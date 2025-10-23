@@ -478,5 +478,355 @@
     "spotifyId": "6a0lr0jt8lKDJhsAYA49NS",
     "youtubeUrl": "",
     "previewUrl": ""
+  },
+  {
+    "id": "song_048",
+    "title": "Rotweinmund",
+    "artist": "Buntspecht",
+    "year": 2019,
+    "audioUrl": "https://example.com/song_048.mp3",
+    "spotifyId": "5hZQIDpkhRxKez0j8TZvoG",
+    "youtubeUrl": "",
+    "previewUrl": ""
+  },
+  {
+    "id": "song_049",
+    "title": "17 Days",
+    "artist": "Prince",
+    "year": 1993,
+    "audioUrl": "https://example.com/song_049.mp3",
+    "spotifyId": "7rwPVahewLXhDGKUjfbzU3",
+    "youtubeUrl": "",
+    "previewUrl": ""
+  },
+  {
+    "id": "song_050",
+    "title": "The Most Beautiful Girl In the World",
+    "artist": "Prince",
+    "year": 1995,
+    "audioUrl": "https://example.com/song_050.mp3",
+    "spotifyId": "0aPaGIX2QIMAH5SMp0VEMe",
+    "youtubeUrl": "",
+    "previewUrl": ""
+  },
+  {
+    "id": "song_051",
+    "title": "Let The Music Play",
+    "artist": "Barry White",
+    "year": 2009,
+    "audioUrl": "https://example.com/song_051.mp3",
+    "spotifyId": "2sR6PY1YgPZTB8hZflRbFq",
+    "youtubeUrl": "",
+    "previewUrl": ""
+  },
+  {
+    "id": "song_052",
+    "title": "Don't Stop - Remix",
+    "artist": "Sylvester",
+    "year": 1982,
+    "audioUrl": "https://example.com/song_052.mp3",
+    "spotifyId": "391LWxtzGLesBcYnXF3apb",
+    "youtubeUrl": "",
+    "previewUrl": ""
+  },
+  {
+    "id": "song_053",
+    "title": "How Will I Know",
+    "artist": "Whitney Houston",
+    "year": 1985,
+    "audioUrl": "https://example.com/song_053.mp3",
+    "spotifyId": "5tdKaKLnC4SgtDZ6RlWeal",
+    "youtubeUrl": "",
+    "previewUrl": ""
+  },
+  {
+    "id": "song_054",
+    "title": "It's My House - 12\" Remix",
+    "artist": "Diana Ross, Jimmy Simpson",
+    "year": 1979,
+    "audioUrl": "https://example.com/song_054.mp3",
+    "spotifyId": "4IHuMACnW8IMUUVPss9rou",
+    "youtubeUrl": "",
+    "previewUrl": ""
+  },
+  {
+    "id": "song_055",
+    "title": "Born to Run",
+    "artist": "Bruce Springsteen",
+    "year": 1975,
+    "audioUrl": "https://example.com/song_055.mp3",
+    "spotifyId": "6hTcuIQa0sxrrByu9wTD7s",
+    "youtubeUrl": "",
+    "previewUrl": ""
+  },
+  {
+    "id": "song_056",
+    "title": "I Won't Let The Sun Go Down On Me",
+    "artist": "Nik Kershaw",
+    "year": 1984,
+    "audioUrl": "https://example.com/song_056.mp3",
+    "spotifyId": "65YtzNpiPhGVzg6GPzkotn",
+    "youtubeUrl": "",
+    "previewUrl": ""
+  },
+  {
+    "id": "song_057",
+    "title": "Ride Wit Me",
+    "artist": "Nelly, City Spud",
+    "year": 2000,
+    "audioUrl": "https://example.com/song_057.mp3",
+    "spotifyId": "3Gf5nttwcX9aaSQXRWidEZ",
+    "youtubeUrl": "",
+    "previewUrl": ""
+  },
+  {
+    "id": "song_058",
+    "title": "Levels - Original Version",
+    "artist": "Avicii",
+    "year": 2011,
+    "audioUrl": "https://example.com/song_058.mp3",
+    "spotifyId": "6Xe9wT5xeZETPwtaP2ynUz",
+    "youtubeUrl": "",
+    "previewUrl": ""
+  },
+  {
+    "id": "song_059",
+    "title": "Go Your Own Way - 2004 Remaster",
+    "artist": "Fleetwood Mac",
+    "year": 1977,
+    "audioUrl": "https://example.com/song_059.mp3",
+    "spotifyId": "07GvNcU1WdyZJq3XxP0kZa",
+    "youtubeUrl": "",
+    "previewUrl": ""
+  },
+  {
+    "id": "song_060",
+    "title": "Take on Me",
+    "artist": "a-ha",
+    "year": 1985,
+    "audioUrl": "https://example.com/song_060.mp3",
+    "spotifyId": "2WfaOiMkCvy7F5fcp2zZ8L",
+    "youtubeUrl": "",
+    "previewUrl": ""
+  },
+  {
+    "id": "song_061",
+    "title": "Do You Wanna Funk?",
+    "artist": "Patrick Cowley, Sylvester",
+    "year": 1982,
+    "audioUrl": "https://example.com/song_061.mp3",
+    "spotifyId": "708DnJC8l1b4Bf4xg0GiBv",
+    "youtubeUrl": "",
+    "previewUrl": ""
+  },
+  {
+    "id": "song_062",
+    "title": "Bongo Bong",
+    "artist": "Manu Chao",
+    "year": 1998,
+    "audioUrl": "https://example.com/song_062.mp3",
+    "spotifyId": "00SmB7n85SKROGjybsyq5i",
+    "youtubeUrl": "",
+    "previewUrl": ""
+  },
+  {
+    "id": "song_063",
+    "title": "It Feels So Good - 12\" Breakbeat Mix",
+    "artist": "Sonique",
+    "year": 1998,
+    "audioUrl": "https://example.com/song_063.mp3",
+    "spotifyId": "39TChHld3lrragesFXhdkc",
+    "youtubeUrl": "",
+    "previewUrl": ""
+  },
+  {
+    "id": "song_064",
+    "title": "Kids",
+    "artist": "MGMT",
+    "year": 2007,
+    "audioUrl": "https://example.com/song_064.mp3",
+    "spotifyId": "1jJci4qxiYcOHhQR247rEU",
+    "youtubeUrl": "",
+    "previewUrl": ""
+  },
+  {
+    "id": "song_065",
+    "title": "An Tagen wie diesen",
+    "artist": "Fettes Brot, Pascal Finkenauer",
+    "year": 2023,
+    "audioUrl": "https://example.com/song_065.mp3",
+    "spotifyId": "5gUXZV2Ir17qOWdtUJSh7l",
+    "youtubeUrl": "",
+    "previewUrl": ""
+  },
+  {
+    "id": "song_066",
+    "title": "Klopapier",
+    "artist": "K.I.Z",
+    "year": 2009,
+    "audioUrl": "https://example.com/song_066.mp3",
+    "spotifyId": "3CFfSQD1HTpn2eeGu9xY7J",
+    "youtubeUrl": "",
+    "previewUrl": ""
+  },
+  {
+    "id": "song_067",
+    "title": "Willst du",
+    "artist": "Alligatoah",
+    "year": 2013,
+    "audioUrl": "https://example.com/song_067.mp3",
+    "spotifyId": "3FcqFCeCD6QRtRo6WGLCnC",
+    "youtubeUrl": "",
+    "previewUrl": ""
+  },
+  {
+    "id": "song_068",
+    "title": "Living a Boy's Adventure Tale",
+    "artist": "a-ha",
+    "year": 1985,
+    "audioUrl": "https://example.com/song_068.mp3",
+    "spotifyId": "13WPj6r2DVNU3GoZtMc9eU",
+    "youtubeUrl": "",
+    "previewUrl": ""
+  },
+  {
+    "id": "song_069",
+    "title": "Westerland",
+    "artist": "Die Ärzte",
+    "year": 1988,
+    "audioUrl": "https://example.com/song_069.mp3",
+    "spotifyId": "5aWpvFnByyWodgqYlC9kha",
+    "youtubeUrl": "",
+    "previewUrl": ""
+  },
+  {
+    "id": "song_070",
+    "title": "Major Tom (...völlig losgelöst)",
+    "artist": "Peter Schilling",
+    "year": 1999,
+    "audioUrl": "https://example.com/song_070.mp3",
+    "spotifyId": "6lXKNdOsnaLv9LwulZbxNl",
+    "youtubeUrl": "",
+    "previewUrl": ""
+  },
+  {
+    "id": "song_071",
+    "title": "Bette Davis Eyes",
+    "artist": "Kim Carnes",
+    "year": 1981,
+    "audioUrl": "https://example.com/song_071.mp3",
+    "spotifyId": "0odIT9B9BvOCnXfS0e4lB5",
+    "youtubeUrl": "",
+    "previewUrl": ""
+  },
+  {
+    "id": "song_072",
+    "title": "Train",
+    "artist": "Paul Kalkbrenner",
+    "year": 2013,
+    "audioUrl": "https://example.com/song_072.mp3",
+    "spotifyId": "0a2LIqhveniOMVXt1BzQKR",
+    "youtubeUrl": "",
+    "previewUrl": ""
+  },
+  {
+    "id": "song_073",
+    "title": "Engel",
+    "artist": "Rammstein",
+    "year": 1997,
+    "audioUrl": "https://example.com/song_073.mp3",
+    "spotifyId": "0xrkyEMkG4dVa5OMLQZOX8",
+    "youtubeUrl": "",
+    "previewUrl": ""
+  },
+  {
+    "id": "song_074",
+    "title": "Electric Feel",
+    "artist": "MGMT",
+    "year": 2007,
+    "audioUrl": "https://example.com/song_074.mp3",
+    "spotifyId": "3FtYbEfBqAlGO46NUDQSAt",
+    "youtubeUrl": "",
+    "previewUrl": ""
+  },
+  {
+    "id": "song_075",
+    "title": "Fick ihn doch",
+    "artist": "Alligatoah",
+    "year": 2013,
+    "audioUrl": "https://example.com/song_075.mp3",
+    "spotifyId": "1EC0COi0MYuxILNfvvVIkI",
+    "youtubeUrl": "",
+    "previewUrl": ""
+  },
+  {
+    "id": "song_076",
+    "title": "Agfachrome RSX II",
+    "artist": "Skatebård",
+    "year": 2016,
+    "audioUrl": "https://example.com/song_076.mp3",
+    "spotifyId": "7za2bHIESAb7RVIhQzwn6H",
+    "youtubeUrl": "",
+    "previewUrl": ""
+  },
+  {
+    "id": "song_077",
+    "title": "Essentia - Extended Version",
+    "artist": "Krystal Klear",
+    "year": 2022,
+    "audioUrl": "https://example.com/song_077.mp3",
+    "spotifyId": "4mOlNiBOX1tjxp5wce0Dwe",
+    "youtubeUrl": "",
+    "previewUrl": ""
+  },
+  {
+    "id": "song_078",
+    "title": "Through The Fire And Flames",
+    "artist": "DragonForce",
+    "year": 2006,
+    "audioUrl": "https://example.com/song_078.mp3",
+    "spotifyId": "1UMdbkqX19OiwfExH7gzYA",
+    "youtubeUrl": "",
+    "previewUrl": ""
+  },
+  {
+    "id": "song_079",
+    "title": "Mensch",
+    "artist": "Herbert Grönemeyer",
+    "year": 2008,
+    "audioUrl": "https://example.com/song_079.mp3",
+    "spotifyId": "2urspvjqMlyq8JVAudN3DK",
+    "youtubeUrl": "",
+    "previewUrl": ""
+  },
+  {
+    "id": "song_080",
+    "title": "Scatman (ski-ba-bop-ba-dop-bop)",
+    "artist": "Scatman John",
+    "year": 1995,
+    "audioUrl": "https://example.com/song_080.mp3",
+    "spotifyId": "623rRTKwGmgjH6sjE9uWLh",
+    "youtubeUrl": "",
+    "previewUrl": ""
+  },
+  {
+    "id": "song_081",
+    "title": "Mr. Vain",
+    "artist": "Culture Beat",
+    "year": 1993,
+    "audioUrl": "https://example.com/song_081.mp3",
+    "spotifyId": "2rTYgHxgcndkUrRoU7x0Sv",
+    "youtubeUrl": "",
+    "previewUrl": ""
+  },
+  {
+    "id": "song_082",
+    "title": "Love Comes Easy",
+    "artist": "Vera",
+    "year": 2018,
+    "audioUrl": "https://example.com/song_082.mp3",
+    "spotifyId": "3ExcEpHblGcPikCpcgNNAB",
+    "youtubeUrl": "",
+    "previewUrl": ""
   }
 ]
