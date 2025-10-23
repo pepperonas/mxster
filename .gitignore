@@ -1,0 +1,96 @@
+# Dependencies
+node_modules/
+pwa/node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Python Virtual Environment
+cards/venv/
+*.pyc
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Build outputs
+pwa/dist/
+dist/
+dist-ssr/
+build/
+*.log
+
+# Generated card files (zu groß für Git)
+card-generator/qr-codes/*.png
+card-generator/models/*.scad
+card-generator/models/*.stl
+!card-generator/qr-codes/.gitkeep
+!card-generator/models/.gitkeep
+
+# QR codes in docs/ (behalten für Dokumentation)
+# docs/*.png bleiben im Repo
+
+# Generated PWA data
+pwa/src/data/songs.js
+
+# PDF cards (generated, zu groß)
+pwa/*.pdf
+*.pdf
+
+# Environment variables (SENSIBEL!)
+.env
+.env.local
+.env.production
+.env.development
+*.env
+
+# Spotify credentials (SENSIBEL!)
+spotify.config.js
+pwa/spotify.config.js
+**/spotify.config.js
+
+# Secrets and keys (SENSIBEL!)
+*.key
+*.pem
+*.p12
+*.pfx
+secrets/
+credentials/
+
+# Database files
+*.db
+*.sqlite
+*.sqlite3
+
+# IDE
+.idea/
+.vscode/
+!.vscode/extensions.json
+*.swp
+*.swo
+*~
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Temporary files
+*.tmp
+*.bak
+*.backup
+.cache/
+
+# Package manager lock files (optional)
+# Uncomment if you want to ignore lock files:
+# package-lock.json
+# yarn.lock
+# pnpm-lock.yaml
+
+# PWA service worker (auto-generated)
+pwa/dist/sw.js
+pwa/dist/workbox-*.js

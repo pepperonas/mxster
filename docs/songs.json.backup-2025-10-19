@@ -1,0 +1,52 @@
+[
+  {
+    "id": "song_001",
+    "title": "Bohemian Rhapsody",
+    "artist": "Queen",
+    "year": 1975,
+    "audioUrl": "https://example.com/bohemian-rhapsody.mp3",
+    "spotifyId": "4u7EnebtmKWzUH433cf5Qv",
+    "youtubeUrl": "https://www.youtube.com/watch?v=fJ9rUzIMcZQ",
+    "previewUrl": ""
+  },
+  {
+    "id": "song_002",
+    "title": "Billie Jean",
+    "artist": "Michael Jackson",
+    "year": 1982,
+    "audioUrl": "https://example.com/billie-jean.mp3",
+    "spotifyId": "5ChkMS8OtdzJeqyybCc9R5",
+    "youtubeUrl": "https://www.youtube.com/watch?v=Zi_XLOBDo_Y",
+    "previewUrl": ""
+  },
+  {
+    "id": "song_003",
+    "title": "Like a Prayer",
+    "artist": "Madonna",
+    "year": 1989,
+    "audioUrl": "https://example.com/like-a-prayer.mp3",
+    "spotifyId": "1z3ugFmUKoCzGsrfUndarB",
+    "youtubeUrl": "https://www.youtube.com/watch?v=79fzeNUqQbQ",
+    "previewUrl": ""
+  },
+  {
+    "id": "song_004",
+    "title": "Smells Like Teen Spirit",
+    "artist": "Nirvana",
+    "year": 1991,
+    "audioUrl": "https://example.com/teen-spirit.mp3",
+    "spotifyId": "4CeeEOM32jQcH3eN9Q2dGj",
+    "youtubeUrl": "https://www.youtube.com/watch?v=hTWKbfoikeg",
+    "previewUrl": ""
+  },
+  {
+    "id": "song_005",
+    "title": "Wonderwall",
+    "artist": "Oasis",
+    "year": 1995,
+    "audioUrl": "https://example.com/wonderwall.mp3",
+    "spotifyId": "5qqabIl2vWzo9ApSC317sa",
+    "youtubeUrl": "https://www.youtube.com/watch?v=bx1Bh8ZvH84",
+    "previewUrl": ""
+  }
+]
