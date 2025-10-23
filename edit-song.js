@@ -125,9 +125,9 @@ async function deleteOldFiles(songId) {
   }
 }
 
-// QR-Code und Karten generieren
-async function generateCardFiles(song, include3D = false) {
-  log('🔄 Generiere Karten-Dateien...', 'cyan');
+// QR-Code und Karten generieren (inkl. 3D-Modelle)
+async function generateCardFiles(song) {
+  log('🔄 Generiere Karten-Dateien (QR-Code + 3D-Modelle)...', 'cyan');
 
   try {
     // Generiere Card (QR-Code + SCAD)
@@ -138,18 +138,15 @@ async function generateCardFiles(song, include3D = false) {
     await fs.copyFile(result.qrCodePath, docsQrPath);
     log(`✅ QR-Code generiert: ${docsQrPath}`, 'green');
 
-    // Generiere STL wenn gewünscht
-    if (include3D) {
-      try {
-        const stlResult = await generateSTL(result.scadPath);
-        if (stlResult) {
-          log(`✅ 3D-Modelle generiert (SCAD + STL)`, 'green');
-        }
-      } catch (error) {
-        log(`⚠️  STL-Generierung fehlgeschlagen: ${error.message}`, 'yellow');
+    // Generiere STL (IMMER)
+    try {
+      const stlResult = await generateSTL(result.scadPath);
+      if (stlResult) {
+        log(`✅ 3D-Modelle generiert (SCAD + STL)`, 'green');
       }
-    } else {
-      log(`✅ SCAD-Modell generiert`, 'green');
+    } catch (error) {
+      log(`⚠️  STL-Generierung fehlgeschlagen: ${error.message}`, 'yellow');
+      log(`   💡 Tipp: Installiere OpenSCAD von https://openscad.org/`, 'yellow');
     }
 
     return result;
@@ -281,11 +278,8 @@ async function main() {
     await saveSongs(songs);
     await updateSongsJs(songs);
 
-    // 4. Karten neu generieren
-    const generate3D = await question('\n3D-Modelle neu generieren? (j/n): ');
-    const include3D = generate3D.toLowerCase() === 'j' || generate3D.toLowerCase() === 'ja';
-
-    await generateCardFiles(updatedSong, include3D);
+    // 4. Karten neu generieren (QR-Code + SCAD + STL)
+    await generateCardFiles(updatedSong);
 
     // 5. PDF-Karten generieren (optional)
     const generatePDF = await question('\nPDF-Karten neu generieren (alle Songs)? (j/n): ');
@@ -303,9 +297,7 @@ async function main() {
     log(`  • docs/${updatedSong.id}_*.png`, 'cyan');
     log(`  • card-generator/qr-codes/${updatedSong.id}_*.png`, 'cyan');
     log(`  • card-generator/models/${updatedSong.id}_*.scad`, 'cyan');
-    if (include3D) {
-      log(`  • card-generator/models/${updatedSong.id}_*.stl`, 'cyan');
-    }
+    log(`  • card-generator/models/${updatedSong.id}_*.stl`, 'cyan');
     if (generatePDF.toLowerCase() === 'j' || generatePDF.toLowerCase() === 'ja') {
       log(`  • pwa/mxster-cards-*.pdf`, 'cyan');
     }
