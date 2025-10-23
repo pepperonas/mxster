@@ -152,6 +152,7 @@ class MxsterGame {
     this.players = saved.players
     this.currentPlayer = saved.currentPlayer || 0
     this.currentDJ = saved.currentDJ || 0
+    this.currentSong = saved.currentSong || null
     this.gameMode = saved.gameMode || GAME_MODES.GUESS
     this.gameVariant = saved.gameVariant || GAME_VARIANTS.PHYSICAL
     console.log('✅ Spiel wiederhergestellt:', GAME_MODE_INFO[this.gameMode].name, '/', GAME_VARIANT_INFO[this.gameVariant].name)
@@ -164,6 +165,7 @@ class MxsterGame {
       players: this.players,
       currentPlayer: this.currentPlayer,
       currentDJ: this.currentDJ,
+      currentSong: this.currentSong,
       gameMode: this.gameMode,
       gameVariant: this.gameVariant,
       timestamp: Date.now()
@@ -842,6 +844,8 @@ class MxsterGame {
 
     if (song) {
       this.currentSong = song
+      // Speichere Spielstand sofort nach Song-Selektion
+      this.saveGame()
 
       // Im Guess-Modus: Zeige Ratebereich
       if (this.gameMode === GAME_MODES.GUESS) {
@@ -1045,6 +1049,8 @@ class MxsterGame {
     // Punkte im Ratespiel: Jede richtige Antwort = 1 Punkt
     if (this.gameMode === GAME_MODES.GUESS) {
       player.score += correctCount
+      // Speichere Spielstand sofort nach Punktevergabe
+      this.saveGame()
     }
 
     // Modal-Titel basierend auf korrekten Antworten
@@ -1245,6 +1251,8 @@ class MxsterGame {
       // Sortiere Timeline chronologisch (ältester Song links/oben)
       player.timeline.sort((a, b) => a.year - b.year)
       player.cards += 1
+      // Speichere Spielstand sofort nach Kartenzählung
+      this.saveGame()
 
       // Prüfe Gewinnbedingung
       if (player.cards >= 10) {
@@ -1316,6 +1324,8 @@ class MxsterGame {
 
     // Karte zählt immer (da automatisch richtig platziert)
     player.cards += 1
+    // Speichere Spielstand sofort nach Kartenzählung
+    this.saveGame()
 
     // Update Timeline
     this.updateTimeline()
@@ -1339,6 +1349,8 @@ class MxsterGame {
 
     // Karte zählt immer (da automatisch richtig platziert)
     player.cards += 1
+    // Speichere Spielstand sofort nach Kartenzählung
+    this.saveGame()
 
     // Prüfe Gewinnbedingung
     if (player.cards >= 10) {
@@ -1367,6 +1379,7 @@ class MxsterGame {
   nextTurn() {
     // Reset
     this.lastScannedCode = null
+    this.currentSong = null
 
     // Song-info nur im Guess-Modus ausblenden
     const songInfo = document.getElementById('song-info')
@@ -1382,6 +1395,9 @@ class MxsterGame {
       this.currentDJ = (this.currentDJ + 1) % this.players.length
       this.currentPlayer = (this.currentPlayer + 1) % this.players.length
     }
+
+    // Speichere Spielstand nach Spielerwechsel
+    this.saveGame()
 
     this.renderGameScreen()
   }
