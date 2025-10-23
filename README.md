@@ -27,8 +27,9 @@ mxster ist ein **Multiplayer-Musikquiz** mit drei verschiedenen Spielmodi:
 - 📱 **Progressive Web App** - Installierbar auf Smartphone & Desktop
 - 🏆 **Live Punktesystem** - Echtzeit-Updates nach jeder Runde
 - 📸 **QR-Code Scanner** - Scanne Karten mit Smartphone-Kamera
-- 💾 **Spielstand speichern** - Export/Import als JSON-Datei
+- 💾 **Automatische Spielstand-Speicherung** - Kein Fortschritt geht verloren, selbst bei Page Refresh!
 - 🎮 **Multiplayer** - Spiele mit beliebig vielen Freunden
+- ✏️ **Song-Editor** - Bearbeite Songs nachträglich mit interaktivem Wizard
 
 ## 🚀 Schnellstart für Anfänger
 
@@ -181,7 +182,7 @@ node add-song.js "https://open.spotify.com/track/TRACK_ID" --generate-3d
 - Infill: 100%
 - Support: Nicht nötig
 
-## 🎵 Songs hinzufügen
+## 🎵 Songs verwalten
 
 ### Einzelnen Song hinzufügen (einfachste Methode)
 
@@ -196,6 +197,92 @@ node add-song.js "https://open.spotify.com/track/DEINE_TRACK_ID"
 3. ✅ Datenbank aktualisiert
 4. ✅ QR-Code erstellt
 5. ✅ PWA-Daten synchronisiert
+
+### Song bearbeiten (interaktiver Wizard)
+
+Du hast einen Tippfehler oder möchtest einen Song aktualisieren? Nutze den Song-Editor:
+
+```bash
+# Im Hauptverzeichnis
+node edit-song.js
+```
+
+**Der Wizard führt dich durch:**
+1. 🔍 Song-ID eingeben (z.B. `song_001`)
+2. 📋 Aktuelle Daten werden angezeigt
+3. ✏️ Neue Daten eingeben (leer lassen = Wert behalten)
+4. 👀 Vorher/Nachher-Vergleich ansehen
+5. ✅ Änderungen bestätigen
+
+**Was passiert automatisch:**
+- ✅ Automatisches Backup erstellt (`songs.json.backup-2025-10-24`)
+- ✅ Datenbank aktualisiert (`docs/songs.json`)
+- ✅ PWA-Daten synchronisiert (`pwa/src/data/songs.js`)
+- ✅ Alte Dateien gelöscht (falls Titel/Artist geändert)
+- ✅ Neue QR-Codes generiert
+- ✅ Optional: 3D-Modelle neu erstellen (SCAD + STL)
+
+**Beispiel-Ablauf:**
+
+```bash
+$ node edit-song.js
+
+╔════════════════════════════════════════════╗
+║   🎵  mxster Song Editor Wizard  🎵      ║
+╚════════════════════════════════════════════╝
+
+📚 35 Songs in der Datenbank gefunden
+
+Schritt 1/4: Song auswählen
+─────────────────────────────
+Song-ID (z.B. song_001): song_008
+
+✅ Song gefunden:
+   Titel:    Tell It to My Heart
+   Interpret: Taylor Dayne
+   Jahr:     1988
+   Spotify:  4u7EnebtmKWzUH433cf5Qv
+
+Schritt 2/4: Neue Daten eingeben
+─────────────────────────────────
+(Leer lassen = Wert behalten)
+
+Titel [Tell It to My Heart]: Tell It To My Heart
+Interpret [Taylor Dayne]:
+Jahr [1988]: 1987
+
+Schritt 3/4: Änderungen bestätigen
+───────────────────────────────────
+
+Vorher:
+  Taylor Dayne - Tell It to My Heart (1988)
+
+Nachher:
+  Taylor Dayne - Tell It To My Heart (1987)
+
+Änderungen übernehmen? (j/n): j
+
+Schritt 4/4: Dateien aktualisieren
+───────────────────────────────────
+✅ Backup erstellt: docs/songs.json.backup-2025-10-24
+🗑️  2 alte Dateien gelöscht
+✅ songs.json aktualisiert
+✅ pwa/src/data/songs.js aktualisiert
+🔄 Generiere QR-Code...
+✅ QR-Code generiert
+
+3D-Modelle neu generieren? (j/n): n
+
+╔════════════════════════════════════════════╗
+║            ✅  Fertig!  ✅                 ║
+╚════════════════════════════════════════════╝
+
+Aktualisierte Dateien:
+  • docs/songs.json
+  • pwa/src/data/songs.js
+  • docs/song_008_*.png
+  • card-generator/qr-codes/song_008_*.png
+```
 
 ### Aus Spotify Playlist importieren
 
@@ -243,9 +330,10 @@ mxster/
 │   ├── qrToScad.js       # QR → OpenSCAD Konverter
 │   └── models/           # Generierte STL/SCAD (nicht in Git)
 ├── docs/
-│   ├── songs.json        # Zentrale Song-Datenbank
+│   ├── songs.json        # Zentrale Song-Datenbank (Source of Truth)
 │   └── *.png             # QR-Code Bilder
 ├── add-song.js           # CLI Tool: Song hinzufügen
+├── edit-song.js          # CLI Tool: Song bearbeiten (interaktiv)
 ├── deploy.sh             # Deployment-Script
 └── README.md             # Diese Datei
 ```
@@ -264,6 +352,7 @@ npm run preview         # Build testen
 # Songs verwalten
 node add-song.js "SPOTIFY_URL"                    # Song hinzufügen
 node add-song.js "SPOTIFY_URL" --generate-3d      # + 3D-Modell
+node edit-song.js                                 # Song bearbeiten (interaktiv)
 npm run import-spotify                             # Aus Playlist
 npm run update-previews                            # Preview URLs updaten
 npm run filter-songs                               # Ungültige Songs entfernen
@@ -273,6 +362,42 @@ node generate-cards.js                # PDF Standard
 node generate-cards.js --bw          # PDF Schwarz-Weiß
 node generate-cards.js --duplex      # PDF Duplex
 ```
+
+### CLI Tools
+
+#### add-song.js
+Fügt neue Songs zur Datenbank hinzu. Lädt Metadaten automatisch von Spotify.
+
+```bash
+node add-song.js "https://open.spotify.com/track/TRACK_ID"
+node add-song.js "TRACK_ID"  # Alternativ: Nur die ID
+```
+
+#### edit-song.js
+Interaktiver Wizard zum Bearbeiten bestehender Songs. Ideal für Korrekturen und Updates.
+
+**Features:**
+- 🎨 Farbiger Terminal-Output mit Emojis
+- 🔍 Zeigt aktuelle Song-Daten an
+- ✏️ Inkrementelle Eingabe (nur ändern was nötig ist)
+- 👀 Vorher/Nachher-Vergleich
+- 💾 Automatisches Backup vor jeder Änderung
+- 🗑️ Löscht alte Dateien bei Namensänderung
+- 🔄 Regeneriert QR-Codes automatisch
+- 🎲 Optionale 3D-Modell-Regenerierung
+
+**Verwendung:**
+```bash
+node edit-song.js
+# Folge den Anweisungen im Wizard
+```
+
+**Technische Details:**
+- Nutzt Node.js `readline` für interaktive Prompts
+- Erstellt Backups mit Zeitstempel: `songs.json.backup-YYYY-MM-DD`
+- Führt `generateCard.js` automatisch aus für neue QR-Codes
+- Synchronisiert beide Datenbanken: `docs/songs.json` und `pwa/src/data/songs.js`
+- Säubert alte Dateien aus `docs/`, `qr-codes/` und `models/` Verzeichnissen
 
 ### Tech Stack
 
