@@ -39,11 +39,16 @@ class MxsterGame {
       return
     }
 
-    if (spotifyAuth.loadFromStorage()) {
-      console.log('✅ Bereits bei Spotify eingeloggt')
+    // Prüfe ob bereits eingeloggt (inkl. automatischem Token-Refresh)
+    const isLoggedIn = await spotifyAuth.loadFromStorage()
+    if (isLoggedIn) {
+      console.log('✅ Bereits bei Spotify eingeloggt (Token gültig)')
       await this.initializeSpotifyPlayer()
+      // Starte periodischen Token-Check
+      spotifyAuth.startRefreshCheck()
       this.proceedToGame()
     } else {
+      console.log('🔐 Nicht eingeloggt oder Token abgelaufen')
       this.renderLoginScreen()
     }
   }
@@ -65,6 +70,8 @@ class MxsterGame {
     if (accessToken) {
       console.log('✅ Spotify Login erfolgreich')
       await this.initializeSpotifyPlayer()
+      // Starte periodischen Token-Check
+      spotifyAuth.startRefreshCheck()
       window.history.pushState({}, '', '/')
       this.proceedToGame()
     } else {
@@ -379,7 +386,7 @@ class MxsterGame {
       return
     }
 
-    // DJ ist Spieler 0, aktiver Spieler ist Spieler 1 (links vom DJ)
+    // DJ ist Spieler 0, aktiver Spieler ist Spieler 1 (nächster nach DJ)
     this.currentDJ = 0
     this.currentPlayer = 1
 
@@ -607,10 +614,133 @@ class MxsterGame {
           </div>
         ` : `
           <!-- Timeline for Timeline Modes -->
-          <div class="card">
-            <h3 style="margin-bottom: 16px; display: flex; align-items: center; gap: 8px;">${getIconHTML('music')} Timeline von ${player.name}</h3>
-            <div class="timeline" id="timeline"></div>
-          </div>
+          ${this.gameMode === GAME_MODES.TIMELINE_PERSONAL ? `
+            <!-- All Players' Timelines (5 slots per row) -->
+            ${this.players.map((p, pIdx) => `
+              <div class="card" style="${pIdx === this.currentPlayer ? 'border: 2px solid var(--accent);' : ''}">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+                  <h3 style="margin: 0; display: flex; align-items: center; gap: 8px;">
+                    ${getIconHTML('users')} ${p.name}
+                    ${pIdx === this.currentPlayer ? '<span style="margin-left: 8px; font-size: 14px; color: var(--accent);">← Aktuell</span>' : ''}
+                  </h3>
+                  <div style="
+                    font-size: 14px;
+                    font-weight: bold;
+                    color: var(--accent);
+                    padding: 6px 12px;
+                    background: var(--bg-secondary);
+                    border-radius: 8px;
+                  ">
+                    ${p.cards}/10
+                  </div>
+                </div>
+
+                <!-- Progress Bar -->
+                <div style="
+                  width: 100%;
+                  height: 8px;
+                  background: var(--bg-secondary);
+                  border-radius: 4px;
+                  overflow: hidden;
+                  margin-bottom: 16px;
+                ">
+                  <div style="
+                    width: ${(p.cards / 10) * 100}%;
+                    height: 100%;
+                    background: linear-gradient(90deg, var(--secondary), var(--accent));
+                    transition: width 0.5s ease;
+                  "></div>
+                </div>
+
+                <!-- Card Grid: 5 per row, 2 rows -->
+                <div style="
+                  display: grid;
+                  grid-template-columns: repeat(5, 1fr);
+                  gap: 10px;
+                ">
+                  ${Array.from({ length: 10 }, (_, slotIndex) => {
+                    const song = p.timeline[slotIndex]
+                    const hasSong = !!song
+
+                    return `
+                      <div class="collected-card" style="
+                        background: ${hasSong ? 'var(--bg-secondary)' : 'transparent'};
+                        border: 2px ${hasSong ? 'solid var(--accent)' : 'dashed var(--border)'};
+                        border-radius: 12px;
+                        padding: 10px 8px;
+                        text-align: center;
+                        transition: all 0.3s;
+                        position: relative;
+                        overflow: hidden;
+                        opacity: ${hasSong ? '1' : '0.4'};
+                        aspect-ratio: 3/4;
+                        display: flex;
+                        flex-direction: column;
+                        justify-content: center;
+                      ">
+                        ${hasSong ? `
+                          <!-- Success Badge -->
+                          <div style="
+                            position: absolute;
+                            top: 4px;
+                            right: 4px;
+                            width: 18px;
+                            height: 18px;
+                            background: var(--accent);
+                            border-radius: 50%;
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            font-size: 11px;
+                          ">
+                            ✓
+                          </div>
+
+                          <!-- Year -->
+                          <div style="
+                            font-size: 20px;
+                            font-weight: bold;
+                            color: var(--text-primary);
+                            margin-bottom: 4px;
+                          ">
+                            ${song.year}
+                          </div>
+
+                          <!-- Title (truncated) -->
+                          <div style="
+                            font-size: 9px;
+                            color: var(--text-secondary);
+                            overflow: hidden;
+                            text-overflow: ellipsis;
+                            white-space: nowrap;
+                            max-width: 100%;
+                          " title="${song.title} - ${song.artist}">
+                            ${song.title}
+                          </div>
+                        ` : `
+                          <!-- Empty Slot -->
+                          <div style="
+                            font-size: 24px;
+                            font-weight: bold;
+                            color: var(--text-secondary);
+                            opacity: 0.3;
+                          ">
+                            ${slotIndex + 1}
+                          </div>
+                        `}
+                      </div>
+                    `
+                  }).join('')}
+                </div>
+              </div>
+            `).join('')}
+          ` : `
+            <!-- Single Timeline for Global Mode -->
+            <div class="card">
+              <h3 style="margin-bottom: 16px; display: flex; align-items: center; gap: 8px;">${getIconHTML('music')} Globale Timeline</h3>
+              <div class="timeline" id="timeline"></div>
+            </div>
+          `}
 
           <!-- Placement Options -->
           <div class="card" id="placement-card" style="display: none;">
@@ -1112,6 +1242,8 @@ class MxsterGame {
     const isCorrect = JSON.stringify(player.timeline.map(s => s.id)) === JSON.stringify(sortedTimeline.map(s => s.id))
 
     if (isCorrect) {
+      // Sortiere Timeline chronologisch (ältester Song links/oben)
+      player.timeline.sort((a, b) => a.year - b.year)
       player.cards += 1
 
       // Prüfe Gewinnbedingung
@@ -1122,15 +1254,22 @@ class MxsterGame {
 
       this.showModal(
         'Richtig platziert!',
-        `<div style="text-align: center;">
-           <div style="font-size: 48px; margin: 20px 0;">✅</div>
-           <p style="font-size: 18px;">Die Karte wurde korrekt in die Timeline eingefügt!</p>
-           <div class="card" style="background: var(--primary); margin-top: 20px; padding: 16px;">
-             <strong>Fortschritt:</strong>
-             <p style="margin: 8px 0 0 0; font-size: 20px;">${player.cards}/10 Karten</p>
+        `<div class="placement-result placement-success">
+           <div class="result-icon">✅</div>
+           <p class="result-message">Die Karte wurde korrekt in die Timeline eingefügt!</p>
+
+           <div class="result-song-info">
+             <div class="result-song-title">${this.currentSong.title}</div>
+             <div class="result-song-artist">${this.currentSong.artist}</div>
+             <div class="result-song-year">${this.currentSong.year}</div>
+           </div>
+
+           <div class="result-progress">
+             <strong>${player.name} - Fortschritt:</strong>
+             <p>${player.cards}/10 Karten</p>
            </div>
          </div>`,
-        [{ text: `${getIconHTML('check')} Weiter`, onclick: 'game.closeModal(); game.continueTurn()', className: 'btn-accent' }]
+        [{ text: `${getIconHTML('check')} Weiter`, onclick: 'game.continueTurn(); game.closeModal()', className: 'btn-accent' }]
       )
     } else {
       // Entferne falsch platzierte Karte
@@ -1138,15 +1277,22 @@ class MxsterGame {
 
       this.showModal(
         'Falsch platziert!',
-        `<div style="text-align: center;">
-           <div style="font-size: 48px; margin: 20px 0;">❌</div>
-           <p style="font-size: 18px;">Die Karte wurde an der falschen Position platziert und wird entfernt.</p>
-           <div class="card" style="background: var(--primary); margin-top: 20px; padding: 16px;">
-             <strong>Aktueller Stand:</strong>
-             <p style="margin: 8px 0 0 0; font-size: 20px;">${player.cards}/10 Karten</p>
+        `<div class="placement-result placement-error">
+           <div class="result-icon">❌</div>
+           <p class="result-message">Die Karte wurde an der falschen Position platziert und wird entfernt.</p>
+
+           <div class="result-song-info">
+             <div class="result-song-title">${this.currentSong.title}</div>
+             <div class="result-song-artist">${this.currentSong.artist}</div>
+             <div class="result-song-year">${this.currentSong.year}</div>
+           </div>
+
+           <div class="result-progress">
+             <strong>${player.name} - Aktueller Stand:</strong>
+             <p>${player.cards}/10 Karten</p>
            </div>
          </div>`,
-        [{ text: `${getIconHTML('check')} Weiter`, onclick: 'game.closeModal(); game.continueTurn()', className: 'btn-accent' }]
+        [{ text: `${getIconHTML('check')} Weiter`, onclick: 'game.continueTurn(); game.closeModal()', className: 'btn-accent' }]
       )
     }
   }
@@ -1516,7 +1662,7 @@ class MxsterGame {
          </div>
        </div>`,
       [
-        { text: `${getIconHTML('home')} Zur Startseite`, onclick: 'game.closeModal(); game.renderStartScreen()', className: 'btn-accent' }
+        { text: `${getIconHTML('home')} Zur Startseite`, onclick: 'game.closeModal(); game.renderLoginScreen()', className: 'btn-accent' }
       ]
     )
   }

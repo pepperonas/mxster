@@ -5,6 +5,38 @@ class SpotifyAuth {
     this.accessToken = null
     this.refreshToken = null
     this.expiresAt = null
+    this.refreshCheckInterval = null
+  }
+
+  // Starte periodischen Token-Check (alle 10 Minuten)
+  startRefreshCheck() {
+    // Stoppe existierenden Interval
+    if (this.refreshCheckInterval) {
+      clearInterval(this.refreshCheckInterval)
+    }
+
+    // Prüfe alle 10 Minuten
+    this.refreshCheckInterval = setInterval(async () => {
+      console.log('⏰ Periodischer Token-Check...')
+      const isValid = await this.isLoggedIn()
+      if (!isValid) {
+        console.log('❌ Token ungültig, Session beendet')
+        clearInterval(this.refreshCheckInterval)
+        // Optional: Zeige Meldung an User
+        if (window.game) {
+          alert('Deine Spotify-Session ist abgelaufen. Bitte melde dich neu an.')
+          window.game.renderLoginScreen()
+        }
+      }
+    }, 10 * 60 * 1000) // 10 Minuten
+  }
+
+  // Stoppe periodischen Token-Check
+  stopRefreshCheck() {
+    if (this.refreshCheckInterval) {
+      clearInterval(this.refreshCheckInterval)
+      this.refreshCheckInterval = null
+    }
   }
 
   // Generiere Code Verifier für PKCE (empfohlen ab 2025)
@@ -144,31 +176,91 @@ class SpotifyAuth {
   }
 
   // Lade Tokens aus localStorage
-  loadFromStorage() {
+  async loadFromStorage() {
     this.accessToken = localStorage.getItem('spotify_access_token')
     this.refreshToken = localStorage.getItem('spotify_refresh_token')
     const expiresAt = localStorage.getItem('spotify_expires_at')
     this.expiresAt = expiresAt ? parseInt(expiresAt) : null
 
-    return this.isLoggedIn()
+    return await this.isLoggedIn()
   }
 
   // Prüfe ob eingeloggt und Token gültig
-  isLoggedIn() {
+  async isLoggedIn() {
     if (!this.accessToken || !this.expiresAt) {
       return false
     }
 
-    // Token abgelaufen?
-    if (Date.now() >= this.expiresAt) {
+    // Token bald abgelaufen? (5 Minuten Puffer)
+    const fiveMinutes = 5 * 60 * 1000
+    if (Date.now() >= (this.expiresAt - fiveMinutes)) {
+      // Versuche Token zu refreshen
+      if (this.refreshToken) {
+        console.log('🔄 Token läuft ab, refreshe...')
+        const refreshed = await this.refreshAccessToken()
+        if (refreshed) {
+          console.log('✅ Token erfolgreich refreshed')
+          return true
+        }
+      }
+      console.log('❌ Token abgelaufen und kein Refresh möglich')
       return false
     }
 
     return true
   }
 
+  // Refresh Access Token mit Refresh Token
+  async refreshAccessToken() {
+    if (!this.refreshToken) {
+      return false
+    }
+
+    const params = new URLSearchParams({
+      client_id: config.clientId,
+      grant_type: 'refresh_token',
+      refresh_token: this.refreshToken
+    })
+
+    try {
+      const response = await fetch('https://accounts.spotify.com/api/token', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        body: params.toString()
+      })
+
+      if (!response.ok) {
+        const error = await response.json()
+        console.error('Token Refresh Error:', error)
+        return false
+      }
+
+      const data = await response.json()
+
+      // Aktualisiere Tokens
+      this.accessToken = data.access_token
+      this.expiresAt = Date.now() + (data.expires_in * 1000)
+
+      // Refresh token bleibt gleich (wird nicht immer neu ausgestellt)
+      if (data.refresh_token) {
+        this.refreshToken = data.refresh_token
+      }
+
+      // Speichere neue Tokens
+      this.saveToStorage()
+
+      return true
+    } catch (error) {
+      console.error('Token Refresh Failed:', error)
+      return false
+    }
+  }
+
   // Logout
   logout() {
+    this.stopRefreshCheck()
     this.accessToken = null
     this.refreshToken = null
     this.expiresAt = null

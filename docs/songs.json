@@ -368,5 +368,115 @@
     "spotifyId": "4SyAk2E6pBO7J4d2Pboc27",
     "youtubeUrl": "",
     "previewUrl": ""
+  },
+  {
+    "id": "song_037",
+    "title": "The Look Of Love, Pt.1",
+    "artist": "ABC",
+    "year": 1982,
+    "audioUrl": "https://example.com/song_037.mp3",
+    "spotifyId": "6HvUtPLqkP0t6zd6YNdWby",
+    "youtubeUrl": "",
+    "previewUrl": ""
+  },
+  {
+    "id": "song_038",
+    "title": "No No No Senor",
+    "artist": "Brenda & The Big Dudes",
+    "year": 2006,
+    "audioUrl": "https://example.com/song_038.mp3",
+    "spotifyId": "5xFw5Kw4hqhcwXXjFOZKIw",
+    "youtubeUrl": "",
+    "previewUrl": ""
+  },
+  {
+    "id": "song_039",
+    "title": "Galaxis 4000 - Marcus Christiansen Remix",
+    "artist": "Bizzarro Universe, Marcus Christiansen",
+    "year": 2024,
+    "audioUrl": "https://example.com/song_039.mp3",
+    "spotifyId": "5SXxursn0O3NZu5yan9Xer",
+    "youtubeUrl": "",
+    "previewUrl": ""
+  },
+  {
+    "id": "song_040",
+    "title": "Nix Neues in Poona",
+    "artist": "Lusthansa",
+    "year": 1983,
+    "audioUrl": "https://example.com/song_040.mp3",
+    "spotifyId": "5MmXILyuHEWAQ0IqYHwm1G",
+    "youtubeUrl": "",
+    "previewUrl": ""
+  },
+  {
+    "id": "song_041",
+    "title": "U-Bahn - Original Version",
+    "artist": "Oliver Koletzki, Axel Bosse",
+    "year": 2009,
+    "audioUrl": "https://example.com/song_041.mp3",
+    "spotifyId": "51lq1JlxFQztlTJpJYsyWL",
+    "youtubeUrl": "",
+    "previewUrl": ""
+  },
+  {
+    "id": "song_042",
+    "title": "Smooth Criminal",
+    "artist": "Alien Ant Farm",
+    "year": 2001,
+    "audioUrl": "https://example.com/song_042.mp3",
+    "spotifyId": "5z6xHjCZr7a7AIcy8sPBKy",
+    "youtubeUrl": "",
+    "previewUrl": ""
+  },
+  {
+    "id": "song_043",
+    "title": "Der Komtur",
+    "artist": "Carlos Perón, Peter Ehrlich",
+    "year": 2018,
+    "audioUrl": "https://example.com/song_043.mp3",
+    "spotifyId": "7IdcCf2KAAkeI66vSLfAyC",
+    "youtubeUrl": "",
+    "previewUrl": ""
+  },
+  {
+    "id": "song_044",
+    "title": "Jack The Bear",
+    "artist": "Mind Over Matter",
+    "year": 2020,
+    "audioUrl": "https://example.com/song_044.mp3",
+    "spotifyId": "3nuSWxFEkdtGiP9huP3NoH",
+    "youtubeUrl": "",
+    "previewUrl": ""
+  },
+  {
+    "id": "song_045",
+    "title": "Blackpool Boulevard",
+    "artist": "Anish Kumar, Barry Can't Swim",
+    "year": 2021,
+    "audioUrl": "https://example.com/song_045.mp3",
+    "spotifyId": "5TaNnFsq2RSPHpsb8euzib",
+    "youtubeUrl": "",
+    "previewUrl": ""
+  },
+  {
+    "id": "song_046",
+    "title": "Gimme! Gimme! Gimme! (A Man After Midnight)",
+    "artist": "ABBA",
+    "year": 1979,
+    "audioUrl": "https://example.com/song_046.mp3",
+    "spotifyId": "3vkQ5DAB1qQMYO4Mr9zJN6",
+    "youtubeUrl": "",
+    "previewUrl": ""
+  },
+  {
+    "id": "song_047",
+    "title": "Jeanny",
+    "artist": "Falco",
+    "year": 1985,
+    "audioUrl": "https://example.com/song_047.mp3",
+    "spotifyId": "6a0lr0jt8lKDJhsAYA49NS",
+    "youtubeUrl": "",
+    "previewUrl": ""
   }
 ]
