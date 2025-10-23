@@ -94,3 +94,32 @@ Thumbs.db
 # PWA service worker (auto-generated)
 pwa/dist/sw.js
 pwa/dist/workbox-*.js
+
+# Internal documentation (nur für privates Repo)
+CLAUDE.md
+DEPLOYMENT.md
+POST-DEPLOYMENT-CHECKLIST.md
+FUZZY-MATCHING.md
+GAME-RULES-IMPLEMENTATION.md
+PWA-INSTALLATION.md
+SPOTIFY-REDIRECT-URI-SETUP.md
+
+# Deployment scripts (SENSIBEL - enthält Server-Infos)
+deploy.sh
+nginx-mxster.conf
+pwa-check.html
+
+# Backup files
+*.backup
+*.backup-*
+docs/*.backup*
+docs/songs.json.backup-*
+
+# Test files (nur für Entwicklung)
+test-*.js
+**/test-*.js
+card-generator/test-*.js
+
+# 3D printer files (zu groß, proprietär)
+*.3mf
+card-generator/models/*.3mf
