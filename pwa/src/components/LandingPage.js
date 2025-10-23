@@ -444,6 +444,101 @@ export function renderLandingPage(onLoginClick) {
         </div>
       </div>
 
+      <!-- Open Source Section -->
+      <div class="max-w-7xl mx-auto px-6 py-20" id="open-source">
+        <div class="text-center mb-16">
+          <h2 class="text-4xl md:text-5xl font-bold text-gradient mb-4">
+            Open Source
+          </h2>
+          <p class="text-xl text-text-secondary">
+            mxster ist komplett Open Source und auf GitHub verfügbar
+          </p>
+        </div>
+
+        <div class="max-w-4xl mx-auto">
+          <div class="glass p-10 rounded-3xl hover:shadow-glow-md transition-all">
+            <div class="flex flex-col md:flex-row items-center gap-8">
+              <!-- GitHub Icon -->
+              <div class="flex-shrink-0">
+                <div class="w-24 h-24 rounded-full bg-gradient-to-br from-secondary to-accent flex items-center justify-center text-5xl shadow-glow-sm">
+                  🐙
+                </div>
+              </div>
+
+              <!-- Content -->
+              <div class="flex-1 text-center md:text-left">
+                <h3 class="text-3xl font-bold mb-3 text-text-primary">
+                  Auf GitHub
+                </h3>
+                <p class="text-text-secondary leading-relaxed mb-6">
+                  Der komplette Quellcode ist öffentlich auf GitHub verfügbar.
+                  Schau dir den Code an, lerne daraus, oder trage selbst bei!
+                </p>
+
+                <div class="flex flex-wrap gap-4 justify-center md:justify-start text-sm text-text-secondary mb-6">
+                  <div class="flex items-center gap-2">
+                    <span class="text-accent">⭐</span>
+                    <span>Star das Projekt</span>
+                  </div>
+                  <div class="flex items-center gap-2">
+                    <span class="text-accent">🔧</span>
+                    <span>Fork & Contribute</span>
+                  </div>
+                  <div class="flex items-center gap-2">
+                    <span class="text-accent">🐛</span>
+                    <span>Issues melden</span>
+                  </div>
+                </div>
+
+                <div class="flex flex-col sm:flex-row gap-4">
+                  <a
+                    href="https://github.com/pepperonas/mxster"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="btn btn-accent px-8 py-3 group inline-flex items-center justify-center gap-2"
+                  >
+                    <span>🐙</span>
+                    <span>Zum GitHub Repository</span>
+                    <span class="transition-transform group-hover:translate-x-1">→</span>
+                  </a>
+                  <a
+                    href="https://github.com/pepperonas/mxster/issues"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="btn btn-outline px-8 py-3 inline-flex items-center justify-center gap-2"
+                  >
+                    <span>💬</span>
+                    <span>Issues & Diskussionen</span>
+                  </a>
+                </div>
+              </div>
+            </div>
+
+            <!-- GitHub Stats (optional) -->
+            <div class="mt-8 pt-8 border-t border-white/10">
+              <div class="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
+                <div>
+                  <div class="text-2xl font-bold text-gradient mb-1">100%</div>
+                  <div class="text-sm text-text-secondary">Open Source</div>
+                </div>
+                <div>
+                  <div class="text-2xl font-bold text-gradient mb-1">MIT</div>
+                  <div class="text-sm text-text-secondary">Lizenz</div>
+                </div>
+                <div>
+                  <div class="text-2xl font-bold text-gradient mb-1">3</div>
+                  <div class="text-sm text-text-secondary">Spielmodi</div>
+                </div>
+                <div>
+                  <div class="text-2xl font-bold text-gradient mb-1">∞</div>
+                  <div class="text-sm text-text-secondary">Songs möglich</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <!-- Support Section -->
       <div class="max-w-5xl mx-auto px-6 py-20" id="support">
         <div class="glass p-12 rounded-3xl text-center hover:shadow-glow-md transition-all">
