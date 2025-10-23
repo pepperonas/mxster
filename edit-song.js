@@ -159,6 +159,25 @@ async function generateCardFiles(song, include3D = false) {
   }
 }
 
+// PDF-Karten generieren (alle Songs)
+async function generatePDFCards() {
+  log('🔄 Generiere PDF-Karten (alle Songs)...', 'cyan');
+
+  try {
+    const { execSync } = require('child_process');
+    const pwaDir = path.join(__dirname, 'pwa');
+
+    execSync('node generate-cards.js', {
+      cwd: pwaDir,
+      stdio: 'inherit'
+    });
+
+    log('✅ PDF-Karten generiert', 'green');
+  } catch (error) {
+    log(`❌ Fehler beim Generieren der PDF-Karten: ${error.message}`, 'red');
+  }
+}
+
 // Sanitize Dateinamen
 function sanitizeFilename(str) {
   return str
@@ -268,6 +287,12 @@ async function main() {
 
     await generateCardFiles(updatedSong, include3D);
 
+    // 5. PDF-Karten generieren (optional)
+    const generatePDF = await question('\nPDF-Karten neu generieren (alle Songs)? (j/n): ');
+    if (generatePDF.toLowerCase() === 'j' || generatePDF.toLowerCase() === 'ja') {
+      await generatePDFCards();
+    }
+
     log('\n╔════════════════════════════════════════════╗', 'bright');
     log('║            ✅  Fertig!  ✅                 ║', 'green');
     log('╚════════════════════════════════════════════╝\n', 'bright');
@@ -280,6 +305,9 @@ async function main() {
     log(`  • card-generator/models/${updatedSong.id}_*.scad`, 'cyan');
     if (include3D) {
       log(`  • card-generator/models/${updatedSong.id}_*.stl`, 'cyan');
+    }
+    if (generatePDF.toLowerCase() === 'j' || generatePDF.toLowerCase() === 'ja') {
+      log(`  • pwa/mxster-cards-*.pdf`, 'cyan');
     }
 
   } catch (error) {
