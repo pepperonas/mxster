@@ -20,12 +20,12 @@ dist-ssr/
 build/
 *.log
 
-# Generated card files (zu groß für Git)
+# Generated card files
 card-generator/qr-codes/*.png
-card-generator/models/*.scad
-card-generator/models/*.stl
 !card-generator/qr-codes/.gitkeep
 !card-generator/models/.gitkeep
+
+# Note: SCAD and STL files are now tracked in Git for both repos
 
 # QR codes in docs/ (behalten für Dokumentation)
 # docs/*.png bleiben im Repo
