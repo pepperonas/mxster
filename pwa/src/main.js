@@ -25,6 +25,7 @@ class MxsterGame {
     this.waitingForGuess = false  // Wartet auf Song/Artist Guess
     this.gameMode = null  // Selected game mode (GUESS, TIMELINE_PERSONAL, TIMELINE_GLOBAL)
     this.gameVariant = null  // Selected game variant (PHYSICAL or VIRTUAL)
+    this.globalTimeline = []  // Shared timeline for TIMELINE_GLOBAL mode
 
     // Headphone button long press detection
     this.headphonePressStart = null
@@ -1325,9 +1326,16 @@ class MxsterGame {
   autoPlaceInTimeline() {
     const player = this.players[this.currentPlayer]
 
-    // Füge Song zur Timeline hinzu und sortiere chronologisch
-    player.timeline.push(this.currentSong)
-    player.timeline.sort((a, b) => a.year - b.year)
+    // Füge Song zur richtigen Timeline hinzu (global oder persönlich)
+    if (this.gameMode === GAME_MODES.TIMELINE_GLOBAL) {
+      // Bei globaler Timeline: Füge zur gemeinsamen Timeline hinzu
+      this.globalTimeline.push(this.currentSong)
+      this.globalTimeline.sort((a, b) => a.year - b.year)
+    } else {
+      // Bei persönlicher Timeline: Füge zur Spieler-Timeline hinzu
+      player.timeline.push(this.currentSong)
+      player.timeline.sort((a, b) => a.year - b.year)
+    }
 
     // Karte zählt immer (da automatisch richtig platziert)
     player.cards += 1
@@ -1406,14 +1414,18 @@ class MxsterGame {
       return
     }
 
-    const player = this.players[this.currentPlayer]
+    // Bei TIMELINE_GLOBAL: Verwende globale Timeline
+    // Bei TIMELINE_PERSONAL: Verwende Spieler-Timeline
+    const timelineData = this.gameMode === GAME_MODES.TIMELINE_GLOBAL
+      ? this.globalTimeline
+      : this.players[this.currentPlayer].timeline
 
-    if (player.timeline.length === 0) {
+    if (timelineData.length === 0) {
       timeline.innerHTML = '<p style="text-align: center; color: var(--text-secondary); padding: 40px;">Noch keine Karten in der Timeline</p>'
       return
     }
 
-    timeline.innerHTML = player.timeline
+    timeline.innerHTML = timelineData
       .map((song, index) => `
         <div class="timeline-card">
           <div style="font-weight: 800; font-size: 24px; margin-bottom: 8px;">${song.year}</div>
