@@ -5,8 +5,8 @@
  */
 
 export function renderWinnerScreen(players) {
-  // Sort players by tokens (descending)
-  const sortedPlayers = [...players].sort((a, b) => (b.tokens || 0) - (a.tokens || 0))
+  // Sort players by score (descending)
+  const sortedPlayers = [...players].sort((a, b) => (b.score || 0) - (a.score || 0))
   const winner = sortedPlayers[0]
   const secondPlace = sortedPlayers[1]
   const thirdPlace = sortedPlayers[2]
@@ -59,17 +59,17 @@ export function renderWinnerScreen(players) {
           <div class="glass p-8 rounded-2xl max-w-md mx-auto shadow-glow-lg">
             <div class="space-y-4">
               <div class="flex items-center justify-between">
-                <span class="text-text-secondary">Token:</span>
-                <span class="text-3xl font-bold text-gradient">${winner.tokens || 0}🪙</span>
+                <span class="text-text-secondary">Punkte:</span>
+                <span class="text-3xl font-bold text-gradient">${winner.score || 0} ⭐</span>
               </div>
               <div class="flex items-center justify-between">
                 <span class="text-text-secondary">Karten gespielt:</span>
                 <span class="text-2xl font-semibold text-text-primary">${winner.cards || 0}</span>
               </div>
               <div class="flex items-center justify-between">
-                <span class="text-text-secondary">Erfolgsquote:</span>
+                <span class="text-text-secondary">Durchschnitt pro Karte:</span>
                 <span class="text-2xl font-semibold text-text-primary">
-                  ${calculateSuccessRate(winner)}%
+                  ${calculateAverage(winner)} ⭐
                 </span>
               </div>
             </div>
@@ -88,7 +88,7 @@ export function renderWinnerScreen(players) {
                   <div class="glass p-6 rounded-t-2xl text-center bg-gradient-to-b from-gray-400/20 to-gray-500/20 border-2 border-gray-400/30">
                     <div class="text-5xl mb-3">🥈</div>
                     <div class="font-bold text-xl text-text-primary mb-2">${secondPlace.name}</div>
-                    <div class="text-2xl font-bold text-gradient">${secondPlace.tokens || 0}🪙</div>
+                    <div class="text-2xl font-bold text-gradient">${secondPlace.score || 0} ⭐</div>
                   </div>
                   <div class="h-32 bg-gradient-to-b from-gray-400/20 to-gray-500/30 rounded-b-xl border-2 border-t-0 border-gray-400/30"></div>
                 </div>
@@ -99,7 +99,7 @@ export function renderWinnerScreen(players) {
                 <div class="glass p-8 rounded-t-2xl text-center bg-gradient-to-b from-accent/30 to-secondary/30 border-2 border-accent shadow-glow-accent">
                   <div class="text-6xl mb-4 animate-float">🥇</div>
                   <div class="font-bold text-2xl text-text-primary mb-3">${winner.name}</div>
-                  <div class="text-3xl font-bold text-gradient">${winner.tokens || 0}🪙</div>
+                  <div class="text-3xl font-bold text-gradient">${winner.score || 0} ⭐</div>
                 </div>
                 <div class="h-48 bg-gradient-to-b from-accent/30 to-secondary/40 rounded-b-xl border-2 border-t-0 border-accent shadow-glow-accent"></div>
               </div>
@@ -110,7 +110,7 @@ export function renderWinnerScreen(players) {
                   <div class="glass p-6 rounded-t-2xl text-center bg-gradient-to-b from-amber-700/20 to-amber-800/20 border-2 border-amber-700/30">
                     <div class="text-5xl mb-3">🥉</div>
                     <div class="font-bold text-xl text-text-primary mb-2">${thirdPlace.name}</div>
-                    <div class="text-2xl font-bold text-gradient">${thirdPlace.tokens || 0}🪙</div>
+                    <div class="text-2xl font-bold text-gradient">${thirdPlace.score || 0} ⭐</div>
                   </div>
                   <div class="h-24 bg-gradient-to-b from-amber-700/20 to-amber-800/30 rounded-b-xl border-2 border-t-0 border-amber-700/30"></div>
                 </div>
@@ -137,7 +137,7 @@ export function renderWinnerScreen(players) {
                       </div>
                     </div>
                     <div class="text-xl font-bold text-gradient">
-                      ${player.tokens || 0}🪙
+                      ${player.score || 0} ⭐
                     </div>
                   </div>
                 `).join('')}
@@ -218,37 +218,42 @@ export function renderWinnerScreen(players) {
 }
 
 /**
- * Calculate success rate for player
+ * Calculate average score per card for player
  */
-function calculateSuccessRate(player) {
+function calculateAverage(player) {
   const cards = player.cards || 0
-  const tokens = player.tokens || 0
+  const score = player.score || 0
 
-  if (cards === 0) return 0
+  if (cards === 0) return '0.0'
 
-  // Estimate success: if average tokens per card >= 1, that's ~75% success
-  const avgTokensPerCard = tokens / cards
-  const successRate = Math.min(100, Math.round(avgTokensPerCard * 50))
-
-  return successRate
+  const avg = score / cards
+  return avg.toFixed(1)
 }
 
 /**
  * Generate fun facts about the game
  */
 function generateFunFacts(players) {
-  const totalTokens = players.reduce((sum, p) => sum + (p.tokens || 0), 0)
+  const totalScore = players.reduce((sum, p) => sum + (p.score || 0), 0)
   const totalCards = players.reduce((sum, p) => sum + (p.cards || 0), 0)
-  const avgTokens = players.length > 0 ? (totalTokens / players.length).toFixed(1) : 0
+  const avgScore = players.length > 0 ? (totalScore / players.length).toFixed(1) : 0
 
   // Find player with most cards
   const mostCardsPlayer = [...players].sort((a, b) => (b.cards || 0) - (a.cards || 0))[0]
 
+  // Find player with highest average score per card
+  const bestAvgPlayer = [...players].sort((a, b) => {
+    const avgA = (a.cards || 0) > 0 ? (a.score || 0) / (a.cards || 0) : 0
+    const avgB = (b.cards || 0) > 0 ? (b.score || 0) / (b.cards || 0) : 0
+    return avgB - avgA
+  })[0]
+
   const facts = [
-    `Insgesamt ${totalTokens}🪙 Token verdient`,
+    `Insgesamt ${totalScore} Punkte erzielt`,
     `${totalCards} Songs wurden gespielt`,
-    `Durchschnitt: ${avgTokens}🪙 Token pro Spieler`,
-    `${mostCardsPlayer.name} hat die meisten Karten gespielt (${mostCardsPlayer.cards || 0})`
+    `Durchschnitt: ${avgScore} Punkte pro Spieler`,
+    `${mostCardsPlayer.name} hat die meisten Karten gespielt (${mostCardsPlayer.cards || 0})`,
+    `${bestAvgPlayer.name} hat die beste Quote (${calculateAverage(bestAvgPlayer)} Punkte/Karte)`
   ]
 
   return facts.map(fact => `

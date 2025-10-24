@@ -148,28 +148,31 @@
   position: relative;
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 8px;
   padding: 10px 16px;
-  background: var(--primary);
-  border: 2px solid var(--border);
+  background: #2C2E3B;
+  border: 2px solid #3A3C4B;
   border-radius: 8px;
-  color: var(--text-primary);
+  color: #FFFFFF;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
+  flex: 1;
+  min-width: 120px;
 }
 
 .beat-sync-toggle:hover {
-  border-color: var(--secondary);
+  border-color: #4A90E2;
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
 .beat-sync-toggle.active {
-  background: var(--accent);
-  border-color: var(--accent);
+  background: #FF6B35;
+  border-color: #FF6B35;
   color: white;
-  box-shadow: 0 0 20px rgba(99, 102, 241, 0.5);
+  box-shadow: 0 0 20px rgba(255, 107, 53, 0.5);
 }
 
 .beat-sync-toggle .icon {
@@ -189,6 +192,19 @@
   50% {
     transform: scale(1.2);
   }
+}
+
+/* ===== Beat Sync Settings Button ===== */
+
+.beat-sync-settings-btn {
+  flex-shrink: 0;
+  padding: 10px 14px !important;
+  font-size: 16px !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 52px;
+  height: auto;
 }
 
 /* ===== Beat Sync Settings Modal ===== */

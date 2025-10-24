@@ -314,7 +314,10 @@ export class BeatSyncSettings {
           const newHTML = this.renderElementItem(allElements[index], index)
           const tempDiv = document.createElement('div')
           tempDiv.innerHTML = newHTML
-          elementCard.replaceWith(tempDiv.firstChild)
+          // Use firstElementChild instead of firstChild to skip text nodes
+          if (tempDiv.firstElementChild) {
+            elementCard.replaceWith(tempDiv.firstElementChild)
+          }
         }
       }
     }

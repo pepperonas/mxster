@@ -7,12 +7,7 @@ export default defineConfig({
     vue(),
     VitePWA({
       registerType: 'autoUpdate',
-      includeAssets: [
-        'assets/favicon.ico',
-        'assets/apple-touch-icon.png',
-        'assets/favicon-16x16.png',
-        'assets/favicon-32x32.png'
-      ],
+      includeAssets: [],
       manifest: {
         name: 'mxster - Music Timeline Game',
         short_name: 'mxster',

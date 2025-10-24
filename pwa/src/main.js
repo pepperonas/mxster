@@ -519,17 +519,16 @@ class MxsterGame {
               </div>
 
               <!-- Beat Sync Controls -->
-              <div style="margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--border);">
-                <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+              <div style="margin-top: 16px; padding-top: 16px; border-top: 1px solid #3A3C4B;">
+                <div style="display: flex; gap: 12px; align-items: stretch;">
                   <button class="beat-sync-toggle ${this.beatSyncEnabled ? 'active' : ''}"
                           onclick="game.toggleBeatSync()"
                           title="Beat-Animationen aktivieren">
                     <span class="icon">🎵</span>
                     <span>Beat Sync</span>
                   </button>
-                  <button class="btn btn-outline"
+                  <button class="btn btn-outline beat-sync-settings-btn"
                           onclick="game.openBeatSettings()"
-                          style="padding: 8px 14px; font-size: 13px;"
                           title="Beat Sync Einstellungen">
                     ${getIconHTML('settings')}
                   </button>
@@ -1219,7 +1218,7 @@ class MxsterGame {
 
     // Zeige Song-Infos im Timeline-Modus (virtueller Modus)
     this.showModal(
-      '🎵 Song erkannt!',
+      '📍 Karte platzieren',
       `<div style="text-align: center;">
          <p style="font-size: 18px; margin-bottom: 20px;">Wähle die Position in der Timeline</p>
 
@@ -1233,10 +1232,13 @@ class MxsterGame {
            <p style="font-weight: 600; margin-bottom: 16px;">Wo möchtest du die Karte einfügen?</p>
            ${this.createDropZones(player)}
          </div>
+
+         <div style="background: rgba(255, 107, 53, 0.1); padding: 12px; border-radius: 8px; margin-top: 20px;">
+           <strong>⚠️ Hinweis:</strong> Du musst eine Position wählen, um fortzufahren.
+         </div>
        </div>`,
-      [
-        { text: '❌ Abbrechen', onclick: 'game.closeModal()', className: 'btn-outline' }
-      ]
+      [],
+      { required: true, preventRefresh: true }
     )
   }
 
@@ -1351,13 +1353,31 @@ class MxsterGame {
 
     let zones = `<button class="drop-zone" onclick="game.placeAtPosition(0)">⬅️ Vor ${timeline[0].year}</button>`
 
-    for (let i = 0; i < timeline.length; i++) {
+    // Gruppiere aufeinanderfolgende gleiche Jahre
+    let i = 0
+    while (i < timeline.length) {
       const currentYear = timeline[i].year
-      const nextYear = timeline[i + 1]?.year
 
-      if (nextYear) {
-        zones += `<button class="drop-zone" onclick="game.placeAtPosition(${i + 1})">↔️ Zwischen ${currentYear} und ${nextYear}</button>`
+      // Finde das Ende der aktuellen Jahresgruppe
+      let j = i
+      while (j < timeline.length && timeline[j].year === currentYear) {
+        j++
       }
+
+      // j zeigt jetzt auf das erste Element mit einem anderen Jahr (oder auf timeline.length)
+      if (j < timeline.length) {
+        const nextYear = timeline[j].year
+
+        // Nur eine Zone für die gesamte Jahresgruppe erstellen
+        if (currentYear === nextYear) {
+          zones += `<button class="drop-zone" onclick="game.placeAtPosition(${j})">📍 Bei ${currentYear}</button>`
+        } else {
+          zones += `<button class="drop-zone" onclick="game.placeAtPosition(${j})">↔️ Zwischen ${currentYear} und ${nextYear}</button>`
+        }
+      }
+
+      // Springe zum nächsten unterschiedlichen Jahr
+      i = j
     }
 
     zones += `<button class="drop-zone" onclick="game.placeAtPosition(${timeline.length})">➡️ Nach ${timeline[timeline.length - 1].year}</button>`
@@ -1637,27 +1657,139 @@ class MxsterGame {
   }
 
   showInstructions() {
-    this.showModal(
-      'Spielregeln',
-      `<div style="text-align: left;">
+    const modeInfo = GAME_MODE_INFO[this.gameMode]
+    const variantInfo = GAME_VARIANT_INFO[this.gameVariant]
+
+    let content = ''
+
+    // Header mit aktuellem Modus
+    content += `
+      <div style="text-align: left;">
+        <div style="background: rgba(74, 144, 226, 0.1); padding: 12px; border-radius: 8px; margin-bottom: 20px;">
+          <strong>Aktueller Modus:</strong> ${modeInfo.icon} ${modeInfo.name} | ${variantInfo.icon} ${variantInfo.name}
+        </div>
+    `
+
+    // GUESS MODE
+    if (this.gameMode === GAME_MODES.GUESS) {
+      content += `
         <h3 style="margin-top: 0; margin-bottom: 16px;">🎯 Ziel des Spiels</h3>
         <p style="margin-bottom: 20px;">
-          Sortiere 10 Songs chronologisch in deine Timeline ein, um zu gewinnen!
+          Rate Song-Titel, Künstler und Jahr richtig, um <strong>Punkte</strong> zu sammeln. Der Spieler mit den meisten Punkten nach 10 Songs gewinnt!
         </p>
 
         <h3 style="margin-bottom: 16px;">🎮 Spielablauf</h3>
         <ol style="margin-left: 20px; line-height: 1.8;">
-          <li><strong>DJ scannt QR-Code:</strong> Der DJ scannt eine Song-Karte mit dem QR-Scanner.</li>
-          <li><strong>Song erraten (optional):</strong> Der aktive Spieler kann versuchen, den Song-Titel, Künstler und das Jahr zu erraten (nur im Ratespiel-Modus relevant für Punkte).</li>
-          <li><strong>Karte einsortieren:</strong> Die Karte wird automatisch chronologisch in die Timeline eingefügt.</li>
+          ${this.gameVariant === GAME_VARIANTS.PHYSICAL ? `
+            <li><strong>DJ scannt QR-Code:</strong> Der DJ scannt eine Song-Karte. Der DJ rät nicht mit.</li>
+          ` : `
+            <li><strong>Zufälliger Song:</strong> Das System wählt automatisch einen zufälligen Song aus.</li>
+          `}
+          <li><strong>Song anhören:</strong> Der Song wird für alle Spieler abgespielt.</li>
+          <li><strong>Raten:</strong> Der aktive Spieler gibt seine Tipps ein:
+            <ul style="margin-top: 8px; margin-left: 20px;">
+              <li>Titel richtig = <strong>+1 Punkt</strong></li>
+              <li>Künstler richtig = <strong>+1 Punkt</strong></li>
+              <li>Jahr richtig (±2 Jahre) = <strong>+1 Punkt</strong></li>
+            </ul>
+          </li>
+          <li><strong>Automatische Platzierung:</strong> Die Karte wird automatisch chronologisch in die Timeline eingefügt.</li>
           <li><strong>Nächster Spieler:</strong> Das Spiel geht im Uhrzeigersinn weiter.</li>
         </ol>
 
         <h3 style="margin-top: 24px; margin-bottom: 16px;">🏆 Gewinnbedingung</h3>
         <p style="margin: 0;">
-          Der erste Spieler, der <strong>10 Karten korrekt</strong> in seiner Timeline hat, gewinnt das Spiel!
+          Der Spieler mit den <strong>meisten Punkten</strong> nach 10 Songs gewinnt!
         </p>
-      </div>`,
+      `
+    }
+
+    // TIMELINE PERSONAL MODE
+    else if (this.gameMode === GAME_MODES.TIMELINE_PERSONAL) {
+      content += `
+        <h3 style="margin-top: 0; margin-bottom: 16px;">🎯 Ziel des Spiels</h3>
+        <p style="margin-bottom: 20px;">
+          Sortiere 10 Songs <strong>chronologisch korrekt</strong> in deine persönliche Timeline ein, um zu gewinnen!
+        </p>
+
+        <h3 style="margin-bottom: 16px;">🎮 Spielablauf</h3>
+        <ol style="margin-left: 20px; line-height: 1.8;">
+          ${this.gameVariant === GAME_VARIANTS.PHYSICAL ? `
+            <li><strong>DJ scannt QR-Code:</strong> Der DJ scannt eine Song-Karte für den aktiven Spieler.</li>
+          ` : `
+            <li><strong>Zufälliger Song:</strong> Das System wählt automatisch einen zufälligen Song aus.</li>
+          `}
+          <li><strong>Song anhören:</strong> Der Song wird für alle Spieler abgespielt.</li>
+          <li><strong>Raten (optional):</strong> Du kannst versuchen zu raten, aber es gibt keine Punkte.</li>
+          <li><strong>Position wählen:</strong> Wähle die richtige Position in deiner Timeline:
+            <ul style="margin-top: 8px; margin-left: 20px;">
+              <li>Richtig platziert = <strong>Karte bleibt in Timeline (+1 Karte)</strong></li>
+              <li>Falsch platziert = <strong>Karte wird entfernt (keine Karte)</strong></li>
+            </ul>
+          </li>
+          <li><strong>Nächster Spieler:</strong> Das Spiel geht im Uhrzeigersinn weiter.</li>
+        </ol>
+
+        <h3 style="margin-top: 24px; margin-bottom: 16px;">🏆 Gewinnbedingung</h3>
+        <p style="margin: 0;">
+          Der erste Spieler, der <strong>10 Karten korrekt</strong> in seiner persönlichen Timeline hat, gewinnt!
+        </p>
+
+        <div style="background: rgba(255, 107, 53, 0.1); padding: 12px; border-radius: 8px; margin-top: 20px;">
+          <strong>⚠️ Wichtig:</strong> Jeder Spieler baut seine <strong>eigene Timeline</strong> auf. Die Timelines der anderen Spieler siehst du nicht.
+        </div>
+      `
+    }
+
+    // TIMELINE GLOBAL MODE
+    else if (this.gameMode === GAME_MODES.TIMELINE_GLOBAL) {
+      content += `
+        <h3 style="margin-top: 0; margin-bottom: 16px;">🎯 Ziel des Spiels</h3>
+        <p style="margin-bottom: 20px;">
+          Sortiere 10 Songs <strong>chronologisch korrekt</strong> in die gemeinsame Timeline ein, um zu gewinnen!
+        </p>
+
+        <h3 style="margin-bottom: 16px;">🎮 Spielablauf</h3>
+        <ol style="margin-left: 20px; line-height: 1.8;">
+          ${this.gameVariant === GAME_VARIANTS.PHYSICAL ? `
+            <li><strong>DJ scannt QR-Code:</strong> Der DJ scannt eine Song-Karte für den aktiven Spieler.</li>
+          ` : `
+            <li><strong>Zufälliger Song:</strong> Das System wählt automatisch einen zufälligen Song aus.</li>
+          `}
+          <li><strong>Song anhören:</strong> Der Song wird für alle Spieler abgespielt.</li>
+          <li><strong>Raten (optional):</strong> Du kannst versuchen zu raten, aber es gibt keine Punkte.</li>
+          <li><strong>Position wählen:</strong> Wähle die richtige Position in der <strong>gemeinsamen Timeline</strong>:
+            <ul style="margin-top: 8px; margin-left: 20px;">
+              <li>Richtig platziert = <strong>Karte bleibt in Timeline (+1 Karte)</strong></li>
+              <li>Falsch platziert = <strong>Karte wird entfernt (keine Karte)</strong></li>
+            </ul>
+          </li>
+          <li><strong>Nächster Spieler:</strong> Das Spiel geht im Uhrzeigersinn weiter.</li>
+        </ol>
+
+        <h3 style="margin-top: 24px; margin-bottom: 16px;">🏆 Gewinnbedingung</h3>
+        <p style="margin: 0;">
+          Der erste Spieler, der <strong>10 Karten korrekt</strong> platziert hat, gewinnt!
+        </p>
+
+        <div style="background: rgba(255, 107, 53, 0.1); padding: 12px; border-radius: 8px; margin-top: 20px;">
+          <strong>⚠️ Wichtig:</strong> Alle Spieler arbeiten an der <strong>gleichen Timeline</strong>. Du siehst alle bereits platzierten Songs aller Spieler.
+        </div>
+      `
+    }
+
+    // Zusätzliche Info zu bereits gespielten Songs
+    content += `
+      <div style="background: rgba(99, 102, 241, 0.1); padding: 12px; border-radius: 8px; margin-top: 20px;">
+        <strong>💡 Tipp:</strong> Jeder Song kann nur einmal pro Spiel gezogen werden. Bereits gespielte Songs können nicht erneut auftreten.
+      </div>
+    `
+
+    content += `</div>`
+
+    this.showModal(
+      'Spielregeln',
+      content,
       [{ text: 'Verstanden', onclick: 'game.closeModal()', className: 'btn-accent' }]
     )
   }
@@ -1745,6 +1877,10 @@ class MxsterGame {
   startNewGame() {
     // Reset played songs list when starting completely new game
     this.playedSongs = []
+    // Reset global timeline
+    this.globalTimeline = []
+    // Clear saved game state from localStorage
+    this.gameState.clear()
     this.closeModal()
     this.renderModeSelection()
   }
@@ -2123,11 +2259,27 @@ class MxsterGame {
         }
       })
     }
+
+    // Prevent page refresh when modal is open (if preventRefresh option is enabled)
+    if (options.preventRefresh) {
+      this.beforeUnloadHandler = (e) => {
+        e.preventDefault()
+        e.returnValue = ''
+        return ''
+      }
+      window.addEventListener('beforeunload', this.beforeUnloadHandler)
+    }
   }
 
   closeModal() {
     const modal = document.getElementById('game-modal')
     if (modal) modal.remove()
+
+    // Remove beforeunload handler if it exists
+    if (this.beforeUnloadHandler) {
+      window.removeEventListener('beforeunload', this.beforeUnloadHandler)
+      this.beforeUnloadHandler = null
+    }
   }
 
   // Toast Notification System

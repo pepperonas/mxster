@@ -256,19 +256,19 @@ export function renderLandingPage(onLoginClick) {
             </p>
 
             <div class="space-y-3">
-              <a href="/downloads/mxster-cards.pdf" download class="btn btn-accent w-full flex items-center justify-between group">
+              <a href="https://github.com/pepperonas/mxster/releases/latest/download/mxster-cards.pdf" target="_blank" rel="noopener noreferrer" class="btn btn-accent w-full flex items-center justify-between group">
                 <span>📄 Standard (Farbig)</span>
                 <span class="transition-transform group-hover:translate-x-1">↓</span>
               </a>
-              <a href="/downloads/mxster-cards-bw.pdf" download class="btn btn-outline w-full flex items-center justify-between group">
+              <a href="https://github.com/pepperonas/mxster/releases/latest/download/mxster-cards-bw.pdf" target="_blank" rel="noopener noreferrer" class="btn btn-outline w-full flex items-center justify-between group">
                 <span>📄 Schwarz-Weiß</span>
                 <span class="transition-transform group-hover:translate-x-1">↓</span>
               </a>
-              <a href="/downloads/mxster-cards-duplex.pdf" download class="btn btn-outline w-full flex items-center justify-between group">
+              <a href="https://github.com/pepperonas/mxster/releases/latest/download/mxster-cards-duplex.pdf" target="_blank" rel="noopener noreferrer" class="btn btn-outline w-full flex items-center justify-between group">
                 <span>📄 Duplex (Farbig)</span>
                 <span class="transition-transform group-hover:translate-x-1">↓</span>
               </a>
-              <a href="/downloads/mxster-cards-bw-duplex.pdf" download class="btn btn-outline w-full flex items-center justify-between group">
+              <a href="https://github.com/pepperonas/mxster/releases/latest/download/mxster-cards-bw-duplex.pdf" target="_blank" rel="noopener noreferrer" class="btn btn-outline w-full flex items-center justify-between group">
                 <span>📄 Duplex (Schwarz-Weiß)</span>
                 <span class="transition-transform group-hover:translate-x-1">↓</span>
               </a>
@@ -293,11 +293,19 @@ export function renderLandingPage(onLoginClick) {
             </p>
 
             <div class="space-y-3">
-              <a href="/downloads/3d-models-all.zip" download class="btn btn-accent w-full flex items-center justify-between group">
-                <span>📦 Alle Modelle (.zip)</span>
+              <a href="https://github.com/pepperonas/mxster/releases/latest/download/all-cards.3mf" target="_blank" rel="noopener noreferrer" class="btn btn-accent w-full flex items-center justify-between group">
+                <span>📦 All-Cards (3MF)</span>
                 <span class="transition-transform group-hover:translate-x-1">↓</span>
               </a>
-              <a href="/downloads/3d-models-individual/" target="_blank" class="btn btn-outline w-full flex items-center justify-between group">
+              <a href="https://github.com/pepperonas/mxster/releases/latest/download/mxster-stl-models.zip" target="_blank" rel="noopener noreferrer" class="btn btn-outline w-full flex items-center justify-between group">
+                <span>📦 STL Modelle (ZIP)</span>
+                <span class="transition-transform group-hover:translate-x-1">↓</span>
+              </a>
+              <a href="https://github.com/pepperonas/mxster/releases/latest/download/mxster-scad-models.zip" target="_blank" rel="noopener noreferrer" class="btn btn-outline w-full flex items-center justify-between group">
+                <span>📦 SCAD Modelle (ZIP)</span>
+                <span class="transition-transform group-hover:translate-x-1">↓</span>
+              </a>
+              <a href="https://github.com/pepperonas/mxster/tree/main/card-generator/models" target="_blank" rel="noopener noreferrer" class="btn btn-outline w-full flex items-center justify-between group">
                 <span>📂 Einzelne Modelle</span>
                 <span class="transition-transform group-hover:translate-x-1">→</span>
               </a>

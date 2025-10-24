@@ -3,7 +3,7 @@
 **Das ultimative Musikquiz für Musikfans!** Rate Songs, platziere sie chronologisch und teste dein Musikwissen. Spiele mit Freunden, sammle Punkte und werde zum Musik-Champion!
 
 [![Live Demo](https://img.shields.io/badge/Demo-mxster.de-blue?style=for-the-badge)](https://mxster.de)
-[![License](https://img.shields.io/badge/License-Private-red?style=for-the-badge)](LICENSE)
+[![License](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)](LICENSE)
 
 ![mxster Banner](https://mxster.de/assets/mxster.jpg)
 
@@ -161,7 +161,25 @@ npm run dev
 - Kooperatives Timeline-Building
 - Nur Kartenzählung pro Spieler entscheidet
 
-## 🃏 Karten erstellen
+## 📥 Downloads (Fertige Karten)
+
+**Am einfachsten:** Lade fertige Karten direkt von den [GitHub Releases](https://github.com/pepperonas/mxster/releases/latest) herunter!
+
+### 🖨️ PDF Druckkarten
+- [Standard (Farbig)](https://github.com/pepperonas/mxster/releases/latest/download/mxster-cards.pdf)
+- [Schwarz-Weiß](https://github.com/pepperonas/mxster/releases/latest/download/mxster-cards-bw.pdf)
+- [Duplex (Farbig)](https://github.com/pepperonas/mxster/releases/latest/download/mxster-cards-duplex.pdf)
+- [Duplex (Schwarz-Weiß)](https://github.com/pepperonas/mxster/releases/latest/download/mxster-cards-bw-duplex.pdf)
+
+### 🎲 3D-Druckmodelle
+- [All-Cards (3MF)](https://github.com/pepperonas/mxster/releases/latest/download/all-cards.3mf) - Alle Karten in einer Datei
+- [STL Modelle (ZIP)](https://github.com/pepperonas/mxster/releases/latest/download/mxster-stl-models.zip)
+- [SCAD Modelle (ZIP)](https://github.com/pepperonas/mxster/releases/latest/download/mxster-scad-models.zip)
+- [Einzelne Modelle](https://github.com/pepperonas/mxster/tree/main/card-generator/models) - Direkt auf GitHub
+
+---
+
+## 🃏 Karten selbst generieren
 
 ### 📄 PDF-Karten (Empfohlen für Einsteiger)
 
@@ -269,9 +287,9 @@ node edit-song.js
 ```bash
 $ node edit-song.js
 
-╔════════════════════════════════════════════╗
-║   🎵  mxster Song Editor Wizard  🎵      ║
-╚════════════════════════════════════════════╝
+╔══════════════════════════════════════════╗
+║  🎵  mxster Song Editor Wizard  🎵   ║
+╚══════════════════════════════════════════╝
 
 📚 35 Songs in der Datenbank gefunden
 
@@ -315,9 +333,9 @@ Schritt 4/4: Dateien aktualisieren
 
 3D-Modelle neu generieren? (j/n): n
 
-╔════════════════════════════════════════════╗
-║            ✅  Fertig!  ✅                 ║
-╚════════════════════════════════════════════╝
+╔══════════════════════════════════════════╗
+║          ✅  Fertig!  ✅               ║
+╚══════════════════════════════════════════╝
 
 Aktualisierte Dateien:
   • docs/songs.json
@@ -359,9 +377,9 @@ node exchange-song.js
 ```bash
 $ node exchange-song.js
 
-╔════════════════════════════════════════════╗
-║   🔄  mxster Song Exchange Wizard  🔄    ║
-╚════════════════════════════════════════════╝
+╔════════════════════════════════════════╗
+║  🔄  mxster Song Exchange Wizard  🔄   ║
+╚════════════════════════════════════════╝
 
 📚 83 Songs in der Datenbank gefunden
 
@@ -414,9 +432,9 @@ Schritt 5/5: Dateien aktualisieren
 
 PDF-Karten neu generieren (alle Songs)? (j/n): n
 
-╔════════════════════════════════════════════╗
-║            ✅  Fertig!  ✅                 ║
-╚════════════════════════════════════════════╝
+╔════════════════════════════════════════╗
+║        ✅  Fertig!  ✅             ║
+╚════════════════════════════════════════╝
 
 Aktualisierte Dateien:
   • docs/songs.json
@@ -511,6 +529,42 @@ npm run filter-songs                               # Ungültige Songs entfernen
 node generate-cards.js                # PDF Standard
 node generate-cards.js --bw          # PDF Schwarz-Weiß
 node generate-cards.js --duplex      # PDF Duplex
+
+# Release erstellen (automatisch via GitHub Actions)
+git tag v1.0.0                       # Tag erstellen
+git push origin v1.0.0               # Push löst CI/CD aus
+# GitHub Actions generiert automatisch:
+# - PDFs, STL-ZIP, SCAD-ZIP
+# - GitHub Release mit all-cards.3mf
+```
+
+### GitHub Release erstellen
+
+Beim Pushen eines Version-Tags (z.B. `v1.0.0`) wird automatisch ein GitHub Release erstellt:
+
+```bash
+# 1. Sicherstellen dass all-cards.3mf aktuell ist
+# (Diese Datei muss manuell erstellt und committed werden)
+
+# 2. Git Tag erstellen
+git tag v1.0.0
+git push origin v1.0.0
+
+# 3. GitHub Actions läuft automatisch und erstellt:
+#    - mxster-cards.pdf (4 Varianten)
+#    - mxster-stl-models.zip
+#    - mxster-scad-models.zip
+#    - all-cards.3mf (aus Repo)
+#
+# 4. Release wird unter GitHub Releases veröffentlicht
+```
+
+**Was passiert automatisch:**
+- ✅ Alle 4 PDF-Varianten werden generiert
+- ✅ SCAD-Modelle werden als ZIP gepackt
+- ✅ STL-Modelle werden als ZIP gepackt
+- ✅ all-cards.3mf wird aus dem Repo genommen
+- ✅ GitHub Release wird mit allen Assets erstellt
 ```
 
 ### CLI Tools
@@ -578,7 +632,7 @@ Jeder Beitrag hilft, mxster noch besser zu machen! ❤️
 
 ## 📝 Lizenz
 
-Dieses Projekt ist für **privaten Gebrauch** entwickelt.
+Dieses Projekt ist unter der **MIT-Lizenz** veröffentlicht. Siehe [LICENSE](LICENSE) für Details.
 
 ## 🙏 Credits
 

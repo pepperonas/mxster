@@ -1,0 +1,84 @@
+name: Create Release with Assets
+
+on:
+  push:
+    tags:
+      - 'v*'  # Trigger on version tags like v1.0.0, v1.1.0, etc.
+
+jobs:
+  build-and-release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Install dependencies
+        run: |
+          cd pwa
+          npm ci
+
+      - name: Generate PDF cards
+        run: |
+          cd pwa
+          chmod +x ../generate-all-pdfs.sh
+          ../generate-all-pdfs.sh
+
+      - name: Create SCAD models ZIP
+        run: |
+          cd card-generator/models
+          zip -r ../../mxster-scad-models.zip *.scad
+
+      - name: Create STL models ZIP
+        run: |
+          cd card-generator/models
+          zip -r ../../mxster-stl-models.zip *.stl
+
+      - name: Get tag name
+        id: tag_name
+        run: echo "TAG=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: ${{ steps.tag_name.outputs.TAG }}
+          name: Release ${{ steps.tag_name.outputs.TAG }}
+          body: |
+            ## 🎵 mxster Release ${{ steps.tag_name.outputs.TAG }}
+
+            ### 📦 Downloads
+
+            **PDF Druckkarten** (4 Karten pro A4-Seite):
+            - Standard (Farbig)
+            - Schwarz-Weiß
+            - Duplex (Farbig)
+            - Duplex (Schwarz-Weiß)
+
+            **3D-Druckmodelle**:
+            - All-Cards (3MF)
+            - SCAD Models (ZIP)
+            - STL Models (ZIP)
+
+            ### 🖨️ Druckeinstellungen
+            **3D-Druck**:
+            - Layer Height: 0.1-0.15mm
+            - Infill: 100%
+            - Material: PLA oder PETG
+            - Support: Nicht nötig
+          files: |
+            pwa/mxster-cards.pdf
+            pwa/mxster-cards-bw.pdf
+            pwa/mxster-cards-duplex.pdf
+            pwa/mxster-cards-bw-duplex.pdf
+            mxster-scad-models.zip
+            mxster-stl-models.zip
+            card-generator/models/all-cards.3mf
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
