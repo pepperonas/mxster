@@ -1,4 +1,5 @@
 import './styles/tailwind.css'
+import './styles/beatAnimations.css'
 import QrScanner from 'qr-scanner'
 import { Howl } from 'howler'
 import { songs } from './data/songs.js'
@@ -1528,10 +1529,13 @@ class MxsterGame {
     // Wechsle zum nächsten Spieler (im Uhrzeigersinn)
     this.currentPlayer = (this.currentPlayer + 1) % this.players.length
 
-    // Wenn wieder beim DJ: DJ wechselt
-    if (this.currentPlayer === this.currentDJ) {
-      this.currentDJ = (this.currentDJ + 1) % this.players.length
-      this.currentPlayer = (this.currentPlayer + 1) % this.players.length
+    // Nur im physischen Modus: DJ-Wechsel-Logik
+    if (this.gameVariant === GAME_VARIANTS.PHYSICAL) {
+      // Wenn wieder beim DJ: DJ wechselt
+      if (this.currentPlayer === this.currentDJ) {
+        this.currentDJ = (this.currentDJ + 1) % this.players.length
+        this.currentPlayer = (this.currentPlayer + 1) % this.players.length
+      }
     }
 
     // Speichere Spielstand nach Spielerwechsel
@@ -2266,11 +2270,22 @@ class MxsterGame {
 
     const trackId = this.currentSong.spotifyId
 
+    // Get fresh access token
+    const accessToken = spotifyAuth.getAccessToken()
+    if (!accessToken) {
+      console.error('❌ No access token available for beat sync')
+      this.showToast('Beat Sync benötigt aktive Spotify-Verbindung', 'error')
+      return
+    }
+
     // Load analysis if different track
     if (this.currentTrackId !== trackId) {
-      const success = await beatAnimator.loadTrackAnalysis(trackId)
+      const success = await beatAnimator.loadTrackAnalysis(trackId, accessToken)
       if (success) {
         this.currentTrackId = trackId
+      } else {
+        this.showToast('Beat-Analyse konnte nicht geladen werden', 'error')
+        return
       }
     }
 

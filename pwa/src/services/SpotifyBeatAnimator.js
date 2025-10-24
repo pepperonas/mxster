@@ -36,52 +36,68 @@ class SpotifyBeatAnimator {
   /**
    * Load audio analysis for a track
    * @param {string} trackId - Spotify track ID
+   * @param {string} accessToken - Optional fresh access token
    */
-  async loadTrackAnalysis(trackId) {
+  async loadTrackAnalysis(trackId, accessToken = null) {
+    // Update token if provided
+    if (accessToken) {
+      this.accessToken = accessToken
+    }
+
     // Skip if same track
     if (this.currentTrackId === trackId && this.audioAnalysis) {
       console.log('✅ Using cached audio analysis for track:', trackId)
       return true
     }
 
+    if (!this.accessToken) {
+      console.error('❌ No access token available')
+      return false
+    }
+
     try {
       console.log('🔍 Fetching audio analysis for track:', trackId)
 
-      const response = await fetch(`https://api.spotify.com/v1/audio-features/${trackId}`, {
-        headers: {
-          'Authorization': `Bearer ${this.accessToken}`
-        }
-      })
-
-      if (!response.ok) {
-        throw new Error(`HTTP ${response.status}: ${response.statusText}`)
-      }
-
-      const audioFeatures = await response.json()
-
-      // Fetch full analysis
+      // Try full audio analysis first (includes beats, bars, sections)
       const analysisResponse = await fetch(`https://api.spotify.com/v1/audio-analysis/${trackId}`, {
         headers: {
           'Authorization': `Bearer ${this.accessToken}`
         }
       })
 
-      if (!analysisResponse.ok) {
-        // Fallback: Use simple BPM-based timing
-        console.warn('⚠️ Audio analysis not available, using BPM fallback')
-        this.useBpmFallback(audioFeatures.tempo)
-        return false
+      if (analysisResponse.ok) {
+        // Success: Use detailed beat data
+        this.audioAnalysis = await analysisResponse.json()
+        this.beats = this.audioAnalysis.beats || []
+        this.currentTrackId = trackId
+        this.currentBeatIndex = 0
+
+        const tempo = this.audioAnalysis.track?.tempo || 120
+        console.log(`✅ Audio analysis loaded: ${this.beats.length} beats detected`)
+        console.log(`   Tempo: ${tempo} BPM`)
+        console.log(`   Duration: ${this.audioAnalysis.track?.duration}s`)
+
+        return true
       }
 
-      this.audioAnalysis = await analysisResponse.json()
-      this.beats = this.audioAnalysis.beats || []
-      this.currentTrackId = trackId
-      this.currentBeatIndex = 0
+      // Fallback: Try audio-features for BPM
+      console.log('⚠️ Full analysis not available, trying audio-features...')
+      const featuresResponse = await fetch(`https://api.spotify.com/v1/audio-features/${trackId}`, {
+        headers: {
+          'Authorization': `Bearer ${this.accessToken}`
+        }
+      })
 
-      console.log(`✅ Audio analysis loaded: ${this.beats.length} beats detected`)
-      console.log(`   Tempo: ${audioFeatures.tempo} BPM`)
-      console.log(`   Duration: ${this.audioAnalysis.track.duration}s`)
+      if (featuresResponse.ok) {
+        const audioFeatures = await featuresResponse.json()
+        console.log('✅ Using BPM-based fallback:', audioFeatures.tempo, 'BPM')
+        this.useBpmFallback(audioFeatures.tempo)
+        return true
+      }
 
+      // Last resort: Use default 120 BPM
+      console.warn('⚠️ No beat data available, using default 120 BPM')
+      this.useBpmFallback(120)
       return true
     } catch (error) {
       console.error('❌ Failed to load audio analysis:', error)

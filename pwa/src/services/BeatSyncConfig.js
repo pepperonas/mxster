@@ -9,8 +9,8 @@ const STORAGE_KEY = 'mxster_beat_config'
 
 class BeatSyncConfig {
   constructor() {
-    this.config = this.getDefaultConfig()
     this.presets = this.getDefaultPresets()
+    this.config = this.load() || this.getDefaultConfig()
   }
 
   /**
@@ -18,7 +18,7 @@ class BeatSyncConfig {
    */
   getDefaultConfig() {
     return {
-      enabled: false,
+      enabled: true,
       elements: [
         {
           id: 'background',
@@ -29,7 +29,7 @@ class BeatSyncConfig {
           duration: null, // Use beat duration
           syncType: 'beat',
           colors: ['#6366f1', '#8b5cf6'],
-          enabled: false
+          enabled: true
         },
         {
           id: 'timeline-cards',
@@ -40,7 +40,7 @@ class BeatSyncConfig {
           duration: null,
           syncType: 'beat',
           colors: [],
-          enabled: false
+          enabled: true
         },
         {
           id: 'score-overview',

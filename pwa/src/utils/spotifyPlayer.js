@@ -4,10 +4,12 @@ class SpotifyPlayer {
     this.deviceId = null
     this.isReady = false
     this.currentTrackUri = null
+    this.accessToken = null
   }
 
   // Initialisiere Spotify Web Playback SDK
   async initialize(accessToken) {
+    this.accessToken = accessToken
     return new Promise((resolve, reject) => {
       // Lade Spotify SDK Script
       if (!window.Spotify) {
@@ -92,8 +94,8 @@ class SpotifyPlayer {
           this.currentTrackId = trackId
 
           // Load new track analysis for beat sync
-          if (window.game && window.game.beatSyncEnabled) {
-            window.beatAnimator.loadTrackAnalysis(trackId).then(() => {
+          if (window.game && window.game.beatSyncEnabled && this.accessToken) {
+            window.beatAnimator.loadTrackAnalysis(trackId, this.accessToken).then(() => {
               if (!state.paused) {
                 window.beatAnimator.start(state.position)
               }
