@@ -140,6 +140,21 @@ npm run dev
 
 Schnell, einfach und kein 3D-Drucker nötig!
 
+#### Alle PDFs auf einmal generieren (empfohlen)
+
+```bash
+# Generiert alle 4 Varianten automatisch
+./generate-all-pdfs.sh
+```
+
+Erstellt:
+- `mxster-cards.pdf` - Standard (farbig, nebeneinander)
+- `mxster-cards-bw.pdf` - Schwarz-Weiß (nebeneinander)
+- `mxster-cards-duplex.pdf` - Duplex (farbig, getrennte Seiten)
+- `mxster-cards-bw-duplex.pdf` - Duplex (Schwarz-Weiß, getrennte Seiten)
+
+#### Einzelne Variante generieren
+
 ```bash
 cd pwa
 
@@ -323,10 +338,10 @@ mxster/
 │   │   ├── components/    # Landing Page, UI-Komponenten
 │   │   ├── utils/         # Spotify Auth, Game State, etc.
 │   │   └── styles/        # Tailwind CSS
-│   ├── generate-cards.js  # PDF-Karten Generator
+│   ├── generate-cards.js  # PDF-Karten Generator (einzelne Variante)
 │   └── package.json
 ├── card-generator/         # 3D-Karten Generator (Node.js)
-│   ├── generateCard.js    # Hauptskript
+│   ├── generateCard.js    # Hauptskript (QR + SCAD)
 │   ├── qrToScad.js       # QR → OpenSCAD Konverter
 │   └── models/           # Generierte STL/SCAD (nicht in Git)
 ├── docs/
@@ -334,6 +349,7 @@ mxster/
 │   └── *.png             # QR-Code Bilder
 ├── add-song.js           # CLI Tool: Song hinzufügen
 ├── edit-song.js          # CLI Tool: Song bearbeiten (interaktiv)
+├── generate-all-pdfs.sh  # Generiert alle 4 PDF-Varianten
 ├── deploy.sh             # Deployment-Script
 └── README.md             # Diese Datei
 ```
@@ -358,6 +374,7 @@ npm run update-previews                            # Preview URLs updaten
 npm run filter-songs                               # Ungültige Songs entfernen
 
 # Karten generieren
+./generate-all-pdfs.sh               # Alle 4 PDF-Varianten
 node generate-cards.js                # PDF Standard
 node generate-cards.js --bw          # PDF Schwarz-Weiß
 node generate-cards.js --duplex      # PDF Duplex
