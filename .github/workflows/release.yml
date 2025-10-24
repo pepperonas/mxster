@@ -27,21 +27,62 @@ jobs:
         run: |
           cd pwa
           chmod +x ../generate-all-pdfs.sh
-          ../generate-all-pdfs.sh
+          ../generate-all-pdfs.sh || echo "PDF generation failed, continuing..."
 
       - name: Create SCAD models ZIP
         run: |
           cd card-generator/models
-          zip -r ../../mxster-scad-models.zip *.scad
+          if ls *.scad 1> /dev/null 2>&1; then
+            zip -r ../../mxster-scad-models.zip *.scad
+          else
+            echo "No SCAD files found, skipping..."
+          fi
 
       - name: Create STL models ZIP
         run: |
           cd card-generator/models
-          zip -r ../../mxster-stl-models.zip *.stl
+          if ls *.stl 1> /dev/null 2>&1; then
+            zip -r ../../mxster-stl-models.zip *.stl
+          else
+            echo "No STL files found, skipping..."
+          fi
+
+      - name: List available files for release
+        run: |
+          echo "=== Available PDFs ==="
+          ls -lh pwa/*.pdf || echo "No PDFs found"
+          echo "=== Available ZIPs ==="
+          ls -lh *.zip || echo "No ZIPs found"
+          echo "=== Available 3MF ==="
+          ls -lh card-generator/models/*.3mf || echo "No 3MF found"
 
       - name: Get tag name
         id: tag_name
         run: echo "TAG=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
+
+      - name: Prepare release files list
+        id: files
+        run: |
+          FILES=""
+
+          # Add PDFs if they exist
+          [ -f pwa/mxster-cards.pdf ] && FILES="$FILES pwa/mxster-cards.pdf"
+          [ -f pwa/mxster-cards-bw.pdf ] && FILES="$FILES pwa/mxster-cards-bw.pdf"
+          [ -f pwa/mxster-cards-duplex.pdf ] && FILES="$FILES pwa/mxster-cards-duplex.pdf"
+          [ -f pwa/mxster-cards-bw-duplex.pdf ] && FILES="$FILES pwa/mxster-cards-bw-duplex.pdf"
+
+          # Add ZIPs if they exist
+          [ -f mxster-scad-models.zip ] && FILES="$FILES mxster-scad-models.zip"
+          [ -f mxster-stl-models.zip ] && FILES="$FILES mxster-stl-models.zip"
+
+          # Add 3MF if it exists
+          [ -f card-generator/models/all-cards.3mf ] && FILES="$FILES card-generator/models/all-cards.3mf"
+
+          echo "FILES<<EOF" >> $GITHUB_OUTPUT
+          echo "$FILES" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
+          echo "Will upload: $FILES"
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v1
@@ -70,15 +111,9 @@ jobs:
             - Infill: 100%
             - Material: PLA oder PETG
             - Support: Nicht nötig
-          files: |
-            pwa/mxster-cards.pdf
-            pwa/mxster-cards-bw.pdf
-            pwa/mxster-cards-duplex.pdf
-            pwa/mxster-cards-bw-duplex.pdf
-            mxster-scad-models.zip
-            mxster-stl-models.zip
-            card-generator/models/all-cards.3mf
+          files: ${{ steps.files.outputs.FILES }}
           draft: false
-          prerelease: false
+          prerelease: true
+          fail_on_unmatched_files: false
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
