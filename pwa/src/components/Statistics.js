@@ -15,7 +15,7 @@ export function renderStatistics(players, gameHistory) {
         <div class="flex items-center justify-between">
           <div>
             <h1 class="text-4xl md:text-5xl font-bold text-gradient mb-2">
-              📊 Statistiken
+              <span class="mr-3">📊</span>Statistiken
             </h1>
             <p class="text-text-secondary">
               Deine Spiel-Performance im Überblick
@@ -58,13 +58,13 @@ export function renderStatistics(players, gameHistory) {
             </div>
           </div>
 
-          <!-- Average Tokens -->
+          <!-- Average Score -->
           <div class="glass p-6 rounded-xl text-center hover:shadow-glow-sm transition-all">
             <div class="text-4xl font-bold text-gradient mb-2">
-              ${stats.avgTokens}🪙
+              ${stats.avgScore}
             </div>
             <div class="text-sm text-text-secondary">
-              Ø Token/Spiel
+              Ø Punkte/Spieler
             </div>
           </div>
         </div>
@@ -127,35 +127,37 @@ export function renderStatistics(players, gameHistory) {
 function calculateStats(players, gameHistory) {
   const totalGames = gameHistory ? gameHistory.length : 0
   const totalSongs = players.reduce((sum, p) => sum + (p.cards || 0), 0)
-  const totalTokens = players.reduce((sum, p) => sum + (p.tokens || 0), 0)
-  const avgTokens = players.length > 0 ? Math.round(totalTokens / players.length) : 0
+  const totalScore = players.reduce((sum, p) => sum + (p.score || 0), 0)
+  const avgScore = players.length > 0 ? Math.round(totalScore / players.length) : 0
 
-  // Success rate: percentage of games where player earned tokens
-  const successfulGames = players.filter(p => (p.tokens || 0) >= 3).length
-  const successRate = players.length > 0 ? Math.round((successfulGames / players.length) * 100) : 0
+  // Success rate: percentage of players with score > 0
+  const successfulPlayers = players.filter(p => (p.score || 0) > 0).length
+  const successRate = players.length > 0 ? Math.round((successfulPlayers / players.length) * 100) : 0
 
-  // Score distribution (how many +2, +1, ±0, -1)
+  // Score distribution (how many +3, +2, +1, 0)
   const scoreDistribution = {
-    perfect: 0,    // +2 (guessed all 3 correctly)
-    good: 0,       // +1 (guessed 2 correctly)
-    partial: 0,    // ±0 (guessed 1 correctly)
-    wrong: 0       // -1 (guessed 0 correctly)
+    perfect: 0,    // +3 (guessed all 3 correctly)
+    good: 0,       // +2 (guessed 2 correctly)
+    partial: 0,    // +1 (guessed 1 correctly)
+    wrong: 0       // 0 (guessed 0 correctly)
   }
 
-  // Estimate distribution from token counts (simplified)
-  players.forEach(player => {
-    const tokens = player.tokens || 0
-    if (tokens >= 8) scoreDistribution.perfect++
-    else if (tokens >= 5) scoreDistribution.good++
-    else if (tokens >= 2) scoreDistribution.partial++
-    else scoreDistribution.wrong++
-  })
+  // Calculate distribution from game history
+  if (gameHistory && gameHistory.length > 0) {
+    gameHistory.forEach(game => {
+      const points = game.pointsEarned || 0
+      if (points === 3) scoreDistribution.perfect++
+      else if (points === 2) scoreDistribution.good++
+      else if (points === 1) scoreDistribution.partial++
+      else scoreDistribution.wrong++
+    })
+  }
 
   return {
     totalGames,
     totalSongs,
     successRate,
-    avgTokens,
+    avgScore,
     scoreDistribution
   }
 }
@@ -168,8 +170,8 @@ function renderLeaderboard(players) {
     return `<p class="text-text-secondary text-center py-8">Noch keine Spieler vorhanden</p>`
   }
 
-  // Sort players by tokens (descending)
-  const sortedPlayers = [...players].sort((a, b) => (b.tokens || 0) - (a.tokens || 0))
+  // Sort players by score (descending)
+  const sortedPlayers = [...players].sort((a, b) => (b.score || 0) - (a.score || 0))
 
   return sortedPlayers.map((player, index) => {
     const rank = index + 1
@@ -193,10 +195,10 @@ function renderLeaderboard(players) {
         </div>
         <div class="text-right">
           <div class="text-2xl font-bold text-gradient">
-            ${player.tokens || 0}🪙
+            ${player.score || 0}
           </div>
           <div class="text-sm text-text-secondary">
-            Token
+            Punkte
           </div>
         </div>
       </div>
@@ -215,10 +217,10 @@ function renderPerformanceChart(scoreDistribution) {
   }
 
   const categories = [
-    { key: 'perfect', label: '🏆 Perfekt (+2)', color: 'from-green-500 to-green-600' },
-    { key: 'good', label: '👍 Gut (+1)', color: 'from-blue-500 to-blue-600' },
-    { key: 'partial', label: '🤷 Teilweise (±0)', color: 'from-yellow-500 to-yellow-600' },
-    { key: 'wrong', label: '❌ Falsch (-1)', color: 'from-red-500 to-red-600' }
+    { key: 'perfect', label: '🏆 Perfekt (+3)', color: 'from-green-500 to-green-600' },
+    { key: 'good', label: '👍 Gut (+2)', color: 'from-blue-500 to-blue-600' },
+    { key: 'partial', label: '🤷 Teilweise (+1)', color: 'from-yellow-500 to-yellow-600' },
+    { key: 'wrong', label: '❌ Falsch (0)', color: 'from-red-500 to-red-600' }
   ]
 
   return `
@@ -272,7 +274,7 @@ function renderGameHistory(history) {
           </div>
           <div class="text-right">
             <div class="font-bold text-gradient">
-              ${game.tokensEarned >= 0 ? '+' : ''}${game.tokensEarned}🪙
+              ${game.pointsEarned !== undefined ? `+${game.pointsEarned} Punkte` : 'Keine Daten'}
             </div>
             <div class="text-xs text-text-secondary">
               ${game.songTitle || ''}
@@ -303,9 +305,9 @@ function renderAchievements(stats) {
     },
     {
       icon: '💎',
-      title: 'Token-Sammler',
-      description: 'Sammle 10 Token',
-      unlocked: stats.avgTokens >= 10
+      title: 'Punktesammler',
+      description: 'Erreiche 30 Punkte gesamt',
+      unlocked: stats.avgScore >= 30
     },
     {
       icon: '🏆',
