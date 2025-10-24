@@ -322,11 +322,14 @@ export class BeatSyncSettings {
   updateElementIntensity(elementId, intensity) {
     beatSyncConfig.updateElement(elementId, { intensity: parseInt(intensity) })
 
-    // Update display
+    // Update display only (no full modal refresh)
     const element = document.querySelector(`[data-element-id="${elementId}"] .intensity-value`)
     if (element) {
       element.textContent = `${intensity}%`
     }
+
+    // Save but don't re-render
+    beatSyncConfig.save()
   }
 
   /**

@@ -298,60 +298,91 @@
 
 .beat-sync-settings .intensity-slider {
   flex: 1;
-  height: 8px;
-  border-radius: 4px;
-  background: linear-gradient(to right, rgba(99, 102, 241, 0.2), rgba(99, 102, 241, 0.5));
+  height: 10px;
+  border-radius: 8px;
+  background: linear-gradient(to right,
+    rgba(99, 102, 241, 0.15) 0%,
+    rgba(99, 102, 241, 0.3) 50%,
+    rgba(99, 102, 241, 0.5) 100%);
+  border: 1px solid rgba(99, 102, 241, 0.2);
   appearance: none;
   outline: none;
   cursor: pointer;
-  transition: opacity 0.2s;
+  transition: all 0.2s ease;
+  position: relative;
 }
 
 .beat-sync-settings .intensity-slider:hover {
-  opacity: 0.8;
+  border-color: rgba(99, 102, 241, 0.4);
+  box-shadow: 0 2px 8px rgba(99, 102, 241, 0.2);
 }
 
 .beat-sync-settings .intensity-slider::-webkit-slider-thumb {
   appearance: none;
-  width: 22px;
-  height: 22px;
+  width: 24px;
+  height: 24px;
   border-radius: 50%;
-  background: linear-gradient(135deg, #6366f1, #8b5cf6);
-  cursor: pointer;
-  box-shadow: 0 3px 8px rgba(99, 102, 241, 0.4), 0 0 0 4px rgba(99, 102, 241, 0.1);
+  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+  cursor: grab;
+  border: 3px solid white;
+  box-shadow:
+    0 2px 8px rgba(99, 102, 241, 0.3),
+    0 0 0 1px rgba(99, 102, 241, 0.1),
+    inset 0 1px 2px rgba(255, 255, 255, 0.3);
   transition: all 0.2s ease;
+  margin-top: -8px;
 }
 
 .beat-sync-settings .intensity-slider::-webkit-slider-thumb:hover {
-  transform: scale(1.1);
-  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.6), 0 0 0 6px rgba(99, 102, 241, 0.15);
+  transform: scale(1.15);
+  box-shadow:
+    0 4px 16px rgba(99, 102, 241, 0.5),
+    0 0 0 4px rgba(99, 102, 241, 0.15),
+    inset 0 1px 2px rgba(255, 255, 255, 0.3);
+}
+
+.beat-sync-settings .intensity-slider::-webkit-slider-thumb:active {
+  cursor: grabbing;
+  transform: scale(1.05);
 }
 
 .beat-sync-settings .intensity-slider::-moz-range-thumb {
-  width: 22px;
-  height: 22px;
+  width: 24px;
+  height: 24px;
   border-radius: 50%;
-  background: linear-gradient(135deg, #6366f1, #8b5cf6);
-  cursor: pointer;
-  border: none;
-  box-shadow: 0 3px 8px rgba(99, 102, 241, 0.4), 0 0 0 4px rgba(99, 102, 241, 0.1);
+  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+  cursor: grab;
+  border: 3px solid white;
+  box-shadow:
+    0 2px 8px rgba(99, 102, 241, 0.3),
+    0 0 0 1px rgba(99, 102, 241, 0.1),
+    inset 0 1px 2px rgba(255, 255, 255, 0.3);
   transition: all 0.2s ease;
 }
 
 .beat-sync-settings .intensity-slider::-moz-range-thumb:hover {
-  transform: scale(1.1);
-  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.6), 0 0 0 6px rgba(99, 102, 241, 0.15);
+  transform: scale(1.15);
+  box-shadow:
+    0 4px 16px rgba(99, 102, 241, 0.5),
+    0 0 0 4px rgba(99, 102, 241, 0.15),
+    inset 0 1px 2px rgba(255, 255, 255, 0.3);
+}
+
+.beat-sync-settings .intensity-slider::-moz-range-thumb:active {
+  cursor: grabbing;
+  transform: scale(1.05);
 }
 
 .beat-sync-settings .intensity-slider::-webkit-slider-runnable-track {
-  height: 8px;
-  border-radius: 4px;
+  height: 10px;
+  border-radius: 8px;
+  background: transparent;
 }
 
 .beat-sync-settings .intensity-slider::-moz-range-track {
-  height: 8px;
-  border-radius: 4px;
-  background: linear-gradient(to right, rgba(99, 102, 241, 0.2), rgba(99, 102, 241, 0.5));
+  height: 10px;
+  border-radius: 8px;
+  background: transparent;
   border: none;
 }
 
