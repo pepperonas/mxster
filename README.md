@@ -215,7 +215,7 @@ node add-song.js "https://open.spotify.com/track/DEINE_TRACK_ID"
 
 ### Song bearbeiten (interaktiver Wizard)
 
-Du hast einen Tippfehler oder möchtest einen Song aktualisieren? Nutze den Song-Editor:
+Du hast einen Tippfehler oder möchtest Metadaten korrigieren? Nutze den Song-Editor:
 
 ```bash
 # Im Hauptverzeichnis
@@ -299,6 +299,112 @@ Aktualisierte Dateien:
   • card-generator/qr-codes/song_008_*.png
 ```
 
+### Song austauschen (komplett ersetzen)
+
+Du möchtest einen Song komplett durch einen anderen ersetzen? Nutze den Song-Exchange-Wizard:
+
+```bash
+# Im Hauptverzeichnis
+node exchange-song.js
+```
+
+**Der Wizard führt dich durch:**
+1. 🔍 Song-ID zum Ersetzen eingeben (z.B. `song_031`)
+2. 📋 Aktueller Song wird angezeigt
+3. 🎵 Neue Spotify URL/Track-ID eingeben
+4. 📥 Metadaten von Spotify werden automatisch geladen
+5. 👀 Vorher/Nachher-Vergleich ansehen
+6. ✅ Austausch bestätigen
+
+**Was passiert automatisch:**
+- ✅ Automatisches Backup erstellt
+- ✅ Song-ID bleibt **unverändert** (nur Metadaten werden ersetzt)
+- ✅ Alte Dateien gelöscht (QR, SCAD, STL)
+- ✅ Datenbank aktualisiert (`docs/songs.json`)
+- ✅ PWA-Daten synchronisiert (`pwa/src/data/songs.js`)
+- ✅ Neue Metadaten von Spotify geladen (Titel, Artist, Jahr, Album)
+- ✅ Neue QR-Codes generiert (beide Verzeichnisse)
+- ✅ Neue 3D-Modelle generiert (SCAD + STL)
+- 🔧 Optional: Alle PDFs neu generieren
+
+**Beispiel-Ablauf:**
+
+```bash
+$ node exchange-song.js
+
+╔════════════════════════════════════════════╗
+║   🔄  mxster Song Exchange Wizard  🔄    ║
+╚════════════════════════════════════════════╝
+
+📚 83 Songs in der Datenbank gefunden
+
+Schritt 1/5: Song auswählen zum Ersetzen
+──────────────────────────────────────────
+Song-ID zum Ersetzen (z.B. song_001): song_031
+
+✅ Song gefunden (wird ersetzt):
+   Titel:    Only You
+   Interpret: Steve Monite
+   Jahr:     1984
+   Spotify:  3d7lH2ppf2aIELQXY4nagn
+
+Schritt 2/5: Neuen Spotify Track eingeben
+─────────────────────────────────────────
+Spotify URL oder Track-ID: https://open.spotify.com/track/NEW_TRACK_ID
+
+Schritt 3/5: Metadaten von Spotify laden
+─────────────────────────────────────────
+🔍 Lade Track-Informationen von Spotify...
+
+✅ Neuer Track gefunden:
+   Titel:    Neuer Song
+   Interpret: Neuer Artist
+   Jahr:     2020
+   Album:    Neues Album
+
+Schritt 4/5: Austausch bestätigen
+─────────────────────────────────────────
+
+🔴 ALT (wird gelöscht):
+  Steve Monite - Only You (1984)
+
+🟢 NEU (wird eingefügt):
+  Neuer Artist - Neuer Song (2020)
+
+💡 Song-ID bleibt: song_031
+
+Song austauschen? (j/n): j
+
+Schritt 5/5: Dateien aktualisieren
+─────────────────────────────────────────
+🗑️  6 alte Dateien gelöscht
+✅ Backup erstellt: docs/songs.json.backup-2025-10-24
+✅ songs.json aktualisiert
+✅ pwa/src/data/songs.js aktualisiert
+🔄 Generiere Karten-Dateien (QR-Code + 3D-Modelle)...
+✅ QR-Code generiert
+✅ 3D-Modelle generiert (SCAD + STL)
+
+PDF-Karten neu generieren (alle Songs)? (j/n): n
+
+╔════════════════════════════════════════════╗
+║            ✅  Fertig!  ✅                 ║
+╚════════════════════════════════════════════╝
+
+Aktualisierte Dateien:
+  • docs/songs.json
+  • pwa/src/data/songs.js
+  • docs/song_031_*.png
+  • card-generator/qr-codes/song_031_*.png
+  • card-generator/models/song_031_*.scad
+  • card-generator/models/song_031_*.stl
+
+📊 Song-Details:
+   Alt: Steve Monite - Only You (1984)
+   Neu: Neuer Artist - Neuer Song (2020)
+   ID:  song_031 (unverändert)
+```
+
 ### Aus Spotify Playlist importieren
 
 ```bash
@@ -367,8 +473,8 @@ npm run preview         # Build testen
 
 # Songs verwalten
 node add-song.js "SPOTIFY_URL"                    # Song hinzufügen
-node add-song.js "SPOTIFY_URL" --generate-3d      # + 3D-Modell
-node edit-song.js                                 # Song bearbeiten (interaktiv)
+node edit-song.js                                 # Song bearbeiten (Metadaten)
+node exchange-song.js                             # Song austauschen (komplett)
 npm run import-spotify                             # Aus Playlist
 npm run update-previews                            # Preview URLs updaten
 npm run filter-songs                               # Ungültige Songs entfernen
