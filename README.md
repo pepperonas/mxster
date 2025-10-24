@@ -108,31 +108,58 @@ npm run dev
 
 **Ziel:** Sammle die meisten Punkte durch richtiges Raten!
 
-1. Song wird abgespielt (DJ scannt QR-Code oder virtueller Modus)
-2. Spieler raten Titel, Künstler und Jahr
-3. Punkte vergeben:
+1. **Song abspielen:** DJ scannt QR-Code oder virtueller Modus zieht zufälligen Song
+2. **Raten:** Spieler gibt Titel, Künstler und Jahr ein
+3. **Fuzzy Matching:** System akzeptiert auch ähnliche Schreibweisen (z.B. "Fleetwood Mac" = "Fleetwood Mack")
+4. **Punkte vergeben:**
    - ✅ Titel richtig: **+1 Punkt**
    - ✅ Künstler richtig: **+1 Punkt**
-   - ✅ Jahr richtig (±2 Jahre): **+1 Punkt**
-4. Karte wird automatisch chronologisch einsortiert
-5. **Gewinner:** Meiste Punkte nach 10 Karten
+   - ✅ Jahr richtig (±2 Jahre Toleranz): **+1 Punkt**
+5. **Automatische Platzierung:** Karte wird sofort chronologisch in die Timeline einsortiert
+6. **Live-Rangliste:** Score-Overview zeigt alle Spieler sortiert nach Punkten
+7. **Gewinner:** Spieler mit den meisten Punkten nach 10 Karten
+
+**Besonderheiten:**
+- Keine manuelle Platzierung nötig
+- Timeline wird automatisch sortiert
+- Skip-Funktion verfügbar (0 Punkte, Karte wird trotzdem platziert)
 
 ### 👤 Timeline (Persönlich)
 
 **Ziel:** Baue deine eigene Timeline mit 10 Karten auf!
 
-1. Jeder Spieler hat seine eigene Timeline
-2. Songs werden präsentiert
-3. Spieler platziert Song manuell in Timeline (Buttons klicken)
-4. **Gewinner:** Erster mit 10 richtig platzierten Karten
+1. **Individuelle Timelines:** Jeder Spieler baut seine eigene separate Timeline
+2. **Song abspielen:** DJ scannt QR-Code oder virtueller Modus
+3. **Optional raten:** Spieler kann zum Spaß raten (keine Punkte)
+4. **Automatische Platzierung:** Karte wird chronologisch in die persönliche Timeline eingefügt
+5. **Bestätigung:** Dialog zeigt an, an welcher Position die Karte eingefügt wurde
+6. **Spielerwechsel:** Timeline wechselt zur Timeline des nächsten Spielers
+7. **Gewinner:** Erster Spieler, der 10 Karten in seiner Timeline hat
+
+**Besonderheiten:**
+- Kein Punktesystem
+- Jeder Spieler sieht nur seine eigene Timeline
+- Automatische chronologische Sortierung
+- Nur Kartenzählung entscheidet
 
 ### 🌍 Timeline (Global)
 
-**Ziel:** Wie Timeline Persönlich, aber mit gemeinsamer Timeline!
+**Ziel:** Gemeinsam eine Timeline aufbauen - Wer erreicht zuerst 10 Karten?
 
-1. Alle Spieler teilen eine Timeline
-2. Kooperatives Gameplay
-3. **Gewinner:** Erster mit 10 richtig platzierten Karten
+1. **Geteilte Timeline:** ALLE Spieler teilen EINE gemeinsame Timeline
+2. **Song abspielen:** DJ scannt QR-Code oder virtueller Modus
+3. **Optional raten:** Spieler kann zum Spaß raten (keine Punkte)
+4. **Automatische Platzierung:** Karte wird in die globale Timeline eingefügt
+5. **Timeline bleibt gleich:** Beim Spielerwechsel sehen alle die gleiche Timeline
+6. **Kooperativ:** Alle bauen gemeinsam an einer chronologischen Timeline
+7. **Gewinner:** Erster Spieler, der insgesamt 10 Karten platziert hat
+
+**Besonderheiten:**
+- Kein Punktesystem
+- Timeline ändert sich NICHT beim Spielerwechsel
+- Alle sehen immer die gleiche globale Timeline
+- Kooperatives Timeline-Building
+- Nur Kartenzählung pro Spieler entscheidet
 
 ## 🃏 Karten erstellen
 

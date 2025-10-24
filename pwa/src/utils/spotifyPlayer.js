@@ -81,6 +81,34 @@ class SpotifyPlayer {
         duration: state.duration,
         track: state.track_window.current_track.name
       })
+
+      // Notify beat animator of state changes
+      if (window.beatAnimator) {
+        const trackId = state.track_window.current_track.id
+
+        // Track changed
+        if (this.currentTrackId !== trackId) {
+          console.log('🔄 Track changed, loading beat analysis...')
+          this.currentTrackId = trackId
+
+          // Load new track analysis for beat sync
+          if (window.game && window.game.beatSyncEnabled) {
+            window.beatAnimator.loadTrackAnalysis(trackId).then(() => {
+              if (!state.paused) {
+                window.beatAnimator.start(state.position)
+              }
+            })
+          }
+        }
+
+        // Pause/Resume beat sync
+        if (state.paused) {
+          window.beatAnimator.pause()
+        } else {
+          // Update position for sync
+          window.beatAnimator.updatePosition(state.position)
+        }
+      }
     })
 
     // Verbinde Player

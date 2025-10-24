@@ -12,6 +12,10 @@ import { renderLandingPage, attachLandingPageListeners } from './components/Land
 import { renderStatistics } from './components/Statistics.js'
 import { renderWinnerScreen } from './components/WinnerScreen.js'
 import { GAME_MODES, GAME_MODE_INFO, GAME_VARIANTS, GAME_VARIANT_INFO } from './utils/gameModes.js'
+import beatAnimator from './services/SpotifyBeatAnimator.js'
+import beatSyncConfig from './services/BeatSyncConfig.js'
+import beatSyncSettings from './components/BeatSyncSettings.js'
+import { applyBeatAnimation } from './utils/animationEffects.js'
 
 class MxsterGame {
   constructor() {
@@ -27,6 +31,11 @@ class MxsterGame {
     this.gameVariant = null  // Selected game variant (PHYSICAL or VIRTUAL)
     this.globalTimeline = []  // Shared timeline for TIMELINE_GLOBAL mode
 
+    // Beat Sync properties
+    this.beatSyncEnabled = false
+    this.beatSyncConfig = beatSyncConfig
+    this.currentTrackId = null
+
     // Headphone button long press detection
     this.headphonePressStart = null
     this.headphonePressTimer = null
@@ -40,11 +49,19 @@ class MxsterGame {
       return
     }
 
+    // Initialize Beat Sync Config
+    beatSyncConfig.load()
+
+    // Make globally accessible
+    window.beatSyncSettings = beatSyncSettings
+    window.beatAnimator = beatAnimator
+
     // Prüfe ob bereits eingeloggt (inkl. automatischem Token-Refresh)
     const isLoggedIn = await spotifyAuth.loadFromStorage()
     if (isLoggedIn) {
       console.log('✅ Bereits bei Spotify eingeloggt (Token gültig)')
       await this.initializeSpotifyPlayer()
+      this.initializeBeatSync()
       // Starte periodischen Token-Check
       spotifyAuth.startRefreshCheck()
       this.proceedToGame()
@@ -144,7 +161,8 @@ class MxsterGame {
       [
         { text: `${getIconHTML('check')} Spiel fortsetzen`, onclick: 'game.restoreGame()', className: 'btn-accent' },
         { text: `${getIconHTML('plus')} Neues Spiel`, onclick: 'game.startNewGame()', className: 'btn-outline' }
-      ]
+      ],
+      { required: true }
     )
   }
 
@@ -156,6 +174,7 @@ class MxsterGame {
     this.currentSong = saved.currentSong || null
     this.gameMode = saved.gameMode || GAME_MODES.GUESS
     this.gameVariant = saved.gameVariant || GAME_VARIANTS.PHYSICAL
+    this.globalTimeline = saved.globalTimeline || []  // Lade globale Timeline
     console.log('✅ Spiel wiederhergestellt:', GAME_MODE_INFO[this.gameMode].name, '/', GAME_VARIANT_INFO[this.gameVariant].name)
     this.closeModal()
     this.renderGameScreen()
@@ -169,6 +188,7 @@ class MxsterGame {
       currentSong: this.currentSong,
       gameMode: this.gameMode,
       gameVariant: this.gameVariant,
+      globalTimeline: this.globalTimeline,  // Speichere globale Timeline
       timestamp: Date.now()
     })
   }
@@ -483,6 +503,24 @@ class MxsterGame {
                   <span>•</span>
                   <span>${GAME_VARIANT_INFO[this.gameVariant].icon}</span>
                   <span>${GAME_VARIANT_INFO[this.gameVariant].name}</span>
+                </div>
+              </div>
+
+              <!-- Beat Sync Controls -->
+              <div style="margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--border);">
+                <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+                  <button class="beat-sync-toggle ${this.beatSyncEnabled ? 'active' : ''}"
+                          onclick="game.toggleBeatSync()"
+                          title="Beat-Animationen aktivieren">
+                    <span class="icon">🎵</span>
+                    <span>Beat Sync</span>
+                  </button>
+                  <button class="btn btn-outline"
+                          onclick="game.openBeatSettings()"
+                          style="padding: 8px 14px; font-size: 13px;"
+                          title="Beat Sync Einstellungen">
+                    ${getIconHTML('settings')}
+                  </button>
                 </div>
               </div>
             </div>
@@ -856,9 +894,9 @@ class MxsterGame {
       // Audio abspielen
       this.playAudio(song)
 
-      // Im Timeline-Modus: Zeige Song-Karte und starte Drag & Drop
+      // Im Timeline-Modus: Zeige Song-Infos mit Skip/Guess Optionen
       if (this.gameMode !== GAME_MODES.GUESS) {
-        this.showSongCardAndStartDragDrop(song)
+        this.showTimelineSongInfo(song)
       }
 
       console.log('✅ Song erkannt:', song.title, '-', song.artist)
@@ -1135,6 +1173,105 @@ class MxsterGame {
     )
   }
 
+  showTimelineSongInfo(song) {
+    const player = this.players[this.currentPlayer]
+
+    // Zeige Song-Infos im Timeline-Modus (virtueller Modus)
+    this.showModal(
+      '🎵 Song erkannt!',
+      `<div style="text-align: center;">
+         <p style="font-size: 18px; margin-bottom: 20px;">Wähle die Position in der Timeline</p>
+
+         <div class="virtual-song-card" style="margin: 20px auto;">
+           <div class="card-title">${song.title}</div>
+           <div class="card-artist">${song.artist}</div>
+           <div class="card-logo">mxster</div>
+         </div>
+
+         <div style="margin-top: 30px;">
+           <p style="font-weight: 600; margin-bottom: 16px;">Wo möchtest du die Karte einfügen?</p>
+           ${this.createDropZones(player)}
+         </div>
+       </div>`,
+      [
+        { text: '❌ Abbrechen', onclick: 'game.closeModal()', className: 'btn-outline' }
+      ]
+    )
+  }
+
+  startTimelineGuessing() {
+    // Zeige Eingabefelder für Ratespiel (ohne Punkte)
+    this.showModal(
+      '🎯 Rate den Song!',
+      `<div style="text-align: center;">
+         <p style="margin-bottom: 20px; color: var(--text-secondary);">Nur zum Spaß - keine Punkte im Timeline-Modus</p>
+
+         <div style="text-align: left; max-width: 400px; margin: 0 auto;">
+           <div style="margin-bottom: 16px;">
+             <label style="display: block; margin-bottom: 8px; font-weight: 600;">Titel</label>
+             <input id="timeline-guess-title" type="text" class="input" placeholder="Song-Titel" />
+           </div>
+
+           <div style="margin-bottom: 16px;">
+             <label style="display: block; margin-bottom: 8px; font-weight: 600;">Künstler</label>
+             <input id="timeline-guess-artist" type="text" class="input" placeholder="Künstler" />
+           </div>
+
+           <div style="margin-bottom: 16px;">
+             <label style="display: block; margin-bottom: 8px; font-weight: 600;">Jahr</label>
+             <input id="timeline-guess-year" type="number" class="input" placeholder="Jahr" />
+           </div>
+         </div>
+       </div>`,
+      [
+        { text: `${getIconHTML('check')} Auflösung & Platzieren`, onclick: 'game.checkTimelineGuess()', className: 'btn-accent' },
+        { text: '⏭️ Überspringen', onclick: 'game.autoPlaceInTimeline(); game.closeModal()', className: 'btn-outline' }
+      ]
+    )
+  }
+
+  checkTimelineGuess() {
+    const guessedTitle = document.getElementById('timeline-guess-title')?.value.trim()
+    const guessedArtist = document.getElementById('timeline-guess-artist')?.value.trim()
+    const guessedYear = document.getElementById('timeline-guess-year')?.value
+
+    // Prüfe Antworten mit Fuzzy Matching
+    const titleCorrect = checkSongGuess(this.currentSong.title, guessedTitle)
+    const artistCorrect = checkSongGuess(this.currentSong.artist, guessedArtist)
+    const yearCorrect = guessedYear && Math.abs(parseInt(guessedYear) - this.currentSong.year) <= 2
+
+    // Zeige Auflösung
+    const message = `
+      <div style="text-align: center;">
+        <h3 style="margin-bottom: 20px;">Auflösung</h3>
+
+        <div style="text-align: left; max-width: 400px; margin: 0 auto;">
+          <div style="margin-bottom: 12px; padding: 12px; background: var(--primary); border-radius: 8px;">
+            ${titleCorrect ? '✅' : '❌'} <strong>Titel:</strong> ${this.currentSong.title}
+          </div>
+
+          <div style="margin-bottom: 12px; padding: 12px; background: var(--primary); border-radius: 8px;">
+            ${artistCorrect ? '✅' : '❌'} <strong>Künstler:</strong> ${this.currentSong.artist}
+          </div>
+
+          <div style="margin-bottom: 12px; padding: 12px; background: var(--primary); border-radius: 8px;">
+            ${yearCorrect ? '✅' : '❌'} <strong>Jahr:</strong> ${this.currentSong.year}
+          </div>
+        </div>
+
+        <p style="margin-top: 20px; color: var(--text-secondary); font-size: 14px;">
+          Im Timeline-Modus gibt es keine Punkte
+        </p>
+      </div>
+    `
+
+    this.showModal(
+      'Auflösung',
+      message,
+      [{ text: `${getIconHTML('check')} Karte platzieren`, onclick: 'game.autoPlaceInTimeline(); game.closeModal()', className: 'btn-accent' }]
+    )
+  }
+
   showSongCardAndStartDragDrop(song) {
     const player = this.players[this.currentPlayer]
 
@@ -1162,22 +1299,27 @@ class MxsterGame {
   }
 
   createDropZones(player) {
-    if (player.timeline.length === 0) {
+    // Bei Timeline Global: Verwende globale Timeline
+    const timeline = this.gameMode === GAME_MODES.TIMELINE_GLOBAL
+      ? this.globalTimeline
+      : player.timeline
+
+    if (timeline.length === 0) {
       return '<button class="drop-zone" onclick="game.placeAtPosition(0)">📍 Erste Karte platzieren</button>'
     }
 
-    let zones = `<button class="drop-zone" onclick="game.placeAtPosition(0)">⬅️ Vor ${player.timeline[0].year}</button>`
+    let zones = `<button class="drop-zone" onclick="game.placeAtPosition(0)">⬅️ Vor ${timeline[0].year}</button>`
 
-    for (let i = 0; i < player.timeline.length; i++) {
-      const currentYear = player.timeline[i].year
-      const nextYear = player.timeline[i + 1]?.year
+    for (let i = 0; i < timeline.length; i++) {
+      const currentYear = timeline[i].year
+      const nextYear = timeline[i + 1]?.year
 
       if (nextYear) {
         zones += `<button class="drop-zone" onclick="game.placeAtPosition(${i + 1})">↔️ Zwischen ${currentYear} und ${nextYear}</button>`
       }
     }
 
-    zones += `<button class="drop-zone" onclick="game.placeAtPosition(${player.timeline.length})">➡️ Nach ${player.timeline[player.timeline.length - 1].year}</button>`
+    zones += `<button class="drop-zone" onclick="game.placeAtPosition(${timeline.length})">➡️ Nach ${timeline[timeline.length - 1].year}</button>`
 
     return zones
   }
@@ -1223,16 +1365,21 @@ class MxsterGame {
   placeAtPosition(position) {
     const player = this.players[this.currentPlayer]
 
+    // Bei Timeline Global: Verwende globale Timeline
+    const timeline = this.gameMode === GAME_MODES.TIMELINE_GLOBAL
+      ? this.globalTimeline
+      : player.timeline
+
     // Füge Song an gewählter Position ein
-    player.timeline.splice(position, 0, this.currentSong)
+    timeline.splice(position, 0, this.currentSong)
 
     // Prüfe ob korrekt platziert
-    const sortedTimeline = [...player.timeline].sort((a, b) => a.year - b.year)
-    const isCorrect = JSON.stringify(player.timeline.map(s => s.id)) === JSON.stringify(sortedTimeline.map(s => s.id))
+    const sortedTimeline = [...timeline].sort((a, b) => a.year - b.year)
+    const isCorrect = JSON.stringify(timeline.map(s => s.id)) === JSON.stringify(sortedTimeline.map(s => s.id))
 
     if (isCorrect) {
       // Sortiere Timeline chronologisch (ältester Song links/oben)
-      player.timeline.sort((a, b) => a.year - b.year)
+      timeline.sort((a, b) => a.year - b.year)
       player.cards += 1
       // Speichere Spielstand sofort nach Kartenzählung
       this.saveGame()
@@ -1264,7 +1411,7 @@ class MxsterGame {
       )
     } else {
       // Entferne falsch platzierte Karte
-      player.timeline.splice(position, 1)
+      timeline.splice(position, 1)
 
       this.showModal(
         'Falsch platziert!',
@@ -1349,6 +1496,9 @@ class MxsterGame {
       return
     }
 
+    // Update Timeline SOFORT nach dem Einfügen
+    this.updateTimeline()
+
     // Im Timeline-Modus: Zeige Bestätigung
     this.showModal(
       'Karte eingefügt!',
@@ -1360,10 +1510,8 @@ class MxsterGame {
            <p style="margin: 8px 0 0 0; font-size: 20px;">${player.cards}/10 Karten</p>
          </div>
        </div>`,
-      [{ text: `${getIconHTML('check')} Weiter`, onclick: 'game.nextTurn(); game.closeModal()', className: 'btn-accent' }]
+      [{ text: `${getIconHTML('check')} Weiter`, onclick: 'game.closeModal(); game.nextTurn()', className: 'btn-accent' }]
     )
-
-    this.updateTimeline()
   }
 
   nextTurn() {
@@ -1390,6 +1538,11 @@ class MxsterGame {
     this.saveGame()
 
     this.renderGameScreen()
+
+    // Bei Timeline Global: Aktualisiere Timeline nach renderGameScreen
+    if (this.gameMode === GAME_MODES.TIMELINE_GLOBAL) {
+      this.updateTimeline()
+    }
   }
 
   updatePlayerInfo() {
@@ -1885,7 +2038,7 @@ class MxsterGame {
   }
 
   // Modal System
-  showModal(title, bodyHTML, buttons = []) {
+  showModal(title, bodyHTML, buttons = [], options = {}) {
     // Remove existing modal if any
     const existing = document.getElementById('game-modal')
     if (existing) existing.remove()
@@ -1912,12 +2065,14 @@ class MxsterGame {
     `
     document.body.appendChild(modal)
 
-    // Close on background click
-    modal.addEventListener('click', (e) => {
-      if (e.target === modal) {
-        this.closeModal()
-      }
-    })
+    // Close on background click (only if not required)
+    if (!options.required) {
+      modal.addEventListener('click', (e) => {
+        if (e.target === modal) {
+          this.closeModal()
+        }
+      })
+    }
   }
 
   closeModal() {
@@ -2036,6 +2191,124 @@ class MxsterGame {
     } else if (randomSong.id) {
       this.handleQRCode(randomSong.id)
     }
+  }
+
+  // ===== Beat Sync Methods =====
+
+  /**
+   * Initialize Beat Sync system
+   */
+  initializeBeatSync() {
+    const accessToken = spotifyAuth.getAccessToken()
+    if (!accessToken) {
+      console.warn('⚠️ No access token available for beat sync')
+      return
+    }
+
+    beatAnimator.initialize(accessToken)
+
+    // Register beat event listener
+    document.addEventListener('beatPulse', (event) => {
+      this.handleBeatPulse(event)
+    })
+
+    console.log('🎵 Beat Sync system initialized')
+  }
+
+  /**
+   * Handle beat pulse event
+   */
+  handleBeatPulse(event) {
+    if (!this.beatSyncEnabled || !beatSyncConfig.config.enabled) return
+
+    const enabledElements = beatSyncConfig.getEnabledElements()
+
+    enabledElements.forEach(element => {
+      const domElements = document.querySelectorAll(element.selector)
+      if (domElements.length > 0) {
+        applyBeatAnimation(
+          domElements,
+          element.animationType,
+          element.intensity,
+          event.detail.duration,
+          element.colors
+        )
+      }
+    })
+  }
+
+  /**
+   * Toggle Beat Sync on/off
+   */
+  toggleBeatSync() {
+    this.beatSyncEnabled = !this.beatSyncEnabled
+
+    if (this.beatSyncEnabled) {
+      // Start beat sync if music is playing
+      if (this.currentSong && this.currentSong.spotifyId) {
+        this.startBeatSyncForCurrentTrack()
+      }
+      this.showToast('Beat Sync aktiviert! 🎵', 'success')
+    } else {
+      beatAnimator.stop()
+      this.showToast('Beat Sync deaktiviert', 'info')
+    }
+
+    // Update UI
+    this.updateBeatSyncButton()
+  }
+
+  /**
+   * Start beat sync for current track
+   */
+  async startBeatSyncForCurrentTrack() {
+    if (!this.currentSong || !this.currentSong.spotifyId) return
+
+    const trackId = this.currentSong.spotifyId
+
+    // Load analysis if different track
+    if (this.currentTrackId !== trackId) {
+      const success = await beatAnimator.loadTrackAnalysis(trackId)
+      if (success) {
+        this.currentTrackId = trackId
+      }
+    }
+
+    // Get current playback position
+    const state = await spotifyPlayer.getState()
+    const position = state?.position || 0
+
+    // Start beat sync
+    beatAnimator.start(position)
+  }
+
+  /**
+   * Update Beat Sync button appearance
+   */
+  updateBeatSyncButton() {
+    const button = document.querySelector('.beat-sync-toggle')
+    if (!button) return
+
+    if (this.beatSyncEnabled) {
+      button.classList.add('active')
+    } else {
+      button.classList.remove('active')
+    }
+  }
+
+  /**
+   * Open Beat Sync settings modal
+   */
+  openBeatSettings() {
+    const content = beatSyncSettings.render()
+
+    this.showModal(
+      '🎵 Beat Sync Einstellungen',
+      content,
+      [
+        { text: '✓ Speichern & Schließen', onclick: 'game.closeModal()', className: 'btn-accent' }
+      ]
+    )
   }
 }
 

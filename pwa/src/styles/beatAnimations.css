@@ -1,0 +1,404 @@
+/**
+ * Beat Animations CSS
+ *
+ * CSS classes and keyframe animations for beat synchronization
+ * Provides smooth, performant animations triggered by JavaScript
+ */
+
+/* ===== CSS Custom Properties ===== */
+:root {
+  --beat-intensity: 1;
+  --beat-color: #6366f1;
+  --beat-duration: 300ms;
+  --beat-glow-blur: 20px;
+  --beat-scale-max: 1.05;
+}
+
+/* ===== Keyframe Animations ===== */
+
+@keyframes beat-pulse {
+  0% {
+    opacity: 0.7;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0.7;
+  }
+}
+
+@keyframes beat-flash {
+  0% {
+    filter: brightness(1);
+  }
+  50% {
+    filter: brightness(1.5);
+  }
+  100% {
+    filter: brightness(1);
+  }
+}
+
+@keyframes beat-scale {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(var(--beat-scale-max));
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes beat-glow {
+  0% {
+    box-shadow: 0 0 0 0 transparent;
+  }
+  50% {
+    box-shadow: 0 0 var(--beat-glow-blur) calc(var(--beat-glow-blur) / 2) var(--beat-color);
+  }
+  100% {
+    box-shadow: 0 0 0 0 transparent;
+  }
+}
+
+@keyframes beat-shake {
+  0% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-5px);
+  }
+  75% {
+    transform: translateX(5px);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+
+@keyframes beat-color {
+  0% {
+    background-color: var(--background);
+  }
+  50% {
+    background-color: var(--beat-color);
+  }
+  100% {
+    background-color: var(--background);
+  }
+}
+
+@keyframes beat-border-pulse {
+  0% {
+    border-width: 1px;
+    border-color: var(--border);
+  }
+  50% {
+    border-width: 3px;
+    border-color: var(--beat-color);
+  }
+  100% {
+    border-width: 1px;
+    border-color: var(--border);
+  }
+}
+
+/* ===== Animation Classes ===== */
+
+.beat-pulse-active {
+  animation: beat-pulse var(--beat-duration) ease-out;
+}
+
+.beat-flash-active {
+  animation: beat-flash var(--beat-duration) ease-out;
+}
+
+.beat-scale-active {
+  animation: beat-scale var(--beat-duration) ease-out;
+  /* Prevent layout shift */
+  will-change: transform;
+}
+
+.beat-glow-active {
+  animation: beat-glow var(--beat-duration) ease-out;
+  will-change: box-shadow;
+}
+
+.beat-shake-active {
+  animation: beat-shake var(--beat-duration) ease-in-out;
+  will-change: transform;
+}
+
+.beat-color-active {
+  animation: beat-color var(--beat-duration) ease-out;
+  will-change: background-color;
+}
+
+.beat-border-pulse-active {
+  animation: beat-border-pulse var(--beat-duration) ease-out;
+  will-change: border;
+}
+
+/* ===== Beat Sync Toggle Button ===== */
+
+.beat-sync-toggle {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  background: var(--primary);
+  border: 2px solid var(--border);
+  border-radius: 8px;
+  color: var(--text-primary);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.beat-sync-toggle:hover {
+  border-color: var(--secondary);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.beat-sync-toggle.active {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: white;
+  box-shadow: 0 0 20px rgba(99, 102, 241, 0.5);
+}
+
+.beat-sync-toggle .icon {
+  font-size: 20px;
+  display: inline-block;
+  transition: transform 0.3s ease;
+}
+
+.beat-sync-toggle.active .icon {
+  animation: beat-sync-icon-pulse 1s ease-in-out infinite;
+}
+
+@keyframes beat-sync-icon-pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.2);
+  }
+}
+
+/* ===== Beat Sync Settings Modal ===== */
+
+.beat-sync-settings {
+  max-width: 700px;
+  width: 100%;
+}
+
+.beat-sync-settings .tabs {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 24px;
+  border-bottom: 2px solid var(--border);
+}
+
+.beat-sync-settings .tab {
+  padding: 12px 20px;
+  background: transparent;
+  border: none;
+  border-bottom: 3px solid transparent;
+  color: var(--text-secondary);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.beat-sync-settings .tab:hover {
+  color: var(--text-primary);
+  border-bottom-color: var(--secondary);
+}
+
+.beat-sync-settings .tab.active {
+  color: var(--accent);
+  border-bottom-color: var(--accent);
+}
+
+.beat-sync-settings .element-list {
+  display: grid;
+  gap: 16px;
+}
+
+.beat-sync-settings .element-item {
+  padding: 16px;
+  background: var(--primary);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  transition: all 0.2s ease;
+}
+
+.beat-sync-settings .element-item:hover {
+  border-color: var(--secondary);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.beat-sync-settings .element-item.enabled {
+  border-color: var(--accent);
+  background: linear-gradient(135deg, var(--primary), rgba(99, 102, 241, 0.05));
+}
+
+.beat-sync-settings .element-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.beat-sync-settings .element-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.beat-sync-settings .element-icon {
+  font-size: 24px;
+}
+
+.beat-sync-settings .element-name {
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.beat-sync-settings .element-selector {
+  font-size: 12px;
+  color: var(--text-secondary);
+  font-family: 'Courier New', monospace;
+}
+
+.beat-sync-settings .element-controls {
+  display: grid;
+  gap: 12px;
+  margin-top: 12px;
+}
+
+.beat-sync-settings .control-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.beat-sync-settings .control-label {
+  min-width: 100px;
+  font-size: 14px;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+.beat-sync-settings .intensity-slider {
+  flex: 1;
+  height: 6px;
+  border-radius: 3px;
+  background: var(--border);
+  appearance: none;
+  outline: none;
+}
+
+.beat-sync-settings .intensity-slider::-webkit-slider-thumb {
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--accent);
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+}
+
+.beat-sync-settings .intensity-slider::-moz-range-thumb {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--accent);
+  cursor: pointer;
+  border: none;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+}
+
+.beat-sync-settings .intensity-value {
+  min-width: 45px;
+  text-align: right;
+  font-weight: 600;
+  color: var(--accent);
+}
+
+.beat-sync-settings .preset-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+}
+
+.beat-sync-settings .preset-card {
+  padding: 20px;
+  background: var(--primary);
+  border: 2px solid var(--border);
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-align: center;
+}
+
+.beat-sync-settings .preset-card:hover {
+  border-color: var(--accent);
+  transform: translateY(-4px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+}
+
+.beat-sync-settings .preset-icon {
+  font-size: 48px;
+  margin-bottom: 12px;
+}
+
+.beat-sync-settings .preset-name {
+  font-weight: 700;
+  font-size: 18px;
+  margin-bottom: 8px;
+  color: var(--text-primary);
+}
+
+.beat-sync-settings .preset-description {
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+/* ===== Element Picker Mode ===== */
+
+.beat-picker-active * {
+  cursor: crosshair !important;
+}
+
+.beat-picker-highlight {
+  outline: 2px dashed var(--accent) !important;
+  outline-offset: 2px;
+  background: rgba(99, 102, 241, 0.1) !important;
+}
+
+/* ===== Performance Optimizations ===== */
+
+.beat-animated {
+  /* Hint to browser that this element will be animated */
+  will-change: transform, opacity, box-shadow, filter;
+}
+
+/* Reduce motion for users who prefer it */
+@media (prefers-reduced-motion: reduce) {
+  .beat-pulse-active,
+  .beat-flash-active,
+  .beat-scale-active,
+  .beat-glow-active,
+  .beat-shake-active,
+  .beat-color-active,
+  .beat-border-pulse-active {
+    animation: none !important;
+  }
+}
