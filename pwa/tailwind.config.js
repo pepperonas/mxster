@@ -12,6 +12,8 @@ export default {
         secondary: '#4A90E2',
         accent: '#FF6B35',
         background: '#1A1C27',
+        border: '#3A3C4B',
+        danger: '#DC2626',
         'text-primary': '#FFFFFF',
         'text-secondary': '#B0B3C1',
 

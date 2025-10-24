@@ -25,6 +25,7 @@ class MxsterGame {
     this.players = []
     this.currentSong = null
     this.lastScannedCode = null
+    this.qrScanner = null  // QR Scanner instance
     this.gameState = new GameState()
     this.spotifyReady = false
     this.waitingForGuess = false  // Wartet auf Song/Artist Guess
@@ -818,6 +819,14 @@ class MxsterGame {
     const video = document.getElementById('qr-video')
     if (!video) return // Skip if not in physical mode
 
+    // Stop previous scanner instance if it exists
+    if (this.qrScanner) {
+      this.qrScanner.stop()
+      this.qrScanner.destroy()
+      this.qrScanner = null
+      console.log('🛑 Previous scanner stopped')
+    }
+
     // Suppress QR Scanner library console logs
     const originalConsoleLog = console.log
     const originalConsoleWarn = console.warn
@@ -846,7 +855,7 @@ class MxsterGame {
       }
     }
 
-    const qrScanner = new QrScanner(
+    this.qrScanner = new QrScanner(
       video,
       result => this.handleQRCode(result.data),
       {
@@ -855,7 +864,8 @@ class MxsterGame {
         preferredCamera: 'environment'
       }
     )
-    qrScanner.start()
+    this.qrScanner.start()
+    console.log('▶️ Scanner initialized')
 
     // Restore console after 1 second (scanner initialization complete)
     setTimeout(() => {
@@ -898,6 +908,10 @@ class MxsterGame {
       if (this.playedSongs.includes(songId)) {
         this.showToast('Dieser Song wurde bereits gespielt!', 'warning')
         console.log('⚠️ Song bereits gespielt:', song.title)
+        // Reset lastScannedCode so the same code can be scanned again later
+        setTimeout(() => {
+          this.lastScannedCode = null
+        }, 2000)
         return
       }
 
@@ -926,6 +940,10 @@ class MxsterGame {
     } else {
       this.showToast('Song nicht gefunden!', 'error')
       console.warn('❌ Song nicht gefunden für QR-Code:', data)
+      // Reset lastScannedCode for unknown codes
+      setTimeout(() => {
+        this.lastScannedCode = null
+      }, 2000)
     }
   }
 
@@ -1554,8 +1572,9 @@ class MxsterGame {
     // Wechsle zum nächsten Spieler (im Uhrzeigersinn)
     this.currentPlayer = (this.currentPlayer + 1) % this.players.length
 
-    // Nur im physischen Modus: DJ-Wechsel-Logik
-    if (this.gameVariant === GAME_VARIANTS.PHYSICAL) {
+    // Nur im physischen Guess-Modus: DJ-Wechsel-Logik
+    // Im Timeline-Modus legen alle Spieler (inkl. DJ) selbst Karten
+    if (this.gameVariant === GAME_VARIANTS.PHYSICAL && this.gameMode === GAME_MODES.GUESS) {
       // Wenn wieder beim DJ: DJ wechselt
       if (this.currentPlayer === this.currentDJ) {
         this.currentDJ = (this.currentDJ + 1) % this.players.length
