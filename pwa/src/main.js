@@ -1544,7 +1544,14 @@ class MxsterGame {
   }
 
   closeStatistics() {
-    this.renderGameScreen()
+    // Wenn ein Gewinner existiert oder das Spiel beendet ist, zurück zur Spielauswahl
+    // Ansonsten zurück zum laufenden Spiel
+    const hasWinner = this.players.some(p => p.cards >= 10)
+    if (hasWinner || !this.currentSong) {
+      this.renderStartScreen()
+    } else {
+      this.renderGameScreen()
+    }
   }
 
   shareResults(platform) {
