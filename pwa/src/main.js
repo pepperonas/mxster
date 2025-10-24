@@ -1113,11 +1113,11 @@ class MxsterGame {
     // Button-Text und -Aktion abhängig vom Spielmodus
     const buttonText = this.gameMode === GAME_MODES.GUESS
       ? `${getIconHTML('arrowRight')} Weiter`
-      : `${getIconHTML('check')} Weiter zur Platzierung`
+      : `${getIconHTML('check')} Karte einsortieren`
 
     const buttonAction = this.gameMode === GAME_MODES.GUESS
       ? 'game.placeCardAndContinue()'
-      : 'game.proceedToPlacement()'
+      : 'game.autoPlaceInTimeline()'
 
     this.showModal(
       'Song enthüllt',
@@ -1132,24 +1132,6 @@ class MxsterGame {
        </div>`,
       [{ text: buttonText, onclick: buttonAction, className: 'btn-accent' }]
     )
-  }
-
-  proceedToPlacement() {
-    // Schließe Modal zuerst
-    this.closeModal()
-
-    // Zeige Song-Info
-    document.getElementById('song-title').textContent = this.currentSong.title
-    document.getElementById('song-artist').textContent = this.currentSong.artist
-    document.getElementById('song-year').textContent = this.currentSong.year
-    document.getElementById('song-year').style.display = 'block'
-
-    // Verstecke Guess Section, zeige Placement Section
-    document.getElementById('guess-section').style.display = 'none'
-    document.getElementById('placement-section').style.display = 'block'
-
-    this.waitingForGuess = false
-    this.showPlacementOptions()
   }
 
   showSongCardAndStartDragDrop(song) {
