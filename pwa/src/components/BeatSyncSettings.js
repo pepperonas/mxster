@@ -304,7 +304,19 @@ export class BeatSyncSettings {
     if (element) {
       element.enabled = !element.enabled
       beatSyncConfig.save()
-      this.updateModal()
+
+      // Update only this specific element card
+      const elementCard = document.querySelector(`[data-element-id="${elementId}"]`)
+      if (elementCard) {
+        const allElements = [...config.elements, ...config.customElements]
+        const index = allElements.findIndex(el => el.id === elementId)
+        if (index !== -1) {
+          const newHTML = this.renderElementItem(allElements[index], index)
+          const tempDiv = document.createElement('div')
+          tempDiv.innerHTML = newHTML
+          elementCard.replaceWith(tempDiv.firstChild)
+        }
+      }
     }
   }
 

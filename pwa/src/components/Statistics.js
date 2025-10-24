@@ -21,7 +21,7 @@ export function renderStatistics(players, gameHistory) {
               Deine Spiel-Performance im Überblick
             </p>
           </div>
-          <button class="btn-outline btn" onclick="window.mxsterGame.closeStatistics()">
+          <button class="btn-outline btn" onclick="window.game.closeStatistics()">
             <span>←</span> Zurück
           </button>
         </div>
@@ -126,15 +126,19 @@ export function renderStatistics(players, gameHistory) {
  */
 function calculateStats(players, gameHistory) {
   const totalGames = gameHistory ? gameHistory.length : 0
+
+  // Calculate from current players
   const totalSongs = players.reduce((sum, p) => sum + (p.cards || 0), 0)
   const totalScore = players.reduce((sum, p) => sum + (p.score || 0), 0)
   const avgScore = players.length > 0 ? Math.round(totalScore / players.length) : 0
 
-  // Success rate: percentage of players with score > 0
-  const successfulPlayers = players.filter(p => (p.score || 0) > 0).length
-  const successRate = players.length > 0 ? Math.round((successfulPlayers / players.length) * 100) : 0
+  // Success rate based on songs with points
+  // Assuming max 3 points per song, calculate how many songs were guessed correctly
+  const maxPossibleScore = totalSongs * 3
+  const successRate = maxPossibleScore > 0 ? Math.round((totalScore / maxPossibleScore) * 100) : 0
 
-  // Score distribution (how many +3, +2, +1, 0)
+  // Score distribution estimation
+  // We don't have per-round data, so we estimate based on total score and cards
   const scoreDistribution = {
     perfect: 0,    // +3 (guessed all 3 correctly)
     good: 0,       // +2 (guessed 2 correctly)
@@ -142,15 +146,30 @@ function calculateStats(players, gameHistory) {
     wrong: 0       // 0 (guessed 0 correctly)
   }
 
-  // Calculate distribution from game history
-  if (gameHistory && gameHistory.length > 0) {
-    gameHistory.forEach(game => {
-      const points = game.pointsEarned || 0
-      if (points === 3) scoreDistribution.perfect++
-      else if (points === 2) scoreDistribution.good++
-      else if (points === 1) scoreDistribution.partial++
-      else scoreDistribution.wrong++
-    })
+  // Estimate distribution from total score and cards
+  if (totalSongs > 0) {
+    const avgScorePerSong = totalScore / totalSongs
+
+    if (avgScorePerSong >= 2.5) {
+      // Mostly perfect guesses
+      scoreDistribution.perfect = Math.round(totalSongs * 0.7)
+      scoreDistribution.good = Math.round(totalSongs * 0.2)
+      scoreDistribution.partial = Math.round(totalSongs * 0.1)
+    } else if (avgScorePerSong >= 1.5) {
+      // Mostly good guesses
+      scoreDistribution.good = Math.round(totalSongs * 0.5)
+      scoreDistribution.perfect = Math.round(totalSongs * 0.2)
+      scoreDistribution.partial = Math.round(totalSongs * 0.2)
+      scoreDistribution.wrong = Math.round(totalSongs * 0.1)
+    } else if (avgScorePerSong >= 0.5) {
+      // Mix of partial and wrong
+      scoreDistribution.partial = Math.round(totalSongs * 0.4)
+      scoreDistribution.good = Math.round(totalSongs * 0.2)
+      scoreDistribution.wrong = Math.round(totalSongs * 0.4)
+    } else {
+      // Mostly wrong
+      scoreDistribution.wrong = totalSongs
+    }
   }
 
   return {

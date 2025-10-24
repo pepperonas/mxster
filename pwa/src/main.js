@@ -31,6 +31,7 @@ class MxsterGame {
     this.gameMode = null  // Selected game mode (GUESS, TIMELINE_PERSONAL, TIMELINE_GLOBAL)
     this.gameVariant = null  // Selected game variant (PHYSICAL or VIRTUAL)
     this.globalTimeline = []  // Shared timeline for TIMELINE_GLOBAL mode
+    this.playedSongs = []  // Track already played songs in current game
 
     // Beat Sync properties
     this.beatSyncEnabled = false
@@ -176,7 +177,9 @@ class MxsterGame {
     this.gameMode = saved.gameMode || GAME_MODES.GUESS
     this.gameVariant = saved.gameVariant || GAME_VARIANTS.PHYSICAL
     this.globalTimeline = saved.globalTimeline || []  // Lade globale Timeline
+    this.playedSongs = saved.playedSongs || []  // Lade gespielte Songs
     console.log('✅ Spiel wiederhergestellt:', GAME_MODE_INFO[this.gameMode].name, '/', GAME_VARIANT_INFO[this.gameVariant].name)
+    console.log(`   Bereits gespielte Songs: ${this.playedSongs.length}`)
     this.closeModal()
     this.renderGameScreen()
   }
@@ -190,6 +193,7 @@ class MxsterGame {
       gameMode: this.gameMode,
       gameVariant: this.gameVariant,
       globalTimeline: this.globalTimeline,  // Speichere globale Timeline
+      playedSongs: this.playedSongs,  // Speichere gespielte Songs
       timestamp: Date.now()
     })
   }
@@ -410,6 +414,9 @@ class MxsterGame {
       return
     }
 
+    // Reset played songs list for new game
+    this.playedSongs = []
+
     // DJ ist Spieler 0, aktiver Spieler ist Spieler 1 (nächster nach DJ)
     this.currentDJ = 0
     this.currentPlayer = 1
@@ -421,6 +428,9 @@ class MxsterGame {
         player.timeline = [starterSong]
         player.cards = 1  // Start mit 1 Karte (Rick Astley)
       })
+      // Add starter song to played songs list
+      const starterSongId = starterSong.spotifyId || starterSong.id
+      this.playedSongs.push(starterSongId)
       console.log('✅ Starter-Song "Never Gonna Give You Up" (1987) zu allen Spielern hinzugefügt')
     }
 
@@ -883,6 +893,18 @@ class MxsterGame {
     }
 
     if (song) {
+      // Check if song was already played in this game
+      const songId = song.spotifyId || song.id
+      if (this.playedSongs.includes(songId)) {
+        this.showToast('Dieser Song wurde bereits gespielt!', 'warning')
+        console.log('⚠️ Song bereits gespielt:', song.title)
+        return
+      }
+
+      // Add song to playedSongs list to prevent duplicates
+      this.playedSongs.push(songId)
+      console.log(`➕ Song added to played list: ${song.title} (${this.playedSongs.length}/${songs.length})`)
+
       this.currentSong = song
       // Speichere Spielstand sofort nach Song-Selektion
       this.saveGame()
@@ -1364,6 +1386,9 @@ class MxsterGame {
   }
 
   placeAtPosition(position) {
+    // Schließe den Positionsauswahl-Dialog sofort
+    this.closeModal()
+
     const player = this.players[this.currentPlayer]
 
     // Bei Timeline Global: Verwende globale Timeline
@@ -1699,6 +1724,8 @@ class MxsterGame {
 
   // Helper methods for winner screen
   startNewGame() {
+    // Reset played songs list when starting completely new game
+    this.playedSongs = []
     this.closeModal()
     this.renderModeSelection()
   }
@@ -2183,11 +2210,25 @@ class MxsterGame {
       icon.style.filter = ''
     }
 
-    // Select random song from database
-    const randomIndex = Math.floor(Math.random() * songs.length)
-    const randomSong = songs[randomIndex]
+    // Filter out already played songs
+    const availableSongs = songs.filter(song => {
+      const songId = song.spotifyId || song.id
+      return !this.playedSongs.includes(songId)
+    })
+
+    // Check if all songs have been played
+    if (availableSongs.length === 0) {
+      this.showToast('Alle Songs wurden bereits gespielt!', 'warning')
+      console.log('⚠️ Keine neuen Songs mehr verfügbar')
+      return
+    }
+
+    // Select random song from available songs
+    const randomIndex = Math.floor(Math.random() * availableSongs.length)
+    const randomSong = availableSongs[randomIndex]
 
     console.log('🎲 Zufälliger Song ausgewählt:', randomSong.title, 'von', randomSong.artist)
+    console.log(`📊 Verbleibende Songs: ${availableSongs.length}/${songs.length}`)
 
     // Simulate QR code scan by calling handleQRCode
     if (randomSong.spotifyId) {
