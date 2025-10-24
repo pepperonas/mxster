@@ -16,7 +16,7 @@ song_year = "2000";
 song_title_line1 = "Ride Wit Me";
 song_title_line2 = "";
 song_title_is_split = false;
-song_artist = "Nelly, City Spud";
+song_artist = "Nelly";
 
 // QR Code settings
 qr_code_size = 48;  // Increased from 35 for better camera recognition

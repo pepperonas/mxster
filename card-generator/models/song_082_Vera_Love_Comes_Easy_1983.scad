@@ -12,7 +12,7 @@ card_height = 1.6;  // Increased from 1.2mm (133% thicker for better durability)
 corner_radius = 2.5;
 
 // Song information
-song_year = "2018";
+song_year = "1983";
 song_title_line1 = "Love Comes Easy";
 song_title_line2 = "";
 song_title_is_split = false;
