@@ -1,4 +1,4 @@
-name: Create Release with Assets
+name: Create Release
 
 on:
   push:
@@ -6,90 +6,18 @@ on:
       - 'v*'  # Trigger on version tags like v1.0.0, v1.1.0, etc.
 
 jobs:
-  build-and-release:
+  create-release:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '18'
-
-      - name: Install dependencies
-        run: |
-          cd pwa
-          npm ci
-
-      - name: Generate songs.js from songs.json
-        run: |
-          cd pwa
-          node -e "const songs = require('../docs/songs.json'); require('fs').writeFileSync('src/data/songs.js', 'export const songs = ' + JSON.stringify(songs, null, 2))"
-
-      - name: Generate PDF cards
-        run: |
-          cd pwa
-          chmod +x ../generate-all-pdfs.sh
-          ../generate-all-pdfs.sh || echo "PDF generation failed, continuing..."
-
-      - name: Create SCAD models ZIP
-        run: |
-          cd card-generator/models
-          if ls *.scad 1> /dev/null 2>&1; then
-            zip -r ../../mxster-scad-models.zip *.scad
-          else
-            echo "No SCAD files found, skipping..."
-          fi
-
-      - name: Create STL models ZIP
-        run: |
-          cd card-generator/models
-          if ls *.stl 1> /dev/null 2>&1; then
-            zip -r ../../mxster-stl-models.zip *.stl
-          else
-            echo "No STL files found, skipping..."
-          fi
-
-      - name: List available files for release
-        run: |
-          echo "=== Available PDFs ==="
-          ls -lh pwa/*.pdf || echo "No PDFs found"
-          echo "=== Available ZIPs ==="
-          ls -lh *.zip || echo "No ZIPs found"
-          echo "=== Available 3MF ==="
-          ls -lh card-generator/models/*.3mf || echo "No 3MF found"
-
       - name: Get tag name
         id: tag_name
         run: echo "TAG=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
 
-      - name: Prepare release files list
-        id: files
-        run: |
-          FILES=""
-
-          # Add PDFs if they exist
-          [ -f pwa/mxster-cards.pdf ] && FILES="$FILES pwa/mxster-cards.pdf"
-          [ -f pwa/mxster-cards-bw.pdf ] && FILES="$FILES pwa/mxster-cards-bw.pdf"
-          [ -f pwa/mxster-cards-duplex.pdf ] && FILES="$FILES pwa/mxster-cards-duplex.pdf"
-          [ -f pwa/mxster-cards-bw-duplex.pdf ] && FILES="$FILES pwa/mxster-cards-bw-duplex.pdf"
-
-          # Add ZIPs if they exist
-          [ -f mxster-scad-models.zip ] && FILES="$FILES mxster-scad-models.zip"
-          [ -f mxster-stl-models.zip ] && FILES="$FILES mxster-stl-models.zip"
-
-          # Add 3MF if it exists
-          [ -f card-generator/models/all-cards.3mf ] && FILES="$FILES card-generator/models/all-cards.3mf"
-
-          echo "FILES<<EOF" >> $GITHUB_OUTPUT
-          echo "$FILES" >> $GITHUB_OUTPUT
-          echo "EOF" >> $GITHUB_OUTPUT
-
-          echo "Will upload: $FILES"
-
-      - name: Create GitHub Release
+      - name: Create GitHub Release (Draft)
         uses: softprops/action-gh-release@v1
         with:
           tag_name: ${{ steps.tag_name.outputs.TAG }}
@@ -100,15 +28,15 @@ jobs:
             ### 📦 Downloads
 
             **PDF Druckkarten** (4 Karten pro A4-Seite):
-            - Standard (Farbig)
-            - Schwarz-Weiß
-            - Duplex (Farbig)
-            - Duplex (Schwarz-Weiß)
+            - Standard (Farbig) - Manuell hochladen
+            - Schwarz-Weiß - Manuell hochladen
+            - Duplex (Farbig) - Manuell hochladen
+            - Duplex (Schwarz-Weiß) - Manuell hochladen
 
             **3D-Druckmodelle**:
-            - All-Cards (3MF)
-            - SCAD Models (ZIP)
-            - STL Models (ZIP)
+            - All-Cards (3MF) - Siehe Repository
+            - SCAD Models (ZIP) - Manuell hochladen
+            - STL Models (ZIP) - Manuell hochladen
 
             ### 🖨️ Druckeinstellungen
             **3D-Druck**:
@@ -116,9 +44,14 @@ jobs:
             - Infill: 100%
             - Material: PLA oder PETG
             - Support: Nicht nötig
-          files: ${{ steps.files.outputs.FILES }}
-          draft: false
+
+            ### 📝 Hinweis
+            Assets werden manuell hochgeladen. Nutze:
+            ```bash
+            gh release upload ${{ steps.tag_name.outputs.TAG }} pwa/*.pdf mxster-*.zip card-generator/models/all-cards.3mf
+            ```
+          files: card-generator/models/all-cards.3mf
+          draft: true
           prerelease: true
-          fail_on_unmatched_files: false
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
