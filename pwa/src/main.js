@@ -539,6 +539,33 @@ class MxsterGame {
               ${getIconHTML('camera')}
               <span>Scanne QR-Code</span>
             </div>
+            <button
+              id="flashlight-btn"
+              class="flashlight-btn"
+              onclick="game.toggleFlashlight()"
+              style="
+                position: absolute;
+                bottom: 20px;
+                right: 20px;
+                width: 56px;
+                height: 56px;
+                border-radius: 50%;
+                background: rgba(0, 0, 0, 0.6);
+                border: 2px solid rgba(255, 255, 255, 0.3);
+                color: white;
+                font-size: 24px;
+                cursor: pointer;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                transition: all 0.3s ease;
+                z-index: 10;
+              "
+              onmouseover="this.style.background='rgba(0, 0, 0, 0.8)'; this.style.transform='scale(1.1)'"
+              onmouseout="this.style.background='rgba(0, 0, 0, 0.6)'; this.style.transform='scale(1)'"
+            >
+              💡
+            </button>
           </div>
         ` : `
           <div class="card" style="text-align: center; padding: 40px;">
@@ -819,6 +846,10 @@ class MxsterGame {
       console.log('🛑 Previous scanner stopped')
     }
 
+    // Reset flashlight state
+    this.flashlightEnabled = false
+    this.videoStream = null
+
     // Suppress QR Scanner library console logs
     const originalConsoleLog = console.log
     const originalConsoleWarn = console.warn
@@ -856,14 +887,61 @@ class MxsterGame {
         preferredCamera: 'environment'
       }
     )
-    this.qrScanner.start()
-    console.log('▶️ Scanner initialized')
+    this.qrScanner.start().then(() => {
+      console.log('▶️ Scanner initialized')
+      // Speichere Video-Stream für Taschenlampen-Steuerung
+      this.videoStream = video.srcObject
+    })
 
     // Restore console after 1 second (scanner initialization complete)
     setTimeout(() => {
       console.log = originalConsoleLog
       console.warn = originalConsoleWarn
     }, 1000)
+  }
+
+  async toggleFlashlight() {
+    if (!this.videoStream) {
+      this.showToast('Kamera nicht verfügbar', 'warning')
+      return
+    }
+
+    const track = this.videoStream.getVideoTracks()[0]
+    if (!track) {
+      this.showToast('Video-Track nicht gefunden', 'warning')
+      return
+    }
+
+    // Prüfe ob Taschenlampe unterstützt wird
+    const capabilities = track.getCapabilities()
+    if (!capabilities.torch) {
+      this.showToast('Taschenlampe nicht unterstützt auf diesem Gerät', 'warning')
+      return
+    }
+
+    try {
+      this.flashlightEnabled = !this.flashlightEnabled
+      await track.applyConstraints({
+        advanced: [{ torch: this.flashlightEnabled }]
+      })
+
+      // Update Button-Style
+      const btn = document.getElementById('flashlight-btn')
+      if (btn) {
+        btn.style.background = this.flashlightEnabled
+          ? 'rgba(255, 193, 7, 0.8)'
+          : 'rgba(0, 0, 0, 0.6)'
+        btn.style.borderColor = this.flashlightEnabled
+          ? 'rgba(255, 193, 7, 1)'
+          : 'rgba(255, 255, 255, 0.3)'
+        btn.textContent = this.flashlightEnabled ? '🔦' : '💡'
+      }
+
+      console.log(`💡 Taschenlampe ${this.flashlightEnabled ? 'AN' : 'AUS'}`)
+    } catch (error) {
+      console.error('Fehler beim Umschalten der Taschenlampe:', error)
+      this.showToast('Taschenlampe konnte nicht umgeschaltet werden', 'error')
+    }
   }
 
   handleQRCode(data) {
