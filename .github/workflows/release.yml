@@ -28,15 +28,16 @@ jobs:
             ### 📦 Downloads
 
             **PDF Druckkarten** (4 Karten pro A4-Seite):
-            - Standard (Farbig) - Manuell hochladen
-            - Schwarz-Weiß - Manuell hochladen
-            - Duplex (Farbig) - Manuell hochladen
-            - Duplex (Schwarz-Weiß) - Manuell hochladen
+            - [Standard (Farbig)](https://github.com/pepperonas/mxster/releases/download/${{ steps.tag_name.outputs.TAG }}/mxster-cards.pdf)
+            - [Schwarz-Weiß](https://github.com/pepperonas/mxster/releases/download/${{ steps.tag_name.outputs.TAG }}/mxster-cards-bw.pdf)
+            - [Duplex (Farbig)](https://github.com/pepperonas/mxster/releases/download/${{ steps.tag_name.outputs.TAG }}/mxster-cards-duplex.pdf)
+            - [Duplex (Schwarz-Weiß)](https://github.com/pepperonas/mxster/releases/download/${{ steps.tag_name.outputs.TAG }}/mxster-cards-bw-duplex.pdf)
 
             **3D-Druckmodelle**:
-            - All-Cards (3MF) - Siehe Repository
-            - SCAD Models (ZIP) - Manuell hochladen
-            - STL Models (ZIP) - Manuell hochladen
+            - [All-Cards (3MF)](https://github.com/pepperonas/mxster/releases/download/${{ steps.tag_name.outputs.TAG }}/all-cards.3mf)
+            - [SCAD Models (ZIP)](https://github.com/pepperonas/mxster/releases/download/${{ steps.tag_name.outputs.TAG }}/mxster-scad-models.zip)
+            - [STL Models (ZIP)](https://github.com/pepperonas/mxster/releases/download/${{ steps.tag_name.outputs.TAG }}/mxster-stl-models.zip)
+            - [Einzelne Modelle im Repository](https://github.com/pepperonas/mxster/tree/main/card-generator/models)
 
             ### 🖨️ Druckeinstellungen
             **3D-Druck**:
@@ -45,13 +46,12 @@ jobs:
             - Material: PLA oder PETG
             - Support: Nicht nötig
 
-            ### 📝 Hinweis
-            Assets werden manuell hochgeladen. Nutze:
+            ### 📝 Assets hochladen
+            Assets werden manuell hochgeladen. Nutze lokal:
             ```bash
             gh release upload ${{ steps.tag_name.outputs.TAG }} pwa/*.pdf mxster-*.zip card-generator/models/all-cards.3mf
             ```
-          files: card-generator/models/all-cards.3mf
-          draft: true
+          draft: false
           prerelease: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
