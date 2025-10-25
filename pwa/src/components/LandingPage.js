@@ -11,7 +11,7 @@ export function renderLandingPage(onLoginClick) {
       <!-- Hero Section -->
       <div class="relative overflow-hidden">
         <!-- Animated Background Pattern -->
-        <div class="absolute inset-0 opacity-5">
+        <div class="absolute inset-0 opacity-20">
           <div class="absolute inset-0 bg-gradient-to-br from-secondary via-accent to-secondary bg-[length:400%_400%] animate-float"></div>
         </div>
 
