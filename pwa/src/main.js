@@ -2190,7 +2190,7 @@ class MxsterGame {
          </div>
        </div>`,
       [
-        { text: `${getIconHTML('home')} Zur Startseite`, onclick: 'game.closeModal(); game.renderLoginScreen()', className: 'btn-accent' }
+        { text: `${getIconHTML('arrowLeft')} Zur Startseite`, onclick: 'game.closeModal(); game.renderLoginScreen()', className: 'btn-accent' }
       ]
     )
   }
