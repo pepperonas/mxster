@@ -375,19 +375,21 @@ class MxsterGame {
   }
 
   handlePlayerNameKeydown(event) {
-    // Enter: Spieler hinzufügen
-    if (event.key === 'Enter' && !event.metaKey && !event.ctrlKey) {
-      event.preventDefault()
-      this.addPlayer()
-    }
+    if (event.key !== 'Enter') return
+
+    event.preventDefault()
+
     // Cmd/Ctrl + Enter: Spiel starten (wenn mindestens 2 Spieler)
-    else if (event.key === 'Enter' && (event.metaKey || event.ctrlKey)) {
-      event.preventDefault()
+    if (event.metaKey || event.ctrlKey) {
       if (this.players.length >= 2) {
         this.startGame()
       } else {
         this.showToast('Mindestens 2 Spieler erforderlich', 'warning')
       }
+    }
+    // Enter alleine: Spieler hinzufügen
+    else {
+      this.addPlayer()
     }
   }
 
