@@ -2103,24 +2103,39 @@ class MxsterGame {
   }
 
   endGameEarly() {
-    // Find player with most cards
-    const sortedPlayers = [...this.players].sort((a, b) => b.cards - a.cards)
-    const topPlayer = sortedPlayers[0]
+    // Find leader based on game mode
+    let sortedPlayers, topPlayer, leadInfo
+
+    if (this.gameMode === GAME_MODES.GUESS) {
+      // Guess-Modus: Höchster Score
+      sortedPlayers = [...this.players].sort((a, b) => (b.score || 0) - (a.score || 0))
+      topPlayer = sortedPlayers[0]
+      leadInfo = `${topPlayer.score || 0} Punkte`
+    } else {
+      // Timeline-Modi: Meiste Karten
+      sortedPlayers = [...this.players].sort((a, b) => b.cards - a.cards)
+      topPlayer = sortedPlayers[0]
+      leadInfo = `${topPlayer.cards} Karten`
+    }
+
+    const playerStats = sortedPlayers.map((p, i) => {
+      if (this.gameMode === GAME_MODES.GUESS) {
+        return `<p style="margin: 4px 0;">${i + 1}. ${p.name}: ${p.score || 0} Punkte (${p.cards} Karten)</p>`
+      } else {
+        return `<p style="margin: 4px 0;">${i + 1}. ${p.name}: ${p.cards} Karten</p>`
+      }
+    }).join('')
 
     this.showModal(
       'Spiel vorzeitig beenden?',
       `<p>Möchtest du das aktuelle Spiel wirklich beenden?</p>
        <div class="card" style="background: var(--primary); margin-top: 16px; padding: 16px;">
          <p style="margin: 0 0 12px 0;"><strong>Aktueller Stand:</strong></p>
-         ${sortedPlayers.map((p, i) => `
-           <p style="margin: 4px 0;">
-             ${i + 1}. ${p.name}: ${p.cards} Karten
-           </p>
-         `).join('')}
+         ${playerStats}
        </div>
        <div class="card" style="background: var(--accent); margin-top: 16px; padding: 16px;">
          <p style="margin: 0;">
-           <strong>🏆 ${topPlayer.name}</strong> führt mit ${topPlayer.cards} Karten und wird als Gewinner in die Historie eingetragen.
+           <strong>🏆 ${topPlayer.name}</strong> führt mit ${leadInfo} und wird als Gewinner in die Historie eingetragen.
          </p>
        </div>`,
       [
@@ -2131,9 +2146,18 @@ class MxsterGame {
   }
 
   confirmEndGame() {
-    // Find player with most cards as winner
-    const sortedPlayers = [...this.players].sort((a, b) => b.cards - a.cards)
-    const winner = sortedPlayers[0]
+    // Find winner based on game mode
+    let winner
+
+    if (this.gameMode === GAME_MODES.GUESS) {
+      // Guess-Modus: Höchster Score
+      const sortedByScore = [...this.players].sort((a, b) => (b.score || 0) - (a.score || 0))
+      winner = sortedByScore[0]
+    } else {
+      // Timeline-Modi: Meiste Karten
+      const sortedByCards = [...this.players].sort((a, b) => b.cards - a.cards)
+      winner = sortedByCards[0]
+    }
 
     // Save game to history
     gameHistory.saveGame({
@@ -2142,18 +2166,23 @@ class MxsterGame {
         cards: winner.cards,
         score: winner.score || 0
       },
-      players: this.players
+      players: this.players,
+      gameMode: this.gameMode
     })
 
     this.gameState.clear()
     this.closeModal()
+
+    const winMessage = this.gameMode === GAME_MODES.GUESS
+      ? `${winner.score || 0} Punkte (${winner.cards} Karten)`
+      : `${winner.cards} Karten korrekt platziert`
 
     this.showModal(
       'Spiel beendet',
       `<div style="text-align: center;">
          <div style="font-size: 64px; margin: 20px 0;">🏁</div>
          <h2 style="font-size: 28px; margin-bottom: 16px;">${winner.name} gewinnt!</h2>
-         <p style="font-size: 18px; color: var(--accent);">${winner.cards} Karten korrekt platziert</p>
+         <p style="font-size: 18px; color: var(--accent);">${winMessage}</p>
          <div class="card" style="background: var(--primary); margin-top: 16px; padding: 16px;">
            <p style="margin: 0; font-size: 14px; color: var(--text-secondary);">
              ✅ Spiel wurde in der Historie gespeichert
