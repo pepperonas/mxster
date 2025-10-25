@@ -348,27 +348,6 @@ class MxsterGame {
           ${getIconHTML('music')} Spiel starten (${this.players.length} Spieler)
         </button>
 
-        <div class="card" style="margin-top: 24px;">
-          <div class="modal-header">
-            <h3>${getIconHTML('save')} Spielhistorie verwalten</h3>
-          </div>
-          <div class="modal-body">
-            <div class="guess-actions">
-              <button class="btn btn-outline btn-mobile-full" onclick="game.exportGame()" style="flex: 1;">
-                ${getIconHTML('download')} Exportieren
-              </button>
-              <button class="btn btn-outline btn-mobile-full" onclick="document.getElementById('import-file').click()" style="flex: 1;">
-                ${getIconHTML('upload')} Importieren
-              </button>
-              <input type="file" id="import-file" accept=".json" style="display: none;"
-                     onchange="game.importGame(event)">
-            </div>
-            <p style="margin-top: 16px; font-size: 14px; color: var(--text-secondary);">
-              Sichere Spielhistorie als JSON-Datei oder lade gespeicherte Historie.
-            </p>
-          </div>
-        </div>
-
         <button class="btn btn-outline btn-mobile-full"
                 onclick="game.renderVariantSelection()"
                 style="width: 100%; margin-top: 24px;">
@@ -505,6 +484,10 @@ class MxsterGame {
           <button class="sidebar-item" onclick="game.showScoreboard(); game.closeSidebar();">
             ${getIconHTML('barchart')}
             <span>Spielstand</span>
+          </button>
+          <button class="sidebar-item" onclick="game.showHistory(); game.closeSidebar();">
+            ${getIconHTML('clock')}
+            <span>Spielhistorie</span>
           </button>
           <button class="sidebar-item" onclick="game.showSettings(); game.closeSidebar();">
             ${getIconHTML('settings')}
