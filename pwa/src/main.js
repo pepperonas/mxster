@@ -366,6 +366,12 @@ class MxsterGame {
       </div>
     `
     this.updatePlayerList()
+
+    // Auto-Focus auf Spielername-Input
+    setTimeout(() => {
+      const input = document.getElementById('player-name')
+      if (input) input.focus()
+    }, 0)
   }
 
   handlePlayerNameKeydown(event) {
