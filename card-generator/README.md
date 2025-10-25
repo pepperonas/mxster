@@ -1,97 +1,97 @@
-# 🎴 mxster Card Generator
+# 🎴 mxster Karten-Generator
 
-Generate QR code cards and 3D-printable models for the mxster music timeline game.
+Generiere QR-Code-Karten und 3D-druckbare Modelle für das mxster Musik-Timeline-Spiel.
 
-## Quick Start
+## Schnellstart
 
-### Prerequisites
+### Voraussetzungen
 ```bash
-# Install Python dependencies
+# Python-Abhängigkeiten installieren
 cd card-generator
 python3 -m venv venv
-source venv/bin/activate  # or .\venv\Scripts\activate on Windows
+source venv/bin/activate  # oder .\venv\Scripts\activate unter Windows
 pip install qrcode pillow
 ```
 
-### Generate Cards
+### Karten generieren
 
 ```bash
-# Generate QR codes + printable cards from songs.json
+# QR-Codes + druckbare Karten aus songs.json generieren
 python generate_cards.py ../docs/songs.json
 
-# Output:
-# - qr-codes/*.png - Individual QR codes
-# - printable/*.png - Cards with song info and QR code
+# Ausgabe:
+# - qr-codes/*.png - Einzelne QR-Codes
+# - printable/*.png - Karten mit Song-Info und QR-Code
 ```
 
-## Features
+## Funktionen
 
-### 1. QR Code Generation
-- Creates QR codes linking to Spotify tracks
-- High error correction (Level H, 30% redundancy)
-- Optimized size: 20px boxes, 8px border
-- Works with smartphone cameras and in-browser scanners
+### 1. QR-Code-Generierung
+- Erstellt QR-Codes mit Links zu Spotify-Tracks
+- Hohe Fehlerkorrektur (Level H, 30% Redundanz)
+- Optimierte Größe: 20px Boxen, 8px Rand
+- Funktioniert mit Smartphone-Kameras und Browser-Scannern
 
-### 2. Printable Cards
-- Song title, artist, year
-- Embedded QR code
-- Optimized for home printing
-- Standard card dimensions
+### 2. Druckbare Karten
+- Songtitel, Künstler, Jahr
+- Eingebetteter QR-Code
+- Optimiert für Heimdruck
+- Standard-Kartenabmessungen
 
-### 3. 3D Models (Optional)
-Generate 3D-printable card holders and game pieces:
+### 3. 3D-Modelle (Optional)
+3D-druckbare Kartenhalter und Spielsteine generieren:
 ```bash
-# Requires OpenSCAD installed
+# Erfordert installiertes OpenSCAD
 node generate-3d-models.js
 ```
 
-## File Structure
+## Dateistruktur
 
 ```
 card-generator/
-├── generate_cards.py       # Main generation script
-├── qr-codes/              # Generated QR codes (gitignored)
-├── printable/             # Printable cards (gitignored)
-├── models/                # 3D models (SCAD/STL)
-└── venv/                  # Python virtual environment
+├── generate_cards.py       # Haupt-Generierungsskript
+├── qr-codes/              # Generierte QR-Codes (gitignored)
+├── printable/             # Druckbare Karten (gitignored)
+├── models/                # 3D-Modelle (SCAD/STL)
+└── venv/                  # Python Virtual Environment
 ```
 
-## Technical Details
+## Technische Details
 
-### QR Code Format
-- **Content**: Spotify Track URLs (`https://open.spotify.com/track/{spotifyId}`)
-- **Fallback**: YouTube URLs if Spotify unavailable
-- **Error Correction**: Level H (30% redundancy for damaged codes)
-- **Size**: 20px box size, 8px border
+### QR-Code-Format
+- **Inhalt**: Spotify-Track-URLs (`https://open.spotify.com/track/{spotifyId}`)
+- **Fallback**: YouTube-URLs falls Spotify nicht verfügbar
+- **Fehlerkorrektur**: Level H (30% Redundanz für beschädigte Codes)
+- **Größe**: 20px Boxgröße, 8px Rand
 
-### Card Specifications
-- **Format**: PNG images
-- **Resolution**: 300 DPI (print quality)
-- **Dimensions**: Standard playing card size
-- **Layout**: Title (top) → Artist → Year → QR Code (bottom)
+### Karten-Spezifikationen
+- **Format**: PNG-Bilder
+- **Auflösung**: 300 DPI (Druckqualität)
+- **Abmessungen**: Standard-Spielkartengröße
+- **Layout**: Titel (oben) → Künstler → Jahr → QR-Code (unten)
 
-### 3D Printing
-Located in `../3d-models/`:
-- `song_card.scad` - Card with QR cutout
-- `game_chip.scad` - Timeline markers
-- `card_holder.scad` - Card storage
+### 3D-Druck
+Befindet sich in `../3d-models/`:
+- `song_card.scad` - Karte mit QR-Ausschnitt
+- `game_chip.scad` - Timeline-Marker
+- `card_holder.scad` - Kartenaufbewahrung
 
-**Recommended Settings:**
-- Material: PLA or PETG
-- Layer Height: 0.2mm
+**Empfohlene Einstellungen:**
+- Material: PLA oder PETG
+- Schichthöhe: 0,2mm
 - Infill: 20%
-- Support: Only for chips
+- Support: Nur für Chips
 
-## Workflow
+## Arbeitsablauf
 
-### Adding New Songs
+### Neue Songs hinzufügen
 
-1. **Add to songs.json**:
+1. **Zu songs.json hinzufügen**:
 ```json
 {
   "id": "song_XXX",
-  "title": "Song Title",
-  "artist": "Artist Name",
+  "title": "Songtitel",
+  "artist": "Künstlername",
   "year": 1999,
   "spotifyId": "spotify_track_id",
   "previewUrl": "https://...",
@@ -99,77 +99,77 @@ Located in `../3d-models/`:
 }
 ```
 
-2. **Generate Cards**:
+2. **Karten generieren**:
 ```bash
 python generate_cards.py ../docs/songs.json
 ```
 
-3. **Update PWA Data**:
+3. **PWA-Daten aktualisieren**:
 ```bash
 cd ../pwa
-npm run import-spotify  # Or manually update src/data/songs.js
+npm run import-spotify  # Oder manuell src/data/songs.js aktualisieren
 ```
 
-### Import from Spotify Playlist
+### Von Spotify-Playlist importieren
 
 ```bash
 cd ../pwa
 
-# Configure spotify.config.js first
+# Zuerst spotify.config.js konfigurieren
 npm run import-spotify
 
-# Optional: Filter invalid songs
+# Optional: Ungültige Songs filtern
 npm run filter-songs
 
-# Regenerate cards
+# Karten neu generieren
 cd ../card-generator
 python generate_cards.py ../docs/songs.json
 ```
 
-## Troubleshooting
+## Fehlerbehebung
 
-### QR Codes Not Scanning
-- Increase error correction level
-- Check printer DPI settings (minimum 300 DPI)
-- Ensure adequate lighting when scanning
-- Try increasing QR code size in script
+### QR-Codes scannen nicht
+- Fehlerkorrektur-Level erhöhen
+- Drucker-DPI-Einstellungen prüfen (mindestens 300 DPI)
+- Ausreichende Beleuchtung beim Scannen sicherstellen
+- QR-Code-Größe im Skript erhöhen
 
-### Missing Dependencies
+### Fehlende Abhängigkeiten
 ```bash
 pip install --upgrade qrcode pillow
 ```
 
-### 3D Print Issues
-- Enable support for game chips
-- Check bed adhesion settings
-- Verify STL file integrity in slicer
+### 3D-Druck-Probleme
+- Support für Spielchips aktivieren
+- Haftungseinstellungen prüfen
+- STL-Datei-Integrität im Slicer überprüfen
 
 ## Changelog
 
-### v1.2.0 (Current)
-- Added 3D model generation support
-- Improved card layout with better spacing
-- Added batch generation for all songs
-- Optimized QR code error correction
+### v1.2.0 (Aktuell)
+- 3D-Modell-Generierung hinzugefügt
+- Verbessertes Kartenlayout mit besserem Abstand
+- Stapelverarbeitung für alle Songs hinzugefügt
+- Optimierte QR-Code-Fehlerkorrektur
 
 ### v1.1.0
-- Added printable card generation
-- Implemented filename sanitization
-- Added support for YouTube fallback URLs
+- Druckbare Kartengenerierung hinzugefügt
+- Dateinamen-Bereinigung implementiert
+- Unterstützung für YouTube-Fallback-URLs hinzugefügt
 
 ### v1.0.0
-- Initial QR code generation
-- Basic card layout
-- Spotify integration
+- Erste QR-Code-Generierung
+- Basis-Kartenlayout
+- Spotify-Integration
 
-## Contributing
+## Mitwirken
 
-When adding features:
-1. Test with multiple song entries
-2. Verify QR codes scan correctly
-3. Check print quality at 300 DPI
-4. Update this README with changes
+Beim Hinzufügen von Funktionen:
+1. Mit mehreren Song-Einträgen testen
+2. QR-Codes auf korrekte Scan-Funktion prüfen
+3. Druckqualität bei 300 DPI überprüfen
+4. Diese README mit Änderungen aktualisieren
 
-## License
+## Lizenz
 
-Part of the mxster project. See main repository LICENSE.
+Teil des mxster-Projekts. Siehe Haupt-Repository-LIZENZ.
