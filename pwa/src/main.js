@@ -236,7 +236,7 @@ class MxsterGame {
         <button class="btn btn-outline btn-mobile-full"
                 onclick="game.renderLoginScreen()"
                 style="width: 100%; margin-top: 24px;">
-          ${getIconHTML('home')} Zurück zur Startseite
+          ${getIconHTML('arrowLeft')} Zurück zur Startseite
         </button>
       </div>
     `
