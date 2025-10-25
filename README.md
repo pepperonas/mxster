@@ -114,7 +114,7 @@ npm run dev
 4. **Punkte vergeben:**
    - ✅ Titel richtig: **+1 Punkt**
    - ✅ Künstler richtig: **+1 Punkt**
-   - ✅ Jahr richtig (±2 Jahre Toleranz): **+1 Punkt**
+   - ✅ Jahr richtig (exakt): **+1 Punkt**
 5. **Automatische Platzierung:** Karte wird sofort chronologisch in die Timeline einsortiert
 6. **Live-Rangliste:** Score-Overview zeigt alle Spieler sortiert nach Punkten
 7. **Gewinner:** Spieler mit den meisten Punkten nach 10 Karten

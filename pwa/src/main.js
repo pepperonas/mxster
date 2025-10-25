@@ -1109,9 +1109,9 @@ class MxsterGame {
     // Verwende toleranten Fuzzy-Match mit 3 erlaubten Tippfehlern
     const result = checkSongGuess(guessTitle, guessArtist, this.currentSong, 3)
 
-    // Jahr-Prüfung mit ±2 Jahren Toleranz
+    // Jahr-Prüfung: Exakte Übereinstimmung erforderlich
+    const yearCorrect = guessYear === this.currentSong.year
     const yearDiff = Math.abs(guessYear - this.currentSong.year)
-    const yearCorrect = yearDiff <= 2
 
     const player = this.players[this.currentPlayer]
 
@@ -1213,7 +1213,12 @@ class MxsterGame {
     this.showModal(
       '📍 Karte platzieren',
       `<div style="text-align: center;">
-         <p style="font-size: 18px; margin-bottom: 20px;">Wähle die Position in der Timeline</p>
+         <p style="font-size: 18px; margin-bottom: 12px;">
+           <strong>${player.name}</strong> ist am Zug
+         </p>
+         <p style="font-size: 16px; color: var(--text-secondary); margin-bottom: 20px;">
+           Wähle die Position in der Timeline
+         </p>
 
          <div class="virtual-song-card" style="margin: 20px auto;">
            <div class="card-title">${song.title}</div>
@@ -1274,7 +1279,7 @@ class MxsterGame {
     // Prüfe Antworten mit Fuzzy Matching
     const titleCorrect = checkSongGuess(this.currentSong.title, guessedTitle)
     const artistCorrect = checkSongGuess(this.currentSong.artist, guessedArtist)
-    const yearCorrect = guessedYear && Math.abs(parseInt(guessedYear) - this.currentSong.year) <= 2
+    const yearCorrect = guessedYear && parseInt(guessedYear) === this.currentSong.year
 
     // Zeige Auflösung
     const message = `
@@ -1431,8 +1436,8 @@ class MxsterGame {
     timeline.splice(position, 0, this.currentSong)
 
     // Prüfe ob korrekt platziert
-    const sortedTimeline = [...timeline].sort((a, b) => a.year - b.year)
-    const isCorrect = JSON.stringify(timeline.map(s => s.id)) === JSON.stringify(sortedTimeline.map(s => s.id))
+    // WICHTIG: Bei Songs mit gleichem Jahr akzeptiere beide möglichen Positionen
+    const isCorrect = this.isTimelineCorrect(timeline)
 
     if (isCorrect) {
       // Sortiere Timeline chronologisch (ältester Song links/oben)
@@ -1498,6 +1503,19 @@ class MxsterGame {
     this.nextTurn()
   }
 
+  isTimelineCorrect(timeline) {
+    // Prüfe ob Timeline chronologisch korrekt sortiert ist
+    // WICHTIG: Bei Songs mit gleichem Jahr sind beide Reihenfolgen akzeptabel
+    for (let i = 0; i < timeline.length - 1; i++) {
+      // Wenn aktueller Song SPÄTER ist als der nächste → falsch
+      if (timeline[i].year > timeline[i + 1].year) {
+        return false
+      }
+      // Gleiche Jahre sind OK (beide Positionen akzeptiert)
+      // Frühere Jahre sind OK
+    }
+    return true
+  }
 
   placeCardAndContinue() {
     // Schließe Modal zuerst
@@ -1518,9 +1536,14 @@ class MxsterGame {
     this.updateTimeline()
 
     // Prüfe Gewinnbedingung
-    if (player.cards >= 10) {
-      this.showWinner(player)
-      return
+    // Guess-Modus: Alle müssen 10 Karten haben, dann gewinnt höchster Score
+    if (this.gameMode === GAME_MODES.GUESS && player.cards >= 10) {
+      // Prüfe ob ALLE Spieler 10 Karten haben
+      const allPlayersFinished = this.players.every(p => p.cards >= 10)
+      if (allPlayersFinished) {
+        this.showWinner(player) // Wird intern den richtigen Gewinner ermitteln
+        return
+      }
     }
 
     // Weiter zum nächsten Spieler
@@ -1848,22 +1871,32 @@ class MxsterGame {
     )
   }
 
-  showWinner(player) {
+  showWinner(triggeringPlayer) {
+    // Im Guess-Modus: Gewinner ist Spieler mit meisten Punkten
+    // In Timeline-Modi: Gewinner ist erster Spieler mit 10 Karten
+    let actualWinner = triggeringPlayer
+
+    if (this.gameMode === GAME_MODES.GUESS) {
+      // Finde Spieler mit höchstem Score
+      actualWinner = [...this.players].sort((a, b) => (b.score || 0) - (a.score || 0))[0]
+    }
+
     // Save game to history before clearing state
     gameHistory.saveGame({
       winner: {
-        name: player.name,
-        cards: player.cards,
-        score: player.score || 0
+        name: actualWinner.name,
+        cards: actualWinner.cards,
+        score: actualWinner.score || 0
       },
-      players: this.players
+      players: this.players,
+      gameMode: this.gameMode
     })
 
     this.gameState.clear()
 
     // Render winner screen component
     const app = document.getElementById('app')
-    app.innerHTML = renderWinnerScreen(this.players)
+    app.innerHTML = renderWinnerScreen(this.players, this.gameMode)
   }
 
   // Helper methods for winner screen
@@ -1899,8 +1932,19 @@ class MxsterGame {
   }
 
   shareResults(platform) {
-    const winner = [...this.players].sort((a, b) => b.cards - a.cards)[0]
-    const text = `🏆 ${winner.name} hat mxster gewonnen mit ${winner.cards} Karten! 🎵\n\nSpiele jetzt mit: https://mxster.de`
+    // Finde richtigen Gewinner basierend auf Spielmodus
+    let winner
+    if (this.gameMode === GAME_MODES.GUESS) {
+      // Guess-Modus: Höchster Score
+      winner = [...this.players].sort((a, b) => (b.score || 0) - (a.score || 0))[0]
+    } else {
+      // Timeline-Modi: Meiste Karten
+      winner = [...this.players].sort((a, b) => (b.cards || 0) - (a.cards || 0))[0]
+    }
+
+    const text = this.gameMode === GAME_MODES.GUESS
+      ? `🏆 ${winner.name} hat mxster gewonnen mit ${winner.score || 0} Punkten! 🎵\n\nSpiele jetzt mit: https://mxster.de`
+      : `🏆 ${winner.name} hat mxster gewonnen mit ${winner.cards} Karten! 🎵\n\nSpiele jetzt mit: https://mxster.de`
 
     if (platform === 'twitter') {
       window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`, '_blank')

@@ -100,7 +100,7 @@ export function renderLandingPage(onLoginClick) {
                 <span class="text-accent">✓</span> Künstler richtig: +1 Punkt
               </div>
               <div class="flex items-center gap-2">
-                <span class="text-accent">✓</span> Jahr richtig (±2): +1 Punkt
+                <span class="text-accent">✓</span> Jahr richtig (exakt): +1 Punkt
               </div>
               <div class="flex items-center gap-2 font-bold text-text-primary pt-2">
                 <span class="text-accent">🏆</span> Gewinner: Meiste Punkte
@@ -422,7 +422,7 @@ export function renderLandingPage(onLoginClick) {
             </h3>
             <p class="text-text-secondary leading-relaxed">
               Fuzzy Matching erkennt Tippfehler (bis zu 3), Groß-/Kleinschreibung egal,
-              Sonderzeichen werden ignoriert. Jahr ±2 Jahre Toleranz.
+              Sonderzeichen werden ignoriert. Jahr muss exakt stimmen.
             </p>
           </div>
 
