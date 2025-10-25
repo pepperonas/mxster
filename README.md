@@ -433,7 +433,7 @@ Schritt 5/5: Dateien aktualisieren
 PDF-Karten neu generieren (alle Songs)? (j/n): n
 
 ╔════════════════════════════════════════╗
-║            ✅  Fertig!  ✅            ║
+║             ✅  Fertig!  ✅            ║
 ╚════════════════════════════════════════╝
 
 Aktualisierte Dateien:
