@@ -23,6 +23,11 @@ jobs:
           cd pwa
           npm ci
 
+      - name: Generate songs.js from songs.json
+        run: |
+          cd pwa
+          node -e "const songs = require('../docs/songs.json'); require('fs').writeFileSync('src/data/songs.js', 'export const songs = ' + JSON.stringify(songs, null, 2))"
+
       - name: Generate PDF cards
         run: |
           cd pwa
