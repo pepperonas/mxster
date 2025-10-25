@@ -914,8 +914,36 @@ class MxsterGame {
 
     // Prüfe ob Taschenlampe unterstützt wird
     const capabilities = track.getCapabilities()
+    console.log('📸 Camera capabilities:', capabilities)
+
     if (!capabilities.torch) {
+      // Versuche alternative Methode (fillLightMode)
+      if (capabilities.fillLightMode && capabilities.fillLightMode.includes('flash')) {
+        console.log('💡 Using fillLightMode instead of torch')
+        this.flashlightEnabled = !this.flashlightEnabled
+
+        try {
+          await track.applyConstraints({
+            advanced: [{ fillLightMode: this.flashlightEnabled ? 'flash' : 'off' }]
+          })
+
+          // Update Button-Style
+          const btn = document.getElementById('flashlight-btn')
+          if (btn) {
+            btn.style.background = this.flashlightEnabled ? 'rgba(255, 193, 7, 0.8)' : 'rgba(0, 0, 0, 0.6)'
+            btn.style.borderColor = this.flashlightEnabled ? 'rgba(255, 193, 7, 1)' : 'rgba(255, 255, 255, 0.3)'
+            btn.textContent = this.flashlightEnabled ? '🔦' : '💡'
+          }
+
+          console.log(`💡 Taschenlampe (fillLightMode) ${this.flashlightEnabled ? 'AN' : 'AUS'}`)
+          return
+        } catch (error) {
+          console.error('fillLightMode error:', error)
+        }
+      }
+
       this.showToast('Taschenlampe nicht unterstützt auf diesem Gerät', 'warning')
+      console.log('❌ Keine Torch-Unterstützung gefunden. Capabilities:', JSON.stringify(capabilities))
       return
     }
 
