@@ -163,18 +163,18 @@ npm run dev
 
 ## 📥 Downloads (Fertige Karten)
 
-**Am einfachsten:** Lade fertige Karten direkt von den [GitHub Releases](https://github.com/pepperonas/mxster/releases/latest) herunter!
+**Am einfachsten:** Lade fertige Karten direkt von den [GitHub Releases](https://github.com/pepperonas/mxster/releases) herunter!
 
 ### 🖨️ PDF Druckkarten
-- [Standard (Farbig)](https://github.com/pepperonas/mxster/releases/latest/download/mxster-cards.pdf)
-- [Schwarz-Weiß](https://github.com/pepperonas/mxster/releases/latest/download/mxster-cards-bw.pdf)
-- [Duplex (Farbig)](https://github.com/pepperonas/mxster/releases/latest/download/mxster-cards-duplex.pdf)
-- [Duplex (Schwarz-Weiß)](https://github.com/pepperonas/mxster/releases/latest/download/mxster-cards-bw-duplex.pdf)
+- [Standard (Farbig)](https://github.com/pepperonas/mxster/releases/download/v0.0.1-beta/mxster-cards.pdf)
+- [Schwarz-Weiß](https://github.com/pepperonas/mxster/releases/download/v0.0.1-beta/mxster-cards-bw.pdf)
+- [Duplex (Farbig)](https://github.com/pepperonas/mxster/releases/download/v0.0.1-beta/mxster-cards-duplex.pdf)
+- [Duplex (Schwarz-Weiß)](https://github.com/pepperonas/mxster/releases/download/v0.0.1-beta/mxster-cards-bw-duplex.pdf)
 
 ### 🎲 3D-Druckmodelle
-- [All-Cards (3MF)](https://github.com/pepperonas/mxster/releases/latest/download/all-cards.3mf) - Alle Karten in einer Datei
-- [STL Modelle (ZIP)](https://github.com/pepperonas/mxster/releases/latest/download/mxster-stl-models.zip)
-- [SCAD Modelle (ZIP)](https://github.com/pepperonas/mxster/releases/latest/download/mxster-scad-models.zip)
+- [All-Cards (3MF)](https://github.com/pepperonas/mxster/releases/download/v0.0.1-beta/all-cards.3mf) - Alle Karten in einer Datei
+- [STL Modelle (ZIP)](https://github.com/pepperonas/mxster/releases/download/v0.0.1-beta/mxster-stl-models.zip)
+- [SCAD Modelle (ZIP)](https://github.com/pepperonas/mxster/releases/download/v0.0.1-beta/mxster-scad-models.zip)
 - [Einzelne Modelle](https://github.com/pepperonas/mxster/tree/main/card-generator/models) - Direkt auf GitHub
 
 ---
@@ -540,32 +540,61 @@ git push origin v1.0.0               # Push löst CI/CD aus
 
 ### GitHub Release erstellen
 
-Beim Pushen eines Version-Tags (z.B. `v1.0.0`) wird automatisch ein GitHub Release erstellt:
+Releases werden **manuell** mit GitHub CLI erstellt:
 
 ```bash
-# 1. Sicherstellen dass all-cards.3mf aktuell ist
-# (Diese Datei muss manuell erstellt und committed werden)
+# 1. Assets lokal generieren
+./generate-all-pdfs.sh
 
-# 2. Git Tag erstellen
-git tag v1.0.0
-git push origin v1.0.0
+cd card-generator/models
+zip -r ../../mxster-stl-models.zip *.stl
+zip -r ../../mxster-scad-models.zip *.scad
+cd ../..
 
-# 3. GitHub Actions läuft automatisch und erstellt:
-#    - mxster-cards.pdf (4 Varianten)
-#    - mxster-stl-models.zip
-#    - mxster-scad-models.zip
-#    - all-cards.3mf (aus Repo)
-#
-# 4. Release wird unter GitHub Releases veröffentlicht
+# 2. all-cards.3mf in PrusaSlicer erstellen (manuell)
+# 3. all-cards.3mf zu Git hinzufügen
+git add card-generator/models/all-cards.3mf
+git commit -m "Update all-cards.3mf"
+git push
+
+# 4. Einmalig: GitHub CLI authentifizieren
+gh auth login
+
+# 5. Release erstellen mit allen Assets
+gh release create v0.0.X-beta \
+  --title "Release v0.0.X-beta" \
+  --prerelease \
+  pwa/mxster-cards*.pdf \
+  mxster-*.zip \
+  card-generator/models/all-cards.3mf
+
+# 6. WICHTIG: Download-Links aktualisieren!
+# Ersetze in folgenden Dateien "v0.0.X-beta" mit der neuen Version:
+# - README.md (Zeilen 169-177)
+# - pwa/src/components/LandingPage.js (Zeilen 259-307)
 ```
 
-**Was passiert automatisch:**
-- ✅ Alle 4 PDF-Varianten werden generiert
-- ✅ SCAD-Modelle werden als ZIP gepackt
-- ✅ STL-Modelle werden als ZIP gepackt
-- ✅ all-cards.3mf wird aus dem Repo genommen
-- ✅ GitHub Release wird mit allen Assets erstellt
-```
+**⚠️ WICHTIG nach jedem Release:**
+Nach dem Erstellen eines neuen Release **MÜSSEN** die Download-Links aktualisiert werden:
+
+1. **README.md**: Alle URLs von `/download/v0.0.X-beta/` auf neue Version ändern
+2. **pwa/src/components/LandingPage.js**: Alle URLs von `/download/v0.0.X-beta/` auf neue Version ändern
+3. Build & Deploy: `cd pwa && npm run build && cd .. && ./deploy.sh`
+4. Commit & Push: `git add -A && git commit -m "Update download links to vX.X.X-beta" && git push`
+
+**Warum `/latest/` nicht funktioniert:**
+- Releases mit `--prerelease` Flag werden NICHT als "latest" erkannt
+- Nur full releases (ohne --prerelease) haben `/latest/` Support
+- Daher: Immer spezifisches Tag verwenden (`/download/v0.0.X-beta/`)
+
+**Was wird hochgeladen:**
+- ✅ mxster-cards.pdf (Standard, farbig)
+- ✅ mxster-cards-bw.pdf (Schwarz-Weiß)
+- ✅ mxster-cards-duplex.pdf (Duplex, farbig)
+- ✅ mxster-cards-bw-duplex.pdf (Duplex, Schwarz-Weiß)
+- ✅ mxster-stl-models.zip (alle STL Dateien)
+- ✅ mxster-scad-models.zip (alle SCAD Dateien)
+- ✅ all-cards.3mf (alle Karten für 3D-Drucker)
 
 ### CLI Tools
 
