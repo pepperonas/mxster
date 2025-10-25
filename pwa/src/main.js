@@ -312,7 +312,7 @@ class MxsterGame {
           <div class="modal-body">
             <div class="guess-inputs">
               <input type="text" id="player-name" class="input" placeholder="Spielername eingeben"
-                     onkeypress="if(event.key==='Enter') game.addPlayer()">
+                     onkeydown="game.handlePlayerNameKeydown(event)">
               <button class="btn btn-accent" onclick="game.addPlayer()">
                 ${getIconHTML('plus')} Hinzufügen
               </button>
@@ -357,6 +357,23 @@ class MxsterGame {
       </div>
     `
     this.updatePlayerList()
+  }
+
+  handlePlayerNameKeydown(event) {
+    // Enter: Spieler hinzufügen
+    if (event.key === 'Enter' && !event.metaKey && !event.ctrlKey) {
+      event.preventDefault()
+      this.addPlayer()
+    }
+    // Cmd/Ctrl + Enter: Spiel starten (wenn mindestens 2 Spieler)
+    else if (event.key === 'Enter' && (event.metaKey || event.ctrlKey)) {
+      event.preventDefault()
+      if (this.players.length >= 2) {
+        this.startGame()
+      } else {
+        this.showToast('Mindestens 2 Spieler erforderlich', 'warning')
+      }
+    }
   }
 
   addPlayer() {
