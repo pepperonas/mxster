@@ -152,12 +152,23 @@ class MxsterGame {
 
   renderLoginScreen() {
     const app = document.getElementById('app')
-    app.innerHTML = renderLandingPage(() => this.spotifyLogin())
-    attachLandingPageListeners(() => this.spotifyLogin())
+    app.innerHTML = renderLandingPage(() => this.handleStartButtonClick())
+    attachLandingPageListeners(() => this.handleStartButtonClick())
   }
 
-  async spotifyLogin() {
-    await spotifyAuth.login()
+  async handleStartButtonClick() {
+    // Prüfe ob bereits eingeloggt
+    const isLoggedIn = await spotifyAuth.isLoggedIn()
+
+    if (isLoggedIn) {
+      console.log('✅ Bereits eingeloggt, überspringe Spotify-Login')
+      // Direkt zur Spielauswahl
+      this.proceedToGame()
+    } else {
+      console.log('🔐 Nicht eingeloggt, starte Spotify-Login')
+      // Spotify Login Flow
+      await spotifyAuth.login()
+    }
   }
 
   showRestoreDialog(savedGame) {
