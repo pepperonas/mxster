@@ -67,7 +67,16 @@ class MxsterGame {
       this.initializeBeatSync()
       // Starte periodischen Token-Check
       spotifyAuth.startRefreshCheck()
-      this.proceedToGame()
+
+      // Prüfe ob ein gespeichertes Spiel existiert
+      const savedGame = this.gameState.load()
+      if (savedGame && savedGame.players && savedGame.players.length > 0) {
+        // Es gibt ein laufendes Spiel -> zeige Restore-Dialog
+        this.proceedToGame()
+      } else {
+        // Kein laufendes Spiel -> zeige Startseite (Landing Page)
+        this.renderLoginScreen()
+      }
     } else {
       console.log('🔐 Nicht eingeloggt oder Token abgelaufen')
       this.renderLoginScreen()
