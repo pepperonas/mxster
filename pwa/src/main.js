@@ -422,18 +422,11 @@ class MxsterGame {
     this.currentDJ = 0
     this.currentPlayer = 1
 
-    // Füge song_000 (Rick Astley) als Starter-Song zu allen Spielern hinzu
-    const starterSong = songs.find(s => s.id === 'song_000')
-    if (starterSong) {
-      this.players.forEach(player => {
-        player.timeline = [starterSong]
-        player.cards = 1  // Start mit 1 Karte (Rick Astley)
-      })
-      // Add starter song to played songs list
-      const starterSongId = starterSong.spotifyId || starterSong.id
-      this.playedSongs.push(starterSongId)
-      console.log('✅ Starter-Song "Never Gonna Give You Up" (1987) zu allen Spielern hinzugefügt')
-    }
+    // Spieler starten mit leeren Timelines
+    this.players.forEach(player => {
+      player.timeline = []
+      player.cards = 0
+    })
 
     this.saveGame()
     this.renderGameScreen()
