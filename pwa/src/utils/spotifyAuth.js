@@ -173,6 +173,12 @@ class SpotifyAuth {
     localStorage.setItem('spotify_access_token', this.accessToken)
     localStorage.setItem('spotify_refresh_token', this.refreshToken || '')
     localStorage.setItem('spotify_expires_at', this.expiresAt.toString())
+
+    console.log('💾 Tokens in Storage gespeichert:', {
+      hasAccessToken: !!this.accessToken,
+      hasRefreshToken: !!this.refreshToken,
+      expiresAt: new Date(this.expiresAt).toLocaleString('de-DE')
+    })
   }
 
   // Lade Tokens aus localStorage
@@ -181,6 +187,12 @@ class SpotifyAuth {
     this.refreshToken = localStorage.getItem('spotify_refresh_token')
     const expiresAt = localStorage.getItem('spotify_expires_at')
     this.expiresAt = expiresAt ? parseInt(expiresAt) : null
+
+    console.log('📦 Tokens aus Storage geladen:', {
+      hasAccessToken: !!this.accessToken,
+      hasRefreshToken: !!this.refreshToken,
+      expiresAt: this.expiresAt ? new Date(this.expiresAt).toLocaleString('de-DE') : 'null'
+    })
 
     return await this.isLoggedIn()
   }
