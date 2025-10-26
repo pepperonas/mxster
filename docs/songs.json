@@ -262,7 +262,7 @@
   {
     "id": "song_026",
     "title": "Superman",
-    "artist": "Eminem, Dina Rae",
+    "artist": "Eminem",
     "year": 2002,
     "audioUrl": "https://example.com/song_026.mp3",
     "spotifyId": "4woTEX1wYOTGDqNXuavlRC",
@@ -793,7 +793,7 @@
     "id": "song_079",
     "title": "Mensch",
     "artist": "Herbert Grönemeyer",
-    "year": 2008,
+    "year": 2002,
     "audioUrl": "https://example.com/song_079.mp3",
     "spotifyId": "2urspvjqMlyq8JVAudN3DK",
     "youtubeUrl": "",
@@ -826,6 +826,206 @@
     "year": 1983,
     "audioUrl": "https://example.com/song_082.mp3",
     "spotifyId": "3ExcEpHblGcPikCpcgNNAB",
+    "youtubeUrl": "",
+    "previewUrl": ""
+  },
+  {
+    "id": "song_083",
+    "title": "Ain't Nobody",
+    "artist": "Chaka Khan",
+    "year": 1983,
+    "audioUrl": "https://example.com/song_083.mp3",
+    "spotifyId": "2NVpYQqdraEcQwqT7GhUkh",
+    "youtubeUrl": "",
+    "previewUrl": ""
+  },
+  {
+    "id": "song_084",
+    "title": "Big in Japan",
+    "artist": "Alphaville",
+    "year": 1984,
+    "audioUrl": "https://example.com/song_084.mp3",
+    "spotifyId": "3BZGi1yUqQyCNC868AqUGG",
+    "youtubeUrl": "",
+    "previewUrl": ""
+  },
+  {
+    "id": "song_085",
+    "title": "Self Control",
+    "artist": "Laura Branigan",
+    "year": 1984,
+    "audioUrl": "https://example.com/song_085.mp3",
+    "spotifyId": "6JNJERZGJwDVgkmbohBw7u",
+    "youtubeUrl": "",
+    "previewUrl": ""
+  },
+  {
+    "id": "song_086",
+    "title": "You Can Call Me Al",
+    "artist": "Paul Simon",
+    "year": 1986,
+    "audioUrl": "https://example.com/song_086.mp3",
+    "spotifyId": "0qxYx4F3vm1AOnfux6dDxP",
+    "youtubeUrl": "",
+    "previewUrl": ""
+  },
+  {
+    "id": "song_087",
+    "title": "Africa",
+    "artist": "TOTO",
+    "year": 1982,
+    "audioUrl": "https://example.com/song_087.mp3",
+    "spotifyId": "2374M0fQpWi3dLnB54qaLX",
+    "youtubeUrl": "",
+    "previewUrl": ""
+  },
+  {
+    "id": "song_088",
+    "title": "Ella, elle l'a - Remasterisé en 2004",
+    "artist": "France Gall",
+    "year": 1987,
+    "audioUrl": "https://example.com/song_088.mp3",
+    "spotifyId": "67CfbIKKTCKFqmQLJwUftX",
+    "youtubeUrl": "",
+    "previewUrl": ""
+  },
+  {
+    "id": "song_089",
+    "title": "Fast Car",
+    "artist": "Tracy Chapman",
+    "year": 1988,
+    "audioUrl": "https://example.com/song_089.mp3",
+    "spotifyId": "2M9ro2krNb7nr7HSprkEgo",
+    "youtubeUrl": "",
+    "previewUrl": ""
+  },
+  {
+    "id": "song_090",
+    "title": "Girl You Know It's True",
+    "artist": "Milli Vanilli",
+    "year": 1988,
+    "audioUrl": "https://example.com/song_090.mp3",
+    "spotifyId": "0C7dYeCLF6ukChtW64UNge",
+    "youtubeUrl": "",
+    "previewUrl": ""
+  },
+  {
+    "id": "song_091",
+    "title": "In The Air Tonight - 2015 Remastered",
+    "artist": "Phil Collins",
+    "year": 1981,
+    "audioUrl": "https://example.com/song_091.mp3",
+    "spotifyId": "18AXbzPzBS8Y3AkgSxzJPb",
+    "youtubeUrl": "",
+    "previewUrl": ""
+  },
+  {
+    "id": "song_092",
+    "title": "Finally",
+    "artist": "CeCe Peniston",
+    "year": 1992,
+    "audioUrl": "https://example.com/song_092.mp3",
+    "spotifyId": "0uqvSVhGgQTIdj9G51vhvv",
+    "youtubeUrl": "",
+    "previewUrl": ""
+  },
+  {
+    "id": "song_093",
+    "title": "Freestyler",
+    "artist": "Bomfunk MC's",
+    "year": 1999,
+    "audioUrl": "https://example.com/song_093.mp3",
+    "spotifyId": "2vlgOAH3M8Fmo19wOjeRyw",
+    "youtubeUrl": "",
+    "previewUrl": ""
+  },
+  {
+    "id": "song_094",
+    "title": "Moving on Up",
+    "artist": "M People",
+    "year": 1993,
+    "audioUrl": "https://example.com/song_094.mp3",
+    "spotifyId": "6vGW3d8X48CBaLdU0PQbey",
+    "youtubeUrl": "",
+    "previewUrl": ""
+  },
+  {
+    "id": "song_095",
+    "title": "Be My Lover",
+    "artist": "La Bouche",
+    "year": 1995,
+    "audioUrl": "https://example.com/song_095.mp3",
+    "spotifyId": "3vSn1frPgFcRXrjWOfhMLl",
+    "youtubeUrl": "",
+    "previewUrl": ""
+  },
+  {
+    "id": "song_096",
+    "title": "Good Times",
+    "artist": "CHIC",
+    "year": 1979,
+    "audioUrl": "https://example.com/song_096.mp3",
+    "spotifyId": "0G3fbPbE1vGeABDEZF0jeG",
+    "youtubeUrl": "",
+    "previewUrl": ""
+  },
+  {
+    "id": "song_097",
+    "title": "Lost in Music",
+    "artist": "Sister Sledge",
+    "year": 1979,
+    "audioUrl": "https://example.com/song_097.mp3",
+    "spotifyId": "47eSFHsPDVJwssTTG62Af3",
+    "youtubeUrl": "",
+    "previewUrl": ""
+  },
+  {
+    "id": "song_098",
+    "title": "Follow Me",
+    "artist": "Uncle Kracker",
+    "year": 2000,
+    "audioUrl": "https://example.com/song_098.mp3",
+    "spotifyId": "4KoecuyOpZaNFZ0UqVsllc",
+    "youtubeUrl": "",
+    "previewUrl": ""
+  },
+  {
+    "id": "song_099",
+    "title": "Viva La Vida",
+    "artist": "Coldplay",
+    "year": 2008,
+    "audioUrl": "https://example.com/song_099.mp3",
+    "spotifyId": "1mea3bSkSGXuIRvnydlB5b",
+    "youtubeUrl": "",
+    "previewUrl": ""
+  },
+  {
+    "id": "song_100",
+    "title": "Save Tonight",
+    "artist": "Eagle-Eye Cherry",
+    "year": 1997,
+    "audioUrl": "https://example.com/song_100.mp3",
+    "spotifyId": "2hdhm6piUJnmKXmEmskXCg",
+    "youtubeUrl": "",
+    "previewUrl": ""
+  },
+  {
+    "id": "song_101",
+    "title": "Two Princes",
+    "artist": "Spin Doctors",
+    "year": 1991,
+    "audioUrl": "https://example.com/song_101.mp3",
+    "spotifyId": "4ePP9So5xRzspjLFVVbj90",
+    "youtubeUrl": "",
+    "previewUrl": ""
+  },
+  {
+    "id": "song_102",
+    "title": "Fairground",
+    "artist": "Simply Red",
+    "year": 1995,
+    "audioUrl": "https://example.com/song_102.mp3",
+    "spotifyId": "1cPcbT9kuGAMCAwI9W8vAL",
     "youtubeUrl": "",
     "previewUrl": ""
   }
