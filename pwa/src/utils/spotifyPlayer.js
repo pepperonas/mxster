@@ -1,3 +1,5 @@
+import spotifyAuth from './spotifyAuth.js'
+
 class SpotifyPlayer {
   constructor() {
     this.player = null
@@ -5,6 +7,18 @@ class SpotifyPlayer {
     this.isReady = false
     this.currentTrackUri = null
     this.accessToken = null
+  }
+
+  // Hole aktuelles Token (mit automatischem Refresh falls nötig)
+  async getCurrentToken() {
+    // Prüfe ob Token noch gültig ist
+    const isValid = await spotifyAuth.isLoggedIn()
+    if (!isValid) {
+      console.error('❌ Token ungültig und konnte nicht refreshed werden')
+      return null
+    }
+    // Hole frisches Token
+    return spotifyAuth.getAccessToken()
   }
 
   // Initialisiere Spotify Web Playback SDK
@@ -34,7 +48,12 @@ class SpotifyPlayer {
 
     this.player = new window.Spotify.Player({
       name: 'mxster Game Player',
-      getOAuthToken: cb => { cb(accessToken) },
+      getOAuthToken: async cb => {
+        // Hole immer das aktuelle Token von spotifyAuth
+        // Falls Token abgelaufen, wird es automatisch refreshed
+        const token = await this.getCurrentToken()
+        cb(token)
+      },
       volume: 0.8
     })
 
@@ -94,10 +113,14 @@ class SpotifyPlayer {
           this.currentTrackId = trackId
 
           // Load new track analysis for beat sync
-          if (window.game && window.game.beatSyncEnabled && this.accessToken) {
-            window.beatAnimator.loadTrackAnalysis(trackId, this.accessToken).then(() => {
-              if (!state.paused) {
-                window.beatAnimator.start(state.position)
+          if (window.game && window.game.beatSyncEnabled) {
+            this.getCurrentToken().then(token => {
+              if (token) {
+                window.beatAnimator.loadTrackAnalysis(trackId, token).then(() => {
+                  if (!state.paused) {
+                    window.beatAnimator.start(state.position)
+                  }
+                })
               }
             })
           }
@@ -124,7 +147,7 @@ class SpotifyPlayer {
   }
 
   // Spiele Track ab
-  async playTrack(trackUri, accessToken) {
+  async playTrack(trackUri, accessToken = null) {
     if (!this.isReady || !this.deviceId) {
       console.error('❌ Player nicht bereit')
       return false
@@ -133,10 +156,17 @@ class SpotifyPlayer {
     try {
       console.log('▶️ Spiele Track:', trackUri)
 
+      // Verwende aktuelles Token falls keins übergeben wurde
+      const token = accessToken || await this.getCurrentToken()
+      if (!token) {
+        console.error('❌ Kein gültiges Token verfügbar')
+        return false
+      }
+
       const response = await fetch(`https://api.spotify.com/v1/me/player/play?device_id=${this.deviceId}`, {
         method: 'PUT',
         headers: {
-          'Authorization': `Bearer ${accessToken}`,
+          'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
