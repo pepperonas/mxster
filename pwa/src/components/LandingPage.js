@@ -34,7 +34,7 @@ export function renderLandingPage(onLoginClick) {
             <!-- Subtitle -->
             <p class="text-lg md:text-xl text-text-secondary max-w-2xl mx-auto leading-relaxed">
               Rate Songs, ordne sie chronologisch und teste dein Musikwissen.
-              Der ultimative Multiplayer-Musikquiz mit Spotify-Integration.
+              Das ultimative Multiplayer-Musikquiz mit Spotify-Integration.
             </p>
 
             <!-- Song Count Badge -->
