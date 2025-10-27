@@ -14,9 +14,8 @@ import { renderStatistics } from './components/Statistics.js'
 import { renderWinnerScreen } from './components/WinnerScreen.js'
 import { GAME_MODES, GAME_MODE_INFO, GAME_VARIANTS, GAME_VARIANT_INFO } from './utils/gameModes.js'
 import beatAnimator from './services/SpotifyBeatAnimator.js'
-import beatSyncConfig from './services/BeatSyncConfig.js'
-import beatSyncSettings from './components/BeatSyncSettings.js'
-import { applyBeatAnimation } from './utils/animationEffects.js'
+import { BACKGROUND_ANIMATIONS, applyBackgroundBeat } from './utils/backgroundAnimations.js'
+import renderSimpleBeatSettings from './components/SimpleBeatSettings.js'
 
 class MxsterGame {
   constructor() {
@@ -34,9 +33,10 @@ class MxsterGame {
     this.globalTimeline = []  // Shared timeline for TIMELINE_GLOBAL mode
     this.playedSongs = []  // Track already played songs in current game
 
-    // Beat Sync properties
+    // Beat Sync properties (simplified - background only)
     this.beatSyncEnabled = false
-    this.beatSyncConfig = beatSyncConfig
+    this.backgroundAnimation = BACKGROUND_ANIMATIONS.PULSE
+    this.animationIntensity = 50
     this.currentTrackId = null
 
     // Headphone button long press detection
@@ -2694,34 +2694,22 @@ class MxsterGame {
 
     beatAnimator.initialize(accessToken)
 
-    // Register beat event listener
+    // Register beat event listener (simplified - background only)
     document.addEventListener('beatPulse', (event) => {
       this.handleBeatPulse(event)
     })
 
-    console.log('🎵 Beat Sync system initialized')
+    console.log('🎵 Beat Sync system initialized (background animations only)')
   }
 
   /**
-   * Handle beat pulse event
+   * Handle beat pulse event (simplified - background only)
    */
   handleBeatPulse(event) {
-    if (!this.beatSyncEnabled || !beatSyncConfig.config.enabled) return
+    if (!this.beatSyncEnabled) return
 
-    const enabledElements = beatSyncConfig.getEnabledElements()
-
-    enabledElements.forEach(element => {
-      const domElements = document.querySelectorAll(element.selector)
-      if (domElements.length > 0) {
-        applyBeatAnimation(
-          domElements,
-          element.animationType,
-          element.intensity,
-          event.detail.duration,
-          element.colors
-        )
-      }
-    })
+    // Apply animation to background only
+    applyBackgroundBeat(this.backgroundAnimation, this.animationIntensity)
   }
 
   /**
@@ -2798,14 +2786,49 @@ class MxsterGame {
    * Open Beat Sync settings modal
    */
   openBeatSettings() {
-    const content = beatSyncSettings.render()
+    const content = renderSimpleBeatSettings(
+      this.backgroundAnimation,
+      this.animationIntensity
+    )
 
     this.showModal(
       '🎵 Beat Sync Einstellungen',
       content,
-      [
-        { text: '✓ Speichern & Schließen', onclick: 'game.closeModal()', className: 'btn-accent' }
-      ]
+      [] // No buttons - they're inside the component
+    )
+  }
+
+  saveBeatSettings() {
+    // Get selected animation type
+    const selectedAnimation = document.querySelector('input[name="animation-type"]:checked')
+    if (selectedAnimation) {
+      this.backgroundAnimation = selectedAnimation.value
+    }
+
+    // Get intensity value
+    const intensitySlider = document.getElementById('intensity-slider')
+    if (intensitySlider) {
+      this.animationIntensity = parseInt(intensitySlider.value)
+    }
+
+    // Enable/disable beat sync based on animation selection
+    this.beatSyncEnabled = this.backgroundAnimation !== BACKGROUND_ANIMATIONS.NONE
+
+    console.log('✅ Beat Sync Einstellungen gespeichert:', {
+      animation: this.backgroundAnimation,
+      intensity: this.animationIntensity,
+      enabled: this.beatSyncEnabled
+    })
+
+    // Close modal
+    this.closeModal()
+
+    // Show confirmation
+    this.showToast(
+      this.beatSyncEnabled
+        ? `Beat Sync aktiviert: ${this.backgroundAnimation}`
+        : 'Beat Sync deaktiviert',
+      'success'
     )
   }
 }
