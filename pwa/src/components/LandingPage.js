@@ -27,7 +27,7 @@ export function renderLandingPage(onLoginClick) {
                 mxster
               </h1>
               <p class="text-2xl md:text-3xl text-text-secondary font-medium">
-                🎵 Zeitreise durch die Musik
+                🎵 Deine Zeitreise durch die Musik
               </p>
             </div>
 
