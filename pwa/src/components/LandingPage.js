@@ -113,7 +113,7 @@ export function renderLandingPage(onLoginClick) {
                 <span class="text-accent">✓</span> Künstler richtig: +1 Punkt
               </div>
               <div class="flex items-center gap-2">
-                <span class="text-accent">✓</span> Jahr richtig (exakt): +1 Punkt
+                <span class="text-accent">✓</span> Jahr richtig: +1 Punkt
               </div>
               <div class="flex items-center gap-2 font-bold text-text-primary pt-2">
                 <span class="text-accent">🏆</span> Gewinner: Meiste Punkte
@@ -236,10 +236,6 @@ export function renderLandingPage(onLoginClick) {
               <div class="flex items-start gap-3">
                 <span class="text-accent flex-shrink-0">✓</span>
                 <span class="text-text-secondary">Perfekt zum Testen</span>
-              </div>
-              <div class="flex items-start gap-3">
-                <span class="text-accent flex-shrink-0">✓</span>
-                <span class="text-text-secondary">Unbegrenzte Songs verfügbar</span>
               </div>
             </div>
           </div>

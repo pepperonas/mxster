@@ -4,7 +4,7 @@
 
 [![App](https://img.shields.io/badge/App-mxster.de-blue?style=for-the-badge)](https://mxster.de)
 [![License](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)](LICENSE)
-![Songs](https://img.shields.io/badge/Songs-104-orange?style=for-the-badge)
+![Songs](https://img.shields.io/badge/Songs-105-orange?style=for-the-badge)
 
 ![mxster Banner](https://mxster.de/assets/mxster.jpg)
 
@@ -115,7 +115,7 @@ npm run dev
 4. **Punkte vergeben:**
    - ✅ Titel richtig: **+1 Punkt**
    - ✅ Künstler richtig: **+1 Punkt**
-   - ✅ Jahr richtig (exakt): **+1 Punkt**
+   - ✅ Jahr richtig: **+1 Punkt**
 5. **Automatische Platzierung:** Karte wird sofort chronologisch in die Timeline einsortiert
 6. **Live-Rangliste:** Score-Overview zeigt alle Spieler sortiert nach Punkten
 7. **Gewinner:** Spieler mit den meisten Punkten nach 10 Karten
