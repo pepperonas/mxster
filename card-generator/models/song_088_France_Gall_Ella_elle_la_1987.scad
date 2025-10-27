@@ -1,4 +1,4 @@
-// mxster Game Card - Ella, elle l'a - Remasterisé en 2004
+// mxster Game Card - Ella, elle l'a
 // Generated automatically - do not edit manually
 
 // ========================================
@@ -13,9 +13,9 @@ corner_radius = 2.5;
 
 // Song information
 song_year = "1987";
-song_title_line1 = "Ella, elle l'a -";
-song_title_line2 = "Remasterisé en 2004";
-song_title_is_split = true;
+song_title_line1 = "Ella, elle l'a";
+song_title_line2 = "";
+song_title_is_split = false;
 song_artist = "France Gall";
 
 // QR Code settings

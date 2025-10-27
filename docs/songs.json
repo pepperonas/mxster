@@ -881,7 +881,7 @@
   },
   {
     "id": "song_088",
-    "title": "Ella, elle l'a - Remasterisé en 2004",
+    "title": "Ella, elle l'a",
     "artist": "France Gall",
     "year": 1987,
     "audioUrl": "https://example.com/song_088.mp3",
@@ -911,7 +911,7 @@
   },
   {
     "id": "song_091",
-    "title": "In The Air Tonight - 2015 Remastered",
+    "title": "In The Air Tonight",
     "artist": "Phil Collins",
     "year": 1981,
     "audioUrl": "https://example.com/song_091.mp3",
@@ -1033,7 +1033,7 @@
     "id": "song_103",
     "title": "Red Red Wine",
     "artist": "UB40",
-    "year": 2000,
+    "year": 1983,
     "audioUrl": "https://example.com/song_103.mp3",
     "spotifyId": "4uOKFydzAejjSFqYbv1XPt",
     "youtubeUrl": "",
@@ -1046,6 +1046,56 @@
     "year": 1996,
     "audioUrl": "https://example.com/song_104.mp3",
     "spotifyId": "6lbJyE7viZ7hKo5APRHymX",
+    "youtubeUrl": "",
+    "previewUrl": ""
+  },
+  {
+    "id": "song_105",
+    "title": "Give Me Love",
+    "artist": "Cerrone",
+    "year": 1977,
+    "audioUrl": "https://example.com/song_105.mp3",
+    "spotifyId": "2ffCT6Pe2LYriwN2Y5ObIg",
+    "youtubeUrl": "",
+    "previewUrl": ""
+  },
+  {
+    "id": "song_106",
+    "title": "Good Feeling",
+    "artist": "Flo Rida",
+    "year": 2012,
+    "audioUrl": "https://example.com/song_106.mp3",
+    "spotifyId": "2LEF1A8DOZ9wRYikWgVlZ8",
+    "youtubeUrl": "",
+    "previewUrl": ""
+  },
+  {
+    "id": "song_107",
+    "title": "Step by Step",
+    "artist": "Whitney Houston",
+    "year": 1996,
+    "audioUrl": "https://example.com/song_107.mp3",
+    "spotifyId": "5dEBcymDDG9TUjJnAouOPp",
+    "youtubeUrl": "",
+    "previewUrl": ""
+  },
+  {
+    "id": "song_108",
+    "title": "Paper Planes",
+    "artist": "M.I.A.",
+    "year": 2007,
+    "audioUrl": "https://example.com/song_108.mp3",
+    "spotifyId": "1ixbwbeBi5ufN4noUKmW5a",
+    "youtubeUrl": "",
+    "previewUrl": ""
+  },
+  {
+    "id": "song_109",
+    "title": "Bon Trip",
+    "artist": "Carlita",
+    "year": 2022,
+    "audioUrl": "https://example.com/song_109.mp3",
+    "spotifyId": "5P1oT1yKRSlGWjDy5ijOm7",
     "youtubeUrl": "",
     "previewUrl": ""
   }
