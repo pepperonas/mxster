@@ -650,18 +650,6 @@ class MxsterGame {
             <!-- Guess Section -->
             <div id="guess-section" class="guess-form">
               <h4 style="margin-bottom: 16px;">🎯 Song, Artist & Jahr erraten</h4>
-              <!-- Current Player Display -->
-              <div style="
-                background: var(--accent);
-                padding: 12px 16px;
-                border-radius: 8px;
-                margin-bottom: 16px;
-                text-align: center;
-                font-weight: bold;
-                font-size: 16px;
-              ">
-                ${this.players[this.currentPlayer].name}, höre und rate den Song!
-              </div>
               <div class="guess-inputs">
                 <input type="number" id="guess-year" class="input" placeholder="Jahr (z.B. 1985)"
                        min="1900" max="${new Date().getFullYear()}"
@@ -1136,7 +1124,7 @@ class MxsterGame {
     }
 
     info.style.display = 'block'
-    document.getElementById('song-title').textContent = '🎵 ???'
+    document.getElementById('song-title').textContent = `🎵 ${this.players[this.currentPlayer].name}`
     document.getElementById('song-artist').textContent = 'Höre und rate den Song!'
     document.getElementById('song-year').style.display = 'none'
 
