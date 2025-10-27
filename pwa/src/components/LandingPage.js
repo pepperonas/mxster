@@ -600,7 +600,7 @@ export function renderLandingPage(onLoginClick) {
           Entwickelt mit ❤️ für Musikliebhaber
         </p>
         <p class="mb-6 text-sm">
-          © ${new Date().getFullYear()} Martin Pfeffer
+          © ${new Date().getFullYear()} Martin Pfeffer - <a href="https://celox.io" target="_blank" rel="noopener noreferrer" class="hover:text-secondary transition-colors">celox.io</a>
         </p>
         <div class="flex flex-wrap gap-6 justify-center text-sm">
           <a href="https://celox.io/datenschutz" target="_blank" class="hover:text-secondary transition-colors">
