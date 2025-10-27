@@ -43,7 +43,9 @@ export default defineConfig({
         ]
       },
       workbox: {
-        globPatterns: ['**/*.{js,css,html,ico,png,svg,mp3}'],
+        globPatterns: ['**/*.{js,css,html,ico,svg,mp3}'],
+        // Exclude PNG files from precache to avoid conflicts
+        globIgnores: ['**/assets/**/*.png'],
         runtimeCaching: [
           {
             urlPattern: /^https:\/\/.*\.spotify\.com\/.*/i,
@@ -53,6 +55,18 @@ export default defineConfig({
               expiration: {
                 maxEntries: 50,
                 maxAgeSeconds: 60 * 60 * 24 * 7 // 7 days
+              }
+            }
+          },
+          {
+            // Cache PNG assets at runtime
+            urlPattern: /\.png$/,
+            handler: 'CacheFirst',
+            options: {
+              cacheName: 'image-cache',
+              expiration: {
+                maxEntries: 30,
+                maxAgeSeconds: 60 * 60 * 24 * 30 // 30 days
               }
             }
           }

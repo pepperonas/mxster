@@ -52,11 +52,7 @@ class MxsterGame {
       return
     }
 
-    // Initialize Beat Sync Config
-    beatSyncConfig.load()
-
-    // Make globally accessible
-    window.beatSyncSettings = beatSyncSettings
+    // Beat Sync settings are now stored in game instance (simplified)
     window.beatAnimator = beatAnimator
 
     // Prüfe ob bereits eingeloggt (inkl. automatischem Token-Refresh)
