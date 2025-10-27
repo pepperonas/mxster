@@ -672,8 +672,11 @@ class MxsterGame {
                        onkeypress="if(event.key==='Enter') game.checkGuess()">
               </div>
               <div class="guess-actions">
-                <button class="btn btn-accent btn-mobile-full" onclick="game.checkGuess()" style="width: 100%;">
+                <button class="btn btn-accent btn-mobile-full" onclick="game.checkGuess()" style="flex: 1;">
                   ${getIconHTML('check')} Prüfen
+                </button>
+                <button class="btn btn-outline btn-mobile-full" onclick="game.confirmSkipGuess()" style="flex: 1;">
+                  ${getIconHTML('skip')} Überspringen
                 </button>
               </div>
             </div>
@@ -1362,8 +1365,31 @@ class MxsterGame {
     )
   }
 
+  confirmSkipGuess() {
+    this.showModal(
+      '⚠️ Wirklich überspringen?',
+      `<div style="text-align: center;">
+        <p style="font-size: 18px; margin: 20px 0;">
+          <strong>💡 Tipp:</strong> Lieber raten als überspringen!
+        </p>
+        <p style="color: var(--text-secondary); margin: 16px 0;">
+          Selbst wenn du dir unsicher bist – ein Rateversucht bringt dir möglicherweise Punkte.
+          Beim Überspringen bekommst du garantiert 0 Punkte.
+        </p>
+        <p style="color: var(--accent); margin-top: 20px; font-size: 16px;">
+          Möchtest du wirklich überspringen?
+        </p>
+      </div>`,
+      [
+        { text: `${getIconHTML('close')} Abbrechen`, onclick: 'game.closeModal()', className: 'btn-outline' },
+        { text: `${getIconHTML('skip')} Ja, überspringen`, onclick: 'game.skipGuess()', className: 'btn-accent' }
+      ]
+    )
+  }
+
   skipGuess() {
-    // Sofort Eingabemaske verstecken um mehrfache Eingaben zu verhindern
+    // Sofort Modal und Eingabemaske verstecken
+    this.closeModal()
     document.getElementById('guess-section').style.display = 'none'
     this.waitingForGuess = false
 
