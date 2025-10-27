@@ -39,6 +39,9 @@ class MxsterGame {
     this.animationIntensity = 50
     this.currentTrackId = null
 
+    // Game settings
+    this.randomStartPosition = false // Start songs at random position
+
     // Headphone button long press detection
     this.headphonePressStart = null
     this.headphonePressTimer = null
@@ -1162,6 +1165,23 @@ class MxsterGame {
 
       if (success) {
         console.log('🎵 Spiele über Spotify SDK:', song.title)
+
+        // Random start position wenn aktiviert
+        if (this.randomStartPosition) {
+          // Warte kurz bis Track geladen ist, dann springe zu zufälliger Position
+          setTimeout(async () => {
+            const state = await spotifyPlayer.getState()
+            if (state && state.duration) {
+              // Zufällige Position zwischen 10% und 70% der Tracklänge
+              const minPos = state.duration * 0.1
+              const maxPos = state.duration * 0.7
+              const randomPos = Math.floor(Math.random() * (maxPos - minPos) + minPos)
+              await spotifyPlayer.seek(randomPos)
+              console.log(`🎲 Zufällige Startposition: ${Math.floor(randomPos / 1000)}s`)
+            }
+          }, 1000)
+        }
+
         const audioPlayer = document.getElementById('audio-player')
         if (audioPlayer) {
           audioPlayer.style.display = 'none'
@@ -1188,6 +1208,20 @@ class MxsterGame {
       console.log('   Preview URL:', song.previewUrl)
       audioPlayer.style.display = 'block'
       audioPlayer.src = song.previewUrl
+
+      // Random start position wenn aktiviert
+      if (this.randomStartPosition) {
+        // Warte bis Metadaten geladen sind
+        audioPlayer.onloadedmetadata = () => {
+          // Preview sind 30 Sekunden - zufällige Position zwischen 3s und 20s
+          const minPos = 3
+          const maxPos = Math.min(20, audioPlayer.duration - 5)
+          const randomPos = Math.random() * (maxPos - minPos) + minPos
+          audioPlayer.currentTime = randomPos
+          console.log(`🎲 Zufällige Startposition: ${randomPos.toFixed(1)}s`)
+        }
+      }
+
       try {
         await audioPlayer.play()
         console.log('🎵 Spiele Spotify Preview:', song.title)
@@ -2028,6 +2062,28 @@ class MxsterGame {
     this.showModal(
       'Einstellungen',
       `<div class="scoreboard">
+         <!-- Game Settings -->
+         <div class="player-row" style="cursor: default; background: var(--bg-secondary); border: 1px solid var(--border);">
+           <div style="width: 100%;">
+             <strong>🎲 Zufällige Startposition</strong>
+             <p style="margin: 8px 0; font-size: 14px; color: var(--text-secondary);">
+               Songs starten an einer zufälligen Stelle (erschwert das Raten)
+             </p>
+             <label style="display: flex; align-items: center; gap: 12px; cursor: pointer;">
+               <input
+                 type="checkbox"
+                 id="random-start-checkbox"
+                 ${this.randomStartPosition ? 'checked' : ''}
+                 onchange="game.toggleRandomStart(this.checked)"
+                 style="width: 20px; height: 20px; cursor: pointer;">
+               <span style="font-size: 14px;">
+                 ${this.randomStartPosition ? 'Aktiviert' : 'Deaktiviert'}
+               </span>
+             </label>
+           </div>
+         </div>
+
+         <!-- History Settings -->
          <div class="player-row" onclick="game.showHistory()">
            <div>
              <strong>${getIconHTML('trophy')} Spielhistorie anzeigen</strong>
@@ -2056,6 +2112,15 @@ class MxsterGame {
                 onchange="game.importGame(event); game.closeModal()">
        </div>`,
       [{ text: 'Schließen', onclick: 'game.closeModal()', className: 'btn-outline' }]
+    )
+  }
+
+  toggleRandomStart(enabled) {
+    this.randomStartPosition = enabled
+    console.log('🎲 Zufällige Startposition:', enabled ? 'aktiviert' : 'deaktiviert')
+    this.showToast(
+      enabled ? 'Zufällige Startposition aktiviert' : 'Zufällige Startposition deaktiviert',
+      'success'
     )
   }
 
