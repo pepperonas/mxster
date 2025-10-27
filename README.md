@@ -2,7 +2,7 @@
 
 **Das ultimative Musikquiz für Musikfans!** Rate Songs, platziere sie chronologisch und teste dein Musikwissen. Spiele mit Freunden, sammle Punkte und werde zum Musik-Champion!
 
-[![Live Demo](https://img.shields.io/badge/Demo-mxster.de-blue?style=for-the-badge)](https://mxster.de)
+[![App](https://img.shields.io/badge/App-mxster.de-blue?style=for-the-badge)](https://mxster.de)
 [![License](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)](LICENSE)
 ![Songs](https://img.shields.io/badge/Songs-104-orange?style=for-the-badge)
 
