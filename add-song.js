@@ -164,6 +164,15 @@ async function main() {
       console.log(`   ⚠️  Could not copy QR code to docs/: ${error.message}\n`);
     }
 
+    // 10. Update song count in README.md
+    console.log('📊 Updating song count in README.md...');
+    try {
+      const { execSync } = require('child_process');
+      execSync('node update-song-count.js', { cwd: __dirname, stdio: 'inherit' });
+    } catch (error) {
+      console.log(`   ⚠️  Could not update README.md: ${error.message}\n`);
+    }
+
     // 11. Try to generate STL files (optional)
     try {
       const stlFiles = await generateSTL(result.scadPath);

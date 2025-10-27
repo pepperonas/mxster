@@ -1160,28 +1160,42 @@ class MxsterGame {
       console.log('   trackUri:', trackUri)
       console.log('   accessToken available:', !!accessToken)
 
-      const success = await spotifyPlayer.playTrack(trackUri, accessToken)
+      let success = false
+
+      // Random start position wenn aktiviert
+      if (this.randomStartPosition) {
+        // Hole Track-Länge von Spotify API
+        const duration = await spotifyPlayer.getTrackDuration(song.spotifyId, accessToken)
+        if (duration) {
+          // Berechne Position mit mindestens 60 Sekunden Restlaufzeit
+          const minRestzeit = 60000 // 60 Sekunden in ms
+          const maxPos = Math.max(0, duration - minRestzeit)
+
+          // Starte frühestens bei 10% des Songs
+          const minPos = Math.max(0, duration * 0.1)
+
+          // Wenn Song zu kurz (< 70 Sekunden), starte normal
+          if (maxPos > minPos) {
+            const randomPos = Math.floor(Math.random() * (maxPos - minPos) + minPos)
+            console.log(`🎲 Spiele mit zufälliger Startposition: ${Math.floor(randomPos / 1000)}s (Rest: ${Math.floor((duration - randomPos) / 1000)}s)`)
+            success = await spotifyPlayer.playTrackWithPosition(trackUri, randomPos, accessToken)
+          } else {
+            console.log('⚠️ Song zu kurz für zufällige Position, starte normal')
+            success = await spotifyPlayer.playTrack(trackUri, accessToken)
+          }
+        } else {
+          console.warn('⚠️ Konnte Track-Länge nicht abrufen, starte normal')
+          success = await spotifyPlayer.playTrack(trackUri, accessToken)
+        }
+      } else {
+        // Normale Wiedergabe von Anfang an
+        success = await spotifyPlayer.playTrack(trackUri, accessToken)
+      }
+
       console.log('   Spotify SDK playback result:', success)
 
       if (success) {
         console.log('🎵 Spiele über Spotify SDK:', song.title)
-
-        // Random start position wenn aktiviert
-        if (this.randomStartPosition) {
-          // Warte kurz bis Track geladen ist, dann springe zu zufälliger Position
-          setTimeout(async () => {
-            const state = await spotifyPlayer.getState()
-            if (state && state.duration) {
-              // Zufällige Position zwischen 10% und 70% der Tracklänge
-              const minPos = state.duration * 0.1
-              const maxPos = state.duration * 0.7
-              const randomPos = Math.floor(Math.random() * (maxPos - minPos) + minPos)
-              await spotifyPlayer.seek(randomPos)
-              console.log(`🎲 Zufällige Startposition: ${Math.floor(randomPos / 1000)}s`)
-            }
-          }, 1000)
-        }
-
         const audioPlayer = document.getElementById('audio-player')
         if (audioPlayer) {
           audioPlayer.style.display = 'none'
@@ -1213,12 +1227,14 @@ class MxsterGame {
       if (this.randomStartPosition) {
         // Warte bis Metadaten geladen sind
         audioPlayer.onloadedmetadata = () => {
-          // Preview sind 30 Sekunden - zufällige Position zwischen 3s und 20s
-          const minPos = 3
-          const maxPos = Math.min(20, audioPlayer.duration - 5)
-          const randomPos = Math.random() * (maxPos - minPos) + minPos
-          audioPlayer.currentTime = randomPos
-          console.log(`🎲 Zufällige Startposition: ${randomPos.toFixed(1)}s`)
+          // Preview sind 30 Sekunden - NICHT verwenden wenn zu kurz
+          const duration = audioPlayer.duration
+          console.log(`📊 Preview Dauer: ${duration.toFixed(1)}s`)
+
+          // Preview sind meist 30s - für zufällige Position NICHT geeignet
+          // da keine 60s Restlaufzeit möglich
+          console.log('⚠️ Preview-URLs zu kurz für zufällige Position (benötigt 60s Restlaufzeit)')
+          // Starte am Anfang
         }
       }
 
@@ -2065,47 +2081,58 @@ class MxsterGame {
          <!-- Game Settings -->
          <div class="player-row" style="cursor: default; background: var(--bg-secondary); border: 1px solid var(--border);">
            <div style="width: 100%;">
-             <strong>🎲 Zufällige Startposition</strong>
-             <p style="margin: 8px 0; font-size: 14px; color: var(--text-secondary);">
-               Songs starten an einer zufälligen Stelle (erschwert das Raten)
-             </p>
-             <label style="display: flex; align-items: center; gap: 12px; cursor: pointer;">
-               <input
-                 type="checkbox"
-                 id="random-start-checkbox"
-                 ${this.randomStartPosition ? 'checked' : ''}
-                 onchange="game.toggleRandomStart(this.checked)"
-                 style="width: 20px; height: 20px; cursor: pointer;">
-               <span style="font-size: 14px;">
-                 ${this.randomStartPosition ? 'Aktiviert' : 'Deaktiviert'}
-               </span>
-             </label>
+             <div style="display: flex; align-items: start; gap: 8px;">
+               <span style="font-size: 20px; line-height: 1.4;">🎲</span>
+               <div style="width: 100%;">
+                 <strong style="display: block;">Zufällige Startposition</strong>
+                 <label style="display: flex; align-items: center; gap: 12px; cursor: pointer; margin-top: 8px;">
+                   <input
+                     type="checkbox"
+                     id="random-start-checkbox"
+                     ${this.randomStartPosition ? 'checked' : ''}
+                     onchange="game.toggleRandomStart(this.checked)"
+                     class="styled-checkbox">
+                   <span style="font-size: 14px; color: var(--text-secondary);">
+                     Songs starten an einer zufälligen Stelle (erschwert das Raten)
+                   </span>
+                 </label>
+               </div>
+             </div>
            </div>
          </div>
 
          <!-- History Settings -->
          <div class="player-row" onclick="game.showHistory()">
-           <div>
-             <strong>${getIconHTML('trophy')} Spielhistorie anzeigen</strong>
-             <p style="margin: 4px 0 0 0; font-size: 14px; color: var(--text-secondary);">
-               ${historyCount} abgeschlossene(s) Spiel(e)
-             </p>
+           <div style="display: flex; align-items: start; gap: 8px;">
+             ${getIconHTML('trophy')}
+             <div>
+               <strong style="display: block;">Spielhistorie anzeigen</strong>
+               <p style="margin: 4px 0 0 0; font-size: 14px; color: var(--text-secondary);">
+                 ${historyCount} abgeschlossene(s) Spiel(e)
+               </p>
+             </div>
            </div>
          </div>
          <div class="player-row" onclick="game.exportGame()">
-           <div>
-             <strong>${getIconHTML('download')} Spielhistorie exportieren</strong>
-             <p style="margin: 4px 0 0 0; font-size: 14px; color: var(--text-secondary);">
-               Speichere aktuelle Spielhistorie als JSON-Datei
-             </p>
+           <div style="display: flex; align-items: start; gap: 8px;">
+             ${getIconHTML('download')}
+             <div>
+               <strong style="display: block;">Spielhistorie exportieren</strong>
+               <p style="margin: 4px 0 0 0; font-size: 14px; color: var(--text-secondary);">
+                 Speichere aktuelle Spielhistorie als JSON-Datei
+               </p>
+             </div>
            </div>
          </div>
          <div class="player-row" onclick="document.getElementById('import-file-settings').click()">
-           <div>
-             <strong>${getIconHTML('upload')} Spielhistorie importieren</strong>
-             <p style="margin: 4px 0 0 0; font-size: 14px; color: var(--text-secondary);">
-               Lade gespeicherte Spielhistorie
-             </p>
+           <div style="display: flex; align-items: start; gap: 8px;">
+             ${getIconHTML('upload')}
+             <div>
+               <strong style="display: block;">Spielhistorie importieren</strong>
+               <p style="margin: 4px 0 0 0; font-size: 14px; color: var(--text-secondary);">
+                 Lade gespeicherte Spielhistorie
+               </p>
+             </div>
            </div>
          </div>
          <input type="file" id="import-file-settings" accept=".json" style="display: none;"

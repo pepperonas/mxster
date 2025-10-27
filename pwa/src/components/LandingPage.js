@@ -5,7 +5,10 @@
  * Shows game features, game modes, how to play, and downloads
  */
 
+import { songs } from '../data/songs.js'
+
 export function renderLandingPage(onLoginClick) {
+  const songCount = songs.length
   return `
     <div class="min-h-screen bg-background">
       <!-- Hero Section -->
@@ -33,6 +36,16 @@ export function renderLandingPage(onLoginClick) {
               Rate Songs, ordne sie chronologisch und teste dein Musikwissen.
               Der ultimative Multiplayer-Musikquiz mit Spotify-Integration.
             </p>
+
+            <!-- Song Count Badge -->
+            <div class="flex justify-center pt-4">
+              <div class="glass px-8 py-4 rounded-2xl shadow-glow-md border-2 border-accent/30">
+                <div class="text-5xl font-black text-gradient mb-2">${songCount}</div>
+                <div class="text-sm font-semibold text-text-secondary uppercase tracking-wider">
+                  Songs verfügbar
+                </div>
+              </div>
+            </div>
 
             <!-- CTA Buttons -->
             <div class="flex flex-col sm:flex-row gap-4 justify-center items-center pt-8">

@@ -799,6 +799,24 @@
   @apply border-accent border-4 scale-110;
 }
 
+/* Custom Checkbox Styling */
+.styled-checkbox {
+  @apply appearance-none w-5 h-5 rounded cursor-pointer transition-all duration-300;
+  @apply border-2 border-white/20 bg-primary;
+  @apply hover:border-accent hover:shadow-glow-sm;
+  @apply checked:bg-accent checked:border-accent;
+  position: relative;
+}
+
+.styled-checkbox:checked::before {
+  content: "✓";
+  @apply absolute inset-0 flex items-center justify-center text-white font-bold text-sm;
+}
+
+.styled-checkbox:focus {
+  @apply outline-none ring-2 ring-accent/30;
+}
+
 /* Utilities Layer Extensions */
 @layer utilities {
   .flex-1 {

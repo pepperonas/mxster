@@ -317,6 +317,15 @@ async function main() {
       await generatePDFCards();
     }
 
+    // Update song count in README.md
+    log('\n📊 Updating song count in README.md...', 'cyan');
+    try {
+      const { execSync } = require('child_process');
+      execSync('node update-song-count.js', { cwd: __dirname, stdio: 'inherit' });
+    } catch (error) {
+      log(`   ⚠️  Could not update README.md: ${error.message}`, 'yellow');
+    }
+
     log('\n╔════════════════════════════════════════╗', 'bright');
     log('║        ✅  Fertig!  ✅             ║', 'green');
     log('╚════════════════════════════════════════╝\n', 'bright');

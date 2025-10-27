@@ -188,6 +188,50 @@ class SpotifyPlayer {
     }
   }
 
+  // Spiele Track ab mit Startposition (optimiert für sofortigen Start)
+  async playTrackWithPosition(trackUri, positionMs, accessToken = null) {
+    if (!this.isReady || !this.deviceId) {
+      console.error('❌ Player nicht bereit')
+      return false
+    }
+
+    try {
+      console.log('▶️ Spiele Track mit Position:', trackUri, 'Position:', positionMs)
+
+      // Verwende aktuelles Token falls keins übergeben wurde
+      const token = accessToken || await this.getCurrentToken()
+      if (!token) {
+        console.error('❌ Kein gültiges Token verfügbar')
+        return false
+      }
+
+      // Spiele Track direkt mit Startposition ab
+      const response = await fetch(`https://api.spotify.com/v1/me/player/play?device_id=${this.deviceId}`, {
+        method: 'PUT',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          uris: [trackUri],
+          position_ms: positionMs
+        })
+      })
+
+      if (!response.ok) {
+        const error = await response.json()
+        console.error('❌ Playback Error:', error)
+        return false
+      }
+
+      this.currentTrackUri = trackUri
+      return true
+    } catch (error) {
+      console.error('❌ Play Track Failed:', error)
+      return false
+    }
+  }
+
   // Pause
   async pause() {
     if (!this.player) return
@@ -216,6 +260,34 @@ class SpotifyPlayer {
   async getState() {
     if (!this.player) return null
     return await this.player.getCurrentState()
+  }
+
+  // Get track duration from Spotify API
+  async getTrackDuration(trackId, accessToken = null) {
+    try {
+      const token = accessToken || await this.getCurrentToken()
+      if (!token) {
+        console.error('❌ Kein gültiges Token verfügbar')
+        return null
+      }
+
+      const response = await fetch(`https://api.spotify.com/v1/tracks/${trackId}`, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      })
+
+      if (!response.ok) {
+        console.error('❌ Track Info Error:', response.status)
+        return null
+      }
+
+      const data = await response.json()
+      return data.duration_ms
+    } catch (error) {
+      console.error('❌ Get Track Duration Failed:', error)
+      return null
+    }
   }
 
   // Disconnect Player
