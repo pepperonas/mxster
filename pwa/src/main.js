@@ -660,7 +660,7 @@ class MxsterGame {
                 font-weight: bold;
                 font-size: 16px;
               ">
-                🎮 ${this.players[this.currentPlayer].name} ist am Zug
+                ${this.players[this.currentPlayer].name}, höre und rate den Song!
               </div>
               <div class="guess-inputs">
                 <input type="number" id="guess-year" class="input" placeholder="Jahr (z.B. 1985)"
