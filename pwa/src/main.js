@@ -561,7 +561,26 @@ class MxsterGame {
 
         <!-- QR Scanner (Physical) or Virtual Button -->
         ${this.gameVariant === GAME_VARIANTS.PHYSICAL ? `
-          <div class="scanner-container">
+          <div class="scanner-container" style="${this.gameMode === GAME_MODES.GUESS && this.waitingForGuess ? 'opacity: 0.5; pointer-events: none;' : ''}">
+            ${this.gameMode === GAME_MODES.GUESS && this.waitingForGuess ? `
+              <div style="
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                background: var(--warning);
+                color: var(--bg-primary);
+                padding: 20px 30px;
+                border-radius: 12px;
+                font-weight: bold;
+                font-size: 18px;
+                z-index: 20;
+                text-align: center;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+              ">
+                ⏳ Warte auf ${this.players[this.currentPlayer].name}
+              </div>
+            ` : ''}
             <video id="qr-video"></video>
             <div class="scanner-label">
               ${getIconHTML('camera')}
@@ -596,8 +615,20 @@ class MxsterGame {
             </button>
           </div>
         ` : `
-          <div class="card" style="text-align: center; padding: 40px;">
+          <div class="card" style="text-align: center; padding: 40px; ${this.gameMode === GAME_MODES.GUESS && this.waitingForGuess ? 'opacity: 0.5; pointer-events: none;' : ''}">
             <h3 style="margin-bottom: 24px;">💻 Virtueller Modus</h3>
+            ${this.gameMode === GAME_MODES.GUESS && this.waitingForGuess ? `
+              <div style="
+                background: var(--warning);
+                color: var(--bg-primary);
+                padding: 16px;
+                border-radius: 8px;
+                margin-bottom: 16px;
+                font-weight: bold;
+              ">
+                ⏳ Warte auf ${this.players[this.currentPlayer].name}
+              </div>
+            ` : ''}
             <button class="btn btn-accent" onclick="game.playRandomSong()"
                     style="font-size: 18px; padding: 20px 40px; min-height: 60px;">
               🎲 Zufälligen Song spielen
@@ -619,6 +650,18 @@ class MxsterGame {
             <!-- Guess Section -->
             <div id="guess-section" class="guess-form">
               <h4 style="margin-bottom: 16px;">🎯 Song, Artist & Jahr erraten</h4>
+              <!-- Current Player Display -->
+              <div style="
+                background: var(--accent);
+                padding: 12px 16px;
+                border-radius: 8px;
+                margin-bottom: 16px;
+                text-align: center;
+                font-weight: bold;
+                font-size: 16px;
+              ">
+                🎮 ${this.players[this.currentPlayer].name} ist am Zug
+              </div>
               <div class="guess-inputs">
                 <input type="number" id="guess-year" class="input" placeholder="Jahr (z.B. 1985)"
                        min="1900" max="${new Date().getFullYear()}"
@@ -629,11 +672,8 @@ class MxsterGame {
                        onkeypress="if(event.key==='Enter') game.checkGuess()">
               </div>
               <div class="guess-actions">
-                <button class="btn btn-accent btn-mobile-full" onclick="game.checkGuess()" style="flex: 1;">
+                <button class="btn btn-accent btn-mobile-full" onclick="game.checkGuess()" style="width: 100%;">
                   ${getIconHTML('check')} Prüfen
-                </button>
-                <button class="btn btn-outline btn-mobile-full" onclick="game.skipGuess()" style="flex: 1;">
-                  ${getIconHTML('skip')} Überspringen
                 </button>
               </div>
             </div>
@@ -1004,6 +1044,17 @@ class MxsterGame {
     if (this.lastScannedCode === data) {
       return
     }
+
+    // Im Guess-Modus: Verhindere neuen Song, solange Spieler noch raten muss
+    if (this.gameMode === GAME_MODES.GUESS && this.waitingForGuess) {
+      this.showToast(`⏳ Warte auf ${this.players[this.currentPlayer].name}`, 'warning')
+      // Reset lastScannedCode so code can be scanned again after player guessed
+      setTimeout(() => {
+        this.lastScannedCode = null
+      }, 2000)
+      return
+    }
+
     this.lastScannedCode = data
 
     // Close any open modal/dialog when QR code is scanned
@@ -2567,6 +2618,12 @@ class MxsterGame {
   }
 
   playRandomSong() {
+    // Im Guess-Modus: Verhindere neuen Song, solange Spieler noch raten muss
+    if (this.gameMode === GAME_MODES.GUESS && this.waitingForGuess) {
+      this.showToast(`⏳ Warte auf ${this.players[this.currentPlayer].name}`, 'warning')
+      return
+    }
+
     // Clear the timer
     if (this.headphonePressTimer) {
       clearTimeout(this.headphonePressTimer)
