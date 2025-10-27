@@ -1408,13 +1408,6 @@ class MxsterGame {
     this.showModal(
       '📍 Karte platzieren',
       `<div style="text-align: center;">
-         <p style="font-size: 18px; margin-bottom: 12px;">
-           <strong>${player.name}</strong> ist am Zug
-         </p>
-         <p style="font-size: 16px; color: var(--text-secondary); margin-bottom: 20px;">
-           Wähle die Position in der Timeline
-         </p>
-
          <div class="virtual-song-card" style="margin: 20px auto;">
            <div class="card-title">${song.title}</div>
            <div class="card-artist">${song.artist}</div>
@@ -1422,7 +1415,7 @@ class MxsterGame {
          </div>
 
          <div style="margin-top: 30px;">
-           <p style="font-weight: 600; margin-bottom: 16px;">Wo möchtest du die Karte einfügen?</p>
+           <p style="font-weight: 600; margin-bottom: 16px;">${player.name}, wo möchtest du die Karte einfügen?</p>
            ${this.createDropZones(player)}
          </div>
 
