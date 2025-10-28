@@ -40,7 +40,7 @@ async function generateCard(song, outputDir = './card-generator/models') {
   await QRCode.toFile(qrCodePath, spotifyUrl, {
     width: 1000, // High resolution for 3D printing
     margin: 2, // Increased margin for better recognition
-    errorCorrectionLevel: 'H', // Highest error correction (30%) for damaged/3D printed codes
+    errorCorrectionLevel: 'M', // Medium error correction (15%) - balance between density and robustness
     color: {
       dark: '#000000',
       light: '#FFFFFF'
