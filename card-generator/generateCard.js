@@ -39,7 +39,7 @@ async function generateCard(song, outputDir = './card-generator/models') {
   console.log(`   Spotify URL: ${spotifyUrl}`);
   await QRCode.toFile(qrCodePath, spotifyUrl, {
     width: 1000, // High resolution for 3D printing
-    margin: 4, // Larger margin for better recognition
+    margin: 1,
     errorCorrectionLevel: 'L', // Low error correction (7%) - less dense, easier to scan
     color: {
       dark: '#000000',
