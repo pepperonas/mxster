@@ -1973,19 +1973,19 @@ class MxsterGame {
         <h3 style="margin-bottom: 16px;">🎮 Spielablauf</h3>
         <ol style="margin-left: 20px; line-height: 1.8;">
           ${this.gameVariant === GAME_VARIANTS.PHYSICAL ? `
-            <li><strong>DJ scannt QR-Code:</strong> Der DJ scannt eine Song-Karte. Der DJ rät nicht mit.</li>
+            <li style="margin-bottom: 12px;"><strong>DJ scannt QR-Code:</strong> Der DJ scannt eine Song-Karte. Der DJ rät nicht mit.</li>
           ` : `
-            <li><strong>Zufälliger Song:</strong> Das System wählt automatisch einen zufälligen Song aus.</li>
+            <li style="margin-bottom: 12px;"><strong>Zufälliger Song:</strong> Das System wählt automatisch einen zufälligen Song aus.</li>
           `}
-          <li><strong>Song anhören:</strong> Der Song wird für alle Spieler abgespielt.</li>
-          <li><strong>Raten:</strong> Der aktive Spieler gibt seine Tipps ein:
+          <li style="margin-bottom: 12px;"><strong>Song anhören:</strong> Der Song wird für alle Spieler abgespielt.</li>
+          <li style="margin-bottom: 12px;"><strong>Raten:</strong> Der aktive Spieler gibt seine Tipps ein:
             <ul style="margin-top: 8px; margin-left: 20px;">
               <li>Titel richtig = <strong>+1 Punkt</strong></li>
               <li>Künstler richtig = <strong>+1 Punkt</strong></li>
               <li>Jahr richtig = <strong>+1 Punkt</strong></li>
             </ul>
           </li>
-          <li><strong>Automatische Platzierung:</strong> Die Karte wird automatisch chronologisch in die Timeline eingefügt.</li>
+          <li style="margin-bottom: 12px;"><strong>Automatische Platzierung:</strong> Die Karte wird automatisch chronologisch in die Timeline eingefügt.</li>
           <li><strong>Nächster Spieler:</strong> Das Spiel geht im Uhrzeigersinn weiter.</li>
         </ol>
 
@@ -2007,11 +2007,11 @@ class MxsterGame {
         <h3 style="margin-bottom: 16px;">🎮 Spielablauf</h3>
         <ol style="margin-left: 20px; line-height: 1.8;">
           ${this.gameVariant === GAME_VARIANTS.PHYSICAL ? `
-            <li><strong>DJ scannt QR-Code:</strong> Der DJ scannt eine Song-Karte für den aktiven Spieler.</li>
+            <li style="margin-bottom: 12px;"><strong>DJ scannt QR-Code:</strong> Der DJ scannt eine Song-Karte für den aktiven Spieler.</li>
           ` : `
-            <li><strong>Zufälliger Song:</strong> Das System wählt automatisch einen zufälligen Song aus.</li>
+            <li style="margin-bottom: 12px;"><strong>Zufälliger Song:</strong> Das System wählt automatisch einen zufälligen Song aus.</li>
           `}
-          <li><strong>Position wählen:</strong> Der aktive Spieler wählt die richtige Position in seiner Timeline:
+          <li style="margin-bottom: 12px;"><strong>Position wählen:</strong> Der aktive Spieler wählt die richtige Position in seiner Timeline:
             <ul style="margin-top: 8px; margin-left: 20px;">
               <li>Richtig platziert = <strong>Karte bleibt in Timeline (+1 Karte)</strong></li>
               <li>Falsch platziert = <strong>Karte wird entfernt (keine Karte)</strong></li>
@@ -2042,11 +2042,11 @@ class MxsterGame {
         <h3 style="margin-bottom: 16px;">🎮 Spielablauf</h3>
         <ol style="margin-left: 20px; line-height: 1.8;">
           ${this.gameVariant === GAME_VARIANTS.PHYSICAL ? `
-            <li><strong>DJ scannt QR-Code:</strong> Der DJ scannt eine Song-Karte für den aktiven Spieler.</li>
+            <li style="margin-bottom: 12px;"><strong>DJ scannt QR-Code:</strong> Der DJ scannt eine Song-Karte für den aktiven Spieler.</li>
           ` : `
-            <li><strong>Zufälliger Song:</strong> Das System wählt automatisch einen zufälligen Song aus.</li>
+            <li style="margin-bottom: 12px;"><strong>Zufälliger Song:</strong> Das System wählt automatisch einen zufälligen Song aus.</li>
           `}
-          <li><strong>Position wählen:</strong> Der aktive Spieler wählt die richtige Position in der <strong>gemeinsamen Timeline</strong>:
+          <li style="margin-bottom: 12px;"><strong>Position wählen:</strong> Der aktive Spieler wählt die richtige Position in der <strong>gemeinsamen Timeline</strong>:
             <ul style="margin-top: 8px; margin-left: 20px;">
               <li>Richtig platziert = <strong>Karte bleibt in Timeline (+1 Karte)</strong></li>
               <li>Falsch platziert = <strong>Karte wird entfernt (keine Karte)</strong></li>
