@@ -223,16 +223,22 @@
     }
   }
 
-  /* Scanner container */
+  /* Scanner container - Quadratische Live-Vorschau */
   .scanner-container {
-    @apply relative w-full max-w-2xl mx-auto my-5;
+    @apply relative mx-auto my-5;
     @apply bg-black rounded-xl overflow-hidden;
     @apply border-2 border-secondary shadow-glow-sm;
+    /* Quadratischer Container: responsive bis max 500px */
+    width: min(90vw, 500px);
+    height: min(90vw, 500px);
+    max-width: 500px;
+    max-height: 500px;
   }
 
   #qr-video {
-    @apply w-full h-auto block;
-    object-fit: cover;
+    @apply w-full h-full block;
+    object-fit: cover; /* Füllt das Quadrat aus, schneidet bei Bedarf zu */
+    object-position: center;
   }
 
   /* Scanner label overlay */
