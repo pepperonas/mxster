@@ -1982,7 +1982,7 @@ class MxsterGame {
             <ul style="margin-top: 8px; margin-left: 20px;">
               <li>Titel richtig = <strong>+1 Punkt</strong></li>
               <li>Künstler richtig = <strong>+1 Punkt</strong></li>
-              <li>Jahr richtig (±2 Jahre) = <strong>+1 Punkt</strong></li>
+              <li>Jahr richtig = <strong>+1 Punkt</strong></li>
             </ul>
           </li>
           <li><strong>Automatische Platzierung:</strong> Die Karte wird automatisch chronologisch in die Timeline eingefügt.</li>
