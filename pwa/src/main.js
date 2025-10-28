@@ -24,6 +24,8 @@ class MxsterGame {
     this.players = []
     this.currentSong = null
     this.lastScannedCode = null
+    this.lastScannedTime = 0  // Timestamp des letzten Scans für Debouncing
+    this.scanDebounceMs = 3000  // 3 Sekunden zwischen identischen Scans
     this.qrScanner = null  // QR Scanner instance
     this.gameState = new GameState()
     this.spotifyReady = false
@@ -1000,9 +1002,12 @@ class MxsterGame {
       }
     )
 
+    // Setze Inversion Mode für bessere Erkennung bei verschiedenen Lichtverhältnissen
+    this.qrScanner.setInversionMode('both')
+
     // Setze höhere Video-Auflösung für bessere QR-Code-Erkennung
     this.qrScanner.start().then(() => {
-      console.log('▶️ Scanner initialized')
+      console.log('▶️ Scanner initialized with inversion mode: both')
       // Speichere Video-Stream für Taschenlampen-Steuerung
       this.videoStream = video.srcObject
 
@@ -1104,21 +1109,23 @@ class MxsterGame {
   }
 
   handleQRCode(data) {
-    if (this.lastScannedCode === data) {
+    const currentTime = Date.now()
+
+    // Debouncing: Verhindere mehrfaches Scannen desselben Codes innerhalb von 3 Sekunden
+    if (this.lastScannedCode === data && (currentTime - this.lastScannedTime) < this.scanDebounceMs) {
+      console.log('⏭️ Scan ignoriert (Debouncing): Derselbe Code innerhalb von 3 Sekunden')
       return
     }
 
     // Im Guess-Modus: Verhindere neuen Song, solange Spieler noch raten muss
     if (this.gameMode === GAME_MODES.GUESS && this.waitingForGuess) {
       this.showToast(`⏳ Warte auf ${this.players[this.currentPlayer].name}`, 'warning')
-      // Reset lastScannedCode so code can be scanned again after player guessed
-      setTimeout(() => {
-        this.lastScannedCode = null
-      }, 2000)
       return
     }
 
+    // Speichere Code und Timestamp
     this.lastScannedCode = data
+    this.lastScannedTime = currentTime
 
     // Close any open modal/dialog when QR code is scanned
     this.closeModal()
@@ -1148,10 +1155,6 @@ class MxsterGame {
       if (this.playedSongs.includes(songId)) {
         this.showToast('Dieser Song wurde bereits gespielt!', 'warning')
         console.log('⚠️ Song bereits gespielt:', song.title)
-        // Reset lastScannedCode so the same code can be scanned again later
-        setTimeout(() => {
-          this.lastScannedCode = null
-        }, 2000)
         return
       }
 
@@ -1180,10 +1183,6 @@ class MxsterGame {
     } else {
       this.showToast('Song nicht gefunden!', 'error')
       console.warn('❌ Song nicht gefunden für QR-Code:', data)
-      // Reset lastScannedCode for unknown codes
-      setTimeout(() => {
-        this.lastScannedCode = null
-      }, 2000)
     }
   }
 
