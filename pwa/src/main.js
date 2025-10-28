@@ -1082,10 +1082,10 @@ class MxsterGame {
   handleQRCode(data) {
     const currentTime = Date.now()
 
-    // Debouncing: Verhindere mehrfaches Scannen desselben Codes innerhalb von 3 Sekunden
-    if (this.lastScannedCode === data && (currentTime - this.lastScannedTime) < this.scanDebounceMs) {
-      console.log('⏭️ Scan ignoriert (Debouncing): Derselbe Code innerhalb von 3 Sekunden')
-      return
+    // Debouncing: Verhindere ALLE Scans innerhalb von 3 Sekunden nach dem letzten erfolgreichen Scan
+    if ((currentTime - this.lastScannedTime) < this.scanDebounceMs) {
+      console.log('⏭️ Scan ignoriert (Debouncing): Zu schnell nach letztem Scan')
+      return // SILENT - kein Toast!
     }
 
     // Im Guess-Modus: Verhindere neuen Song, solange Spieler noch raten muss
