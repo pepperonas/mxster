@@ -2011,9 +2011,7 @@ class MxsterGame {
           ` : `
             <li><strong>Zufälliger Song:</strong> Das System wählt automatisch einen zufälligen Song aus.</li>
           `}
-          <li><strong>Song anhören:</strong> Der Song wird für alle Spieler abgespielt.</li>
-          <li><strong>Raten (optional):</strong> Du kannst versuchen zu raten, aber es gibt keine Punkte.</li>
-          <li><strong>Position wählen:</strong> Wähle die richtige Position in deiner Timeline:
+          <li><strong>Position wählen:</strong> Der aktive Spieler wählt die richtige Position in seiner Timeline:
             <ul style="margin-top: 8px; margin-left: 20px;">
               <li>Richtig platziert = <strong>Karte bleibt in Timeline (+1 Karte)</strong></li>
               <li>Falsch platziert = <strong>Karte wird entfernt (keine Karte)</strong></li>
@@ -2048,9 +2046,7 @@ class MxsterGame {
           ` : `
             <li><strong>Zufälliger Song:</strong> Das System wählt automatisch einen zufälligen Song aus.</li>
           `}
-          <li><strong>Song anhören:</strong> Der Song wird für alle Spieler abgespielt.</li>
-          <li><strong>Raten (optional):</strong> Du kannst versuchen zu raten, aber es gibt keine Punkte.</li>
-          <li><strong>Position wählen:</strong> Wähle die richtige Position in der <strong>gemeinsamen Timeline</strong>:
+          <li><strong>Position wählen:</strong> Der aktive Spieler wählt die richtige Position in der <strong>gemeinsamen Timeline</strong>:
             <ul style="margin-top: 8px; margin-left: 20px;">
               <li>Richtig platziert = <strong>Karte bleibt in Timeline (+1 Karte)</strong></li>
               <li>Falsch platziert = <strong>Karte wird entfernt (keine Karte)</strong></li>
