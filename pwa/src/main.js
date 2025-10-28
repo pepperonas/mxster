@@ -46,6 +46,13 @@ class MxsterGame {
     this.headphonePressStart = null
     this.headphonePressTimer = null
 
+    // Modal state tracking
+    this.modalOpen = false
+    this.modalHistoryState = false
+
+    // Browser Back-Button Handler für Dialoge
+    this.setupBrowserBackHandler()
+
     this.init()
   }
 
@@ -117,6 +124,31 @@ class MxsterGame {
         </div>
       `
     }
+  }
+
+  setupBrowserBackHandler() {
+    // Handler für Browser Zurück-Button
+    window.addEventListener('popstate', (event) => {
+      // Wenn ein Modal geöffnet ist, schließe es
+      if (this.modalOpen) {
+        event.preventDefault()
+        this.closeModal()
+        return
+      }
+
+      // Wenn kein Modal offen ist und Zurück-Button gedrückt wird
+      // Zeige Warnung vor dem Schließen
+      if (!this.modalOpen) {
+        // Verhindere das Zurückgehen
+        window.history.pushState(null, '', window.location.href)
+
+        // Zeige Warnung
+        this.showCloseWarning()
+      }
+    })
+
+    // Initial history state setzen
+    window.history.pushState(null, '', window.location.href)
   }
 
   async initializeSpotifyPlayer() {
@@ -1932,6 +1964,12 @@ class MxsterGame {
           Rate Song-Titel, Künstler und Jahr richtig, um <strong>Punkte</strong> zu sammeln. Der Spieler mit den meisten Punkten nach 10 Songs gewinnt!
         </p>
 
+        ${this.gameVariant === GAME_VARIANTS.PHYSICAL ? `
+          <div style="background: rgba(74, 144, 226, 0.1); padding: 12px; border-radius: 8px; margin-bottom: 20px;">
+            <strong>🃏 Vorbereitung:</strong> Zu Spielbeginn werden <strong>10 Karten verdeckt</strong> an alle Spieler ausgeteilt. Diese Karten werden nacheinander vom DJ gescannt.
+          </div>
+        ` : ''}
+
         <h3 style="margin-bottom: 16px;">🎮 Spielablauf</h3>
         <ol style="margin-left: 20px; line-height: 1.8;">
           ${this.gameVariant === GAME_VARIANTS.PHYSICAL ? `
@@ -2151,7 +2189,46 @@ class MxsterGame {
     )
   }
 
+  stopAudio() {
+    // Stoppe Spotify Player
+    if (spotifyPlayer && spotifyPlayer.player) {
+      spotifyPlayer.pause().catch(err => {
+        console.warn('⚠️ Spotify Player konnte nicht pausiert werden:', err)
+      })
+    }
+
+    // Stoppe Beat Sync
+    if (beatAnimator) {
+      beatAnimator.stop()
+    }
+
+    console.log('🔇 Audio gestoppt')
+  }
+
+  showCloseWarning() {
+    this.showModal(
+      'App verlassen?',
+      `<div style="text-align: center;">
+         <div style="font-size: 48px; margin: 20px 0;">⚠️</div>
+         <p>Möchtest du die App wirklich verlassen?</p>
+         <div class="card" style="background: var(--primary); margin-top: 16px; padding: 16px; text-align: left;">
+           <p style="margin: 0; font-size: 14px; color: var(--text-secondary);">
+             💡 <strong>Tipp:</strong> Dein Spielstand wird automatisch gespeichert und kann beim nächsten Besuch fortgesetzt werden.
+           </p>
+         </div>
+       </div>`,
+      [
+        { text: 'Bleiben', onclick: 'game.closeModal()', className: 'btn-accent' },
+        { text: 'Verlassen', onclick: 'window.history.back()', className: 'btn-outline' }
+      ],
+      { required: true }
+    )
+  }
+
   showWinner(triggeringPlayer) {
+    // Stoppe Audio wenn Gewinner angezeigt wird
+    this.stopAudio()
+
     // Im Guess-Modus: Gewinner ist Spieler mit meisten Punkten
     // In Timeline-Modi: Gewinner ist erster Spieler mit 10 Karten
     let actualWinner = triggeringPlayer
@@ -2277,19 +2354,15 @@ class MxsterGame {
   }
 
   endGameEarly() {
-    // Find leader based on game mode
-    let sortedPlayers, topPlayer, leadInfo
+    // Sortiere Spieler nach aktuellem Stand
+    let sortedPlayers
 
     if (this.gameMode === GAME_MODES.GUESS) {
       // Guess-Modus: Höchster Score
       sortedPlayers = [...this.players].sort((a, b) => (b.score || 0) - (a.score || 0))
-      topPlayer = sortedPlayers[0]
-      leadInfo = `${topPlayer.score || 0} Punkte`
     } else {
       // Timeline-Modi: Meiste Karten
       sortedPlayers = [...this.players].sort((a, b) => b.cards - a.cards)
-      topPlayer = sortedPlayers[0]
-      leadInfo = `${topPlayer.cards} Karten`
     }
 
     const playerStats = sortedPlayers.map((p, i) => {
@@ -2307,9 +2380,9 @@ class MxsterGame {
          <p style="margin: 0 0 12px 0;"><strong>Aktueller Stand:</strong></p>
          ${playerStats}
        </div>
-       <div class="card" style="background: var(--accent); margin-top: 16px; padding: 16px;">
-         <p style="margin: 0;">
-           <strong>🏆 ${topPlayer.name}</strong> führt mit ${leadInfo} und wird als Gewinner in die Historie eingetragen.
+       <div class="card" style="background: var(--bg-secondary); border: 1px solid var(--border); margin-top: 16px; padding: 16px;">
+         <p style="margin: 0; color: var(--text-secondary);">
+           ⚠️ Das Spiel wird ohne Gewinner beendet und nicht in der Historie gespeichert.
          </p>
        </div>`,
       [
@@ -2320,48 +2393,22 @@ class MxsterGame {
   }
 
   confirmEndGame() {
-    // Find winner based on game mode
-    let winner
+    // Stoppe Audio wenn Spiel beendet wird
+    this.stopAudio()
 
-    if (this.gameMode === GAME_MODES.GUESS) {
-      // Guess-Modus: Höchster Score
-      const sortedByScore = [...this.players].sort((a, b) => (b.score || 0) - (a.score || 0))
-      winner = sortedByScore[0]
-    } else {
-      // Timeline-Modi: Meiste Karten
-      const sortedByCards = [...this.players].sort((a, b) => b.cards - a.cards)
-      winner = sortedByCards[0]
-    }
-
-    // Save game to history
-    gameHistory.saveGame({
-      winner: {
-        name: winner.name,
-        cards: winner.cards,
-        score: winner.score || 0
-      },
-      players: this.players,
-      gameMode: this.gameMode
-    })
-
+    // Lösche Spielstand
     this.gameState.clear()
     this.closeModal()
 
-    const winMessage = this.gameMode === GAME_MODES.GUESS
-      ? `${winner.score || 0} Punkte (${winner.cards} Karten)`
-      : `${winner.cards} Karten korrekt platziert`
-
+    // Zeige Beendigungs-Nachricht ohne Gewinner
     this.showModal(
       'Spiel beendet',
       `<div style="text-align: center;">
          <div style="font-size: 64px; margin: 20px 0;">🏁</div>
-         <h2 style="font-size: 28px; margin-bottom: 16px;">${winner.name} gewinnt!</h2>
-         <p style="font-size: 18px; color: var(--accent);">${winMessage}</p>
-         <div class="card" style="background: var(--primary); margin-top: 16px; padding: 16px;">
-           <p style="margin: 0; font-size: 14px; color: var(--text-secondary);">
-             ✅ Spiel wurde in der Historie gespeichert
-           </p>
-         </div>
+         <h2 style="font-size: 28px; margin-bottom: 16px;">Spiel vorzeitig beendet</h2>
+         <p style="font-size: 16px; color: var(--text-secondary);">
+           Das Spiel wurde ohne Gewinner beendet.
+         </p>
        </div>`,
       [
         { text: `${getIconHTML('arrowLeft')} Zur Startseite`, onclick: 'game.closeModal(); game.renderLoginScreen()', className: 'btn-accent' }
@@ -2597,6 +2644,15 @@ class MxsterGame {
     `
     document.body.appendChild(modal)
 
+    // Setze Modal-Status
+    this.modalOpen = true
+
+    // Füge History-State hinzu für Back-Button
+    if (!this.modalHistoryState) {
+      window.history.pushState({ modal: true }, '', window.location.href)
+      this.modalHistoryState = true
+    }
+
     // Close on background click (only if not required)
     if (!options.required) {
       modal.addEventListener('click', (e) => {
@@ -2620,6 +2676,10 @@ class MxsterGame {
   closeModal() {
     const modal = document.getElementById('game-modal')
     if (modal) modal.remove()
+
+    // Setze Modal-Status zurück
+    this.modalOpen = false
+    this.modalHistoryState = false
 
     // Remove beforeunload handler if it exists
     if (this.beforeUnloadHandler) {
