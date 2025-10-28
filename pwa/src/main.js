@@ -972,15 +972,56 @@ class MxsterGame {
       video,
       result => this.handleQRCode(result.data),
       {
+        // Visuelle Hervorhebung
         highlightScanRegion: true,
         highlightCodeOutline: true,
-        preferredCamera: 'environment'
+
+        // Kamera-Einstellungen
+        preferredCamera: 'environment',
+
+        // Scan-Frequenz erhöhen für bessere Erkennung
+        maxScansPerSecond: 10, // Standard ist 25, reduzieren für bessere Genauigkeit
+
+        // Höhere Auflösung für bessere QR-Code-Erkennung
+        calculateScanRegion: (video) => {
+          // Nutze die gesamte Videofläche für maximale Erkennungsrate
+          return {
+            x: 0,
+            y: 0,
+            width: video.videoWidth,
+            height: video.videoHeight,
+            downScaledWidth: Math.min(video.videoWidth, 1280),
+            downScaledHeight: Math.min(video.videoHeight, 1280)
+          }
+        },
+
+        // Verbesserungen für QR-Code-Erkennung
+        returnDetailedScanResult: true
       }
     )
+
+    // Setze höhere Video-Auflösung für bessere QR-Code-Erkennung
     this.qrScanner.start().then(() => {
       console.log('▶️ Scanner initialized')
       // Speichere Video-Stream für Taschenlampen-Steuerung
       this.videoStream = video.srcObject
+
+      // Versuche höhere Auflösung zu setzen
+      const track = this.videoStream?.getVideoTracks()[0]
+      if (track) {
+        track.applyConstraints({
+          width: { ideal: 1920 },
+          height: { ideal: 1080 },
+          facingMode: 'environment',
+          focusMode: { ideal: 'continuous' },
+          exposureMode: { ideal: 'continuous' },
+          whiteBalanceMode: { ideal: 'continuous' }
+        }).then(() => {
+          console.log('✅ Höhere Kamera-Auflösung aktiviert')
+        }).catch(err => {
+          console.log('⚠️ Konnte nicht auf höhere Auflösung wechseln:', err.message)
+        })
+      }
     })
 
     // Restore console after 1 second (scanner initialization complete)
