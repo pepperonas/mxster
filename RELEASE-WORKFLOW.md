@@ -195,6 +195,28 @@ gh release edit latest --prerelease=false --latest
 6. ✅ Git Tag `latest` zeigt auf aktuellen Commit
 7. ✅ "latest" steht ganz oben in Release-Liste
 
+## Wichtige Hinweise
+
+### Dateistruktur
+
+**PDFs werden NUR in `pwa/` generiert:**
+- ✅ `pwa/mxster-cards.pdf` (wird für Release verwendet)
+- ✅ `pwa/mxster-cards-bw.pdf` (wird für Release verwendet)
+- ✅ `pwa/mxster-cards-duplex.pdf` (wird für Release verwendet)
+- ✅ `pwa/mxster-cards-bw-duplex.pdf` (wird für Release verwendet)
+- ❌ KEINE PDFs im Root-Verzeichnis (sind redundant)
+
+**ZIPs werden im Root generiert:**
+- ✅ `mxster-scad-models.zip` (temporär, für Release)
+- ✅ `mxster-stl-models.zip` (temporär, für Release)
+- ✅ `mxster-source.zip` (temporär, für Release)
+- ℹ️ Diese können nach Upload gelöscht werden
+
+**3D-Modelle:**
+- `card-generator/models/*.scad` (im Git)
+- `card-generator/models/*.stl` (im Git)
+- `card-generator/models/all-cards.3mf` (im Git, für Release)
+
 ## Troubleshooting
 
 **"release not found" beim Upload zu latest:**
@@ -212,10 +234,12 @@ gh release create latest \
   mxster-source.zip
 ```
 
-**ZIP-Dateien zu groß:**
-- SCAD: ~500 KB (normal)
-- STL: ~12 MB (normal)
-- Source: ~25 MB (normal, enthält node_modules)
+**Dateigröße Referenz:**
+- SCAD ZIP: ~546 KB (111 Dateien)
+- STL ZIP: ~12 MB (111 Dateien)
+- Source ZIP: ~25 MB (enthält node_modules)
+- PDFs: ~250-280 KB pro Datei
+- 3MF: ~12 MB (kombiniert)
 
 **PWA cached alte Version:**
 - Hard Refresh im Browser: STRG+SHIFT+R
