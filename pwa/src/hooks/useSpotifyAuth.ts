@@ -171,7 +171,7 @@ export function useSpotifyAuth() {
     logout,
     handleCallback,
     refreshToken,
-    isLoggedIn: isLoggedIn,
+    checkIsLoggedIn: isLoggedIn,
     getAccessToken,
     startRefreshCheck,
     stopRefreshCheck

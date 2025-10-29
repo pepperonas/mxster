@@ -232,6 +232,26 @@ export const SettingsIcon = ({ size = 20, className = '', color = 'currentColor'
   </svg>
 )
 
+export const HistoryIcon = ({ size = 20, className = '', color = 'currentColor' }: IconProps) => (
+  <svg
+    width={size}
+    height={size}
+    viewBox="0 0 24 24"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    className={className}
+  >
+    <path
+      d="M3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12C21 16.9706 16.9706 21 12 21"
+      stroke={color}
+      strokeWidth="2"
+      strokeLinecap="round"
+    />
+    <path d="M3 17L3 21L7 21" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+    <path d="M12 7V12L15 15" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+  </svg>
+)
+
 export const CloseIcon = ({ size = 20, className = '', color = 'currentColor' }: IconProps) => (
   <svg
     width={size}
@@ -349,6 +369,7 @@ export const iconComponents = {
   trophy: TrophyIcon,
   music: MusicIcon,
   settings: SettingsIcon,
+  history: HistoryIcon,
   close: CloseIcon,
   check: CheckIcon,
   plus: PlusIcon,
