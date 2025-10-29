@@ -16,11 +16,35 @@
    - Für historische Downloads
    - Assets: 3 Dateien (nur ZIPs)
 
+## Quick Update: Songs hinzufügen/ändern
+
+**Nach add-song.js oder edit-song.js:**
+
+```bash
+# Automatischer Workflow (empfohlen)
+./update-and-release.sh "Add new song: [Titel] by [Artist]"
+
+# Das Script führt automatisch aus:
+# 1. PDFs neu generieren
+# 2. Git commit & push
+# 3. ZIP-Archive erstellen
+# 4. GitHub "latest" Release aktualisieren
+```
+
+**Was add-song.js / edit-song.js machen:**
+- ✅ Aktualisiert `docs/songs.json`
+- ✅ Aktualisiert `pwa/src/data/songs.js`
+- ✅ Generiert 3D-Modelle (SCAD + STL)
+- ✅ Kopiert QR-Code PNG nach `docs/`
+- ❌ Kein Git commit/push (das macht `update-and-release.sh`)
+- ❌ Keine PDF-Regenerierung (das macht `update-and-release.sh`)
+- ❌ Kein Release-Update (das macht `update-and-release.sh`)
+
 ## Vorbereitung
 
 Stelle sicher, dass alle Änderungen committed sind und das Spiel funktioniert.
 
-## Release-Schritte
+## Vollständiger Release (neue Version)
 
 ### 1. Version bump
 
