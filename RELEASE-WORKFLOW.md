@@ -1,5 +1,21 @@
 # Release Workflow für mxster
 
+## Release-Strategie
+
+**Zwei Release-Typen:**
+
+1. **"latest" Release** (immer aktuell)
+   - Keine Versionsnummer in Dateinamen
+   - Wird bei jedem Release aktualisiert
+   - Für Landing Page und README Links
+   - Assets: 8 Dateien (ZIPs, PDFs, 3MF)
+
+2. **Versionierte Releases** (v0.0.X-beta)
+   - Mit Versionsnummer in Dateinamen
+   - Als Pre-release markiert
+   - Für historische Downloads
+   - Assets: 3 Dateien (nur ZIPs)
+
 ## Vorbereitung
 
 Stelle sicher, dass alle Änderungen committed sind und das Spiel funktioniert.
@@ -19,20 +35,33 @@ Stelle sicher, dass alle Änderungen committed sind und das Spiel funktioniert.
 ./deploy.sh
 ```
 
-### 3. ZIP Archive erstellen
+### 3. Generiere PDFs (111 Songs)
 
 ```bash
-# SCAD Models (111 Dateien)
-zip -r mxster-scad-models-v0.0.X-beta.zip card-generator/models/*.scad -q
-
-# STL Models (111 Dateien)
-zip -r mxster-stl-models-v0.0.X-beta.zip card-generator/models/*.stl -q
-
-# Source Code (Git Archive)
-git archive --format=zip --prefix=mxster-v0.0.X-beta/ -o mxster-source-v0.0.X-beta.zip HEAD
+./generate-all-pdfs.sh
+# Erstellt in pwa/:
+# - mxster-cards.pdf
+# - mxster-cards-bw.pdf
+# - mxster-cards-duplex.pdf
+# - mxster-cards-bw-duplex.pdf
 ```
 
-### 4. Git Commit & Push
+### 4. Erstelle ZIP Archive
+
+```bash
+# Versionlose Dateien für "latest"
+rm -f mxster-*.zip
+zip -r mxster-scad-models.zip card-generator/models/*.scad -q
+zip -r mxster-stl-models.zip card-generator/models/*.stl -q
+git archive --format=zip --prefix=mxster/ -o mxster-source.zip HEAD
+
+# Versionierte Kopien für v0.0.X-beta
+cp mxster-scad-models.zip mxster-scad-models-v0.0.X-beta.zip
+cp mxster-stl-models.zip mxster-stl-models-v0.0.X-beta.zip
+cp mxster-source.zip mxster-source-v0.0.X-beta.zip
+```
+
+### 5. Git Commit & Push
 
 ```bash
 git add pwa/package.json pwa/src/main.js
@@ -48,7 +77,7 @@ Co-Authored-By: Claude <noreply@anthropic.com>"
 git push origin main
 ```
 
-### 5. GitHub Release mit versionierten Dateien
+### 6. GitHub Release mit versionierten Dateien (nur ZIPs)
 
 ```bash
 gh release create v0.0.X-beta \
@@ -61,8 +90,8 @@ gh release create v0.0.X-beta \
 - [Feature/Fix 2]
 
 ### Downloads
-- **SCAD Models**: OpenSCAD source files for 3D card generation
-- **STL Models**: Ready-to-print STL files for all XXX cards
+- **SCAD Models**: OpenSCAD source files for 3D card generation (111 cards)
+- **STL Models**: Ready-to-print STL files for all 111 cards
 - **Source Code**: Complete mxster game source code
 
 ### Deployment
@@ -76,23 +105,23 @@ gh release create v0.0.X-beta \
   mxster-source-v0.0.X-beta.zip
 ```
 
-### 6. Versionlose Kopien für "latest" Release
+### 7. Update "latest" Release (ALLE Assets)
 
 ```bash
-# Erstelle Kopien ohne Versionsnummer
-cp mxster-scad-models-v0.0.X-beta.zip mxster-scad-models.zip
-cp mxster-stl-models-v0.0.X-beta.zip mxster-stl-models.zip
-cp mxster-source-v0.0.X-beta.zip mxster-source.zip
-
-# Upload zu "latest" Release (überschreibt alte Dateien)
+# Upload alle 8 Dateien zu "latest" (überschreibt alte Dateien)
 gh release upload latest \
   mxster-scad-models.zip \
   mxster-stl-models.zip \
   mxster-source.zip \
+  pwa/mxster-cards.pdf \
+  pwa/mxster-cards-bw.pdf \
+  pwa/mxster-cards-duplex.pdf \
+  pwa/mxster-cards-bw-duplex.pdf \
+  card-generator/models/all-cards.3mf \
   --clobber
 ```
 
-### 7. Update "latest" Git Tag
+### 8. Update "latest" Git Tag
 
 ```bash
 git tag -d latest 2>/dev/null
@@ -100,7 +129,7 @@ git tag latest
 git push origin latest --force
 ```
 
-### 8. Update "latest" Release Notes und Status
+### 9. Update "latest" Release Notes und Status
 
 ```bash
 # Update Release Notes
@@ -112,9 +141,25 @@ This release is automatically updated with each new version.
 Current version: **v0.0.X-beta**
 
 ### Downloads
-- **SCAD Models**: OpenSCAD source files for 3D card generation
-- **STL Models**: Ready-to-print STL files for all cards
-- **Source Code**: Complete mxster game source code
+
+**3D Models (111 cards):**
+- **all-cards.3mf**: All cards combined for 3D printing (12 MB)
+- **mxster-scad-models.zip**: OpenSCAD source files (546 KB)
+- **mxster-stl-models.zip**: Ready-to-print STL files (12 MB)
+
+**Printable Cards (PDF):**
+- **mxster-cards.pdf**: Color cards, single-sided (258 KB)
+- **mxster-cards-bw.pdf**: Black & white cards, single-sided (253 KB)
+- **mxster-cards-duplex.pdf**: Color cards, double-sided for duplex printing (274 KB)
+- **mxster-cards-bw-duplex.pdf**: Black & white cards, double-sided (269 KB)
+
+**Source Code:**
+- **mxster-source.zip**: Complete mxster game source code (25 MB)
+
+### Card Layout
+- 6 cards per page (A4 landscape, 3x2 grid)
+- ISO/IEC 7810 standard size (85.6mm x 53.98mm - credit card size)
+- Cut marks included for precise cutting
 
 For specific versions, see: https://github.com/pepperonas/mxster/releases
 
@@ -127,21 +172,28 @@ gh release edit latest --prerelease=false --latest
 
 ## Download-Links (für Landing Page / README)
 
-**Immer aktuell (latest):**
-- SCAD Models: `https://github.com/pepperonas/mxster/releases/download/latest/mxster-scad-models.zip`
-- STL Models: `https://github.com/pepperonas/mxster/releases/download/latest/mxster-stl-models.zip`
-- Source Code: `https://github.com/pepperonas/mxster/releases/download/latest/mxster-source.zip`
+**Immer aktuell (latest) - 8 Dateien:**
+- 3MF: `https://github.com/pepperonas/mxster/releases/download/latest/all-cards.3mf`
+- SCAD: `https://github.com/pepperonas/mxster/releases/download/latest/mxster-scad-models.zip`
+- STL: `https://github.com/pepperonas/mxster/releases/download/latest/mxster-stl-models.zip`
+- PDF Color: `https://github.com/pepperonas/mxster/releases/download/latest/mxster-cards.pdf`
+- PDF B&W: `https://github.com/pepperonas/mxster/releases/download/latest/mxster-cards-bw.pdf`
+- PDF Duplex Color: `https://github.com/pepperonas/mxster/releases/download/latest/mxster-cards-duplex.pdf`
+- PDF Duplex B&W: `https://github.com/pepperonas/mxster/releases/download/latest/mxster-cards-bw-duplex.pdf`
+- Source: `https://github.com/pepperonas/mxster/releases/download/latest/mxster-source.zip`
 
-**Spezifische Version:**
+**Spezifische Version (nur ZIPs):**
 - `https://github.com/pepperonas/mxster/releases/tag/v0.0.X-beta`
 
 ## Verifizierung
 
 1. ✅ PWA läuft auf https://mxster.de
-2. ✅ GitHub Release v0.0.X-beta existiert mit Assets
-3. ✅ "latest" Release zeigt korrekte Version in Notes
-4. ✅ Download-Links funktionieren
-5. ✅ Git Tag `latest` zeigt auf aktuellen Commit
+2. ✅ GitHub Release v0.0.X-beta existiert mit 3 Assets (ZIPs)
+3. ✅ "latest" Release hat 8 Assets (ZIPs, PDFs, 3MF)
+4. ✅ "latest" Release zeigt korrekte Version in Notes
+5. ✅ Download-Links funktionieren
+6. ✅ Git Tag `latest` zeigt auf aktuellen Commit
+7. ✅ "latest" steht ganz oben in Release-Liste
 
 ## Troubleshooting
 
