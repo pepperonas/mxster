@@ -59,6 +59,30 @@ echo -e "${CYAN}📝 Geänderte Dateien:${RESET}"
 git status --short
 echo ""
 
+# 0. Integrity Tests ausführen
+echo -e "${CYAN}╔════════════════════════════════════════════╗${RESET}"
+echo -e "${CYAN}║  Step 0: Integrity Tests                   ║${RESET}"
+echo -e "${CYAN}╚════════════════════════════════════════════╝${RESET}"
+echo ""
+
+echo -e "${CYAN}🧪 Running integrity tests...${RESET}"
+npm test
+
+if [ $? -ne 0 ]; then
+  echo ""
+  echo -e "${RED}╔════════════════════════════════════════════╗${RESET}"
+  echo -e "${RED}║  ❌ Tests failed! Aborting release.        ║${RESET}"
+  echo -e "${RED}╚════════════════════════════════════════════╝${RESET}"
+  echo ""
+  echo -e "${YELLOW}⚠️  Please fix the errors above before releasing.${RESET}"
+  echo ""
+  exit 1
+fi
+
+echo ""
+echo -e "${GREEN}✅ All tests passed! Proceeding with release...${RESET}"
+echo ""
+
 # 1. PDFs neu generieren
 echo -e "${CYAN}╔════════════════════════════════════════════╗${RESET}"
 echo -e "${CYAN}║  Step 1: PDFs neu generieren              ║${RESET}"

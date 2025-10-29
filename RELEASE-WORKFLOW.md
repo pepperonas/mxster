@@ -25,6 +25,7 @@
 ./update-and-release.sh "Add new song: [Titel] by [Artist]"
 
 # Das Script führt automatisch aus:
+# 0. Integrity Tests (bricht bei Fehlern ab)
 # 1. PDFs neu generieren
 # 2. Git commit & push
 # 3. ZIP-Archive erstellen
