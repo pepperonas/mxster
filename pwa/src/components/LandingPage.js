@@ -265,19 +265,19 @@ export function renderLandingPage(onLoginClick) {
             </p>
 
             <div class="space-y-3">
-              <a href="https://github.com/pepperonas/mxster/releases/download/v0.0.1-beta/mxster-cards.pdf" target="_blank" rel="noopener noreferrer" class="btn btn-accent w-full flex items-center justify-between group">
+              <a href="https://github.com/pepperonas/mxster/releases/download/latest/mxster-cards.pdf" target="_blank" rel="noopener noreferrer" class="btn btn-accent w-full flex items-center justify-between group">
                 <span>📄 Standard (Farbig)</span>
                 <span class="transition-transform group-hover:translate-x-1">↓</span>
               </a>
-              <a href="https://github.com/pepperonas/mxster/releases/download/v0.0.1-beta/mxster-cards-bw.pdf" target="_blank" rel="noopener noreferrer" class="btn btn-outline w-full flex items-center justify-between group">
+              <a href="https://github.com/pepperonas/mxster/releases/download/latest/mxster-cards-bw.pdf" target="_blank" rel="noopener noreferrer" class="btn btn-outline w-full flex items-center justify-between group">
                 <span>📄 Schwarz-Weiß</span>
                 <span class="transition-transform group-hover:translate-x-1">↓</span>
               </a>
-              <a href="https://github.com/pepperonas/mxster/releases/download/v0.0.1-beta/mxster-cards-duplex.pdf" target="_blank" rel="noopener noreferrer" class="btn btn-outline w-full flex items-center justify-between group">
+              <a href="https://github.com/pepperonas/mxster/releases/download/latest/mxster-cards-duplex.pdf" target="_blank" rel="noopener noreferrer" class="btn btn-outline w-full flex items-center justify-between group">
                 <span>📄 Duplex (Farbig)</span>
                 <span class="transition-transform group-hover:translate-x-1">↓</span>
               </a>
-              <a href="https://github.com/pepperonas/mxster/releases/download/v0.0.1-beta/mxster-cards-bw-duplex.pdf" target="_blank" rel="noopener noreferrer" class="btn btn-outline w-full flex items-center justify-between group">
+              <a href="https://github.com/pepperonas/mxster/releases/download/latest/mxster-cards-bw-duplex.pdf" target="_blank" rel="noopener noreferrer" class="btn btn-outline w-full flex items-center justify-between group">
                 <span>📄 Duplex (Schwarz-Weiß)</span>
                 <span class="transition-transform group-hover:translate-x-1">↓</span>
               </a>
@@ -302,15 +302,15 @@ export function renderLandingPage(onLoginClick) {
             </p>
 
             <div class="space-y-3">
-              <a href="https://github.com/pepperonas/mxster/releases/download/v0.0.1-beta/all-cards.3mf" target="_blank" rel="noopener noreferrer" class="btn btn-accent w-full flex items-center justify-between group">
+              <a href="https://github.com/pepperonas/mxster/releases/download/latest/all-cards.3mf" target="_blank" rel="noopener noreferrer" class="btn btn-accent w-full flex items-center justify-between group">
                 <span>📦 All-Cards (3MF)</span>
                 <span class="transition-transform group-hover:translate-x-1">↓</span>
               </a>
-              <a href="https://github.com/pepperonas/mxster/releases/download/v0.0.1-beta/mxster-stl-models.zip" target="_blank" rel="noopener noreferrer" class="btn btn-outline w-full flex items-center justify-between group">
+              <a href="https://github.com/pepperonas/mxster/releases/download/latest/mxster-stl-models.zip" target="_blank" rel="noopener noreferrer" class="btn btn-outline w-full flex items-center justify-between group">
                 <span>📦 STL Modelle (ZIP)</span>
                 <span class="transition-transform group-hover:translate-x-1">↓</span>
               </a>
-              <a href="https://github.com/pepperonas/mxster/releases/download/v0.0.1-beta/mxster-scad-models.zip" target="_blank" rel="noopener noreferrer" class="btn btn-outline w-full flex items-center justify-between group">
+              <a href="https://github.com/pepperonas/mxster/releases/download/latest/mxster-scad-models.zip" target="_blank" rel="noopener noreferrer" class="btn btn-outline w-full flex items-center justify-between group">
                 <span>📦 SCAD Modelle (ZIP)</span>
                 <span class="transition-transform group-hover:translate-x-1">↓</span>
               </a>
