@@ -1,0 +1,10 @@
+{
+  "name": "mxster - Music Timeline Game",
+  "short_name": "mxster",
+  "description": "Music timeline game with Spotify integration and QR code scanning",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#1a1a1a",
+  "theme_color": "#ff6b6b",
+  "icons": []
+}
