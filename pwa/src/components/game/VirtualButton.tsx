@@ -3,68 +3,51 @@
  * "Next Song" button for Virtual mode - draws random song from database
  */
 
-import { useState } from 'react'
 import { useGame } from '@/contexts'
 import { songs } from '@/data/songs'
 
-export function VirtualButton() {
-  const { playedSongs, setCurrentSong } = useGame()
-  const [isLoading, setIsLoading] = useState(false)
+interface VirtualButtonProps {
+  onClick: () => void
+}
 
-  const handleDrawSong = () => {
-    setIsLoading(true)
-
-    // Get available songs (not yet played)
-    const availableSongs = songs.filter((song) => !playedSongs.includes(song.id))
-
-    if (availableSongs.length === 0) {
-      alert('Alle Songs wurden bereits gespielt!')
-      setIsLoading(false)
-      return
-    }
-
-    // Draw random song
-    const randomIndex = Math.floor(Math.random() * availableSongs.length)
-    const randomSong = availableSongs[randomIndex]
-
-    // Simulate loading delay for dramatic effect
-    setTimeout(() => {
-      setCurrentSong(randomSong)
-      setIsLoading(false)
-    }, 500)
-  }
+export function VirtualButton({ onClick }: VirtualButtonProps) {
+  const { playedSongs } = useGame()
 
   const availableCount = songs.length - playedSongs.length
 
   return (
-    <div className="text-center">
+    <div className="bg-gray-900/80 backdrop-blur-sm rounded-2xl p-8 border-2 border-gray-800 text-center">
+      <h3 className="text-2xl font-bold mb-6">Virtueller Modus</h3>
+
       <button
-        onClick={handleDrawSong}
-        disabled={isLoading || availableCount === 0}
+        onClick={onClick}
+        disabled={availableCount === 0}
         className={`
-          px-12 py-6 rounded-2xl font-bold text-xl transition-all
+          w-full px-12 py-6 rounded-2xl font-bold text-xl transition-all
           ${
-            isLoading || availableCount === 0
+            availableCount === 0
               ? 'bg-gray-700 text-gray-500 cursor-not-allowed'
-              : 'bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white shadow-glow-accent'
+              : 'bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white shadow-glow-accent transform hover:scale-105'
           }
         `}
       >
-        {isLoading ? (
-          <>
-            <span className="inline-block animate-spin mr-2">⏳</span>
-            Ziehe Song...
-          </>
-        ) : (
-          <>
-            🎲 Nächsten Song ziehen
-          </>
-        )}
+        🎲 Zufälligen Song ziehen
       </button>
 
-      <p className="text-sm text-gray-400 mt-3">
-        {availableCount} von {songs.length} Songs verfügbar
-      </p>
+      <div className="mt-4 px-4 py-2 bg-purple-900/30 rounded-lg">
+        <p className="text-sm font-semibold">
+          Verfügbare Songs:{' '}
+          <span className={availableCount === 0 ? 'text-red-400' : 'text-purple-400'}>
+            {availableCount}/{songs.length}
+          </span>
+        </p>
+      </div>
+
+      {availableCount === 0 && (
+        <div className="mt-4 p-3 bg-red-900/30 rounded-lg text-red-300 text-sm">
+          ⚠️ Alle Songs wurden bereits gespielt!
+        </div>
+      )}
     </div>
   )
 }
