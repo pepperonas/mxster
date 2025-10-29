@@ -854,4 +854,17 @@
   .shadow-glow-accent {
     box-shadow: 0 0 20px rgba(99, 102, 241, 0.5);
   }
+
+  /* Custom scrollbar for timeline */
+  .custom-scrollbar::-webkit-scrollbar {
+    @apply w-2;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-track {
+    @apply bg-gray-800 rounded;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    @apply bg-purple-600 rounded hover:bg-purple-500;
+  }
 }
