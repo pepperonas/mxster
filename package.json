@@ -2,6 +2,7 @@
   "name": "mxster",
   "version": "0.0.4-beta",
   "description": "Music Timeline Game with 3D-Printable Cards",
+  "type": "module",
   "scripts": {
     "test": "node test-integrity.js",
     "test:verbose": "node test-integrity.js --verbose"

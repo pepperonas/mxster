@@ -12,8 +12,13 @@
  * 6. File Naming Consistency
  */
 
-const fs = require('fs');
-const path = require('path');
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+// ES Module equivalent of __dirname
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 // Colors for terminal output
 const colors = {
@@ -56,13 +61,16 @@ console.log('\n╔════════════════════�
 console.log('║   🧪 mxster Integrity Test Suite 🧪      ║');
 console.log('╚════════════════════════════════════════════╝\n');
 
+// Main async function
+(async () => {
+
 /**
  * Test 1: Load and validate songs.json
  */
 console.log(`${colors.cyan}[Test 1] Loading songs.json...${colors.reset}`);
 let songs = [];
 try {
-  const songsData = fs.readFileSync('./docs/songs.json', 'utf8');
+  const songsData = fs.readFileSync(path.join(__dirname, 'docs/songs.json'), 'utf8');
   songs = JSON.parse(songsData);
   logSuccess(`Loaded ${songs.length} songs from songs.json`);
 } catch (error) {
@@ -75,7 +83,8 @@ try {
  */
 console.log(`\n${colors.cyan}[Test 2] Validating PWA songs.js...${colors.reset}`);
 try {
-  const pwaSongs = require('./pwa/src/data/songs.js').songs;
+  const pwaSongsModule = await import('./pwa/src/data/songs.js');
+  const pwaSongs = pwaSongsModule.songs;
 
   if (pwaSongs.length !== songs.length) {
     logError(
@@ -142,7 +151,7 @@ if (failedTests === passedTests) {
  * Test 6: Check 3D model files existence
  */
 console.log(`\n${colors.cyan}[Test 6] Checking 3D model files...${colors.reset}`);
-const modelsDir = './card-generator/models';
+const modelsDir = path.join(__dirname, 'card-generator/models');
 let missingScad = 0;
 let missingStl = 0;
 
@@ -176,7 +185,7 @@ if (missingScad === 0 && missingStl === 0) {
  * Test 7: Check QR code PNG files
  */
 console.log(`\n${colors.cyan}[Test 7] Checking QR code PNG files...${colors.reset}`);
-const docsDir = './docs';
+const docsDir = path.join(__dirname, 'docs');
 let missingPngs = 0;
 
 songs.forEach(song => {
@@ -203,7 +212,7 @@ if (missingPngs === 0) {
  * Test 8: Check all-cards.3mf exists
  */
 console.log(`\n${colors.cyan}[Test 8] Checking combined 3MF file...${colors.reset}`);
-const all3mfPath = './card-generator/models/all-cards.3mf';
+const all3mfPath = path.join(__dirname, 'card-generator/models/all-cards.3mf');
 if (fs.existsSync(all3mfPath)) {
   const stats = fs.statSync(all3mfPath);
   logSuccess(`all-cards.3mf exists (${(stats.size / 1024 / 1024).toFixed(2)} MB)`);
@@ -273,3 +282,5 @@ if (failedTests > 0) {
   console.log(`\n${colors.green}✅ All tests passed!${colors.reset}\n`);
   process.exit(0);
 }
+
+})(); // End of async IIFE
