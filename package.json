@@ -1,0 +1,16 @@
+{
+  "name": "mxster",
+  "version": "0.0.4-beta",
+  "description": "Music Timeline Game with 3D-Printable Cards",
+  "scripts": {
+    "test": "node test-integrity.js",
+    "test:verbose": "node test-integrity.js --verbose"
+  },
+  "keywords": ["music", "game", "3d-printing", "qr-codes"],
+  "author": "pepperonas",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/pepperonas/mxster.git"
+  }
+}
