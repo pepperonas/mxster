@@ -16,7 +16,7 @@ song_year = "1982";
 song_title_line1 = "Do You";
 song_title_line2 = "Wanna Funk?";
 song_title_is_split = true;
-song_artist = "Patrick Cowley, Sylvester";
+song_artist = "Sylvester";
 
 // QR Code settings
 qr_code_size = 48;  // Increased from 35 for better camera recognition

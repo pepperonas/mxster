@@ -1025,17 +1025,12 @@ class MxsterGame {
         })
       }
 
-      // Prüfe Flash-Unterstützung und zeige/verstecke Button
-      const hasFlash = await this.qrScanner.hasFlash()
+      // Zeige Flash-Button IMMER (hasFlash() ist nicht zuverlässig auf allen Geräten)
+      // Wenn Flash nicht verfügbar ist, wird beim Klick eine Fehlermeldung angezeigt
       const flashBtn = document.getElementById('flashlight-btn')
       if (flashBtn) {
-        if (hasFlash) {
-          flashBtn.style.display = 'flex'
-          console.log('✅ Taschenlampe wird unterstützt')
-        } else {
-          flashBtn.style.display = 'none'
-          console.log('⚠️ Keine Taschenlampen-Unterstützung auf diesem Gerät')
-        }
+        flashBtn.style.display = 'flex'
+        console.log('💡 Taschenlampen-Button aktiviert (Unterstützung wird beim Klick geprüft)')
       }
     })
 
@@ -1548,7 +1543,8 @@ class MxsterGame {
       [
         { text: `${getIconHTML('check')} Auflösung & Platzieren`, onclick: 'game.checkTimelineGuess()', className: 'btn-accent' },
         { text: '⏭️ Überspringen', onclick: 'game.autoPlaceInTimeline(); game.closeModal()', className: 'btn-outline' }
-      ]
+      ],
+      { required: true }
     )
   }
 
@@ -1590,7 +1586,8 @@ class MxsterGame {
     this.showModal(
       'Auflösung',
       message,
-      [{ text: `${getIconHTML('check')} Karte platzieren`, onclick: 'game.autoPlaceInTimeline(); game.closeModal()', className: 'btn-accent' }]
+      [{ text: `${getIconHTML('check')} Karte platzieren`, onclick: 'game.autoPlaceInTimeline(); game.closeModal()', className: 'btn-accent' }],
+      { required: true }
     )
   }
 
@@ -1616,7 +1613,8 @@ class MxsterGame {
            ${this.createDropZones(player)}
          </div>
        </div>`,
-      []
+      [],
+      { required: true, preventRefresh: true }
     )
   }
 
@@ -2226,10 +2224,24 @@ class MxsterGame {
        </div>`,
       [
         { text: 'Bleiben', onclick: 'game.closeModal()', className: 'btn-accent' },
-        { text: 'Verlassen', onclick: 'window.history.back()', className: 'btn-outline' }
+        { text: 'Verlassen', onclick: 'game.exitToHome()', className: 'btn-outline' }
       ],
       { required: true }
     )
+  }
+
+  exitToHome() {
+    // Stoppe Audio
+    this.stopAudio()
+
+    // Speichere aktuellen Spielstand
+    this.saveGame()
+
+    // Schließe Modal
+    this.closeModal()
+
+    // Gehe zur Startseite
+    this.renderLoginScreen()
   }
 
   showWinner(triggeringPlayer) {

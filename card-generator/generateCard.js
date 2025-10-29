@@ -21,9 +21,9 @@ async function generateCard(song, outputDir = './card-generator/models') {
   // Create filename-safe versions of artist and title
   const sanitizeFilename = (str) => {
     return str
-      .replace(/[^a-zA-Z0-9\s]/g, '') // Remove special chars
-      .replace(/\s+/g, '_')            // Replace spaces with underscore
-      .substring(0, 30);                // Limit length
+        .replace(/[^a-zA-Z0-9\s]/g, '') // Remove special chars
+        .replace(/\s+/g, '_')            // Replace spaces with underscore
+        .substring(0, 30);                // Limit length
   };
 
   const artistSafe = sanitizeFilename(artist);
@@ -40,7 +40,6 @@ async function generateCard(song, outputDir = './card-generator/models') {
   await QRCode.toFile(qrCodePath, spotifyUrl, {
     width: 1000, // High resolution for 3D printing
     margin: 1,
-    errorCorrectionLevel: 'L', // Low error correction (7%) - less dense, easier to scan
     color: {
       dark: '#000000',
       light: '#FFFFFF'
@@ -235,8 +234,8 @@ function generateOpenSCAD(song, qrScadModule) {
 
   const titleData = splitLongText(escapeScad(cleanTitle), titleFontSize, maxTitleWidth);
   const artistTruncated = escapeScad(artist).length > 25
-    ? escapeScad(artist).substring(0, 22) + '...'
-    : escapeScad(artist);
+      ? escapeScad(artist).substring(0, 22) + '...'
+      : escapeScad(artist);
 
   return `// mxster Game Card - ${cleanTitle}
 // Generated automatically - do not edit manually
@@ -418,7 +417,7 @@ async function generateSTL(scadPath) {
 
     // Generate single dual-sided STL
     await execPromise(
-      `openscad -o "${stlPath}" "${scadPath}"`
+        `openscad -o "${stlPath}" "${scadPath}"`
     );
     console.log(`   ✅ STL saved: ${stlPath}`);
 
