@@ -25,6 +25,7 @@ mxster ist ein **Multiplayer-Musikquiz** mit drei verschiedenen Spielmodi:
 ## ✨ Features
 
 - 🎵 **Spotify Premium Integration** - Volle Song-Wiedergabe (keine 30s Previews!)
+- 🌊 **3D Beat Animation** - Dramatische Partikelwelle reagiert auf jeden Beat (10.000 Partikel!)
 - 🎯 **Tolerantes Raten** - Fuzzy Matching erkennt Tippfehler
 - 📱 **Progressive Web App** - Installierbar auf Smartphone & Desktop
 - 🏆 **Live Punktesystem** - Echtzeit-Updates nach jeder Runde
@@ -638,10 +639,11 @@ node edit-song.js
 
 - **Frontend**: Vite 5.0, Vanilla JavaScript (ES6+), Tailwind CSS
 - **Audio**: Spotify Web Playback SDK + Howler.js (Fallback)
+- **Beat Sync**: Spotify Audio Analysis API + Three.js (3D Particle Wave Animation)
 - **PWA**: vite-plugin-pwa, Service Worker, Offline-Support
 - **QR**: qr-scanner (Browser-basiert)
 - **PDF**: PDFKit
-- **3D**: OpenSCAD (optional)
+- **3D**: OpenSCAD (optional für Karten), Three.js (für Animationen)
 
 ## 🤝 Mitmachen
 
