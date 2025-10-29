@@ -286,7 +286,9 @@ class SpotifyBeatAnimator {
       this.syncInterval = null
     }
 
+    // Log stack trace to see WHO called stop()
     console.log('⏹️ Beat sync stopped')
+    console.trace('Stop called from:')
   }
 
   /**

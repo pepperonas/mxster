@@ -14,7 +14,7 @@ import { renderStatistics } from './components/Statistics.js'
 import { renderWinnerScreen } from './components/WinnerScreen.js'
 import { GAME_MODES, GAME_MODE_INFO, GAME_VARIANTS, GAME_VARIANT_INFO } from './utils/gameModes.js'
 import beatAnimator from './services/SpotifyBeatAnimator.js'
-import { BACKGROUND_ANIMATIONS, applyBackgroundBeat } from './utils/backgroundAnimations.js'
+import { BACKGROUND_ANIMATIONS, applyBackgroundBeat, cleanupBackgroundAnimations } from './utils/backgroundAnimations.js'
 import renderSimpleBeatSettings from './components/SimpleBeatSettings.js'
 
 class MxsterGame {
@@ -36,8 +36,8 @@ class MxsterGame {
     this.playedSongs = []  // Track already played songs in current game
 
     // Beat Sync properties (simplified - background only)
-    this.beatSyncEnabled = false
-    this.backgroundAnimation = BACKGROUND_ANIMATIONS.PULSE
+    this.beatSyncEnabled = true // Default enabled
+    this.backgroundAnimation = BACKGROUND_ANIMATIONS.WAVE_3D // Only 3D animation
     this.animationIntensity = 50
     this.currentTrackId = null
 
@@ -572,21 +572,15 @@ class MxsterGame {
                 </div>
               </div>
 
-              <!-- Beat Sync Controls -->
+              <!-- Beat Sync Controls (Settings button removed - animation always on) -->
               <div style="margin-top: 16px; padding-top: 16px; border-top: 1px solid #3A3C4B;">
-                <div style="display: flex; gap: 12px; align-items: stretch;">
-                  <button class="beat-sync-toggle ${this.beatSyncEnabled ? 'active' : ''}"
-                          onclick="game.toggleBeatSync()"
-                          title="Beat-Animationen aktivieren">
-                    <span class="icon">🎵</span>
-                    <span>Beat Sync</span>
-                  </button>
-                  <button class="btn btn-outline beat-sync-settings-btn"
-                          onclick="game.openBeatSettings()"
-                          title="Beat Sync Einstellungen">
-                    ${getIconHTML('settings')}
-                  </button>
-                </div>
+                <button class="beat-sync-toggle ${this.beatSyncEnabled ? 'active' : ''}"
+                        onclick="game.toggleBeatSync()"
+                        title="3D Partikelwelle aktivieren/deaktivieren"
+                        style="width: 100%;">
+                  <span class="icon">🎵</span>
+                  <span>3D Partikelwelle</span>
+                </button>
               </div>
             </div>
           </div>
@@ -1238,6 +1232,13 @@ class MxsterGame {
         if (audioPlayer) {
           audioPlayer.style.display = 'none'
         }
+
+        // Auto-start Beat Sync for 3D particle animation (if enabled)
+        if (this.beatSyncEnabled && song.spotifyId) {
+          console.log('🌊 Auto-starting 3D particle wave animation')
+          this.startBeatSyncForCurrentTrack()
+        }
+
         return
       } else {
         console.warn('⚠️ Spotify SDK playback failed, trying fallback...')
@@ -2867,6 +2868,7 @@ class MxsterGame {
    */
   handleBeatPulse(event) {
     if (!this.beatSyncEnabled) return
+    if (this.modalOpen) return // Don't animate when modal is open
 
     // Apply animation to background only
     applyBackgroundBeat(this.backgroundAnimation, this.animationIntensity)
@@ -2886,6 +2888,7 @@ class MxsterGame {
       this.showToast('Beat Sync aktiviert! 🎵', 'success')
     } else {
       beatAnimator.stop()
+      cleanupBackgroundAnimations() // Cleanup 3D animations
       this.showToast('Beat Sync deaktiviert', 'info')
     }
 
@@ -2897,7 +2900,10 @@ class MxsterGame {
    * Start beat sync for current track
    */
   async startBeatSyncForCurrentTrack() {
-    if (!this.currentSong || !this.currentSong.spotifyId) return
+    if (!this.currentSong || !this.currentSong.spotifyId) {
+      console.log('⚠️ No current song for beat sync')
+      return
+    }
 
     const trackId = this.currentSong.spotifyId
 
@@ -2909,23 +2915,33 @@ class MxsterGame {
       return
     }
 
+    console.log('🎵 Starting beat sync for track:', trackId)
+
     // Load analysis if different track
     if (this.currentTrackId !== trackId) {
+      console.log('📊 Loading track analysis...')
       const success = await beatAnimator.loadTrackAnalysis(trackId, accessToken)
       if (success) {
         this.currentTrackId = trackId
+        console.log('✅ Track analysis loaded')
       } else {
         this.showToast('Beat-Analyse konnte nicht geladen werden', 'error')
         return
       }
+    } else {
+      console.log('✅ Using cached track analysis')
     }
 
     // Get current playback position
     const state = await spotifyPlayer.getState()
     const position = state?.position || 0
 
+    console.log('🎯 Starting beat sync at position:', position, 'ms')
+    console.log('🎮 Player state:', state)
+
     // Start beat sync
     beatAnimator.start(position)
+    console.log('🚀 Beat sync started!')
   }
 
   /**
@@ -2959,10 +2975,13 @@ class MxsterGame {
   }
 
   saveBeatSettings() {
-    // Get selected animation type
-    const selectedAnimation = document.querySelector('input[name="animation-type"]:checked')
-    if (selectedAnimation) {
-      this.backgroundAnimation = selectedAnimation.value
+    // Get checkbox state for 3D animation
+    const animationCheckbox = document.getElementById('animation-enabled')
+    if (animationCheckbox) {
+      this.beatSyncEnabled = animationCheckbox.checked
+      this.backgroundAnimation = animationCheckbox.checked
+        ? BACKGROUND_ANIMATIONS.WAVE_3D
+        : null
     }
 
     // Get intensity value
@@ -2971,14 +2990,22 @@ class MxsterGame {
       this.animationIntensity = parseInt(intensitySlider.value)
     }
 
-    // Enable/disable beat sync based on animation selection
-    this.beatSyncEnabled = this.backgroundAnimation !== BACKGROUND_ANIMATIONS.NONE
-
     console.log('✅ Beat Sync Einstellungen gespeichert:', {
       animation: this.backgroundAnimation,
       intensity: this.animationIntensity,
       enabled: this.beatSyncEnabled
     })
+
+    // Start beat sync immediately if music is playing
+    if (this.beatSyncEnabled && this.currentSong && this.currentSong.spotifyId) {
+      this.startBeatSyncForCurrentTrack()
+    } else if (!this.beatSyncEnabled) {
+      beatAnimator.stop()
+      cleanupBackgroundAnimations() // Cleanup 3D animations
+    }
+
+    // Update UI
+    this.updateBeatSyncButton()
 
     // Close modal
     this.closeModal()
@@ -2986,12 +3013,17 @@ class MxsterGame {
     // Show confirmation
     this.showToast(
       this.beatSyncEnabled
-        ? `Beat Sync aktiviert: ${this.backgroundAnimation}`
+        ? '3D Partikelwelle aktiviert'
         : 'Beat Sync deaktiviert',
       'success'
     )
   }
 }
+
+// Create dedicated background layer for beat animations
+const beatBackground = document.createElement('div')
+beatBackground.id = 'beat-background'
+document.body.insertBefore(beatBackground, document.body.firstChild)
 
 // Global game instance
 window.game = new MxsterGame()

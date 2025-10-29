@@ -3,58 +3,52 @@ import { getIconHTML } from '../utils/icons.js'
 
 /**
  * Simplified Beat Sync Settings Component
- * Only controls background animation
+ * Toggle on/off for 3D particle wave animation
  */
 export default function renderSimpleBeatSettings(currentAnimation, currentIntensity, onSave) {
+  const isEnabled = currentAnimation === BACKGROUND_ANIMATIONS.WAVE_3D
+
   return `
     <div class="beat-settings">
       <h3 style="margin-bottom: 24px;">🎵 Beat Sync Einstellungen</h3>
 
       <p style="color: var(--text-secondary); margin-bottom: 24px;">
-        Synchronisiere den Hintergrund mit dem Beat der Musik
+        3D Partikelwelle synchronisiert mit dem Beat der Musik
       </p>
 
-      <!-- Animation Type Selection -->
+      <!-- Animation Enable/Disable Toggle -->
       <div style="margin-bottom: 24px;">
-        <label style="display: block; margin-bottom: 12px; font-weight: bold;">
-          Hintergrund-Animation
+        <label style="
+          display: flex;
+          align-items: center;
+          padding: 16px;
+          background: var(--bg-secondary);
+          border: 2px solid ${isEnabled ? 'var(--accent)' : 'var(--border)'};
+          border-radius: 8px;
+          cursor: pointer;
+          transition: all 0.2s;
+        "
+        onmouseover="this.style.borderColor='var(--accent)'"
+        onmouseout="this.style.borderColor='${isEnabled ? 'var(--accent)' : 'var(--border)'}'">
+          <input
+            type="checkbox"
+            id="animation-enabled"
+            ${isEnabled ? 'checked' : ''}
+            style="margin-right: 12px; width: 20px; height: 20px; cursor: pointer;"
+          >
+          <div>
+            <div style="font-weight: bold; margin-bottom: 4px;">
+              3D Partikelwelle aktivieren
+            </div>
+            <div style="font-size: 12px; color: var(--text-secondary);">
+              ${getAnimationDescription(BACKGROUND_ANIMATIONS.WAVE_3D)}
+            </div>
+          </div>
         </label>
-        <div style="display: grid; gap: 12px;">
-          ${Object.values(BACKGROUND_ANIMATIONS).map(type => `
-            <label style="
-              display: flex;
-              align-items: center;
-              padding: 12px 16px;
-              background: var(--bg-secondary);
-              border: 2px solid ${currentAnimation === type ? 'var(--accent)' : 'var(--border)'};
-              border-radius: 8px;
-              cursor: pointer;
-              transition: all 0.2s;
-            "
-            onmouseover="this.style.borderColor='var(--accent)'"
-            onmouseout="this.style.borderColor='${currentAnimation === type ? 'var(--accent)' : 'var(--border)'}'">
-              <input
-                type="radio"
-                name="animation-type"
-                value="${type}"
-                ${currentAnimation === type ? 'checked' : ''}
-                style="margin-right: 12px;"
-              >
-              <div>
-                <div style="font-weight: bold; margin-bottom: 4px;">
-                  ${getAnimationName(type)}
-                </div>
-                <div style="font-size: 12px; color: var(--text-secondary);">
-                  ${getAnimationDescription(type)}
-                </div>
-              </div>
-            </label>
-          `).join('')}
-        </div>
       </div>
 
       <!-- Intensity Slider -->
-      <div style="margin-bottom: 24px; ${currentAnimation === BACKGROUND_ANIMATIONS.NONE ? 'display: none;' : ''}">
+      <div style="margin-bottom: 24px;">
         <label style="display: block; margin-bottom: 12px; font-weight: bold;">
           Intensität: <span id="intensity-value">${currentIntensity}%</span>
         </label>

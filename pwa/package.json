@@ -19,6 +19,7 @@
     "pdfkit": "^0.15.0",
     "qr-scanner": "^1.4.2",
     "qrcode": "^1.5.3",
+    "three": "^0.180.0",
     "vue": "^3.5.22",
     "vuedraggable": "^4.1.0"
   },
