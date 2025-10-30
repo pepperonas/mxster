@@ -81,6 +81,14 @@ export function TimelinePersonalView() {
                   >
                     {slot.song.title}
                   </div>
+
+                  {/* Artist (truncated) */}
+                  <div
+                    className="text-[8px] text-text-secondary/60 overflow-hidden text-ellipsis whitespace-nowrap w-full text-center mt-0.5"
+                    title={slot.song.artist}
+                  >
+                    {slot.song.artist}
+                  </div>
                 </>
               ) : (
                 /* Empty Slot */

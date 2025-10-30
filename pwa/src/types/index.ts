@@ -63,12 +63,17 @@ export interface GameState {
   currentSong: Song | null
   gameMode: GameMode | null
   gameVariant: GameVariant | null
-  globalTimeline: Song[]  // For TIMELINE_GLOBAL mode
+  globalTimeline: GlobalTimelineCard[]  // For TIMELINE_GLOBAL mode
   playedSongs: string[]   // Song IDs to prevent duplicates
   timestamp: number
   randomStartPosition: boolean
   isGameStarted: boolean
   waitingForGuess: boolean
+}
+
+export interface GlobalTimelineCard {
+  song: Song
+  playerId: number  // Index of player who placed this card
 }
 
 export interface SavedGameState extends GameState {

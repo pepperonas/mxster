@@ -41,9 +41,6 @@ export function GameScreen() {
   // Timeline Mode: Track which song we already showed modal for
   const lastSongIdShown = useRef<string | null>(null)
 
-  // Store last guess result for score calculation in placeCardAndContinue
-  const [lastGuessResult, setLastGuessResult] = useState<ReturnType<typeof validateGuess> | null>(null)
-
   const {
     gameMode,
     gameVariant,
@@ -182,10 +179,7 @@ export function GameScreen() {
       correctCount: result.correctCount
     })
 
-    // Store result for score calculation in placeCardAndContinue
-    setLastGuessResult(result)
-
-    // Show evaluation modal
+    // Show evaluation modal with result
     showEvaluationModal(result, currentSong)
   }
 
@@ -196,10 +190,7 @@ export function GameScreen() {
   const handleSkip = () => {
     if (!currentSong) return
 
-    // Clear any previous guess result (no points for skipping)
-    setLastGuessResult(null)
-
-    // Show song reveal modal
+    // Show song reveal modal (no points for skipping)
     showModal(
       'Song enthüllt',
       <div className="text-center py-4">
@@ -288,9 +279,13 @@ export function GameScreen() {
           label: gameMode === 'guess' ? 'Weiter' : 'Karte platzieren',
           variant: 'primary',
           onClick: () => {
+            console.log('🟡 EVALUATION MODAL - BUTTON CLICKED! gameMode:', gameMode)
+            console.log('🟡 result from closure:', result)
             if (gameMode === 'guess') {
-              placeCardAndContinue()
+              console.log('🟡 Calling placeCardAndContinue() with result:', result.correctCount)
+              placeCardAndContinue(result)
             } else {
+              console.log('🟡 Calling showManualPlacementModal()')
               showManualPlacementModal()
             }
           }
@@ -303,39 +298,48 @@ export function GameScreen() {
   // Guess Mode: Auto-place card in timeline & check win
   // ============================================================================
 
-  const placeCardAndContinue = () => {
+  const placeCardAndContinue = (guessResult?: ReturnType<typeof validateGuess>) => {
+    console.log('🔥 placeCardAndContinue START')
+    console.log('🔥 gameMode:', gameMode)
+    console.log('🔥 guessResult param:', guessResult)
+
     if (!currentSong) return
 
     const player = players[currentPlayer]
+    console.log('🔥 Current player:', player.name, 'Current score:', player.score)
 
     // Add card to timeline (chronologically sorted)
     const newTimeline = placeCardInTimeline(player.timeline, currentSong)
 
     // Calculate new score (only in Guess Mode)
     let newScore = player.score
-    if (gameMode === 'guess' && lastGuessResult) {
-      newScore = player.score + lastGuessResult.correctCount
+    if (gameMode === 'guess' && guessResult) {
+      newScore = player.score + guessResult.correctCount
       console.log('🎯 Updating score:', {
         oldScore: player.score,
-        points: lastGuessResult.correctCount,
+        points: guessResult.correctCount,
         newScore
       })
+    } else {
+      console.log('❌ Score NOT updated! gameMode:', gameMode, 'guessResult:', guessResult)
     }
 
-    // Update player with new timeline, cards count, and score
+    console.log('🔥 Final newScore before update:', newScore)
+
+    // Update player with only changed fields to avoid race conditions
+    updatePlayer(currentPlayer, {
+      timeline: newTimeline,
+      cards: player.cards + 1,
+      score: newScore
+    })
+
+    // Check win condition (use updated player data)
     const updatedPlayer = {
       ...player,
       timeline: newTimeline,
       cards: player.cards + 1,
       score: newScore
     }
-
-    updatePlayer(currentPlayer, updatedPlayer)
-
-    // Clear last guess result
-    setLastGuessResult(null)
-
-    // Check win condition (use updated player data)
     const updatedPlayers = [...players]
     updatedPlayers[currentPlayer] = updatedPlayer
     const winCheck = checkWinCondition(updatedPlayers, currentPlayer, gameMode)
@@ -363,7 +367,14 @@ export function GameScreen() {
 
     console.log('🟠 currentSong:', currentSong.title)
     const player = players[currentPlayer]
-    const timeline = gameMode === 'timeline_global' ? globalTimeline : player.timeline
+
+    // Get timeline: GlobalTimelineCard[] for global mode, Song[] for personal mode
+    const rawTimeline = gameMode === 'timeline_global' ? globalTimeline : player.timeline
+    // Extract songs for display (handle both GlobalTimelineCard[] and Song[])
+    const timeline = gameMode === 'timeline_global'
+      ? rawTimeline.map((card: any) => card.song)
+      : rawTimeline
+
     console.log('🟠 Timeline length:', timeline.length)
 
     // Two text variations for modal title
@@ -462,7 +473,13 @@ export function GameScreen() {
     // WICHTIG: Spieler-Index VORHER speichern (wird durch nextTurn() geändert!)
     const playerIndex = currentPlayer
     const player = players[playerIndex]
-    const timeline = gameMode === 'timeline_global' ? globalTimeline : player.timeline
+
+    // Get timeline: GlobalTimelineCard[] for global mode, Song[] for personal mode
+    const rawTimeline = gameMode === 'timeline_global' ? globalTimeline : player.timeline
+    // Extract songs for validation (handle both GlobalTimelineCard[] and Song[])
+    const timeline = gameMode === 'timeline_global'
+      ? rawTimeline.map((card: any) => card.song)
+      : rawTimeline
 
     console.log('🟡 Current timeline length:', timeline.length)
 
@@ -488,7 +505,7 @@ export function GameScreen() {
       // Correct placement!
       if (gameMode === 'timeline_global') {
         // Add to global timeline (will be auto-sorted by reducer)
-        addToGlobalTimeline(currentSong)
+        addToGlobalTimeline(currentSong, playerIndex)
         // Increment cards for global timeline
         updatePlayer(playerIndex, {
           cards: player.cards + 1
@@ -651,7 +668,7 @@ export function GameScreen() {
   }
 
   return (
-    <div className="min-h-screen pt-20 pb-8 relative z-10">
+    <div className="min-h-screen pt-28 pb-8 relative z-10">
       <div className="container mx-auto px-4 max-w-7xl">
         {/* Player Info */}
         <div className="mb-6">

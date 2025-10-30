@@ -29,7 +29,7 @@ export function TimelineCard({ song, index, isHighlighted = false }: TimelineCar
       </div>
 
       {/* Song Info */}
-      <div className="pl-3">
+      <div className="pl-12">
         <h4 className="font-bold text-white text-lg mb-1 group-hover:text-gradient transition-colors">{song.title}</h4>
         <p className="text-text-secondary text-sm mb-2">{song.artist}</p>
         <div className="flex items-center gap-2">

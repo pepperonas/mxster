@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useReducer, useEffect, ReactNode } from 'react'
-import type { Player, Song, GameMode, GameVariant } from '@/types'
+import type { Player, Song, GameMode, GameVariant, GlobalTimelineCard } from '@/types'
 
 // ============================================================================
 // Storage Key
@@ -27,7 +27,7 @@ interface GameState {
   waitingForGuess: boolean
 
   // Timeline
-  globalTimeline: Song[]
+  globalTimeline: GlobalTimelineCard[]
   playedSongs: string[]
 
   // Game Started
@@ -45,7 +45,7 @@ type GameAction =
   | { type: 'SET_CURRENT_DJ'; payload: number }
   | { type: 'SET_CURRENT_SONG'; payload: Song | null }
   | { type: 'SET_WAITING_FOR_GUESS'; payload: boolean }
-  | { type: 'ADD_TO_GLOBAL_TIMELINE'; payload: Song }
+  | { type: 'ADD_TO_GLOBAL_TIMELINE'; payload: { song: Song; playerId: number } }
   | { type: 'ADD_TO_PLAYED_SONGS'; payload: string }
   | { type: 'START_GAME' }
   | { type: 'END_GAME' }
@@ -64,7 +64,7 @@ interface GameContextValue extends GameState {
   setCurrentDJ: (index: number) => void
   setCurrentSong: (song: Song | null) => void
   setWaitingForGuess: (waiting: boolean) => void
-  addToGlobalTimeline: (song: Song) => void
+  addToGlobalTimeline: (song: Song, playerId: number) => void
   addToPlayedSongs: (songId: string) => void
   startGame: () => void
   endGame: () => void
@@ -165,8 +165,12 @@ function gameReducer(state: GameState, action: GameAction): GameState {
       return { ...state, waitingForGuess: action.payload }
 
     case 'ADD_TO_GLOBAL_TIMELINE': {
-      const newTimeline = [...state.globalTimeline, action.payload]
-      newTimeline.sort((a, b) => a.year - b.year)
+      const newCard: GlobalTimelineCard = {
+        song: action.payload.song,
+        playerId: action.payload.playerId
+      }
+      const newTimeline = [...state.globalTimeline, newCard]
+      newTimeline.sort((a, b) => a.song.year - b.song.year)
       return { ...state, globalTimeline: newTimeline }
     }
 
@@ -314,7 +318,7 @@ export function GameProvider({ children }: GameProviderProps) {
     setCurrentDJ: (index) => dispatch({ type: 'SET_CURRENT_DJ', payload: index }),
     setCurrentSong: (song) => dispatch({ type: 'SET_CURRENT_SONG', payload: song }),
     setWaitingForGuess: (waiting) => dispatch({ type: 'SET_WAITING_FOR_GUESS', payload: waiting }),
-    addToGlobalTimeline: (song) => dispatch({ type: 'ADD_TO_GLOBAL_TIMELINE', payload: song }),
+    addToGlobalTimeline: (song, playerId) => dispatch({ type: 'ADD_TO_GLOBAL_TIMELINE', payload: { song, playerId } }),
     addToPlayedSongs: (songId) => dispatch({ type: 'ADD_TO_PLAYED_SONGS', payload: songId }),
     startGame: () => dispatch({ type: 'START_GAME' }),
     endGame: () => dispatch({ type: 'END_GAME' }),
