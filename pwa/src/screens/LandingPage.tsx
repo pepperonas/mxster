@@ -412,7 +412,7 @@ export function LandingPage() {
         </div>
 
         {/* CTA Button */}
-        <div className="text-center mt-12">
+        <div className="flex justify-center mt-12">
           <button
             onClick={handleLogin}
             className="btn btn-accent px-12 py-5 text-xl shadow-glow-accent group"
