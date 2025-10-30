@@ -32,6 +32,7 @@ mxster ist ein **Multiplayer-Musikquiz** mit drei verschiedenen Spielmodi:
 - 💾 **Automatische Spielstand-Speicherung** - Kein Fortschritt geht verloren, selbst bei Page Refresh!
 - 🎮 **Multiplayer** - Spiele mit beliebig vielen Freunden
 - ✏️ **Song-Editor** - Bearbeite Songs nachträglich mit interaktivem Wizard
+- ✨ **Music-Reactive Particles** - 3D-Partikelhintergrund reagiert auf Musikwiedergabe mit intensiven Effekten
 
 ## 🚀 Schnellstart für Anfänger
 

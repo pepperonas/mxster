@@ -13,6 +13,7 @@ export type InteractionType =
   | 'sidebar'         // Sidebar toggle
   | 'route'           // Route changes
   | 'game'            // Game events
+  | 'music'           // Music playback state
   | 'input'           // Text input
   | 'scroll'          // Scroll events
   | 'hover'           // Hover events
@@ -43,6 +44,7 @@ const INTERACTION_INTENSITIES: Record<InteractionType, number> = {
   sidebar: 50,
   route: 55,
   game: 70,
+  music: 85,
   input: 25,
   scroll: 10,
   hover: 15
@@ -123,7 +125,7 @@ export function InteractionProvider({ children }: InteractionProviderProps) {
       let newLevel: ActivityLevel = prev.activityLevel
 
       // Determine activity level based on interaction count and type
-      if (type === 'game' || newCount > 20) {
+      if (type === 'music' || type === 'game' || newCount > 20) {
         newLevel = 'intense'
       } else if (newCount > 10 || type === 'route' || type === 'modal') {
         newLevel = 'active'

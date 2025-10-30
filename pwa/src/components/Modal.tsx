@@ -4,7 +4,7 @@
  * Integrates with UIContext for state management
  */
 
-import { useEffect, useCallback } from 'react'
+import { useEffect, useCallback, useRef } from 'react'
 import { createPortal } from 'react-dom'
 import { useUI, useInteraction } from '@/contexts'
 import type { ModalButton } from '@/types'
@@ -12,15 +12,28 @@ import type { ModalButton } from '@/types'
 export function Modal() {
   const { modal, closeModal } = useUI()
   const { registerInteraction } = useInteraction()
+  const primaryButtonRef = useRef<HTMLButtonElement>(null)
 
-  // Close modal on ESC key
+  // Close modal on ESC key, trigger primary button on Enter
   const handleKeyDown = useCallback(
     (e: KeyboardEvent) => {
       if (e.key === 'Escape' && !modal.options?.disableEscapeKey) {
         closeModal()
       }
+
+      // Press Enter to click primary button
+      if (e.key === 'Enter' && modal.buttons && modal.buttons.length > 0) {
+        e.preventDefault()
+        const primaryButton = modal.buttons.find((btn: ModalButton) => btn.variant === 'primary')
+        if (primaryButton && !primaryButton.disabled) {
+          primaryButton.onClick?.()
+          if (primaryButton.closeOnClick !== false) {
+            closeModal()
+          }
+        }
+      }
     },
-    [closeModal, modal.options]
+    [closeModal, modal.options, modal.buttons]
   )
 
   // Register ESC key listener
@@ -44,6 +57,13 @@ export function Modal() {
     // Register modal interaction for background animation
     registerInteraction('modal', 60)
 
+    // Focus primary button after modal opens
+    setTimeout(() => {
+      if (primaryButtonRef.current) {
+        primaryButtonRef.current.focus()
+      }
+    }, 100)
+
     // Handle browser back button
     const handlePopState = (e: PopStateEvent) => {
       // If user clicks back, close the modal
@@ -65,7 +85,7 @@ export function Modal() {
         console.log('🔌 Modal cleanup: removed history state')
       }
     }
-  }, [modal.isOpen, closeModal])
+  }, [modal.isOpen, closeModal, registerInteraction])
 
   // Close on backdrop click
   const handleBackdropClick = useCallback(
@@ -153,6 +173,7 @@ export function Modal() {
             {modal.buttons.map((button: ModalButton, index: number) => (
               <button
                 key={index}
+                ref={button.variant === 'primary' ? primaryButtonRef : null}
                 onClick={() => {
                   button.onClick?.()
                   if (button.closeOnClick !== false) {

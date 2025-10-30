@@ -7,7 +7,7 @@ import { useState, useEffect, useCallback, useRef } from 'react'
 import type { Song } from '@/types'
 import { SpotifyPlayerService, type SpotifyPlayerState } from '@/services/SpotifyPlayerService'
 import { MusicIcon } from '@/utils/icons'
-import { useUI, useAuth, useSettings } from '@/contexts'
+import { useUI, useAuth, useSettings, useInteraction } from '@/contexts'
 
 interface MusicPlayerProps {
   song: Song | null
@@ -18,6 +18,7 @@ export function MusicPlayer({ song, onStateChange }: MusicPlayerProps) {
   const { addToast } = useUI()
   const { accessToken } = useAuth()
   const { settings } = useSettings()
+  const { registerInteraction, setActivityLevel } = useInteraction()
   const [isPlaying, setIsPlaying] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [currentPosition, setCurrentPosition] = useState(0)
@@ -69,9 +70,19 @@ export function MusicPlayer({ song, onStateChange }: MusicPlayerProps) {
    */
   useEffect(() => {
     const handleStateChange = (state: SpotifyPlayerState) => {
-      setIsPlaying(!state.paused)
+      const nowPlaying = !state.paused
+      setIsPlaying(nowPlaying)
       setCurrentPosition(state.position)
       setDuration(state.duration)
+
+      // 🎵 Music-reactive animation: Trigger intense activity when music plays
+      if (nowPlaying && !isPlaying) {
+        console.log('🎵 Music started playing → Intensifying particle animation')
+        registerInteraction('music', 85)
+      } else if (!nowPlaying && isPlaying) {
+        console.log('🎵 Music stopped → Calming particle animation')
+        setActivityLevel('calm')
+      }
 
       // Notify parent component
       if (onStateChange) {
@@ -80,7 +91,7 @@ export function MusicPlayer({ song, onStateChange }: MusicPlayerProps) {
     }
 
     SpotifyPlayerService.onStateChange(handleStateChange)
-  }, [onStateChange])
+  }, [onStateChange, isPlaying, registerInteraction, setActivityLevel])
 
   /**
    * Play song when song prop changes
@@ -128,6 +139,10 @@ export function MusicPlayer({ song, onStateChange }: MusicPlayerProps) {
         if (success) {
           setIsPlaying(true)
           console.log('✅ Playback started successfully')
+
+          // 🎵 Trigger intense animation when new song starts
+          console.log('🎵 New song started → Intensifying particle animation')
+          registerInteraction('music', 85)
         } else {
           console.error('❌ Playback failed')
           addToast('Playback fehlgeschlagen', 'error')

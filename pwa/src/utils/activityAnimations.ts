@@ -88,10 +88,10 @@ export const ACTIVITY_PARAMS: Record<ActivityLevel, AnimationParameters> = {
     accentWaveCount: Math.floor(BASE_PARAMS.accentWaveCount * 1.5),
     starLayerCount: Math.floor(BASE_PARAMS.starLayerCount * 1.5),
     mainParticleSize: BASE_PARAMS.mainParticleSize * 1.5,
-    accentParticleSize: BASE_PARAMS.accentParticleSize * 1.5,
+    accentParticleSize: BASE_PARAMS.accentParticleSize * 2.5, // 🎵 Extra prominent during music
     starParticleSize: BASE_PARAMS.starParticleSize * 1.5,
     mainOpacity: Math.min(1.0, BASE_PARAMS.mainOpacity * 1.25),
-    accentOpacity: Math.min(1.0, BASE_PARAMS.accentOpacity * 1.25),
+    accentOpacity: Math.min(1.0, BASE_PARAMS.accentOpacity * 1.8), // 🎵 Much brighter during music
     starOpacity: Math.min(1.0, BASE_PARAMS.starOpacity * 1.25),
     waveAmplitude: 1.8,
     rotationSpeed: BASE_PARAMS.rotationSpeed * 2.0,
