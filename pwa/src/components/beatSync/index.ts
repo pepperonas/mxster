@@ -1,1 +1,0 @@
-export { BeatAnimator } from './BeatAnimator'

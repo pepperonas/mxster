@@ -16,7 +16,6 @@ import {
   ScoreOverview,
   MusicPlayer
 } from '@/components/game'
-import { BeatAnimator } from '@/components/beatSync'
 import { SpotifyPlayerService } from '@/services/SpotifyPlayerService'
 import {
   validateGuess,
@@ -778,14 +777,6 @@ export function GameScreen() {
           </button>
         </div>
       </div>
-
-      {/* Beat Animator (invisible component for beat sync) */}
-      <BeatAnimator
-        isPlaying={isPlaying}
-        trackId={trackId}
-        currentPosition={currentPosition}
-        accessToken={accessToken}
-      />
     </div>
   )
 }
