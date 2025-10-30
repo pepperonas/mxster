@@ -9,9 +9,13 @@ export { AuthProvider } from './AuthContext'
 export { GameProvider } from './GameContext'
 export { UIProvider } from './UIContext'
 export { BeatSyncProvider } from './BeatSyncContext'
+export { SettingsProvider } from './SettingsContext'
+export { InteractionProvider } from './InteractionContext'
 
 // Hooks
 export { useAuth } from './AuthContext'
 export { useGame } from './GameContext'
 export { useUI } from './UIContext'
 export { useBeatSync } from './BeatSyncContext'
+export { useSettings } from './SettingsContext'
+export { useInteraction } from './InteractionContext'

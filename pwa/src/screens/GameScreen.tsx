@@ -3,29 +3,48 @@
  * Main game interface with all game components
  */
 
+import { useState, useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { useGame, useUI } from '@/contexts'
+import { useGame, useUI, useAuth } from '@/contexts'
 import {
   PlayerInfo,
   QRScanner,
   VirtualButton,
   GuessForm,
   TimelineDisplay,
+  TimelinePersonalView,
   ScoreOverview,
   MusicPlayer
 } from '@/components/game'
+import { BeatAnimator } from '@/components/beatSync'
+import { SpotifyPlayerService } from '@/services/SpotifyPlayerService'
 import {
   validateGuess,
   placeCardInTimeline,
   checkWinCondition,
   selectRandomSong,
   incrementPlayerCards,
-  addToPlayedSongs
+  addToPlayedSongs,
+  GameHistory,
+  type SpotifyPlayerState
 } from '@/services'
 import { songs } from '@/data/songs'
 
 export function GameScreen() {
   const navigate = useNavigate()
+  const { accessToken, isLoggedIn } = useAuth()
+
+  // Beat Sync State
+  const [isPlaying, setIsPlaying] = useState(false)
+  const [currentPosition, setCurrentPosition] = useState(0)
+  const [trackId, setTrackId] = useState<string | null>(null)
+
+  // Timeline Mode: Track which song we already showed modal for
+  const lastSongIdShown = useRef<string | null>(null)
+
+  // Store last guess result for score calculation in placeCardAndContinue
+  const [lastGuessResult, setLastGuessResult] = useState<ReturnType<typeof validateGuess> | null>(null)
+
   const {
     gameMode,
     gameVariant,
@@ -38,14 +57,79 @@ export function GameScreen() {
     setCurrentSong,
     addToGlobalTimeline,
     addToPlayedSongs: contextAddToPlayedSongs,
-    nextTurn
+    nextTurn,
+    resetGame
   } = useGame()
-  const { showModal, addToast } = useUI()
+  const { showModal, closeModal, addToast } = useUI()
 
-  // Redirect if game not properly initialized
+  // ============================================================================
+  // Redirect if game not properly initialized or not logged in
+  // ============================================================================
+
+  useEffect(() => {
+    // Check if game is properly initialized
+    if (!gameMode || !gameVariant || players.length === 0) {
+      console.log('⚠️ Game not properly initialized, redirecting to mode selection')
+      navigate('/mode-selection')
+      return
+    }
+
+    // Check if logged in to Spotify (required for music playback)
+    if (!accessToken || !isLoggedIn) {
+      console.log('⚠️ No Spotify access token found, redirecting to login')
+      addToast('Bitte melde dich bei Spotify an, um das Spiel zu starten', 'error')
+      navigate('/')
+    }
+  }, [gameMode, gameVariant, players.length, accessToken, isLoggedIn, navigate, addToast])
+
+  // ============================================================================
+  // Timeline Mode: Show placement modal for all cards
+  // ============================================================================
+
+  useEffect(() => {
+    console.log('🔷 useEffect triggered - currentSong:', currentSong?.title || 'null', 'gameMode:', gameMode)
+
+    // Only in Timeline Modes (not Guess Mode)
+    if (currentSong && gameMode !== 'guess') {
+      const songId = currentSong.spotifyId || currentSong.id
+      console.log('🔷 In Timeline Mode, songId:', songId, 'lastSongIdShown:', lastSongIdShown.current)
+
+      // Only process once per song
+      if (lastSongIdShown.current !== songId) {
+        console.log('🔷 New song detected - showing placement modal')
+        lastSongIdShown.current = songId
+
+        // Always show modal (even for first card)
+        showManualPlacementModal()
+      } else {
+        console.log('🔷 Song already shown, skipping')
+      }
+    } else {
+      console.log('🔷 Not in Timeline Mode or no currentSong, skipping')
+    }
+  }, [currentSong, gameMode])
+
+  // Debug logging
+  console.log('🔵 GameScreen render - currentPlayer:', currentPlayer, 'currentSong:', currentSong?.title || 'null')
+
+  // Don't render if not initialized
   if (!gameMode || !gameVariant || players.length === 0) {
-    navigate('/mode-selection')
     return null
+  }
+
+  // ============================================================================
+  // Player State Change Handler (for BeatAnimator)
+  // ============================================================================
+
+  const handlePlayerStateChange = (state: SpotifyPlayerState) => {
+    setIsPlaying(!state.paused)
+    setCurrentPosition(state.position)
+
+    // Update track ID
+    const newTrackId = state.track_window.current_track.id
+    if (newTrackId !== trackId) {
+      setTrackId(newTrackId)
+    }
   }
 
   // ============================================================================
@@ -53,12 +137,16 @@ export function GameScreen() {
   // ============================================================================
 
   const handleVirtualSong = () => {
+    console.log('🎲 handleVirtualSong called - drawing random song')
     const song = selectRandomSong(songs, playedSongs)
 
     if (!song) {
+      console.log('🎲 No songs available')
       addToast('Alle Songs wurden bereits gespielt!', 'warning')
       return
     }
+
+    console.log('🎲 Song selected:', song.title)
 
     // Mark song as played
     const newPlayedSongs = addToPlayedSongs(playedSongs, song)
@@ -66,7 +154,6 @@ export function GameScreen() {
 
     // Set current song
     setCurrentSong(song)
-    addToast(`Song gezogen: ${song.title}`, 'success')
 
     console.log('🎵 Virtual Song Selected:', {
       title: song.title,
@@ -96,12 +183,8 @@ export function GameScreen() {
       correctCount: result.correctCount
     })
 
-    // Update score in Guess Mode
-    if (gameMode === 'guess' && result.correctCount > 0) {
-      updatePlayer(currentPlayer, {
-        score: player.score + result.correctCount
-      })
-    }
+    // Store result for score calculation in placeCardAndContinue
+    setLastGuessResult(result)
 
     // Show evaluation modal
     showEvaluationModal(result, currentSong)
@@ -114,13 +197,16 @@ export function GameScreen() {
   const handleSkip = () => {
     if (!currentSong) return
 
+    // Clear any previous guess result (no points for skipping)
+    setLastGuessResult(null)
+
     // Show song reveal modal
     showModal(
       'Song enthüllt',
       <div className="text-center py-4">
         <p className="text-2xl font-bold mb-2">{currentSong.title}</p>
-        <p className="text-lg text-gray-400 mb-4">von {currentSong.artist}</p>
-        <div className="inline-block px-6 py-3 bg-purple-600/30 rounded-lg text-3xl font-bold">
+        <p className="text-lg text-text-secondary mb-4">von {currentSong.artist}</p>
+        <div className="inline-block px-6 py-3 glass border-2 border-accent/30 rounded-lg text-3xl font-bold">
           {currentSong.year}
         </div>
       </div>,
@@ -132,7 +218,7 @@ export function GameScreen() {
             if (gameMode === 'guess') {
               placeCardAndContinue()
             } else {
-              autoPlaceInTimeline()
+              showManualPlacementModal()
             }
           }
         }
@@ -168,13 +254,13 @@ export function GameScreen() {
             <span className="text-2xl">{result.titleMatch ? '✅' : '❌'}</span>
             <span>Titel: "{song.title}"</span>
           </div>
-          <div className="flex items-center justify-center gap-3 text-lg text-gray-400">
+          <div className="flex items-center justify-center gap-3 text-lg text-text-secondary">
             <span className="text-2xl">{result.artistMatch ? '✅' : '❌'}</span>
             <span>Artist: {song.artist}</span>
           </div>
           <div className="flex items-center justify-center gap-3">
             <span className="text-2xl">{result.yearMatch ? '✅' : '❌'}</span>
-            <div className="inline-block px-6 py-2 bg-purple-600/30 rounded-lg text-xl font-bold">
+            <div className="inline-block px-6 py-2 glass border-2 border-accent/30 rounded-lg text-xl font-bold">
               {song.year}
             </div>
           </div>
@@ -182,8 +268,8 @@ export function GameScreen() {
 
         {/* Year difference (if wrong) */}
         {!result.yearMatch && result.yearDifference > 0 && (
-          <div className="mb-4 p-3 bg-purple-900/30 rounded-lg">
-            <p className="text-sm text-purple-300">
+          <div className="mb-4 p-3 glass border border-accent/30 rounded-lg">
+            <p className="text-sm text-text-secondary">
               {result.yearDifference} Jahre daneben
             </p>
           </div>
@@ -191,7 +277,7 @@ export function GameScreen() {
 
         {/* Points in Guess Mode */}
         {gameMode === 'guess' && (
-          <div className="p-4 bg-purple-600 rounded-lg">
+          <div className="p-4 bg-secondary rounded-lg">
             <p className="text-xl font-bold">
               +{result.correctCount} {result.correctCount === 1 ? 'Punkt' : 'Punkte'}
             </p>
@@ -200,13 +286,13 @@ export function GameScreen() {
       </div>,
       [
         {
-          label: gameMode === 'guess' ? 'Weiter' : 'Karte einsortieren',
+          label: gameMode === 'guess' ? 'Weiter' : 'Karte platzieren',
           variant: 'primary',
           onClick: () => {
             if (gameMode === 'guess') {
               placeCardAndContinue()
             } else {
-              autoPlaceInTimeline()
+              showManualPlacementModal()
             }
           }
         }
@@ -226,16 +312,34 @@ export function GameScreen() {
     // Add card to timeline (chronologically sorted)
     const newTimeline = placeCardInTimeline(player.timeline, currentSong)
 
-    // Update player
-    const updatedPlayer = incrementPlayerCards({
+    // Calculate new score (only in Guess Mode)
+    let newScore = player.score
+    if (gameMode === 'guess' && lastGuessResult) {
+      newScore = player.score + lastGuessResult.correctCount
+      console.log('🎯 Updating score:', {
+        oldScore: player.score,
+        points: lastGuessResult.correctCount,
+        newScore
+      })
+    }
+
+    // Update player with new timeline, cards count, and score
+    const updatedPlayer = {
       ...player,
-      timeline: newTimeline
-    })
+      timeline: newTimeline,
+      cards: player.cards + 1,
+      score: newScore
+    }
 
     updatePlayer(currentPlayer, updatedPlayer)
 
-    // Check win condition
-    const winCheck = checkWinCondition(players, currentPlayer, gameMode)
+    // Clear last guess result
+    setLastGuessResult(null)
+
+    // Check win condition (use updated player data)
+    const updatedPlayers = [...players]
+    updatedPlayers[currentPlayer] = updatedPlayer
+    const winCheck = checkWinCondition(updatedPlayers, currentPlayer, gameMode)
 
     if (winCheck.gameOver && winCheck.winner) {
       showWinnerModal(winCheck.winner, winCheck.message)
@@ -248,89 +352,307 @@ export function GameScreen() {
   }
 
   // ============================================================================
-  // Timeline Modes: Auto-place in global/personal timeline & check win
+  // Timeline Modes: Manual placement modal
   // ============================================================================
 
-  const autoPlaceInTimeline = () => {
-    if (!currentSong) return
-
-    const player = players[currentPlayer]
-
-    // Global or Personal timeline
-    if (gameMode === 'timeline_global') {
-      // Add to global timeline
-      addToGlobalTimeline(currentSong)
-    } else {
-      // Add to personal timeline
-      const newTimeline = placeCardInTimeline(player.timeline, currentSong)
-      updatePlayer(currentPlayer, { timeline: newTimeline })
-    }
-
-    // Increment cards
-    const updatedPlayer = incrementPlayerCards(player)
-    updatePlayer(currentPlayer, updatedPlayer)
-
-    // Check win condition
-    const winCheck = checkWinCondition(players, currentPlayer, gameMode)
-
-    if (winCheck.gameOver && winCheck.winner) {
-      showWinnerModal(winCheck.winner, winCheck.message)
+  const showManualPlacementModal = () => {
+    console.log('🟠 showManualPlacementModal called')
+    if (!currentSong) {
+      console.log('🟠 No currentSong, returning early')
       return
     }
 
-    // Show confirmation modal
+    console.log('🟠 currentSong:', currentSong.title)
+    const player = players[currentPlayer]
+    const timeline = gameMode === 'timeline_global' ? globalTimeline : player.timeline
+    console.log('🟠 Timeline length:', timeline.length)
+
+    // Two text variations for modal title
+    const titleVariations = [
+      `📍 Wo gehört dieser Song hin, ${player.name}?`,
+      `📍 ${player.name}, wo gehört dieser Song hin?`
+    ]
+    const modalTitle = titleVariations[Math.floor(Math.random() * titleVariations.length)]
+
     showModal(
-      'Karte eingefügt!',
-      <div className="text-center py-4">
-        <div className="text-5xl mb-4">✅</div>
-        <p className="text-lg mb-4">
-          "{currentSong.title}" wurde chronologisch eingefügt!
-        </p>
-        <div className="p-4 bg-purple-900/30 rounded-lg">
-          <p className="font-semibold">Fortschritt:</p>
-          <p className="text-2xl mt-2">
-            {updatedPlayer.cards}/10 Karten
-          </p>
+      modalTitle,
+      <div className="py-4">
+        <div className="mb-6 p-4 glass border-2 border-accent/30 rounded-lg">
+          <div className="text-xl font-bold">{currentSong.title}</div>
+          <div className="text-text-secondary">{currentSong.artist}</div>
+          <div className="text-sm text-text-secondary/70 mt-2">Jahr ist verdeckt - wähle die Position!</div>
+        </div>
+
+        <div className="space-y-3 max-w-2xl mx-auto">
+          {timeline.length === 0 ? (
+            <button
+              onClick={() => {
+                console.log('🟠 Position button clicked: 0 (erste Karte)')
+                handleManualPlacement(0)
+              }}
+              className="w-full py-4 px-4 bg-primary/50 hover:bg-accent/50 border-2 border-accent/30 hover:border-accent rounded-lg transition-colors"
+            >
+              <div className="text-lg">📍 Erste Karte platzieren</div>
+            </button>
+          ) : (
+            <>
+              {/* Before first card */}
+              <button
+                onClick={() => {
+                  console.log('🟠 Position button clicked: 0 (vor erstem)')
+                  handleManualPlacement(0)
+                }}
+                className="w-full py-3 px-4 bg-primary/50 hover:bg-accent/50 border-2 border-accent/30 hover:border-accent rounded-lg transition-colors text-sm"
+              >
+                ⬆️ Vor {timeline[0].year}
+              </button>
+
+              {/* Cards and placement buttons */}
+              {timeline.map((song, index) => (
+                <div key={song.id}>
+                  {/* Existing card */}
+                  <div className="py-3 px-4 bg-primary/30 border border-white/10 rounded-lg">
+                    <div className="font-semibold">{song.title}</div>
+                    <div className="text-sm text-text-secondary">{song.artist} • {song.year}</div>
+                  </div>
+
+                  {/* Placement button after this card */}
+                  {index < timeline.length - 1 && (
+                    <button
+                      onClick={() => {
+                        console.log('🟠 Position button clicked:', index + 1, '(zwischen)')
+                        handleManualPlacement(index + 1)
+                      }}
+                      className="w-full py-2 px-4 bg-primary/50 hover:bg-accent/50 border-2 border-accent/30 hover:border-accent rounded-lg transition-colors text-sm mt-3"
+                    >
+                      📍 Zwischen {timeline[index].year} und {timeline[index + 1].year}
+                    </button>
+                  )}
+                </div>
+              ))}
+
+              {/* After last card */}
+              <button
+                onClick={() => {
+                  console.log('🟠 Position button clicked:', timeline.length, '(nach letztem)')
+                  handleManualPlacement(timeline.length)
+                }}
+                className="w-full py-3 px-4 bg-primary/50 hover:bg-accent/50 border-2 border-accent/30 hover:border-accent rounded-lg transition-colors text-sm"
+              >
+                ⬇️ Nach {timeline[timeline.length - 1].year}
+              </button>
+            </>
+          )}
         </div>
       </div>,
-      [{ label: 'Weiter', variant: 'primary', onClick: nextTurn }]
+      [] // No default buttons - handled by placement buttons
     )
   }
+
+  const handleManualPlacement = (position: number) => {
+    console.log('🟡 handleManualPlacement called with position:', position)
+
+    if (!currentSong) {
+      console.log('🟡 No currentSong, returning early')
+      return
+    }
+
+    console.log('🟡 currentSong:', currentSong.title)
+    console.log('🟡 gameMode:', gameMode)
+
+    // WICHTIG: Spieler-Index VORHER speichern (wird durch nextTurn() geändert!)
+    const playerIndex = currentPlayer
+    const player = players[playerIndex]
+    const timeline = gameMode === 'timeline_global' ? globalTimeline : player.timeline
+
+    console.log('🟡 Current timeline length:', timeline.length)
+
+    // Insert song at chosen position
+    const newTimeline = [...timeline]
+    newTimeline.splice(position, 0, currentSong)
+
+    // Check if placement is chronologically correct
+    const isCorrect = newTimeline.every((song, idx) => {
+      if (idx === 0) return true
+      return song.year >= newTimeline[idx - 1].year
+    })
+
+    console.log('🟡 Placement is correct:', isCorrect)
+
+    // Store current song info for modal (before state changes)
+    const songTitle = currentSong.title
+    const songArtist = currentSong.artist
+    const songYear = currentSong.year
+
+    if (isCorrect) {
+      console.log('🟡 Correct placement - updating player and showing modal')
+      // Correct placement!
+      if (gameMode === 'timeline_global') {
+        // Add to global timeline (will be auto-sorted by reducer)
+        addToGlobalTimeline(currentSong)
+        // Increment cards for global timeline
+        updatePlayer(playerIndex, {
+          cards: player.cards + 1
+        })
+      } else {
+        // Update player's personal timeline AND increment cards in ONE update
+        updatePlayer(playerIndex, {
+          timeline: newTimeline,
+          cards: player.cards + 1
+        })
+      }
+
+      // Get updated player for win check
+      const updatedPlayer = {
+        ...player,
+        cards: player.cards + 1,
+        timeline: gameMode === 'timeline_global' ? player.timeline : newTimeline
+      }
+
+      // Check win condition
+      const winCheck = checkWinCondition(players, playerIndex, gameMode)
+
+      if (winCheck.gameOver && winCheck.winner) {
+        showWinnerModal(winCheck.winner, winCheck.message)
+        return
+      }
+
+      // Show success feedback, dann Spielerwechsel im Button onClick
+      showModal(
+        '✅ Richtig platziert!',
+        <div className="text-center py-6">
+          <div className="text-6xl mb-4">🎉</div>
+          <div className="text-2xl font-bold mb-2">{songTitle}</div>
+          <div className="text-lg text-text-secondary mb-4">{songArtist}</div>
+          <div className="text-3xl font-bold text-secondary mb-2">{songYear}</div>
+          <div className="mt-6 p-4 glass border-2 border-accent/30 rounded-lg">
+            <div className="text-sm text-text-secondary">Fortschritt</div>
+            <div className="text-2xl font-bold">{updatedPlayer.cards}/10 Karten</div>
+          </div>
+        </div>,
+        [
+          {
+            label: 'Nächster Spieler',
+            variant: 'primary',
+            closeOnClick: false,
+            onClick: () => {
+              console.log('🔴 Button clicked - closing modal and calling nextTurn()')
+              console.log('🔴 Before - currentPlayer:', currentPlayer, 'currentSong:', currentSong?.title)
+
+              // Modal schließen
+              closeModal()
+
+              // Spielerwechsel im nächsten Event-Loop
+              setTimeout(() => {
+                console.log('🔴 Calling nextTurn()')
+                nextTurn()
+              }, 0)
+            }
+          }
+        ]
+      )
+    } else {
+      // Wrong placement! - Spielerwechsel nach Modal
+      showModal(
+        '❌ Falsch platziert!',
+        <div className="text-center py-6">
+          <div className="text-6xl mb-4">😞</div>
+          <div className="text-xl font-bold mb-2">Das war leider nicht richtig</div>
+          <div className="text-2xl font-bold mb-2">{songTitle}</div>
+          <div className="text-lg text-text-secondary mb-4">{songArtist}</div>
+          <div className="text-3xl font-bold text-red-500 mb-2">{songYear}</div>
+          <div className="mt-6 p-4 glass rounded-lg border-2 border-red-500/50">
+            <div className="text-sm">Die Karte wird nicht hinzugefügt</div>
+          </div>
+        </div>,
+        [
+          {
+            label: 'Nächster Spieler',
+            variant: 'primary',
+            closeOnClick: false,
+            onClick: () => {
+              console.log('🔴 Button clicked (wrong placement) - closing modal and calling nextTurn()')
+              console.log('🔴 Before - currentPlayer:', currentPlayer, 'currentSong:', currentSong?.title)
+
+              // Modal schließen
+              closeModal()
+
+              // Spielerwechsel im nächsten Event-Loop
+              setTimeout(() => {
+                console.log('🔴 Calling nextTurn()')
+                nextTurn()
+              }, 0)
+            }
+          }
+        ]
+      )
+    }
+  }
+
 
   // ============================================================================
   // Win Modal
   // ============================================================================
 
   const showWinnerModal = (winner: typeof players[0], message: string) => {
+    // Save game to history
+    try {
+      GameHistory.saveGame(winner, players, gameMode)
+      console.log('✅ Game saved to history')
+      addToast('Spiel wurde gespeichert!', 'success')
+    } catch (error) {
+      console.error('❌ Failed to save game:', error)
+    }
+
     showModal(
       '🏆 Gewinner!',
       <div className="text-center py-6">
         <div className="text-6xl mb-4">🎉</div>
         <p className="text-3xl font-bold mb-2">{winner.name}</p>
-        <p className="text-xl text-gray-400 mb-6">{message}</p>
+        <p className="text-xl text-text-secondary mb-6">{message}</p>
 
         {gameMode === 'guess' && (
-          <div className="p-6 bg-gradient-to-r from-purple-600 to-pink-600 rounded-xl">
+          <div className="p-6 bg-gradient-to-r from-secondary to-accent rounded-xl">
             <p className="text-2xl font-bold">{winner.score} Punkte</p>
             <p className="text-sm text-white/80 mt-1">{winner.cards}/10 Karten</p>
           </div>
         )}
 
         {gameMode !== 'guess' && (
-          <div className="p-6 bg-purple-600 rounded-xl">
+          <div className="p-6 bg-secondary rounded-xl">
             <p className="text-2xl font-bold">{winner.cards}/10 Karten</p>
           </div>
         )}
+
+        {/* History Info */}
+        <div className="mt-6 p-4 glass border border-accent/30 rounded-lg text-sm text-text-secondary">
+          📊 Spiel wurde zur Historie hinzugefügt
+        </div>
       </div>,
       [
-        { label: 'Neues Spiel', variant: 'primary', onClick: () => navigate('/mode-selection') },
-        { label: 'Zurück zum Start', variant: 'secondary', onClick: () => navigate('/') }
+        {
+          label: 'Neues Spiel',
+          variant: 'primary',
+          onClick: () => {
+            console.log('🔄 Resetting game state...')
+            resetGame()
+            navigate('/mode-selection')
+          }
+        },
+        {
+          label: 'Zurück zum Start',
+          variant: 'secondary',
+          onClick: () => {
+            resetGame()
+            navigate('/')
+          }
+        }
       ]
     )
   }
 
   return (
-    <div className="min-h-screen pt-20 pb-8">
+    <div className="min-h-screen pt-20 pb-8 relative z-10">
       <div className="container mx-auto px-4 max-w-7xl">
         {/* Player Info */}
         <div className="mb-6">
@@ -342,7 +664,8 @@ export function GameScreen() {
           {/* Left Column: Song Input & Playback */}
           <div className="space-y-6">
             {/* Song Selection (Physical = QR Scanner, Virtual = Button) */}
-            {!currentSong && (
+            {/* Timeline Mode: ALWAYS show button | Guess Mode: only when !currentSong */}
+            {(gameMode !== 'guess' || !currentSong) && (
               <div>
                 {gameVariant === 'physical' ? (
                   <QRScanner />
@@ -355,27 +678,27 @@ export function GameScreen() {
             {/* Music Player (when song is playing) */}
             {currentSong && (
               <div>
-                <MusicPlayer song={currentSong} />
+                <MusicPlayer song={currentSong} onStateChange={handlePlayerStateChange} />
               </div>
             )}
 
-            {/* Guess Form (when song is active) */}
-            {currentSong && (
+            {/* Guess Form (only in Guess Mode!) */}
+            {currentSong && gameMode === 'guess' && (
               <div>
                 <GuessForm onSubmit={handleGuessSubmit} onSkip={handleSkip} />
               </div>
             )}
 
-            {/* Instructions when no song */}
-            {!currentSong && (
-              <div className="bg-gray-900/80 backdrop-blur-sm rounded-2xl p-8 border-2 border-gray-800 text-center">
+            {/* Instructions when no song (only in Guess Mode) */}
+            {!currentSong && gameMode === 'guess' && (
+              <div className="bg-primary/80 backdrop-blur-sm rounded-2xl p-8 border-2 border-border text-center">
                 <div className="text-5xl mb-4">👇</div>
                 <h3 className="text-xl font-bold text-white mb-2">
                   {gameVariant === 'physical'
                     ? 'Scanne eine Karte'
                     : 'Ziehe einen zufälligen Song'}
                 </h3>
-                <p className="text-gray-400">
+                <p className="text-text-secondary">
                   {gameVariant === 'physical'
                     ? 'Aktiviere die Kamera und scanne den QR-Code'
                     : 'Klicke auf den Button, um einen Song zu ziehen'}
@@ -395,7 +718,13 @@ export function GameScreen() {
 
             {/* Timeline Display */}
             <div>
-              <TimelineDisplay />
+              {gameMode === 'timeline_personal' ? (
+                /* Persönliche Timeline: Show all players' timelines */
+                <TimelinePersonalView />
+              ) : (
+                /* Globale Timeline or Guess Mode: Show single timeline */
+                <TimelineDisplay />
+              )}
             </div>
           </div>
         </div>
@@ -404,21 +733,59 @@ export function GameScreen() {
         <div className="mt-8 text-center">
           <button
             onClick={() => {
-              if (confirm('Spiel wirklich beenden?')) {
-                navigate('/')
-              }
+              showModal(
+                '⚠️ Spiel beenden?',
+                <div className="text-center py-6">
+                  <p className="text-xl font-bold mb-2">Möchtest du das Spiel wirklich beenden?</p>
+                  <p className="text-sm text-text-secondary">Der Spielstand geht verloren.</p>
+                </div>,
+                [
+                  {
+                    label: 'Abbrechen',
+                    variant: 'secondary',
+                    onClick: () => {
+                      // Just close modal
+                    }
+                  },
+                  {
+                    label: 'Spiel beenden',
+                    variant: 'primary',
+                    closeOnClick: false,
+                    onClick: () => {
+                      // Stop music (non-blocking)
+                      SpotifyPlayerService.pause().catch((error) => {
+                        console.error('❌ Error stopping music:', error)
+                      })
+
+                      // Clear game state first
+                      resetGame()
+
+                      // Close modal
+                      closeModal()
+
+                      // Navigate to home after short delay to ensure state is cleared
+                      setTimeout(() => {
+                        navigate('/', { replace: true })
+                      }, 100)
+                    }
+                  }
+                ]
+              )
             }}
-            className="px-8 py-3 bg-gray-800 hover:bg-gray-700 rounded-lg transition-colors"
+            className="btn btn-secondary"
           >
             ← Spiel beenden
           </button>
         </div>
-
-        {/* Phase Note */}
-        <div className="mt-6 p-4 bg-green-900/30 rounded-lg text-center text-sm text-green-300 max-w-3xl mx-auto">
-          ✅ <strong>Phase 9 Implemented:</strong> Game Logic Integration complete! Guess validation, Timeline placement, Turn rotation, and Win conditions all working.
-        </div>
       </div>
+
+      {/* Beat Animator (invisible component for beat sync) */}
+      <BeatAnimator
+        isPlaying={isPlaying}
+        trackId={trackId}
+        currentPosition={currentPosition}
+        accessToken={accessToken}
+      />
     </div>
   )
 }

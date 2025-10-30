@@ -7,13 +7,18 @@
  * Behält die Song-ID bei, lädt neue Metadaten und regeneriert alle Dateien.
  */
 
-const fs = require('fs').promises;
-const fsSync = require('fs');
-const path = require('path');
-const readline = require('readline');
-const { getTrackMetadata } = require('./card-generator/spotifyApi');
-const { generateCard, generateSTL } = require('./card-generator/generateCard');
-const { execSync } = require('child_process');
+import fs from 'fs/promises'
+import fsSync from 'fs'
+import path from 'path'
+import { fileURLToPath } from 'url'
+import readline from 'readline'
+import { execSync } from 'child_process'
+import { getTrackMetadata } from './card-generator/spotifyApi.js'
+import { generateCard, generateSTL } from './card-generator/generateCard.js'
+
+// ES Module equivalent of __dirname
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__filename)
 
 // Farben für Terminal-Output
 const colors = {
@@ -63,12 +68,12 @@ async function saveSongs(songs) {
   log('✅ songs.json aktualisiert', 'green');
 }
 
-// songs.js aktualisieren
+// songs.ts aktualisieren
 async function updateSongsJs(songs) {
-  const songsJsPath = path.join(__dirname, 'pwa', 'src', 'data', 'songs.js');
-  const content = `export const songs = ${JSON.stringify(songs, null, 2)}\n`;
+  const songsJsPath = path.join(__dirname, 'pwa', 'src', 'data', 'songs.ts');
+  const content = `import type { Song } from '@/types'\n\nexport const songs = ${JSON.stringify(songs, null, 2)}\n`;
   await fs.writeFile(songsJsPath, content);
-  log('✅ pwa/src/data/songs.js aktualisiert', 'green');
+  log('✅ pwa/src/data/songs.ts aktualisiert', 'green');
 }
 
 // Alte Dateien löschen
@@ -320,7 +325,6 @@ async function main() {
     // Update song count in README.md
     log('\n📊 Updating song count in README.md...', 'cyan');
     try {
-      const { execSync } = require('child_process');
       execSync('node update-song-count.js', { cwd: __dirname, stdio: 'inherit' });
     } catch (error) {
       log(`   ⚠️  Could not update README.md: ${error.message}`, 'yellow');
@@ -332,7 +336,7 @@ async function main() {
 
     log('Aktualisierte Dateien:', 'cyan');
     log('  • docs/songs.json', 'cyan');
-    log('  • pwa/src/data/songs.js', 'cyan');
+    log('  • pwa/src/data/songs.ts', 'cyan');
     log(`  • docs/${songId}_*.png`, 'cyan');
     log(`  • card-generator/qr-codes/${songId}_*.png`, 'cyan');
     log(`  • card-generator/models/${songId}_*.scad`, 'cyan');

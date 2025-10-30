@@ -79,23 +79,32 @@ try {
 }
 
 /**
- * Test 2: Validate PWA songs.js matches songs.json
+ * Test 2: Validate PWA songs.ts matches songs.json
  */
-console.log(`\n${colors.cyan}[Test 2] Validating PWA songs.js...${colors.reset}`);
+console.log(`\n${colors.cyan}[Test 2] Validating PWA songs.ts...${colors.reset}`);
 try {
-  const pwaSongsModule = await import('./pwa/src/data/songs.js');
-  const pwaSongs = pwaSongsModule.songs;
+  // Read songs.ts as text and parse the JSON content
+  const songsFilePath = path.join(__dirname, 'pwa/src/data/songs.ts');
+  const songsFileContent = fs.readFileSync(songsFilePath, 'utf8');
 
-  if (pwaSongs.length !== songs.length) {
-    logError(
-      'PWA songs.js count mismatch',
-      `songs.json: ${songs.length}, PWA: ${pwaSongs.length}`
-    );
+  // Extract JSON array from the file (remove export statement and type import)
+  const jsonMatch = songsFileContent.match(/export const songs = (\[[\s\S]*\])/);
+  if (!jsonMatch) {
+    logError('Failed to parse PWA songs.ts', 'Could not find songs array');
   } else {
-    logSuccess(`PWA songs.js matches songs.json (${pwaSongs.length} songs)`);
+    const pwaSongs = JSON.parse(jsonMatch[1]);
+
+    if (pwaSongs.length !== songs.length) {
+      logError(
+        'PWA songs.ts count mismatch',
+        `songs.json: ${songs.length}, PWA: ${pwaSongs.length}`
+      );
+    } else {
+      logSuccess(`PWA songs.ts matches songs.json (${pwaSongs.length} songs)`);
+    }
   }
 } catch (error) {
-  logError('Failed to load PWA songs.js', error.message);
+  logError('Failed to load PWA songs.ts', error.message);
 }
 
 /**

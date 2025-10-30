@@ -85,8 +85,11 @@ export class SpotifyAuthService {
    */
   static getRedirectUri(): string {
     const hostname = window.location.hostname
+    const port = window.location.port
+
     if (hostname === 'localhost' || hostname === '127.0.0.1') {
-      return `http://localhost:${window.location.port}/callback`
+      // Always use 127.0.0.1 for Spotify OAuth compatibility
+      return `http://127.0.0.1:${port || '5173'}/callback`
     }
     return 'https://mxster.de/callback'
   }
@@ -103,17 +106,27 @@ export class SpotifyAuthService {
     sessionStorage.setItem('spotify_code_verifier', codeVerifier)
 
     // Build authorization URL
+    const redirectUri = this.getRedirectUri()
     const params = new URLSearchParams({
       client_id: SpotifyConfig.clientId,
       response_type: 'code',
-      redirect_uri: this.getRedirectUri(),
+      redirect_uri: redirectUri,
       code_challenge_method: 'S256',
       code_challenge: codeChallenge,
       scope: SpotifyConfig.scopes.join(' ')
     })
 
+    const authUrl = `https://accounts.spotify.com/authorize?${params.toString()}`
+
+    // DEBUG: Log exact redirect URI and auth URL
+    console.log('=== SPOTIFY AUTH DEBUG ===')
+    console.log('Redirect URI:', redirectUri)
+    console.log('Client ID:', SpotifyConfig.clientId)
+    console.log('Full Auth URL:', authUrl)
+    console.log('=========================')
+
     // Redirect to Spotify login
-    window.location.href = `https://accounts.spotify.com/authorize?${params.toString()}`
+    window.location.href = authUrl
   }
 
   /**

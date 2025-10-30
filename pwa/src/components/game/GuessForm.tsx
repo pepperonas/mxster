@@ -12,11 +12,14 @@ interface GuessFormProps {
 }
 
 export function GuessForm({ onSubmit, onSkip }: GuessFormProps) {
-  const { gameMode } = useGame()
+  const { gameMode, players, currentPlayer } = useGame()
   const { showModal } = useUI()
   const [title, setTitle] = useState('')
   const [artist, setArtist] = useState('')
   const [year, setYear] = useState('')
+
+  // Get current player name
+  const playerName = players[currentPlayer]?.name || 'Spieler'
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
@@ -67,15 +70,17 @@ export function GuessForm({ onSubmit, onSkip }: GuessFormProps) {
   }
 
   return (
-    <div className="bg-gray-900/80 backdrop-blur-sm rounded-2xl p-8 border-2 border-gray-800">
-      <h3 className="text-2xl font-bold mb-6 text-center">
-        {gameMode === 'guess' ? 'Was ist deine Vermutung?' : 'Optional: Rate den Song'}
+    <div className="glass rounded-2xl p-8 border-2 border-accent/30">
+      <h3 className="text-2xl font-bold mb-6 text-center text-gradient">
+        {gameMode === 'guess'
+          ? `${playerName}, was ist deine Vermutung?`
+          : `${playerName}, rate optional den Song`}
       </h3>
 
       <form onSubmit={handleSubmit} className="space-y-4">
         {/* Title Input */}
         <div>
-          <label htmlFor="title" className="block text-sm font-medium text-gray-400 mb-2">
+          <label htmlFor="title" className="block text-sm font-medium text-text-secondary mb-2">
             Titel {gameMode === 'guess' && '(+1 Punkt)'}
           </label>
           <input
@@ -84,13 +89,13 @@ export function GuessForm({ onSubmit, onSkip }: GuessFormProps) {
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             placeholder="Song-Titel eingeben..."
-            className="w-full px-4 py-3 bg-gray-800 border-2 border-gray-700 rounded-lg text-white placeholder-gray-500 focus:border-purple-600 focus:outline-none"
+            className="w-full px-4 py-3 bg-primary border-2 border-accent/30 rounded-lg text-white placeholder-gray-500 focus:border-accent focus:shadow-glow-accent focus:outline-none focus:ring-0 transition-all"
           />
         </div>
 
         {/* Artist Input */}
         <div>
-          <label htmlFor="artist" className="block text-sm font-medium text-gray-400 mb-2">
+          <label htmlFor="artist" className="block text-sm font-medium text-text-secondary mb-2">
             Interpret {gameMode === 'guess' && '(+1 Punkt)'}
           </label>
           <input
@@ -99,13 +104,13 @@ export function GuessForm({ onSubmit, onSkip }: GuessFormProps) {
             value={artist}
             onChange={(e) => setArtist(e.target.value)}
             placeholder="Interpret eingeben..."
-            className="w-full px-4 py-3 bg-gray-800 border-2 border-gray-700 rounded-lg text-white placeholder-gray-500 focus:border-purple-600 focus:outline-none"
+            className="w-full px-4 py-3 bg-primary border-2 border-accent/30 rounded-lg text-white placeholder-gray-500 focus:border-accent focus:shadow-glow-accent focus:outline-none focus:ring-0 transition-all"
           />
         </div>
 
         {/* Year Input */}
         <div>
-          <label htmlFor="year" className="block text-sm font-medium text-gray-400 mb-2">
+          <label htmlFor="year" className="block text-sm font-medium text-text-secondary mb-2">
             Jahr {gameMode === 'guess' && '(+1 Punkt)'}
           </label>
           <input
@@ -116,15 +121,14 @@ export function GuessForm({ onSubmit, onSkip }: GuessFormProps) {
             placeholder="1990"
             min="1950"
             max={new Date().getFullYear()}
-            className="w-full px-4 py-3 bg-gray-800 border-2 border-gray-700 rounded-lg text-white placeholder-gray-500 focus:border-purple-600 focus:outline-none"
+            className="w-full px-4 py-3 bg-primary border-2 border-accent/30 rounded-lg text-white placeholder-gray-500 focus:border-accent focus:shadow-glow-accent focus:outline-none focus:ring-0 transition-all"
           />
         </div>
 
         {/* Info */}
         {gameMode === 'guess' && (
-          <div className="p-4 bg-purple-900/30 rounded-lg text-sm text-purple-300">
-            💡 <strong>Fuzzy Matching:</strong> Tippfehler werden toleriert, Groß-/Kleinschreibung
-            spielt keine Rolle!
+          <div className="glass p-4 rounded-lg text-sm text-text-secondary border border-accent/20">
+            💡 <strong className="text-white">Fuzzy Matching:</strong> Tippfehler werden toleriert, Groß-/Kleinschreibung spielt keine Rolle!
           </div>
         )}
 
@@ -133,15 +137,15 @@ export function GuessForm({ onSubmit, onSkip }: GuessFormProps) {
           <button
             type="button"
             onClick={handleSkipClick}
-            className="flex-1 px-6 py-3 bg-gray-700 hover:bg-gray-600 rounded-lg transition-colors font-medium"
+            className="btn btn-secondary flex-1"
           >
             Überspringen
           </button>
           <button
             type="submit"
-            className="flex-1 px-6 py-3 bg-purple-600 hover:bg-purple-700 rounded-lg transition-colors font-bold"
+            className="btn btn-accent flex-1 shadow-glow-accent"
           >
-            {gameMode === 'guess' ? 'Rate absenden' : 'Weiter'}
+            {gameMode === 'guess' ? '✓ Antwort prüfen' : 'Weiter'}
           </button>
         </div>
       </form>

@@ -1,7 +1,7 @@
 import PDFDocument from 'pdfkit';
 import QRCode from 'qrcode';
 import fs from 'fs';
-import { songs } from './src/data/songs.js';
+import { songs } from './src/data/songs.ts';
 
 // Configuration: Set to true for black & white printing (no backgrounds)
 const BLACK_AND_WHITE = process.argv.includes('--bw') || process.argv.includes('--black-white');

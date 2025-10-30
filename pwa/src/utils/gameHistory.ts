@@ -1,18 +1,105 @@
 // Game History Management
 // Stores completed games for later viewing and export
 
+import type { Player } from '@/types'
+
 const HISTORY_KEY = 'mxster_game_history'
 
+/**
+ * Player data structure for history
+ */
+export interface HistoryPlayer {
+  name: string
+  cards: number
+  tokens: number
+  timeline: HistorySong[]
+}
+
+/**
+ * Song data structure for history
+ */
+export interface HistorySong {
+  id: string
+  title: string
+  artist: string
+  year: number
+}
+
+/**
+ * Winner data structure
+ */
+export interface Winner {
+  name: string
+  cards?: number
+  tokens?: number
+  score?: number
+}
+
+/**
+ * Game history entry structure
+ */
+export interface GameHistoryEntry {
+  id: number
+  timestamp: number
+  date: string
+  winner: Winner
+  players: HistoryPlayer[]
+  duration: number | null
+  totalRounds: number | null
+}
+
+/**
+ * Export data structure
+ */
+export interface ExportData {
+  version: string
+  exportDate: string
+  totalGames: number
+  games: GameHistoryEntry[]
+}
+
+/**
+ * Import result structure
+ */
+export interface ImportResult {
+  success: boolean
+  message: string
+  gamesImported: number
+}
+
+/**
+ * Statistics structure
+ */
+export interface GameStatistics {
+  totalGames: number
+  totalPlayers: number
+  winnerStats: Record<string, number>
+  averageGameCards: string
+  oldestGame?: GameHistoryEntry
+  newestGame?: GameHistoryEntry
+}
+
+/**
+ * Game data input structure
+ */
+export interface GameData {
+  winner: Winner
+  players: Player[]
+  duration?: number
+  totalRounds?: number
+}
+
 export class GameHistory {
+  private history: GameHistoryEntry[]
+
   constructor() {
     this.history = this.loadAll()
   }
 
   /**
    * Load all game history from localStorage
-   * @returns {Array} Array of completed games
    */
-  loadAll() {
+  loadAll(): GameHistoryEntry[] {
     try {
       const data = localStorage.getItem(HISTORY_KEY)
       return data ? JSON.parse(data) : []
@@ -24,10 +111,9 @@ export class GameHistory {
 
   /**
    * Save a completed game to history
-   * @param {Object} gameData - Complete game data with winner info
    */
-  saveGame(gameData) {
-    const historyEntry = {
+  saveGame(gameData: GameData): GameHistoryEntry {
+    const historyEntry: GameHistoryEntry = {
       id: Date.now(), // Unique ID for the game
       timestamp: Date.now(),
       date: new Date().toISOString(),
@@ -35,7 +121,7 @@ export class GameHistory {
       players: gameData.players.map(p => ({
         name: p.name,
         cards: p.cards,
-        tokens: p.tokens,
+        tokens: 0, // Legacy field, kept for compatibility
         timeline: p.timeline.map(song => ({
           id: song.id,
           title: song.title,
@@ -43,8 +129,8 @@ export class GameHistory {
           year: song.year
         }))
       })),
-      duration: gameData.duration || null, // Optional: game duration
-      totalRounds: gameData.totalRounds || null // Optional: total rounds played
+      duration: gameData.duration || null,
+      totalRounds: gameData.totalRounds || null
     }
 
     this.history.unshift(historyEntry) // Add to beginning of array (newest first)
@@ -61,7 +147,7 @@ export class GameHistory {
   /**
    * Save history to localStorage
    */
-  saveToStorage() {
+  private saveToStorage(): void {
     try {
       localStorage.setItem(HISTORY_KEY, JSON.stringify(this.history))
     } catch (error) {
@@ -71,26 +157,22 @@ export class GameHistory {
 
   /**
    * Get all games from history
-   * @returns {Array} All completed games
    */
-  getAll() {
+  getAll(): GameHistoryEntry[] {
     return this.history
   }
 
   /**
    * Get a specific game by ID
-   * @param {number} gameId - Game ID
-   * @returns {Object|null} Game data or null
    */
-  getById(gameId) {
+  getById(gameId: number): GameHistoryEntry | null {
     return this.history.find(game => game.id === gameId) || null
   }
 
   /**
    * Delete a specific game from history
-   * @param {number} gameId - Game ID to delete
    */
-  deleteGame(gameId) {
+  deleteGame(gameId: number): void {
     this.history = this.history.filter(game => game.id !== gameId)
     this.saveToStorage()
   }
@@ -98,33 +180,30 @@ export class GameHistory {
   /**
    * Clear all game history
    */
-  clearAll() {
+  clearAll(): void {
     this.history = []
     localStorage.removeItem(HISTORY_KEY)
   }
 
   /**
    * Export all game history as JSON
-   * @returns {string} JSON string of all games
    */
-  exportAll() {
-    return JSON.stringify({
+  exportAll(): string {
+    const exportData: ExportData = {
       version: '1.0',
       exportDate: new Date().toISOString(),
       totalGames: this.history.length,
       games: this.history
-    }, null, 2)
+    }
+    return JSON.stringify(exportData, null, 2)
   }
 
   /**
    * Import game history from JSON
-   * @param {string} jsonData - JSON string with game history
-   * @param {boolean} merge - If true, merge with existing history; if false, replace
-   * @returns {Object} Import result with success status and message
    */
-  importGames(jsonData, merge = true) {
+  importGames(jsonData: string, merge: boolean = true): ImportResult {
     try {
-      const data = JSON.parse(jsonData)
+      const data: ExportData = JSON.parse(jsonData)
 
       if (!data.games || !Array.isArray(data.games)) {
         throw new Error('Ungültiges Format: "games" Array fehlt')
@@ -158,7 +237,7 @@ export class GameHistory {
     } catch (error) {
       return {
         success: false,
-        message: `Import fehlgeschlagen: ${error.message}`,
+        message: `Import fehlgeschlagen: ${(error as Error).message}`,
         gamesImported: 0
       }
     }
@@ -166,19 +245,18 @@ export class GameHistory {
 
   /**
    * Get statistics from game history
-   * @returns {Object} Statistics object
    */
-  getStatistics() {
+  getStatistics(): GameStatistics {
     if (this.history.length === 0) {
       return {
         totalGames: 0,
         totalPlayers: 0,
         winnerStats: {},
-        averageGameCards: 0
+        averageGameCards: '0'
       }
     }
 
-    const winnerStats = {}
+    const winnerStats: Record<string, number> = {}
     let totalCards = 0
 
     this.history.forEach(game => {

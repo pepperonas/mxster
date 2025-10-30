@@ -241,7 +241,7 @@ export const songs = [
   },
   {
     "id": "song_024",
-    "title": "Dreams - 2004 Remaster",
+    "title": "Dreams",
     "artist": "Fleetwood Mac",
     "year": 1977,
     "audioUrl": "https://example.com/song_024.mp3",
@@ -1106,6 +1106,26 @@ export const songs = [
     "year": 2001,
     "audioUrl": "https://example.com/song_110.mp3",
     "spotifyId": "7GmHOAdriOnI9s5S79GAUr",
+    "youtubeUrl": "",
+    "previewUrl": ""
+  },
+  {
+    "id": "song_111",
+    "title": "In the Shadows",
+    "artist": "The Rasmus",
+    "year": 2003,
+    "audioUrl": "https://example.com/song_111.mp3",
+    "spotifyId": "1fr92Vupmcs2vgLMFVQ7rd",
+    "youtubeUrl": "",
+    "previewUrl": ""
+  },
+  {
+    "id": "song_112",
+    "title": "My Heart Goes Boom",
+    "artist": "French Affair",
+    "year": 2000,
+    "audioUrl": "https://example.com/song_112.mp3",
+    "spotifyId": "6ou0PY1UD7gdRnHbbyiHaA",
     "youtubeUrl": "",
     "previewUrl": ""
   }

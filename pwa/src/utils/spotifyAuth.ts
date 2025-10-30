@@ -1,46 +1,63 @@
 import config from '../../spotify.config.js'
 
-class SpotifyAuth {
-  constructor() {
-    this.accessToken = null
-    this.refreshToken = null
-    this.expiresAt = null
-    this.refreshCheckInterval = null
-  }
+/**
+ * Token response from Spotify API
+ */
+interface TokenResponse {
+  access_token: string
+  refresh_token?: string
+  expires_in: number
+  token_type: string
+  scope: string
+}
 
-  // Starte periodischen Token-Check (alle 10 Minuten)
-  startRefreshCheck() {
-    // Stoppe existierenden Interval
+class SpotifyAuth {
+  private accessToken: string | null = null
+  private refreshToken: string | null = null
+  private expiresAt: number | null = null
+  private refreshCheckInterval: NodeJS.Timeout | null = null
+
+  /**
+   * Start periodic token check (every 10 minutes)
+   */
+  startRefreshCheck(): void {
+    // Stop existing interval
     if (this.refreshCheckInterval) {
       clearInterval(this.refreshCheckInterval)
     }
 
-    // Prüfe alle 10 Minuten
+    // Check every 10 minutes
     this.refreshCheckInterval = setInterval(async () => {
       console.log('⏰ Periodischer Token-Check...')
       const isValid = await this.isLoggedIn()
       if (!isValid) {
         console.log('❌ Token ungültig, Session beendet')
-        clearInterval(this.refreshCheckInterval)
-        // Optional: Zeige Meldung an User
+        if (this.refreshCheckInterval) {
+          clearInterval(this.refreshCheckInterval)
+        }
+        // Optional: Show message to user
         if (window.game) {
           alert('Deine Spotify-Session ist abgelaufen. Bitte melde dich neu an.')
           window.game.renderLoginScreen()
         }
       }
-    }, 10 * 60 * 1000) // 10 Minuten
+    }, 10 * 60 * 1000) // 10 minutes
   }
 
-  // Stoppe periodischen Token-Check
-  stopRefreshCheck() {
+  /**
+   * Stop periodic token check
+   */
+  stopRefreshCheck(): void {
     if (this.refreshCheckInterval) {
       clearInterval(this.refreshCheckInterval)
       this.refreshCheckInterval = null
     }
   }
 
-  // Generiere Code Verifier für PKCE (empfohlen ab 2025)
-  generateCodeVerifier() {
+  /**
+   * Generate Code Verifier for PKCE (recommended since 2025)
+   */
+  generateCodeVerifier(): string {
     const array = new Uint8Array(32)
     crypto.getRandomValues(array)
     return btoa(String.fromCharCode(...array))
@@ -49,8 +66,10 @@ class SpotifyAuth {
       .replace(/=/g, '')
   }
 
-  // Generiere Code Challenge für PKCE
-  async generateCodeChallenge(verifier) {
+  /**
+   * Generate Code Challenge for PKCE
+   */
+  async generateCodeChallenge(verifier: string): Promise<string> {
     const encoder = new TextEncoder()
     const data = encoder.encode(verifier)
     const hash = await crypto.subtle.digest('SHA-256', data)
@@ -60,39 +79,58 @@ class SpotifyAuth {
       .replace(/=/g, '')
   }
 
-  // Get redirect URI based on environment
-  getRedirectUri() {
+  /**
+   * Get redirect URI based on environment
+   */
+  getRedirectUri(): string {
     const hostname = window.location.hostname
+    const port = window.location.port
+
     if (hostname === 'localhost' || hostname === '127.0.0.1') {
-      return 'http://localhost:5174/callback'
+      // Use 127.0.0.1 for Spotify OAuth compatibility
+      return `http://127.0.0.1:${port || '5173'}/callback`
     }
     return 'https://mxster.de/callback'
   }
 
-  // Starte OAuth Flow (Authorization Code mit PKCE)
-  async login() {
+  /**
+   * Start OAuth Flow (Authorization Code with PKCE)
+   */
+  async login(): Promise<void> {
     const codeVerifier = this.generateCodeVerifier()
     const codeChallenge = await this.generateCodeChallenge(codeVerifier)
 
-    // Speichere Code Verifier für späteren Token-Exchange
+    // Store Code Verifier for later token exchange
     sessionStorage.setItem('spotify_code_verifier', codeVerifier)
 
-    // Erstelle Authorization URL
+    // Create Authorization URL
+    const redirectUri = this.getRedirectUri()
     const params = new URLSearchParams({
       client_id: config.clientId,
       response_type: 'code',
-      redirect_uri: this.getRedirectUri(),
+      redirect_uri: redirectUri,
       code_challenge_method: 'S256',
       code_challenge: codeChallenge,
       scope: config.scopes.join(' ')
     })
 
-    // Redirect zu Spotify Login
-    window.location.href = `https://accounts.spotify.com/authorize?${params.toString()}`
+    const authUrl = `https://accounts.spotify.com/authorize?${params.toString()}`
+
+    // DEBUG: Log the exact redirect URI and URL
+    console.log('=== SPOTIFY AUTH DEBUG ===')
+    console.log('Redirect URI:', redirectUri)
+    console.log('Client ID:', config.clientId)
+    console.log('Full Auth URL:', authUrl)
+    console.log('=========================')
+
+    // Redirect to Spotify Login
+    window.location.href = authUrl
   }
 
-  // Handle Callback nach Login
-  async handleCallback() {
+  /**
+   * Handle Callback after login
+   */
+  async handleCallback(): Promise<string | null> {
     const params = new URLSearchParams(window.location.search)
     const code = params.get('code')
     const error = params.get('error')
@@ -106,21 +144,21 @@ class SpotifyAuth {
       return null
     }
 
-    // Hole Code Verifier
+    // Get Code Verifier
     const codeVerifier = sessionStorage.getItem('spotify_code_verifier')
     if (!codeVerifier) {
       console.error('Code Verifier nicht gefunden')
       return null
     }
 
-    // Tausche Code gegen Access Token
+    // Exchange Code for Access Token
     const tokenData = await this.exchangeCodeForToken(code, codeVerifier)
 
     if (tokenData) {
       this.setTokens(tokenData)
       sessionStorage.removeItem('spotify_code_verifier')
 
-      // Speichere Tokens in localStorage für Session-Persistenz
+      // Save tokens to localStorage for session persistence
       this.saveToStorage()
 
       return this.accessToken
@@ -129,8 +167,10 @@ class SpotifyAuth {
     return null
   }
 
-  // Tausche Authorization Code gegen Access Token
-  async exchangeCodeForToken(code, codeVerifier) {
+  /**
+   * Exchange Authorization Code for Access Token
+   */
+  async exchangeCodeForToken(code: string, codeVerifier: string): Promise<TokenResponse | null> {
     const params = new URLSearchParams({
       client_id: config.clientId,
       grant_type: 'authorization_code',
@@ -161,15 +201,21 @@ class SpotifyAuth {
     }
   }
 
-  // Setze Tokens
-  setTokens(data) {
+  /**
+   * Set tokens
+   */
+  setTokens(data: TokenResponse): void {
     this.accessToken = data.access_token
-    this.refreshToken = data.refresh_token
+    this.refreshToken = data.refresh_token || null
     this.expiresAt = Date.now() + (data.expires_in * 1000)
   }
 
-  // Speichere Tokens in localStorage
-  saveToStorage() {
+  /**
+   * Save tokens to localStorage
+   */
+  saveToStorage(): void {
+    if (!this.accessToken || !this.expiresAt) return
+
     localStorage.setItem('spotify_access_token', this.accessToken)
     localStorage.setItem('spotify_refresh_token', this.refreshToken || '')
     localStorage.setItem('spotify_expires_at', this.expiresAt.toString())
@@ -181,8 +227,10 @@ class SpotifyAuth {
     })
   }
 
-  // Lade Tokens aus localStorage
-  async loadFromStorage() {
+  /**
+   * Load tokens from localStorage
+   */
+  async loadFromStorage(): Promise<boolean> {
     this.accessToken = localStorage.getItem('spotify_access_token')
     this.refreshToken = localStorage.getItem('spotify_refresh_token')
     const expiresAt = localStorage.getItem('spotify_expires_at')
@@ -197,16 +245,18 @@ class SpotifyAuth {
     return await this.isLoggedIn()
   }
 
-  // Prüfe ob eingeloggt und Token gültig
-  async isLoggedIn() {
+  /**
+   * Check if logged in and token is valid
+   */
+  async isLoggedIn(): Promise<boolean> {
     if (!this.accessToken || !this.expiresAt) {
       return false
     }
 
-    // Token bald abgelaufen? (5 Minuten Puffer)
+    // Token expiring soon? (5 minutes buffer)
     const fiveMinutes = 5 * 60 * 1000
     if (Date.now() >= (this.expiresAt - fiveMinutes)) {
-      // Versuche Token zu refreshen
+      // Try to refresh token
       if (this.refreshToken) {
         console.log('🔄 Token läuft ab, refreshe...')
         const refreshed = await this.refreshAccessToken()
@@ -222,8 +272,10 @@ class SpotifyAuth {
     return true
   }
 
-  // Refresh Access Token mit Refresh Token
-  async refreshAccessToken() {
+  /**
+   * Refresh Access Token with Refresh Token
+   */
+  async refreshAccessToken(): Promise<boolean> {
     if (!this.refreshToken) {
       return false
     }
@@ -249,18 +301,18 @@ class SpotifyAuth {
         return false
       }
 
-      const data = await response.json()
+      const data: TokenResponse = await response.json()
 
-      // Aktualisiere Tokens
+      // Update tokens
       this.accessToken = data.access_token
       this.expiresAt = Date.now() + (data.expires_in * 1000)
 
-      // Refresh token bleibt gleich (wird nicht immer neu ausgestellt)
+      // Refresh token stays the same (not always reissued)
       if (data.refresh_token) {
         this.refreshToken = data.refresh_token
       }
 
-      // Speichere neue Tokens
+      // Save new tokens
       this.saveToStorage()
 
       return true
@@ -270,8 +322,10 @@ class SpotifyAuth {
     }
   }
 
-  // Logout
-  logout() {
+  /**
+   * Logout
+   */
+  logout(): void {
     this.stopRefreshCheck()
     this.accessToken = null
     this.refreshToken = null
@@ -281,9 +335,27 @@ class SpotifyAuth {
     localStorage.removeItem('spotify_expires_at')
   }
 
-  // Hole Access Token
-  getAccessToken() {
+  /**
+   * Get Access Token
+   */
+  getAccessToken(): string | null {
     return this.accessToken
+  }
+}
+
+// Extend Window interface for game reference
+declare global {
+  interface Window {
+    game?: {
+      renderLoginScreen: () => void
+      beatSyncEnabled?: boolean
+    }
+    beatAnimator?: {
+      loadTrackAnalysis: (trackId: string, token: string) => Promise<void>
+      start: (position: number) => void
+      pause: () => void
+      updatePosition: (position: number) => void
+    }
   }
 }
 

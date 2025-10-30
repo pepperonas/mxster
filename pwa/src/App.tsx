@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
-import { AppProviders } from '@/contexts'
-import { Modal, Toast, ActionBar, Sidebar, BeatBackground } from '@/components'
+import { AppProviders, useInteraction } from '@/contexts'
+import { Modal, Toast, ActionBar, Sidebar } from '@/components'
+import { ParticleBackground } from '@/components/game'
 import {
   LandingPage,
   ModeSelection,
@@ -9,14 +10,25 @@ import {
   GameScreen,
   CallbackScreen
 } from '@/screens'
+import { useTokenRefresh } from '@/hooks/useTokenRefresh'
 import './styles/tailwind.css'
 import './styles/beatAnimations.css'
 
 function AppContent() {
+  // Background Token Refresh Service
+  useTokenRefresh()
+
+  // Get interaction state for background animation
+  const { activityLevel, pulseIntensity } = useInteraction()
+
   return (
     <>
-      {/* Beat-synchronized Background */}
-      <BeatBackground />
+      {/* 3D Particle Background - Activity-reactive */}
+      <ParticleBackground
+        isPlaying={true}
+        beatIntensity={pulseIntensity}
+        activityLevel={activityLevel}
+      />
 
       {/* Layout Components */}
       <ActionBar />

@@ -6,20 +6,21 @@
 
 import { useEffect, useCallback } from 'react'
 import { createPortal } from 'react-dom'
-import { useUI } from '@/contexts'
+import { useUI, useInteraction } from '@/contexts'
 import type { ModalButton } from '@/types'
 
 export function Modal() {
-  const { modal, hideModal } = useUI()
+  const { modal, closeModal } = useUI()
+  const { registerInteraction } = useInteraction()
 
   // Close modal on ESC key
   const handleKeyDown = useCallback(
     (e: KeyboardEvent) => {
       if (e.key === 'Escape' && !modal.options?.disableEscapeKey) {
-        hideModal()
+        closeModal()
       }
     },
-    [hideModal, modal.options]
+    [closeModal, modal.options]
   )
 
   // Register ESC key listener
@@ -30,14 +31,50 @@ export function Modal() {
     }
   }, [modal.isOpen, handleKeyDown])
 
+  // Browser Back Button Support with History API
+  useEffect(() => {
+    if (!modal.isOpen) return
+
+    // Push fake state to history when modal opens
+    const modalState = { modal: true }
+    window.history.pushState(modalState, '')
+
+    console.log('📱 Modal opened, pushed history state')
+
+    // Register modal interaction for background animation
+    registerInteraction('modal', 60)
+
+    // Handle browser back button
+    const handlePopState = (e: PopStateEvent) => {
+      // If user clicks back, close the modal
+      if (modal.isOpen) {
+        console.log('🔙 Browser back button pressed, closing modal')
+        closeModal()
+      }
+    }
+
+    window.addEventListener('popstate', handlePopState)
+
+    // Cleanup on unmount or when modal closes
+    return () => {
+      window.removeEventListener('popstate', handlePopState)
+
+      // If modal is still in history, remove it
+      if (window.history.state?.modal) {
+        window.history.back()
+        console.log('🔌 Modal cleanup: removed history state')
+      }
+    }
+  }, [modal.isOpen, closeModal])
+
   // Close on backdrop click
   const handleBackdropClick = useCallback(
     (e: React.MouseEvent<HTMLDivElement>) => {
       if (e.target === e.currentTarget && !modal.options?.disableBackdropClick) {
-        hideModal()
+        closeModal()
       }
     },
-    [hideModal, modal.options]
+    [closeModal, modal.options]
   )
 
   // Don't render if modal is closed
@@ -50,24 +87,45 @@ export function Modal() {
       onClick={handleBackdropClick}
     >
       <div
-        className="relative bg-gray-900 rounded-lg shadow-2xl max-w-2xl w-full mx-4 max-h-[90vh] overflow-auto"
+        className="relative glass rounded-2xl shadow-glow-accent border-2 border-accent/30 max-w-2xl w-full mx-4 max-h-[90vh] overflow-auto"
         role="dialog"
         aria-modal="true"
         aria-labelledby="modal-title"
       >
         {/* Header */}
-        <div className="flex items-center justify-between p-6 border-b border-gray-800">
+        <div className="flex items-center justify-between p-6 border-b border-accent/30">
           <h2
             id="modal-title"
-            className="text-2xl font-bold text-white"
+            className="text-2xl font-bold flex items-center gap-2"
           >
-            {modal.title}
+            {/* Split emoji from text */}
+            {(() => {
+              // Only apply emoji splitting if title is a string
+              if (typeof modal.title !== 'string') {
+                return modal.title
+              }
+
+              // Enhanced emoji regex that captures emoji with variation selectors
+              const emojiRegex = /^((?:[\u{1F300}-\u{1F9FF}]|[\u{2600}-\u{26FF}]|[\u{2700}-\u{27BF}])[\u{FE00}-\u{FE0F}\u{200D}]*)\s*/u
+              const match = modal.title.match(emojiRegex)
+              if (match) {
+                const emoji = match[1]
+                const text = modal.title.slice(match[0].length)
+                return (
+                  <>
+                    <span className="text-2xl">{emoji}</span>
+                    <span className="text-gradient">{text}</span>
+                  </>
+                )
+              }
+              return <span className="text-gradient">{modal.title}</span>
+            })()}
           </h2>
 
           {!modal.options?.hideCloseButton && (
             <button
-              onClick={hideModal}
-              className="text-gray-400 hover:text-white transition-colors p-2"
+              onClick={closeModal}
+              className="text-text-secondary hover:text-white transition-colors p-2"
               aria-label="Close modal"
             >
               <svg
@@ -91,24 +149,24 @@ export function Modal() {
 
         {/* Buttons */}
         {modal.buttons && modal.buttons.length > 0 && (
-          <div className="flex justify-end gap-3 p-6 border-t border-gray-800">
+          <div className="flex justify-end gap-3 p-6 border-t border-accent/30">
             {modal.buttons.map((button: ModalButton, index: number) => (
               <button
                 key={index}
                 onClick={() => {
                   button.onClick?.()
                   if (button.closeOnClick !== false) {
-                    hideModal()
+                    closeModal()
                   }
                 }}
                 className={`
                   px-6 py-2.5 rounded-lg font-medium transition-all
                   ${
                     button.variant === 'primary'
-                      ? 'bg-purple-600 hover:bg-purple-700 text-white'
+                      ? 'btn btn-accent'
                       : button.variant === 'danger'
-                        ? 'bg-red-600 hover:bg-red-700 text-white'
-                        : 'bg-gray-700 hover:bg-gray-600 text-white'
+                        ? 'bg-red-600 hover:bg-red-700 text-white border-2 border-red-500'
+                        : 'btn btn-secondary'
                   }
                   ${button.disabled ? 'opacity-50 cursor-not-allowed' : ''}
                 `}

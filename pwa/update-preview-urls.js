@@ -80,11 +80,11 @@ async function updateSongs() {
   fs.writeFileSync(songsPath, JSON.stringify(songs, null, 2))
   console.log(`\n✅ songs.json aktualisiert: ${songsPath}`)
 
-  // Aktualisiere auch songs.js für die Web-App
-  const songsJsPath = path.join(__dirname, 'src/data/songs.js')
-  const songsJs = `export const songs = ${JSON.stringify(songs, null, 2)}\n`
+  // Aktualisiere auch songs.ts für die Web-App
+  const songsJsPath = path.join(__dirname, 'src/data/songs.ts')
+  const songsJs = `import type { Song } from '@/types'\n\nexport const songs = ${JSON.stringify(songs, null, 2)}\n`
   fs.writeFileSync(songsJsPath, songsJs)
-  console.log(`✅ songs.js aktualisiert: ${songsJsPath}`)
+  console.log(`✅ songs.ts aktualisiert: ${songsJsPath}`)
 
   console.log('\n🎉 Fertig! Starte die App neu um die Änderungen zu sehen.')
 }

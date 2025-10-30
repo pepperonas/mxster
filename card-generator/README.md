@@ -131,8 +131,8 @@ node add-song.js "https://open.spotify.com/track/DEINE_TRACK_ID"
 **Was passiert automatisch:**
 1. ✅ Metadaten von Spotify geladen (Titel, Künstler, Jahr, Preview-URL)
 2. ✅ Song-ID automatisch generiert (z.B. `song_036`)
-3. ✅ `docs/songs.json` aktualisiert
-4. ✅ `pwa/src/data/songs.js` synchronisiert
+3. ✅ `docs/songs.tson` aktualisiert
+4. ✅ `pwa/src/data/songs.ts` synchronisiert
 5. ✅ QR-Code erstellt (`card-generator/qr-codes/`)
 6. ✅ PNG-Karte generiert (`docs/`)
 
@@ -159,9 +159,9 @@ node edit-song.js
 5. ✅ Änderungen bestätigen
 
 **Was passiert automatisch:**
-- ✅ Automatisches Backup erstellt (`songs.json.backup-2025-10-24`)
-- ✅ `docs/songs.json` aktualisiert
-- ✅ `pwa/src/data/songs.js` synchronisiert
+- ✅ Automatisches Backup erstellt (`songs.tson.backup-2025-10-24`)
+- ✅ `docs/songs.tson` aktualisiert
+- ✅ `pwa/src/data/songs.ts` synchronisiert
 - ✅ Alte Dateien gelöscht (falls Titel/Artist geändert)
 - ✅ Neue QR-Codes generiert
 - ✅ PNG-Karten aktualisiert
@@ -209,10 +209,10 @@ Nachher:
 
 Schritt 4/4: Dateien aktualisieren
 ───────────────────────────────────
-✅ Backup erstellt: docs/songs.json.backup-2025-10-24
+✅ Backup erstellt: docs/songs.tson.backup-2025-10-24
 🗑️  2 alte Dateien gelöscht
-✅ songs.json aktualisiert
-✅ pwa/src/data/songs.js aktualisiert
+✅ songs.tson aktualisiert
+✅ pwa/src/data/songs.ts aktualisiert
 🔄 Generiere QR-Code...
 ✅ QR-Code generiert
 
@@ -255,7 +255,7 @@ pip install qrcode pillow
 
 ### Generieren
 ```bash
-python generate_cards.py ../docs/songs.json
+python generate_cards.py ../docs/songs.tson
 ```
 
 **Ausgabe:**
@@ -284,12 +284,12 @@ card-generator/
 ```
 mxster/
 ├── docs/
-│   ├── songs.json         # Zentrale Song-Datenbank
+│   ├── songs.tson         # Zentrale Song-Datenbank
 │   └── song_XXX_*.png     # PNG-Karten (mit QR-Code)
 ├── pwa/
 │   ├── generate-cards.js  # PDF-Generator (Node.js)
 │   ├── mxster-cards*.pdf  # Generierte PDFs (gitignored)
-│   └── src/data/songs.js  # PWA Song-Daten
+│   └── src/data/songs.ts  # PWA Song-Daten
 ├── add-song.js            # Song hinzufügen (interaktiv)
 ├── edit-song.js           # Song bearbeiten (Wizard)
 └── generate-all-pdfs.sh   # Alle PDF-Varianten generieren
@@ -365,8 +365,8 @@ pip install --upgrade qrcode pillow
 ### PDF-Generierung schlägt fehl
 
 ```bash
-# Stelle sicher, dass songs.json existiert
-ls ../docs/songs.json
+# Stelle sicher, dass songs.tson existiert
+ls ../docs/songs.tson
 
 # Prüfe Node.js Version (>=18)
 node --version
@@ -403,8 +403,8 @@ npm install
 ```
 1. Song hinzufügen
    └─> node add-song.js "SPOTIFY_URL"
-       ├─> docs/songs.json aktualisiert
-       ├─> pwa/src/data/songs.js aktualisiert
+       ├─> docs/songs.tson aktualisiert
+       ├─> pwa/src/data/songs.ts aktualisiert
        ├─> QR-Code generiert
        ├─> PNG-Karte generiert
        └─> Optional: SCAD + STL generiert

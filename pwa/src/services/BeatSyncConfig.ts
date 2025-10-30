@@ -5,9 +5,49 @@
  * Handles loading, saving, and validating animation settings
  */
 
+import type { AnimationType } from '@/utils/animationPresets'
+import type { SyncType } from '@/utils/animationPresets'
+
 const STORAGE_KEY = 'mxster_beat_config'
 
+// ============================================================================
+// Types
+// ============================================================================
+
+export interface BeatElement {
+  id: string
+  selector: string
+  name: string
+  animationType: AnimationType
+  intensity: number
+  duration: number | null
+  syncType: SyncType
+  colors: string[]
+  enabled: boolean
+}
+
+export interface BeatConfig {
+  enabled: boolean
+  elements: BeatElement[]
+  customElements: BeatElement[]
+}
+
+export interface BeatPreset {
+  name: string
+  description: string
+  config: BeatConfig
+}
+
+export type BeatPresets = Record<string, BeatPreset>
+
+// ============================================================================
+// BeatSyncConfig Class
+// ============================================================================
+
 class BeatSyncConfig {
+  private presets: BeatPresets
+  private config: BeatConfig
+
   constructor() {
     this.presets = this.getDefaultPresets()
     this.config = this.load() || this.getDefaultConfig()
@@ -16,7 +56,7 @@ class BeatSyncConfig {
   /**
    * Get default configuration
    */
-  getDefaultConfig() {
+  getDefaultConfig(): BeatConfig {
     return {
       enabled: true,
       elements: [
@@ -26,7 +66,7 @@ class BeatSyncConfig {
           name: 'Hintergrund',
           animationType: 'pulse',
           intensity: 30,
-          duration: null, // Use beat duration
+          duration: null,
           syncType: 'beat',
           colors: ['#6366f1', '#8b5cf6'],
           enabled: true
@@ -76,14 +116,14 @@ class BeatSyncConfig {
           enabled: false
         }
       ],
-      customElements: [] // User-added custom selectors
+      customElements: []
     }
   }
 
   /**
    * Get default presets
    */
-  getDefaultPresets() {
+  getDefaultPresets(): BeatPresets {
     return {
       'bass-heavy': {
         name: '🎸 Bass Heavy',
@@ -230,27 +270,29 @@ class BeatSyncConfig {
   /**
    * Load configuration from LocalStorage
    */
-  load() {
+  load(): BeatConfig | null {
     try {
       const stored = localStorage.getItem(STORAGE_KEY)
       if (stored) {
         const parsed = JSON.parse(stored)
         this.config = this.mergeWithDefaults(parsed)
         console.log('✅ Beat sync config loaded from storage')
+        return this.config
       } else {
         console.log('ℹ️ No stored config, using defaults')
+        return null
       }
     } catch (error) {
       console.error('❌ Failed to load beat sync config:', error)
       this.config = this.getDefaultConfig()
+      return this.config
     }
-    return this.config
   }
 
   /**
    * Merge stored config with defaults (add missing fields)
    */
-  mergeWithDefaults(stored) {
+  mergeWithDefaults(stored: Partial<BeatConfig>): BeatConfig {
     const defaults = this.getDefaultConfig()
 
     return {
@@ -263,8 +305,8 @@ class BeatSyncConfig {
   /**
    * Merge stored elements with defaults
    */
-  mergeElements(storedElements, defaultElements) {
-    const merged = []
+  mergeElements(storedElements: BeatElement[], defaultElements: BeatElement[]): BeatElement[] {
+    const merged: BeatElement[] = []
 
     // Add default elements
     defaultElements.forEach(defaultEl => {
@@ -285,7 +327,7 @@ class BeatSyncConfig {
   /**
    * Save configuration to LocalStorage
    */
-  save(config = this.config) {
+  save(config: BeatConfig = this.config): boolean {
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(config))
       this.config = config
@@ -300,7 +342,7 @@ class BeatSyncConfig {
   /**
    * Load a preset
    */
-  loadPreset(presetName) {
+  loadPreset(presetName: string): boolean {
     const preset = this.presets[presetName]
     if (!preset) {
       console.error('❌ Preset not found:', presetName)
@@ -316,21 +358,21 @@ class BeatSyncConfig {
   /**
    * Get all presets
    */
-  getPresets() {
+  getPresets(): BeatPresets {
     return this.presets
   }
 
   /**
    * Add custom element
    */
-  addCustomElement(selector, name, animationType = 'pulse') {
+  addCustomElement(selector: string, name?: string, animationType: AnimationType = 'pulse'): boolean {
     // Validate selector
     if (!this.validateSelector(selector)) {
       console.error('❌ Invalid CSS selector:', selector)
       return false
     }
 
-    const customElement = {
+    const customElement: BeatElement = {
       id: `custom-${Date.now()}`,
       selector,
       name: name || selector,
@@ -351,7 +393,7 @@ class BeatSyncConfig {
   /**
    * Remove custom element
    */
-  removeCustomElement(id) {
+  removeCustomElement(id: string): void {
     this.config.customElements = this.config.customElements.filter(el => el.id !== id)
     this.save()
   }
@@ -359,7 +401,7 @@ class BeatSyncConfig {
   /**
    * Update element configuration
    */
-  updateElement(id, updates) {
+  updateElement(id: string, updates: Partial<BeatElement>): boolean {
     const element = this.config.elements.find(el => el.id === id)
     if (element) {
       Object.assign(element, updates)
@@ -380,7 +422,7 @@ class BeatSyncConfig {
   /**
    * Get all enabled elements
    */
-  getEnabledElements() {
+  getEnabledElements(): BeatElement[] {
     const allElements = [...this.config.elements, ...this.config.customElements]
     return allElements.filter(el => el.enabled)
   }
@@ -388,7 +430,7 @@ class BeatSyncConfig {
   /**
    * Validate CSS selector
    */
-  validateSelector(selector) {
+  validateSelector(selector: string): boolean {
     try {
       document.querySelector(selector)
       return true
@@ -400,7 +442,7 @@ class BeatSyncConfig {
   /**
    * Reset to defaults
    */
-  reset() {
+  reset(): void {
     this.config = this.getDefaultConfig()
     this.save()
     console.log('✅ Beat sync config reset to defaults')
@@ -409,14 +451,14 @@ class BeatSyncConfig {
   /**
    * Export configuration as JSON
    */
-  exportConfig() {
+  exportConfig(): string {
     return JSON.stringify(this.config, null, 2)
   }
 
   /**
    * Import configuration from JSON
    */
-  importConfig(jsonString) {
+  importConfig(jsonString: string): boolean {
     try {
       const imported = JSON.parse(jsonString)
       this.config = this.mergeWithDefaults(imported)
@@ -427,6 +469,13 @@ class BeatSyncConfig {
       console.error('❌ Failed to import configuration:', error)
       return false
     }
+  }
+
+  /**
+   * Get current config
+   */
+  getConfig(): BeatConfig {
+    return this.config
   }
 }
 

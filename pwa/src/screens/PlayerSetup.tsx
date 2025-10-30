@@ -21,7 +21,7 @@ export function PlayerSetup() {
   }
 
   const needsDJ = requiresDJ(gameMode, gameVariant)
-  const minPlayers = needsDJ ? 3 : 2 // DJ + 2 players minimum for physical guess mode
+  const minPlayers = 2 // All modes require minimum 2 players (DJ also plays in physical mode)
 
   const handleAddPlayer = () => {
     if (!newPlayerName.trim()) {
@@ -57,30 +57,41 @@ export function PlayerSetup() {
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
-      handleAddPlayer()
+      // If field is empty AND minimum players reached -> Start game
+      if (!newPlayerName.trim() && players.length >= minPlayers) {
+        handleStartGame()
+      }
+      // If field has name -> Add player
+      else if (newPlayerName.trim()) {
+        handleAddPlayer()
+      }
+      // Otherwise: Show warning (field empty but not enough players)
+      else {
+        addToast(`Mindestens ${minPlayers} Spieler benötigt`, 'warning')
+      }
     }
   }
 
   return (
-    <div className="min-h-screen pt-20 pb-8">
+    <div className="min-h-screen pt-28 pb-8 relative z-10">
       <div className="container mx-auto px-4 max-w-3xl">
         {/* Header */}
         <div className="text-center mb-12 animate-fade-in">
           <h1 className="text-5xl md:text-6xl font-bold text-gradient mb-4">
             Spieler hinzufügen
           </h1>
-          <p className="text-xl text-gray-400 mb-2">
+          <p className="text-xl text-text-secondary mb-2">
             Mindestens {minPlayers} Spieler benötigt
           </p>
           {needsDJ && (
             <p className="text-sm text-yellow-400">
-              ℹ️ Der erste Spieler wird automatisch als DJ festgelegt
+              ℹ️ Der erste Spieler ist DJ (scannt QR-Codes) und spielt mit
             </p>
           )}
         </div>
 
         {/* Add Player Input */}
-        <div className="bg-gray-900/80 backdrop-blur-sm rounded-2xl p-8 border-2 border-gray-800 mb-8">
+        <div className="glass rounded-2xl p-8 border-2 border-accent/30 mb-8">
           <div className="flex gap-3">
             <input
               type="text"
@@ -88,13 +99,13 @@ export function PlayerSetup() {
               onChange={(e) => setNewPlayerName(e.target.value)}
               onKeyDown={handleKeyDown}
               placeholder="Spielername eingeben..."
-              className="flex-1 px-4 py-3 bg-gray-800 border-2 border-gray-700 rounded-lg text-white placeholder-gray-500 focus:border-purple-600 focus:outline-none"
+              className="flex-1 px-4 py-3 bg-primary border-2 border-accent/30 rounded-lg text-white placeholder-gray-500 focus:border-accent focus:shadow-glow-accent focus:outline-none focus:ring-0 transition-all"
               maxLength={20}
               autoFocus
             />
             <button
               onClick={handleAddPlayer}
-              className="px-6 py-3 bg-purple-600 hover:bg-purple-700 rounded-lg transition-colors text-white font-medium flex items-center gap-2"
+              className="btn btn-accent px-6 py-3 flex items-center gap-2"
             >
               <PlusIcon size={20} />
               <span className="hidden sm:inline">Hinzufügen</span>
@@ -104,7 +115,7 @@ export function PlayerSetup() {
 
         {/* Players List */}
         {players.length > 0 && (
-          <div className="bg-gray-900/80 backdrop-blur-sm rounded-2xl p-8 border-2 border-gray-800 mb-8">
+          <div className="glass rounded-2xl p-8 border-2 border-accent/30 mb-8">
             <h2 className="text-2xl font-bold text-white mb-6">
               Spieler ({players.length})
             </h2>
@@ -112,7 +123,7 @@ export function PlayerSetup() {
               {players.map((player, index) => (
                 <div
                   key={index}
-                  className="flex items-center justify-between p-4 bg-gray-800 rounded-lg border-2 border-gray-700"
+                  className="flex items-center justify-between p-4 bg-primary rounded-lg border-2 border-white/10"
                 >
                   <div className="flex items-center gap-3">
                     <span className="text-2xl">
@@ -121,7 +132,7 @@ export function PlayerSetup() {
                     <div>
                       <p className="font-medium text-white">{player.name}</p>
                       {index === 0 && needsDJ && (
-                        <p className="text-xs text-purple-400">DJ (scannt QR-Codes)</p>
+                        <p className="text-xs text-secondary">DJ (scannt QR-Codes)</p>
                       )}
                     </div>
                   </div>
@@ -142,7 +153,7 @@ export function PlayerSetup() {
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <button
             onClick={() => navigate('/variant-selection')}
-            className="px-8 py-3 bg-gray-800 hover:bg-gray-700 rounded-lg transition-colors text-white"
+            className="btn btn-secondary"
           >
             ← Zurück
           </button>
@@ -153,8 +164,8 @@ export function PlayerSetup() {
               px-12 py-4 rounded-lg font-bold text-lg transition-all
               ${
                 players.length >= minPlayers
-                  ? 'bg-purple-600 hover:bg-purple-700 shadow-glow-accent text-white'
-                  : 'bg-gray-700 text-gray-500 cursor-not-allowed'
+                  ? 'btn btn-accent shadow-glow-accent'
+                  : 'bg-gray-700 text-text-secondary cursor-not-allowed'
               }
             `}
           >

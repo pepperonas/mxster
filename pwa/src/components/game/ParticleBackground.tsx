@@ -1,0 +1,495 @@
+/**
+ * ParticleBackground Component
+ * Enhanced 3D Particle Animation with Three.js
+ * Features:
+ * - Multi-layer particle systems with different colors
+ * - Dramatic beat-reactive explosions and waves
+ * - Dynamic camera movements
+ * - Color gradients synchronized with beats
+ * - Glow effects and advanced blending
+ * - Activity-based animation intensity (responds to user interactions)
+ */
+
+import { useEffect, useRef, useState } from 'react'
+import * as THREE from 'three'
+import type { ActivityLevel } from '@/contexts/InteractionContext'
+import {
+  getParametersForActivity,
+  interpolateParameters,
+  getTransitionDuration,
+  type AnimationParameters
+} from '@/utils/activityAnimations'
+
+interface ParticleBackgroundProps {
+  isPlaying?: boolean
+  beatIntensity?: number
+  activityLevel?: ActivityLevel
+}
+
+export function ParticleBackground({
+  isPlaying = false,
+  beatIntensity = 0,
+  activityLevel = 'calm'
+}: ParticleBackgroundProps) {
+  const containerRef = useRef<HTMLDivElement>(null)
+  const sceneRef = useRef<THREE.Scene | null>(null)
+  const cameraRef = useRef<THREE.PerspectiveCamera | null>(null)
+  const rendererRef = useRef<THREE.WebGLRenderer | null>(null)
+  const particleSystemsRef = useRef<THREE.Points[]>([])
+  const animationIdRef = useRef<number | null>(null)
+  const timeRef = useRef(0)
+  const beatPulseRef = useRef(0)
+
+  // Activity-based animation parameters
+  const [currentParams, setCurrentParams] = useState<AnimationParameters>(() =>
+    getParametersForActivity('calm')
+  )
+  const [targetParams, setTargetParams] = useState<AnimationParameters>(() =>
+    getParametersForActivity('calm')
+  )
+  const transitionStartTimeRef = useRef(0)
+  const transitionDurationRef = useRef(0)
+  const previousActivityRef = useRef<ActivityLevel>('calm')
+
+  useEffect(() => {
+    if (!containerRef.current) return
+
+    // ============================================================================
+    // Scene Setup
+    // ============================================================================
+
+    const scene = new THREE.Scene()
+    scene.fog = new THREE.FogExp2(0x000000, 0.0008) // Add depth with fog
+    sceneRef.current = scene
+
+    // Camera Setup - Dynamic perspective
+    const camera = new THREE.PerspectiveCamera(
+      75,
+      window.innerWidth / window.innerHeight,
+      0.1,
+      2000
+    )
+    camera.position.set(0, 100, 200)
+    camera.lookAt(0, 0, 0)
+    cameraRef.current = camera
+
+    // Renderer Setup
+    const renderer = new THREE.WebGLRenderer({
+      antialias: true,
+      alpha: true,
+      powerPreference: 'high-performance'
+    })
+    renderer.setSize(window.innerWidth, window.innerHeight)
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
+    renderer.setClearColor(0x000000, 0)
+    containerRef.current.appendChild(renderer.domElement)
+    rendererRef.current = renderer
+
+    // ============================================================================
+    // Particle Texture - Perfect circle with glow
+    // ============================================================================
+
+    const createParticleTexture = (glowIntensity: number = 1.0) => {
+      const canvas = document.createElement('canvas')
+      canvas.width = 256
+      canvas.height = 256
+      const ctx = canvas.getContext('2d')
+      if (!ctx) return null
+
+      ctx.clearRect(0, 0, 256, 256)
+
+      const centerX = 128
+      const centerY = 128
+      const radius = 120
+
+      const gradient = ctx.createRadialGradient(centerX, centerY, 0, centerX, centerY, radius)
+      gradient.addColorStop(0, `rgba(255, 255, 255, ${1.0 * glowIntensity})`)
+      gradient.addColorStop(0.2, `rgba(255, 255, 255, ${0.95 * glowIntensity})`)
+      gradient.addColorStop(0.5, `rgba(255, 255, 255, ${0.6 * glowIntensity})`)
+      gradient.addColorStop(0.8, `rgba(255, 255, 255, ${0.2 * glowIntensity})`)
+      gradient.addColorStop(1, 'rgba(255, 255, 255, 0)')
+
+      ctx.fillStyle = gradient
+      ctx.beginPath()
+      ctx.arc(centerX, centerY, radius, 0, Math.PI * 2)
+      ctx.fill()
+
+      return new THREE.CanvasTexture(canvas)
+    }
+
+    // ============================================================================
+    // Multi-Layer Particle Systems
+    // ============================================================================
+
+    const particleSystems: THREE.Points[] = []
+
+    // Layer 1: Main Wave (Purple/Blue)
+    const createMainWave = () => {
+      const count = 12000
+      const geometry = new THREE.BufferGeometry()
+      const positions = new Float32Array(count * 3)
+      const velocities = new Float32Array(count * 3)
+
+      const gridSize = Math.ceil(Math.sqrt(count))
+      const spacing = 7.0
+
+      for (let i = 0; i < count; i++) {
+        const i3 = i * 3
+        const x = (i % gridSize) - gridSize / 2
+        const z = Math.floor(i / gridSize) - gridSize / 2
+
+        positions[i3] = x * spacing
+        positions[i3 + 1] = 0
+        positions[i3 + 2] = z * spacing
+
+        // Random velocities for organic movement
+        velocities[i3] = (Math.random() - 0.5) * 0.1
+        velocities[i3 + 1] = (Math.random() - 0.5) * 0.1
+        velocities[i3 + 2] = (Math.random() - 0.5) * 0.1
+      }
+
+      geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3))
+      geometry.setAttribute('velocity', new THREE.BufferAttribute(velocities, 3))
+
+      const material = new THREE.PointsMaterial({
+        map: createParticleTexture(1.0),
+        color: 0x6366f1, // Indigo
+        size: 1.5,
+        transparent: true,
+        opacity: 0.8,
+        blending: THREE.AdditiveBlending,
+        sizeAttenuation: true,
+        depthWrite: false
+      })
+
+      return new THREE.Points(geometry, material)
+    }
+
+    // Layer 2: Accent Wave (Orange/Red)
+    const createAccentWave = () => {
+      const count = 8000
+      const geometry = new THREE.BufferGeometry()
+      const positions = new Float32Array(count * 3)
+
+      const gridSize = Math.ceil(Math.sqrt(count))
+      const spacing = 8.5
+
+      for (let i = 0; i < count; i++) {
+        const i3 = i * 3
+        const x = (i % gridSize) - gridSize / 2
+        const z = Math.floor(i / gridSize) - gridSize / 2
+
+        positions[i3] = x * spacing + (Math.random() - 0.5) * 2
+        positions[i3 + 1] = 0
+        positions[i3 + 2] = z * spacing + (Math.random() - 0.5) * 2
+      }
+
+      geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3))
+
+      const material = new THREE.PointsMaterial({
+        map: createParticleTexture(1.2),
+        color: 0xFF6B35, // Orange accent
+        size: 1.0,
+        transparent: true,
+        opacity: 0.6,
+        blending: THREE.AdditiveBlending,
+        sizeAttenuation: true,
+        depthWrite: false
+      })
+
+      return new THREE.Points(geometry, material)
+    }
+
+    // Layer 3: Floating Stars (Cyan)
+    const createStarLayer = () => {
+      const count = 5000
+      const geometry = new THREE.BufferGeometry()
+      const positions = new Float32Array(count * 3)
+
+      for (let i = 0; i < count; i++) {
+        const i3 = i * 3
+        positions[i3] = (Math.random() - 0.5) * 800
+        positions[i3 + 1] = Math.random() * 400 - 50
+        positions[i3 + 2] = (Math.random() - 0.5) * 800
+      }
+
+      geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3))
+
+      const material = new THREE.PointsMaterial({
+        map: createParticleTexture(0.8),
+        color: 0x4AEDC4, // Cyan
+        size: 0.8,
+        transparent: true,
+        opacity: 0.5,
+        blending: THREE.AdditiveBlending,
+        sizeAttenuation: true,
+        depthWrite: false
+      })
+
+      return new THREE.Points(geometry, material)
+    }
+
+    // Create and add all layers
+    const mainWave = createMainWave()
+    const accentWave = createAccentWave()
+    const starLayer = createStarLayer()
+
+    scene.add(mainWave)
+    scene.add(accentWave)
+    scene.add(starLayer)
+
+    particleSystems.push(mainWave, accentWave, starLayer)
+    particleSystemsRef.current = particleSystems
+
+    // ============================================================================
+    // Animation Loop
+    // ============================================================================
+
+    let lastTime = performance.now()
+
+    const animate = (currentTime: number) => {
+      const deltaTime = Math.min((currentTime - lastTime) * 0.001, 0.1)
+      lastTime = currentTime
+
+      timeRef.current += deltaTime
+
+      const time = timeRef.current
+
+      // Decay beat pulse
+      beatPulseRef.current *= Math.pow(0.9, deltaTime * 60)
+
+      // ============================================================================
+      // Main Wave Animation - Complex multi-wave patterns
+      // ============================================================================
+
+      const mainPositions = mainWave.geometry.attributes.position.array as Float32Array
+      const mainVelocities = mainWave.geometry.attributes.velocity.array as Float32Array
+
+      for (let i = 0; i < mainPositions.length; i += 3) {
+        const x = mainPositions[i]
+        const z = mainPositions[i + 2]
+
+        // Multiple wave harmonics (scaled by activity)
+        const baseAmplitude = currentParams.waveAmplitude
+        const wave1 = Math.sin(x * 0.12 + time * 1.5) * (6 * baseAmplitude)
+        const wave2 = Math.cos(z * 0.12 + time * 1.8) * (6 * baseAmplitude)
+        const wave3 = Math.sin((x + z) * 0.08 + time * 2.2) * (4 * baseAmplitude)
+
+        // Circular ripples from center (scaled by activity)
+        const distFromCenter = Math.sqrt(x * x + z * z)
+        const ripple1 = Math.sin(distFromCenter * 0.06 - time * 2.5) * (10 * baseAmplitude)
+        const ripple2 = Math.cos(distFromCenter * 0.04 + time * 1.8) * (6 * baseAmplitude)
+
+        // Cross patterns (scaled by activity)
+        const cross = Math.sin((x - z) * 0.1 + time * 1.2) * (3 * baseAmplitude)
+
+        // Beat explosion effect - radiating from center
+        const beatDistance = Math.sqrt(x * x + z * z) * 0.02
+        const beatWave = Math.sin(beatDistance - beatPulseRef.current * 15) * beatPulseRef.current * 40
+        const beatExplosion = beatPulseRef.current * 35 * Math.exp(-beatDistance * 0.5)
+
+        // Combine all effects
+        mainPositions[i + 1] = wave1 + wave2 + wave3 + ripple1 + ripple2 + cross + beatWave + beatExplosion
+
+        // Add subtle organic drift
+        mainPositions[i] += mainVelocities[i] * deltaTime * 10
+        mainPositions[i + 2] += mainVelocities[i + 2] * deltaTime * 10
+      }
+
+      mainWave.geometry.attributes.position.needsUpdate = true
+
+      // Beat-reactive material properties with activity-based parameters
+      const mainMaterial = mainWave.material as THREE.PointsMaterial
+      mainMaterial.opacity = currentParams.mainOpacity + beatPulseRef.current * 0.2
+      mainMaterial.size = currentParams.mainParticleSize + beatPulseRef.current * 1.5
+
+      // Activity-based rotation
+      mainWave.rotation.y += deltaTime * currentParams.rotationSpeed
+
+      // ============================================================================
+      // Accent Wave Animation - Secondary layer with offset timing
+      // ============================================================================
+
+      const accentPositions = accentWave.geometry.attributes.position.array as Float32Array
+
+      for (let i = 0; i < accentPositions.length; i += 3) {
+        const x = accentPositions[i]
+        const z = accentPositions[i + 2]
+
+        // Offset timing for layered effect (scaled by activity)
+        const accentAmplitude = currentParams.waveAmplitude
+        const wave1 = Math.sin(x * 0.1 - time * 1.8) * (8 * accentAmplitude)
+        const wave2 = Math.cos(z * 0.1 + time * 2.0) * (8 * accentAmplitude)
+
+        const distFromCenter = Math.sqrt(x * x + z * z)
+        const ripple = Math.cos(distFromCenter * 0.05 + time * 2.8) * (12 * accentAmplitude)
+
+        // Beat effect with different pattern
+        const beatDistance = Math.sqrt(x * x + z * z) * 0.015
+        const beatRipple = Math.cos(beatDistance + beatPulseRef.current * 12) * beatPulseRef.current * 45
+
+        accentPositions[i + 1] = wave1 + wave2 + ripple + beatRipple
+      }
+
+      accentWave.geometry.attributes.position.needsUpdate = true
+
+      const accentMaterial = accentWave.material as THREE.PointsMaterial
+      accentMaterial.opacity = currentParams.accentOpacity + beatPulseRef.current * 0.3
+      accentMaterial.size = currentParams.accentParticleSize + beatPulseRef.current * 2.0
+
+      accentWave.rotation.y -= deltaTime * (currentParams.rotationSpeed * 1.5) // Counter-rotation (faster)
+
+      // ============================================================================
+      // Star Layer Animation - Floating ambient particles
+      // ============================================================================
+
+      const starPositions = starLayer.geometry.attributes.position.array as Float32Array
+
+      for (let i = 0; i < starPositions.length; i += 3) {
+        const x = starPositions[i]
+        const z = starPositions[i + 2]
+
+        // Gentle float
+        const float = Math.sin(time * 0.5 + i * 0.01) * 2
+
+        // Slight wave influence
+        const wave = Math.sin(x * 0.02 + z * 0.02 + time) * 3
+
+        starPositions[i + 1] = (starPositions[i + 1] % 400) + float + wave - 50
+      }
+
+      starLayer.geometry.attributes.position.needsUpdate = true
+
+      const starMaterial = starLayer.material as THREE.PointsMaterial
+      starMaterial.opacity = currentParams.starOpacity + Math.sin(time * 0.8) * 0.2 + beatPulseRef.current * 0.3
+      starMaterial.size = currentParams.starParticleSize
+
+      // ============================================================================
+      // Dynamic Camera Movement
+      // ============================================================================
+
+      if (isPlaying) {
+        // Orbital camera movement (activity-based)
+        const cameraRadius = currentParams.cameraRadius
+        const cameraSpeed = currentParams.cameraSpeed
+        const cameraX = Math.sin(time * cameraSpeed) * cameraRadius * 0.3
+        const cameraZ = Math.cos(time * cameraSpeed) * cameraRadius
+
+        camera.position.x = cameraX
+        camera.position.z = cameraZ
+        camera.position.y = 100 + Math.sin(time * 0.3) * 30 + beatPulseRef.current * 20
+
+        // Look slightly ahead of center
+        camera.lookAt(
+          Math.sin(time * cameraSpeed + 0.5) * 20,
+          0,
+          Math.cos(time * cameraSpeed + 0.5) * 20
+        )
+      }
+
+      // Render scene
+      renderer.render(scene, camera)
+
+      animationIdRef.current = requestAnimationFrame(animate)
+    }
+
+    // Start animation
+    animate(performance.now())
+
+    // ============================================================================
+    // Window Resize Handler
+    // ============================================================================
+
+    const handleResize = () => {
+      if (!camera || !renderer) return
+
+      camera.aspect = window.innerWidth / window.innerHeight
+      camera.updateProjectionMatrix()
+      renderer.setSize(window.innerWidth, window.innerHeight)
+    }
+
+    window.addEventListener('resize', handleResize)
+
+    console.log('🎨 Enhanced Particle Background initialized')
+
+    // ============================================================================
+    // Cleanup
+    // ============================================================================
+
+    return () => {
+      if (animationIdRef.current) {
+        cancelAnimationFrame(animationIdRef.current)
+      }
+
+      window.removeEventListener('resize', handleResize)
+
+      particleSystems.forEach((system) => {
+        system.geometry.dispose()
+        const material = system.material as THREE.PointsMaterial
+        material.dispose()
+        if (material.map) material.map.dispose()
+        scene.remove(system)
+      })
+
+      if (renderer.domElement && renderer.domElement.parentNode) {
+        renderer.domElement.parentNode.removeChild(renderer.domElement)
+      }
+
+      renderer.dispose()
+
+      console.log('🎨 Particle Background cleaned up')
+    }
+  }, [isPlaying])
+
+  // Update beat pulse when beatIntensity changes
+  useEffect(() => {
+    if (beatIntensity > 0) {
+      beatPulseRef.current = Math.min(beatIntensity / 100, 1.0)
+    }
+  }, [beatIntensity])
+
+  // Handle activity level changes with smooth transitions
+  useEffect(() => {
+    if (activityLevel !== previousActivityRef.current) {
+      console.log(`🎨 Activity level changed: ${previousActivityRef.current} → ${activityLevel}`)
+
+      const newParams = getParametersForActivity(activityLevel)
+      const duration = getTransitionDuration(previousActivityRef.current, activityLevel)
+
+      setTargetParams(newParams)
+      transitionStartTimeRef.current = Date.now()
+      transitionDurationRef.current = duration
+      previousActivityRef.current = activityLevel
+    }
+  }, [activityLevel])
+
+  // Smooth parameter interpolation
+  useEffect(() => {
+    if (transitionDurationRef.current > 0) {
+      const intervalId = setInterval(() => {
+        const now = Date.now()
+        const elapsed = now - transitionStartTimeRef.current
+        const progress = Math.min(1, elapsed / transitionDurationRef.current)
+
+        if (progress < 1) {
+          const interpolated = interpolateParameters(currentParams, targetParams, progress)
+          setCurrentParams(interpolated)
+        } else {
+          setCurrentParams(targetParams)
+          transitionDurationRef.current = 0
+        }
+      }, 16) // ~60fps
+
+      return () => clearInterval(intervalId)
+    }
+  }, [currentParams, targetParams])
+
+  return (
+    <div
+      ref={containerRef}
+      className="fixed inset-0 -z-10 pointer-events-none"
+      style={{ background: 'radial-gradient(circle at center, #0a0a1f 0%, #000000 100%)' }}
+      aria-hidden="true"
+    />
+  )
+}

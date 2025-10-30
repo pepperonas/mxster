@@ -1,5 +1,11 @@
-import React, { createContext, useContext, useReducer, ReactNode } from 'react'
+import React, { createContext, useContext, useReducer, useEffect, ReactNode } from 'react'
 import type { Player, Song, GameMode, GameVariant } from '@/types'
+
+// ============================================================================
+// Storage Key
+// ============================================================================
+
+const GAME_STATE_STORAGE_KEY = 'mxster_game_state'
 
 // ============================================================================
 // Types
@@ -191,19 +197,27 @@ function gameReducer(state: GameState, action: GameAction): GameState {
       const playerCount = state.players.length
       if (playerCount === 0) return state
 
+      console.log('🟢 NEXT_TURN reducer called')
+      console.log('🟢 Old currentPlayer:', state.currentPlayer)
+      console.log('🟢 Old currentSong:', state.currentSong?.title)
+
+      // Wechsle zum nächsten Spieler (im Uhrzeigersinn)
       let newCurrentPlayer = (state.currentPlayer + 1) % playerCount
       let newCurrentDJ = state.currentDJ
 
-      // DJ rotation logic for Physical Guess Mode
-      // When turn returns to DJ, DJ switches to next player
-      if (
-        state.gameVariant === 'physical' &&
-        state.gameMode === 'guess' &&
-        newCurrentPlayer === state.currentDJ
-      ) {
-        newCurrentDJ = (state.currentDJ + 1) % playerCount
-        newCurrentPlayer = (newCurrentPlayer + 1) % playerCount
+      // Nur im physischen Guess-Modus: DJ-Wechsel-Logik
+      // Im Timeline-Modus legen alle Spieler (inkl. DJ) selbst Karten
+      if (state.gameVariant === 'physical' && state.gameMode === 'guess') {
+        // Wenn wieder beim DJ: DJ wechselt
+        if (newCurrentPlayer === newCurrentDJ) {
+          newCurrentDJ = (newCurrentDJ + 1) % playerCount
+          newCurrentPlayer = (newCurrentPlayer + 1) % playerCount
+        }
       }
+
+      console.log('🟢 New currentPlayer:', newCurrentPlayer)
+      console.log('🟢 New currentSong: null')
+      console.log('🟢 Players:', state.players.map(p => p.name))
 
       return {
         ...state,
@@ -229,6 +243,64 @@ interface GameProviderProps {
 
 export function GameProvider({ children }: GameProviderProps) {
   const [state, dispatch] = useReducer(gameReducer, initialState)
+
+  // Auto-save game state to localStorage on every important change
+  useEffect(() => {
+    if (!state.isGameStarted) {
+      // Don't save if game hasn't started yet
+      return
+    }
+
+    try {
+      const gameStateToSave = {
+        gameMode: state.gameMode,
+        gameVariant: state.gameVariant,
+        randomStartPosition: state.randomStartPosition,
+        players: state.players,
+        currentPlayer: state.currentPlayer,
+        currentDJ: state.currentDJ,
+        currentSong: state.currentSong,
+        globalTimeline: state.globalTimeline,
+        playedSongs: state.playedSongs,
+        isGameStarted: state.isGameStarted,
+        savedAt: Date.now()
+      }
+
+      localStorage.setItem(GAME_STATE_STORAGE_KEY, JSON.stringify(gameStateToSave))
+      console.log('💾 Game state auto-saved')
+    } catch (error) {
+      console.error('❌ Failed to auto-save game state:', error)
+    }
+  }, [
+    state.gameMode,
+    state.gameVariant,
+    state.players,
+    state.currentPlayer,
+    state.currentDJ,
+    state.currentSong,
+    state.globalTimeline,
+    state.playedSongs,
+    state.isGameStarted
+  ])
+
+  // Load saved game state on mount
+  useEffect(() => {
+    try {
+      const savedState = localStorage.getItem(GAME_STATE_STORAGE_KEY)
+      if (savedState) {
+        const parsed = JSON.parse(savedState)
+        console.log('📦 Found saved game state:', {
+          savedAt: parsed.savedAt ? new Date(parsed.savedAt).toLocaleString('de-DE') : 'unknown',
+          players: parsed.players?.length || 0
+        })
+
+        // Optional: Auto-load saved state or show dialog
+        // For now, we just log it - the user can load it via UI
+      }
+    } catch (error) {
+      console.error('❌ Failed to load saved game state:', error)
+    }
+  }, [])
 
   const value: GameContextValue = {
     ...state,

@@ -3,20 +3,22 @@
  * Beautiful visual effects synchronized with music beats
  */
 
-import { startThreeWave, stopThreeWave, triggerWaveBeat, cleanupThreeWave } from './threeWaveAnimation.js'
+import { startThreeWave, stopThreeWave, triggerWaveBeat, cleanupThreeWave } from './threeWaveAnimation'
 
 // Available background animation types
 export const BACKGROUND_ANIMATIONS = {
   WAVE_3D: 'wave3d' // Default and only animation
-}
+} as const
+
+export type BackgroundAnimationType = typeof BACKGROUND_ANIMATIONS[keyof typeof BACKGROUND_ANIMATIONS]
 
 // Track active 3D animation
-let active3DAnimation = null
+let active3DAnimation: string | null = null
 
 /**
  * Apply beat animation to background
  */
-export function applyBackgroundBeat(animationType, intensity = 50) {
+export function applyBackgroundBeat(animationType: BackgroundAnimationType, intensity: number = 50): void {
   const background = document.getElementById('beat-background')
 
   if (!background) {
@@ -39,7 +41,7 @@ export function applyBackgroundBeat(animationType, intensity = 50) {
 /**
  * Cleanup all 3D animations
  */
-function cleanup3DAnimations() {
+function cleanup3DAnimations(): void {
   if (active3DAnimation === 'wave3d') {
     cleanupThreeWave()
   }
@@ -49,20 +51,20 @@ function cleanup3DAnimations() {
 /**
  * Cleanup function to be called when Beat Sync is disabled
  */
-export function cleanupBackgroundAnimations() {
+export function cleanupBackgroundAnimations(): void {
   cleanup3DAnimations()
 }
 
 /**
  * Get animation display name
  */
-export function getAnimationName(type) {
+export function getAnimationName(type: BackgroundAnimationType): string {
   return '3D Partikelwelle'
 }
 
 /**
  * Get animation description
  */
-export function getAnimationDescription(type) {
+export function getAnimationDescription(type: BackgroundAnimationType): string {
   return '3D Wellen-Animation mit Three.js'
 }

@@ -10,14 +10,14 @@ class SpotifyImporter {
   }
 
   async authenticate() {
-    const credentials = Buffer.from(\`\${this.clientId}:\${this.clientSecret}\`).toString('base64')
-    
+    const credentials = Buffer.from(`${this.clientId}:${this.clientSecret}`).toString('base64')
+
     try {
-      const response = await axios.post('https://accounts.spotify.com/api/token', 
+      const response = await axios.post('https://accounts.spotify.com/api/token',
         'grant_type=client_credentials',
         {
           headers: {
-            'Authorization': \`Basic \${credentials}\`,
+            'Authorization': `Basic ${credentials}`,
             'Content-Type': 'application/x-www-form-urlencoded'
           }
         }
@@ -37,16 +37,16 @@ class SpotifyImporter {
     }
 
     try {
-      const response = await axios.get(\`https://api.spotify.com/v1/playlists/\${playlistId}/tracks\`, {
+      const response = await axios.get(`https://api.spotify.com/v1/playlists/${playlistId}/tracks`, {
         headers: {
-          'Authorization': \`Bearer \${this.accessToken}\`
+          'Authorization': `Bearer ${this.accessToken}`
         }
       })
 
       const tracks = response.data.items.map((item, index) => {
         const track = item.track
         return {
-          id: \`song_\${String(index + 1).padStart(3, '0')}\`,
+          id: `song_${String(index + 1).padStart(3, '0')}`,
           title: track.name,
           artist: track.artists[0].name,
           year: new Date(track.album.release_date).getFullYear(),
@@ -57,7 +57,7 @@ class SpotifyImporter {
         }
       })
 
-      console.log(\`✅ \${tracks.length} Songs von Playlist geladen\`)
+      console.log(`✅ ${tracks.length} Songs von Playlist geladen`)
       return tracks
     } catch (error) {
       console.error('❌ Fehler beim Laden der Playlist:', error.message)
@@ -71,10 +71,10 @@ class SpotifyImporter {
     }
 
     try {
-      const query = encodeURIComponent(\`track:\${title} artist:\${artist}\`)
-      const response = await axios.get(\`https://api.spotify.com/v1/search?q=\${query}&type=track&limit=1\`, {
+      const query = encodeURIComponent(`track:${title} artist:${artist}`)
+      const response = await axios.get(`https://api.spotify.com/v1/search?q=${query}&type=track&limit=1`, {
         headers: {
-          'Authorization': \`Bearer \${this.accessToken}\`
+          'Authorization': `Bearer ${this.accessToken}`
         }
       })
 
@@ -97,9 +97,9 @@ class SpotifyImporter {
   }
 
   saveSongsToFile(songs, outputPath) {
-    const songsJs = \`export const songs = \${JSON.stringify(songs, null, 2)}\`
+    const songsJs = `export const songs = ${JSON.stringify(songs, null, 2)}`
     fs.writeFileSync(outputPath, songsJs, 'utf-8')
-    console.log(\`✅ Songs gespeichert in: \${outputPath}\`)
+    console.log(`✅ Songs gespeichert in: ${outputPath}`)
   }
 }
 
@@ -116,19 +116,19 @@ async function main() {
   }
 
   const importer = new SpotifyImporter(config.clientId, config.clientSecret)
-  
+
   if (config.playlistId) {
     console.log('📥 Importiere Playlist...')
     const songs = await importer.getPlaylistTracks(config.playlistId)
-    
+
     if (songs.length > 0) {
-      const outputPath = path.join(process.cwd(), 'src', 'data', 'songs.js')
+      const outputPath = path.join(process.cwd(), 'src', 'data', 'songs.ts')
       importer.saveSongsToFile(songs, outputPath)
-      
+
       // Auch als JSON für QR-Code Generator speichern
       const jsonPath = path.join(process.cwd(), '..', 'docs', 'songs.json')
       fs.writeFileSync(jsonPath, JSON.stringify(songs, null, 2))
-      console.log(\`✅ Songs auch gespeichert als JSON: \${jsonPath}\`)
+      console.log(`✅ Songs auch gespeichert als JSON: ${jsonPath}`)
     }
   } else {
     console.log('ℹ️  Keine Playlist-ID konfiguriert')
@@ -137,7 +137,7 @@ async function main() {
 }
 
 // Nur ausführen wenn direkt aufgerufen
-if (import.meta.url === \`file://\${process.argv[1]}\`) {
+if (import.meta.url === `file://${process.argv[1]}`) {
   main()
 }
 

@@ -5,15 +5,23 @@
  * Uses CSS transitions and Web Animations API for smooth effects
  */
 
+import type { AnimationType } from './animationPresets'
+
 /**
  * Apply animation to elements based on beat event
- * @param {Array} elements - DOM elements to animate
- * @param {string} animationType - Type of animation
- * @param {number} intensity - Animation intensity (0-100)
- * @param {number} duration - Animation duration in ms
- * @param {Array} colors - Optional colors for color-based animations
+ * @param elements - DOM elements to animate
+ * @param animationType - Type of animation
+ * @param intensity - Animation intensity (0-100)
+ * @param duration - Animation duration in ms
+ * @param colors - Optional colors for color-based animations
  */
-export function applyBeatAnimation(elements, animationType, intensity, duration, colors = []) {
+export function applyBeatAnimation(
+  elements: NodeListOf<Element> | Element[] | null,
+  animationType: AnimationType,
+  intensity: number,
+  duration?: number,
+  colors: string[] = []
+): void {
   if (!elements || elements.length === 0) return
 
   // Convert NodeList to Array
@@ -52,11 +60,11 @@ export function applyBeatAnimation(elements, animationType, intensity, duration,
 /**
  * Pulse Animation: Opacity change
  */
-function applyPulseAnimation(elements, intensity, duration) {
+function applyPulseAnimation(elements: Element[], intensity: number, duration: number): void {
   const minOpacity = 1 - (intensity / 100) * 0.3 // 0.7 - 1.0 range
 
   elements.forEach(el => {
-    const originalOpacity = el.style.opacity || '1'
+    if (!(el instanceof HTMLElement)) return
 
     // Animate using Web Animations API
     el.animate([
@@ -72,10 +80,12 @@ function applyPulseAnimation(elements, intensity, duration) {
 /**
  * Flash Animation: Brightness burst
  */
-function applyFlashAnimation(elements, intensity, duration) {
+function applyFlashAnimation(elements: Element[], intensity: number, duration: number): void {
   const maxBrightness = 1 + (intensity / 100) * 0.5 // 1.0 - 1.5 range
 
   elements.forEach(el => {
+    if (!(el instanceof HTMLElement)) return
+
     el.animate([
       { filter: `brightness(${maxBrightness})` },
       { filter: 'brightness(1)' }
@@ -89,10 +99,12 @@ function applyFlashAnimation(elements, intensity, duration) {
 /**
  * Scale Animation: Size change
  */
-function applyScaleAnimation(elements, intensity, duration) {
+function applyScaleAnimation(elements: Element[], intensity: number, duration: number): void {
   const maxScale = 1 + (intensity / 100) * 0.1 // 1.0 - 1.1 range
 
   elements.forEach(el => {
+    if (!(el instanceof HTMLElement)) return
+
     el.animate([
       { transform: `scale(${maxScale})` },
       { transform: 'scale(1)' }
@@ -106,12 +118,19 @@ function applyScaleAnimation(elements, intensity, duration) {
 /**
  * Glow Animation: Box-shadow effect
  */
-function applyGlowAnimation(elements, intensity, duration, colors) {
+function applyGlowAnimation(
+  elements: Element[],
+  intensity: number,
+  duration: number,
+  colors: string[]
+): void {
   const glowColor = colors[0] || '#6366f1'
   const blurRadius = (intensity / 100) * 30 // 0-30px blur
   const spreadRadius = (intensity / 100) * 10 // 0-10px spread
 
   elements.forEach(el => {
+    if (!(el instanceof HTMLElement)) return
+
     const originalBoxShadow = getComputedStyle(el).boxShadow
 
     el.animate([
@@ -127,10 +146,12 @@ function applyGlowAnimation(elements, intensity, duration, colors) {
 /**
  * Shake Animation: Horizontal translation
  */
-function applyShakeAnimation(elements, intensity, duration) {
+function applyShakeAnimation(elements: Element[], intensity: number, duration: number): void {
   const shakeAmount = (intensity / 100) * 10 // 0-10px shake
 
   elements.forEach(el => {
+    if (!(el instanceof HTMLElement)) return
+
     el.animate([
       { transform: `translateX(-${shakeAmount}px)` },
       { transform: `translateX(${shakeAmount}px)` },
@@ -145,7 +166,12 @@ function applyShakeAnimation(elements, intensity, duration) {
 /**
  * Color Animation: Background color transition
  */
-function applyColorAnimation(elements, intensity, duration, colors) {
+function applyColorAnimation(
+  elements: Element[],
+  intensity: number,
+  duration: number,
+  colors: string[]
+): void {
   if (!colors || colors.length === 0) {
     colors = ['#6366f1', '#8b5cf6', '#ec4899']
   }
@@ -153,6 +179,8 @@ function applyColorAnimation(elements, intensity, duration, colors) {
   const randomColor = colors[Math.floor(Math.random() * colors.length)]
 
   elements.forEach(el => {
+    if (!(el instanceof HTMLElement)) return
+
     const originalBg = getComputedStyle(el).backgroundColor
     const opacity = intensity / 100
 
@@ -172,11 +200,18 @@ function applyColorAnimation(elements, intensity, duration, colors) {
 /**
  * Border Pulse Animation: Border width/color change
  */
-function applyBorderPulseAnimation(elements, intensity, duration, colors) {
+function applyBorderPulseAnimation(
+  elements: Element[],
+  intensity: number,
+  duration: number,
+  colors: string[]
+): void {
   const borderColor = colors[0] || '#6366f1'
   const maxBorderWidth = 2 + (intensity / 100) * 4 // 2-6px border
 
   elements.forEach(el => {
+    if (!(el instanceof HTMLElement)) return
+
     const originalBorder = getComputedStyle(el).border
 
     el.animate([
@@ -192,7 +227,7 @@ function applyBorderPulseAnimation(elements, intensity, duration, colors) {
 /**
  * Helper: Convert hex color to rgba
  */
-function hexToRgba(hex, alpha = 1) {
+function hexToRgba(hex: string, alpha: number = 1): string {
   // Remove # if present
   hex = hex.replace('#', '')
 
@@ -207,7 +242,11 @@ function hexToRgba(hex, alpha = 1) {
 /**
  * Apply CSS class-based animation (alternative approach)
  */
-export function applyClassAnimation(elements, className, duration) {
+export function applyClassAnimation(
+  elements: NodeListOf<Element> | Element[] | null,
+  className: string,
+  duration: number
+): void {
   if (!elements || elements.length === 0) return
 
   const elementsArray = Array.from(elements)
@@ -226,7 +265,7 @@ export function applyClassAnimation(elements, className, duration) {
 /**
  * Check if Web Animations API is supported
  */
-export function supportsWebAnimations() {
+export function supportsWebAnimations(): boolean {
   return typeof Element.prototype.animate === 'function'
 }
 
@@ -237,7 +276,7 @@ let lastFrameTime = performance.now()
 let frameCount = 0
 let currentFPS = 60
 
-export function getFPS() {
+export function getFPS(): number {
   const now = performance.now()
   frameCount++
 
@@ -253,8 +292,8 @@ export function getFPS() {
 /**
  * Start FPS monitoring
  */
-export function startFPSMonitor(callback, threshold = 30) {
-  let monitorInterval = setInterval(() => {
+export function startFPSMonitor(callback?: (fps: number) => void, threshold: number = 30): NodeJS.Timeout {
+  const monitorInterval = setInterval(() => {
     const fps = getFPS()
     if (fps < threshold && callback) {
       callback(fps)

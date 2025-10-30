@@ -18,7 +18,7 @@ node test-integrity.js
 
 ### 1. **Song Daten-Integrität**
 - ✅ songs.json kann geladen werden
-- ✅ PWA songs.js stimmt mit songs.json überein
+- ✅ PWA songs.ts stimmt mit songs.json überein
 - ✅ Alle Songs haben Pflichtfelder: id, title, artist, year, spotifyId
 - ✅ Jahre sind im gültigen Bereich (1900-heute)
 
@@ -48,8 +48,8 @@ node test-integrity.js
 [Test 1] Loading songs.json...
 ✅ Loaded 111 songs from songs.json
 
-[Test 2] Validating PWA songs.js...
-✅ PWA songs.js matches songs.json (111 songs)
+[Test 2] Validating PWA songs.ts...
+✅ PWA songs.ts matches songs.json (111 songs)
 
 [Test 3] Validating song data structure...
 ✅ All songs have required fields
@@ -108,7 +108,7 @@ git commit -m "..."
 node card-generator/generateCard.js
 ```
 
-### Fehler: "PWA songs.js count mismatch"
+### Fehler: "PWA songs.ts count mismatch"
 ```bash
 # Sync PWA mit songs.json
 node -e "const songs = require('./docs/songs.json'); require('fs').writeFileSync('pwa/src/data/songs.js', 'export const songs = ' + JSON.stringify(songs, null, 2))"

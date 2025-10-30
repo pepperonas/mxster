@@ -7,17 +7,17 @@ export default {
   theme: {
     extend: {
       colors: {
-        // Celox Dark Theme
-        primary: '#2C2E3B',
-        secondary: '#4A90E2',
-        accent: '#FF6B35',
-        background: '#1A1C27',
-        border: '#3A3C4B',
-        danger: '#DC2626',
+        // Celox Dark Theme (mxster adapted)
+        background: '#1A1C27',        // Main background
+        primary: '#2C2E3B',           // Cards, containers
+        secondary: '#4A90E2',         // Brand blue (links, CTAs)
+        accent: '#FF6B35',            // Highlight orange
+        border: '#3A3C4B',            // Border color
+        danger: '#DC2626',            // Error states
         'text-primary': '#FFFFFF',
         'text-secondary': '#B0B3C1',
 
-        // mxster Game Colors (zusätzlich)
+        // mxster Game Colors (additional)
         'game-bg': '#1a1a2e',
         'game-card': '#16213e',
         'game-accent': '#0f3460',

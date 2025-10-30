@@ -30,7 +30,7 @@ export const SPOTIFY_CONFIG = {
     'user-read-private',
     'user-read-playback-state',
     'user-modify-playback-state'
-  ],
+  ] as string[],  // Cast to mutable array
   TOKEN_REFRESH_THRESHOLD_MS: 5 * 60 * 1000,  // 5 minutes
   TOKEN_REFRESH_CHECK_INTERVAL_MS: 10 * 60 * 1000  // 10 minutes
 } as const

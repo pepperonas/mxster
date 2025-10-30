@@ -5,13 +5,18 @@
 
 import * as THREE from 'three'
 
-let scene = null
-let camera = null
-let renderer = null
-let particleSystem = null
-let animationFrameId = null
+interface AnimationState {
+  time: number
+  waveIntensity: number
+}
+
+let scene: THREE.Scene | null = null
+let camera: THREE.PerspectiveCamera | null = null
+let renderer: THREE.WebGLRenderer | null = null
+let particleSystem: THREE.Points | null = null
+let animationFrameId: number | null = null
 let isInitialized = false
-let animationState = {
+let animationState: AnimationState = {
   time: 0,
   waveIntensity: 0
 }
@@ -19,7 +24,7 @@ let animationState = {
 /**
  * Initialize Three.js scene
  */
-export function initThreeWave() {
+export function initThreeWave(): void {
   if (isInitialized) return
 
   const container = document.getElementById('beat-background')
@@ -80,6 +85,11 @@ export function initThreeWave() {
   canvas.height = 256
   const ctx = canvas.getContext('2d')
 
+  if (!ctx) {
+    console.error('Cannot get 2D context for canvas')
+    return
+  }
+
   // Fill with transparent background
   ctx.clearRect(0, 0, 256, 256)
 
@@ -134,7 +144,7 @@ export function initThreeWave() {
 /**
  * Handle window resize
  */
-function onWindowResize() {
+function onWindowResize(): void {
   if (!camera || !renderer) return
 
   camera.aspect = window.innerWidth / window.innerHeight
@@ -145,12 +155,12 @@ function onWindowResize() {
 /**
  * Start wave animation
  */
-export function startThreeWave(intensity = 50) {
+export function startThreeWave(intensity: number = 50): void {
   if (!isInitialized) {
     initThreeWave()
   }
 
-  if (!particleSystem) return
+  if (!particleSystem || !renderer || !scene || !camera) return
 
   // Stop previous animation
   if (animationFrameId) {
@@ -163,7 +173,9 @@ export function startThreeWave(intensity = 50) {
   // Animation loop - BUTTER SMOOTH 60fps with optimized calculations
   let lastTime = performance.now()
 
-  function animate(currentTime) {
+  function animate(currentTime: number): void {
+    if (!particleSystem || !renderer || !scene || !camera) return
+
     // Delta time for frame-independent animation
     const deltaTime = (currentTime - lastTime) * 0.001 // Convert to seconds
     lastTime = currentTime
@@ -171,7 +183,8 @@ export function startThreeWave(intensity = 50) {
     // Smooth time progression (capped for consistency)
     animationState.time += Math.min(deltaTime, 0.1) * 2
 
-    const positions = particleSystem.geometry.attributes.position.array
+    const positionsAttr = particleSystem.geometry.attributes.position
+    const positions = positionsAttr.array as Float32Array
     const time = animationState.time
 
     // Optimized wave calculations - pre-calculate values
@@ -206,11 +219,11 @@ export function startThreeWave(intensity = 50) {
     }
 
     // Flag geometry for update
-    particleSystem.geometry.attributes.position.needsUpdate = true
+    positionsAttr.needsUpdate = true
 
     // Beat-reactive particle color - flash brighter on beats
-    const beatColorBoost = 1 + (animationState.waveIntensity * 0.5) // Up to 1.5x brightness
-    particleSystem.material.opacity = 0.85 + (animationState.waveIntensity * 0.15) // Pulse opacity
+    const material = particleSystem.material as THREE.PointsMaterial
+    material.opacity = 0.85 + (animationState.waveIntensity * 0.15) // Pulse opacity
 
     // Very slow rotation for dynamic view
     particleSystem.rotation.y += deltaTime * 0.1
@@ -219,7 +232,7 @@ export function startThreeWave(intensity = 50) {
     animationState.waveIntensity *= Math.pow(0.85, deltaTime * 60)
 
     // Render scene
-    renderer.render(scene, camera)
+    renderer!.render(scene!, camera!)
 
     animationFrameId = requestAnimationFrame(animate)
   }
@@ -232,14 +245,14 @@ export function startThreeWave(intensity = 50) {
 /**
  * Trigger beat pulse in the wave
  */
-export function triggerWaveBeat(intensity = 50) {
+export function triggerWaveBeat(intensity: number = 50): void {
   animationState.waveIntensity = intensity / 100
 }
 
 /**
  * Stop wave animation
  */
-export function stopThreeWave() {
+export function stopThreeWave(): void {
   if (animationFrameId) {
     cancelAnimationFrame(animationFrameId)
     animationFrameId = null
@@ -250,7 +263,7 @@ export function stopThreeWave() {
 /**
  * Cleanup Three.js resources
  */
-export function cleanupThreeWave() {
+export function cleanupThreeWave(): void {
   stopThreeWave()
 
   if (renderer && renderer.domElement && renderer.domElement.parentNode) {
@@ -259,8 +272,11 @@ export function cleanupThreeWave() {
 
   if (particleSystem) {
     particleSystem.geometry.dispose()
-    particleSystem.material.dispose()
-    scene.remove(particleSystem)
+    const material = particleSystem.material as THREE.PointsMaterial
+    material.dispose()
+    if (scene) {
+      scene.remove(particleSystem)
+    }
   }
 
   if (renderer) {

@@ -4,6 +4,10 @@ import { VitePWA } from 'vite-plugin-pwa'
 import path from 'path'
 
 export default defineConfig({
+  server: {
+    host: '127.0.0.1',
+    port: 5173
+  },
   plugins: [
     react(),
     VitePWA({

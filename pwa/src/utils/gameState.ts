@@ -1,9 +1,19 @@
+/**
+ * Game State Management
+ * Handles saving and loading game state to/from localStorage
+ */
+
 export class GameState {
+  private storageKey: string
+
   constructor() {
     this.storageKey = 'hitster_game_state'
   }
 
-  save(data) {
+  /**
+   * Save data to localStorage
+   */
+  save(data: any): boolean {
     try {
       localStorage.setItem(this.storageKey, JSON.stringify(data))
       return true
@@ -13,7 +23,10 @@ export class GameState {
     }
   }
 
-  load() {
+  /**
+   * Load data from localStorage
+   */
+  load(): any | null {
     try {
       const data = localStorage.getItem(this.storageKey)
       return data ? JSON.parse(data) : null
@@ -23,7 +36,10 @@ export class GameState {
     }
   }
 
-  clear() {
+  /**
+   * Clear saved data
+   */
+  clear(): boolean {
     try {
       localStorage.removeItem(this.storageKey)
       return true
@@ -33,7 +49,10 @@ export class GameState {
     }
   }
 
-  exists() {
+  /**
+   * Check if saved data exists
+   */
+  exists(): boolean {
     return localStorage.getItem(this.storageKey) !== null
   }
 }

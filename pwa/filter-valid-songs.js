@@ -143,13 +143,13 @@ async function filterSongs() {
     console.log(`📋 Entfernte Songs gespeichert: songs_removed.json`)
   }
 
-  // Aktualisiere PWA songs.js
-  const songsJsPath = path.join(__dirname, 'src/data/songs.js')
+  // Aktualisiere PWA songs.ts
+  const songsJsPath = path.join(__dirname, 'src/data/songs.ts')
   fs.writeFileSync(
     songsJsPath,
-    `export const songs = ${JSON.stringify(validSongs, null, 2)}\n`
+    `import type { Song } from '@/types'\n\nexport const songs = ${JSON.stringify(validSongs, null, 2)}\n`
   )
-  console.log(`✅ PWA songs.js aktualisiert`)
+  console.log(`✅ PWA songs.ts aktualisiert`)
 
   console.log(`\n🎉 Fertig! Nächste Schritte:`)
   console.log(`   1. QR-Codes neu generieren: cd ../cards && ./venv/bin/python generate_cards.py ../docs/songs.json`)

@@ -1,4 +1,4 @@
-const axios = require('axios');
+import axios from 'axios'
 
 /**
  * Spotify API Helper
@@ -151,8 +151,8 @@ async function searchTrack(query) {
   }
 }
 
-module.exports = {
+export {
   getTrackMetadata,
   searchTrack,
   extractTrackId
-};
+}

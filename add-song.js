@@ -10,15 +10,22 @@
  *   node add-song.js "https://open.spotify.com/track/4u7EnebtmKWzUH433cf5Qv"
  */
 
-require('dotenv').config();
-const fs = require('fs').promises;
-const path = require('path');
-const { getTrackMetadata } = require('./card-generator/spotifyApi');
-const { generateCard, generateSTL } = require('./card-generator/generateCard');
+import 'dotenv/config'
+import fs from 'fs/promises'
+import path from 'path'
+import { fileURLToPath } from 'url'
+import readline from 'readline'
+import { execSync } from 'child_process'
+import { getTrackMetadata } from './card-generator/spotifyApi.js'
+import { generateCard, generateSTL } from './card-generator/generateCard.js'
+
+// ES Module equivalent of __dirname
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__filename)
 
 // Configuration
 const SONGS_JSON_PATH = './docs/songs.json';
-const PWA_SONGS_PATH = './pwa/src/data/songs.js';
+const PWA_SONGS_PATH = './pwa/src/data/songs.ts';
 
 /**
  * Main function
@@ -68,15 +75,15 @@ async function main() {
       console.log(`   Artist: ${duplicate.artist}`);
       console.log(`   Year: ${duplicate.year}`);
 
-      const readline = require('readline').createInterface({
+      const rl = readline.createInterface({
         input: process.stdin,
         output: process.stdout
       });
 
       const answer = await new Promise(resolve => {
-        readline.question('\n❓ Generate card anyway? (y/N): ', resolve);
+        rl.question('\n❓ Generate card anyway? (y/N): ', resolve);
       });
-      readline.close();
+      rl.close();
 
       if (answer.toLowerCase() !== 'y') {
         console.log('❌ Operation cancelled');
@@ -95,15 +102,15 @@ async function main() {
       trackData.id = newId;
 
       // 5. Prompt for YouTube URL (optional)
-      const readline = require('readline').createInterface({
+      const rl2 = readline.createInterface({
         input: process.stdin,
         output: process.stdout
       });
 
       const youtubeUrl = await new Promise(resolve => {
-        readline.question('\n🎬 YouTube URL (optional, Enter to skip): ', resolve);
+        rl2.question('\n🎬 YouTube URL (optional, Enter to skip): ', resolve);
       });
-      readline.close();
+      rl2.close();
 
       // 6. Create song object
       const newSong = {
@@ -130,14 +137,14 @@ async function main() {
       );
       console.log(`   ✅ songs.json updated (${songs.length} songs total)\n`);
 
-      // 8. Update PWA songs.js
-      console.log('🔄 Updating PWA songs.js...');
+      // 8. Update PWA songs.ts
+      console.log('🔄 Updating PWA songs.ts...');
       try {
-        const pwaSongsContent = `export const songs = ${JSON.stringify(songs, null, 2)}\n`;
+        const pwaSongsContent = `import type { Song } from '@/types'\n\nexport const songs = ${JSON.stringify(songs, null, 2)}\n`;
         await fs.writeFile(PWA_SONGS_PATH, pwaSongsContent, 'utf8');
-        console.log(`   ✅ PWA songs.js updated\n`);
+        console.log(`   ✅ PWA songs.ts updated\n`);
       } catch (error) {
-        console.log(`   ⚠️  Could not update PWA songs.js: ${error.message}\n`);
+        console.log(`   ⚠️  Could not update PWA songs.ts: ${error.message}\n`);
       }
     }
 
@@ -167,7 +174,6 @@ async function main() {
     // 10. Update song count in README.md
     console.log('📊 Updating song count in README.md...');
     try {
-      const { execSync } = require('child_process');
       execSync('node update-song-count.js', { cwd: __dirname, stdio: 'inherit' });
     } catch (error) {
       console.log(`   ⚠️  Could not update README.md: ${error.message}\n`);

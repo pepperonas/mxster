@@ -3,7 +3,7 @@
  * Defines the three game modes for mxster
  */
 
-import type { GameMode, GameVariant, GameModeInfo, GameVariantInfo, Song, GuessResult } from '@/types'
+import type { GameMode, GameVariant, GameModeInfo, GameVariantInfo, Song } from '@/types'
 
 // Game Mode Constants
 export const GAME_MODES: Record<string, GameMode> = {
@@ -20,15 +20,15 @@ export const GAME_VARIANTS: Record<string, GameVariant> = {
 
 // Game Variant Metadata
 export const GAME_VARIANT_INFO: Record<GameVariant, GameVariantInfo & { requiresCamera: boolean }> = {
-  [GAME_VARIANTS.PHYSICAL]: {
+  physical: {
     name: 'Physische Karten',
     description: 'Spiele mit 3D-gedruckten oder PDF-Karten und QR-Scanner',
     icon: '📱',
     requirements: ['Smartphone mit Kamera', 'Physische Karten (PDF oder 3D-Druck)'],
-    features: ['QR-Code Scanner', 'DJ-Rolle', 'Taschenlampe'],
+    features: ['QR-Code Scanner', 'DJ spielt mit', 'Taschenlampe'],
     requiresCamera: true
   },
-  [GAME_VARIANTS.VIRTUAL]: {
+  virtual: {
     name: 'Virtuelle Karten',
     description: 'Spiele komplett digital ohne physische Karten',
     icon: '💻',
@@ -45,7 +45,7 @@ export const GAME_MODE_INFO: Record<GameMode, GameModeInfo & {
   requiresTimeline: boolean
   sharedTimeline?: boolean
 }> = {
-  [GAME_MODES.GUESS]: {
+  guess: {
     name: 'Ratespiel',
     description: 'Rate Jahr, Titel und Interpret - 1 Punkt pro richtigem Parameter',
     icon: '🎯',
@@ -61,8 +61,8 @@ export const GAME_MODE_INFO: Record<GameMode, GameModeInfo & {
     requiresInput: true,
     requiresTimeline: false
   },
-  [GAME_MODES.TIMELINE_PERSONAL]: {
-    name: 'Timeline (Persönlich)',
+  timeline_personal: {
+    name: 'Persönliche Timeline',
     description: 'Jeder Spieler hat seine eigene Timeline - sortiere die Karten chronologisch',
     icon: '👤',
     rules: [
@@ -78,8 +78,8 @@ export const GAME_MODE_INFO: Record<GameMode, GameModeInfo & {
     requiresTimeline: true,
     sharedTimeline: false
   },
-  [GAME_MODES.TIMELINE_GLOBAL]: {
-    name: 'Timeline (Global)',
+  timeline_global: {
+    name: 'Globale Timeline',
     description: 'Alle Spieler teilen eine Timeline - falsche Karten werden entfernt',
     icon: '🌍',
     rules: [
@@ -197,7 +197,7 @@ export function insertSongIntoTimeline(song: Song, timeline: Song[]): Song[] {
 /**
  * Get win condition for a game mode
  */
-export function getWinCondition(mode: GameMode): number {
+export function getWinCondition(_mode: GameMode): number {
   return 10 // All modes currently use 10 cards as win condition
 }
 

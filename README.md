@@ -4,7 +4,7 @@
 
 [![App](https://img.shields.io/badge/App-mxster.de-blue?style=for-the-badge)](https://mxster.de)
 [![License](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)](LICENSE)
-![Songs](https://img.shields.io/badge/Songs-111-orange?style=for-the-badge)
+![Songs](https://img.shields.io/badge/Songs-113-orange?style=for-the-badge)
 [![Tests](https://github.com/pepperonas/mxster/actions/workflows/test.yml/badge.svg)](https://github.com/pepperonas/mxster/actions/workflows/test.yml)
 
 ![mxster Banner](https://mxster.de/assets/mxster.jpg)
@@ -280,7 +280,7 @@ node edit-song.js
 **Was passiert automatisch:**
 - ✅ Automatisches Backup erstellt (`songs.json.backup-2025-10-24`)
 - ✅ Datenbank aktualisiert (`docs/songs.json`)
-- ✅ PWA-Daten synchronisiert (`pwa/src/data/songs.js`)
+- ✅ PWA-Daten synchronisiert (`pwa/src/data/songs.ts`)
 - ✅ Alte Dateien gelöscht (falls Titel/Artist geändert)
 - ✅ Neue QR-Codes generiert
 - ✅ Optional: 3D-Modelle neu erstellen (SCAD + STL)
@@ -330,7 +330,7 @@ Schritt 4/4: Dateien aktualisieren
 ✅ Backup erstellt: docs/songs.json.backup-2025-10-24
 🗑️  2 alte Dateien gelöscht
 ✅ songs.json aktualisiert
-✅ pwa/src/data/songs.js aktualisiert
+✅ pwa/src/data/songs.ts aktualisiert
 🔄 Generiere QR-Code...
 ✅ QR-Code generiert
 
@@ -342,7 +342,7 @@ Schritt 4/4: Dateien aktualisieren
 
 Aktualisierte Dateien:
   • docs/songs.json
-  • pwa/src/data/songs.js
+  • pwa/src/data/songs.ts
   • docs/song_008_*.png
   • card-generator/qr-codes/song_008_*.png
 ```
@@ -369,7 +369,7 @@ node exchange-song.js
 - ✅ Song-ID bleibt **unverändert** (nur Metadaten werden ersetzt)
 - ✅ Alte Dateien gelöscht (QR, SCAD, STL)
 - ✅ Datenbank aktualisiert (`docs/songs.json`)
-- ✅ PWA-Daten synchronisiert (`pwa/src/data/songs.js`)
+- ✅ PWA-Daten synchronisiert (`pwa/src/data/songs.ts`)
 - ✅ Neue Metadaten von Spotify geladen (Titel, Artist, Jahr, Album)
 - ✅ Neue QR-Codes generiert (beide Verzeichnisse)
 - ✅ Neue 3D-Modelle generiert (SCAD + STL)
@@ -428,7 +428,7 @@ Schritt 5/5: Dateien aktualisieren
 🗑️  6 alte Dateien gelöscht
 ✅ Backup erstellt: docs/songs.json.backup-2025-10-24
 ✅ songs.json aktualisiert
-✅ pwa/src/data/songs.js aktualisiert
+✅ pwa/src/data/songs.ts aktualisiert
 🔄 Generiere Karten-Dateien (QR-Code + 3D-Modelle)...
 ✅ QR-Code generiert
 ✅ 3D-Modelle generiert (SCAD + STL)
@@ -441,7 +441,7 @@ PDF-Karten neu generieren (alle Songs)? (j/n): n
 
 Aktualisierte Dateien:
   • docs/songs.json
-  • pwa/src/data/songs.js
+  • pwa/src/data/songs.ts
   • docs/song_031_*.png
   • card-generator/qr-codes/song_031_*.png
   • card-generator/models/song_031_*.scad
@@ -632,7 +632,7 @@ node edit-song.js
 - Nutzt Node.js `readline` für interaktive Prompts
 - Erstellt Backups mit Zeitstempel: `songs.json.backup-YYYY-MM-DD`
 - Führt `generateCard.js` automatisch aus für neue QR-Codes
-- Synchronisiert beide Datenbanken: `docs/songs.json` und `pwa/src/data/songs.js`
+- Synchronisiert beide Datenbanken: `docs/songs.json` und `pwa/src/data/songs.ts`
 - Säubert alte Dateien aus `docs/`, `qr-codes/` und `models/` Verzeichnissen
 
 ### Tech Stack

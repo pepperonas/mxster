@@ -13,19 +13,32 @@ export const ANIMATION_TYPES = {
   SHAKE: 'shake',
   COLOR: 'color',
   BORDER_PULSE: 'border-pulse'
-}
+} as const
+
+export type AnimationType = typeof ANIMATION_TYPES[keyof typeof ANIMATION_TYPES]
 
 export const SYNC_TYPES = {
   BEAT: 'beat',
   BAR: 'bar',
   SECTION: 'section',
   TATUM: 'tatum'
+} as const
+
+export type SyncType = typeof SYNC_TYPES[keyof typeof SYNC_TYPES]
+
+/**
+ * Animation type info structure
+ */
+export interface AnimationTypeInfo {
+  name: string
+  description: string
+  icon: string
 }
 
 /**
  * Animation type descriptions
  */
-export const ANIMATION_TYPE_INFO = {
+export const ANIMATION_TYPE_INFO: Record<AnimationType, AnimationTypeInfo> = {
   [ANIMATION_TYPES.PULSE]: {
     name: 'Pulse',
     description: 'Sanfte Opacity-Änderung',
@@ -72,12 +85,23 @@ export const COLOR_PALETTES = {
   PURPLE: ['#8b5cf6', '#a855f7', '#c026d3'],
   RED: ['#ef4444', '#f59e0b', '#ec4899'],
   RAINBOW: ['#ef4444', '#f59e0b', '#eab308', '#22c55e', '#3b82f6', '#8b5cf6', '#ec4899']
+} as const
+
+/**
+ * Element preset structure
+ */
+export interface ElementPreset {
+  id: string
+  selector: string
+  name: string
+  icon: string
+  recommended: AnimationType[]
 }
 
 /**
  * Element selector presets
  */
-export const ELEMENT_PRESETS = [
+export const ELEMENT_PRESETS: ElementPreset[] = [
   {
     id: 'background',
     selector: 'body',

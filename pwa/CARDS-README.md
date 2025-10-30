@@ -102,7 +102,7 @@ Die Karten verwenden das mxster Design:
 - `qrcode` - QR-Code Generierung
 
 ### Song-Daten
-Die Karten werden aus `src/data/songs.js` generiert. Jeder Song benötigt:
+Die Karten werden aus `src/data/songs.ts` generiert. Jeder Song benötigt:
 - `id` - Eindeutige ID
 - `title` - Song-Titel
 - `artist` - Künstler
@@ -134,7 +134,7 @@ const CARD_HEIGHT = 3.5 * 72; // Höhe in inches * 72 (points)
 Passe die Farbwerte in den `drawCardFront()` und `drawCardBack()` Funktionen an.
 
 ### Mehr Songs hinzufügen
-Füge neue Songs zu `src/data/songs.js` hinzu und führe das Skript erneut aus.
+Füge neue Songs zu `src/data/songs.ts` hinzu und führe das Skript erneut aus.
 
 ## Beispiel-Ausgabe
 
@@ -173,7 +173,7 @@ Die Karten werden im mxster Music Timeline Game verwendet:
 - Prüfe die Konsole auf Fehlermeldungen
 
 ### QR-Codes funktionieren nicht
-- Stelle sicher, dass die `spotifyId` in `songs.js` korrekt ist
+- Stelle sicher, dass die `spotifyId` in `songs.ts` korrekt ist
 - Teste den QR-Code mit einem Standard-QR-Reader
 - Die URL sollte im Format `https://open.spotify.com/track/{id}` sein
 

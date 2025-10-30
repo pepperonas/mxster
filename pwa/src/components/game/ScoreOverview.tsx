@@ -18,11 +18,11 @@ export function ScoreOverview() {
   const medals = ['🥇', '🥈', '🥉']
 
   return (
-    <div className="bg-gray-900/80 backdrop-blur-sm rounded-2xl p-6 border-2 border-gray-800">
+    <div className="glass rounded-2xl p-6 border-2 border-accent/30">
       {/* Header */}
       <div className="flex items-center gap-3 mb-6">
         <TrophyIcon size={24} color="#a855f7" />
-        <h3 className="text-xl font-bold text-white">Punkteübersicht</h3>
+        <h3 className="text-xl font-bold text-gradient">Punkteübersicht</h3>
       </div>
 
       {/* Players List */}
@@ -35,11 +35,11 @@ export function ScoreOverview() {
             <div
               key={player.name}
               className={`
-                flex items-center justify-between p-4 rounded-lg transition-all
+                flex items-center justify-between p-4 rounded-lg transition-all glass
                 ${
                   isCurrentPlayer
-                    ? 'bg-purple-900/50 border-2 border-purple-600'
-                    : 'bg-gray-800/50 border-2 border-gray-700'
+                    ? 'border-2 border-accent shadow-glow-accent'
+                    : 'border-2 border-accent/30 hover:border-accent/50'
                 }
               `}
             >
@@ -49,15 +49,15 @@ export function ScoreOverview() {
                   {index < 3 ? medals[index] : `#${index + 1}`}
                 </span>
                 <div>
-                  <p className="font-bold text-white">{player.name}</p>
-                  <p className="text-xs text-gray-400">{player.cards} Karten</p>
+                  <p className="font-bold text-gradient">{player.name}</p>
+                  <p className="text-xs text-text-secondary">{player.cards} Karten</p>
                 </div>
               </div>
 
               {/* Score */}
               <div className="text-right">
-                <div className="text-2xl font-bold text-yellow-400">{player.score}</div>
-                <div className="text-xs text-gray-400">Punkte</div>
+                <div className="text-2xl font-bold text-gradient">{player.score}</div>
+                <div className="text-xs text-text-secondary">Punkte</div>
               </div>
             </div>
           )
@@ -65,8 +65,8 @@ export function ScoreOverview() {
       </div>
 
       {/* Info */}
-      <div className="mt-6 pt-4 border-t border-gray-800 text-center text-sm text-gray-400">
-        🏆 Gewinner: Meiste Punkte nach 10 Karten
+      <div className="mt-6 pt-4 border-t border-accent/20 text-center text-sm text-text-secondary">
+        🏆 Gewinner: Meisten Punkte nach 10 Karten
       </div>
     </div>
   )

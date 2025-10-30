@@ -57,23 +57,23 @@ function ToastItem({ toast, onRemove }: { toast: ToastType; onRemove: () => void
   const getColorClasses = () => {
     switch (toast.type) {
       case 'success':
-        return 'bg-green-600 border-green-500'
+        return 'bg-green-600 border-green-500 shadow-glow-sm'
       case 'error':
-        return 'bg-red-600 border-red-500'
+        return 'bg-red-600 border-red-500 shadow-glow-sm'
       case 'warning':
-        return 'bg-yellow-600 border-yellow-500'
+        return 'bg-yellow-600 border-yellow-500 shadow-glow-sm'
       default:
-        return 'bg-gray-700 border-gray-600'
+        return 'glass border-accent/30 shadow-glow-sm'
     }
   }
 
   return (
     <div
       className={`
-        flex items-center gap-3 px-4 py-3 rounded-lg border-2 shadow-lg
+        flex items-center gap-3 px-4 py-3 rounded-lg border-2
         ${getColorClasses()}
         text-white min-w-[300px] max-w-md
-        animate-slide-up
+        animate-slide-up backdrop-blur-sm
       `}
       role="alert"
     >

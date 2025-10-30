@@ -67,10 +67,13 @@ export interface GameState {
   playedSongs: string[]   // Song IDs to prevent duplicates
   timestamp: number
   randomStartPosition: boolean
+  isGameStarted: boolean
+  waitingForGuess: boolean
 }
 
 export interface SavedGameState extends GameState {
   version: string
+  savedAt?: number
 }
 
 // ============================================================================

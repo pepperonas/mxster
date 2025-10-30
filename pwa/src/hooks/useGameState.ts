@@ -1,6 +1,6 @@
 import { useCallback } from 'react'
 import { useGame } from '@/contexts'
-import type { GameState, SavedGameState } from '@/types'
+import type { SavedGameState } from '@/types'
 import { STORAGE_KEYS } from '@/utils/constants'
 
 /**

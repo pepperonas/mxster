@@ -34,7 +34,7 @@
 
 **Was add-song.js / edit-song.js machen:**
 - ✅ Aktualisiert `docs/songs.json`
-- ✅ Aktualisiert `pwa/src/data/songs.js`
+- ✅ Aktualisiert `pwa/src/data/songs.ts`
 - ✅ Generiert 3D-Modelle (SCAD + STL)
 - ✅ Kopiert QR-Code PNG nach `docs/`
 - ❌ Kein Git commit/push (das macht `update-and-release.sh`)

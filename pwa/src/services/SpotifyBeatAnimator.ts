@@ -5,40 +5,79 @@
  * Connects to Spotify API /audio-analysis endpoint and triggers beat events
  */
 
-class SpotifyBeatAnimator {
-  constructor() {
-    this.isActive = false
-    this.currentTrackId = null
-    this.audioAnalysis = null
-    this.beats = []
-    this.currentBeatIndex = 0
-    this.beatTimeouts = []
-    this.playbackStartTime = null
-    this.playbackPosition = 0
-    this.isPaused = false
-    this.syncInterval = null
-    this.accessToken = null
+// ============================================================================
+// Types
+// ============================================================================
 
-    // Performance tracking
-    this.lastBeatTime = 0
-    this.beatDebounceMs = 100 // Minimum time between beats
-  }
+interface Beat {
+  start: number
+  duration: number
+  confidence: number
+}
+
+interface AudioAnalysisTrack {
+  tempo?: number
+  duration?: number
+}
+
+interface AudioAnalysis {
+  beats?: Beat[]
+  track?: AudioAnalysisTrack
+}
+
+interface AudioFeatures {
+  tempo: number
+}
+
+interface BeatEventDetail {
+  beat: Beat
+  beatIndex: number
+  confidence: number
+  duration: number
+}
+
+interface BeatStats {
+  isActive: boolean
+  currentTrackId: string | null
+  totalBeats: number
+  currentBeatIndex: number
+  scheduledBeats: number
+  playbackPosition: number
+}
+
+// ============================================================================
+// SpotifyBeatAnimator Class
+// ============================================================================
+
+class SpotifyBeatAnimator {
+  private isActive: boolean = false
+  private currentTrackId: string | null = null
+  private audioAnalysis: AudioAnalysis | null = null
+  private beats: Beat[] = []
+  private currentBeatIndex: number = 0
+  private beatTimeouts: NodeJS.Timeout[] = []
+  private playbackStartTime: number | null = null
+  private playbackPosition: number = 0
+  private isPaused: boolean = false
+  private syncInterval: NodeJS.Timeout | null = null
+  private accessToken: string | null = null
+
+  // Performance tracking
+  private lastBeatTime: number = 0
+  private beatDebounceMs: number = 100 // Minimum time between beats
 
   /**
    * Initialize the beat animator
-   * @param {string} accessToken - Spotify access token
    */
-  initialize(accessToken) {
+  initialize(accessToken: string): void {
     this.accessToken = accessToken
     console.log('🎵 SpotifyBeatAnimator initialized')
   }
 
   /**
    * Load audio analysis for a track
-   * @param {string} trackId - Spotify track ID
-   * @param {string} accessToken - Optional fresh access token
    */
-  async loadTrackAnalysis(trackId, accessToken = null) {
+  async loadTrackAnalysis(trackId: string, accessToken: string | null = null): Promise<boolean> {
     // Update token if provided
     if (accessToken) {
       this.accessToken = accessToken
@@ -89,7 +128,7 @@ class SpotifyBeatAnimator {
       })
 
       if (featuresResponse.ok) {
-        const audioFeatures = await featuresResponse.json()
+        const audioFeatures: AudioFeatures = await featuresResponse.json()
         console.log('✅ Using BPM-based fallback:', audioFeatures.tempo, 'BPM')
         this.useBpmFallback(audioFeatures.tempo)
         return true
@@ -103,9 +142,10 @@ class SpotifyBeatAnimator {
       console.error('❌ Failed to load audio analysis:', error)
 
       // Show user-friendly error
-      if (error.message.includes('429')) {
+      const errorMessage = (error as Error).message
+      if (errorMessage.includes('429')) {
         this.showError('Zu viele Anfragen. Beat-Sync kurz pausiert.')
-      } else if (error.message.includes('404')) {
+      } else if (errorMessage.includes('404')) {
         this.showError('Keine Beat-Daten für diesen Track verfügbar.')
       }
 
@@ -115,9 +155,8 @@ class SpotifyBeatAnimator {
 
   /**
    * Fallback: Simple BPM-based beat generation
-   * @param {number} bpm - Beats per minute
    */
-  useBpmFallback(bpm) {
+  useBpmFallback(bpm: number): void {
     const beatInterval = (60 / bpm) * 1000 // Convert BPM to milliseconds
     this.beats = []
 
@@ -135,9 +174,8 @@ class SpotifyBeatAnimator {
 
   /**
    * Start beat synchronization
-   * @param {number} playbackPosition - Current playback position in ms
    */
-  start(playbackPosition = 0) {
+  start(playbackPosition: number = 0): void {
     if (!this.beats || this.beats.length === 0) {
       console.warn('⚠️ No beats available for synchronization')
       return
@@ -172,9 +210,11 @@ class SpotifyBeatAnimator {
   /**
    * Schedule beat triggers
    */
-  scheduleBeats() {
+  private scheduleBeats(): void {
     // Clear existing timeouts
     this.clearBeatTimeouts()
+
+    if (!this.playbackStartTime) return
 
     const now = Date.now()
     const currentPlaybackTime = (now - this.playbackStartTime) / 1000 // in seconds
@@ -204,10 +244,8 @@ class SpotifyBeatAnimator {
 
   /**
    * Trigger a beat animation event
-   * @param {object} beat - Beat object from audio analysis
-   * @param {number} beatIndex - Index of the beat
    */
-  triggerBeat(beat, beatIndex) {
+  private triggerBeat(beat: Beat, beatIndex: number): void {
     // Debounce: Skip if too close to last beat
     const now = Date.now()
     if (now - this.lastBeatTime < this.beatDebounceMs) {
@@ -216,7 +254,7 @@ class SpotifyBeatAnimator {
     this.lastBeatTime = now
 
     // Dispatch custom event
-    const beatEvent = new CustomEvent('beatPulse', {
+    const beatEvent = new CustomEvent<BeatEventDetail>('beatPulse', {
       detail: {
         beat,
         beatIndex,
@@ -239,8 +277,8 @@ class SpotifyBeatAnimator {
   /**
    * Check synchronization with actual playback
    */
-  checkSync() {
-    if (!this.isActive || !this.beats.length) return
+  private checkSync(): void {
+    if (!this.isActive || !this.beats.length || !this.playbackStartTime) return
 
     const now = Date.now()
     const expectedPlaybackTime = (now - this.playbackStartTime) / 1000
@@ -255,7 +293,7 @@ class SpotifyBeatAnimator {
   /**
    * Pause beat synchronization
    */
-  pause() {
+  pause(): void {
     this.isPaused = true
     this.clearBeatTimeouts()
     console.log('⏸️ Beat sync paused')
@@ -263,9 +301,8 @@ class SpotifyBeatAnimator {
 
   /**
    * Resume beat synchronization
-   * @param {number} playbackPosition - Current playback position in ms
    */
-  resume(playbackPosition) {
+  resume(playbackPosition: number): void {
     this.isPaused = false
     this.playbackPosition = playbackPosition
     this.playbackStartTime = Date.now() - playbackPosition
@@ -276,7 +313,7 @@ class SpotifyBeatAnimator {
   /**
    * Stop beat synchronization
    */
-  stop() {
+  stop(): void {
     this.isActive = false
     this.isPaused = false
     this.clearBeatTimeouts()
@@ -294,25 +331,23 @@ class SpotifyBeatAnimator {
   /**
    * Clear all scheduled beat timeouts
    */
-  clearBeatTimeouts() {
+  private clearBeatTimeouts(): void {
     this.beatTimeouts.forEach(timeout => clearTimeout(timeout))
     this.beatTimeouts = []
   }
 
   /**
    * Update playback position (called by player state change)
-   * @param {number} positionMs - Current playback position in ms
    */
-  updatePosition(positionMs) {
+  updatePosition(positionMs: number): void {
     this.playbackPosition = positionMs
     this.playbackStartTime = Date.now() - positionMs
   }
 
   /**
    * Show error message to user
-   * @param {string} message - Error message
    */
-  showError(message) {
+  private showError(message: string): void {
     if (window.game && typeof window.game.showToast === 'function') {
       window.game.showToast(message, 'error')
     } else {
@@ -323,7 +358,7 @@ class SpotifyBeatAnimator {
   /**
    * Get current statistics
    */
-  getStats() {
+  getStats(): BeatStats {
     return {
       isActive: this.isActive,
       currentTrackId: this.currentTrackId,
@@ -331,6 +366,17 @@ class SpotifyBeatAnimator {
       currentBeatIndex: this.currentBeatIndex,
       scheduledBeats: this.beatTimeouts.length,
       playbackPosition: this.playbackPosition
+    }
+  }
+}
+
+// Extend Window interface
+declare global {
+  interface Window {
+    game?: {
+      showToast?: (message: string, type: string) => void
+      renderLoginScreen?: () => void
+      beatSyncEnabled?: boolean
     }
   }
 }

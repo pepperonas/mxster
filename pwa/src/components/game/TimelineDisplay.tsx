@@ -26,10 +26,10 @@ export function TimelineDisplay({ playerId }: TimelineDisplayProps) {
 
   if (timeline.length === 0) {
     return (
-      <div className="bg-gray-900/80 backdrop-blur-sm rounded-2xl p-12 border-2 border-gray-800 text-center">
+      <div className="glass rounded-2xl p-12 border-2 border-accent/30 text-center">
         <div className="text-6xl mb-4">📭</div>
-        <h3 className="text-2xl font-bold text-gray-400 mb-2">Keine Karten</h3>
-        <p className="text-gray-500">
+        <h3 className="text-2xl font-bold text-gradient mb-2">Keine Karten</h3>
+        <p className="text-text-secondary">
           {gameMode === 'timeline_global'
             ? 'Die Timeline ist noch leer'
             : `${playerName} hat noch keine Karten`}
@@ -39,13 +39,13 @@ export function TimelineDisplay({ playerId }: TimelineDisplayProps) {
   }
 
   return (
-    <div className="bg-gray-900/80 backdrop-blur-sm rounded-2xl p-6 border-2 border-gray-800">
+    <div className="glass rounded-2xl p-6 border-2 border-accent/30">
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
-        <h3 className="text-xl font-bold text-white">
+        <h3 className="text-xl font-bold text-gradient">
           {gameMode === 'timeline_global' ? 'Globale Timeline' : `Timeline: ${playerName}`}
         </h3>
-        <span className="px-4 py-2 bg-purple-600/30 rounded-full text-purple-300 font-semibold">
+        <span className="glass px-4 py-2 rounded-full text-secondary font-semibold border border-accent/20">
           {timeline.length} {timeline.length === 1 ? 'Karte' : 'Karten'}
         </span>
       </div>
@@ -59,14 +59,14 @@ export function TimelineDisplay({ playerId }: TimelineDisplayProps) {
 
       {/* Progress */}
       {timeline.length < 10 && (
-        <div className="mt-6 pt-4 border-t border-gray-800">
+        <div className="mt-6 pt-4 border-t border-accent/20">
           <div className="flex items-center justify-between text-sm">
-            <span className="text-gray-400">Fortschritt</span>
-            <span className="text-purple-400 font-semibold">{timeline.length}/10</span>
+            <span className="text-text-secondary">Fortschritt</span>
+            <span className="text-secondary font-semibold">{timeline.length}/10</span>
           </div>
-          <div className="mt-2 h-2 bg-gray-800 rounded-full overflow-hidden">
+          <div className="mt-2 h-2 bg-primary rounded-full overflow-hidden border border-accent/20">
             <div
-              className="h-full bg-gradient-to-r from-purple-600 to-pink-600 transition-all duration-300"
+              className="h-full bg-gradient-to-r from-secondary to-accent transition-all duration-300 shadow-glow-sm"
               style={{ width: `${(timeline.length / 10) * 100}%` }}
             />
           </div>

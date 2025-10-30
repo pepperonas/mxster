@@ -1,7 +1,11 @@
-const fs = require('fs').promises;
-const path = require('path');
-const QRCode = require('qrcode');
-const { qrToScadModule } = require('./qrToScad');
+import fs from 'fs/promises'
+import path from 'path'
+import { exec, execSync } from 'child_process'
+import { promisify } from 'util'
+import QRCode from 'qrcode'
+import { qrToScadModule } from './qrToScad.js'
+
+const execPromise = promisify(exec)
 
 /**
  * Generate a 3D printable game card for a song
@@ -403,10 +407,6 @@ difference() {
  * @param {string} scadPath - Path to .scad file
  */
 async function generateSTL(scadPath) {
-  const { exec } = require('child_process');
-  const util = require('util');
-  const execPromise = util.promisify(exec);
-
   const stlPath = scadPath.replace('.scad', '.stl');
 
   try {
@@ -433,7 +433,7 @@ async function generateSTL(scadPath) {
   }
 }
 
-module.exports = {
+export {
   generateCard,
   generateSTL
-};
+}

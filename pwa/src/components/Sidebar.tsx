@@ -3,17 +3,47 @@
  * Side navigation panel with game info, player list, and quick actions
  */
 
-import { useUI, useGame, useAuth } from '@/contexts'
+import { useNavigate, useLocation } from 'react-router-dom'
+import { useUI, useGame, useAuth, useInteraction } from '@/contexts'
 import { useGameHistory } from '@/hooks'
 import { GAME_MODE_INFO } from '@/utils/gameModes'
 
 export function Sidebar() {
+  const navigate = useNavigate()
+  const location = useLocation()
   const { isSidebarOpen, toggleSidebar } = useUI()
   const { players, currentPlayer, gameMode, gameVariant } = useGame()
   const { isLoggedIn } = useAuth()
   const { history } = useGameHistory()
+  const { registerInteraction } = useInteraction()
 
   if (!isSidebarOpen) return null
+
+  // Helper to navigate and close sidebar
+  const handleNavigation = (path: string) => {
+    registerInteraction('sidebar', 50)
+    navigate(path)
+    toggleSidebar()
+    // Scroll to top when navigating to home page
+    if (path === '/') {
+      setTimeout(() => {
+        window.scrollTo({ top: 0, behavior: 'smooth' })
+      }, 100)
+    }
+  }
+
+  // Helper to scroll to section on landing page
+  const scrollToSection = (sectionId: string) => {
+    if (location.pathname !== '/') {
+      navigate('/')
+      setTimeout(() => {
+        document.getElementById(sectionId)?.scrollIntoView({ behavior: 'smooth' })
+      }, 300)
+    } else {
+      document.getElementById(sectionId)?.scrollIntoView({ behavior: 'smooth' })
+    }
+    toggleSidebar()
+  }
 
   return (
     <>
@@ -24,13 +54,13 @@ export function Sidebar() {
       />
 
       {/* Sidebar Panel */}
-      <aside className="fixed top-0 left-0 bottom-0 w-80 bg-gray-900 border-r border-gray-800 z-50 overflow-y-auto">
+      <aside className="fixed top-0 left-0 bottom-0 w-80 glass border-r-2 border-accent/30 z-50 overflow-y-auto">
         {/* Header */}
-        <div className="flex items-center justify-between p-4 border-b border-gray-800">
-          <h2 className="text-xl font-bold text-white">Menu</h2>
+        <div className="flex items-center justify-between p-4 border-b-2 border-accent/30">
+          <h2 className="text-xl font-bold text-gradient">Menu</h2>
           <button
             onClick={toggleSidebar}
-            className="p-2 hover:bg-gray-800 rounded-lg transition-colors text-gray-400 hover:text-white"
+            className="p-2 hover:bg-accent/20 rounded-lg transition-colors text-text-secondary hover:text-secondary border border-transparent hover:border-accent/30"
             aria-label="Close sidebar"
           >
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
@@ -40,13 +70,13 @@ export function Sidebar() {
         </div>
 
         {/* User Info */}
-        <div className="p-4 border-b border-gray-800">
+        <div className="p-4 border-b-2 border-accent/30">
           <div className="flex items-center gap-3">
             <div
               className={`w-3 h-3 rounded-full ${isLoggedIn ? 'bg-green-500' : 'bg-gray-500'}`}
             />
             <div>
-              <p className="text-sm text-gray-400">Spotify Status</p>
+              <p className="text-sm text-text-secondary">Spotify Status</p>
               <p className="text-white font-medium">
                 {isLoggedIn ? 'Verbunden' : 'Nicht verbunden'}
               </p>
@@ -56,14 +86,14 @@ export function Sidebar() {
 
         {/* Game Info */}
         {gameMode && (
-          <div className="p-4 border-b border-gray-800">
-            <h3 className="text-sm font-semibold text-gray-400 mb-2">Aktuelles Spiel</h3>
+          <div className="p-4 border-b-2 border-accent/30">
+            <h3 className="text-sm font-semibold text-text-secondary mb-2">Aktuelles Spiel</h3>
             <div className="space-y-2">
               <div className="flex items-center gap-2">
                 <span className="text-2xl">{GAME_MODE_INFO[gameMode]?.icon || '🎮'}</span>
                 <div>
-                  <p className="text-white font-medium">{GAME_MODE_INFO[gameMode]?.name}</p>
-                  <p className="text-xs text-gray-400">
+                  <p className="text-gradient font-medium">{GAME_MODE_INFO[gameMode]?.name}</p>
+                  <p className="text-xs text-text-secondary">
                     {gameVariant === 'physical' ? '📷 Mit QR-Scanner' : '🎲 Virtueller Modus'}
                   </p>
                 </div>
@@ -74,8 +104,8 @@ export function Sidebar() {
 
         {/* Players List */}
         {players.length > 0 && (
-          <div className="p-4 border-b border-gray-800">
-            <h3 className="text-sm font-semibold text-gray-400 mb-2">
+          <div className="p-4 border-b-2 border-accent/30">
+            <h3 className="text-sm font-semibold text-text-secondary mb-2">
               Spieler ({players.length})
             </h3>
             <div className="space-y-2">
@@ -83,21 +113,21 @@ export function Sidebar() {
                 <div
                   key={index}
                   className={`
-                    p-3 rounded-lg border-2 transition-colors
+                    p-3 rounded-lg border-2 transition-colors glass
                     ${
                       index === currentPlayer
-                        ? 'bg-purple-900/30 border-purple-600'
-                        : 'bg-gray-800 border-gray-700'
+                        ? 'border-accent shadow-glow-accent'
+                        : 'border-accent/30 hover:border-accent/50'
                     }
                   `}
                 >
                   <div className="flex items-center justify-between">
-                    <span className="text-white font-medium">{player.name}</span>
+                    <span className="text-gradient font-medium">{player.name}</span>
                     {index === currentPlayer && (
-                      <span className="text-xs bg-purple-600 px-2 py-1 rounded">Aktiv</span>
+                      <span className="text-xs glass px-2 py-1 rounded border border-accent/20 text-secondary font-semibold">Aktiv</span>
                     )}
                   </div>
-                  <div className="flex gap-3 mt-2 text-xs text-gray-400">
+                  <div className="flex gap-3 mt-2 text-xs text-text-secondary">
                     <span>🎴 {player.cards} Karten</span>
                     <span>⭐ {player.score} Punkte</span>
                   </div>
@@ -109,16 +139,16 @@ export function Sidebar() {
 
         {/* History Stats */}
         {history.length > 0 && (
-          <div className="p-4 border-b border-gray-800">
-            <h3 className="text-sm font-semibold text-gray-400 mb-2">Statistik</h3>
+          <div className="p-4 border-b-2 border-accent/30">
+            <h3 className="text-sm font-semibold text-text-secondary mb-2">Statistik</h3>
             <div className="space-y-2 text-sm">
               <div className="flex justify-between">
-                <span className="text-gray-400">Gespielte Spiele:</span>
-                <span className="text-white font-medium">{history.length}</span>
+                <span className="text-text-secondary">Gespielte Spiele:</span>
+                <span className="text-gradient font-medium">{history.length}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-gray-400">Letzter Gewinner:</span>
-                <span className="text-white font-medium">
+                <span className="text-text-secondary">Letzter Gewinner:</span>
+                <span className="text-gradient font-medium">
                   {history[0]?.winner || 'Unbekannt'}
                 </span>
               </div>
@@ -128,46 +158,62 @@ export function Sidebar() {
 
         {/* Navigation */}
         <nav className="p-4">
-          <h3 className="text-sm font-semibold text-gray-400 mb-2">Navigation</h3>
+          <h3 className="text-sm font-semibold text-text-secondary mb-2">Navigation</h3>
           <ul className="space-y-1">
             <li>
               <button
-                onClick={() => {
-                  /* TODO: Navigate to home */
-                }}
-                className="w-full text-left px-3 py-2 rounded-lg hover:bg-gray-800 text-gray-300 hover:text-white transition-colors"
+                onClick={() => handleNavigation('/')}
+                className="w-full text-left px-3 py-2 rounded-lg hover:bg-accent/20 text-gray-300 hover:text-secondary transition-colors border border-transparent hover:border-accent/30"
               >
                 🏠 Startseite
               </button>
             </li>
             <li>
               <button
-                onClick={() => {
-                  /* TODO: Open history modal */
-                }}
-                className="w-full text-left px-3 py-2 rounded-lg hover:bg-gray-800 text-gray-300 hover:text-white transition-colors"
+                onClick={() => scrollToSection('game-modes')}
+                className="w-full text-left px-3 py-2 rounded-lg hover:bg-accent/20 text-gray-300 hover:text-secondary transition-colors border border-transparent hover:border-accent/30"
               >
-                📊 Spielhistorie
+                🎮 Spielmodi
               </button>
             </li>
             <li>
               <button
-                onClick={() => {
-                  /* TODO: Open settings modal */
-                }}
-                className="w-full text-left px-3 py-2 rounded-lg hover:bg-gray-800 text-gray-300 hover:text-white transition-colors"
+                onClick={() => scrollToSection('variants')}
+                className="w-full text-left px-3 py-2 rounded-lg hover:bg-accent/20 text-gray-300 hover:text-secondary transition-colors border border-transparent hover:border-accent/30"
               >
-                ⚙️ Einstellungen
+                🎴 Spielvarianten
               </button>
             </li>
             <li>
               <button
-                onClick={() => {
-                  /* TODO: Open rules modal */
-                }}
-                className="w-full text-left px-3 py-2 rounded-lg hover:bg-gray-800 text-gray-300 hover:text-white transition-colors"
+                onClick={() => scrollToSection('how-to-play')}
+                className="w-full text-left px-3 py-2 rounded-lg hover:bg-accent/20 text-gray-300 hover:text-secondary transition-colors border border-transparent hover:border-accent/30"
               >
-                📖 Spielregeln
+                📖 Anleitung
+              </button>
+            </li>
+            <li>
+              <button
+                onClick={() => scrollToSection('downloads')}
+                className="w-full text-left px-3 py-2 rounded-lg hover:bg-accent/20 text-gray-300 hover:text-secondary transition-colors border border-transparent hover:border-accent/30"
+              >
+                📥 Downloads
+              </button>
+            </li>
+            <li>
+              <button
+                onClick={() => scrollToSection('features')}
+                className="w-full text-left px-3 py-2 rounded-lg hover:bg-accent/20 text-gray-300 hover:text-secondary transition-colors border border-transparent hover:border-accent/30"
+              >
+                ✨ Features
+              </button>
+            </li>
+            <li>
+              <button
+                onClick={() => scrollToSection('support')}
+                className="w-full text-left px-3 py-2 rounded-lg hover:bg-accent/20 text-gray-300 hover:text-secondary transition-colors border border-transparent hover:border-accent/30"
+              >
+                💬 Support
               </button>
             </li>
           </ul>

@@ -1,5 +1,5 @@
-const fs = require('fs').promises;
-const { PNG } = require('pngjs');
+import fs from 'fs/promises'
+import { PNG } from 'pngjs'
 
 /**
  * Convert QR code PNG to OpenSCAD module with individual cubes for each black pixel
@@ -44,4 +44,4 @@ async function qrToScadModule(qrImagePath) {
   return scadCode;
 }
 
-module.exports = { qrToScadModule };
+export { qrToScadModule }
