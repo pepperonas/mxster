@@ -7,11 +7,12 @@ import { useNavigate, useLocation } from 'react-router-dom'
 import { useUI, useGame, useAuth, useInteraction } from '@/contexts'
 import { useGameHistory } from '@/hooks'
 import { GAME_MODE_INFO } from '@/utils/gameModes'
+import { HowToPlayContent } from './HowToPlayContent'
 
 export function Sidebar() {
   const navigate = useNavigate()
   const location = useLocation()
-  const { isSidebarOpen, toggleSidebar } = useUI()
+  const { isSidebarOpen, toggleSidebar, showModal } = useUI()
   const { players, currentPlayer, gameMode, gameVariant } = useGame()
   const { isLoggedIn } = useAuth()
   const { history } = useGameHistory()
@@ -42,6 +43,23 @@ export function Sidebar() {
     } else {
       document.getElementById(sectionId)?.scrollIntoView({ behavior: 'smooth' })
     }
+    toggleSidebar()
+  }
+
+  // Open How To Play Modal
+  const openHowToPlayModal = () => {
+    registerInteraction('modal', 60)
+    showModal(
+      '📖 Anleitung',
+      <HowToPlayContent />,
+      [
+        {
+          label: 'Verstanden',
+          variant: 'primary',
+          onClick: () => {}
+        }
+      ]
+    )
     toggleSidebar()
   }
 
@@ -189,7 +207,7 @@ export function Sidebar() {
               </li>
               <li>
                 <button
-                  onClick={() => scrollToSection('how-to-play')}
+                  onClick={openHowToPlayModal}
                   className="w-full text-left px-3 py-2 rounded-lg hover:bg-accent/20 text-gray-300 hover:text-secondary transition-colors border border-transparent hover:border-accent/30"
                 >
                   📖 Anleitung
@@ -227,7 +245,7 @@ export function Sidebar() {
         <div className="p-4 border-t-2 border-accent/30 flex-shrink-0">
           <div className="text-center">
             <p className="text-xs text-text-secondary mb-1">mxster</p>
-            <p className="text-sm text-gradient font-medium">Version 0.0.12</p>
+            <p className="text-sm text-gradient font-medium">Version 0.0.14</p>
           </div>
         </div>
       </aside>
