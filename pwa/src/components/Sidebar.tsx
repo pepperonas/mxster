@@ -218,6 +218,14 @@ export function Sidebar() {
             </li>
           </ul>
         </nav>
+
+        {/* Version Info */}
+        <div className="p-4 border-t-2 border-accent/30 mt-auto">
+          <div className="text-center">
+            <p className="text-xs text-text-secondary mb-1">mxster</p>
+            <p className="text-sm text-gradient font-medium">Version 0.0.9</p>
+          </div>
+        </div>
       </aside>
     </>
   )
