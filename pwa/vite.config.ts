@@ -51,7 +51,28 @@ export default defineConfig({
         globPatterns: ['**/*.{js,css,html,ico,svg,mp3}'],
         // Exclude PNG files from precache to avoid conflicts
         globIgnores: ['**/assets/**/*.png'],
+        // Navigation fallback - always serve index.html for SPA routes
+        navigateFallback: '/index.html',
+        navigateFallbackDenylist: [
+          // Don't use fallback for these patterns
+          /^\/api\//,
+          /\.[a-zA-Z0-9]+$/, // Files with extensions (except HTML)
+          /\/callback\?/ // Spotify OAuth callback with query params
+        ],
         runtimeCaching: [
+          {
+            // Always fetch navigation requests from network first
+            urlPattern: ({ request }) => request.mode === 'navigate',
+            handler: 'NetworkFirst',
+            options: {
+              cacheName: 'pages-cache',
+              networkTimeoutSeconds: 3,
+              expiration: {
+                maxEntries: 10,
+                maxAgeSeconds: 60 * 60 * 24 // 24 hours
+              }
+            }
+          },
           {
             urlPattern: /^https:\/\/.*\.spotify\.com\/.*/i,
             handler: 'NetworkFirst',
