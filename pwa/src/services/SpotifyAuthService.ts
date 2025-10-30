@@ -13,35 +13,44 @@ class SpotifyConfig {
   private static _clientId: string | null = null
   private static _scopes: string[] = SPOTIFY_CONFIG.SCOPES
   private static _initialized = false
+  private static _initPromise: Promise<void> | null = null
 
   static async initialize() {
     if (this._initialized) return
+    if (this._initPromise) return this._initPromise
 
-    try {
-      // Try to load config from spotify.config.js (for development)
-      // @ts-ignore - Dynamic import for optional config
-      const config = await import('../../spotify.config.js')
-      if (config.default) {
-        this._clientId = config.default.clientId
-        this._scopes = config.default.scopes || SPOTIFY_CONFIG.SCOPES
-        console.log('✅ Loaded Spotify config from spotify.config.js')
+    this._initPromise = (async () => {
+      try {
+        // Try to load config from spotify.config.js (for development)
+        // @ts-ignore - Dynamic import for optional config
+        const config = await import('../../spotify.config.js')
+        if (config.default) {
+          this._clientId = config.default.clientId
+          this._scopes = config.default.scopes || SPOTIFY_CONFIG.SCOPES
+          console.log('✅ Loaded Spotify config from spotify.config.js')
+        }
+      } catch (error) {
+        // Fallback to environment variables (production)
+        this._clientId = import.meta.env.VITE_SPOTIFY_CLIENT_ID || null
+        if (this._clientId) {
+          console.log('✅ Loaded Spotify config from environment variables')
+        } else {
+          console.warn('⚠️ No Spotify config found')
+        }
       }
-    } catch (error) {
-      // Fallback to environment variables (production)
-      this._clientId = import.meta.env.VITE_SPOTIFY_CLIENT_ID || null
-      if (this._clientId) {
-        console.log('✅ Loaded Spotify config from environment variables')
-      } else {
-        console.warn('⚠️ No Spotify config found')
-      }
-    }
 
-    this._initialized = true
+      this._initialized = true
+    })()
+
+    return this._initPromise
   }
 
   static get clientId(): string {
+    if (!this._initialized) {
+      throw new Error('Spotify Client ID not configured. Call SpotifyConfig.initialize() first and wait for it to complete.')
+    }
     if (!this._clientId) {
-      throw new Error('Spotify Client ID not configured. Call SpotifyConfig.initialize() first.')
+      throw new Error('Spotify Client ID not available. Check configuration.')
     }
     return this._clientId
   }
@@ -49,9 +58,13 @@ class SpotifyConfig {
   static get scopes(): string[] {
     return this._scopes
   }
+
+  static get isInitialized(): boolean {
+    return this._initialized
+  }
 }
 
-// Initialize config immediately
+// Start initialization immediately (but don't wait for it here)
 SpotifyConfig.initialize()
 
 export class SpotifyAuthService {
@@ -99,6 +112,9 @@ export class SpotifyAuthService {
    * Redirects user to Spotify authorization page
    */
   static async login(): Promise<void> {
+    // Ensure config is initialized before proceeding
+    await SpotifyConfig.initialize()
+
     const codeVerifier = this.generateCodeVerifier()
     const codeChallenge = await this.generateCodeChallenge(codeVerifier)
 
@@ -134,6 +150,9 @@ export class SpotifyAuthService {
    * Exchanges authorization code for access token
    */
   static async handleCallback(): Promise<SpotifyTokens | null> {
+    // Ensure config is initialized before proceeding
+    await SpotifyConfig.initialize()
+
     const params = new URLSearchParams(window.location.search)
     const code = params.get('code')
     const error = params.get('error')
