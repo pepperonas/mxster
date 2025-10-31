@@ -583,8 +583,8 @@ Hochwertige, dauerhafte Karten mit graviertem QR-Code!
 - [OpenSCAD](https://openscad.org/) (optional, für STL-Export)
 
 ```bash
-# Song hinzufügen + 3D-Modell erstellen
-node add-song.js "https://open.spotify.com/track/TRACK_ID" --generate-3d
+# Song hinzufügen (3D-Modelle werden automatisch erstellt)
+node scripts/song-management/add-song.js "https://open.spotify.com/track/TRACK_ID"
 ```
 
 **Druckeinstellungen:**

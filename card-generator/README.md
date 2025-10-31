@@ -86,10 +86,10 @@ Hochwertige, dauerhafte Karten mit graviertem QR-Code!
 
 ### Modelle generieren
 
-#### Beim Song hinzufügen
+#### Beim Song hinzufügen (automatisch)
 ```bash
-# Im Hauptverzeichnis
-node add-song.js "https://open.spotify.com/track/TRACK_ID" --generate-3d
+# Im Hauptverzeichnis - 3D-Modelle werden automatisch erstellt
+node scripts/song-management/add-song.js "https://open.spotify.com/track/TRACK_ID"
 ```
 
 #### Nachträglich für bestehende Songs
@@ -99,9 +99,9 @@ node generateCard.js
 ```
 
 **Ausgabe:**
-- `models/*.scad` - OpenSCAD Quelldateien
-- `models/*.stl` - Druckfertige 3D-Modelle
-- `qr-codes/*.png` - QR-Code Bilder
+- `output/models/*.scad` - OpenSCAD Quelldateien
+- `output/models/*.stl` - Druckfertige 3D-Modelle
+- `output/qr-codes/*.png` - QR-Code Bilder
 
 ### 🖨️ 3D-Druckeinstellungen
 
@@ -131,16 +131,13 @@ node add-song.js "https://open.spotify.com/track/DEINE_TRACK_ID"
 **Was passiert automatisch:**
 1. ✅ Metadaten von Spotify geladen (Titel, Künstler, Jahr, Preview-URL)
 2. ✅ Song-ID automatisch generiert (z.B. `song_036`)
-3. ✅ `docs/songs.tson` aktualisiert
+3. ✅ `docs/songs.json` aktualisiert
 4. ✅ `pwa/src/data/songs.ts` synchronisiert
-5. ✅ QR-Code erstellt (`card-generator/qr-codes/`)
-6. ✅ PNG-Karte generiert (`docs/`)
+5. ✅ QR-Code erstellt (`card-generator/output/qr-codes/`)
+6. ✅ SCAD-Datei generiert (`card-generator/output/models/`)
+7. ✅ STL-Datei generiert (`card-generator/output/models/`)
 
-**Mit 3D-Modell:**
-```bash
-node add-song.js "https://open.spotify.com/track/TRACK_ID" --generate-3d
-```
-Zusätzlich: SCAD + STL Modelle in `card-generator/models/`
+**Hinweis:** 3D-Modelle (SCAD + STL) werden automatisch erstellt, kein zusätzlicher Parameter nötig!
 
 ### Song bearbeiten (Interaktiver Wizard)
 
