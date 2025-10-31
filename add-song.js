@@ -176,7 +176,7 @@ async function main() {
       // 8. Update PWA songs.ts
       console.log('🔄 Updating PWA songs.ts...');
       try {
-        const pwaSongsContent = `import type { Song } from '@/types'\n\nexport const songs = ${JSON.stringify(songs, null, 2)}\n`;
+        const pwaSongsContent = `import type { Song } from '@/types'\n\nexport const songs: Song[] = ${JSON.stringify(songs, null, 2)}\n`;
         await fs.writeFile(PWA_SONGS_PATH, pwaSongsContent, 'utf8');
         console.log(`   ✅ PWA songs.ts updated\n`);
       } catch (error) {

@@ -1,4 +1,6 @@
-export const songs = [
+import type { Song } from '@/types'
+
+export const songs: Song[] = [
   {
     "id": "song_000",
     "title": "Never Gonna Give You Up",
@@ -1127,6 +1129,125 @@ export const songs = [
     "audioUrl": "https://example.com/song_112.mp3",
     "spotifyId": "6ou0PY1UD7gdRnHbbyiHaA",
     "youtubeUrl": "",
+    "previewUrl": ""
+  },
+  {
+    "id": "song_113",
+    "title": "Entre dos tierras",
+    "artist": "Heroes Del Silencio",
+    "year": 1990,
+    "audioUrl": "https://example.com/song_113.mp3",
+    "spotifyId": "4rJdaSwOCHLBhxdMsymeMw",
+    "youtubeUrl": "",
+    "previewUrl": ""
+  },
+  {
+    "id": "song_114",
+    "title": "The Riddle",
+    "artist": "Gigi D'Agostino",
+    "year": 1999,
+    "audioUrl": "https://example.com/song_114.mp3",
+    "spotifyId": "0ZqveF2rEFlz2oqF2xrriP",
+    "previewUrl": ""
+  },
+  {
+    "id": "song_115",
+    "title": "Chicken or Beef",
+    "artist": "Day Din",
+    "year": 2012,
+    "audioUrl": "https://example.com/song_115.mp3",
+    "spotifyId": "593pYRPHQ17uYUECWqEEEL",
+    "previewUrl": ""
+  },
+  {
+    "id": "song_116",
+    "title": "All That She Wants",
+    "artist": "Ace of Base",
+    "year": 1993,
+    "audioUrl": "https://example.com/song_116.mp3",
+    "spotifyId": "6kWJvPfC4DgUpRsXKNa9z9",
+    "previewUrl": ""
+  },
+  {
+    "id": "song_117",
+    "title": "Sing Hallelujah!",
+    "artist": "Dr. Alban",
+    "year": 1992,
+    "audioUrl": "https://example.com/song_117.mp3",
+    "spotifyId": "2qjDNbgLzfBpCvDwfw11Qg",
+    "previewUrl": ""
+  },
+  {
+    "id": "song_118",
+    "title": "Rhythm Is a Dancer",
+    "artist": "SNAP!",
+    "year": 1992,
+    "audioUrl": "https://example.com/song_118.mp3",
+    "spotifyId": "5uFYYOyT3EclOVhiFzPJSz",
+    "previewUrl": ""
+  },
+  {
+    "id": "song_119",
+    "title": "Traumreise",
+    "artist": "Massive Töne",
+    "year": 2002,
+    "audioUrl": "https://example.com/song_119.mp3",
+    "spotifyId": "1tVhmi6ltumhZtd1pM8Tya",
+    "previewUrl": ""
+  },
+  {
+    "id": "song_120",
+    "title": "Hey Porsche",
+    "artist": "Nelly",
+    "year": 2013,
+    "audioUrl": "https://example.com/song_120.mp3",
+    "spotifyId": "7rbWpbXVwY2DFrZpWYPtVj",
+    "previewUrl": ""
+  },
+  {
+    "id": "song_121",
+    "title": "For You",
+    "artist": "Manfred Mann's Earth Band",
+    "year": 1980,
+    "audioUrl": "https://example.com/song_121.mp3",
+    "spotifyId": "3iCUemj0xhPUqIQAH5Evx6",
+    "previewUrl": ""
+  },
+  {
+    "id": "song_122",
+    "title": "All Along the Watchtower",
+    "artist": "Bob Dylan",
+    "year": 1967,
+    "audioUrl": "https://example.com/song_122.mp3",
+    "spotifyId": "0Fnb2pfBfu0ka33d6Yki17",
+    "youtubeUrl": "",
+    "previewUrl": ""
+  },
+  {
+    "id": "song_123",
+    "title": "She Moves",
+    "artist": "Alle Farben",
+    "year": 2014,
+    "audioUrl": "https://example.com/song_123.mp3",
+    "spotifyId": "6ggAYREO7PlFwI2vbOG3dp",
+    "previewUrl": ""
+  },
+  {
+    "id": "song_124",
+    "title": "Africa",
+    "artist": "Lexer",
+    "year": 2015,
+    "audioUrl": "https://example.com/song_124.mp3",
+    "spotifyId": "0eTScHHJpojI1zWkbwelg2",
+    "previewUrl": ""
+  },
+  {
+    "id": "song_125",
+    "title": "Bring Me Home",
+    "artist": "Oliver Koletzki",
+    "year": 2014,
+    "audioUrl": "https://example.com/song_125.mp3",
+    "spotifyId": "4xVtkEmgVrqKqiowB8NA9E",
     "previewUrl": ""
   }
 ]

@@ -70,7 +70,7 @@ async function saveSongs(songs) {
 // songs.ts aktualisieren
 async function updateSongsJs(songs) {
   const songsJsPath = path.join(__dirname, 'pwa', 'src', 'data', 'songs.ts');
-  const content = `import type { Song } from '@/types'\n\nexport const songs = ${JSON.stringify(songs, null, 2)}\n`;
+  const content = `import type { Song } from '@/types'\n\nexport const songs: Song[] = ${JSON.stringify(songs, null, 2)}\n`;
   await fs.writeFile(songsJsPath, content);
   log('✅ pwa/src/data/songs.ts aktualisiert', 'green');
 }
