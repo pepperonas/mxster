@@ -25,8 +25,8 @@ echo "║   📄  mxster PDF Generator  📄           ║"
 echo "╚════════════════════════════════════════════╝"
 echo ""
 
-# Wechsle ins pwa Verzeichnis
-cd "$(dirname "$0")/pwa" || exit 1
+# Wechsle ins pwa Verzeichnis (from scripts/build/ to root/pwa)
+cd "$(dirname "$0")/../../pwa" || exit 1
 
 # Zähle Songs
 SONG_COUNT=$(node -e "const songs = require('./src/data/songs.js'); console.log(songs.songs.length)")

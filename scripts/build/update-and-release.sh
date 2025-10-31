@@ -43,6 +43,10 @@ echo "║   🚀 mxster Update & Release  🚀          ║"
 echo "╚════════════════════════════════════════════╝"
 echo ""
 
+# Get project root directory (from scripts/build/ to root)
+PROJECT_ROOT="$(cd "$(dirname "$0")/../.." && pwd)"
+cd "$PROJECT_ROOT"
+
 # Zähle Songs
 SONG_COUNT=$(node -e "const songs = require('./pwa/src/data/songs.js'); console.log(songs.songs.length)")
 echo -e "${CYAN}📚 Songs in der Datenbank: ${SONG_COUNT}${RESET}"
@@ -89,7 +93,7 @@ echo -e "${CYAN}║  Step 1: PDFs neu generieren              ║${RESET}"
 echo -e "${CYAN}╚════════════════════════════════════════════╝${RESET}"
 echo ""
 
-./generate-all-pdfs.sh
+./scripts/build/generate-all-pdfs.sh
 
 echo ""
 

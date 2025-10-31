@@ -18,8 +18,8 @@ if ! command -v openscad &> /dev/null; then
     echo "⚠️  OpenSCAD nicht gefunden. Für 3D-Modelle installieren: brew install openscad"
 fi
 
-# PWA Dependencies
-cd pwa
+# PWA Dependencies (from scripts/setup/ to root/pwa)
+cd "$(dirname "$0")/../../pwa"
 npm install
 
 # Python Dependencies
