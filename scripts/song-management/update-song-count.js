@@ -15,9 +15,9 @@ import { fileURLToPath } from 'url'
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 
-// Pfade
-const SONGS_JSON = path.join(__dirname, 'docs', 'songs.json')
-const README_PATH = path.join(__dirname, 'README.md')
+// Pfade (script is in scripts/song-management/, need to go up two levels)
+const SONGS_JSON = path.join(__dirname, '../../docs', 'songs.json')
+const README_PATH = path.join(__dirname, '../../README.md')
 
 try {
   // Lade Songs
