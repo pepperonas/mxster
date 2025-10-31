@@ -641,11 +641,17 @@ node scripts/song-management/edit-song.js
 ```
 
 **Der Wizard führt dich durch:**
-1. 🔍 Song-ID eingeben (z.B. `song_001`)
+1. 🔍 Song-ID eingeben (z.B. `song_001` oder einfach `001` / `128`)
 2. 📋 Aktuelle Daten werden angezeigt
 3. ✏️ Neue Daten eingeben (leer lassen = Wert behalten)
 4. 👀 Vorher/Nachher-Vergleich ansehen
 5. ✅ Änderungen bestätigen
+
+**Flexibles ID-Format:**
+- ✅ `song_128` (vollständiges Format)
+- ✅ `128` (Kurzformat - wird automatisch zu `song_128`)
+- ✅ `095` (mit führender Null - wird zu `song_095`)
+- ✅ `95` (ohne führende Null - wird zu `song_095`)
 
 **Was passiert automatisch:**
 - ✅ Automatisches Backup erstellt (`songs.json.backup-2025-10-24`)

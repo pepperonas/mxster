@@ -199,7 +199,15 @@ async function main() {
     log('Schritt 1/4: Song auswählen', 'bright');
     log('─────────────────────────────', 'bright');
 
-    const songId = await question('Song-ID (z.B. song_001): ');
+    let songIdInput = await question('Song-ID (z.B. song_001 oder 001): ');
+    songIdInput = songIdInput.trim();
+
+    // Normalisiere Song-ID: Füge "song_" hinzu, falls nicht vorhanden
+    let songId = songIdInput;
+    if (!songIdInput.startsWith('song_')) {
+      // Format: "128" oder "095" → "song_128" oder "song_095"
+      songId = `song_${songIdInput.padStart(3, '0')}`;
+    }
 
     // Song finden
     const songIndex = songs.findIndex(s => s.id === songId);
