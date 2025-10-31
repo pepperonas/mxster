@@ -4,7 +4,7 @@
 
 [![App](https://img.shields.io/badge/App-mxster.de-blue?style=for-the-badge)](https://mxster.de)
 [![License](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)](LICENSE)
-![Songs](https://img.shields.io/badge/Songs-146-orange?style=for-the-badge)
+![Songs](https://img.shields.io/badge/Songs-179-orange?style=for-the-badge)
 [![Tests](https://github.com/pepperonas/mxster/actions/workflows/test.yml/badge.svg)](https://github.com/pepperonas/mxster/actions/workflows/test.yml)
 
 ![mxster Banner](https://mxster.de/assets/mxster.jpg)
@@ -126,6 +126,28 @@ npm run dev
 - Keine manuelle Platzierung nötig
 - Timeline wird automatisch sortiert
 - Skip-Funktion verfügbar (0 Punkte, Karte wird trotzdem platziert)
+
+**⚠️ Progressive Skip-Strafe:**
+Ein Spieler kann einen Track überspringen, wenn er ihn nicht kennt und sich sicher ist, dass sein Gegner ihn auch nicht kennt. **ABER:** Wenn jeder Spieler den gleichen Song bereits mindestens 1x übersprungen hat, besteht ab dem 2. Skip die Möglichkeit einer **-3 Punkte Strafe**:
+
+- ✅ **1. Skip pro Spieler:** Keine Strafe
+- ⚠️ **2. Skip (wenn alle einmal übersprungen):** 33% Chance auf -3 Punkte
+- ⚠️ **3. Skip:** 66% Chance auf -3 Punkte
+- ⚠️ **4.+ Skip:** 95% Chance auf -3 Punkte
+
+**Bei Strafanwendung:**
+- Spieler verliert 3 Punkte (kann ins **Negative** gehen!)
+- Ein neuer zufälliger Song wird automatisch gezogen
+- Nächster Spieler ist dran
+- Skip-Zähler wird für den neuen Song zurückgesetzt
+
+**Warndialog:**
+Sobald alle Spieler mindestens 1x übersprungen haben, erscheint vor dem Spielerwechsel ein Warndialog mit:
+- Aktueller Strafe-Wahrscheinlichkeit für den nächsten Skip
+- Empfehlung zum Raten statt Überspringen
+- "Verstanden"-Button zum Fortfahren
+
+Diese Mechanik verhindert, dass schwierige Songs permanent übersprungen werden und fördert aktives Raten.
 
 ### 👤 Timeline (Persönlich)
 
@@ -1096,6 +1118,70 @@ git push origin v1.0.0               # Push löst CI/CD aus
 # - PDFs, STL-ZIP, SCAD-ZIP
 # - GitHub Release mit all-cards.3mf
 ```
+
+### 🧪 Testing
+
+Das Projekt enthält einen umfassenden Integritätstest, der die Qualität und Konsistenz aller Songs, generierten Dateien und Konfigurationen überprüft.
+
+#### Test ausführen
+
+```bash
+# Im Hauptverzeichnis
+npm test
+
+# Mit ausführlicher Ausgabe
+npm run test:verbose
+```
+
+#### Was wird getestet?
+
+**Basis-Tests (1-10)** - Laufen immer:
+1. ✅ **Song-Datenbank-Integrität** - Struktur, Pflichtfelder, Duplikate
+2. ✅ **PWA-Sync** - `pwa/src/data/songs.ts` ↔ `docs/songs.json`
+3. ✅ **Song-IDs** - Fortlaufende Nummerierung, keine Lücken
+4. ✅ **Spotify IDs** - Format-Validierung (22 Zeichen, alphanumerisch)
+5. ✅ **Preview URLs** - Gültige Spotify-URLs
+6. ⚠️ **QR-Codes** - Prüft Existenz (gitignored, Warning bei Fehlen)
+7. ⚠️ **3D-Modelle** - Prüft SCAD/STL (gitignored, Warning bei Fehlen)
+8. ✅ **Jahreszahlen** - Plausibilität (1950-2030)
+9. ✅ **PDF-Karten** - Prüft Existenz (4 Varianten)
+10. ⚠️ **Docs-Sync** - QR-Code-Kopien in `docs/` (gitignored)
+
+**Erweiterte Tests (11-15)** - Nur mit Abhängigkeiten:
+11. 🔍 **QR-Code Decodierung** - Verifiziert Scanbarkeit (5 Sample-Songs)
+12. 🌐 **Spotify API** - Validiert Track-IDs live (5 Sample-Songs)
+13. 📐 **Bild-Dimensionen** - Prüft QR-Code-Größe (5 Sample-Songs)
+14. 🎲 **OpenSCAD Syntax** - Validiert 3D-Modelle (5 Sample-Songs)
+15. 📄 **PDF-Generierung** - Verifiziert PDF-Integrität (alle 4 Varianten)
+
+#### Erweiterte Tests installieren
+
+Die Tests 11-15 benötigen optionale Abhängigkeiten:
+
+```bash
+# Im Hauptverzeichnis
+npm install --save-dev jsqr pngjs sharp
+
+# Für Test 14 (OpenSCAD):
+# macOS: brew install openscad
+# Ubuntu: sudo apt install openscad
+# Windows: https://openscad.org/downloads.html
+```
+
+**Ohne Installation**: Tests werden übersprungen mit hilfreichen Hinweisen
+
+#### Test-Design
+
+- ⚡ **Schnell**: Sample-basiert (5 statt 179 Songs)
+- 🔧 **Flexibel**: Erweiterte Tests sind optional
+- 🤖 **CI/CD-freundlich**: Keine Fehler bei fehlenden Dependencies
+- 📊 **Informativ**: Klare Warnungen vs. Fehler
+
+#### Ergebnisse interpretieren
+
+**✅ Success** - Test bestanden, alles in Ordnung
+**⚠️ Warning** - Nicht kritisch (z.B. gitignored Dateien fehlen in CI/CD)
+**❌ Error** - Kritisches Problem, muss behoben werden
 
 ### GitHub Release erstellen
 
