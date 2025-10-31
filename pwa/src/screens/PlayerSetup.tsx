@@ -5,7 +5,7 @@
 
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { useGame, useUI } from '@/contexts'
+import { useGame, useUI, useSettings } from '@/contexts'
 import { PlusIcon, CloseIcon } from '@/utils/icons'
 import { requiresDJ } from '@/utils/gameModes'
 
@@ -13,6 +13,7 @@ export function PlayerSetup() {
   const navigate = useNavigate()
   const { gameMode, gameVariant, players, addPlayer, removePlayer, startGame } = useGame()
   const { addToast } = useUI()
+  const { settings, addPlayer: savePlayer } = useSettings()
   const [newPlayerName, setNewPlayerName] = useState('')
 
   if (!gameMode || !gameVariant) {
@@ -34,9 +35,21 @@ export function PlayerSetup() {
       return
     }
 
-    addPlayer(newPlayerName.trim())
+    const playerName = newPlayerName.trim()
+    addPlayer(playerName)
+    savePlayer(playerName) // Save to settings for future use
     setNewPlayerName('')
-    addToast(`${newPlayerName} hinzugefügt`, 'success')
+    addToast(`${playerName} hinzugefügt`, 'success')
+  }
+
+  const handleQuickAddPlayer = (playerName: string) => {
+    if (players.some((p) => p.name.toLowerCase() === playerName.toLowerCase())) {
+      addToast('Dieser Name existiert bereits', 'error')
+      return
+    }
+
+    addPlayer(playerName)
+    addToast(`${playerName} hinzugefügt`, 'success')
   }
 
   const handleRemovePlayer = (index: number) => {
@@ -92,7 +105,7 @@ export function PlayerSetup() {
 
         {/* Add Player Input */}
         <div className="glass rounded-2xl p-8 border-2 border-accent/30 mb-8">
-          <div className="flex gap-3">
+          <div className="flex gap-3 mb-6">
             <input
               type="text"
               value={newPlayerName}
@@ -111,6 +124,41 @@ export function PlayerSetup() {
               <span className="hidden sm:inline">Hinzufügen</span>
             </button>
           </div>
+
+          {/* Saved Players Quick Add */}
+          {settings.savedPlayers.length > 0 && (
+            <div>
+              <h3 className="text-sm font-semibold text-text-secondary mb-3">
+                👥 Gespeicherte Spieler
+              </h3>
+              <div className="flex flex-wrap gap-2">
+                {settings.savedPlayers.map((playerName, index) => {
+                  const isAlreadyAdded = players.some(
+                    (p) => p.name.toLowerCase() === playerName.toLowerCase()
+                  )
+                  return (
+                    <button
+                      key={index}
+                      onClick={() => handleQuickAddPlayer(playerName)}
+                      disabled={isAlreadyAdded}
+                      className={`
+                        px-4 py-2 rounded-lg font-medium transition-all border-2
+                        ${
+                          isAlreadyAdded
+                            ? 'bg-gray-700 text-text-secondary border-gray-600 cursor-not-allowed'
+                            : 'bg-primary border-accent/30 text-white hover:border-accent hover:shadow-glow-sm'
+                        }
+                      `}
+                      title={isAlreadyAdded ? 'Bereits hinzugefügt' : `${playerName} hinzufügen`}
+                    >
+                      {playerName}
+                      {isAlreadyAdded && ' ✓'}
+                    </button>
+                  )
+                })}
+              </div>
+            </div>
+          )}
         </div>
 
         {/* Players List */}

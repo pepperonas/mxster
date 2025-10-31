@@ -79,9 +79,9 @@ export function LandingPage() {
 
         <div className="grid md:grid-cols-3 gap-6">
           {/* Ratespiel */}
-          <div className="glass p-8 rounded-2xl border-2 border-accent/30 hover:border-accent transition-all group hover:shadow-glow-accent cursor-pointer">
-            <div className="text-6xl mb-6 group-hover:scale-110 transition-transform">🎯</div>
-            <h3 className="text-2xl font-bold mb-3 text-white group-hover:text-gradient">
+          <div className="glass p-8 rounded-2xl border-2 border-accent/30">
+            <div className="text-6xl mb-6">🎯</div>
+            <h3 className="text-2xl font-bold mb-3 text-white">
               Ratespiel
             </h3>
             <p className="text-text-secondary leading-relaxed mb-4">
@@ -109,9 +109,9 @@ export function LandingPage() {
           </div>
 
           {/* Persönliche Timeline */}
-          <div className="glass p-8 rounded-2xl border-2 border-accent/30 hover:border-accent transition-all group hover:shadow-glow-accent cursor-pointer">
-            <div className="text-6xl mb-6 group-hover:scale-110 transition-transform">👤</div>
-            <h3 className="text-2xl font-bold mb-3 text-white group-hover:text-gradient">
+          <div className="glass p-8 rounded-2xl border-2 border-accent/30">
+            <div className="text-6xl mb-6">👤</div>
+            <h3 className="text-2xl font-bold mb-3 text-white">
               Persönliche Timeline
             </h3>
             <p className="text-text-secondary leading-relaxed mb-4">
@@ -139,9 +139,9 @@ export function LandingPage() {
           </div>
 
           {/* Globale Timeline */}
-          <div className="glass p-8 rounded-2xl border-2 border-accent/30 hover:border-accent transition-all group hover:shadow-glow-accent cursor-pointer">
-            <div className="text-6xl mb-6 group-hover:scale-110 transition-transform">🌍</div>
-            <h3 className="text-2xl font-bold mb-3 text-white group-hover:text-gradient">
+          <div className="glass p-8 rounded-2xl border-2 border-accent/30">
+            <div className="text-6xl mb-6">🌍</div>
+            <h3 className="text-2xl font-bold mb-3 text-white">
               Globale Timeline
             </h3>
             <p className="text-text-secondary leading-relaxed mb-4">

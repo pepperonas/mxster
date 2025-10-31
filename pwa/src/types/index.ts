@@ -11,11 +11,12 @@ export interface Song {
   spotifyId?: string
   previewUrl?: string
   youtubeUrl?: string
+  points?: number  // Points earned for this song (Guess Mode only)
 }
 
 export interface Player {
   name: string
-  timeline: Song[]
+  timeline: Song[]  // Songs with optional points property
   cards: number  // Count of correctly placed cards
   score: number  // Points (Guess Mode only)
 }

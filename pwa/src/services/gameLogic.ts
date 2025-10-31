@@ -69,8 +69,10 @@ export function validateGuess(
  * @param song - Song to insert
  * @returns New timeline (sorted by year)
  */
-export function placeCardInTimeline(timeline: Song[], song: Song): Song[] {
-  const newTimeline = [...timeline, song]
+export function placeCardInTimeline(timeline: Song[], song: Song, points?: number): Song[] {
+  // Add points to song if provided (Guess Mode)
+  const songWithPoints = points !== undefined ? { ...song, points } : song
+  const newTimeline = [...timeline, songWithPoints]
   return sortTimelineByYear(newTimeline)
 }
 

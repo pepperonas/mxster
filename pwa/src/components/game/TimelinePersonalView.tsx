@@ -3,11 +3,12 @@
  * Shows ALL players' timelines simultaneously in Timeline Personal mode
  */
 
-import { useGame } from '@/contexts'
+import { useGame, useSettings } from '@/contexts'
 import type { Player } from '@/types'
 
 export function TimelinePersonalView() {
-  const { players, currentPlayer } = useGame()
+  const { players, currentPlayer, gameMode } = useGame()
+  const { settings } = useSettings()
 
   const renderPlayerTimeline = (player: Player, playerIndex: number) => {
     const isCurrentPlayer = playerIndex === currentPlayer
@@ -47,8 +48,8 @@ export function TimelinePersonalView() {
           />
         </div>
 
-        {/* Card Grid: 5 per row, 2 rows */}
-        <div className="grid grid-cols-5 gap-3">
+        {/* Card Grid: Responsive - 2 cols on mobile (2×5), 4 on tablet, 5 on desktop */}
+        <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-5 gap-3">
           {slots.map((slot) => (
             <div
               key={slot.slotNumber}
@@ -64,27 +65,30 @@ export function TimelinePersonalView() {
             >
               {slot.song ? (
                 <>
-                  {/* Success Badge */}
-                  <div className="absolute top-1 right-1 w-4 h-4 bg-gradient-to-br from-secondary to-accent rounded-full flex items-center justify-center text-xs shadow-glow-sm">
-                    ✓
+                  {/* Success Badge - Show points in Guess Mode, checkmark otherwise */}
+                  <div className="absolute top-1 right-1 w-6 h-6 bg-gradient-to-br from-secondary to-accent rounded-full flex items-center justify-center text-xs font-bold shadow-glow-sm">
+                    {gameMode === 'guess' && slot.song.points !== undefined
+                      ? slot.song.points
+                      : '✓'
+                    }
                   </div>
 
-                  {/* Year */}
-                  <div className="text-xl font-bold text-gradient mb-1">
+                  {/* Year - Responsive */}
+                  <div className={`text-2xl sm:text-xl font-bold text-gradient mb-1 ${settings.hideYearsInTimeline ? 'blur-md select-none' : ''}`}>
                     {slot.song.year}
                   </div>
 
-                  {/* Title (truncated) */}
+                  {/* Title (truncated) - Responsive */}
                   <div
-                    className="text-[9px] text-text-secondary overflow-hidden text-ellipsis whitespace-nowrap w-full text-center"
+                    className="text-xs sm:text-[11px] text-text-secondary overflow-hidden text-ellipsis whitespace-nowrap w-full text-center"
                     title={`${slot.song.title} - ${slot.song.artist}`}
                   >
                     {slot.song.title}
                   </div>
 
-                  {/* Artist (truncated) */}
+                  {/* Artist (truncated) - Responsive */}
                   <div
-                    className="text-[8px] text-text-secondary/60 overflow-hidden text-ellipsis whitespace-nowrap w-full text-center mt-0.5"
+                    className="text-[10px] sm:text-[9px] text-text-secondary/60 overflow-hidden text-ellipsis whitespace-nowrap w-full text-center mt-0.5"
                     title={slot.song.artist}
                   >
                     {slot.song.artist}

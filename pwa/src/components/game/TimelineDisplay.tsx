@@ -3,7 +3,7 @@
  * Shows the chronological timeline of cards
  */
 
-import { useGame } from '@/contexts'
+import { useGame, useSettings } from '@/contexts'
 
 interface TimelineDisplayProps {
   playerId?: number // Optional: Show specific player's timeline (Timeline Personal mode)
@@ -11,6 +11,7 @@ interface TimelineDisplayProps {
 
 export function TimelineDisplay({ playerId }: TimelineDisplayProps) {
   const { players, currentPlayer, gameMode, globalTimeline } = useGame()
+  const { settings } = useSettings()
 
   // Determine which timeline to show
   const timeline =
@@ -89,8 +90,8 @@ export function TimelineDisplay({ playerId }: TimelineDisplayProps) {
         </div>
       )}
 
-      {/* Card Grid: 5 per row, 2 rows */}
-      <div className="grid grid-cols-5 gap-3">
+      {/* Card Grid: Responsive - 2 cols on mobile (2×5), 4 on tablet, 5 on desktop */}
+      <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-5 gap-3">
         {slots.map((slot) => (
           <div
             key={slot.slotNumber}
@@ -106,37 +107,42 @@ export function TimelineDisplay({ playerId }: TimelineDisplayProps) {
           >
             {slot.song ? (
               <>
-                {/* Success Badge */}
-                <div className="absolute top-1 right-1 w-4 h-4 bg-gradient-to-br from-secondary to-accent rounded-full flex items-center justify-center text-xs shadow-glow-sm">
-                  ✓
+                {/* Success Badge - Show points in Guess Mode, checkmark otherwise */}
+                <div className="absolute top-1 right-1 w-6 h-6 bg-gradient-to-br from-secondary to-accent rounded-full flex items-center justify-center text-xs font-bold shadow-glow-sm">
+                  {gameMode === 'guess' && slot.song.points !== undefined
+                    ? slot.song.points
+                    : '✓'
+                  }
                 </div>
 
-                {/* Player Badge (Global Timeline only) */}
+                {/* Player Badge (Global Timeline only) - Responsive */}
                 {gameMode === 'timeline_global' && slot.playerId !== null && (
                   <div
-                    className="absolute top-1 left-1 px-1.5 py-0.5 bg-primary/90 border border-accent/50 rounded text-[7px] font-bold text-secondary shadow-glow-sm"
+                    className="absolute top-1 left-1 px-1.5 py-0.5 bg-primary/90 border border-accent/50 rounded text-[10px] sm:text-[8px] font-bold text-secondary shadow-glow-sm"
                     title={`Platziert von: ${players[slot.playerId]?.name}`}
                   >
-                    {players[slot.playerId]?.name.substring(0, 3).toUpperCase()}
+                    {/* Show single letter on mobile, 3 letters on desktop */}
+                    <span className="inline sm:hidden">{players[slot.playerId]?.name.charAt(0).toUpperCase()}</span>
+                    <span className="hidden sm:inline">{players[slot.playerId]?.name.substring(0, 3).toUpperCase()}</span>
                   </div>
                 )}
 
-                {/* Year */}
-                <div className="text-xl font-bold text-gradient mb-1">
+                {/* Year - Responsive */}
+                <div className={`text-2xl sm:text-xl font-bold text-gradient mb-1 ${settings.hideYearsInTimeline ? 'blur-md select-none' : ''}`}>
                   {slot.song.year}
                 </div>
 
-                {/* Title (truncated) */}
+                {/* Title (truncated) - Responsive */}
                 <div
-                  className="text-[9px] text-text-secondary overflow-hidden text-ellipsis whitespace-nowrap w-full text-center"
+                  className="text-xs sm:text-[11px] text-text-secondary overflow-hidden text-ellipsis whitespace-nowrap w-full text-center"
                   title={`${slot.song.title} - ${slot.song.artist}`}
                 >
                   {slot.song.title}
                 </div>
 
-                {/* Artist (truncated) */}
+                {/* Artist (truncated) - Responsive */}
                 <div
-                  className="text-[8px] text-text-secondary/60 overflow-hidden text-ellipsis whitespace-nowrap w-full text-center mt-0.5"
+                  className="text-[10px] sm:text-[9px] text-text-secondary/60 overflow-hidden text-ellipsis whitespace-nowrap w-full text-center mt-0.5"
                   title={slot.song.artist}
                 >
                   {slot.song.artist}

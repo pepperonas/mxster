@@ -13,7 +13,7 @@ interface GuessFormProps {
 
 export function GuessForm({ onSubmit, onSkip }: GuessFormProps) {
   const { gameMode, players, currentPlayer } = useGame()
-  const { showModal } = useUI()
+  const { showModal, closeModal } = useUI()
   const [title, setTitle] = useState('')
   const [artist, setArtist] = useState('')
   const [year, setYear] = useState('')
@@ -35,7 +35,19 @@ export function GuessForm({ onSubmit, onSkip }: GuessFormProps) {
 
     // In Guess mode, at least title OR artist should be filled
     if (!title && !artist && !year) {
-      alert('Bitte mindestens ein Feld ausfüllen')
+      showModal(
+        '⚠️ Eingabe erforderlich',
+        <p className="text-gray-300">
+          Bitte fülle mindestens ein Feld aus, um deine Vermutung abzugeben.
+        </p>,
+        [
+          {
+            label: 'Verstanden',
+            variant: 'primary',
+            onClick: () => {}
+          }
+        ]
+      )
       return
     }
 
@@ -60,7 +72,10 @@ export function GuessForm({ onSubmit, onSkip }: GuessFormProps) {
         {
           label: 'Überspringen',
           variant: 'danger',
+          closeOnClick: false,
           onClick: () => {
+            console.log('🚫 Skip confirmed - closing modal and calling onSkip')
+            closeModal()
             onSkip()
             clearForm()
           }
@@ -89,6 +104,7 @@ export function GuessForm({ onSubmit, onSkip }: GuessFormProps) {
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             placeholder="Song-Titel eingeben..."
+            autoComplete="off"
             className="w-full px-4 py-3 bg-primary border-2 border-accent/30 rounded-lg text-white placeholder-gray-500 focus:border-accent focus:shadow-glow-accent focus:outline-none focus:ring-0 transition-all"
           />
         </div>
@@ -104,6 +120,7 @@ export function GuessForm({ onSubmit, onSkip }: GuessFormProps) {
             value={artist}
             onChange={(e) => setArtist(e.target.value)}
             placeholder="Interpret eingeben..."
+            autoComplete="off"
             className="w-full px-4 py-3 bg-primary border-2 border-accent/30 rounded-lg text-white placeholder-gray-500 focus:border-accent focus:shadow-glow-accent focus:outline-none focus:ring-0 transition-all"
           />
         </div>
@@ -121,6 +138,7 @@ export function GuessForm({ onSubmit, onSkip }: GuessFormProps) {
             placeholder="1990"
             min="1950"
             max={new Date().getFullYear()}
+            autoComplete="off"
             className="w-full px-4 py-3 bg-primary border-2 border-accent/30 rounded-lg text-white placeholder-gray-500 focus:border-accent focus:shadow-glow-accent focus:outline-none focus:ring-0 transition-all"
           />
         </div>

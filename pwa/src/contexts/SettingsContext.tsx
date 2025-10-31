@@ -7,6 +7,8 @@ import { createContext, useContext, useState, useEffect, ReactNode } from 'react
 
 interface Settings {
   randomStartPosition: boolean // Start songs at random position (with 60s+ remaining)
+  hideYearsInTimeline: boolean // Blur years in timeline to prevent cheating
+  savedPlayers: string[] // List of saved player names
   // Future settings can be added here
 }
 
@@ -14,10 +16,14 @@ interface SettingsContextType {
   settings: Settings
   updateSettings: (newSettings: Partial<Settings>) => void
   resetSettings: () => void
+  addPlayer: (playerName: string) => void
+  removePlayer: (playerName: string) => void
 }
 
 const defaultSettings: Settings = {
-  randomStartPosition: false
+  randomStartPosition: false,
+  hideYearsInTimeline: false,
+  savedPlayers: []
 }
 
 const SettingsContext = createContext<SettingsContextType | undefined>(undefined)
@@ -50,8 +56,25 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
     setSettings(defaultSettings)
   }
 
+  const addPlayer = (playerName: string) => {
+    if (!playerName.trim()) return
+    if (settings.savedPlayers.includes(playerName.trim())) return
+
+    setSettings((prev) => ({
+      ...prev,
+      savedPlayers: [...prev.savedPlayers, playerName.trim()]
+    }))
+  }
+
+  const removePlayer = (playerName: string) => {
+    setSettings((prev) => ({
+      ...prev,
+      savedPlayers: prev.savedPlayers.filter((name) => name !== playerName)
+    }))
+  }
+
   return (
-    <SettingsContext.Provider value={{ settings, updateSettings, resetSettings }}>
+    <SettingsContext.Provider value={{ settings, updateSettings, resetSettings, addPlayer, removePlayer }}>
       {children}
     </SettingsContext.Provider>
   )

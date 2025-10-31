@@ -17,7 +17,8 @@ export function Modal() {
   // Close modal on ESC key, trigger primary button on Enter
   const handleKeyDown = useCallback(
     (e: KeyboardEvent) => {
-      if (e.key === 'Escape' && !modal.options?.disableEscapeKey) {
+      // Respect 'required' option - if set, ESC key is disabled
+      if (e.key === 'Escape' && !modal.options?.disableEscapeKey && !modal.options?.required) {
         closeModal()
       }
 
@@ -90,7 +91,8 @@ export function Modal() {
   // Close on backdrop click
   const handleBackdropClick = useCallback(
     (e: React.MouseEvent<HTMLDivElement>) => {
-      if (e.target === e.currentTarget && !modal.options?.disableBackdropClick) {
+      // Respect 'required' option - if set, backdrop click is disabled
+      if (e.target === e.currentTarget && !modal.options?.disableBackdropClick && !modal.options?.required) {
         closeModal()
       }
     },
@@ -134,15 +136,15 @@ export function Modal() {
                 return (
                   <>
                     <span className="text-2xl">{emoji}</span>
-                    <span className="text-gradient">{text}</span>
+                    <span className="text-white">{text}</span>
                   </>
                 )
               }
-              return <span className="text-gradient">{modal.title}</span>
+              return <span className="text-white">{modal.title}</span>
             })()}
           </h2>
 
-          {!modal.options?.hideCloseButton && (
+          {!modal.options?.hideCloseButton && !modal.options?.required && (
             <button
               onClick={closeModal}
               className="text-text-secondary hover:text-white transition-colors p-2"

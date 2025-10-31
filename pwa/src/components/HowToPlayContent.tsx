@@ -13,7 +13,7 @@ interface AccordionSection {
 }
 
 export function HowToPlayContent() {
-  const [openSections, setOpenSections] = useState<string[]>(['guess']) // Open first section by default
+  const [openSections, setOpenSections] = useState<string[]>([]) // All sections closed by default
 
   const toggleSection = (sectionId: string) => {
     setOpenSections((prev) =>
@@ -31,7 +31,7 @@ export function HowToPlayContent() {
       content: (
         <div className="space-y-4">
           <p className="text-text-secondary">
-            <strong className="text-gradient">Ziel:</strong> Sammle die meisten Punkte durch richtiges Raten!
+            <strong className="text-white">Ziel:</strong> Sammle die meisten Punkte durch richtiges Raten!
           </p>
 
           <div className="space-y-3">
@@ -66,15 +66,15 @@ export function HowToPlayContent() {
               <ul className="space-y-1 text-sm text-text-secondary">
                 <li className="flex items-center gap-2">
                   <span className="text-green-400">✓</span>
-                  <span>Titel richtig: <strong className="text-gradient">+1 Punkt</strong></span>
+                  <span>Titel richtig: <strong className="text-white">+1 Punkt</strong></span>
                 </li>
                 <li className="flex items-center gap-2">
                   <span className="text-green-400">✓</span>
-                  <span>Künstler richtig: <strong className="text-gradient">+1 Punkt</strong></span>
+                  <span>Künstler richtig: <strong className="text-white">+1 Punkt</strong></span>
                 </li>
                 <li className="flex items-center gap-2">
                   <span className="text-green-400">✓</span>
-                  <span>Jahr richtig (±2 Jahre Toleranz): <strong className="text-gradient">+1 Punkt</strong></span>
+                  <span>Jahr richtig (±2 Jahre Toleranz): <strong className="text-white">+1 Punkt</strong></span>
                 </li>
               </ul>
             </div>
@@ -82,8 +82,40 @@ export function HowToPlayContent() {
             <div className="glass p-3 rounded-lg border border-accent/20">
               <h4 className="font-semibold text-secondary mb-2">🏆 Gewinner:</h4>
               <p className="text-sm text-text-secondary">
-                Spieler mit den <strong className="text-gradient">meisten Punkten</strong> nach 10 Karten gewinnt!
+                Spieler mit den <strong className="text-white">meisten Punkten</strong> nach 10 Karten gewinnt!
               </p>
+            </div>
+
+            <div className="glass p-3 rounded-lg border border-yellow-500/30 bg-yellow-900/10">
+              <h4 className="font-semibold text-yellow-400 mb-2">⚠️ Überspringen & Progressive Strafe:</h4>
+              <div className="space-y-2 text-sm text-text-secondary">
+                <p>
+                  Du kannst einen Song überspringen, wenn du ihn nicht kennst. <strong className="text-white">ABER:</strong> Wenn alle Spieler den gleichen Song bereits mindestens 1x übersprungen haben, wird es gefährlich!
+                </p>
+                <ul className="space-y-1 ml-4">
+                  <li className="flex items-start gap-2">
+                    <span className="text-green-400 mt-0.5">✓</span>
+                    <span><strong className="text-white">1. Skip pro Spieler:</strong> Keine Strafe</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-yellow-400 mt-0.5">⚠️</span>
+                    <span><strong className="text-white">2. Skip:</strong> 33% Chance auf -3 Punkte</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-orange-400 mt-0.5">⚠️</span>
+                    <span><strong className="text-white">3. Skip:</strong> 66% Chance auf -3 Punkte</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-red-400 mt-0.5">💀</span>
+                    <span><strong className="text-white">4.+ Skip:</strong> 95% Chance auf -3 Punkte</span>
+                  </li>
+                </ul>
+                <div className="bg-red-900/20 p-2 rounded border border-red-500/30 mt-2">
+                  <p className="text-xs">
+                    <strong className="text-red-400">Wichtig:</strong> Punkte können ins <strong className="text-white">Negative</strong> gehen! Bei Strafe wird ein neuer Song gezogen.
+                  </p>
+                </div>
+              </div>
             </div>
 
             <div className="bg-accent/10 p-3 rounded-lg border border-accent/30">
@@ -103,7 +135,7 @@ export function HowToPlayContent() {
       content: (
         <div className="space-y-4">
           <p className="text-text-secondary">
-            <strong className="text-gradient">Ziel:</strong> Baue deine eigene Timeline mit 10 Karten auf!
+            <strong className="text-white">Ziel:</strong> Baue deine eigene Timeline mit 10 Karten auf!
           </p>
 
           <div className="space-y-3">
@@ -154,7 +186,7 @@ export function HowToPlayContent() {
             <div className="glass p-3 rounded-lg border border-accent/20">
               <h4 className="font-semibold text-secondary mb-2">🏆 Gewinner:</h4>
               <p className="text-sm text-text-secondary">
-                <strong className="text-gradient">Erster Spieler</strong>, der 10 Karten in seiner Timeline hat!
+                <strong className="text-white">Erster Spieler</strong>, der 10 Karten in seiner Timeline hat!
               </p>
             </div>
           </div>
@@ -168,7 +200,7 @@ export function HowToPlayContent() {
       content: (
         <div className="space-y-4">
           <p className="text-text-secondary">
-            <strong className="text-gradient">Ziel:</strong> Gemeinsam eine Timeline aufbauen - Wer erreicht zuerst 10 Karten?
+            <strong className="text-white">Ziel:</strong> Gemeinsam eine Timeline aufbauen - Wer erreicht zuerst 10 Karten?
           </p>
 
           <div className="space-y-3">
@@ -223,7 +255,7 @@ export function HowToPlayContent() {
             <div className="glass p-3 rounded-lg border border-accent/20">
               <h4 className="font-semibold text-secondary mb-2">🏆 Gewinner:</h4>
               <p className="text-sm text-text-secondary">
-                <strong className="text-gradient">Erster Spieler</strong>, der insgesamt 10 Karten platziert hat!
+                <strong className="text-white">Erster Spieler</strong>, der insgesamt 10 Karten platziert hat!
               </p>
             </div>
           </div>
@@ -241,11 +273,11 @@ export function HowToPlayContent() {
               <h4 className="font-semibold text-secondary mb-2">🎮 Spielvarianten:</h4>
               <div className="space-y-2 text-sm text-text-secondary">
                 <div>
-                  <strong className="text-gradient">📷 Physischer Modus:</strong>
+                  <strong className="text-white">📷 Physischer Modus:</strong>
                   <p className="ml-4 mt-1">Scanne QR-Codes von gedruckten oder 3D-gedruckten Karten. Ein Spieler übernimmt die Rolle des DJs.</p>
                 </div>
                 <div>
-                  <strong className="text-gradient">🎲 Virtueller Modus:</strong>
+                  <strong className="text-white">🎲 Virtueller Modus:</strong>
                   <p className="ml-4 mt-1">Keine Karten nötig! Songs werden zufällig aus der Datenbank gezogen. Kein DJ erforderlich.</p>
                 </div>
               </div>
@@ -256,15 +288,15 @@ export function HowToPlayContent() {
               <ul className="space-y-1 text-sm text-text-secondary">
                 <li className="flex items-center gap-2">
                   <span className="text-accent">•</span>
-                  <span><strong className="text-gradient">Premium erforderlich:</strong> Volle Song-Wiedergabe nur mit Spotify Premium</span>
+                  <span><strong className="text-white">Premium erforderlich:</strong> Volle Song-Wiedergabe nur mit Spotify Premium</span>
                 </li>
                 <li className="flex items-center gap-2">
                   <span className="text-accent">•</span>
-                  <span><strong className="text-gradient">Web Playback SDK:</strong> Erstellt virtuelles Gerät in deinem Account</span>
+                  <span><strong className="text-white">Web Playback SDK:</strong> Erstellt virtuelles Gerät in deinem Account</span>
                 </li>
                 <li className="flex items-center gap-2">
                   <span className="text-accent">•</span>
-                  <span><strong className="text-gradient">Fallback:</strong> 30-Sekunden-Previews ohne Premium</span>
+                  <span><strong className="text-white">Fallback:</strong> 30-Sekunden-Previews ohne Premium</span>
                 </li>
               </ul>
             </div>
@@ -329,7 +361,7 @@ export function HowToPlayContent() {
   ]
 
   return (
-    <div className="space-y-3 max-h-[70vh] overflow-y-auto pr-2">
+    <div className="space-y-6 max-h-[70vh] overflow-y-auto pr-2">
       {sections.map((section) => {
         const isOpen = openSections.includes(section.id)
 
@@ -345,7 +377,7 @@ export function HowToPlayContent() {
             >
               <div className="flex items-center gap-3">
                 <span className="text-2xl">{section.icon}</span>
-                <h3 className="text-lg font-bold text-gradient">{section.title}</h3>
+                <h3 className="text-lg font-bold text-white">{section.title}</h3>
               </div>
               <svg
                 className={`w-5 h-5 text-secondary transition-transform ${isOpen ? 'rotate-180' : ''}`}
@@ -359,7 +391,7 @@ export function HowToPlayContent() {
 
             {/* Accordion Content */}
             {isOpen && (
-              <div className="p-4 pt-0 border-t-2 border-accent/20">
+              <div className="p-4 pt-4 border-t-2 border-accent/20">
                 {section.content}
               </div>
             )}

@@ -30,6 +30,9 @@ interface GameState {
   globalTimeline: GlobalTimelineCard[]
   playedSongs: string[]
 
+  // Skip Penalty System (Guess Mode)
+  currentSongSkips: Record<number, number> // playerIndex -> skip count for current song
+
   // Game Started
   isGameStarted: boolean
 }
@@ -47,11 +50,14 @@ type GameAction =
   | { type: 'SET_WAITING_FOR_GUESS'; payload: boolean }
   | { type: 'ADD_TO_GLOBAL_TIMELINE'; payload: { song: Song; playerId: number } }
   | { type: 'ADD_TO_PLAYED_SONGS'; payload: string }
+  | { type: 'INCREMENT_SKIP_COUNT'; payload: number } // playerIndex
+  | { type: 'RESET_SKIP_COUNTS' }
   | { type: 'START_GAME' }
   | { type: 'END_GAME' }
   | { type: 'RESET_GAME' }
   | { type: 'LOAD_GAME_STATE'; payload: Partial<GameState> }
   | { type: 'NEXT_TURN' }
+  | { type: 'NEXT_PLAYER_ONLY' } // Switch player, keep currentSong
 
 interface GameContextValue extends GameState {
   setGameMode: (mode: GameMode) => void
@@ -66,11 +72,14 @@ interface GameContextValue extends GameState {
   setWaitingForGuess: (waiting: boolean) => void
   addToGlobalTimeline: (song: Song, playerId: number) => void
   addToPlayedSongs: (songId: string) => void
+  incrementSkipCount: (playerIndex: number) => void
+  resetSkipCounts: () => void
   startGame: () => void
   endGame: () => void
   resetGame: () => void
   loadGameState: (state: Partial<GameState>) => void
   nextTurn: () => void
+  nextPlayerOnly: () => void // Switch player but keep song
 }
 
 // ============================================================================
@@ -94,6 +103,7 @@ const initialState: GameState = {
   waitingForGuess: false,
   globalTimeline: [],
   playedSongs: [],
+  currentSongSkips: {},
   isGameStarted: false
 }
 
@@ -180,6 +190,21 @@ function gameReducer(state: GameState, action: GameAction): GameState {
       }
       return { ...state, playedSongs: [...state.playedSongs, action.payload] }
 
+    case 'INCREMENT_SKIP_COUNT': {
+      const playerIndex = action.payload
+      const currentCount = state.currentSongSkips[playerIndex] || 0
+      return {
+        ...state,
+        currentSongSkips: {
+          ...state.currentSongSkips,
+          [playerIndex]: currentCount + 1
+        }
+      }
+    }
+
+    case 'RESET_SKIP_COUNTS':
+      return { ...state, currentSongSkips: {} }
+
     case 'START_GAME':
       return { ...state, isGameStarted: true }
 
@@ -228,7 +253,42 @@ function gameReducer(state: GameState, action: GameAction): GameState {
         currentPlayer: newCurrentPlayer,
         currentDJ: newCurrentDJ,
         currentSong: null,
+        waitingForGuess: false,
+        currentSongSkips: {} // Reset skip counts when song changes
+      }
+    }
+
+    case 'NEXT_PLAYER_ONLY': {
+      const playerCount = state.players.length
+      if (playerCount === 0) return state
+
+      console.log('⏭️ NEXT_PLAYER_ONLY reducer called (keeping song)')
+      console.log('⏭️ Old currentPlayer:', state.currentPlayer)
+      console.log('⏭️ Current song:', state.currentSong?.title)
+
+      // Wechsle zum nächsten Spieler (im Uhrzeigersinn)
+      let newCurrentPlayer = (state.currentPlayer + 1) % playerCount
+      let newCurrentDJ = state.currentDJ
+
+      // Nur im physischen Guess-Modus: DJ-Wechsel-Logik
+      if (state.gameVariant === 'physical' && state.gameMode === 'guess') {
+        // Wenn wieder beim DJ: DJ wechselt
+        if (newCurrentPlayer === newCurrentDJ) {
+          newCurrentDJ = (newCurrentDJ + 1) % playerCount
+          newCurrentPlayer = (newCurrentPlayer + 1) % playerCount
+        }
+      }
+
+      console.log('⏭️ New currentPlayer:', newCurrentPlayer)
+      console.log('⏭️ Song stays:', state.currentSong?.title)
+
+      return {
+        ...state,
+        currentPlayer: newCurrentPlayer,
+        currentDJ: newCurrentDJ,
+        // currentSong stays unchanged!
         waitingForGuess: false
+        // currentSongSkips stays unchanged! (for penalty tracking)
       }
     }
 
@@ -320,11 +380,14 @@ export function GameProvider({ children }: GameProviderProps) {
     setWaitingForGuess: (waiting) => dispatch({ type: 'SET_WAITING_FOR_GUESS', payload: waiting }),
     addToGlobalTimeline: (song, playerId) => dispatch({ type: 'ADD_TO_GLOBAL_TIMELINE', payload: { song, playerId } }),
     addToPlayedSongs: (songId) => dispatch({ type: 'ADD_TO_PLAYED_SONGS', payload: songId }),
+    incrementSkipCount: (playerIndex) => dispatch({ type: 'INCREMENT_SKIP_COUNT', payload: playerIndex }),
+    resetSkipCounts: () => dispatch({ type: 'RESET_SKIP_COUNTS' }),
     startGame: () => dispatch({ type: 'START_GAME' }),
     endGame: () => dispatch({ type: 'END_GAME' }),
     resetGame: () => dispatch({ type: 'RESET_GAME' }),
     loadGameState: (gameState) => dispatch({ type: 'LOAD_GAME_STATE', payload: gameState }),
-    nextTurn: () => dispatch({ type: 'NEXT_TURN' })
+    nextTurn: () => dispatch({ type: 'NEXT_TURN' }),
+    nextPlayerOnly: () => dispatch({ type: 'NEXT_PLAYER_ONLY' })
   }
 
   return <GameContext.Provider value={value}>{children}</GameContext.Provider>
