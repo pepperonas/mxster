@@ -155,7 +155,6 @@ async function main() {
         title: trackData.title,
         artist: trackData.artist,
         year: trackData.year,
-        audioUrl: `https://example.com/${trackData.id}.mp3`, // Placeholder
         spotifyId: trackData.spotifyId,
         previewUrl: trackData.previewUrl
       };

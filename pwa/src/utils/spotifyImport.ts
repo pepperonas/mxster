@@ -50,7 +50,6 @@ class SpotifyImporter {
           title: track.name,
           artist: track.artists[0].name,
           year: new Date(track.album.release_date).getFullYear(),
-          audioUrl: '',
           previewUrl: track.preview_url,
           spotifyId: track.id,
           albumCover: track.album.images[0]?.url
