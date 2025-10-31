@@ -8,6 +8,7 @@
  * Usage:
  *   node add-song.js <spotify-url>
  *   node add-song.js "https://open.spotify.com/track/4u7EnebtmKWzUH433cf5Qv"
+ *   node add-song.js --edit <spotify-url>  # Interaktiver Modus mit Vorauswahl
  */
 
 import 'dotenv/config'
@@ -33,16 +34,23 @@ const PWA_SONGS_PATH = './pwa/src/data/songs.ts';
 async function main() {
   console.log('\n🎵 mxster - Add Song Tool\n');
 
-  // Get Spotify URL from command line
-  const spotifyUrl = process.argv[2];
+  // Check for --edit parameter
+  const editMode = process.argv[2] === '--edit';
+  const spotifyUrl = editMode ? process.argv[3] : process.argv[2];
 
   if (!spotifyUrl) {
     console.error('❌ Error: Please provide a Spotify URL');
     console.log('\nUsage:');
     console.log('  node add-song.js <spotify-url>');
+    console.log('  node add-song.js --edit <spotify-url>  # Interaktiver Modus');
     console.log('\nExample:');
     console.log('  node add-song.js "https://open.spotify.com/track/4u7EnebtmKWzUH433cf5Qv"');
+    console.log('  node add-song.js --edit "https://open.spotify.com/track/4u7EnebtmKWzUH433cf5Qv"');
     process.exit(1);
+  }
+
+  if (editMode) {
+    console.log('🔧 Interaktiver Modus: Spotify-Metadaten können bearbeitet werden\n');
   }
 
   try {
@@ -101,16 +109,45 @@ async function main() {
       const newId = `song_${String(maxId + 1).padStart(3, '0')}`;
       trackData.id = newId;
 
-      // 5. Prompt for YouTube URL (optional)
-      const rl2 = readline.createInterface({
-        input: process.stdin,
-        output: process.stdout
-      });
+      // 5. Interactive mode: Allow editing Spotify metadata
+      if (editMode) {
+        console.log('\n📝 Metadaten bearbeiten (leer lassen = Wert von Spotify behalten)\n');
 
-      const youtubeUrl = await new Promise(resolve => {
-        rl2.question('\n🎬 YouTube URL (optional, Enter to skip): ', resolve);
-      });
-      rl2.close();
+        const rl2 = readline.createInterface({
+          input: process.stdin,
+          output: process.stdout
+        });
+
+        const newTitle = await new Promise(resolve => {
+          rl2.question(`Titel [${trackData.title}]: `, resolve);
+        });
+
+        const newArtist = await new Promise(resolve => {
+          rl2.question(`Interpret [${trackData.artist}]: `, resolve);
+        });
+
+        const newYearInput = await new Promise(resolve => {
+          rl2.question(`Jahr [${trackData.year}]: `, resolve);
+        });
+
+        rl2.close();
+
+        // Update trackData with user input (if provided)
+        if (newTitle.trim()) {
+          trackData.title = newTitle.trim();
+        }
+        if (newArtist.trim()) {
+          trackData.artist = newArtist.trim();
+        }
+        if (newYearInput.trim()) {
+          trackData.year = parseInt(newYearInput.trim());
+        }
+
+        console.log('\n✅ Verwendete Metadaten:');
+        console.log(`   Titel:    ${trackData.title}`);
+        console.log(`   Interpret: ${trackData.artist}`);
+        console.log(`   Jahr:     ${trackData.year}\n`);
+      }
 
       // 6. Create song object
       const newSong = {
@@ -120,7 +157,6 @@ async function main() {
         year: trackData.year,
         audioUrl: `https://example.com/${trackData.id}.mp3`, // Placeholder
         spotifyId: trackData.spotifyId,
-        youtubeUrl: youtubeUrl.trim() || '', // Use provided URL or empty string
         previewUrl: trackData.previewUrl
       };
 
