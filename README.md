@@ -164,6 +164,220 @@ npm run dev
 - Kooperatives Timeline-Building
 - Nur Kartenzählung pro Spieler entscheidet
 
+## 🎮 Detaillierte Spielregeln & Mechaniken
+
+### DJ-Rotation System
+- DJ wechselt jede Runde im Uhrzeigersinn
+- DJ scannt die Karte (sichtbar im Header: 🎧 DJ: Name)
+- Aktiver Spieler platziert die Karte (🎮 Spieler: Name)
+- Spieler links vom DJ beginnt
+- Nach jedem Spielerzug wechselt zum nächsten Spieler
+- Wenn nächster Spieler = aktueller DJ → DJ wechselt auch
+- Ensures: DJ spielt nie mit seiner eigenen gescannten Karte
+
+### Spielfluss
+
+#### Phase 1: Song scannen
+- DJ scannt QR-Code mit Kamera (oder virtuelle Karte wird gezogen)
+- Song beginnt zu spielen (Spotify oder Preview)
+- Titel & Artist werden **nicht** angezeigt
+
+#### Phase 2: Raten (Optional)
+- Eingabefelder für Titel & Artist
+- Button "✅ Prüfen" oder "⏭️ Überspringen"
+- **Ratespiel-Modus**: Bei richtigem Guess werden Punkte vergeben
+- **Timeline-Modi**: Raten zum Spaß (keine Punkte)
+- Nach Guess/Skip: Song-Info wird enthüllt
+
+#### Phase 3: Platzierung
+- **Ratespiel**: Automatische chronologische Platzierung nach Bewertung
+- **Timeline-Modi**: Automatische Platzierung mit Bestätigungsdialog
+- System prüft ob Timeline noch korrekt sortiert ist
+- Songs mit gleichem Jahr sind in beliebiger Reihenfolge erlaubt
+
+#### Phase 4: Bewertung
+- **Ratespiel**:
+  - Dialog zeigt ✅/❌ Checkmarks für Titel, Artist, Jahr
+  - Punkte werden vergeben (0-3 pro Song)
+  - Score Overview wird aktualisiert
+- **Timeline-Modi**:
+  - Bestätigung der Platzierung
+  - Kartenzähler erhöht sich
+
+### Anzeige-Elemente
+
+#### Spieler-Info (Header)
+```
+🎧 DJ: [Name]
+🎮 Spieler: [Name] (🎵 X/10 Karten)
+```
+**Ratespiel zusätzlich:** Punktestand sichtbar
+
+#### Timeline
+- Zeigt alle korrekt platzierten Karten des aktiven Spielers
+- Sortiert nach Jahr (älteste links)
+- Format pro Karte:
+  - Jahr (groß)
+  - Song-Titel
+  - Artist
+
+#### Scoreboard (Ratespiel)
+- Zeigt für alle Spieler:
+  - Name
+  - Punktestand
+  - Karten-Anzahl (X/10)
+- Live-Updates nach jeder Runde
+- Medaillen für Top 3
+
+### 🎯 Fuzzy Matching System
+
+Das Spiel verwendet **tolerantes Fuzzy-Matching** für Song-Raten, damit Spieler nicht an Tippfehlern scheitern.
+
+#### Features
+
+**Groß-/Kleinschreibung ignoriert:**
+```javascript
+"Bohemian Rhapsody" = "bohemian rhapsody" = "BOHEMIAN RHAPSODY"
+```
+
+**Sonderzeichen ignoriert:**
+```javascript
+"Don't Stop" = "Dont Stop" = "Don't Stop!"
+"What's Up?" = "Whats Up" = "Whats Up"
+```
+
+**Umlaute normalisiert:**
+```javascript
+"Für Elise" = "Fur Elise"
+"Café del Mar" = "Cafe del Mar"
+```
+
+**Bindestriche → Leerzeichen:**
+```javascript
+"Re-mix" = "Re mix" = "Remix"
+```
+
+**Ampersand → "and":**
+```javascript
+"Rock & Roll" = "Rock and Roll"
+```
+
+**3 Tippfehler erlaubt (pro Feld):**
+
+Das System verwendet die **Levenshtein-Distanz** um Tippfehler zu erkennen:
+
+- ✅ **1 Tippfehler**: "Bohemian Rhapsody" → "Bohemain Rhapsody"
+- ✅ **2 Tippfehler**: "Fine Young Cannibals" → "Fin Young Cannibls"
+- ✅ **3 Tippfehler**: "She Drives Me Crazy" → "She Drivs Me Crzy"
+- ❌ **4+ Tippfehler**: "She Drives Me Crazy" → "She Drvs M Crzy"
+
+**Teilstring-Matching:**
+```javascript
+"Drives Me Crazy" matcht "She Drives Me Crazy"
+"Fine Young" matcht "Fine Young Cannibals"
+```
+
+**Phonetische Ähnlichkeit:**
+```javascript
+"Freddie Mercury" = "Freddy Mercury"
+"Philip" = "Phil"
+"Eric" = "Erik"
+```
+
+**Abkürzungen & Slashes:**
+```javascript
+"AC/DC" = "ACDC" = "AC DC"
+"N.W.A." = "nwa"
+```
+
+**"The" Präfix ignoriert:**
+```javascript
+"The Beatles" = "Beatles"
+"The Rolling Stones" = "Rolling Stones"
+```
+
+**Track-Suffixe ignoriert (wichtig!):**
+
+Spieler müssen keine Remix/Version-Informationen eingeben:
+
+```javascript
+"Like a Prayer" = "Like a Prayer - 12" Extended Remix"
+"Drop the Pressure" = "Drop the Pressure - Club Mix"
+"Totoish" = "Totoish - Radio Cut"
+"Song Name" = "Song Name (Extended Version)"
+"Song Name" = "Song Name [Club Mix]"
+"Song Name" = "Song Name 2024 Remastered"
+```
+
+Erkannte Suffixe:
+- `12"`, `7"` (Vinyl-Formate)
+- `Extended`, `Radio`, `Club`, `Vocal`, `Instrumental`
+- `Remix`, `Mix`, `Edit`, `Version`, `Cut`
+- `Remaster`, `Remastered` (auch mit Jahreszahlen)
+- `Live`, `Original`
+- `Single Version`, `Album Version`
+
+#### Technische Details
+
+**Normalisierung:**
+```javascript
+function normalizeText(text) {
+  return text
+    .toLowerCase()                          // Lowercase
+    .normalize('NFD')                       // Unicode decomposition
+    .replace(/[\u0300-\u036f]/g, '')        // Entferne diakritische Zeichen
+    .replace(/[''`]/g, '')                  // Entferne Apostrophe
+    .replace(/[.,?!;:]/g, '')               // Entferne Interpunktion
+    .replace(/[-_]/g, ' ')                  // Bindestriche → Leerzeichen
+    .replace(/&/g, 'and')                   // & → "and"
+    .replace(/\s+/g, ' ')                   // Mehrfache Leerzeichen → einzelnes
+    .trim()
+}
+```
+
+**Matching-Logik:**
+```javascript
+function fuzzyMatch(guess, correct, maxErrors = 3) {
+  const normalizedGuess = normalizeText(guess)
+  const normalizedCorrect = normalizeText(correct)
+
+  // 1. Exakter Match nach Normalisierung
+  if (normalizedGuess === normalizedCorrect) return true
+
+  // 2. Substring-Match
+  if (normalizedCorrect.includes(normalizedGuess) ||
+      normalizedGuess.includes(normalizedCorrect)) return true
+
+  // 3. Levenshtein-Distanz Check
+  const distance = levenshteinDistance(normalizedGuess, normalizedCorrect)
+  return distance <= maxErrors
+}
+```
+
+**Performance:**
+- Normalisierung: ~0.1ms
+- Levenshtein (20 Zeichen): ~0.2ms
+- Gesamt pro Guess: ~0.5ms
+- Vernachlässigbar für User Experience
+
+### Automatische Spielstand-Speicherung
+
+Das Spiel speichert den Spielstand **automatisch**:
+
+- ✅ **Automatisch nach jedem Zug** gespeichert
+- ✅ **LocalStorage-basiert** - Persistent im Browser
+- ✅ **Wiederherstellung beim Neustart** - Dialog fragt nach Fortsetzung
+- ✅ **Export/Import** - JSON-Datei Download/Upload für Backups
+- ✅ **Geräte-Wechsel möglich** - Exportiere auf Gerät A, importiere auf Gerät B
+- ✅ **Manueller Save-Button** - Zusätzlich zur Auto-Save Funktion
+
+**Was wird gespeichert:**
+- Alle Spieler mit Namen, Timelines, Punkte, Karten
+- Aktueller DJ und aktiver Spieler
+- Spielmodus (Ratespiel, Timeline Personal, Timeline Global)
+- Aktueller Song-State
+- Kompletter Spielverlauf
+
 ## 📥 Downloads (Fertige Karten)
 
 **Am einfachsten:** Lade fertige Karten direkt von den [GitHub Releases](https://github.com/pepperonas/mxster/releases) herunter!
@@ -225,6 +439,140 @@ node generate-cards.js --duplex --bw
 3. Schneide entlang der gestrichelten Linien
 4. Falten und zusammenkleben oder laminieren
 5. Fertig! 🎉
+
+### 📝 Detaillierte Karten-Spezifikation
+
+#### Kartenformat
+
+**Vorderseite (QR-Code):**
+- **mxster** Logo oben
+- **QR-Code** in der Mitte (Spotify Track URL)
+- Anweisung: "Scanne den Code mit der mxster App"
+- Song-ID am unteren Rand
+
+**Rückseite (Song-Information):**
+- **Jahr** groß und prominent (48pt)
+- **Song-Titel** (14pt, fett)
+- **Artist** (11pt)
+- Dekorative Linie am unteren Rand
+
+**Abmessungen:**
+- **Kartengröße**: 2.5" x 3.5" (63mm x 88mm) - Standard Spielkartengröße
+- **Papierformat**: A4 (210mm x 297mm)
+- **Karten pro Seite**: 1 Karte (Vorderseite + Rückseite nebeneinander)
+
+#### PDF-Struktur
+
+Das generierte PDF enthält:
+
+1. **Titelseite** mit Übersicht (Anzahl der Songs)
+2. **Pro Song eine Seite** mit:
+   - Vorderseite links (QR-Code)
+   - Rückseite rechts (Song-Info)
+   - Gestrichelte Schneidelinien
+   - Kartennummer (z.B. "Karte 1 von 143")
+3. **Anleitungsseite** mit Druckanweisungen
+
+#### Druckanleitung
+
+**Materialien:**
+- **Papier**: Mindestens 200g/m² (Karton empfohlen)
+- **Drucker**: Farblaserdrucker oder hochwertiger Tintenstrahldrucker
+- **Optional**: Laminiergerät oder Selbstklebefolie
+
+**Schritte:**
+
+1. **Drucken**
+   - Drucke alle Seiten auf festem Papier (200-300g/m²)
+   - Empfehlung: Beidseitiger Druck für professionelles Aussehen
+
+2. **Schneiden**
+   - Schneide entlang der gestrichelten Linien
+   - Verwende ein Schneidegerät für präzise Kanten
+   - Schneide zwischen Vorder- und Rückseite
+
+3. **Zusammenfügen** (Optional)
+   - Klebe Vorderseite und Rückseite Rücken an Rücken zusammen
+   - Oder: Laminiere jede Seite separat und klebe sie dann zusammen
+   - Oder: Falte das Papier in der Mitte, wenn es dünn genug ist
+
+4. **Laminieren** (Empfohlen)
+   - Laminiere die fertigen Karten für längere Haltbarkeit
+   - Schützt vor Abnutzung und Verschmutzung
+
+#### Farbschema
+
+Die Karten verwenden das mxster Design:
+
+**Vorderseite:**
+- Hintergrund: `#1A1C27` (Dunkelgrau)
+- Border: `#4A90E2` (Blau)
+- Text: `#FFFFFF` (Weiß) / `#B0B3C1` (Hellgrau)
+
+**Rückseite:**
+- Hintergrund: `#2C2E3B` (Dunkelgrau)
+- Border: `#FF6B35` (Orange)
+- Jahr: `#4A90E2` (Blau)
+- Titel: `#FFFFFF` (Weiß)
+- Artist: `#B0B3C1` (Hellgrau)
+
+#### Technische Details
+
+**Dependencies:**
+- `pdfkit` - PDF-Generierung
+- `qrcode` - QR-Code Generierung
+
+**Song-Daten:**
+Die Karten werden aus `src/data/songs.ts` generiert. Jeder Song benötigt:
+- `id` - Eindeutige ID
+- `title` - Song-Titel
+- `artist` - Künstler
+- `year` - Erscheinungsjahr
+- `spotifyId` - Spotify Track-ID für QR-Code
+
+**QR-Code Format:**
+Der QR-Code enthält die Spotify Track URL im Format:
+```
+https://open.spotify.com/track/{spotifyId}
+```
+
+**Ausgabe:**
+- **Dateiname**: `mxster-cards.pdf` (oder `*-bw.pdf`, `*-duplex.pdf`)
+- **Speicherort**: `pwa/` Verzeichnis
+- **Dateigröße**: ~50-100 KB pro Karte (abhängig von QR-Code Komplexität)
+
+#### Anpassungen
+
+**Kartengröße ändern:**
+Bearbeite die Konstanten in `pwa/generate-cards.js`:
+
+```javascript
+const CARD_WIDTH = 2.5 * 72;  // Breite in inches * 72 (points)
+const CARD_HEIGHT = 3.5 * 72; // Höhe in inches * 72 (points)
+```
+
+**Farben ändern:**
+Passe die Farbwerte in den `drawCardFront()` und `drawCardBack()` Funktionen an.
+
+**Mehr Songs hinzufügen:**
+Füge neue Songs zu `docs/songs.json` hinzu und führe das Skript erneut aus.
+
+#### Troubleshooting
+
+**PDF wird nicht generiert:**
+- Prüfe, ob alle Dependencies installiert sind: `npm install`
+- Stelle sicher, dass Node.js installiert ist (Version 18+)
+- Prüfe die Konsole auf Fehlermeldungen
+
+**QR-Codes funktionieren nicht:**
+- Stelle sicher, dass die `spotifyId` in `songs.json` korrekt ist
+- Teste den QR-Code mit einem Standard-QR-Reader
+- Die URL sollte im Format `https://open.spotify.com/track/{id}` sein
+
+**Schlechte Druckqualität:**
+- Verwende dickeres Papier (mindestens 200g/m²)
+- Stelle den Drucker auf höchste Qualität ein
+- Verwende einen Laserdrucker für beste Ergebnisse
 
 ### 🎲 3D-Karten (für Fortgeschrittene)
 
@@ -462,23 +810,214 @@ npm run import-spotify
 
 Vorher `pwa/spotify.config.js` anpassen (siehe Konfiguration oben).
 
-## 📱 Als App installieren
+## 📱 Als App installieren (PWA)
+
+mxster ist als Progressive Web App (PWA) installierbar und funktioniert wie eine native App!
 
 ### iOS (iPhone/iPad)
 
-1. Öffne mxster.de in Safari
-2. Tippe auf das **Teilen-Symbol** (unten)
-3. Scrolle runter und wähle **"Zum Home-Bildschirm"**
-4. Tippe auf **"Hinzufügen"**
-5. Fertig! App ist jetzt auf deinem Homescreen 📱
+⚠️ **Wichtig**: Auf iOS funktioniert die Installation **nur in Safari** (nicht Chrome oder Firefox)
 
-### Android
+1. **Öffne** https://mxster.de in Safari
+2. **Tippe** auf den Teilen-Button (📤) unten in der Mitte
+3. **Scrolle** nach unten und wähle "Zum Home-Bildschirm"
+4. **Bearbeite** den Namen falls gewünscht (Standard: "mxster")
+5. **Tippe** auf "Hinzufügen" oben rechts
+6. **Fertig!** Die App erscheint auf deinem Home Screen
 
-1. Öffne mxster.de in Chrome
-2. Tippe auf das **Menü** (⋮)
-3. Wähle **"App installieren"** oder **"Zum Startbildschirm hinzufügen"**
-4. Tippe auf **"Installieren"**
-5. Fertig! App ist jetzt in deiner App-Liste 📱
+**Nach Installation:**
+- App öffnet sich im Vollbild (ohne Browser-UI)
+- Sieht aus wie eine native App
+- Eigenes Icon auf dem Home Screen
+
+### Android (Chrome/Edge)
+
+1. **Öffne** https://mxster.de in Chrome oder Edge
+2. **Warte** bis die Seite vollständig geladen ist
+3. **Tippe** auf das Menü (⋮) oben rechts
+4. **Wähle** "App installieren" oder "Zum Startbildschirm hinzufügen"
+5. **Bestätige** die Installation
+6. **Fertig!** Die App erscheint auf deinem Home Screen
+
+**Alternative Methode:**
+- Einige Browser zeigen automatisch ein Banner "App installieren" am unteren Bildschirmrand
+- Tippe einfach auf "Installieren"
+
+### Desktop (Chrome/Edge)
+
+1. **Öffne** https://mxster.de in Chrome oder Edge
+2. **Klicke** auf das ⊕ Symbol in der Adressleiste (rechts)
+   - Oder: Menü (⋮) → "mxster installieren..."
+3. **Klicke** auf "Installieren"
+4. **Fertig!** Die App öffnet sich in einem eigenen Fenster
+
+**Shortcut:**
+- Windows: App erscheint im Startmenü
+- Mac: App erscheint im Applications-Ordner
+- Linux: App erscheint in den Anwendungen
+
+### PWA Features
+
+Nach erfolgreicher Installation:
+
+**Offline-Funktionalität:**
+- ✅ App-Grundgerüst funktioniert offline
+- ✅ Cached Songs spielbar (wenn vorher geladen)
+- ❌ Spotify Streaming benötigt Internet
+
+**Home Screen Icon:**
+- Eigenes mxster Icon
+- Kein Browser-Tab mehr nötig
+- Schnellzugriff vom Home Screen
+
+**Standalone Mode:**
+- Kein Browser-UI (keine Adressleiste)
+- Mehr Bildschirmplatz
+- Native App Feeling
+
+**Auto-Updates:**
+- PWA aktualisiert sich automatisch
+- Service Worker lädt neue Versionen im Hintergrund
+- Beim nächsten App-Start: Neue Version
+
+### Troubleshooting
+
+**"Installieren"-Button wird nicht angezeigt:**
+
+1. **HTTPS erforderlich**
+   - ✅ mxster.de nutzt HTTPS - sollte funktionieren
+   - Auf localhost funktioniert es auch (für Development)
+
+2. **Service Worker nicht registriert**
+   - Öffne DevTools (F12)
+   - Gehe zu "Application" → "Service Workers"
+   - Sollte "mxster Service Worker" zeigen
+
+3. **Browser-Cache**
+   - **Hard Refresh**: Ctrl+F5 (Windows) / Cmd+Shift+R (Mac)
+   - Oder: DevTools → "Application" → "Clear storage" → "Clear site data"
+
+4. **App bereits installiert**
+   - Wenn die App bereits installiert ist, wird der Button nicht angezeigt
+   - Prüfe deinen Home Screen / Anwendungen
+
+**Installation auf iOS funktioniert nicht:**
+
+Checkliste:
+- [ ] Safari Browser verwenden (nicht Chrome/Firefox)
+- [ ] iOS 11.3 oder neuer
+- [ ] Seite vollständig geladen
+- [ ] Teilen-Button (📤) funktioniert
+- [ ] "Zum Home-Bildschirm" ist verfügbar
+
+**App öffnet sich nicht im Vollbild:**
+
+- **iOS**: Stelle sicher, dass du die App vom Home Screen öffnest (nicht über Safari → Lesezeichen)
+- **Android**: App sollte automatisch im Vollbild öffnen. Falls nicht: Deinstallieren und neu installieren
+- **Desktop**: App sollte sich in eigenem Fenster öffnen. Falls nicht: Neu installieren
+
+## 🔧 Spotify Developer Setup
+
+### Redirect URI Konfiguration
+
+Um die App lokal oder in Production zu nutzen, musst du die Redirect URIs im Spotify Developer Dashboard eintragen.
+
+**Problem:** `INVALID_CLIENT: Invalid redirect URI` Error beim Login
+
+**Lösung:** Die App verwendet zur Laufzeit automatisch die korrekte Redirect URI:
+- **Production**: `https://mxster.de/callback`
+- **Development**: `http://localhost:5174/callback`
+
+### Schritt-für-Schritt Anleitung
+
+#### 1. Spotify Developer Dashboard öffnen
+Gehe zu: **https://developer.spotify.com/dashboard**
+
+#### 2. Einloggen
+Verwende deinen Spotify Account
+
+#### 3. App auswählen
+Finde und klicke auf deine App in der Dashboard-Übersicht (oder erstelle eine neue App)
+
+#### 4. Settings öffnen
+Klicke auf den **"Settings"** Button (oben rechts)
+
+#### 5. Redirect URIs bearbeiten
+Scrolle runter bis zu **"Redirect URIs"**
+
+#### 6. Folgende URIs hinzufügen
+
+**WICHTIG**: Trage **EXAKT** diese URIs ein (ohne Leerzeichen oder Trailing Slash):
+
+```
+https://mxster.de/callback
+```
+
+```
+http://localhost:5174/callback
+```
+
+**Achtung**:
+- ❌ FALSCH: `https://mxster.de/callback/` (mit Trailing Slash)
+- ❌ FALSCH: `https://www.mxster.de/callback` (mit www)
+- ✅ RICHTIG: `https://mxster.de/callback`
+
+#### 7. Speichern
+Klicke auf **"Add"** für jede URI, dann **"Save"** unten rechts
+
+#### 8. Warten
+Warte ca. 1-2 Minuten, bis die Änderungen propagiert sind
+
+#### 9. Testen
+1. Öffne https://mxster.de
+2. Klicke auf "Mit Spotify anmelden"
+3. Der Login sollte jetzt funktionieren!
+
+### Häufige Fehler
+
+**"redirect_uri mismatch":**
+- Die URI im Dashboard stimmt nicht mit der App überein
+- Prüfe auf Tippfehler, Leerzeichen, Trailing Slashes
+
+**"INVALID_CLIENT":**
+- Client ID oder Secret falsch
+- Redirect URI nicht im Dashboard eingetragen
+
+**App redirected zu falscher URL:**
+- Hard Refresh im Browser (Ctrl+F5)
+- Service Worker Cache leeren (DevTools → Application → Clear Storage)
+
+### Debug-Hilfe
+
+**Was sendet die App?**
+Die App sendet diese Redirect URI an Spotify:
+```javascript
+// Production (mxster.de)
+https://mxster.de/callback
+
+// Development (localhost)
+http://localhost:5174/callback
+```
+
+**Wie überprüfen?**
+1. Öffne https://mxster.de
+2. Öffne Browser DevTools (F12)
+3. Gehe zu Network Tab
+4. Klicke "Mit Spotify anmelden"
+5. Schau dir die Request-URL an, die zu `accounts.spotify.com/authorize` geht
+6. In der URL findest du: `&redirect_uri=https%3A%2F%2Fmxster.de%2Fcallback`
+   - `%3A%2F%2F` = `://`
+   - `%2F` = `/`
+   - Dekodiert: `https://mxster.de/callback`
+
+### Diese URL muss EXAKT im Spotify Dashboard stehen!
+
+**Erforderliche Scopes:**
+- `streaming` (Web Playback SDK)
+- `user-read-email` (User Info)
+- `user-read-private` (User Info)
+- `user-modify-playback-state` (Playback Control)
+- `user-read-playback-state` (Playback State)
 
 ## 🛠️ Für Entwickler
 
