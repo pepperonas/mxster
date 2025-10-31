@@ -1,7 +1,10 @@
 import PDFDocument from 'pdfkit';
 import QRCode from 'qrcode';
 import fs from 'fs';
-import { songs } from './src/data/songs.ts';
+
+// Load songs from the source of truth (docs/songs.json)
+const songsData = JSON.parse(fs.readFileSync('../docs/songs.json', 'utf8'));
+const songs = songsData;
 
 // Configuration: Set to true for black & white printing (no backgrounds)
 const BLACK_AND_WHITE = process.argv.includes('--bw') || process.argv.includes('--black-white');
