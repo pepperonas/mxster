@@ -7,7 +7,7 @@
  * Behält die Song-ID bei, lädt neue Metadaten und regeneriert alle Dateien.
  */
 
-import 'dotenv/config'
+import dotenv from 'dotenv'
 import fs from 'fs/promises'
 import fsSync from 'fs'
 import path from 'path'
@@ -20,6 +20,9 @@ import { generateCard, generateSTL } from '../../card-generator/generateCard.js'
 // ES Module equivalent of __dirname
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
+
+// Load .env from project root (two levels up)
+dotenv.config({ path: path.join(__dirname, '../../.env') })
 
 // Farben für Terminal-Output
 const colors = {

@@ -11,7 +11,7 @@
  *   node add-song.js --edit <spotify-url>  # Interaktiver Modus mit Vorauswahl
  */
 
-import 'dotenv/config'
+import dotenv from 'dotenv'
 import fs from 'fs/promises'
 import path from 'path'
 import { fileURLToPath } from 'url'
@@ -23,6 +23,9 @@ import { generateCard, generateSTL } from '../../card-generator/generateCard.js'
 // ES Module equivalent of __dirname
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
+
+// Load .env from project root (two levels up)
+dotenv.config({ path: path.join(__dirname, '../../.env') })
 
 // Configuration
 const SONGS_JSON_PATH = '../../docs/songs.json';
