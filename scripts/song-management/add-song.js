@@ -17,16 +17,16 @@ import path from 'path'
 import { fileURLToPath } from 'url'
 import readline from 'readline'
 import { execSync } from 'child_process'
-import { getTrackMetadata } from './card-generator/spotifyApi.js'
-import { generateCard, generateSTL } from './card-generator/generateCard.js'
+import { getTrackMetadata } from '../../card-generator/spotifyApi.js'
+import { generateCard, generateSTL } from '../../card-generator/generateCard.js'
 
 // ES Module equivalent of __dirname
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 
 // Configuration
-const SONGS_JSON_PATH = './docs/songs.json';
-const PWA_SONGS_PATH = './pwa/src/data/songs.ts';
+const SONGS_JSON_PATH = '../../docs/songs.json';
+const PWA_SONGS_PATH = '../../pwa/src/data/songs.ts';
 
 /**
  * Main function
@@ -198,7 +198,7 @@ async function main() {
 
     // 10. Copy QR code PNG to docs/ directory
     console.log('📋 Copying QR code to docs/...');
-    const docsQrPath = path.join('./docs', path.basename(result.qrCodePath));
+    const docsQrPath = path.join('../../docs', path.basename(result.qrCodePath));
     try {
       await fs.copyFile(result.qrCodePath, docsQrPath);
       console.log(`   ✅ QR code copied: ${docsQrPath}\n`);

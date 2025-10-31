@@ -14,8 +14,8 @@ import path from 'path'
 import { fileURLToPath } from 'url'
 import readline from 'readline'
 import { execSync } from 'child_process'
-import { getTrackMetadata } from './card-generator/spotifyApi.js'
-import { generateCard, generateSTL } from './card-generator/generateCard.js'
+import { getTrackMetadata } from '../../card-generator/spotifyApi.js'
+import { generateCard, generateSTL } from '../../card-generator/generateCard.js'
 
 // ES Module equivalent of __dirname
 const __filename = fileURLToPath(import.meta.url)
@@ -49,18 +49,18 @@ function log(message, color = 'reset') {
 
 // Song-Datenbank laden
 function loadSongs() {
-  const songsJsonPath = path.join(__dirname, 'docs', 'songs.json');
+  const songsJsonPath = path.join(__dirname, '../../docs', 'songs.json');
   const songsData = fsSync.readFileSync(songsJsonPath, 'utf8');
   return JSON.parse(songsData);
 }
 
 // Song-Datenbank speichern
 async function saveSongs(songs) {
-  const songsJsonPath = path.join(__dirname, 'docs', 'songs.json');
+  const songsJsonPath = path.join(__dirname, '../../docs', 'songs.json');
 
   // Backup erstellen
   const timestamp = new Date().toISOString().split('T')[0];
-  const backupPath = path.join(__dirname, 'docs', `songs.json.backup-${timestamp}`);
+  const backupPath = path.join(__dirname, '../../docs', `songs.json.backup-${timestamp}`);
   await fs.copyFile(songsJsonPath, backupPath);
   log(`✅ Backup erstellt: ${backupPath}`, 'green');
 
@@ -71,7 +71,7 @@ async function saveSongs(songs) {
 
 // songs.ts aktualisieren
 async function updateSongsJs(songs) {
-  const songsJsPath = path.join(__dirname, 'pwa', 'src', 'data', 'songs.ts');
+  const songsJsPath = path.join(__dirname, '../../pwa', 'src', 'data', 'songs.ts');
   const content = `import type { Song } from '@/types'\n\nexport const songs: Song[] = ${JSON.stringify(songs, null, 2)}\n`;
   await fs.writeFile(songsJsPath, content);
   log('✅ pwa/src/data/songs.ts aktualisiert', 'green');
@@ -82,9 +82,9 @@ async function deleteOldFiles(songId) {
   const oldFiles = [];
 
   // Finde alle Dateien mit dieser Song-ID
-  const docsDir = path.join(__dirname, 'docs');
-  const qrCodesDir = path.join(__dirname, 'card-generator', 'qr-codes');
-  const modelsDir = path.join(__dirname, 'card-generator', 'models');
+  const docsDir = path.join(__dirname, '../../docs');
+  const qrCodesDir = path.join(__dirname, '../../card-generator', 'output', 'qr-codes');
+  const modelsDir = path.join(__dirname, '../../card-generator', 'output', 'models');
 
   // Suche in docs/
   try {
@@ -142,7 +142,7 @@ async function generateCardFiles(song) {
     const result = await generateCard(song);
 
     // Kopiere QR-Code nach docs/
-    const docsQrPath = path.join(__dirname, 'docs', path.basename(result.qrCodePath));
+    const docsQrPath = path.join(__dirname, '../../docs', path.basename(result.qrCodePath));
     await fs.copyFile(result.qrCodePath, docsQrPath);
     log(`✅ QR-Code generiert: ${docsQrPath}`, 'green');
 
@@ -169,9 +169,9 @@ async function generatePDFCards() {
   log('🔄 Generiere PDF-Karten (alle Songs)...', 'cyan');
 
   try {
-    const pdfScript = path.join(__dirname, 'generate-all-pdfs.sh');
+    const pdfScript = path.join(__dirname, '../../scripts/build/generate-all-pdfs.sh');
     execSync(`"${pdfScript}"`, {
-      cwd: __dirname,
+      cwd: path.join(__dirname, '../..'),
       stdio: 'inherit'
     });
 
@@ -326,7 +326,7 @@ async function main() {
     // Update song count in README.md
     log('\n📊 Updating song count in README.md...', 'cyan');
     try {
-      execSync('node update-song-count.js', { cwd: __dirname, stdio: 'inherit' });
+      execSync('node scripts/song-management/update-song-count.js', { cwd: path.join(__dirname, '../..'), stdio: 'inherit' });
     } catch (error) {
       log(`   ⚠️  Could not update README.md: ${error.message}`, 'yellow');
     }
