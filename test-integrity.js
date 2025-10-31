@@ -195,7 +195,7 @@ if (missingScad === 0 && missingStl === 0) {
  * Test 7: Check QR code PNG files
  */
 console.log(`\n${colors.cyan}[Test 7] Checking QR code PNG files...${colors.reset}`);
-const docsDir = path.join(__dirname, 'docs');
+const qrCodesDir = path.join(__dirname, 'card-generator/output/qr-codes');
 let missingPngs = 0;
 
 songs.forEach(song => {
@@ -206,7 +206,7 @@ songs.forEach(song => {
   const titleSafe = sanitizeFilename(song.title);
   const baseFilename = `${song.id}_${artistSafe}_${titleSafe}_${song.year}`;
 
-  const pngPath = path.join(docsDir, `${baseFilename}.png`);
+  const pngPath = path.join(qrCodesDir, `${baseFilename}.png`);
 
   if (!fs.existsSync(pngPath)) {
     logError(`Missing PNG file`, `${song.id}: ${baseFilename}.png`);
@@ -258,7 +258,7 @@ if (invalidSpotifyIds === 0) {
 console.log(`\n${colors.cyan}[Test 10] Checking file count consistency...${colors.reset}`);
 const scadFiles = fs.readdirSync(modelsDir).filter(f => f.endsWith('.scad')).length;
 const stlFiles = fs.readdirSync(modelsDir).filter(f => f.endsWith('.stl')).length;
-const pngFiles = fs.readdirSync(docsDir).filter(f => f.startsWith('song_') && f.endsWith('.png')).length;
+const pngFiles = fs.readdirSync(qrCodesDir).filter(f => f.startsWith('song_') && f.endsWith('.png')).length;
 
 logInfo(`Songs in JSON: ${songs.length}`);
 logInfo(`SCAD files: ${scadFiles}`);

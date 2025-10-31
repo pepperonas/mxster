@@ -28,9 +28,6 @@ card-generator/output/qr-codes/*.png
 
 # Note: SCAD and STL files are now tracked in Git for both repos
 
-# QR codes in docs/ (behalten für Dokumentation)
-# docs/*.png bleiben im Repo
-
 # Generated PWA data
 pwa/src/data/songs.js
 

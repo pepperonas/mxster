@@ -691,8 +691,7 @@ Schritt 4/4: Dateien aktualisieren
 Aktualisierte Dateien:
   • docs/songs.json
   • pwa/src/data/songs.ts
-  • docs/song_008_*.png
-  • card-generator/qr-codes/song_008_*.png
+  • card-generator/output/qr-codes/song_008_*.png
 ```
 
 ### Song austauschen (komplett ersetzen)
@@ -790,10 +789,9 @@ PDF-Karten neu generieren (alle Songs)? (j/n): n
 Aktualisierte Dateien:
   • docs/songs.json
   • pwa/src/data/songs.ts
-  • docs/song_031_*.png
-  • card-generator/qr-codes/song_031_*.png
-  • card-generator/models/song_031_*.scad
-  • card-generator/models/song_031_*.stl
+  • card-generator/output/qr-codes/song_031_*.png
+  • card-generator/output/models/song_031_*.scad
+  • card-generator/output/models/song_031_*.stl
 
 📊 Song-Details:
    Alt: Steve Monite - Only You (1984)

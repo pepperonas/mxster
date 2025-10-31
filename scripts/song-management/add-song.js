@@ -199,16 +199,6 @@ async function main() {
     const result = await generateCard(songForCard);
     console.log(`\n`);
 
-    // 10. Copy QR code PNG to docs/ directory
-    console.log('📋 Copying QR code to docs/...');
-    const docsQrPath = path.join('../../docs', path.basename(result.qrCodePath));
-    try {
-      await fs.copyFile(result.qrCodePath, docsQrPath);
-      console.log(`   ✅ QR code copied: ${docsQrPath}\n`);
-    } catch (error) {
-      console.log(`   ⚠️  Could not copy QR code to docs/: ${error.message}\n`);
-    }
-
     // 10. Update song count in README.md
     console.log('📊 Updating song count in README.md...');
     try {

@@ -143,11 +143,7 @@ async function generateCardFiles(song) {
   try {
     // Generiere Card (QR-Code + SCAD)
     const result = await generateCard(song);
-
-    // Kopiere QR-Code nach docs/
-    const docsQrPath = path.join(__dirname, '../../docs', path.basename(result.qrCodePath));
-    await fs.copyFile(result.qrCodePath, docsQrPath);
-    log(`✅ QR-Code generiert: ${docsQrPath}`, 'green');
+    log(`✅ QR-Code generiert: ${result.qrCodePath}`, 'green');
 
     // Generiere STL (IMMER)
     try {
