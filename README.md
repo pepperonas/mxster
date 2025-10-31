@@ -604,10 +604,26 @@ Nach dem Erstellen eines neuen Release **MÜSSEN** die Download-Links aktualisie
 #### add-song.js
 Fügt neue Songs zur Datenbank hinzu. Lädt Metadaten automatisch von Spotify.
 
+**Modi:**
+
+**Automatischer Modus** (Standard):
 ```bash
 node add-song.js "https://open.spotify.com/track/TRACK_ID"
 node add-song.js "TRACK_ID"  # Alternativ: Nur die ID
 ```
+Verwendet Spotify-Metadaten ohne Nachfrage (Titel, Artist, Jahr).
+
+**Interaktiver Modus** (mit `--edit`):
+```bash
+node add-song.js --edit "https://open.spotify.com/track/TRACK_ID"
+```
+Zeigt Spotify-Metadaten als Vorauswahl, erlaubt manuelle Anpassungen vor dem Speichern.
+
+**Features:**
+- 🎵 Automatischer Download von Spotify-Metadaten
+- ✏️ Optionale manuelle Bearbeitung mit `--edit`
+- 🔄 Generiert automatisch QR-Codes, SCAD und STL-Dateien
+- 📝 Aktualisiert `songs.json` und `songs.ts`
 
 #### edit-song.js
 Interaktiver Wizard zum Bearbeiten bestehender Songs. Ideal für Korrekturen und Updates.
