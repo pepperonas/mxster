@@ -13,12 +13,15 @@ export function Sidebar() {
   const navigate = useNavigate()
   const location = useLocation()
   const { isSidebarOpen, toggleSidebar, showModal } = useUI()
-  const { players, currentPlayer, gameMode, gameVariant } = useGame()
+  const { players, currentPlayer, gameMode, gameVariant, isGameStarted, endGame, resetGame } = useGame()
   const { isLoggedIn } = useAuth()
   const { history } = useGameHistory()
   const { registerInteraction } = useInteraction()
 
   if (!isSidebarOpen) return null
+
+  // Determine if user is in game (not on landing page)
+  const isInGame = location.pathname !== '/'
 
   // Helper to navigate and close sidebar
   const handleNavigation = (path: string) => {
@@ -30,6 +33,50 @@ export function Sidebar() {
       setTimeout(() => {
         window.scrollTo({ top: 0, behavior: 'smooth' })
       }, 100)
+    }
+  }
+
+  // Helper to navigate to home with game end warning
+  const handleHomeNavigation = () => {
+    // If game is running, show warning
+    if (isGameStarted && players.length > 0) {
+      showModal(
+        '⚠️ Spiel beenden?',
+        <div className="space-y-4">
+          <p className="text-gray-300">
+            Du bist gerade in einem laufenden Spiel. Wenn du zur Startseite zurückkehrst, wird das Spiel beendet.
+          </p>
+          <div className="glass p-4 border border-accent/30 rounded-lg">
+            <p className="text-sm text-text-secondary">
+              <strong className="text-white">Hinweis:</strong> Der aktuelle Spielstand wird nicht gespeichert und alle Daten gehen verloren.
+            </p>
+          </div>
+        </div>,
+        [
+          {
+            label: 'Spiel fortsetzen',
+            variant: 'secondary',
+            onClick: () => {
+              // Just close modal, stay in game
+              console.log('🎮 User chose to continue game')
+            }
+          },
+          {
+            label: 'Spiel beenden & zur Startseite',
+            variant: 'danger',
+            onClick: () => {
+              console.log('🏠 User chose to end game and go home')
+              endGame()
+              resetGame()
+              handleNavigation('/')
+            }
+          }
+        ]
+      )
+      toggleSidebar()
+    } else {
+      // No active game, navigate directly
+      handleNavigation('/')
     }
   }
 
@@ -149,8 +196,12 @@ export function Sidebar() {
                       )}
                     </div>
                     <div className="flex gap-3 mt-2 text-xs text-text-secondary">
-                      <span>🎴 {player.cards} Karten</span>
-                      <span>⭐ {player.score} Punkte</span>
+                      {/* Show points in Guess Mode, cards in Timeline Modes */}
+                      {gameMode === 'guess' ? (
+                        <span>⭐ {player.score} Punkte</span>
+                      ) : (
+                        <span>🎴 {player.cards} Karten</span>
+                      )}
                     </div>
                   </div>
                 ))}
@@ -177,66 +228,77 @@ export function Sidebar() {
             </div>
           )}
 
-          {/* Navigation */}
+          {/* Navigation - Context-aware */}
           <nav className="p-4">
             <h3 className="text-sm font-semibold text-text-secondary mb-2">Navigation</h3>
             <ul className="space-y-1">
-              <li>
-                <button
-                  onClick={() => handleNavigation('/')}
-                  className="w-full text-left px-3 py-2 rounded-lg hover:bg-accent/20 text-gray-300 hover:text-secondary transition-colors border border-transparent hover:border-accent/30"
-                >
-                  🏠 Startseite
-                </button>
-              </li>
-              <li>
-                <button
-                  onClick={() => scrollToSection('game-modes')}
-                  className="w-full text-left px-3 py-2 rounded-lg hover:bg-accent/20 text-gray-300 hover:text-secondary transition-colors border border-transparent hover:border-accent/30"
-                >
-                  🎮 Spielmodi
-                </button>
-              </li>
-              <li>
-                <button
-                  onClick={() => scrollToSection('variants')}
-                  className="w-full text-left px-3 py-2 rounded-lg hover:bg-accent/20 text-gray-300 hover:text-secondary transition-colors border border-transparent hover:border-accent/30"
-                >
-                  🎴 Spielvarianten
-                </button>
-              </li>
+              {/* Help/Instructions - always visible */}
               <li>
                 <button
                   onClick={openHowToPlayModal}
                   className="w-full text-left px-3 py-2 rounded-lg hover:bg-accent/20 text-gray-300 hover:text-secondary transition-colors border border-transparent hover:border-accent/30"
                 >
-                  📖 Anleitung
+                  {isInGame ? '❓ Hilfe' : '📖 Anleitung'}
                 </button>
               </li>
-              <li>
-                <button
-                  onClick={() => scrollToSection('downloads')}
-                  className="w-full text-left px-3 py-2 rounded-lg hover:bg-accent/20 text-gray-300 hover:text-secondary transition-colors border border-transparent hover:border-accent/30"
-                >
-                  📥 Downloads
-                </button>
-              </li>
-              <li>
-                <button
-                  onClick={() => scrollToSection('features')}
-                  className="w-full text-left px-3 py-2 rounded-lg hover:bg-accent/20 text-gray-300 hover:text-secondary transition-colors border border-transparent hover:border-accent/30"
-                >
-                  ✨ Features
-                </button>
-              </li>
-              <li>
-                <button
-                  onClick={() => scrollToSection('support')}
-                  className="w-full text-left px-3 py-2 rounded-lg hover:bg-accent/20 text-gray-300 hover:text-secondary transition-colors border border-transparent hover:border-accent/30"
-                >
-                  💬 Support
-                </button>
-              </li>
+
+              {/* Always show home link when in game */}
+              {isInGame && (
+                <li>
+                  <button
+                    onClick={handleHomeNavigation}
+                    className="w-full text-left px-3 py-2 rounded-lg hover:bg-accent/20 text-gray-300 hover:text-secondary transition-colors border border-transparent hover:border-accent/30"
+                  >
+                    🏠 Startseite
+                  </button>
+                </li>
+              )}
+
+              {/* Landing page navigation - only show on landing page */}
+              {!isInGame && (
+                <>
+                  <li>
+                    <button
+                      onClick={() => scrollToSection('game-modes')}
+                      className="w-full text-left px-3 py-2 rounded-lg hover:bg-accent/20 text-gray-300 hover:text-secondary transition-colors border border-transparent hover:border-accent/30"
+                    >
+                      🎮 Spielmodi
+                    </button>
+                  </li>
+                  <li>
+                    <button
+                      onClick={() => scrollToSection('variants')}
+                      className="w-full text-left px-3 py-2 rounded-lg hover:bg-accent/20 text-gray-300 hover:text-secondary transition-colors border border-transparent hover:border-accent/30"
+                    >
+                      🎴 Spielvarianten
+                    </button>
+                  </li>
+                  <li>
+                    <button
+                      onClick={() => scrollToSection('downloads')}
+                      className="w-full text-left px-3 py-2 rounded-lg hover:bg-accent/20 text-gray-300 hover:text-secondary transition-colors border border-transparent hover:border-accent/30"
+                    >
+                      📥 Downloads
+                    </button>
+                  </li>
+                  <li>
+                    <button
+                      onClick={() => scrollToSection('features')}
+                      className="w-full text-left px-3 py-2 rounded-lg hover:bg-accent/20 text-gray-300 hover:text-secondary transition-colors border border-transparent hover:border-accent/30"
+                    >
+                      ✨ Features
+                    </button>
+                  </li>
+                  <li>
+                    <button
+                      onClick={() => scrollToSection('support')}
+                      className="w-full text-left px-3 py-2 rounded-lg hover:bg-accent/20 text-gray-300 hover:text-secondary transition-colors border border-transparent hover:border-accent/30"
+                    >
+                      💬 Support
+                    </button>
+                  </li>
+                </>
+              )}
             </ul>
           </nav>
         </div>

@@ -5,9 +5,10 @@
 
 import { useUI, useAuth, useGame, useSettings, useInteraction } from '@/contexts'
 import { useGameState } from '@/hooks'
-import { SaveIcon, LogoutIcon, DownloadIcon, HistoryIcon, SettingsIcon } from '@/utils/icons'
+import { SaveIcon, LogoutIcon, DownloadIcon, HistoryIcon, SettingsIcon, ChartIcon } from '@/utils/icons'
 import { GameHistory } from '@/services'
 import { SettingsDialog } from './SettingsDialog'
+import { PlayerStatsDialog } from './PlayerStatsDialog'
 
 export function ActionBar() {
   const { toggleSidebar, showModal } = useUI()
@@ -131,6 +132,21 @@ export function ActionBar() {
             title="Spielhistorie"
           >
             <HistoryIcon size={20} />
+          </button>
+
+          {/* Player Stats */}
+          <button
+            onClick={() => {
+              showModal(
+                '📈 Spielerstatistiken',
+                <PlayerStatsDialog />,
+                [{ label: 'Schließen', variant: 'secondary', onClick: () => {} }]
+              )
+            }}
+            className="p-2 hover:bg-accent/20 rounded-lg transition-colors text-gray-300 hover:text-secondary border border-transparent hover:border-accent/30"
+            title="Spielerstatistiken"
+          >
+            <ChartIcon size={20} />
           </button>
 
           {/* Settings */}

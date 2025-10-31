@@ -360,6 +360,36 @@ export const InfoIcon = ({ size = 20, className = '', color = 'currentColor' }: 
   </svg>
 )
 
+export const ChartIcon = ({ size = 20, className = '', color = 'currentColor' }: IconProps) => (
+  <svg
+    width={size}
+    height={size}
+    viewBox="0 0 24 24"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    className={className}
+  >
+    <path
+      d="M3 3V21H21"
+      stroke={color}
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+    <path
+      d="M18 9L13 14L9 10L3 16"
+      stroke={color}
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+    <circle cx="18" cy="9" r="2" fill={color} />
+    <circle cx="13" cy="14" r="2" fill={color} />
+    <circle cx="9" cy="10" r="2" fill={color} />
+    <circle cx="3" cy="16" r="2" fill={color} />
+  </svg>
+)
+
 // Export icon map for backwards compatibility (if needed)
 export const iconComponents = {
   save: SaveIcon,
@@ -374,7 +404,8 @@ export const iconComponents = {
   check: CheckIcon,
   plus: PlusIcon,
   camera: CameraIcon,
-  info: InfoIcon
+  info: InfoIcon,
+  chart: ChartIcon
 }
 
 // Helper to get icon component by name

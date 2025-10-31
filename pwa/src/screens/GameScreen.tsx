@@ -16,6 +16,7 @@ import {
   ScoreOverview,
   MusicPlayer
 } from '@/components/game'
+import { GameEndStatsDialog } from '@/components'
 import { SpotifyPlayerService } from '@/services/SpotifyPlayerService'
 import {
   validateGuess,
@@ -49,11 +50,15 @@ export function GameScreen() {
     currentSong,
     playedSongs,
     globalTimeline,
+    currentSongSkips,
     updatePlayer,
     setCurrentSong,
     addToGlobalTimeline,
     addToPlayedSongs: contextAddToPlayedSongs,
+    incrementSkipCount,
+    resetSkipCounts,
     nextTurn,
+    nextPlayerOnly,
     resetGame
   } = useGame()
   const { showModal, closeModal, addToast } = useUI()
@@ -184,36 +189,154 @@ export function GameScreen() {
   }
 
   // ============================================================================
-  // Skip Guess
+  // Skip Guess (with Progressive Penalty Logic)
   // ============================================================================
 
   const handleSkip = () => {
     if (!currentSong) return
 
-    // Show song reveal modal (no points for skipping)
-    showModal(
-      'Song enthüllt',
-      <div className="text-center py-4">
-        <p className="text-2xl font-bold mb-2">{currentSong.title}</p>
-        <p className="text-lg text-text-secondary mb-4">von {currentSong.artist}</p>
-        <div className="inline-block px-6 py-3 glass border-2 border-accent/30 rounded-lg text-3xl font-bold">
-          {currentSong.year}
-        </div>
-      </div>,
-      [
-        {
-          label: gameMode === 'guess' ? 'Weiter' : 'Karte platzieren',
-          variant: 'primary',
-          onClick: () => {
-            if (gameMode === 'guess') {
-              placeCardAndContinue()
-            } else {
-              showManualPlacementModal()
+    const player = players[currentPlayer]
+
+    // Increment skip count for current player
+    incrementSkipCount(currentPlayer)
+
+    // Get updated skip counts (including the just incremented one)
+    const updatedSkipCounts = { ...currentSongSkips, [currentPlayer]: (currentSongSkips[currentPlayer] || 0) + 1 }
+
+    // Check if penalty system should apply (Guess Mode only)
+    let penaltyTriggered = false
+    let penaltyApplied = false
+    let newScore = player.score
+
+    if (gameMode === 'guess') {
+      // Count how many players have skipped this song
+      const playersWhoSkipped = Object.keys(updatedSkipCounts).length
+      const totalSkips = Object.values(updatedSkipCounts).reduce((sum, count) => sum + count, 0)
+
+      console.log('⏭️ Skip Stats:', {
+        player: player.name,
+        playersWhoSkipped,
+        totalPlayers: players.length,
+        totalSkips,
+        skipCounts: updatedSkipCounts
+      })
+
+      // Penalty applies only if ALL players have skipped at least once
+      if (playersWhoSkipped >= players.length) {
+        // Calculate penalty probability (increases with each skip after everyone has skipped once)
+        // Formula: (totalSkips - playerCount) * 0.33 = 33% per additional skip
+        const additionalSkips = totalSkips - players.length
+        const penaltyProbability = Math.min(additionalSkips * 0.33, 0.95) // Max 95% probability
+
+        console.log('💀 Penalty Check:', {
+          additionalSkips,
+          penaltyProbability: `${(penaltyProbability * 100).toFixed(0)}%`
+        })
+
+        // Roll the dice
+        if (Math.random() < penaltyProbability) {
+          penaltyTriggered = true
+          // Apply penalty (-3 points, can go negative!)
+          newScore = player.score - 3
+          penaltyApplied = true
+
+          console.log('💀 PENALTY APPLIED!', {
+            oldScore: player.score,
+            newScore,
+            pointsDeducted: 3
+          })
+        } else {
+          console.log('✅ Penalty dodged!')
+        }
+      }
+    }
+
+    // If penalty was applied, draw a new song immediately
+    if (penaltyApplied) {
+      // Update player score
+      updatePlayer(currentPlayer, { score: newScore })
+
+      // Show penalty modal
+      showModal(
+        '💀 Zu oft übersprungen!',
+        <div className="text-center py-6">
+          <div className="text-6xl mb-4">⚠️</div>
+          <div className="text-2xl font-bold mb-4 text-red-500">-3 Punkte Strafe!</div>
+          <p className="text-lg text-text-secondary mb-6">
+            Dieser Song wurde von allen Spielern bereits mehrfach übersprungen.
+          </p>
+          <div className="p-6 bg-red-900/30 border-2 border-red-500/50 rounded-xl mb-6">
+            <div className="text-sm text-text-secondary mb-2">Neuer Punktestand</div>
+            <div className="text-4xl font-bold">{newScore} Punkte</div>
+          </div>
+          <div className="p-4 glass border border-accent/30 rounded-lg text-sm text-text-secondary">
+            <p>🎲 Ein neuer Song wird automatisch gezogen.</p>
+          </div>
+        </div>,
+        [
+          {
+            label: 'Neuen Song ziehen',
+            variant: 'primary',
+            onClick: () => {
+              // Reset skip counts for new song
+              resetSkipCounts()
+
+              // Draw new song
+              const newSong = selectRandomSong(songs, playedSongs)
+              if (newSong) {
+                const newPlayedSongs = addToPlayedSongs(playedSongs, newSong)
+                contextAddToPlayedSongs(newSong.spotifyId || newSong.id)
+                setCurrentSong(newSong)
+              }
+
+              // Next player
+              nextTurn()
             }
           }
-        }
-      ]
-    )
+        ]
+      )
+    } else {
+      // No penalty - next player tries the same song
+      console.log('⏭️ Skip confirmed - next player gets the same song')
+
+      // Show warning dialog if all players have skipped at least once
+      if (gameMode === 'guess' && Object.keys(updatedSkipCounts).length >= players.length) {
+        const totalSkips = Object.values(updatedSkipCounts).reduce((sum, count) => sum + count, 0)
+        const additionalSkips = totalSkips - players.length
+        const nextPenaltyProbability = Math.min((additionalSkips + 1) * 0.33, 0.95)
+
+        showModal(
+          '⚠️ Gefährliche Zone!',
+          <div className="text-center py-6">
+            <div className="text-6xl mb-4">🎲</div>
+            <div className="text-xl font-bold mb-4 text-yellow-400">
+              Alle Spieler haben diesen Song bereits übersprungen!
+            </div>
+            <p className="text-lg text-text-secondary mb-6">
+              Der nächste Skip hat eine <span className="text-yellow-400 font-bold">{(nextPenaltyProbability * 100).toFixed(0)}% Chance</span> auf eine <span className="text-red-500 font-bold">-3 Punkte Strafe</span>!
+            </p>
+            <div className="p-4 glass border-2 border-yellow-500/50 rounded-lg text-sm">
+              <p className="text-text-secondary">
+                💡 Tipp: Versuche es zu raten, anstatt zu überspringen!
+              </p>
+            </div>
+          </div>,
+          [
+            {
+              label: 'Verstanden',
+              variant: 'primary',
+              onClick: () => {
+                // Switch to next player but KEEP the song!
+                nextPlayerOnly()
+              }
+            }
+          ]
+        )
+      } else {
+        // No warning needed - just switch player
+        nextPlayerOnly()
+      }
+    }
   }
 
   // ============================================================================
@@ -308,8 +431,11 @@ export function GameScreen() {
     const player = players[currentPlayer]
     console.log('🔥 Current player:', player.name, 'Current score:', player.score)
 
-    // Add card to timeline (chronologically sorted)
-    const newTimeline = placeCardInTimeline(player.timeline, currentSong)
+    // Get points for this song (Guess Mode only)
+    const points = gameMode === 'guess' && guessResult ? guessResult.correctCount : undefined
+
+    // Add card to timeline (chronologically sorted) with points
+    const newTimeline = placeCardInTimeline(player.timeline, currentSong, points)
 
     // Calculate new score (only in Guess Mode)
     let newScore = player.score
@@ -455,7 +581,8 @@ export function GameScreen() {
           )}
         </div>
       </div>,
-      [] // No default buttons - handled by placement buttons
+      [], // No default buttons - handled by placement buttons
+      { required: true } // Dialog can't be closed - user must select a position
     )
   }
 
@@ -615,55 +742,26 @@ export function GameScreen() {
     try {
       GameHistory.saveGame(winner, players, gameMode)
       console.log('✅ Game saved to history')
-      addToast('Spiel wurde gespeichert!', 'success')
+      addToast('Spiel wurde zur Historie hinzugefügt!', 'success')
     } catch (error) {
       console.error('❌ Failed to save game:', error)
     }
 
+    // Show GameEndStatsDialog with confetti and statistics
     showModal(
-      '🏆 Gewinner!',
-      <div className="text-center py-6">
-        <div className="text-6xl mb-4">🎉</div>
-        <p className="text-3xl font-bold mb-2">{winner.name}</p>
-        <p className="text-xl text-text-secondary mb-6">{message}</p>
-
-        {gameMode === 'guess' && (
-          <div className="p-6 bg-gradient-to-r from-secondary to-accent rounded-xl">
-            <p className="text-2xl font-bold">{winner.score} Punkte</p>
-            <p className="text-sm text-white/80 mt-1">{winner.cards}/10 Karten</p>
-          </div>
-        )}
-
-        {gameMode !== 'guess' && (
-          <div className="p-6 bg-secondary rounded-xl">
-            <p className="text-2xl font-bold">{winner.cards}/10 Karten</p>
-          </div>
-        )}
-
-        {/* History Info */}
-        <div className="mt-6 p-4 glass border border-accent/30 rounded-lg text-sm text-text-secondary">
-          📊 Spiel wurde zur Historie hinzugefügt
-        </div>
-      </div>,
-      [
-        {
-          label: 'Neues Spiel',
-          variant: 'primary',
-          onClick: () => {
-            console.log('🔄 Resetting game state...')
-            resetGame()
-            navigate('/mode-selection')
-          }
-        },
-        {
-          label: 'Zurück zum Start',
-          variant: 'secondary',
-          onClick: () => {
-            resetGame()
-            navigate('/')
-          }
-        }
-      ]
+      '🏆 Spiel beendet!',
+      <GameEndStatsDialog
+        winner={winner}
+        allPlayers={players}
+        gameMode={gameMode}
+        onClose={() => {
+          console.log('🔄 Resetting game state...')
+          resetGame()
+          navigate('/mode-selection')
+        }}
+      />,
+      [], // No default buttons - GameEndStatsDialog has its own close button
+      { required: true } // Modal can't be closed with backdrop - must use button
     )
   }
 
@@ -702,23 +800,6 @@ export function GameScreen() {
             {currentSong && gameMode === 'guess' && (
               <div>
                 <GuessForm onSubmit={handleGuessSubmit} onSkip={handleSkip} />
-              </div>
-            )}
-
-            {/* Instructions when no song (only in Guess Mode) */}
-            {!currentSong && gameMode === 'guess' && (
-              <div className="bg-primary/80 backdrop-blur-sm rounded-2xl p-8 border-2 border-border text-center">
-                <div className="text-5xl mb-4">👇</div>
-                <h3 className="text-xl font-bold text-white mb-2">
-                  {gameVariant === 'physical'
-                    ? 'Scanne eine Karte'
-                    : 'Ziehe einen zufälligen Song'}
-                </h3>
-                <p className="text-text-secondary">
-                  {gameVariant === 'physical'
-                    ? 'Aktiviere die Kamera und scanne den QR-Code'
-                    : 'Klicke auf den Button, um einen Song zu ziehen'}
-                </p>
               </div>
             )}
           </div>
