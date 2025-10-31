@@ -22,9 +22,6 @@
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import jsQR from 'jsqr';
-import { PNG } from 'pngjs';
-import sharp from 'sharp';
 import { exec } from 'child_process';
 import { promisify } from 'util';
 
@@ -32,6 +29,16 @@ import { promisify } from 'util';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const execAsync = promisify(exec);
+
+// Dynamic imports for optional dependencies (loaded on-demand)
+let jsQR, PNG, sharp;
+try {
+  jsQR = (await import('jsqr')).default;
+  PNG = (await import('pngjs')).PNG;
+  sharp = (await import('sharp')).default;
+} catch (error) {
+  // Optional dependencies not available - advanced tests will be skipped
+}
 
 // Colors for terminal output
 const colors = {
@@ -307,7 +314,10 @@ if (fs.existsSync(modelsDir) && fs.existsSync(qrCodesDir)) {
  */
 console.log(`\n${colors.cyan}[Test 11] QR Code Decoding Test (advanced)...${colors.reset}`);
 
-if (fs.existsSync(qrCodesDir)) {
+if (!jsQR || !PNG) {
+  logWarning('jsQR or pngjs not available - skipping QR decode test');
+  logInfo('Install with: npm install jsqr pngjs');
+} else if (fs.existsSync(qrCodesDir)) {
   logInfo('Testing QR code decoding on sample files...');
 
   // Test first 5 QR codes as sample
@@ -456,7 +466,10 @@ if (fs.existsSync(spotifyConfigPath)) {
  */
 console.log(`\n${colors.cyan}[Test 13] Image Dimensions Check (advanced)...${colors.reset}`);
 
-if (fs.existsSync(qrCodesDir)) {
+if (!sharp) {
+  logWarning('sharp not available - skipping dimensions check');
+  logInfo('Install with: npm install sharp');
+} else if (fs.existsSync(qrCodesDir)) {
   logInfo('Checking QR code image dimensions (sample of 5)...');
 
   const sampleSongs = songs.slice(0, 5);
