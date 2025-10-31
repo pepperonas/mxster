@@ -161,7 +161,7 @@ if (failedTests === passedTests) {
  * Test 6: Check 3D model files existence
  */
 console.log(`\n${colors.cyan}[Test 6] Checking 3D model files...${colors.reset}`);
-const modelsDir = path.join(__dirname, 'card-generator/models');
+const modelsDir = path.join(__dirname, 'card-generator/output/models');
 let missingScad = 0;
 let missingStl = 0;
 
@@ -222,13 +222,13 @@ if (missingPngs === 0) {
  * Test 8: Check all-cards.3mf exists (optional - distributed via GitHub Releases)
  */
 console.log(`\n${colors.cyan}[Test 8] Checking combined 3MF file...${colors.reset}`);
-const all3mfPath = path.join(__dirname, 'card-generator/models/all-cards.3mf');
+const all3mfPath = path.join(__dirname, 'card-generator/output/models/all-cards.3mf');
 if (fs.existsSync(all3mfPath)) {
   const stats = fs.statSync(all3mfPath);
   logSuccess(`all-cards.3mf exists (${(stats.size / 1024 / 1024).toFixed(2)} MB)`);
 } else {
   logWarning('all-cards.3mf not found (optional - create manually in slicer software for releases)');
-  logInfo('Individual STL files available in card-generator/models/');
+  logInfo('Individual STL files available in card-generator/output/models/');
 }
 
 /**

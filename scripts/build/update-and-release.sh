@@ -104,7 +104,7 @@ echo -e "${CYAN}╚════════════════════�
 echo ""
 
 echo -e "${CYAN}📦 Staging changes...${RESET}"
-git add docs/ pwa/src/data/ card-generator/models/ pwa/mxster-cards*.pdf README.md
+git add docs/ pwa/src/data/ card-generator/output/models/ card-generator/output/pdfs/ README.md
 
 echo -e "${CYAN}💾 Creating commit...${RESET}"
 git commit -m "$COMMIT_MSG
@@ -125,20 +125,23 @@ echo -e "${CYAN}║  Step 3: ZIP-Archive erstellen            ║${RESET}"
 echo -e "${CYAN}╚════════════════════════════════════════════╝${RESET}"
 echo ""
 
+# Ensure build/archives directory exists
+mkdir -p build/archives
+
 echo -e "${CYAN}🗑️  Removing old ZIPs...${RESET}"
-rm -f mxster-*.zip
+rm -f build/archives/mxster-*.zip
 
 echo -e "${CYAN}📦 Creating SCAD models ZIP...${RESET}"
-zip -r mxster-scad-models.zip card-generator/models/*.scad -q
-echo -e "${GREEN}   ✅ mxster-scad-models.zip ($(ls -lh mxster-scad-models.zip | awk '{print $5}'))${RESET}"
+zip -r build/archives/mxster-scad-models.zip card-generator/output/models/*.scad -q
+echo -e "${GREEN}   ✅ mxster-scad-models.zip ($(ls -lh build/archives/mxster-scad-models.zip | awk '{print $5}'))${RESET}"
 
 echo -e "${CYAN}📦 Creating STL models ZIP...${RESET}"
-zip -r mxster-stl-models.zip card-generator/models/*.stl -q
-echo -e "${GREEN}   ✅ mxster-stl-models.zip ($(ls -lh mxster-stl-models.zip | awk '{print $5}'))${RESET}"
+zip -r build/archives/mxster-stl-models.zip card-generator/output/models/*.stl -q
+echo -e "${GREEN}   ✅ mxster-stl-models.zip ($(ls -lh build/archives/mxster-stl-models.zip | awk '{print $5}'))${RESET}"
 
 echo -e "${CYAN}📦 Creating source code ZIP...${RESET}"
-git archive --format=zip --prefix=mxster/ -o mxster-source.zip HEAD
-echo -e "${GREEN}   ✅ mxster-source.zip ($(ls -lh mxster-source.zip | awk '{print $5}'))${RESET}"
+git archive --format=zip --prefix=mxster/ -o build/archives/mxster-source.zip HEAD
+echo -e "${GREEN}   ✅ mxster-source.zip ($(ls -lh build/archives/mxster-source.zip | awk '{print $5}'))${RESET}"
 
 echo ""
 
@@ -150,14 +153,14 @@ echo ""
 
 echo -e "${CYAN}📤 Uploading assets to 'latest' release...${RESET}"
 gh release upload latest \
-  mxster-scad-models.zip \
-  mxster-stl-models.zip \
-  mxster-source.zip \
-  pwa/mxster-cards.pdf \
-  pwa/mxster-cards-bw.pdf \
-  pwa/mxster-cards-duplex.pdf \
-  pwa/mxster-cards-bw-duplex.pdf \
-  card-generator/models/all-cards.3mf \
+  build/archives/mxster-scad-models.zip \
+  build/archives/mxster-stl-models.zip \
+  build/archives/mxster-source.zip \
+  card-generator/output/pdfs/mxster-cards.pdf \
+  card-generator/output/pdfs/mxster-cards-bw.pdf \
+  card-generator/output/pdfs/mxster-cards-duplex.pdf \
+  card-generator/output/pdfs/mxster-cards-bw-duplex.pdf \
+  card-generator/output/models/all-cards.3mf \
   --clobber
 
 echo -e "${GREEN}✅ All assets uploaded${RESET}"
@@ -177,18 +180,18 @@ Current version: **v${CURRENT_VERSION}**
 ### Downloads
 
 **3D Models (${SONG_COUNT} cards):**
-- **all-cards.3mf**: All cards combined for 3D printing ($(ls -lh card-generator/models/all-cards.3mf | awk '{print $5}'))
-- **mxster-scad-models.zip**: OpenSCAD source files ($(ls -lh mxster-scad-models.zip | awk '{print $5}'))
-- **mxster-stl-models.zip**: Ready-to-print STL files ($(ls -lh mxster-stl-models.zip | awk '{print $5}'))
+- **all-cards.3mf**: All cards combined for 3D printing ($(ls -lh card-generator/output/models/all-cards.3mf | awk '{print $5}'))
+- **mxster-scad-models.zip**: OpenSCAD source files ($(ls -lh build/archives/mxster-scad-models.zip | awk '{print $5}'))
+- **mxster-stl-models.zip**: Ready-to-print STL files ($(ls -lh build/archives/mxster-stl-models.zip | awk '{print $5}'))
 
 **Printable Cards (PDF):**
-- **mxster-cards.pdf**: Color cards, single-sided ($(ls -lh pwa/mxster-cards.pdf | awk '{print $5}'))
-- **mxster-cards-bw.pdf**: Black & white cards, single-sided ($(ls -lh pwa/mxster-cards-bw.pdf | awk '{print $5}'))
-- **mxster-cards-duplex.pdf**: Color cards, double-sided for duplex printing ($(ls -lh pwa/mxster-cards-duplex.pdf | awk '{print $5}'))
-- **mxster-cards-bw-duplex.pdf**: Black & white cards, double-sided ($(ls -lh pwa/mxster-cards-bw-duplex.pdf | awk '{print $5}'))
+- **mxster-cards.pdf**: Color cards, single-sided ($(ls -lh card-generator/output/pdfs/mxster-cards.pdf | awk '{print $5}'))
+- **mxster-cards-bw.pdf**: Black & white cards, single-sided ($(ls -lh card-generator/output/pdfs/mxster-cards-bw.pdf | awk '{print $5}'))
+- **mxster-cards-duplex.pdf**: Color cards, double-sided for duplex printing ($(ls -lh card-generator/output/pdfs/mxster-cards-duplex.pdf | awk '{print $5}'))
+- **mxster-cards-bw-duplex.pdf**: Black & white cards, double-sided ($(ls -lh card-generator/output/pdfs/mxster-cards-bw-duplex.pdf | awk '{print $5}'))
 
 **Source Code:**
-- **mxster-source.zip**: Complete mxster game source code ($(ls -lh mxster-source.zip | awk '{print $5}'))
+- **mxster-source.zip**: Complete mxster game source code ($(ls -lh build/archives/mxster-source.zip | awk '{print $5}'))
 
 ### Card Layout
 - 6 cards per page (A4 landscape, 3x2 grid)
@@ -203,10 +206,8 @@ For specific versions, see: https://github.com/pepperonas/mxster/releases
 echo -e "${GREEN}✅ Release notes updated${RESET}"
 echo ""
 
-# Optional: Cleanup temp ZIPs
-echo -e "${CYAN}🧹 Cleaning up temporary files...${RESET}"
-rm -f mxster-*.zip
-echo -e "${GREEN}✅ Temporary ZIPs removed${RESET}"
+# Optional: Keep ZIPs in build/archives (no cleanup needed)
+echo -e "${GREEN}✅ Archives saved in build/archives/${RESET}"
 echo ""
 
 # Fertig!

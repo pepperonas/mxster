@@ -213,7 +213,7 @@ async function generateCardsPDF() {
   });
 
   // Create output stream
-  let outputPath = BLACK_AND_WHITE ? './mxster-cards-bw.pdf' : './mxster-cards.pdf';
+  let outputPath = BLACK_AND_WHITE ? '../card-generator/output/pdfs/mxster-cards-bw.pdf' : '../card-generator/output/pdfs/mxster-cards.pdf';
   if (DUPLEX_MODE) {
     outputPath = outputPath.replace('.pdf', '-duplex.pdf');
   }

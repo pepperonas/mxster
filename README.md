@@ -392,7 +392,7 @@ Das Spiel speichert den Spielstand **automatisch**:
 - [All-Cards (3MF)](https://github.com/pepperonas/mxster/releases/download/v0.0.1-beta/all-cards.3mf) - Alle Karten in einer Datei
 - [STL Modelle (ZIP)](https://github.com/pepperonas/mxster/releases/download/v0.0.1-beta/mxster-stl-models.zip)
 - [SCAD Modelle (ZIP)](https://github.com/pepperonas/mxster/releases/download/v0.0.1-beta/mxster-scad-models.zip)
-- [Einzelne Modelle](https://github.com/pepperonas/mxster/tree/main/card-generator/models) - Direkt auf GitHub
+- [Einzelne Modelle](https://github.com/pepperonas/mxster/tree/main/card-generator/output/models) - Direkt auf GitHub
 
 ---
 
@@ -406,14 +406,14 @@ Schnell, einfach und kein 3D-Drucker nötig!
 
 ```bash
 # Generiert alle 4 Varianten automatisch
-./generate-all-pdfs.sh
+./scripts/build/generate-all-pdfs.sh
 ```
 
 Erstellt:
-- `mxster-cards.pdf` - Standard (farbig, nebeneinander)
-- `mxster-cards-bw.pdf` - Schwarz-Weiß (nebeneinander)
-- `mxster-cards-duplex.pdf` - Duplex (farbig, getrennte Seiten)
-- `mxster-cards-bw-duplex.pdf` - Duplex (Schwarz-Weiß, getrennte Seiten)
+- `card-generator/output/pdfs/mxster-cards.pdf` - Standard (farbig, nebeneinander)
+- `card-generator/output/pdfs/mxster-cards-bw.pdf` - Schwarz-Weiß (nebeneinander)
+- `card-generator/output/pdfs/mxster-cards-duplex.pdf` - Duplex (farbig, getrennte Seiten)
+- `card-generator/output/pdfs/mxster-cards-bw-duplex.pdf` - Duplex (Schwarz-Weiß, getrennte Seiten)
 
 #### Einzelne Variante generieren
 
@@ -538,7 +538,7 @@ https://open.spotify.com/track/{spotifyId}
 
 **Ausgabe:**
 - **Dateiname**: `mxster-cards.pdf` (oder `*-bw.pdf`, `*-duplex.pdf`)
-- **Speicherort**: `pwa/` Verzeichnis
+- **Speicherort**: `card-generator/output/pdfs/` Verzeichnis
 - **Dateigröße**: ~50-100 KB pro Karte (abhängig von QR-Code Komplexität)
 
 #### Anpassungen
@@ -599,7 +599,7 @@ node add-song.js "https://open.spotify.com/track/TRACK_ID" --generate-3d
 
 ```bash
 # Im Hauptverzeichnis
-node add-song.js "https://open.spotify.com/track/DEINE_TRACK_ID"
+node scripts/song-management/add-song.js "https://open.spotify.com/track/DEINE_TRACK_ID"
 ```
 
 **Was passiert automatisch:**
@@ -615,7 +615,7 @@ Du hast einen Tippfehler oder möchtest Metadaten korrigieren? Nutze den Song-Ed
 
 ```bash
 # Im Hauptverzeichnis
-node edit-song.js
+node scripts/song-management/edit-song.js
 ```
 
 **Der Wizard führt dich durch:**
@@ -701,7 +701,7 @@ Du möchtest einen Song komplett durch einen anderen ersetzen? Nutze den Song-Ex
 
 ```bash
 # Im Hauptverzeichnis
-node exchange-song.js
+node scripts/song-management/exchange-song.js
 ```
 
 **Der Wizard führt dich durch:**
@@ -1025,26 +1025,45 @@ http://localhost:5174/callback
 
 ```
 mxster/
-├── pwa/                    # Progressive Web App (Vite + Vanilla JS)
+├── docs/                              # Source of Truth
+│   ├── songs.json                     # Primary song database
+│   ├── song_template.json
+│   ├── songs_removed.json
+│   └── *.png                          # QR code PNGs (in Git for docs)
+├── card-generator/                    # Card generation tools
+│   ├── *.js                          # Generation scripts
+│   ├── template.scad
+│   └── output/                       # All generated files
+│       ├── qr-codes/                 # Generated QR codes
+│       ├── models/                   # SCAD, STL, 3MF files
+│       └── pdfs/                     # Generated PDF cards
+├── build/                             # Release artifacts
+│   └── archives/                     # ZIP archives for releases
+│       ├── mxster-scad-models.zip
+│       ├── mxster-stl-models.zip
+│       └── mxster-source.zip
+├── pwa/                               # Progressive Web App (React + Vite)
 │   ├── src/
-│   │   ├── main.js        # Hauptspiel-Logik
-│   │   ├── components/    # Landing Page, UI-Komponenten
-│   │   ├── utils/         # Spotify Auth, Game State, etc.
-│   │   └── styles/        # Tailwind CSS
-│   ├── generate-cards.js  # PDF-Karten Generator (einzelne Variante)
+│   │   ├── main.tsx                  # App entry point
+│   │   ├── components/               # React components
+│   │   ├── utils/                    # Spotify Auth, Game State, etc.
+│   │   ├── data/songs.ts             # Generated song data
+│   │   └── styles/                   # Tailwind CSS
+│   ├── public/
 │   └── package.json
-├── card-generator/         # 3D-Karten Generator (Node.js)
-│   ├── generateCard.js    # Hauptskript (QR + SCAD)
-│   ├── qrToScad.js       # QR → OpenSCAD Konverter
-│   └── models/           # Generierte STL/SCAD (nicht in Git)
-├── docs/
-│   ├── songs.json        # Zentrale Song-Datenbank (Source of Truth)
-│   └── *.png             # QR-Code Bilder
-├── add-song.js           # CLI Tool: Song hinzufügen
-├── edit-song.js          # CLI Tool: Song bearbeiten (interaktiv)
-├── generate-all-pdfs.sh  # Generiert alle 4 PDF-Varianten
-├── deploy.sh             # Deployment-Script
-└── README.md             # Diese Datei
+└── scripts/                           # Organized utility scripts
+    ├── song-management/
+    │   ├── add-song.js               # CLI: Add new song
+    │   ├── edit-song.js              # CLI: Edit existing song
+    │   ├── exchange-song.js          # CLI: Replace song
+    │   └── update-song-count.js      # CLI: Update README
+    ├── build/
+    │   ├── generate-all-pdfs.sh      # Generate all PDF variants
+    │   └── update-and-release.sh     # Build and release workflow
+    ├── deployment/
+    │   └── deploy.sh                 # Deploy PWA to production
+    └── setup/
+        └── install_dependencies.sh    # Install dependencies
 ```
 
 ### Wichtige Skripte
@@ -1059,18 +1078,18 @@ npm run build           # Production Build
 npm run preview         # Build testen
 
 # Songs verwalten
-node add-song.js "SPOTIFY_URL"                    # Song hinzufügen
-node edit-song.js                                 # Song bearbeiten (Metadaten)
-node exchange-song.js                             # Song austauschen (komplett)
-npm run import-spotify                             # Aus Playlist
-npm run update-previews                            # Preview URLs updaten
-npm run filter-songs                               # Ungültige Songs entfernen
+node scripts/song-management/add-song.js "SPOTIFY_URL"     # Song hinzufügen
+node scripts/song-management/edit-song.js                  # Song bearbeiten (Metadaten)
+node scripts/song-management/exchange-song.js              # Song austauschen (komplett)
+npm run import-spotify                                      # Aus Playlist
+npm run update-previews                                     # Preview URLs updaten
+npm run filter-songs                                        # Ungültige Songs entfernen
 
 # Karten generieren
-./generate-all-pdfs.sh               # Alle 4 PDF-Varianten
-node generate-cards.js                # PDF Standard
-node generate-cards.js --bw          # PDF Schwarz-Weiß
-node generate-cards.js --duplex      # PDF Duplex
+./scripts/build/generate-all-pdfs.sh     # Alle 4 PDF-Varianten
+node pwa/generate-cards.js                # PDF Standard
+node pwa/generate-cards.js --bw          # PDF Schwarz-Weiß
+node pwa/generate-cards.js --duplex      # PDF Duplex
 
 # Release erstellen (automatisch via GitHub Actions)
 git tag v1.0.0                       # Tag erstellen
@@ -1086,16 +1105,16 @@ Releases werden **manuell** mit GitHub CLI erstellt:
 
 ```bash
 # 1. Assets lokal generieren
-./generate-all-pdfs.sh
+./scripts/build/generate-all-pdfs.sh
 
-cd card-generator/models
-zip -r ../../mxster-stl-models.zip *.stl
-zip -r ../../mxster-scad-models.zip *.scad
-cd ../..
+cd card-generator/output/models
+zip -r ../../../build/archives/mxster-stl-models.zip *.stl
+zip -r ../../../build/archives/mxster-scad-models.zip *.scad
+cd ../../..
 
 # 2. all-cards.3mf in PrusaSlicer erstellen (manuell)
 # 3. all-cards.3mf zu Git hinzufügen
-git add card-generator/models/all-cards.3mf
+git add card-generator/output/models/all-cards.3mf
 git commit -m "Update all-cards.3mf"
 git push
 
@@ -1106,9 +1125,9 @@ gh auth login
 gh release create v0.0.X-beta \
   --title "Release v0.0.X-beta" \
   --prerelease \
-  pwa/mxster-cards*.pdf \
-  mxster-*.zip \
-  card-generator/models/all-cards.3mf
+  card-generator/output/pdfs/mxster-cards*.pdf \
+  build/archives/mxster-*.zip \
+  card-generator/output/models/all-cards.3mf
 
 # 6. WICHTIG: Download-Links aktualisieren!
 # Ersetze in folgenden Dateien "v0.0.X-beta" mit der neuen Version:
@@ -1130,13 +1149,13 @@ Nach dem Erstellen eines neuen Release **MÜSSEN** die Download-Links aktualisie
 - Daher: Immer spezifisches Tag verwenden (`/download/v0.0.X-beta/`)
 
 **Was wird hochgeladen:**
-- ✅ mxster-cards.pdf (Standard, farbig)
-- ✅ mxster-cards-bw.pdf (Schwarz-Weiß)
-- ✅ mxster-cards-duplex.pdf (Duplex, farbig)
-- ✅ mxster-cards-bw-duplex.pdf (Duplex, Schwarz-Weiß)
-- ✅ mxster-stl-models.zip (alle STL Dateien)
-- ✅ mxster-scad-models.zip (alle SCAD Dateien)
-- ✅ all-cards.3mf (alle Karten für 3D-Drucker)
+- ✅ mxster-cards.pdf (Standard, farbig) - aus `card-generator/output/pdfs/`
+- ✅ mxster-cards-bw.pdf (Schwarz-Weiß) - aus `card-generator/output/pdfs/`
+- ✅ mxster-cards-duplex.pdf (Duplex, farbig) - aus `card-generator/output/pdfs/`
+- ✅ mxster-cards-bw-duplex.pdf (Duplex, Schwarz-Weiß) - aus `card-generator/output/pdfs/`
+- ✅ mxster-stl-models.zip (alle STL Dateien) - aus `build/archives/`
+- ✅ mxster-scad-models.zip (alle SCAD Dateien) - aus `build/archives/`
+- ✅ all-cards.3mf (alle Karten für 3D-Drucker) - aus `card-generator/output/models/`
 
 ### CLI Tools
 
@@ -1147,14 +1166,14 @@ Fügt neue Songs zur Datenbank hinzu. Lädt Metadaten automatisch von Spotify.
 
 **Automatischer Modus** (Standard):
 ```bash
-node add-song.js "https://open.spotify.com/track/TRACK_ID"
-node add-song.js "TRACK_ID"  # Alternativ: Nur die ID
+node scripts/song-management/add-song.js "https://open.spotify.com/track/TRACK_ID"
+node scripts/song-management/add-song.js "TRACK_ID"  # Alternativ: Nur die ID
 ```
 Verwendet Spotify-Metadaten ohne Nachfrage (Titel, Artist, Jahr).
 
 **Interaktiver Modus** (mit `--edit`):
 ```bash
-node add-song.js --edit "https://open.spotify.com/track/TRACK_ID"
+node scripts/song-management/add-song.js --edit "https://open.spotify.com/track/TRACK_ID"
 ```
 Zeigt Spotify-Metadaten als Vorauswahl, erlaubt manuelle Anpassungen vor dem Speichern.
 
@@ -1179,7 +1198,7 @@ Interaktiver Wizard zum Bearbeiten bestehender Songs. Ideal für Korrekturen und
 
 **Verwendung:**
 ```bash
-node edit-song.js
+node scripts/song-management/edit-song.js
 # Folge den Anweisungen im Wizard
 ```
 

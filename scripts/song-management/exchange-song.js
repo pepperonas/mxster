@@ -339,11 +339,11 @@ async function main() {
     log('  • docs/songs.json', 'cyan');
     log('  • pwa/src/data/songs.ts', 'cyan');
     log(`  • docs/${songId}_*.png`, 'cyan');
-    log(`  • card-generator/qr-codes/${songId}_*.png`, 'cyan');
-    log(`  • card-generator/models/${songId}_*.scad`, 'cyan');
-    log(`  • card-generator/models/${songId}_*.stl`, 'cyan');
+    log(`  • card-generator/output/qr-codes/${songId}_*.png`, 'cyan');
+    log(`  • card-generator/output/models/${songId}_*.scad`, 'cyan');
+    log(`  • card-generator/output/models/${songId}_*.stl`, 'cyan');
     if (generatePDF.toLowerCase() === 'j' || generatePDF.toLowerCase() === 'ja') {
-      log(`  • pwa/mxster-cards-*.pdf`, 'cyan');
+      log(`  • card-generator/output/pdfs/mxster-cards-*.pdf`, 'cyan');
     }
 
     log('\n📊 Song-Details:', 'cyan');

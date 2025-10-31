@@ -308,11 +308,11 @@ async function main() {
     log('  • docs/songs.json', 'cyan');
     log('  • pwa/src/data/songs.ts', 'cyan');
     log(`  • docs/${updatedSong.id}_*.png`, 'cyan');
-    log(`  • card-generator/qr-codes/${updatedSong.id}_*.png`, 'cyan');
-    log(`  • card-generator/models/${updatedSong.id}_*.scad`, 'cyan');
-    log(`  • card-generator/models/${updatedSong.id}_*.stl`, 'cyan');
+    log(`  • card-generator/output/qr-codes/${updatedSong.id}_*.png`, 'cyan');
+    log(`  • card-generator/output/models/${updatedSong.id}_*.scad`, 'cyan');
+    log(`  • card-generator/output/models/${updatedSong.id}_*.stl`, 'cyan');
     if (generatePDF.toLowerCase() === 'j' || generatePDF.toLowerCase() === 'ja') {
-      log(`  • pwa/mxster-cards-*.pdf`, 'cyan');
+      log(`  • card-generator/output/pdfs/mxster-cards-*.pdf`, 'cyan');
     }
 
   } catch (error) {

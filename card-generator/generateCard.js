@@ -12,11 +12,11 @@ const execPromise = promisify(exec)
  * @param {Object} song - Song object with title, artist, year, spotifyId
  * @param {string} outputDir - Directory to save generated files
  */
-async function generateCard(song, outputDir = './card-generator/models') {
+async function generateCard(song, outputDir = './card-generator/output/models') {
   const { id, title, artist, year, spotifyId } = song;
 
   // Ensure output directories exist
-  const qrCodesDir = path.join('./card-generator/qr-codes');
+  const qrCodesDir = path.join('./card-generator/output/qr-codes');
   const modelsDir = outputDir;
 
   await fs.mkdir(qrCodesDir, { recursive: true });

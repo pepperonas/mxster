@@ -78,12 +78,12 @@ echo "╔═══════════════════════�
 echo "║            ✅  Fertig!  ✅                 ║"
 echo "╚════════════════════════════════════════════╝"
 echo ""
-echo -e "${CYAN}Generierte PDFs in pwa/:${RESET}"
+echo -e "${CYAN}Generierte PDFs in card-generator/output/pdfs/:${RESET}"
 echo "  • mxster-cards.pdf          (Standard, farbig)"
 echo "  • mxster-cards-bw.pdf       (Schwarz-Weiß)"
 echo "  • mxster-cards-duplex.pdf   (Duplex, farbig)"
 echo "  • mxster-cards-bw-duplex.pdf (Duplex, Schwarz-Weiß)"
 echo ""
 echo -e "${CYAN}📊 Statistik:${RESET}"
-ls -lh mxster-cards*.pdf 2>/dev/null | awk '{print "  • " $9 " (" $5 ")"}'
+ls -lh ../card-generator/output/pdfs/mxster-cards*.pdf 2>/dev/null | awk '{print "  • " $9 " (" $5 ")"}'
 echo ""
