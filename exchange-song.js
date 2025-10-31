@@ -7,6 +7,7 @@
  * Behält die Song-ID bei, lädt neue Metadaten und regeneriert alle Dateien.
  */
 
+import 'dotenv/config'
 import fs from 'fs/promises'
 import fsSync from 'fs'
 import path from 'path'
