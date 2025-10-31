@@ -22,7 +22,7 @@
 
 ```bash
 # Automatischer Workflow (empfohlen)
-./update-and-release.sh "Add new song: [Titel] by [Artist]"
+./scripts/build/update-and-release.sh "Add new song: [Titel] by [Artist]"
 
 # Das Script führt automatisch aus:
 # 0. Integrity Tests (bricht bei Fehlern ab)
@@ -37,9 +37,9 @@
 - ✅ Aktualisiert `pwa/src/data/songs.ts`
 - ✅ Generiert 3D-Modelle (SCAD + STL)
 - ✅ Kopiert QR-Code PNG nach `docs/`
-- ❌ Kein Git commit/push (das macht `update-and-release.sh`)
-- ❌ Keine PDF-Regenerierung (das macht `update-and-release.sh`)
-- ❌ Kein Release-Update (das macht `update-and-release.sh`)
+- ❌ Kein Git commit/push (das macht `scripts/build/update-and-release.sh`)
+- ❌ Keine PDF-Regenerierung (das macht `scripts/build/update-and-release.sh`)
+- ❌ Kein Release-Update (das macht `scripts/build/update-and-release.sh`)
 
 ## Vorbereitung
 
@@ -57,13 +57,13 @@ Stelle sicher, dass alle Änderungen committed sind und das Spiel funktioniert.
 ### 2. Build & Deploy PWA
 
 ```bash
-./deploy.sh
+./scripts/deployment/deploy.sh
 ```
 
-### 3. Generiere PDFs (111 Songs)
+### 3. Generiere PDFs (143 Songs)
 
 ```bash
-./generate-all-pdfs.sh
+./scripts/build/generate-all-pdfs.sh
 # Erstellt in pwa/:
 # - mxster-cards.pdf
 # - mxster-cards-bw.pdf
