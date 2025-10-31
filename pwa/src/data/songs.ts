@@ -1160,5 +1160,13 @@ export const songs: Song[] = [
     "year": 1978,
     "spotifyId": "37Tmv4NnfQeb0ZgUC4fOJj",
     "previewUrl": ""
+  },
+  {
+    "id": "song_145",
+    "title": "Ride Like the Wind",
+    "artist": "Christopher Cross",
+    "year": 1979,
+    "spotifyId": "7gUMShP1l20tC0xf17Zplk",
+    "previewUrl": ""
   }
 ]
