@@ -1,10 +1,13 @@
 import fs from 'fs/promises'
 import path from 'path'
+import { fileURLToPath } from 'url'
 import { exec, execSync } from 'child_process'
 import { promisify } from 'util'
 import QRCode from 'qrcode'
 import { qrToScadModule } from './qrToScad.js'
 
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__filename)
 const execPromise = promisify(exec)
 
 /**
@@ -12,12 +15,12 @@ const execPromise = promisify(exec)
  * @param {Object} song - Song object with title, artist, year, spotifyId
  * @param {string} outputDir - Directory to save generated files
  */
-async function generateCard(song, outputDir = './card-generator/output/models') {
+async function generateCard(song, outputDir) {
   const { id, title, artist, year, spotifyId } = song;
 
-  // Ensure output directories exist
-  const qrCodesDir = path.join('./card-generator/output/qr-codes');
-  const modelsDir = outputDir;
+  // Ensure output directories exist (use absolute paths)
+  const qrCodesDir = path.join(__dirname, 'output', 'qr-codes');
+  const modelsDir = outputDir || path.join(__dirname, 'output', 'models');
 
   await fs.mkdir(qrCodesDir, { recursive: true });
   await fs.mkdir(modelsDir, { recursive: true });

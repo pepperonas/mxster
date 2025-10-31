@@ -219,9 +219,8 @@ async function main() {
 
     // 12. Summary
     console.log('✨ Success! Card files generated:\n');
-    console.log(`   QR Code (card-generator): ${result.qrCodePath}`);
-    console.log(`   QR Code (docs):           ${docsQrPath}`);
-    console.log(`   OpenSCAD:                 ${result.scadPath}`);
+    console.log(`   QR Code:  ${result.qrCodePath}`);
+    console.log(`   OpenSCAD: ${result.scadPath}`);
     console.log(`\n📝 Next steps:`);
     console.log(`   1. Open ${result.scadPath} in OpenSCAD`);
     console.log(`   2. Preview with F5, Render with F6`);
