@@ -4,7 +4,7 @@
 
 [![App](https://img.shields.io/badge/App-mxster.de-blue?style=for-the-badge)](https://mxster.de)
 [![License](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)](LICENSE)
-![Songs](https://img.shields.io/badge/Songs-143-orange?style=for-the-badge)
+![Songs](https://img.shields.io/badge/Songs-144-orange?style=for-the-badge)
 [![Tests](https://github.com/pepperonas/mxster/actions/workflows/test.yml/badge.svg)](https://github.com/pepperonas/mxster/actions/workflows/test.yml)
 
 ![mxster Banner](https://mxster.de/assets/mxster.jpg)
