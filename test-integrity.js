@@ -88,7 +88,8 @@ try {
   const songsFileContent = fs.readFileSync(songsFilePath, 'utf8');
 
   // Extract JSON array from the file (remove export statement and type import)
-  const jsonMatch = songsFileContent.match(/export const songs = (\[[\s\S]*\])/);
+  // Match both: "export const songs = [" and "export const songs: Song[] = ["
+  const jsonMatch = songsFileContent.match(/export const songs(?:: Song\[\])? = (\[[\s\S]*\])/);
   if (!jsonMatch) {
     logError('Failed to parse PWA songs.ts', 'Could not find songs array');
   } else {
