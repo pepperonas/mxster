@@ -261,19 +261,19 @@ export function LandingPage() {
               Lade druckfertige PDF-Dateien herunter. 4 Karten pro A4-Seite in verschiedenen Varianten.
             </p>
             <div className="space-y-3 mb-6">
-              <a href="/mxster-cards.pdf" download className="btn btn-secondary w-full justify-between">
+              <a href="https://raw.githubusercontent.com/pepperonas/mxster/main/pwa/mxster-cards.pdf" download className="btn btn-secondary w-full justify-between">
                 📄 Standard (Farbig)
                 <span>↓</span>
               </a>
-              <a href="/mxster-cards-bw.pdf" download className="btn btn-secondary w-full justify-between">
+              <a href="https://raw.githubusercontent.com/pepperonas/mxster/main/pwa/mxster-cards-bw.pdf" download className="btn btn-secondary w-full justify-between">
                 📄 Schwarz-Weiß
                 <span>↓</span>
               </a>
-              <a href="/mxster-cards-duplex.pdf" download className="btn btn-secondary w-full justify-between">
+              <a href="https://raw.githubusercontent.com/pepperonas/mxster/main/pwa/mxster-cards-duplex.pdf" download className="btn btn-secondary w-full justify-between">
                 📄 Duplex (Farbig)
                 <span>↓</span>
               </a>
-              <a href="/mxster-cards-bw-duplex.pdf" download className="btn btn-secondary w-full justify-between">
+              <a href="https://raw.githubusercontent.com/pepperonas/mxster/main/pwa/mxster-cards-bw-duplex.pdf" download className="btn btn-secondary w-full justify-between">
                 📄 Duplex (Schwarz-Weiß)
                 <span>↓</span>
               </a>
@@ -295,20 +295,20 @@ export function LandingPage() {
               Lade STL-Dateien für hochwertige 3D-gedruckte Karten herunter. Dual-sided Design mit QR-Code.
             </p>
             <div className="space-y-3 mb-6">
-              <a href="/models/all-cards.3mf" download className="btn btn-secondary w-full justify-between">
+              <a href="https://raw.githubusercontent.com/pepperonas/mxster/main/card-generator/models/all-cards.3mf" download className="btn btn-secondary w-full justify-between">
                 📦 All-Cards (3MF)
                 <span>↓</span>
               </a>
-              <a href="/mxster-stl-models.zip" download className="btn btn-secondary w-full justify-between">
+              <a href="https://raw.githubusercontent.com/pepperonas/mxster/main/mxster-stl-models.zip" download className="btn btn-secondary w-full justify-between">
                 📦 STL Modelle (ZIP)
                 <span>↓</span>
               </a>
-              <a href="/mxster-scad-models.zip" download className="btn btn-secondary w-full justify-between">
+              <a href="https://raw.githubusercontent.com/pepperonas/mxster/main/mxster-scad-models.zip" download className="btn btn-secondary w-full justify-between">
                 📦 SCAD Modelle (ZIP)
                 <span>↓</span>
               </a>
               <a href="https://github.com/pepperonas/mxster/tree/main/card-generator/models" target="_blank" rel="noopener noreferrer" className="btn btn-secondary w-full justify-between">
-                📂 Einzelne Modelle
+                📂 Einzelne Modelle (GitHub)
                 <span>→</span>
               </a>
             </div>
