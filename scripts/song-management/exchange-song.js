@@ -304,9 +304,7 @@ async function main() {
       title: trackData.title,
       artist: trackData.artist,
       year: trackData.year,
-      audioUrl: `https://example.com/${songId}.mp3`,
       spotifyId: trackData.spotifyId,
-      youtubeUrl: '',
       previewUrl: trackData.previewUrl || ''
     };
 

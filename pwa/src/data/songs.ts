@@ -7,7 +7,6 @@ export const songs: Song[] = [
     "artist": "Rick Astley",
     "year": 1987,
     "spotifyId": "4PTG3Z6ehGkBFwjybzWkR8",
-    "youtubeUrl": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
     "previewUrl": ""
   },
   {
@@ -16,7 +15,6 @@ export const songs: Song[] = [
     "artist": "Queen",
     "year": 1975,
     "spotifyId": "4u7EnebtmKWzUH433cf5Qv",
-    "youtubeUrl": "https://www.youtube.com/watch?v=fJ9rUzIMcZQ",
     "previewUrl": ""
   },
   {
@@ -25,7 +23,6 @@ export const songs: Song[] = [
     "artist": "Michael Jackson",
     "year": 1982,
     "spotifyId": "5ChkMS8OtdzJeqyybCc9R5",
-    "youtubeUrl": "https://www.youtube.com/watch?v=Zi_XLOBDo_Y",
     "previewUrl": ""
   },
   {
@@ -34,7 +31,6 @@ export const songs: Song[] = [
     "artist": "Madonna",
     "year": 1989,
     "spotifyId": "0apQVuKL33S64ivuHUQrQ3",
-    "youtubeUrl": "https://www.youtube.com/watch?v=79fzeNUqQbQ",
     "previewUrl": ""
   },
   {
@@ -43,7 +39,6 @@ export const songs: Song[] = [
     "artist": "Nirvana",
     "year": 1991,
     "spotifyId": "4CeeEOM32jQcH3eN9Q2dGj",
-    "youtubeUrl": "https://www.youtube.com/watch?v=hTWKbfoikeg",
     "previewUrl": ""
   },
   {
@@ -52,7 +47,6 @@ export const songs: Song[] = [
     "artist": "Oasis",
     "year": 1995,
     "spotifyId": "5qqabIl2vWzo9ApSC317sa",
-    "youtubeUrl": "https://www.youtube.com/watch?v=bx1Bh8ZvH84",
     "previewUrl": ""
   },
   {
@@ -61,7 +55,6 @@ export const songs: Song[] = [
     "artist": "Fine Young Cannibals",
     "year": 1988,
     "spotifyId": "4d6eqRtpDX7tydHJGDZUBQ",
-    "youtubeUrl": "https://www.youtube.com/watch?v=UtvmTu4zAMg",
     "previewUrl": ""
   },
   {
@@ -70,7 +63,6 @@ export const songs: Song[] = [
     "artist": "Madonna",
     "year": 1983,
     "spotifyId": "7arHM2KZ0KzIZXFVDRGClI",
-    "youtubeUrl": "https://www.youtube.com/watch?v=gyj4L_0MbwU",
     "previewUrl": ""
   },
   {
@@ -79,7 +71,6 @@ export const songs: Song[] = [
     "artist": "Taylor Dayne",
     "year": 1988,
     "spotifyId": "0uyoXwOQ3U5tGfNNmR5Y1p",
-    "youtubeUrl": "https://www.youtube.com/watch?v=Ud6sU3AclT4",
     "previewUrl": ""
   },
   {
@@ -88,7 +79,6 @@ export const songs: Song[] = [
     "artist": "Nelly Furtado",
     "year": 2000,
     "spotifyId": "2aGw77pZqli064JiPuXYRi",
-    "youtubeUrl": "https://www.youtube.com/watch?v=roPQ_M3yJTA",
     "previewUrl": ""
   },
   {
@@ -97,7 +87,6 @@ export const songs: Song[] = [
     "artist": "Electr3x",
     "year": 2013,
     "spotifyId": "3HxjYioUjnLHpSjtLqEPZm",
-    "youtubeUrl": "https://www.youtube.com/watch?v=6QNFz5_QK9I",
     "previewUrl": ""
   },
   {
@@ -106,7 +95,6 @@ export const songs: Song[] = [
     "artist": "Jungle",
     "year": 2023,
     "spotifyId": "19kHhX6f6EfLU7rcO3RqjO",
-    "youtubeUrl": "https://www.youtube.com/watch?v=bZJEOQ-bAOc",
     "previewUrl": ""
   },
   {
@@ -115,7 +103,6 @@ export const songs: Song[] = [
     "artist": "Prince",
     "year": 1979,
     "spotifyId": "4yrM5BVyJzy5Ed4GPO6e8j",
-    "youtubeUrl": "https://www.youtube.com/watch?v=F30Qiy6qyEs",
     "previewUrl": ""
   },
   {
@@ -124,7 +111,6 @@ export const songs: Song[] = [
     "artist": "Mylo",
     "year": 2006,
     "spotifyId": "4dmDrGySyxYklBQVkG66LB",
-    "youtubeUrl": "https://www.youtube.com/watch?v=mbV-1ipGf9k",
     "previewUrl": ""
   },
   {
@@ -133,7 +119,6 @@ export const songs: Song[] = [
     "artist": "Santa Esmeralda",
     "year": 2015,
     "spotifyId": "0rCEfFfigLLYmAFeJXQvm6",
-    "youtubeUrl": "https://www.youtube.com/watch?v=9EjO1jRAerkQ",
     "previewUrl": ""
   },
   {
@@ -142,7 +127,6 @@ export const songs: Song[] = [
     "artist": "Jason Derulo",
     "year": 2010,
     "spotifyId": "7xkQdy0cy5ymoWT7nedvLz",
-    "youtubeUrl": "https://www.youtube.com/watch?v=pBI3lc18k8Q",
     "previewUrl": ""
   },
   {
@@ -151,7 +135,6 @@ export const songs: Song[] = [
     "artist": "Daft Punk",
     "year": 2013,
     "spotifyId": "0oks4FnzhNp5QPTZtoet7c",
-    "youtubeUrl": "https://www.youtube.com/watch?v=zhl-Cs1-sG4",
     "previewUrl": ""
   },
   {
@@ -160,7 +143,6 @@ export const songs: Song[] = [
     "artist": "Ghost",
     "year": 2019,
     "spotifyId": "2HZLXBOnaSRhXStMLrq9fD",
-    "youtubeUrl": "https://www.youtube.com/watch?v=I7nsWRKEScI",
     "previewUrl": ""
   },
   {
@@ -169,7 +151,6 @@ export const songs: Song[] = [
     "artist": "Sylvester",
     "year": 1984,
     "spotifyId": "6gzUi6an8slC9kR2A2GLiE",
-    "youtubeUrl": "https://www.youtube.com/watch?v=aFCO6WidGVM",
     "previewUrl": ""
   },
   {
@@ -178,7 +159,6 @@ export const songs: Song[] = [
     "artist": "2hermanoz",
     "year": 2025,
     "spotifyId": "5e3kI3IzdLulXhIhfcoxXI",
-    "youtubeUrl": "https://www.youtube.com/watch?v=9t2ZO8gRVnQ",
     "previewUrl": ""
   },
   {
@@ -187,7 +167,6 @@ export const songs: Song[] = [
     "artist": "Madonna",
     "year": 1989,
     "spotifyId": "5xAeXQqVX1eVC9ev9p5Ckv",
-    "youtubeUrl": "https://www.youtube.com/watch?v=xBJRuCkrDsU",
     "previewUrl": ""
   },
   {
@@ -196,7 +175,6 @@ export const songs: Song[] = [
     "artist": "Storken, Gusteau",
     "year": 2024,
     "spotifyId": "0xIdZ9u8lIGYl54UNOlFMn",
-    "youtubeUrl": "https://www.youtube.com/watch?v=TcMBFSGVi1c",
     "previewUrl": ""
   },
   {
@@ -205,7 +183,6 @@ export const songs: Song[] = [
     "artist": "Nik Kershaw",
     "year": 1984,
     "spotifyId": "00FDHurakzVEiPutdUxXXq",
-    "youtubeUrl": "",
     "previewUrl": ""
   },
   {
@@ -214,7 +191,6 @@ export const songs: Song[] = [
     "artist": "Tom Petty",
     "year": 1991,
     "spotifyId": "17S4XrLvF5jlGvGCJHgF51",
-    "youtubeUrl": "",
     "previewUrl": ""
   },
   {
@@ -223,7 +199,6 @@ export const songs: Song[] = [
     "artist": "Fleetwood Mac",
     "year": 1977,
     "spotifyId": "0ofHAoxe9vBkTCp2UQIavz",
-    "youtubeUrl": "",
     "previewUrl": ""
   },
   {
@@ -232,7 +207,6 @@ export const songs: Song[] = [
     "artist": "t.A.T.u.",
     "year": 2002,
     "spotifyId": "4bJygwUKrRgq1stlNXcgMg",
-    "youtubeUrl": "",
     "previewUrl": ""
   },
   {
@@ -241,7 +215,6 @@ export const songs: Song[] = [
     "artist": "Eminem",
     "year": 2002,
     "spotifyId": "4woTEX1wYOTGDqNXuavlRC",
-    "youtubeUrl": "",
     "previewUrl": ""
   },
   {
@@ -250,7 +223,6 @@ export const songs: Song[] = [
     "artist": "OMC",
     "year": 1996,
     "spotifyId": "46q5BtHso0ECuTKeq70ZhW",
-    "youtubeUrl": "",
     "previewUrl": ""
   },
   {
@@ -259,7 +231,6 @@ export const songs: Song[] = [
     "artist": "CINTHIE",
     "year": 2018,
     "spotifyId": "7dyoyoetrANuq9z2KdknbD",
-    "youtubeUrl": "",
     "previewUrl": ""
   },
   {
@@ -268,7 +239,6 @@ export const songs: Song[] = [
     "artist": "CIOZ",
     "year": 2021,
     "spotifyId": "3BpLvi63Sk9u1Aa1zfqZHV",
-    "youtubeUrl": "",
     "previewUrl": ""
   },
   {
@@ -277,7 +247,6 @@ export const songs: Song[] = [
     "artist": "BICEP",
     "year": 2017,
     "spotifyId": "2aJDlirz6v2a4HREki98cP",
-    "youtubeUrl": "",
     "previewUrl": ""
   },
   {
@@ -286,7 +255,6 @@ export const songs: Song[] = [
     "artist": "Steve Monite",
     "year": 1984,
     "spotifyId": "3d7lH2ppf2aIELQXY4nagn",
-    "youtubeUrl": "",
     "previewUrl": ""
   },
   {
@@ -295,7 +263,6 @@ export const songs: Song[] = [
     "artist": "Metallica",
     "year": 1991,
     "spotifyId": "5SnOyuBtyzufoXBAKOdcxD",
-    "youtubeUrl": "",
     "previewUrl": ""
   },
   {
@@ -304,7 +271,6 @@ export const songs: Song[] = [
     "artist": "Keinemusik",
     "year": 2024,
     "spotifyId": "2GwsSbo6IbNDVvcm9rtmal",
-    "youtubeUrl": "",
     "previewUrl": ""
   },
   {
@@ -313,7 +279,6 @@ export const songs: Song[] = [
     "artist": "Eiffel 65",
     "year": 1999,
     "spotifyId": "5FgtdSf7I5lClThz2ptWvl",
-    "youtubeUrl": "",
     "previewUrl": ""
   },
   {
@@ -322,7 +287,6 @@ export const songs: Song[] = [
     "artist": "Outkast",
     "year": 2000,
     "spotifyId": "0I3q5fE6wg7LIfHGngUTnV",
-    "youtubeUrl": "",
     "previewUrl": ""
   },
   {
@@ -331,7 +295,6 @@ export const songs: Song[] = [
     "artist": "Phonk D",
     "year": 2024,
     "spotifyId": "4SyAk2E6pBO7J4d2Pboc27",
-    "youtubeUrl": "",
     "previewUrl": ""
   },
   {
@@ -340,7 +303,6 @@ export const songs: Song[] = [
     "artist": "ABC",
     "year": 1982,
     "spotifyId": "6HvUtPLqkP0t6zd6YNdWby",
-    "youtubeUrl": "",
     "previewUrl": ""
   },
   {
@@ -349,7 +311,6 @@ export const songs: Song[] = [
     "artist": "Brenda Fassie",
     "year": 1986,
     "spotifyId": "5xFw5Kw4hqhcwXXjFOZKIw",
-    "youtubeUrl": "",
     "previewUrl": ""
   },
   {
@@ -358,7 +319,6 @@ export const songs: Song[] = [
     "artist": "Bizzarro Universe, Marcus Christiansen",
     "year": 2024,
     "spotifyId": "5SXxursn0O3NZu5yan9Xer",
-    "youtubeUrl": "",
     "previewUrl": ""
   },
   {
@@ -367,7 +327,6 @@ export const songs: Song[] = [
     "artist": "Lusthansa",
     "year": 1983,
     "spotifyId": "5MmXILyuHEWAQ0IqYHwm1G",
-    "youtubeUrl": "",
     "previewUrl": ""
   },
   {
@@ -376,7 +335,6 @@ export const songs: Song[] = [
     "artist": "Oliver Koletzki",
     "year": 2009,
     "spotifyId": "51lq1JlxFQztlTJpJYsyWL",
-    "youtubeUrl": "",
     "previewUrl": ""
   },
   {
@@ -385,7 +343,6 @@ export const songs: Song[] = [
     "artist": "Alien Ant Farm",
     "year": 2001,
     "spotifyId": "5z6xHjCZr7a7AIcy8sPBKy",
-    "youtubeUrl": "",
     "previewUrl": ""
   },
   {
@@ -394,7 +351,6 @@ export const songs: Song[] = [
     "artist": "Carlos Perón",
     "year": 2018,
     "spotifyId": "7IdcCf2KAAkeI66vSLfAyC",
-    "youtubeUrl": "",
     "previewUrl": ""
   },
   {
@@ -403,7 +359,6 @@ export const songs: Song[] = [
     "artist": "Mind Over Matter",
     "year": 2020,
     "spotifyId": "3nuSWxFEkdtGiP9huP3NoH",
-    "youtubeUrl": "",
     "previewUrl": ""
   },
   {
@@ -412,7 +367,6 @@ export const songs: Song[] = [
     "artist": "Anish Kumar, Barry Can't Swim",
     "year": 2021,
     "spotifyId": "5TaNnFsq2RSPHpsb8euzib",
-    "youtubeUrl": "",
     "previewUrl": ""
   },
   {
@@ -421,7 +375,6 @@ export const songs: Song[] = [
     "artist": "ABBA",
     "year": 1979,
     "spotifyId": "3vkQ5DAB1qQMYO4Mr9zJN6",
-    "youtubeUrl": "",
     "previewUrl": ""
   },
   {
@@ -430,7 +383,6 @@ export const songs: Song[] = [
     "artist": "Falco",
     "year": 1985,
     "spotifyId": "6a0lr0jt8lKDJhsAYA49NS",
-    "youtubeUrl": "",
     "previewUrl": ""
   },
   {
@@ -439,7 +391,6 @@ export const songs: Song[] = [
     "artist": "Buntspecht",
     "year": 2019,
     "spotifyId": "5hZQIDpkhRxKez0j8TZvoG",
-    "youtubeUrl": "",
     "previewUrl": ""
   },
   {
@@ -448,7 +399,6 @@ export const songs: Song[] = [
     "artist": "Prince",
     "year": 1986,
     "spotifyId": "7rwPVahewLXhDGKUjfbzU3",
-    "youtubeUrl": "",
     "previewUrl": ""
   },
   {
@@ -457,7 +407,6 @@ export const songs: Song[] = [
     "artist": "Prince",
     "year": 1994,
     "spotifyId": "0aPaGIX2QIMAH5SMp0VEMe",
-    "youtubeUrl": "",
     "previewUrl": ""
   },
   {
@@ -466,7 +415,6 @@ export const songs: Song[] = [
     "artist": "Barry White",
     "year": 1972,
     "spotifyId": "2sR6PY1YgPZTB8hZflRbFq",
-    "youtubeUrl": "",
     "previewUrl": ""
   },
   {
@@ -475,7 +423,6 @@ export const songs: Song[] = [
     "artist": "Sylvester",
     "year": 1982,
     "spotifyId": "391LWxtzGLesBcYnXF3apb",
-    "youtubeUrl": "",
     "previewUrl": ""
   },
   {
@@ -484,7 +431,6 @@ export const songs: Song[] = [
     "artist": "Whitney Houston",
     "year": 1985,
     "spotifyId": "5tdKaKLnC4SgtDZ6RlWeal",
-    "youtubeUrl": "",
     "previewUrl": ""
   },
   {
@@ -493,7 +439,6 @@ export const songs: Song[] = [
     "artist": "Diana Ross",
     "year": 1979,
     "spotifyId": "4IHuMACnW8IMUUVPss9rou",
-    "youtubeUrl": "",
     "previewUrl": ""
   },
   {
@@ -502,7 +447,6 @@ export const songs: Song[] = [
     "artist": "Bruce Springsteen",
     "year": 1975,
     "spotifyId": "6hTcuIQa0sxrrByu9wTD7s",
-    "youtubeUrl": "",
     "previewUrl": ""
   },
   {
@@ -511,7 +455,6 @@ export const songs: Song[] = [
     "artist": "Nik Kershaw",
     "year": 1984,
     "spotifyId": "65YtzNpiPhGVzg6GPzkotn",
-    "youtubeUrl": "",
     "previewUrl": ""
   },
   {
@@ -520,7 +463,6 @@ export const songs: Song[] = [
     "artist": "Nelly",
     "year": 2000,
     "spotifyId": "3Gf5nttwcX9aaSQXRWidEZ",
-    "youtubeUrl": "",
     "previewUrl": ""
   },
   {
@@ -529,7 +471,6 @@ export const songs: Song[] = [
     "artist": "Avicii",
     "year": 2011,
     "spotifyId": "6Xe9wT5xeZETPwtaP2ynUz",
-    "youtubeUrl": "",
     "previewUrl": ""
   },
   {
@@ -538,7 +479,6 @@ export const songs: Song[] = [
     "artist": "Fleetwood Mac",
     "year": 1977,
     "spotifyId": "07GvNcU1WdyZJq3XxP0kZa",
-    "youtubeUrl": "",
     "previewUrl": ""
   },
   {
@@ -547,7 +487,6 @@ export const songs: Song[] = [
     "artist": "a-ha",
     "year": 1985,
     "spotifyId": "2WfaOiMkCvy7F5fcp2zZ8L",
-    "youtubeUrl": "",
     "previewUrl": ""
   },
   {
@@ -556,7 +495,6 @@ export const songs: Song[] = [
     "artist": "Sylvester",
     "year": 1982,
     "spotifyId": "708DnJC8l1b4Bf4xg0GiBv",
-    "youtubeUrl": "",
     "previewUrl": ""
   },
   {
@@ -565,7 +503,6 @@ export const songs: Song[] = [
     "artist": "Manu Chao",
     "year": 1998,
     "spotifyId": "00SmB7n85SKROGjybsyq5i",
-    "youtubeUrl": "",
     "previewUrl": ""
   },
   {
@@ -574,7 +511,6 @@ export const songs: Song[] = [
     "artist": "Sonique",
     "year": 1998,
     "spotifyId": "39TChHld3lrragesFXhdkc",
-    "youtubeUrl": "",
     "previewUrl": ""
   },
   {
@@ -583,7 +519,6 @@ export const songs: Song[] = [
     "artist": "MGMT",
     "year": 2007,
     "spotifyId": "1jJci4qxiYcOHhQR247rEU",
-    "youtubeUrl": "",
     "previewUrl": ""
   },
   {
@@ -592,7 +527,6 @@ export const songs: Song[] = [
     "artist": "Fettes Brot",
     "year": 2005,
     "spotifyId": "5gUXZV2Ir17qOWdtUJSh7l",
-    "youtubeUrl": "",
     "previewUrl": ""
   },
   {
@@ -601,7 +535,6 @@ export const songs: Song[] = [
     "artist": "K.I.Z",
     "year": 2009,
     "spotifyId": "3CFfSQD1HTpn2eeGu9xY7J",
-    "youtubeUrl": "",
     "previewUrl": ""
   },
   {
@@ -610,7 +543,6 @@ export const songs: Song[] = [
     "artist": "Alligatoah",
     "year": 2013,
     "spotifyId": "3FcqFCeCD6QRtRo6WGLCnC",
-    "youtubeUrl": "",
     "previewUrl": ""
   },
   {
@@ -619,7 +551,6 @@ export const songs: Song[] = [
     "artist": "a-ha",
     "year": 1985,
     "spotifyId": "13WPj6r2DVNU3GoZtMc9eU",
-    "youtubeUrl": "",
     "previewUrl": ""
   },
   {
@@ -628,7 +559,6 @@ export const songs: Song[] = [
     "artist": "Die Ärzte",
     "year": 1988,
     "spotifyId": "5aWpvFnByyWodgqYlC9kha",
-    "youtubeUrl": "",
     "previewUrl": ""
   },
   {
@@ -637,7 +567,6 @@ export const songs: Song[] = [
     "artist": "Peter Schilling",
     "year": 1982,
     "spotifyId": "6lXKNdOsnaLv9LwulZbxNl",
-    "youtubeUrl": "",
     "previewUrl": ""
   },
   {
@@ -646,7 +575,6 @@ export const songs: Song[] = [
     "artist": "Kim Carnes",
     "year": 1981,
     "spotifyId": "0odIT9B9BvOCnXfS0e4lB5",
-    "youtubeUrl": "",
     "previewUrl": ""
   },
   {
@@ -655,7 +583,6 @@ export const songs: Song[] = [
     "artist": "Paul Kalkbrenner",
     "year": 2013,
     "spotifyId": "0a2LIqhveniOMVXt1BzQKR",
-    "youtubeUrl": "",
     "previewUrl": ""
   },
   {
@@ -664,7 +591,6 @@ export const songs: Song[] = [
     "artist": "Rammstein",
     "year": 1997,
     "spotifyId": "0xrkyEMkG4dVa5OMLQZOX8",
-    "youtubeUrl": "",
     "previewUrl": ""
   },
   {
@@ -673,7 +599,6 @@ export const songs: Song[] = [
     "artist": "MGMT",
     "year": 2007,
     "spotifyId": "3FtYbEfBqAlGO46NUDQSAt",
-    "youtubeUrl": "",
     "previewUrl": ""
   },
   {
@@ -682,7 +607,6 @@ export const songs: Song[] = [
     "artist": "Alligatoah",
     "year": 2013,
     "spotifyId": "1EC0COi0MYuxILNfvvVIkI",
-    "youtubeUrl": "",
     "previewUrl": ""
   },
   {
@@ -691,7 +615,6 @@ export const songs: Song[] = [
     "artist": "Skatebård",
     "year": 2016,
     "spotifyId": "7za2bHIESAb7RVIhQzwn6H",
-    "youtubeUrl": "",
     "previewUrl": ""
   },
   {
@@ -700,7 +623,6 @@ export const songs: Song[] = [
     "artist": "Krystal Klear",
     "year": 2022,
     "spotifyId": "4mOlNiBOX1tjxp5wce0Dwe",
-    "youtubeUrl": "",
     "previewUrl": ""
   },
   {
@@ -709,7 +631,6 @@ export const songs: Song[] = [
     "artist": "DragonForce",
     "year": 2006,
     "spotifyId": "1UMdbkqX19OiwfExH7gzYA",
-    "youtubeUrl": "",
     "previewUrl": ""
   },
   {
@@ -718,7 +639,6 @@ export const songs: Song[] = [
     "artist": "Herbert Grönemeyer",
     "year": 2002,
     "spotifyId": "2urspvjqMlyq8JVAudN3DK",
-    "youtubeUrl": "",
     "previewUrl": ""
   },
   {
@@ -727,7 +647,6 @@ export const songs: Song[] = [
     "artist": "Scatman John",
     "year": 1995,
     "spotifyId": "623rRTKwGmgjH6sjE9uWLh",
-    "youtubeUrl": "",
     "previewUrl": ""
   },
   {
@@ -736,7 +655,6 @@ export const songs: Song[] = [
     "artist": "Culture Beat",
     "year": 1993,
     "spotifyId": "2rTYgHxgcndkUrRoU7x0Sv",
-    "youtubeUrl": "",
     "previewUrl": ""
   },
   {
@@ -745,7 +663,6 @@ export const songs: Song[] = [
     "artist": "Vera",
     "year": 1983,
     "spotifyId": "3ExcEpHblGcPikCpcgNNAB",
-    "youtubeUrl": "",
     "previewUrl": ""
   },
   {
@@ -754,7 +671,6 @@ export const songs: Song[] = [
     "artist": "Chaka Khan",
     "year": 1983,
     "spotifyId": "2NVpYQqdraEcQwqT7GhUkh",
-    "youtubeUrl": "",
     "previewUrl": ""
   },
   {
@@ -763,7 +679,6 @@ export const songs: Song[] = [
     "artist": "Alphaville",
     "year": 1984,
     "spotifyId": "3BZGi1yUqQyCNC868AqUGG",
-    "youtubeUrl": "",
     "previewUrl": ""
   },
   {
@@ -772,7 +687,6 @@ export const songs: Song[] = [
     "artist": "Laura Branigan",
     "year": 1984,
     "spotifyId": "6JNJERZGJwDVgkmbohBw7u",
-    "youtubeUrl": "",
     "previewUrl": ""
   },
   {
@@ -781,7 +695,6 @@ export const songs: Song[] = [
     "artist": "Paul Simon",
     "year": 1986,
     "spotifyId": "0qxYx4F3vm1AOnfux6dDxP",
-    "youtubeUrl": "",
     "previewUrl": ""
   },
   {
@@ -790,7 +703,6 @@ export const songs: Song[] = [
     "artist": "TOTO",
     "year": 1982,
     "spotifyId": "2374M0fQpWi3dLnB54qaLX",
-    "youtubeUrl": "",
     "previewUrl": ""
   },
   {
@@ -799,7 +711,6 @@ export const songs: Song[] = [
     "artist": "France Gall",
     "year": 1987,
     "spotifyId": "67CfbIKKTCKFqmQLJwUftX",
-    "youtubeUrl": "",
     "previewUrl": ""
   },
   {
@@ -808,7 +719,6 @@ export const songs: Song[] = [
     "artist": "Tracy Chapman",
     "year": 1988,
     "spotifyId": "2M9ro2krNb7nr7HSprkEgo",
-    "youtubeUrl": "",
     "previewUrl": ""
   },
   {
@@ -817,7 +727,6 @@ export const songs: Song[] = [
     "artist": "Milli Vanilli",
     "year": 1988,
     "spotifyId": "0C7dYeCLF6ukChtW64UNge",
-    "youtubeUrl": "",
     "previewUrl": ""
   },
   {
@@ -826,7 +735,6 @@ export const songs: Song[] = [
     "artist": "Phil Collins",
     "year": 1981,
     "spotifyId": "18AXbzPzBS8Y3AkgSxzJPb",
-    "youtubeUrl": "",
     "previewUrl": ""
   },
   {
@@ -835,7 +743,6 @@ export const songs: Song[] = [
     "artist": "CeCe Peniston",
     "year": 1992,
     "spotifyId": "0uqvSVhGgQTIdj9G51vhvv",
-    "youtubeUrl": "",
     "previewUrl": ""
   },
   {
@@ -844,7 +751,6 @@ export const songs: Song[] = [
     "artist": "Bomfunk MC's",
     "year": 1999,
     "spotifyId": "2vlgOAH3M8Fmo19wOjeRyw",
-    "youtubeUrl": "",
     "previewUrl": ""
   },
   {
@@ -853,7 +759,6 @@ export const songs: Song[] = [
     "artist": "M People",
     "year": 1993,
     "spotifyId": "6vGW3d8X48CBaLdU0PQbey",
-    "youtubeUrl": "",
     "previewUrl": ""
   },
   {
@@ -862,7 +767,6 @@ export const songs: Song[] = [
     "artist": "La Bouche",
     "year": 1995,
     "spotifyId": "3vSn1frPgFcRXrjWOfhMLl",
-    "youtubeUrl": "",
     "previewUrl": ""
   },
   {
@@ -871,7 +775,6 @@ export const songs: Song[] = [
     "artist": "CHIC",
     "year": 1979,
     "spotifyId": "0G3fbPbE1vGeABDEZF0jeG",
-    "youtubeUrl": "",
     "previewUrl": ""
   },
   {
@@ -880,7 +783,6 @@ export const songs: Song[] = [
     "artist": "Sister Sledge",
     "year": 1979,
     "spotifyId": "47eSFHsPDVJwssTTG62Af3",
-    "youtubeUrl": "",
     "previewUrl": ""
   },
   {
@@ -889,7 +791,6 @@ export const songs: Song[] = [
     "artist": "Uncle Kracker",
     "year": 2000,
     "spotifyId": "4KoecuyOpZaNFZ0UqVsllc",
-    "youtubeUrl": "",
     "previewUrl": ""
   },
   {
@@ -898,7 +799,6 @@ export const songs: Song[] = [
     "artist": "Coldplay",
     "year": 2008,
     "spotifyId": "1mea3bSkSGXuIRvnydlB5b",
-    "youtubeUrl": "",
     "previewUrl": ""
   },
   {
@@ -907,7 +807,6 @@ export const songs: Song[] = [
     "artist": "Eagle-Eye Cherry",
     "year": 1997,
     "spotifyId": "2hdhm6piUJnmKXmEmskXCg",
-    "youtubeUrl": "",
     "previewUrl": ""
   },
   {
@@ -916,7 +815,6 @@ export const songs: Song[] = [
     "artist": "Spin Doctors",
     "year": 1991,
     "spotifyId": "4ePP9So5xRzspjLFVVbj90",
-    "youtubeUrl": "",
     "previewUrl": ""
   },
   {
@@ -925,7 +823,6 @@ export const songs: Song[] = [
     "artist": "Simply Red",
     "year": 1995,
     "spotifyId": "1cPcbT9kuGAMCAwI9W8vAL",
-    "youtubeUrl": "",
     "previewUrl": ""
   },
   {
@@ -934,7 +831,6 @@ export const songs: Song[] = [
     "artist": "UB40",
     "year": 1983,
     "spotifyId": "4uOKFydzAejjSFqYbv1XPt",
-    "youtubeUrl": "",
     "previewUrl": ""
   },
   {
@@ -943,7 +839,6 @@ export const songs: Song[] = [
     "artist": "Eros Ramazzotti",
     "year": 1996,
     "spotifyId": "6lbJyE7viZ7hKo5APRHymX",
-    "youtubeUrl": "",
     "previewUrl": ""
   },
   {
@@ -952,7 +847,6 @@ export const songs: Song[] = [
     "artist": "Cerrone",
     "year": 1977,
     "spotifyId": "2ffCT6Pe2LYriwN2Y5ObIg",
-    "youtubeUrl": "",
     "previewUrl": ""
   },
   {
@@ -961,7 +855,6 @@ export const songs: Song[] = [
     "artist": "Flo Rida",
     "year": 2012,
     "spotifyId": "2LEF1A8DOZ9wRYikWgVlZ8",
-    "youtubeUrl": "",
     "previewUrl": ""
   },
   {
@@ -970,7 +863,6 @@ export const songs: Song[] = [
     "artist": "Whitney Houston",
     "year": 1996,
     "spotifyId": "5dEBcymDDG9TUjJnAouOPp",
-    "youtubeUrl": "",
     "previewUrl": ""
   },
   {
@@ -979,7 +871,6 @@ export const songs: Song[] = [
     "artist": "M.I.A.",
     "year": 2007,
     "spotifyId": "1ixbwbeBi5ufN4noUKmW5a",
-    "youtubeUrl": "",
     "previewUrl": ""
   },
   {
@@ -988,7 +879,6 @@ export const songs: Song[] = [
     "artist": "Carlita",
     "year": 2022,
     "spotifyId": "5P1oT1yKRSlGWjDy5ijOm7",
-    "youtubeUrl": "",
     "previewUrl": ""
   },
   {
@@ -997,7 +887,6 @@ export const songs: Song[] = [
     "artist": "Titiyo",
     "year": 2001,
     "spotifyId": "7GmHOAdriOnI9s5S79GAUr",
-    "youtubeUrl": "",
     "previewUrl": ""
   },
   {
@@ -1006,7 +895,6 @@ export const songs: Song[] = [
     "artist": "The Rasmus",
     "year": 2003,
     "spotifyId": "1fr92Vupmcs2vgLMFVQ7rd",
-    "youtubeUrl": "",
     "previewUrl": ""
   },
   {
@@ -1015,7 +903,6 @@ export const songs: Song[] = [
     "artist": "French Affair",
     "year": 2000,
     "spotifyId": "6ou0PY1UD7gdRnHbbyiHaA",
-    "youtubeUrl": "",
     "previewUrl": ""
   },
   {
@@ -1024,7 +911,6 @@ export const songs: Song[] = [
     "artist": "Heroes Del Silencio",
     "year": 1990,
     "spotifyId": "4rJdaSwOCHLBhxdMsymeMw",
-    "youtubeUrl": "",
     "previewUrl": ""
   },
   {
@@ -1097,7 +983,6 @@ export const songs: Song[] = [
     "artist": "Bob Dylan",
     "year": 1967,
     "spotifyId": "0Fnb2pfBfu0ka33d6Yki17",
-    "youtubeUrl": "",
     "previewUrl": ""
   },
   {
@@ -1154,7 +1039,6 @@ export const songs: Song[] = [
     "artist": "Moby",
     "year": 1999,
     "spotifyId": "0jpk88zk40MjQ63ljrq7V2",
-    "youtubeUrl": "",
     "previewUrl": ""
   },
   {
@@ -1266,9 +1150,15 @@ export const songs: Song[] = [
     "title": "Anthracene",
     "artist": "Spectra",
     "year": 2017,
-    "audioUrl": "https://example.com/song_143.mp3",
     "spotifyId": "351hT2qfzHywu9sanfSn9o",
-    "youtubeUrl": "",
+    "previewUrl": ""
+  },
+  {
+    "id": "song_144",
+    "title": "Sultans Of Swing",
+    "artist": "Dire Straits",
+    "year": 1978,
+    "spotifyId": "37Tmv4NnfQeb0ZgUC4fOJj",
     "previewUrl": ""
   }
 ]
