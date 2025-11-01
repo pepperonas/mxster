@@ -195,44 +195,47 @@ export function SettingsDialog() {
           variant: 'danger',
           closeOnClick: true,
           onClick: () => {
-            // 1. Clear all localStorage keys
             console.log('🗑️ Deleting all data...')
 
-            // Settings
-            localStorage.removeItem('mxster_settings')
-            console.log('✅ Settings cleared')
+            // CRITICAL: Clear localStorage SYNCHRONOUSLY before page reload
+            // Do NOT call React state updates (like clearAll()) - they won't persist after reload
 
-            // Achievements
-            localStorage.removeItem('mxster_achievements')
-            console.log('✅ Achievements cleared')
+            // Method 1: Remove specific keys
+            const keysToDelete = [
+              'mxster_settings',
+              'mxster_achievements',
+              'mxster_history',
+              'mxster_game_state',
+              'spotify_auth_tokens',
+              'beat_sync_config',
+              'app_settings'
+            ]
 
-            // Game History
-            localStorage.removeItem('mxster_history')
-            console.log('✅ Game history cleared')
+            keysToDelete.forEach(key => {
+              localStorage.removeItem(key)
+              console.log(`🗑️ Removed: ${key}`)
+            })
 
-            // Game State
-            localStorage.removeItem('mxster_game_state')
-            console.log('✅ Game state cleared')
+            // Method 2: Also clear ALL other mxster/hitster keys (cleanup)
+            const allKeys = Object.keys(localStorage)
+            allKeys.forEach(key => {
+              if (key.includes('mxster') || key.includes('hitster')) {
+                localStorage.removeItem(key)
+                console.log(`🧹 Cleaned up: ${key}`)
+              }
+            })
 
-            // Spotify tokens
-            localStorage.removeItem('spotify_auth_tokens')
-            console.log('✅ Spotify tokens cleared')
+            // Verify localStorage is empty
+            const remainingKeys = Object.keys(localStorage).filter(k =>
+              k.includes('mxster') || k.includes('hitster')
+            )
+            console.log('📋 Remaining mxster/hitster keys:', remainingKeys.length)
 
-            // Beat sync config
-            localStorage.removeItem('beat_sync_config')
-            console.log('✅ Beat sync config cleared')
+            console.log('✅ All data deleted from localStorage')
 
-            // App settings
-            localStorage.removeItem('app_settings')
-            console.log('✅ App settings cleared')
-
-            addToast('✅ Alle Daten wurden gelöscht', 'success')
-            console.log('✅ All data deleted successfully')
-
-            // Reload page to reset app state
-            setTimeout(() => {
-              window.location.reload()
-            }, 1000)
+            // IMPORTANT: Hard reload to bypass service worker cache
+            // This ensures no cached data is loaded after deletion
+            window.location.href = window.location.href.split('?')[0] + '?t=' + Date.now()
           }
         }
       ]

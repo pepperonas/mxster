@@ -51,7 +51,7 @@ Schalte 10 spannende Erfolge frei und zeige dein Können!
 - 👑 **Unbesiegbar** - 5 Spiele in Folge gewonnen
 - 🎸 **Dekaden-Kenner** - 10 Songs einer Dekade perfekt erraten
 - ⚡ **Blitzschnell** - Ein Spiel in unter 5 Minuten abgeschlossen
-- 🔥 **Comeback-King** - Aus letztem Platz zum Gewinner aufgestiegen
+- 🔥 **Comeback-King** - Vom letztem Platz zum Gewinner aufgestiegen
 - 🎓 **Musikexperte** - 1000 Gesamtpunkte über alle Spiele erreicht
 
 **Features:**

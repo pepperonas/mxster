@@ -5,7 +5,7 @@
 
 import { useState, useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { useGame, useUI, useAuth } from '@/contexts'
+import { useGame, useUI, useAuth, useAchievements } from '@/contexts'
 import {
   PlayerInfo,
   QRScanner,
@@ -30,6 +30,7 @@ import {
   type SpotifyPlayerState
 } from '@/services'
 import { songs } from '@/data/songs'
+import { AchievementId } from '@/types/achievements'
 
 export function GameScreen() {
   const navigate = useNavigate()
@@ -42,6 +43,13 @@ export function GameScreen() {
 
   // Timeline Mode: Track which song we already showed modal for
   const lastSongIdShown = useRef<string | null>(null)
+
+  // Game Duration Tracking (for LIGHTNING_FAST achievement)
+  const gameStartTime = useRef<number | null>(null)
+
+  // Player Rankings History (for COMEBACK_KING achievement)
+  // Array of snapshots: [{turn: number, rankings: [playerName, playerName, ...]}, ...]
+  const rankingsHistory = useRef<Array<{ turn: number; rankings: string[] }>>([])
 
   const {
     gameMode,
@@ -63,6 +71,7 @@ export function GameScreen() {
     resetGame
   } = useGame()
   const { showModal, closeModal, addToast } = useUI()
+  const { unlockAchievement, updateProgress, checkAchievements } = useAchievements()
 
   // ============================================================================
   // Redirect if game not properly initialized or not logged in
@@ -81,6 +90,13 @@ export function GameScreen() {
       console.log('⚠️ No Spotify access token found, redirecting to login')
       addToast('Bitte melde dich bei Spotify an, um das Spiel zu starten', 'error')
       navigate('/')
+      return
+    }
+
+    // Start game timer (for LIGHTNING_FAST achievement)
+    if (gameStartTime.current === null) {
+      gameStartTime.current = Date.now()
+      console.log('⏱️ Game timer started')
     }
   }, [gameMode, gameVariant, players.length, accessToken, isLoggedIn, navigate, addToast])
 
@@ -504,6 +520,34 @@ export function GameScreen() {
       score: newScore
     })
 
+    // ============================================================================
+    // Achievement Tracking (Hardcore Mode only)
+    // ============================================================================
+    if (gameMode === 'hardcore' && guessResult) {
+      const playerName = player.name
+
+      // Track perfect guess (all 3 correct: title + artist + year)
+      if (earnedPoints === 15) {
+        console.log(`🏆 Perfect guess! Tracking for player: ${playerName}`)
+        // This will be used for PERFECT_STREAK achievement
+        // TODO: Track consecutive perfect guesses in player stats
+      }
+
+      // Track decades for TIME_TRAVELER and DECADE_MASTER achievements
+      if (guessResult.titleMatch || guessResult.artistMatch || guessResult.yearDifference <= 2) {
+        // Song was correctly identified (at least partially)
+        const decade = Math.floor(currentSong.year / 10) * 10
+        console.log(`📊 Tracking decade ${decade}s for player: ${playerName}`)
+        // TODO: Track unique decades and songs per decade in achievement context
+      }
+
+      // Track score milestones
+      if (newScore >= 100) {
+        // HARDCORE_CHAMPION achievement check will happen at game end
+        console.log(`🏆 Player ${playerName} reached ${newScore} points!`)
+      }
+    }
+
     // Check win condition (use updated player data)
     const updatedPlayer = {
       ...player,
@@ -513,6 +557,18 @@ export function GameScreen() {
     }
     const updatedPlayers = [...players]
     updatedPlayers[currentPlayer] = updatedPlayer
+
+    // Track rankings for COMEBACK_KING achievement (Hardcore Mode only)
+    if (gameMode === 'hardcore') {
+      const sortedByScore = [...updatedPlayers].sort((a, b) => b.score - a.score)
+      const currentRankings = sortedByScore.map(p => p.name)
+      rankingsHistory.current.push({
+        turn: updatedPlayer.cards, // Use winner's card count as turn number
+        rankings: currentRankings
+      })
+      console.log(`📊 Rankings after turn ${updatedPlayer.cards}:`, currentRankings)
+    }
+
     const winCheck = checkWinCondition(updatedPlayers, currentPlayer, gameMode)
 
     if (winCheck.gameOver && winCheck.winner) {
@@ -790,6 +846,123 @@ export function GameScreen() {
       addToast('Spiel wurde zur Historie hinzugefügt!', 'success')
     } catch (error) {
       console.error('❌ Failed to save game:', error)
+    }
+
+    // ============================================================================
+    // Check Achievements for ALL Players (Hardcore Mode only)
+    // ============================================================================
+    if (gameMode === 'hardcore') {
+      // Calculate game duration
+      const gameDurationMs = gameStartTime.current ? Date.now() - gameStartTime.current : 0
+      const gameDurationMinutes = gameDurationMs / 1000 / 60
+      console.log(`⏱️ Game duration: ${gameDurationMinutes.toFixed(2)} minutes`)
+
+      // Sort players by score to determine rankings
+      const sortedPlayers = [...players].sort((a, b) => b.score - a.score)
+      const winnerIndex = players.findIndex(p => p.name === winner.name)
+
+      players.forEach((player, index) => {
+        console.log(`🏆 Checking achievements for player: ${player.name}`)
+
+        // 1. HARDCORE_CHAMPION: 100+ points in one game
+        if (player.score >= 100) {
+          unlockAchievement(player.name, AchievementId.HARDCORE_CHAMPION)
+          console.log(`✅ HARDCORE_CHAMPION unlocked for ${player.name}`)
+        }
+
+        // 2. TIME_TRAVELER: Songs from 5 different decades
+        const decades = new Set(player.timeline.map(song => Math.floor(song.year / 10) * 10))
+        if (decades.size >= 5) {
+          unlockAchievement(player.name, AchievementId.TIME_TRAVELER)
+          console.log(`✅ TIME_TRAVELER unlocked for ${player.name} (${decades.size} decades)`)
+        }
+        updateProgress(player.name, AchievementId.TIME_TRAVELER, decades.size)
+
+        // 3. DECADE_MASTER: 10 songs from same decade
+        const decadeCounts: Record<number, number> = {}
+        player.timeline.forEach(song => {
+          const decade = Math.floor(song.year / 10) * 10
+          decadeCounts[decade] = (decadeCounts[decade] || 0) + 1
+        })
+        const maxDecadeCount = Math.max(...Object.values(decadeCounts), 0)
+        if (maxDecadeCount >= 10) {
+          unlockAchievement(player.name, AchievementId.DECADE_MASTER)
+          console.log(`✅ DECADE_MASTER unlocked for ${player.name}`)
+        }
+        updateProgress(player.name, AchievementId.DECADE_MASTER, maxDecadeCount)
+
+        // 4. PERFECTIONIST: All songs placed correctly (10/10 cards)
+        if (player.cards === 10) {
+          unlockAchievement(player.name, AchievementId.PERFECTIONIST)
+          console.log(`✅ PERFECTIONIST unlocked for ${player.name}`)
+        }
+
+        // 5. LIGHTNING_FAST: Game finished in under 5 minutes
+        if (player.name === winner.name && gameDurationMinutes < 5) {
+          unlockAchievement(player.name, AchievementId.LIGHTNING_FAST)
+          console.log(`✅ LIGHTNING_FAST unlocked for ${player.name} (${gameDurationMinutes.toFixed(2)}min)`)
+        }
+
+        // 6. COMEBACK_KING: Winner was in last place at some point during the game
+        if (player.name === winner.name && players.length > 1 && rankingsHistory.current.length > 0) {
+          // Check if winner was ever in last place during the game
+          let wasInLastPlace = false
+
+          // Check rankings in the first half of the game (to ensure real comeback)
+          const firstHalfSnapshots = rankingsHistory.current.filter(
+            snapshot => snapshot.turn <= 5 // First 5 turns
+          )
+
+          firstHalfSnapshots.forEach(snapshot => {
+            const lastIndex = snapshot.rankings.length - 1
+            if (snapshot.rankings[lastIndex] === player.name) {
+              wasInLastPlace = true
+              console.log(`🔍 ${player.name} was in last place at turn ${snapshot.turn}`)
+            }
+          })
+
+          if (wasInLastPlace) {
+            unlockAchievement(player.name, AchievementId.COMEBACK_KING)
+            console.log(`✅ COMEBACK_KING unlocked for ${player.name}`)
+          } else {
+            console.log(`⚠️ ${player.name} won but was never in last place (no comeback)`)
+          }
+        }
+      })
+
+      // 7. PERFECT_STREAK: 3x consecutive perfect guesses (15 points each)
+      // This requires tracking streak during the game, not just at the end
+      // We check timeline for consecutive songs with max points
+      players.forEach(player => {
+        let currentStreak = 0
+        let maxStreak = 0
+
+        player.timeline.forEach(song => {
+          // Check if this song was a perfect guess (song has earnedPoints field from placeCardInTimeline)
+          const earnedPoints = (song as any).earnedPoints || 0
+          if (earnedPoints === 15) {
+            currentStreak++
+            maxStreak = Math.max(maxStreak, currentStreak)
+          } else {
+            currentStreak = 0
+          }
+        })
+
+        updateProgress(player.name, AchievementId.PERFECT_STREAK, maxStreak)
+        if (maxStreak >= 3) {
+          unlockAchievement(player.name, AchievementId.PERFECT_STREAK)
+          console.log(`✅ PERFECT_STREAK unlocked for ${player.name} (streak: ${maxStreak})`)
+        }
+      })
+
+      // 8. UNBEATABLE & 9. MARATHON_RUNNER & 10. MUSIC_EXPERT:
+      // Check from full game history
+      const historyData = GameHistory.loadAll()
+      if (historyData && historyData.games) {
+        players.forEach(player => {
+          checkAchievements(player.name, historyData)
+        })
+      }
     }
 
     // Show GameEndStatsDialog with confetti and statistics

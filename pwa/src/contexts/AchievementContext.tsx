@@ -172,17 +172,45 @@ export function AchievementProvider({ children }: { children: ReactNode }) {
     if (totalGames >= 50) {
       unlockAchievement(playerName, AchievementId.MARATHON_RUNNER)
     }
+    updateProgress(playerName, AchievementId.MARATHON_RUNNER, totalGames)
 
     // Check Music Expert (1000 total points)
     if (totalPoints >= 1000) {
       unlockAchievement(playerName, AchievementId.MUSIC_EXPERT)
     }
+    updateProgress(playerName, AchievementId.MUSIC_EXPERT, totalPoints)
+
+    // Check Unbeatable (5 consecutive wins)
+    let consecutiveWins = 0
+    let maxConsecutiveWins = 0
+
+    // Sort games by date
+    const sortedGames = [...playerGames].sort((a, b) => a.timestamp - b.timestamp)
+
+    sortedGames.forEach(game => {
+      const winner = game.players.reduce((prev, current) =>
+        current.score > prev.score ? current : prev
+      )
+
+      if (winner.name === playerName) {
+        consecutiveWins++
+        maxConsecutiveWins = Math.max(maxConsecutiveWins, consecutiveWins)
+      } else {
+        consecutiveWins = 0
+      }
+    })
+
+    if (maxConsecutiveWins >= 5) {
+      unlockAchievement(playerName, AchievementId.UNBEATABLE)
+    }
+    updateProgress(playerName, AchievementId.UNBEATABLE, maxConsecutiveWins)
 
     // Update stats
     updateStats(playerName, {
       totalGames,
       totalWins,
-      totalPoints
+      totalPoints,
+      consecutiveWins: maxConsecutiveWins
     })
   }
 
