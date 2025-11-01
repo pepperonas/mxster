@@ -25,13 +25,13 @@ export function HowToPlayContent() {
 
   const sections: AccordionSection[] = [
     {
-      id: 'guess',
-      icon: '🎯',
-      title: 'Ratespiel',
+      id: 'hardcore',
+      icon: '🔥',
+      title: 'Hardcore',
       content: (
         <div className="space-y-4">
           <p className="text-text-secondary">
-            <strong className="text-white">Ziel:</strong> Sammle die meisten Punkte durch richtiges Raten!
+            <strong className="text-white">Ziel:</strong> Sammle die meisten Punkte durch präzises Raten!
           </p>
 
           <div className="space-y-3">
@@ -62,21 +62,42 @@ export function HowToPlayContent() {
             </div>
 
             <div className="glass p-3 rounded-lg border border-accent/20">
-              <h4 className="font-semibold text-secondary mb-2">⭐ Punktevergabe:</h4>
-              <ul className="space-y-1 text-sm text-text-secondary">
-                <li className="flex items-center gap-2">
-                  <span className="text-green-400">✓</span>
-                  <span>Titel richtig: <strong className="text-white">+1 Punkt</strong></span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <span className="text-green-400">✓</span>
-                  <span>Künstler richtig: <strong className="text-white">+1 Punkt</strong></span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <span className="text-green-400">✓</span>
-                  <span>Jahr richtig (±2 Jahre Toleranz): <strong className="text-white">+1 Punkt</strong></span>
-                </li>
-              </ul>
+              <h4 className="font-semibold text-secondary mb-2">⭐ Granulares Punktesystem (Neu!):</h4>
+              <div className="space-y-2 text-sm text-text-secondary">
+                <div className="flex items-start gap-2">
+                  <span className="text-green-400 mt-0.5">✓</span>
+                  <div>
+                    <strong className="text-white">Titel richtig: +5 Punkte</strong>
+                  </div>
+                </div>
+                <div className="flex items-start gap-2">
+                  <span className="text-green-400 mt-0.5">✓</span>
+                  <div>
+                    <strong className="text-white">Künstler richtig: +5 Punkte</strong>
+                  </div>
+                </div>
+                <div className="flex items-start gap-2">
+                  <span className="text-green-400 mt-0.5">✓</span>
+                  <div>
+                    <strong className="text-white">Jahr exakt: +5 Punkte</strong>
+                    <div className="ml-4 mt-1 space-y-1">
+                      <div className="flex items-center gap-2">
+                        <span className="text-yellow-400">🟡</span>
+                        <span>±1 Jahr daneben: <strong className="text-white">+2 Punkte</strong></span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <span className="text-yellow-400">🟡</span>
+                        <span>±2 Jahre daneben: <strong className="text-white">+1 Punkt</strong></span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div className="bg-accent/10 p-2 rounded border border-accent/30 mt-2">
+                  <p className="text-xs">
+                    <strong className="text-accent">Maximum:</strong> 15 Punkte pro Song (5+5+5) | 150 Punkte insgesamt
+                  </p>
+                </div>
+              </div>
             </div>
 
             <div className="glass p-3 rounded-lg border border-accent/20">
@@ -346,7 +367,7 @@ export function HowToPlayContent() {
                 </li>
                 <li className="flex items-center gap-2">
                   <span className="text-accent">3.</span>
-                  <span>Im Ratespiel: Auch Teilpunkte zählen - rate immer!</span>
+                  <span>Im Hardcore Modus: Auch Teilpunkte zählen - selbst ±2 Jahre bringen 1 Punkt!</span>
                 </li>
                 <li className="flex items-center gap-2">
                   <span className="text-accent">4.</span>

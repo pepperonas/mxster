@@ -122,6 +122,10 @@ test-*.js
 **/test-*.js
 card-generator/test-*.js
 
+# ABER: Test-Skripte in scripts/testing/ SOLLEN in Git sein
+!scripts/testing/*.js
+!scripts/testing/*.md
+
 # 3D printer files (distributed via GitHub Releases)
 card-generator/output/models/*.3mf
 *.3mf

@@ -38,6 +38,8 @@ mxster ist ein **Multiplayer-Musikquiz** mit drei verschiedenen Spielmodi:
 - 🎮 **Multiplayer** - Spiele mit beliebig vielen Freunden
 - ✏️ **Song-Editor** - Bearbeite Songs nachträglich mit interaktivem Wizard
 - ✨ **Music-Reactive Particles** - 3D-Partikelhintergrund reagiert auf Musikwiedergabe mit intensiven Effekten
+- 🎉 **Achievement Unlock Animations** - Spektakuläre Animationen mit Konfetti beim Freischalten von Erfolgen (3 Sekunden pro Animation)
+- ⌨️ **Auto-Focus Feature** - Automatischer Fokus auf Titel-Eingabefeld nach Song-Ziehung (nur Desktop/Laptop)
 
 ## 🏆 Achievements
 
@@ -1218,6 +1220,55 @@ npm install --save-dev jsqr pngjs sharp
 **✅ Success** - Test bestanden, alles in Ordnung
 **⚠️ Warning** - Nicht kritisch (z.B. gitignored Dateien fehlen in CI/CD)
 **❌ Error** - Kritisches Problem, muss behoben werden
+
+#### Testing Achievements & Animationen
+
+**Location**: `/scripts/testing/` - Browser-Console-Skripte zum Testen der Achievement-Animationen
+
+**Empfohlenes Test-Skript** (`test-animations-simple.js`):
+```javascript
+// In Browser DevTools Console kopieren
+const unlockAchievement = (playerName, achievementId) => {
+  const event = new CustomEvent('test-achievement-unlock', {
+    detail: { playerName, achievementId }
+  })
+  window.dispatchEvent(event)
+  console.log(`🎯 Triggered: ${achievementId} for ${playerName}`)
+}
+
+// Teste einzelne Achievement-Freischaltung
+unlockAchievement('TestPlayer', 'hardcore_champion')
+
+// Teste mehrere Achievements nacheinander (mit 5s Verzögerung)
+setTimeout(() => {
+  unlockAchievement('TestPlayer', 'time_traveler')
+  unlockAchievement('TestPlayer', 'perfectionist')
+  unlockAchievement('TestPlayer', 'lightning_fast')
+  unlockAchievement('TestPlayer', 'comeback_king')
+}, 5000)
+```
+
+**Weitere Test-Skripte**:
+- `test-animations-simple.js` - **Empfohlen**: Custom Event Methode (einfachste Variante)
+- `test-achievement-animations.js` - Initialer Test-Ansatz
+- `test-achievement-animations-simple.js` - Game History Setup
+- `TESTING-INSTRUCTIONS.md` - Vollständige Anleitung
+
+**Wie testen?**:
+1. Öffne https://mxster.de oder `npm run dev` (localhost:5174)
+2. Drücke F12 (DevTools öffnen)
+3. Gehe zu "Console" Tab
+4. Kopiere Code aus `scripts/testing/test-animations-simple.js`
+5. Füge Code ein und drücke Enter
+6. Beobachte die Achievement-Unlock-Animationen (3s pro Animation + 1s Pause)
+
+**Features der Animationen**:
+- 🎉 Konfetti-Effekt mit canvas-confetti
+- ⏱️ 3 Sekunden Animation pro Achievement
+- 📋 Queue-System für mehrere Achievements
+- 🔁 Sequentielle Abarbeitung mit 1s Pause zwischen Animationen
+- 🎨 Farbiger Achievement-Badge mit Icon und Beschreibung
+- 🎵 Sound-Effekte (optional, falls implementiert)
 
 ### GitHub Release erstellen
 

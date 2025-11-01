@@ -1,6 +1,6 @@
 import { BrowserRouter, Routes, Route, useNavigate, useLocation } from 'react-router-dom'
 import { AppProviders, useInteraction, useGame, useUI } from '@/contexts'
-import { Modal, Toast, ActionBar, Sidebar } from '@/components'
+import { Modal, Toast, ActionBar, Sidebar, AchievementUnlockAnimation } from '@/components'
 import { ParticleBackground } from '@/components/game'
 import {
   LandingPage,
@@ -118,6 +118,7 @@ function AppContent() {
       {/* Modal & Toast (rendered via Portal) */}
       <Modal />
       <Toast />
+      <AchievementUnlockAnimation />
 
       {/* Main Content - Router */}
       <Routes>

@@ -10,6 +10,7 @@ export { GameProvider } from './GameContext'
 export { UIProvider } from './UIContext'
 export { SettingsProvider } from './SettingsContext'
 export { InteractionProvider } from './InteractionContext'
+export { AchievementNotificationProvider } from './AchievementNotificationContext'
 export { AchievementProvider } from './AchievementContext'
 
 // Hooks
@@ -18,4 +19,5 @@ export { useGame } from './GameContext'
 export { useUI } from './UIContext'
 export { useSettings } from './SettingsContext'
 export { useInteraction } from './InteractionContext'
+export { useAchievementNotifications } from './AchievementNotificationContext'
 export { useAchievements } from './AchievementContext'

@@ -3,7 +3,7 @@
  * Manages achievement tracking and unlocking
  */
 
-import { createContext, useContext, useState, useEffect, ReactNode } from 'react'
+import { createContext, useContext, useState, useEffect, useCallback, ReactNode } from 'react'
 import {
   AchievementId,
   Achievement,
@@ -12,6 +12,7 @@ import {
 } from '@/types/achievements'
 import type { GameHistory } from '@/types'
 import { useSettings } from './SettingsContext'
+import { useAchievementNotifications } from './AchievementNotificationContext'
 
 interface AchievementContextType {
   playerAchievements: Map<string, PlayerAchievements>
@@ -53,6 +54,7 @@ function initializePlayerAchievements(playerName: string): PlayerAchievements {
 
 export function AchievementProvider({ children }: { children: ReactNode }) {
   const { settings } = useSettings()
+  const { queueNotification } = useAchievementNotifications()
   const [playerAchievements, setPlayerAchievements] = useState<Map<string, PlayerAchievements>>(
     new Map()
   )
@@ -125,19 +127,28 @@ export function AchievementProvider({ children }: { children: ReactNode }) {
   }
 
   // Unlock achievement for player
-  const unlockAchievement = (playerName: string, achievementId: AchievementId) => {
-    const achievements = getOrCreatePlayerAchievements(playerName)
-    const achievement = achievements.achievements.find((a) => a.id === achievementId)
+  const unlockAchievement = useCallback((playerName: string, achievementId: AchievementId) => {
+    setPlayerAchievements((currentMap) => {
+      const achievements = currentMap.get(playerName) || initializePlayerAchievements(playerName)
+      const achievement = achievements.achievements.find((a) => a.id === achievementId)
 
-    if (achievement && !achievement.unlocked) {
-      achievement.unlocked = true
-      achievement.unlockedAt = Date.now()
+      if (achievement && !achievement.unlocked) {
+        achievement.unlocked = true
+        achievement.unlockedAt = Date.now()
 
-      setPlayerAchievements(new Map(playerAchievements).set(playerName, { ...achievements }))
+        console.log(`🏆 Achievement unlocked for ${playerName}: ${achievement.name}`)
 
-      console.log(`🏆 Achievement unlocked for ${playerName}: ${achievement.name}`)
-    }
-  }
+        // Queue notification for animation
+        queueNotification(playerName, achievementId, achievement)
+
+        const newMap = new Map(currentMap)
+        newMap.set(playerName, { ...achievements })
+        return newMap
+      }
+
+      return currentMap
+    })
+  }, [queueNotification])
 
   // Update player stats
   const updateStats = (playerName: string, statsUpdate: Partial<PlayerAchievements['stats']>) => {
@@ -260,6 +271,21 @@ export function AchievementProvider({ children }: { children: ReactNode }) {
       throw error
     }
   }
+
+  // TEST EVENT LISTENER - For testing achievement animations in browser console
+  useEffect(() => {
+    const handleTestUnlock = (event: CustomEvent) => {
+      const { playerName, achievementId } = event.detail
+      console.log('🧪 TEST EVENT: Unlocking achievement', { playerName, achievementId })
+      unlockAchievement(playerName, achievementId)
+    }
+
+    window.addEventListener('test-achievement-unlock' as any, handleTestUnlock as any)
+
+    return () => {
+      window.removeEventListener('test-achievement-unlock' as any, handleTestUnlock as any)
+    }
+  }, [unlockAchievement])
 
   return (
     <AchievementContext.Provider

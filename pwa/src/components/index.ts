@@ -12,6 +12,7 @@ export { SettingsDialog } from './SettingsDialog'
 export { PlayerStatsDialog } from './PlayerStatsDialog'
 export { GameEndStatsDialog } from './GameEndStatsDialog'
 export { AchievementsDialog } from './AchievementsDialog'
+export { AchievementUnlockAnimation } from './AchievementUnlockAnimation'
 
 // Layout Components
 // TODO: Phase 7 - Game Setup Flow Components

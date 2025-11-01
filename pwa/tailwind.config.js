@@ -66,6 +66,8 @@ export default {
         'slide-up': 'slideUp 0.6s ease-out',
         'float': 'float 3s ease-in-out infinite',
         'glow': 'glow 2s ease-in-out infinite alternate',
+        'achievement-unlock': 'achievementSlideIn 0.3s ease-out, achievementFadeOut 0.3s ease-in 2.7s forwards',
+        'bounce-once': 'bounceOnce 0.6s ease-out',
       },
       keyframes: {
         fadeIn: {
@@ -83,6 +85,20 @@ export default {
         glow: {
           '0%': { boxShadow: '0 0 20px rgba(74, 144, 226, 0.4)' },
           '100%': { boxShadow: '0 0 30px rgba(74, 144, 226, 0.6)' },
+        },
+        achievementSlideIn: {
+          '0%': { transform: 'translateY(-100px)', opacity: '0' },
+          '100%': { transform: 'translateY(0)', opacity: '1' },
+        },
+        achievementFadeOut: {
+          '0%': { opacity: '1' },
+          '100%': { opacity: '0' },
+        },
+        bounceOnce: {
+          '0%, 100%': { transform: 'scale(1)' },
+          '25%': { transform: 'scale(1.2)' },
+          '50%': { transform: 'scale(0.9)' },
+          '75%': { transform: 'scale(1.1)' },
         },
       },
     },

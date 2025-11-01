@@ -3,7 +3,7 @@
  * Input fields for guessing title, artist, year
  */
 
-import { useState } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useGame, useUI } from '@/contexts'
 
 interface GuessFormProps {
@@ -17,9 +17,24 @@ export function GuessForm({ onSubmit, onSkip }: GuessFormProps) {
   const [title, setTitle] = useState('')
   const [artist, setArtist] = useState('')
   const [year, setYear] = useState('')
+  const titleInputRef = useRef<HTMLInputElement>(null)
 
   // Get current player name
   const playerName = players[currentPlayer]?.name || 'Spieler'
+
+  // Auto-focus on title input when component mounts (Desktop/Laptop only)
+  useEffect(() => {
+    // Detect if device is mobile (touch-enabled with small screen)
+    const isMobile = 'ontouchstart' in window && window.innerWidth < 768
+
+    // Only auto-focus on desktop/laptop to prevent mobile keyboard popup
+    if (!isMobile && titleInputRef.current) {
+      // Small delay to ensure component is fully rendered
+      setTimeout(() => {
+        titleInputRef.current?.focus()
+      }, 100)
+    }
+  }, [currentPlayer]) // Re-focus when player changes
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
@@ -99,6 +114,7 @@ export function GuessForm({ onSubmit, onSkip }: GuessFormProps) {
             Titel {gameMode === 'hardcore' && '(+5 Punkte)'}
           </label>
           <input
+            ref={titleInputRef}
             type="text"
             id="title"
             value={title}
