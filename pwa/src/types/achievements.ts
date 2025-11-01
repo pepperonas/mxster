@@ -99,7 +99,7 @@ export const ACHIEVEMENT_DEFINITIONS: Record<AchievementId, Omit<Achievement, 'u
   [AchievementId.COMEBACK_KING]: {
     id: AchievementId.COMEBACK_KING,
     name: 'Comeback-King',
-    description: 'Aus letztem Platz zum Gewinner aufgestiegen',
+    description: 'Vom letzten Platz zum Gewinner aufgestiegen',
     icon: '🔥'
   },
   [AchievementId.MUSIC_EXPERT]: {
