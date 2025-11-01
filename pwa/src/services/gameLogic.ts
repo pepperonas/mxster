@@ -103,11 +103,39 @@ export function isTimelineValid(timeline: Song[]): boolean {
 // ============================================================================
 
 /**
- * Calculate points for guess (only in Guess Mode)
- * Each correct answer = 1 point (max 3 points)
+ * Calculate points for Hardcore mode
+ * Title: 5 points
+ * Artist: 5 points
+ * Year: 5 points (exact), 2 points (±1 year), 1 point (±2 years)
+ * Max 15 points per song
  */
-export function calculatePoints(correctCount: number): number {
-  return Math.max(0, Math.min(3, correctCount))
+export function calculatePoints(
+  titleMatch: boolean,
+  artistMatch: boolean,
+  yearDifference: number
+): number {
+  let points = 0
+
+  // Title: 5 points
+  if (titleMatch) {
+    points += 5
+  }
+
+  // Artist: 5 points
+  if (artistMatch) {
+    points += 5
+  }
+
+  // Year: 5/2/1 points based on difference
+  if (yearDifference === 0) {
+    points += 5
+  } else if (yearDifference === 1) {
+    points += 2
+  } else if (yearDifference === 2) {
+    points += 1
+  }
+
+  return points
 }
 
 /**
@@ -159,8 +187,8 @@ export function checkWinCondition(
     message: ''
   }
 
-  // GUESS MODE: All players must have 10 cards, then highest score wins
-  if (gameMode === 'guess') {
+  // HARDCORE MODE: All players must have 10 cards, then highest score wins
+  if (gameMode === 'hardcore') {
     // Current player has 10 cards
     if (player.cards >= 10) {
       // Check if ALL players have 10 cards
@@ -270,7 +298,7 @@ export function getNextDJIndex(
   let nextPlayer = (currentPlayer + 1) % totalPlayers
 
   // DJ rotation logic (only Physical Guess Mode)
-  if (gameVariant === 'physical' && gameMode === 'guess') {
+  if (gameVariant === 'physical' && gameMode === 'hardcore') {
     // If turn returns to DJ, DJ switches to next player
     if (nextPlayer === currentDJ) {
       const nextDJ = (currentDJ + 1) % totalPlayers

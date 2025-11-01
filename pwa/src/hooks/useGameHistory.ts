@@ -36,11 +36,6 @@ interface ImportResult {
 export function useGameHistory() {
   const [history, setHistory] = useState<HistoryEntry[]>([])
 
-  // Load history from localStorage on mount
-  useEffect(() => {
-    loadAll()
-  }, [])
-
   /**
    * Load all game history from localStorage
    */
@@ -50,6 +45,7 @@ export function useGameHistory() {
       if (stored) {
         const data = JSON.parse(stored) as HistoryEntry[]
         setHistory(data)
+        console.log(`✅ Loaded ${data.length} game(s) from history`)
         return data
       }
       return []
@@ -58,6 +54,11 @@ export function useGameHistory() {
       return []
     }
   }, [])
+
+  // Load history from localStorage on mount
+  useEffect(() => {
+    loadAll()
+  }, [loadAll])
 
   /**
    * Save history to localStorage

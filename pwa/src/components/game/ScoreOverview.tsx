@@ -10,7 +10,7 @@ export function ScoreOverview() {
   const { players, currentPlayer, gameMode } = useGame()
 
   // Only show in Guess mode
-  if (gameMode !== 'guess') return null
+  if (gameMode !== 'hardcore') return null
 
   // Sort players by score (descending)
   const sortedPlayers = [...players].sort((a, b) => b.score - a.score)

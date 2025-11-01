@@ -4,26 +4,31 @@
  */
 
 import { useState, useRef } from 'react'
-import { useSettings } from '@/contexts'
+import { useSettings, useAchievements } from '@/contexts'
 import { useGameHistory } from '@/hooks'
 import { useUI } from '@/contexts'
 
 export function SettingsDialog() {
   const { settings, updateSettings, removePlayer } = useSettings()
-  const { history, importGames } = useGameHistory()
-  const { addToast, showModal } = useUI()
+  const { history, importGames, deleteGame, clearAll } = useGameHistory()
+  const { exportAchievements, importAchievements, playerAchievements } = useAchievements()
+  const { addToast, showModal, closeModal } = useUI()
 
   const [isDragging, setIsDragging] = useState(false)
+  const [playerToDelete, setPlayerToDelete] = useState<string | null>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
 
   // Export all data as JSON
   const handleExport = () => {
     try {
+      const achievementsData = JSON.parse(exportAchievements())
+
       const exportData = {
-        version: '1.0',
+        version: '1.1', // Bumped version to include achievements
         exportedAt: new Date().toISOString(),
         settings,
-        history
+        history,
+        achievements: achievementsData
       }
 
       const dataStr = JSON.stringify(exportData, null, 2)
@@ -70,6 +75,13 @@ export function SettingsDialog() {
         console.log('📊 History import result:', result)
       }
 
+      // Import achievements (if available)
+      if (importData.achievements) {
+        const achievementsStr = JSON.stringify(importData.achievements)
+        importAchievements(achievementsStr)
+        console.log('🏆 Achievements imported:', importData.achievements)
+      }
+
       addToast('✅ Daten erfolgreich importiert', 'success')
       console.log('📥 Import successful')
     } catch (error) {
@@ -113,17 +125,59 @@ export function SettingsDialog() {
     }
   }
 
-  // Handle player removal with confirmation
-  const handleRemovePlayer = (playerName: string) => {
+  // Handle complete data deletion with confirmation
+  const handleDeleteAllData = () => {
+    // Count all data
+    const totalPlayers = settings.savedPlayers.length
+    const totalGames = history.length
+    const totalAchievements = Array.from(playerAchievements.values()).reduce(
+      (sum, player) => sum + player.achievements.filter(a => a.unlocked).length,
+      0
+    )
+
     showModal(
-      '🗑️ Spieler löschen?',
+      '⚠️ Alle Daten löschen?',
       <div className="space-y-4">
         <p className="text-gray-300">
-          Möchtest du den Spieler <strong className="text-white">"{playerName}"</strong> wirklich löschen?
+          Möchtest du <strong className="text-red-400">ALLE Daten</strong> unwiderruflich löschen?
         </p>
+
+        {/* Statistics about to be deleted */}
+        <div className="glass p-4 border border-blue-500/30 rounded-lg bg-blue-900/10">
+          <p className="text-sm font-bold text-blue-300 mb-3">Was wird gelöscht:</p>
+          <div className="grid grid-cols-2 gap-3">
+            <div className="text-center p-3 bg-primary/50 rounded-lg border border-accent/20">
+              <div className="text-2xl font-bold text-accent">{totalPlayers}</div>
+              <div className="text-xs text-text-secondary">Spieler</div>
+            </div>
+            <div className="text-center p-3 bg-primary/50 rounded-lg border border-accent/20">
+              <div className="text-2xl font-bold text-accent">{totalGames}</div>
+              <div className="text-xs text-text-secondary">Spiele</div>
+            </div>
+            <div className="text-center p-3 bg-primary/50 rounded-lg border border-accent/20">
+              <div className="text-2xl font-bold text-accent">{totalAchievements}</div>
+              <div className="text-xs text-text-secondary">Achievements</div>
+            </div>
+            <div className="text-center p-3 bg-primary/50 rounded-lg border border-accent/20">
+              <div className="text-2xl font-bold text-accent">✓</div>
+              <div className="text-xs text-text-secondary">Einstellungen</div>
+            </div>
+          </div>
+        </div>
+
+        {/* Warning */}
+        <div className="glass p-4 border border-red-500/50 rounded-lg bg-red-900/20">
+          <p className="text-sm text-text-secondary leading-relaxed">
+            <strong className="text-red-400">⚠️ ACHTUNG:</strong> Diese Aktion kann <strong>nicht rückgängig</strong> gemacht werden!
+            Alle Spieler, Spielhistorie, Achievements und Einstellungen werden <strong>permanent gelöscht</strong>.
+            Die App wird auf den Auslieferungszustand zurückgesetzt.
+          </p>
+        </div>
+
+        {/* Extra confirmation */}
         <div className="glass p-3 border border-yellow-500/30 rounded-lg bg-yellow-900/10">
-          <p className="text-sm text-text-secondary">
-            <strong className="text-yellow-400">Hinweis:</strong> Diese Aktion kann nicht rückgängig gemacht werden. Der Spieler wird aus deiner gespeicherten Liste entfernt.
+          <p className="text-sm text-yellow-300">
+            💡 <strong>Tipp:</strong> Erstelle vorher ein Backup über "Sichern & Wiederherstellen", wenn du deine Daten behalten möchtest!
           </p>
         </div>
       </div>,
@@ -131,25 +185,165 @@ export function SettingsDialog() {
         {
           label: 'Abbrechen',
           variant: 'secondary',
+          closeOnClick: true,
           onClick: () => {
-            console.log(`❌ Spieler löschen abgebrochen: ${playerName}`)
+            console.log('❌ Alle Daten löschen abgebrochen')
           }
         },
         {
-          label: 'Löschen',
+          label: 'Alles unwiderruflich löschen',
           variant: 'danger',
+          closeOnClick: true,
           onClick: () => {
-            removePlayer(playerName)
-            addToast(`✅ Spieler "${playerName}" wurde gelöscht`, 'success')
-            console.log(`🗑️ Spieler gelöscht: ${playerName}`)
+            // 1. Clear all localStorage keys
+            console.log('🗑️ Deleting all data...')
+
+            // Settings
+            localStorage.removeItem('mxster_settings')
+            console.log('✅ Settings cleared')
+
+            // Achievements
+            localStorage.removeItem('mxster_achievements')
+            console.log('✅ Achievements cleared')
+
+            // Game History
+            localStorage.removeItem('mxster_history')
+            console.log('✅ Game history cleared')
+
+            // Game State
+            localStorage.removeItem('mxster_game_state')
+            console.log('✅ Game state cleared')
+
+            // Spotify tokens
+            localStorage.removeItem('spotify_auth_tokens')
+            console.log('✅ Spotify tokens cleared')
+
+            // Beat sync config
+            localStorage.removeItem('beat_sync_config')
+            console.log('✅ Beat sync config cleared')
+
+            // App settings
+            localStorage.removeItem('app_settings')
+            console.log('✅ App settings cleared')
+
+            addToast('✅ Alle Daten wurden gelöscht', 'success')
+            console.log('✅ All data deleted successfully')
+
+            // Reload page to reset app state
+            setTimeout(() => {
+              window.location.reload()
+            }, 1000)
           }
         }
       ]
     )
   }
 
+  // Handle player removal confirmation (inline dialog)
+  const confirmDeletePlayer = () => {
+    if (!playerToDelete) return
+
+    const playerName = playerToDelete
+
+    // 1. Delete from settings (saved players list)
+    removePlayer(playerName)
+    console.log(`🗑️ Removed player from settings: ${playerName}`)
+
+    // 2. Delete all games from history where player participated
+    const gamesToDelete = history.filter(game =>
+      game.players.some(p => p.name === playerName)
+    )
+    gamesToDelete.forEach(game => {
+      deleteGame(game.id)
+    })
+    console.log(`🗑️ Deleted ${gamesToDelete.length} games for player: ${playerName}`)
+
+    // 3. Delete achievements (done via localStorage)
+    const achievementsData = JSON.parse(localStorage.getItem('mxster_achievements') || '{}')
+    if (achievementsData[playerName]) {
+      delete achievementsData[playerName]
+      localStorage.setItem('mxster_achievements', JSON.stringify(achievementsData))
+      console.log(`🗑️ Deleted achievements for player: ${playerName}`)
+    }
+
+    addToast(`✅ Spieler "${playerName}" wurde komplett gelöscht`, 'success')
+    console.log(`✅ Player "${playerName}" completely deleted from all systems`)
+
+    // Close confirmation dialog
+    setPlayerToDelete(null)
+  }
+
+  // Handle player removal with confirmation
+  const handleRemovePlayer = (playerName: string) => {
+    setPlayerToDelete(playerName)
+  }
+
+  // Get data for player to delete (if any)
+  const playerGames = playerToDelete
+    ? history.filter(game => game.players.some(p => p.name === playerToDelete))
+    : []
+  const playerAchievementData = playerToDelete ? playerAchievements.get(playerToDelete) : null
+  const unlockedCount = playerAchievementData?.achievements.filter(a => a.unlocked).length || 0
+
   return (
     <div className="py-4">
+      {/* Inline Confirmation Dialog */}
+      {playerToDelete && (
+        <div className="fixed inset-0 z-[10000] flex items-center justify-center bg-black/70 backdrop-blur-sm">
+          <div className="relative glass rounded-2xl shadow-glow-accent border-2 border-red-500/50 max-w-md w-full mx-4">
+            {/* Header */}
+            <div className="p-6 border-b border-red-500/30">
+              <h3 className="text-xl font-bold text-white flex items-center gap-2">
+                <span className="text-2xl">🗑️</span>
+                <span>Spieler komplett löschen?</span>
+              </h3>
+            </div>
+
+            {/* Content */}
+            <div className="p-6 space-y-4">
+              <p className="text-gray-300">
+                Möchtest du den Spieler <strong className="text-white">"{playerToDelete}"</strong> wirklich <strong className="text-red-400">komplett löschen</strong>?
+              </p>
+
+              {/* Statistics about to be deleted */}
+              <div className="glass p-3 border border-blue-500/30 rounded-lg bg-blue-900/10">
+                <p className="text-sm font-bold text-blue-300 mb-2">Was wird gelöscht:</p>
+                <ul className="text-sm text-text-secondary space-y-1">
+                  <li>✓ Spieler aus gespeicherter Liste</li>
+                  <li>✓ {playerGames.length} Spiele aus der Spielhistorie</li>
+                  <li>✓ {unlockedCount} freigeschaltete Achievements</li>
+                  <li>✓ Alle Statistiken und Fortschritte</li>
+                </ul>
+              </div>
+
+              {/* Warning */}
+              <div className="glass p-3 border border-red-500/30 rounded-lg bg-red-900/10">
+                <p className="text-sm text-text-secondary">
+                  <strong className="text-red-400">⚠️ Achtung:</strong> Diese Aktion kann <strong>nicht rückgängig</strong> gemacht werden!
+                  Alle Daten dieses Spielers werden <strong>permanent gelöscht</strong>.
+                </p>
+              </div>
+            </div>
+
+            {/* Buttons */}
+            <div className="flex justify-end gap-3 p-6 border-t border-red-500/30">
+              <button
+                onClick={() => setPlayerToDelete(null)}
+                className="px-6 py-2.5 rounded-lg font-medium transition-all btn btn-secondary"
+              >
+                Abbrechen
+              </button>
+              <button
+                onClick={confirmDeletePlayer}
+                className="px-6 py-2.5 rounded-lg font-medium transition-all bg-red-600 hover:bg-red-700 text-white border-2 border-red-500"
+              >
+                Endgültig löschen
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       <div className="space-y-6">
         {/* Random Start Position Setting */}
         <div className="glass p-4 rounded-lg border-2 border-accent/30 hover:border-accent/50 transition-colors">
@@ -309,6 +503,26 @@ export function SettingsDialog() {
               </span>
             </p>
           </div>
+        </div>
+
+        {/* Danger Zone: Delete All Data */}
+        <div className="glass p-4 rounded-lg border-2 border-red-500/50 bg-red-900/10">
+          <div className="mb-4">
+            <h3 className="font-bold flex items-center gap-2 text-red-400">
+              <span>⚠️</span>
+              <span>Gefahrenzone</span>
+            </h3>
+            <p className="text-sm text-text-secondary mt-1">
+              Lösche alle Daten unwiderruflich aus der App.
+            </p>
+          </div>
+
+          <button
+            onClick={handleDeleteAllData}
+            className="w-full bg-red-600/20 hover:bg-red-600/30 border-2 border-red-500/50 hover:border-red-500 text-red-300 hover:text-red-200 font-bold py-3 px-4 rounded-lg transition-all"
+          >
+            🗑️ Alle Daten löschen
+          </button>
         </div>
 
         {/* Future settings can be added here */}

@@ -78,11 +78,11 @@ export function LandingPage() {
         </div>
 
         <div className="grid md:grid-cols-3 gap-6">
-          {/* Ratespiel */}
+          {/* Hardcore Mode */}
           <div className="glass p-8 rounded-2xl border-2 border-accent/30">
-            <div className="text-6xl mb-6">🎯</div>
+            <div className="text-6xl mb-6">🔥</div>
             <h3 className="text-2xl font-bold mb-3 text-white">
-              Ratespiel
+              Hardcore
             </h3>
             <p className="text-text-secondary leading-relaxed mb-4">
               Rate Titel, Künstler und Erscheinungsjahr. Sammle Punkte für jede richtige Antwort!
@@ -90,20 +90,20 @@ export function LandingPage() {
             <div className="space-y-2 text-sm text-text-secondary mb-6">
               <div className="flex items-center gap-2">
                 <span className="text-secondary">✓</span>
-                <span>Titel richtig: +1 Punkt</span>
+                <span>Titel richtig: +5 Punkte</span>
               </div>
               <div className="flex items-center gap-2">
                 <span className="text-secondary">✓</span>
-                <span>Künstler richtig: +1 Punkt</span>
+                <span>Künstler richtig: +5 Punkte</span>
               </div>
               <div className="flex items-center gap-2">
                 <span className="text-secondary">✓</span>
-                <span>Jahr richtig: +1 Punkt</span>
+                <span>Jahr exakt: +5 | ±1: +2 | ±2: +1</span>
               </div>
             </div>
             <div className="pt-4 border-t border-border">
               <p className="text-sm font-semibold text-secondary">
-                🏆 Gewinner: Meisten Punkte
+                🏆 Gewinner: Meisten Punkte (max. 15/Song)
               </p>
             </div>
           </div>
@@ -380,7 +380,7 @@ export function LandingPage() {
                   Rate oder Platziere
                 </h3>
                 <p className="text-text-secondary leading-relaxed mb-3">
-                  <strong className="text-white">Ratespiel:</strong> Gib Titel, Künstler und Jahr ein. Sammle Punkte für jede richtige Antwort!
+                  <strong className="text-white">Hardcore:</strong> Gib Titel, Künstler und Jahr ein. Bis zu 15 Punkte pro Song möglich (5+5+5 oder 5+5+2 oder 5+5+1)!
                 </p>
                 <p className="text-text-secondary leading-relaxed">
                   <strong className="text-white">Timeline-Modi:</strong> Platziere Songs manuell in chronologischer Reihenfolge. Fuzzy-Matching erkennt auch ungenaue Eingaben!
@@ -397,14 +397,16 @@ export function LandingPage() {
               </div>
               <div>
                 <h3 className="text-2xl font-bold mb-3 text-white group-hover:text-gradient">
-                  Gewinne das Spiel
+                  Gewinne & Achievements
                 </h3>
                 <p className="text-text-secondary leading-relaxed mb-3">
-                  <strong className="text-white">Ratespiel:</strong> Wer nach 10 Karten die meisten Punkte hat, gewinnt!
+                  <strong className="text-white">Hardcore:</strong> Wer nach 10 Karten die meisten Punkte hat, gewinnt! Maximum: 150 Punkte.
+                </p>
+                <p className="text-text-secondary leading-relaxed mb-3">
+                  <strong className="text-white">Timeline-Modi:</strong> Wer zuerst 10 Karten richtig platziert, ist der Gewinner!
                 </p>
                 <p className="text-text-secondary leading-relaxed">
-                  <strong className="text-white">Timeline-Modi:</strong> Wer zuerst 10 Karten richtig platziert, ist der Gewinner!
-                  Die Punkteübersicht zeigt live Updates nach jeder Runde.
+                  <strong className="text-white">🏆 Achievements:</strong> Schalte Erfolge frei wie Volltreffer-Serie, Marathonläufer (50 Spiele) oder Musikexperte (1000 Punkte)!
                 </p>
               </div>
             </div>
@@ -435,7 +437,7 @@ export function LandingPage() {
           </p>
         </div>
 
-        <div className="grid md:grid-cols-3 gap-6">
+        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
           {/* Feature 1 */}
           <div className="glass p-8 rounded-2xl border-2 border-accent/30 hover:border-accent hover:shadow-glow-accent transition-all text-center group">
             <div className="text-6xl mb-6 group-hover:scale-110 transition-transform">🎯</div>
@@ -443,7 +445,7 @@ export function LandingPage() {
               Tolerantes Raten
             </h3>
             <p className="text-sm text-text-secondary leading-relaxed">
-              Fuzzy Matching erkennt Tippfehler (bis zu 3), Groß-/Kleinschreibung egal, Sonderzeichen werden ignoriert. Jahr muss exakt stimmen.
+              Fuzzy Matching erkennt Tippfehler (bis zu 3), Groß-/Kleinschreibung egal, Sonderzeichen werden ignoriert.
             </p>
           </div>
 
@@ -454,7 +456,7 @@ export function LandingPage() {
               Spotify Premium
             </h3>
             <p className="text-sm text-text-secondary leading-relaxed">
-              Volle Song-Wiedergabe mit Spotify Web Playback SDK. Höre komplette Tracks, keine 30-Sekunden-Previews. Echter Musikgenuss.
+              Volle Song-Wiedergabe mit Spotify Web Playback SDK. Höre komplette Tracks, keine Previews.
             </p>
           </div>
 
@@ -465,7 +467,18 @@ export function LandingPage() {
               Progressive Web App
             </h3>
             <p className="text-sm text-text-secondary leading-relaxed">
-              Installiere die App auf deinem Smartphone für ein natives App-Erlebnis. Offline-Funktionalität und schnelle Ladezeiten inklusive.
+              Installiere die App auf deinem Smartphone für ein natives App-Erlebnis. Offline-fähig!
+            </p>
+          </div>
+
+          {/* Feature 4 - Achievements */}
+          <div className="glass p-8 rounded-2xl border-2 border-accent/30 hover:border-accent hover:shadow-glow-accent transition-all text-center group">
+            <div className="text-6xl mb-6 group-hover:scale-110 transition-transform">🏆</div>
+            <h3 className="text-xl font-bold mb-3 text-white group-hover:text-gradient">
+              Achievements
+            </h3>
+            <p className="text-sm text-text-secondary leading-relaxed">
+              Schalte 10 coole Achievements frei! Volltreffer-Serien, Marathonläufer, Musikexperte und mehr.
             </p>
           </div>
         </div>

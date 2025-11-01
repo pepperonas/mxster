@@ -109,7 +109,7 @@ export function TimelineDisplay({ playerId }: TimelineDisplayProps) {
               <>
                 {/* Success Badge - Show points in Guess Mode, checkmark otherwise */}
                 <div className="absolute top-1 right-1 w-6 h-6 bg-gradient-to-br from-secondary to-accent rounded-full flex items-center justify-center text-xs font-bold shadow-glow-sm">
-                  {gameMode === 'guess' && slot.song.points !== undefined
+                  {gameMode === 'hardcore' && slot.song.points !== undefined
                     ? slot.song.points
                     : '✓'
                   }

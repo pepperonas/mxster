@@ -236,7 +236,7 @@ function gameReducer(state: GameState, action: GameAction): GameState {
 
       // Nur im physischen Guess-Modus: DJ-Wechsel-Logik
       // Im Timeline-Modus legen alle Spieler (inkl. DJ) selbst Karten
-      if (state.gameVariant === 'physical' && state.gameMode === 'guess') {
+      if (state.gameVariant === 'physical' && state.gameMode === 'hardcore') {
         // Wenn wieder beim DJ: DJ wechselt
         if (newCurrentPlayer === newCurrentDJ) {
           newCurrentDJ = (newCurrentDJ + 1) % playerCount
@@ -271,7 +271,7 @@ function gameReducer(state: GameState, action: GameAction): GameState {
       let newCurrentDJ = state.currentDJ
 
       // Nur im physischen Guess-Modus: DJ-Wechsel-Logik
-      if (state.gameVariant === 'physical' && state.gameMode === 'guess') {
+      if (state.gameVariant === 'physical' && state.gameMode === 'hardcore') {
         // Wenn wieder beim DJ: DJ wechselt
         if (newCurrentPlayer === newCurrentDJ) {
           newCurrentDJ = (newCurrentDJ + 1) % playerCount

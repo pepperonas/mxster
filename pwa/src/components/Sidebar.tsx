@@ -197,7 +197,7 @@ export function Sidebar() {
                     </div>
                     <div className="flex gap-3 mt-2 text-xs text-text-secondary">
                       {/* Show points in Guess Mode, cards in Timeline Modes */}
-                      {gameMode === 'guess' ? (
+                      {gameMode === 'hardcore' ? (
                         <span>⭐ {player.score} Punkte</span>
                       ) : (
                         <span>🎴 {player.cards} Karten</span>

@@ -7,8 +7,8 @@ export const APP_VERSION = '0.0.5'
 
 // LocalStorage Keys
 export const STORAGE_KEYS = {
-  GAME_STATE: 'hitster_game_state',
-  GAME_HISTORY: 'hitster_game_history',
+  GAME_STATE: 'mxster_game_state',
+  GAME_HISTORY: 'mxster_history',
   SPOTIFY_TOKENS: 'spotify_auth_tokens',
   BEAT_SYNC_CONFIG: 'beat_sync_config',
   SETTINGS: 'app_settings'

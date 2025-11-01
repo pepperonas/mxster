@@ -7,7 +7,7 @@ import type { GameMode, GameVariant, GameModeInfo, GameVariantInfo, Song } from 
 
 // Game Mode Constants
 export const GAME_MODES: Record<string, GameMode> = {
-  GUESS: 'guess' as GameMode,
+  HARDCORE: 'hardcore' as GameMode,
   TIMELINE_PERSONAL: 'timeline_personal' as GameMode,
   TIMELINE_GLOBAL: 'timeline_global' as GameMode
 }
@@ -45,19 +45,21 @@ export const GAME_MODE_INFO: Record<GameMode, GameModeInfo & {
   requiresTimeline: boolean
   sharedTimeline?: boolean
 }> = {
-  guess: {
-    name: 'Ratespiel',
-    description: 'Rate Jahr, Titel und Interpret - 1 Punkt pro richtigem Parameter',
-    icon: '🎯',
+  hardcore: {
+    name: 'Hardcore',
+    description: 'Rate Jahr, Titel und Interpret - Maximale Punkte für perfekte Antworten',
+    icon: '🔥',
     rules: [
       'Höre den Song',
       'Rate Jahr, Titel und Interpret',
-      'Bekomme 1 Punkt pro richtiger Antwort (max. 3 Punkte)',
+      'Titel richtig: 5 Punkte',
+      'Interpret richtig: 5 Punkte',
+      'Jahr exakt: 5 Punkte | ±1 Jahr: 2 Punkte | ±2 Jahre: 1 Punkt',
       'Karten werden automatisch chronologisch sortiert'
     ],
-    scoring: '1 Punkt pro korrektem Parameter (Jahr, Titel, Interpret)',
+    scoring: 'Titel: 5P | Interpret: 5P | Jahr: 5P/2P/1P (max. 15 Punkte)',
     features: ['Fuzzy Matching', 'Automatische Timeline', 'Punkte-System'],
-    maxPointsPerRound: 3,
+    maxPointsPerRound: 15,
     requiresInput: true,
     requiresTimeline: false
   },
@@ -205,5 +207,5 @@ export function getWinCondition(_mode: GameMode): number {
  * Check if game mode requires DJ
  */
 export function requiresDJ(mode: GameMode, variant: GameVariant): boolean {
-  return variant === GAME_VARIANTS.PHYSICAL && mode === GAME_MODES.GUESS
+  return variant === GAME_VARIANTS.PHYSICAL && mode === GAME_MODES.HARDCORE
 }

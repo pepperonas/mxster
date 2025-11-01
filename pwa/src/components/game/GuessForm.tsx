@@ -25,7 +25,7 @@ export function GuessForm({ onSubmit, onSkip }: GuessFormProps) {
     e.preventDefault()
 
     // In Timeline modes, only year is required
-    if (gameMode !== 'guess') {
+    if (gameMode !== 'hardcore') {
       if (year) {
         onSubmit(title, artist, year)
         clearForm()
@@ -87,7 +87,7 @@ export function GuessForm({ onSubmit, onSkip }: GuessFormProps) {
   return (
     <div className="glass rounded-2xl p-8 border-2 border-accent/30">
       <h3 className="text-2xl font-bold mb-6 text-center text-gradient">
-        {gameMode === 'guess'
+        {gameMode === 'hardcore'
           ? `${playerName}, was ist deine Vermutung?`
           : `${playerName}, rate optional den Song`}
       </h3>
@@ -96,7 +96,7 @@ export function GuessForm({ onSubmit, onSkip }: GuessFormProps) {
         {/* Title Input */}
         <div>
           <label htmlFor="title" className="block text-sm font-medium text-text-secondary mb-2">
-            Titel {gameMode === 'guess' && '(+1 Punkt)'}
+            Titel {gameMode === 'hardcore' && '(+5 Punkte)'}
           </label>
           <input
             type="text"
@@ -112,7 +112,7 @@ export function GuessForm({ onSubmit, onSkip }: GuessFormProps) {
         {/* Artist Input */}
         <div>
           <label htmlFor="artist" className="block text-sm font-medium text-text-secondary mb-2">
-            Interpret {gameMode === 'guess' && '(+1 Punkt)'}
+            Interpret {gameMode === 'hardcore' && '(+5 Punkte)'}
           </label>
           <input
             type="text"
@@ -128,7 +128,7 @@ export function GuessForm({ onSubmit, onSkip }: GuessFormProps) {
         {/* Year Input */}
         <div>
           <label htmlFor="year" className="block text-sm font-medium text-text-secondary mb-2">
-            Jahr {gameMode === 'guess' && '(+1 Punkt)'}
+            Jahr {gameMode === 'hardcore' && '(+5/2/1 Punkte)'}
           </label>
           <input
             type="number"
@@ -144,7 +144,7 @@ export function GuessForm({ onSubmit, onSkip }: GuessFormProps) {
         </div>
 
         {/* Info */}
-        {gameMode === 'guess' && (
+        {gameMode === 'hardcore' && (
           <div className="glass p-4 rounded-lg text-sm text-text-secondary border border-accent/20">
             💡 <strong className="text-white">Fuzzy Matching:</strong> Tippfehler werden toleriert, Groß-/Kleinschreibung spielt keine Rolle!
           </div>
@@ -163,7 +163,7 @@ export function GuessForm({ onSubmit, onSkip }: GuessFormProps) {
             type="submit"
             className="btn btn-accent flex-1 shadow-glow-accent"
           >
-            {gameMode === 'guess' ? '✓ Antwort prüfen' : 'Weiter'}
+            {gameMode === 'hardcore' ? '✓ Antwort prüfen' : 'Weiter'}
           </button>
         </div>
       </form>

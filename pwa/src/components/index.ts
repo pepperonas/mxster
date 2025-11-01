@@ -11,6 +11,7 @@ export { Sidebar } from './Sidebar'
 export { SettingsDialog } from './SettingsDialog'
 export { PlayerStatsDialog } from './PlayerStatsDialog'
 export { GameEndStatsDialog } from './GameEndStatsDialog'
+export { AchievementsDialog } from './AchievementsDialog'
 
 // Layout Components
 // TODO: Phase 7 - Game Setup Flow Components

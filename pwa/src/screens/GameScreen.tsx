@@ -25,6 +25,7 @@ import {
   selectRandomSong,
   incrementPlayerCards,
   addToPlayedSongs,
+  calculatePoints,
   GameHistory,
   type SpotifyPlayerState
 } from '@/services'
@@ -91,7 +92,7 @@ export function GameScreen() {
     console.log('🔷 useEffect triggered - currentSong:', currentSong?.title || 'null', 'gameMode:', gameMode)
 
     // Only in Timeline Modes (not Guess Mode)
-    if (currentSong && gameMode !== 'guess') {
+    if (currentSong && gameMode !== 'hardcore') {
       const songId = currentSong.spotifyId || currentSong.id
       console.log('🔷 In Timeline Mode, songId:', songId, 'lastSongIdShown:', lastSongIdShown.current)
 
@@ -208,7 +209,7 @@ export function GameScreen() {
     let penaltyApplied = false
     let newScore = player.score
 
-    if (gameMode === 'guess') {
+    if (gameMode === 'hardcore') {
       // Count how many players have skipped this song
       const playersWhoSkipped = Object.keys(updatedSkipCounts).length
       const totalSkips = Object.values(updatedSkipCounts).reduce((sum, count) => sum + count, 0)
@@ -300,7 +301,7 @@ export function GameScreen() {
       console.log('⏭️ Skip confirmed - next player gets the same song')
 
       // Show warning dialog if all players have skipped at least once
-      if (gameMode === 'guess' && Object.keys(updatedSkipCounts).length >= players.length) {
+      if (gameMode === 'hardcore' && Object.keys(updatedSkipCounts).length >= players.length) {
         const totalSkips = Object.values(updatedSkipCounts).reduce((sum, count) => sum + count, 0)
         const additionalSkips = totalSkips - players.length
         const nextPenaltyProbability = Math.min((additionalSkips + 1) * 0.33, 0.95)
@@ -349,62 +350,93 @@ export function GameScreen() {
   ) => {
     if (!song) return
 
-    // Modal title based on correct count
-    const titles = [
-      '❌ Leider alles falsch',
-      '🤷 Teilweise richtig',
-      '👍 Gut gemacht! 2 von 3 richtig!',
-      '🏆 Perfekt! Alles richtig!'
-    ]
-    const title = titles[result.correctCount] || titles[0]
+    // Calculate points using new system
+    const earnedPoints = calculatePoints(
+      result.titleMatch,
+      result.artistMatch,
+      result.yearDifference
+    )
+
+    // Modal title based on points
+    const title =
+      earnedPoints === 15
+        ? '🏆 Perfekt! Maximale Punktzahl!'
+        : earnedPoints >= 10
+          ? '👍 Gut gemacht!'
+          : earnedPoints >= 5
+            ? '🤷 Teilweise richtig'
+            : '❌ Leider alles falsch'
 
     showModal(
       title,
       <div className="text-center py-4">
-        {/* Checkmarks */}
+        {/* Checkmarks with individual point values */}
         <div className="space-y-3 mb-6">
           <div className="flex items-center justify-center gap-3 text-lg">
             <span className="text-2xl">{result.titleMatch ? '✅' : '❌'}</span>
             <span>Titel: "{song.title}"</span>
+            {gameMode === 'hardcore' && (
+              <span className="text-sm text-secondary font-bold">
+                {result.titleMatch ? '+5P' : ''}
+              </span>
+            )}
           </div>
           <div className="flex items-center justify-center gap-3 text-lg text-text-secondary">
             <span className="text-2xl">{result.artistMatch ? '✅' : '❌'}</span>
             <span>Artist: {song.artist}</span>
+            {gameMode === 'hardcore' && (
+              <span className="text-sm text-secondary font-bold">
+                {result.artistMatch ? '+5P' : ''}
+              </span>
+            )}
           </div>
           <div className="flex items-center justify-center gap-3">
-            <span className="text-2xl">{result.yearMatch ? '✅' : '❌'}</span>
+            <span className="text-2xl">
+              {result.yearDifference === 0 ? '✅' : result.yearDifference <= 2 ? '🟡' : '❌'}
+            </span>
             <div className="inline-block px-6 py-2 glass border-2 border-accent/30 rounded-lg text-xl font-bold">
               {song.year}
             </div>
+            {gameMode === 'hardcore' && (
+              <span className="text-sm text-secondary font-bold">
+                {result.yearDifference === 0
+                  ? '+5P'
+                  : result.yearDifference === 1
+                    ? '+2P'
+                    : result.yearDifference === 2
+                      ? '+1P'
+                      : ''}
+              </span>
+            )}
           </div>
         </div>
 
         {/* Year difference (if wrong) */}
-        {!result.yearMatch && result.yearDifference > 0 && (
+        {result.yearDifference > 0 && result.yearDifference <= 2 && (
           <div className="mb-4 p-3 glass border border-accent/30 rounded-lg">
             <p className="text-sm text-text-secondary">
-              {result.yearDifference} Jahre daneben
+              {result.yearDifference} {result.yearDifference === 1 ? 'Jahr' : 'Jahre'} daneben
             </p>
           </div>
         )}
 
-        {/* Points in Guess Mode */}
-        {gameMode === 'guess' && (
-          <div className="p-4 bg-secondary rounded-lg">
-            <p className="text-xl font-bold">
-              +{result.correctCount} {result.correctCount === 1 ? 'Punkt' : 'Punkte'}
+        {/* Points in Hardcore Mode */}
+        {gameMode === 'hardcore' && (
+          <div className="p-4 bg-gradient-to-r from-secondary/30 to-accent/30 rounded-lg border-2 border-accent/50">
+            <p className="text-2xl font-bold text-gradient">
+              +{earnedPoints} {earnedPoints === 1 ? 'Punkt' : 'Punkte'}
             </p>
           </div>
         )}
       </div>,
       [
         {
-          label: gameMode === 'guess' ? 'Weiter' : 'Karte platzieren',
+          label: gameMode === 'hardcore' ? 'Weiter' : 'Karte platzieren',
           variant: 'primary',
           onClick: () => {
             console.log('🟡 EVALUATION MODAL - BUTTON CLICKED! gameMode:', gameMode)
             console.log('🟡 result from closure:', result)
-            if (gameMode === 'guess') {
+            if (gameMode === 'hardcore') {
               console.log('🟡 Calling placeCardAndContinue() with result:', result.correctCount)
               placeCardAndContinue(result)
             } else {
@@ -431,19 +463,32 @@ export function GameScreen() {
     const player = players[currentPlayer]
     console.log('🔥 Current player:', player.name, 'Current score:', player.score)
 
-    // Get points for this song (Guess Mode only)
-    const points = gameMode === 'guess' && guessResult ? guessResult.correctCount : undefined
+    // Calculate points using new system (Hardcore Mode only)
+    let earnedPoints = 0
+    if (gameMode === 'hardcore' && guessResult) {
+      earnedPoints = calculatePoints(
+        guessResult.titleMatch,
+        guessResult.artistMatch,
+        guessResult.yearDifference
+      )
+      console.log('🎯 Points calculated:', {
+        titleMatch: guessResult.titleMatch,
+        artistMatch: guessResult.artistMatch,
+        yearDifference: guessResult.yearDifference,
+        earnedPoints
+      })
+    }
 
     // Add card to timeline (chronologically sorted) with points
-    const newTimeline = placeCardInTimeline(player.timeline, currentSong, points)
+    const newTimeline = placeCardInTimeline(player.timeline, currentSong, earnedPoints)
 
-    // Calculate new score (only in Guess Mode)
+    // Calculate new score (only in Hardcore Mode)
     let newScore = player.score
-    if (gameMode === 'guess' && guessResult) {
-      newScore = player.score + guessResult.correctCount
+    if (gameMode === 'hardcore' && guessResult) {
+      newScore = player.score + earnedPoints
       console.log('🎯 Updating score:', {
         oldScore: player.score,
-        points: guessResult.correctCount,
+        earnedPoints,
         newScore
       })
     } else {
@@ -779,7 +824,7 @@ export function GameScreen() {
           <div className="space-y-6">
             {/* Song Selection (Physical = QR Scanner, Virtual = Button) */}
             {/* Timeline Mode: ALWAYS show button | Guess Mode: only when !currentSong */}
-            {(gameMode !== 'guess' || !currentSong) && (
+            {(gameMode !== 'hardcore' || !currentSong) && (
               <div>
                 {gameVariant === 'physical' ? (
                   <QRScanner />
@@ -797,7 +842,7 @@ export function GameScreen() {
             )}
 
             {/* Guess Form (only in Guess Mode!) */}
-            {currentSong && gameMode === 'guess' && (
+            {currentSong && gameMode === 'hardcore' && (
               <div>
                 <GuessForm onSubmit={handleGuessSubmit} onSkip={handleSkip} />
               </div>
@@ -807,7 +852,7 @@ export function GameScreen() {
           {/* Right Column: Timeline & Score */}
           <div className="space-y-6">
             {/* Score Overview (Guess Mode) */}
-            {gameMode === 'guess' && (
+            {gameMode === 'hardcore' && (
               <div>
                 <ScoreOverview />
               </div>

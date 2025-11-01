@@ -94,6 +94,37 @@ export function MusicPlayer({ song, onStateChange }: MusicPlayerProps) {
   }, [onStateChange, isPlaying, registerInteraction, setActivityLevel])
 
   /**
+   * Update progress bar continuously while playing
+   */
+  useEffect(() => {
+    if (!isPlaying || !playerReady) return
+
+    let lastKnownPosition = currentPosition
+    let lastUpdateTime = Date.now()
+
+    // Update every 500ms (2 times per second)
+    const interval = setInterval(async () => {
+      try {
+        const state = await SpotifyPlayerService.getState()
+        if (state && !state.paused) {
+          lastKnownPosition = state.position
+          lastUpdateTime = Date.now()
+          setCurrentPosition(state.position)
+        }
+      } catch (error) {
+        // If API call fails, estimate position based on elapsed time
+        const elapsed = Date.now() - lastUpdateTime
+        const estimatedPosition = lastKnownPosition + elapsed
+        if (estimatedPosition <= duration) {
+          setCurrentPosition(estimatedPosition)
+        }
+      }
+    }, 500)
+
+    return () => clearInterval(interval)
+  }, [isPlaying, playerReady, currentPosition, duration])
+
+  /**
    * Play song when song prop changes
    */
   useEffect(() => {

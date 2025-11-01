@@ -4,7 +4,7 @@
 
 [![App](https://img.shields.io/badge/App-mxster.de-blue?style=for-the-badge)](https://mxster.de)
 [![License](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)](LICENSE)
-![Songs](https://img.shields.io/badge/Songs-179-orange?style=for-the-badge)
+![Songs](https://img.shields.io/badge/Songs-196-orange?style=for-the-badge)
 [![Tests](https://github.com/pepperonas/mxster/actions/workflows/test.yml/badge.svg)](https://github.com/pepperonas/mxster/actions/workflows/test.yml)
 
 ![mxster Banner](https://mxster.de/assets/mxster.jpg)
@@ -13,7 +13,7 @@
 
 mxster ist ein **Multiplayer-Musikquiz** mit drei verschiedenen Spielmodi:
 
-- 🎯 **Ratespiel**: Rate Titel, Künstler und Erscheinungsjahr - sammle Punkte!
+- 🔥 **Hardcore**: Rate Titel, Künstler und Erscheinungsjahr - bis zu 15 Punkte pro Song!
 - 👤 **Timeline (Persönlich)**: Baue deine eigene Timeline chronologisch auf
 - 🌍 **Timeline (Global)**: Alle Spieler teilen eine gemeinsame Timeline
 
@@ -27,12 +27,39 @@ mxster ist ein **Multiplayer-Musikquiz** mit drei verschiedenen Spielmodi:
 - 🎵 **Spotify Premium Integration** - Volle Song-Wiedergabe (keine 30s Previews!)
 - 🎯 **Tolerantes Raten** - Fuzzy Matching erkennt Tippfehler
 - 📱 **Progressive Web App** - Installierbar auf Smartphone & Desktop
-- 🏆 **Live Punktesystem** - Echtzeit-Updates nach jeder Runde
+- 🏆 **Live Punktesystem** - Echtzeit-Updates nach jeder Runde (5+5+5/2/1 Punkte)
+- 🎖️ **Achievement System** - Schalte 10 Erfolge frei (Volltreffer-Serie, Marathonläufer, Musikexperte...)
+- 📊 **Spielerstatistiken** - Detaillierte Stats mit Winrate, Dekaden-Verteilung und Siegesserien
+- 📈 **Spielhistorie** - Vollständige Aufzeichnung aller Spiele mit Export-Funktion
 - 📸 **QR-Code Scanner** - Scanne Karten mit Smartphone-Kamera
 - 💾 **Automatische Spielstand-Speicherung** - Kein Fortschritt geht verloren, selbst bei Page Refresh!
+- 🔄 **Backup & Restore** - Exportiere und importiere alle Daten als JSON
+- 🗑️ **Datenverwaltung** - Lösche einzelne Spieler oder alle Daten mit Bestätigung
 - 🎮 **Multiplayer** - Spiele mit beliebig vielen Freunden
 - ✏️ **Song-Editor** - Bearbeite Songs nachträglich mit interaktivem Wizard
 - ✨ **Music-Reactive Particles** - 3D-Partikelhintergrund reagiert auf Musikwiedergabe mit intensiven Effekten
+
+## 🏆 Achievements
+
+Schalte 10 spannende Erfolge frei und zeige dein Können!
+
+- 🎯 **Volltreffer-Serie** - 3x hintereinander alle Felder (Titel, Artist, Jahr) richtig erraten
+- ⭐ **Perfektionist** - Alle Songs in einem Spiel richtig einsortiert
+- 🕰️ **Zeitreisender** - Songs aus 5 verschiedenen Dekaden korrekt platziert
+- 🏆 **Hardcore-Champion** - 100+ Punkte in einem einzelnen Hardcore-Spiel erreicht
+- 🏃 **Marathonläufer** - 50 Spiele gespielt
+- 👑 **Unbesiegbar** - 5 Spiele in Folge gewonnen
+- 🎸 **Dekaden-Kenner** - 10 Songs einer Dekade perfekt erraten
+- ⚡ **Blitzschnell** - Ein Spiel in unter 5 Minuten abgeschlossen
+- 🔥 **Comeback-King** - Aus letztem Platz zum Gewinner aufgestiegen
+- 🎓 **Musikexperte** - 1000 Gesamtpunkte über alle Spiele erreicht
+
+**Features:**
+- Noch nicht freigeschaltete Achievements sind schwarz maskiert
+- Freigeschaltete Achievements werden in Farbe mit Unlock-Datum angezeigt
+- Fortschrittsbalken für wiederholbare Achievements
+- Spieler-spezifisches Tracking (jeder Spieler hat eigene Achievements)
+- Automatisches Speichern und Restore-Funktion
 
 ## 🚀 Schnellstart für Anfänger
 
@@ -107,17 +134,19 @@ npm run dev
 
 ## 🎯 Spielmodi erklärt
 
-### 🎯 Ratespiel
+### 🔥 Hardcore Modus
 
-**Ziel:** Sammle die meisten Punkte durch richtiges Raten!
+**Ziel:** Sammle die meisten Punkte durch richtiges Raten! **Maximum: 150 Punkte (15 pro Song × 10 Songs)**
 
 1. **Song abspielen:** DJ scannt QR-Code oder virtueller Modus zieht zufälligen Song
 2. **Raten:** Spieler gibt Titel, Künstler und Jahr ein
 3. **Fuzzy Matching:** System akzeptiert auch ähnliche Schreibweisen (z.B. "Fleetwood Mac" = "Fleetwood Mack")
 4. **Punkte vergeben:**
-   - ✅ Titel richtig: **+1 Punkt**
-   - ✅ Künstler richtig: **+1 Punkt**
-   - ✅ Jahr richtig: **+1 Punkt**
+   - ✅ Titel richtig: **+5 Punkte**
+   - ✅ Künstler richtig: **+5 Punkte**
+   - ✅ Jahr exakt richtig: **+5 Punkte**
+   - ✅ Jahr ±1 Jahr: **+2 Punkte**
+   - ✅ Jahr ±2 Jahre: **+1 Punkt**
 5. **Automatische Platzierung:** Karte wird sofort chronologisch in die Timeline einsortiert
 6. **Live-Rangliste:** Score-Overview zeigt alle Spieler sortiert nach Punkten
 7. **Gewinner:** Spieler mit den meisten Punkten nach 10 Karten
@@ -126,6 +155,7 @@ npm run dev
 - Keine manuelle Platzierung nötig
 - Timeline wird automatisch sortiert
 - Skip-Funktion verfügbar (0 Punkte, Karte wird trotzdem platziert)
+- **Granulares Punktesystem** ermöglicht mehr taktische Tiefe
 
 **⚠️ Progressive Skip-Strafe:**
 Ein Spieler kann einen Track überspringen, wenn er ihn nicht kennt und sich sicher ist, dass sein Gegner ihn auch nicht kennt. **ABER:** Wenn jeder Spieler den gleichen Song bereits mindestens 1x übersprungen hat, besteht ab dem 2. Skip die Möglichkeit einer **-3 Punkte Strafe**:

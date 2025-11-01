@@ -26,7 +26,7 @@ export interface Player {
 // ============================================================================
 
 export enum GameMode {
-  GUESS = 'guess',
+  HARDCORE = 'hardcore',
   TIMELINE_PERSONAL = 'timeline_personal',
   TIMELINE_GLOBAL = 'timeline_global'
 }
@@ -203,6 +203,12 @@ export interface GuessResult {
   yearCorrect?: boolean
   correctCount: number
 }
+
+// ============================================================================
+// Achievements
+// ============================================================================
+
+export * from './achievements'
 
 // ============================================================================
 // Utility Types

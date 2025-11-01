@@ -4,6 +4,7 @@ import { GameProvider } from './GameContext'
 import { UIProvider } from './UIContext'
 import { SettingsProvider } from './SettingsContext'
 import { InteractionProvider } from './InteractionContext'
+import { AchievementProvider } from './AchievementContext'
 
 /**
  * Combined Providers Component
@@ -14,7 +15,8 @@ import { InteractionProvider } from './InteractionContext'
  * 2. AuthProvider - Authentication state (needed by all other providers)
  * 3. UIProvider - UI state (modals, toasts, sidebar)
  * 4. InteractionProvider - User interaction tracking (for background animations)
- * 5. GameProvider - Game state (depends on Auth for Spotify integration)
+ * 5. AchievementProvider - Achievement tracking (independent)
+ * 6. GameProvider - Game state (depends on Auth for Spotify integration)
  */
 
 interface AppProvidersProps {
@@ -27,9 +29,11 @@ export function AppProviders({ children }: AppProvidersProps) {
       <AuthProvider>
         <UIProvider>
           <InteractionProvider>
-            <GameProvider>
-              {children}
-            </GameProvider>
+            <AchievementProvider>
+              <GameProvider>
+                {children}
+              </GameProvider>
+            </AchievementProvider>
           </InteractionProvider>
         </UIProvider>
       </AuthProvider>

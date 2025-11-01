@@ -35,7 +35,7 @@ export function PlayerInfo() {
             <div className="text-3xl font-bold text-gradient">{player.cards}</div>
             <div className="text-xs text-text-secondary uppercase tracking-wider">Karten</div>
           </div>
-          {gameMode === 'guess' && (
+          {gameMode === 'hardcore' && (
             <div className="text-center">
               <div className="text-3xl font-bold text-gradient">{player.score}</div>
               <div className="text-xs text-text-secondary uppercase tracking-wider">Punkte</div>

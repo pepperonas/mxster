@@ -135,12 +135,12 @@ export function GameEndStatsDialog({ winner, allPlayers, gameMode, onClose }: Ga
         <div className="text-8xl mb-4 animate-bounce">🏆</div>
         <h2 className="text-4xl font-bold text-gradient mb-2">{winner.name}</h2>
         <p className="text-xl text-secondary mb-4">ist der Gewinner!</p>
-        {gameMode === 'guess' && (
+        {gameMode === 'hardcore' && (
           <div className="inline-block glass px-6 py-3 rounded-full border-2 border-accent">
             <span className="text-3xl font-bold text-accent">{winner.score} Punkte</span>
           </div>
         )}
-        {gameMode !== 'guess' && (
+        {gameMode !== 'hardcore' && (
           <div className="inline-block glass px-6 py-3 rounded-full border-2 border-accent">
             <span className="text-3xl font-bold text-accent">{winner.cards} Karten</span>
           </div>
@@ -171,7 +171,7 @@ export function GameEndStatsDialog({ winner, allPlayers, gameMode, onClose }: Ga
                     {playerStat.name === winner.name && <span className="text-3xl">🏆</span>}
                     <div>
                       <h4 className="text-lg font-bold text-white">{playerStat.name}</h4>
-                      {gameMode === 'guess' && (
+                      {gameMode === 'hardcore' && (
                         <p className="text-sm text-text-secondary">{playerStat.score} Punkte</p>
                       )}
                     </div>

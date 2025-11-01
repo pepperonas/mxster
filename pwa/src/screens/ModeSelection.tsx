@@ -18,7 +18,7 @@ export function ModeSelection() {
   }
 
   const modes: GameMode[] = [
-    GAME_MODES.GUESS,
+    GAME_MODES.HARDCORE,
     GAME_MODES.TIMELINE_PERSONAL,
     GAME_MODES.TIMELINE_GLOBAL
   ]
