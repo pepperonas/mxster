@@ -192,14 +192,14 @@ export function checkWinCondition(
     return noWinner
   }
 
-  // TIMELINE MODES: First player to reach 10 cards wins
+  // TIMELINE MODES: First player to reach 11 cards wins (first card is 0)
   if (gameMode === 'timeline_personal' || gameMode === 'timeline_global') {
-    if (player.cards >= 10) {
+    if (player.cards >= 11) {
       return {
         gameOver: true,
         winner: player,
         winnerIndex: currentPlayer,
-        message: `${player.name} hat 10 Karten und gewinnt!`
+        message: `${player.name} hat 10 Karten platziert und gewinnt!`
       }
     }
 

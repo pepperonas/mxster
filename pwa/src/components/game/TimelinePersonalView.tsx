@@ -36,7 +36,7 @@ export function TimelinePersonalView() {
             )}
           </div>
           <div className="text-sm font-bold text-secondary glass px-4 py-2 rounded-lg border border-accent/20">
-            {player.cards}/10
+            {Math.max(0, player.cards - 1)}/10
           </div>
         </div>
 
@@ -44,7 +44,7 @@ export function TimelinePersonalView() {
         <div className="w-full h-2 bg-primary rounded-full overflow-hidden mb-4 border border-accent/20">
           <div
             className="h-full bg-gradient-to-r from-secondary to-accent transition-all duration-500 shadow-glow-sm"
-            style={{ width: `${(player.cards / 10) * 100}%` }}
+            style={{ width: `${(Math.max(0, player.cards - 1) / 10) * 100}%` }}
           />
         </div>
 

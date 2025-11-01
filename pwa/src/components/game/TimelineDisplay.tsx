@@ -54,7 +54,7 @@ export function TimelineDisplay({ playerId }: TimelineDisplayProps) {
           {gameMode === 'timeline_global' ? 'Globale Timeline' : `Timeline: ${playerName}`}
         </h3>
         <span className="text-sm font-bold text-secondary glass px-4 py-2 rounded-lg border border-accent/20">
-          {cardCount}/10
+          {Math.max(0, cardCount - 1)}/10
         </span>
       </div>
 
@@ -62,7 +62,7 @@ export function TimelineDisplay({ playerId }: TimelineDisplayProps) {
       <div className="w-full h-2 bg-primary rounded-full overflow-hidden mb-4 border border-accent/20">
         <div
           className="h-full bg-gradient-to-r from-secondary to-accent transition-all duration-500 shadow-glow-sm"
-          style={{ width: `${(cardCount / 10) * 100}%` }}
+          style={{ width: `${(Math.max(0, cardCount - 1) / 10) * 100}%` }}
         />
       </div>
 
@@ -83,7 +83,7 @@ export function TimelineDisplay({ playerId }: TimelineDisplayProps) {
                 `}
               >
                 <div className="text-xs font-semibold truncate">{player.name}</div>
-                <div className="text-sm font-bold text-secondary">{player.cards}/10 Karten</div>
+                <div className="text-sm font-bold text-secondary">{Math.max(0, player.cards - 1)}/10 Karten</div>
               </div>
             ))}
           </div>

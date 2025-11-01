@@ -1029,7 +1029,7 @@ export const songs: Song[] = [
     "id": "song_128",
     "title": "Glücklich",
     "artist": "Heiko & Maiko",
-    "year": 2009,
+    "year": 2005,
     "spotifyId": "56ev3tFYAzuMEUIKUhLcTO",
     "previewUrl": ""
   },

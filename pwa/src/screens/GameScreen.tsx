@@ -670,7 +670,7 @@ export function GameScreen() {
           <div className="text-3xl font-bold text-secondary mb-2">{songYear}</div>
           <div className="mt-6 p-4 glass border-2 border-accent/30 rounded-lg">
             <div className="text-sm text-text-secondary">Fortschritt</div>
-            <div className="text-2xl font-bold">{updatedPlayer.cards}/10 Karten</div>
+            <div className="text-2xl font-bold">{Math.max(0, updatedPlayer.cards - 1)}/10 Karten</div>
           </div>
         </div>,
         [
