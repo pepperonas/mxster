@@ -6,6 +6,7 @@
 import { useState, useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useGame, useUI, useAuth, useAchievements } from '@/contexts'
+import { useGameHistory } from '@/hooks'
 import {
   PlayerInfo,
   QRScanner,
@@ -23,10 +24,8 @@ import {
   placeCardInTimeline,
   checkWinCondition,
   selectRandomSong,
-  incrementPlayerCards,
   addToPlayedSongs,
   calculatePoints,
-  GameHistory,
   type SpotifyPlayerState
 } from '@/services'
 import { songs } from '@/data/songs'
@@ -37,8 +36,8 @@ export function GameScreen() {
   const { accessToken, isLoggedIn } = useAuth()
 
   // Beat Sync State
-  const [isPlaying, setIsPlaying] = useState(false)
-  const [currentPosition, setCurrentPosition] = useState(0)
+  const [, setIsPlaying] = useState(false)
+  const [, setCurrentPosition] = useState(0)
   const [trackId, setTrackId] = useState<string | null>(null)
 
   // Timeline Mode: Track which song we already showed modal for
@@ -72,6 +71,7 @@ export function GameScreen() {
   } = useGame()
   const { showModal, closeModal, addToast } = useUI()
   const { unlockAchievement, updateProgress, checkAchievements } = useAchievements()
+  const { saveGame, history } = useGameHistory()
 
   // ============================================================================
   // Redirect if game not properly initialized or not logged in
@@ -221,7 +221,6 @@ export function GameScreen() {
     const updatedSkipCounts = { ...currentSongSkips, [currentPlayer]: (currentSongSkips[currentPlayer] || 0) + 1 }
 
     // Check if penalty system should apply (Guess Mode only)
-    let penaltyTriggered = false
     let penaltyApplied = false
     let newScore = player.score
 
@@ -252,7 +251,6 @@ export function GameScreen() {
 
         // Roll the dice
         if (Math.random() < penaltyProbability) {
-          penaltyTriggered = true
           // Apply penalty (-3 points, can go negative!)
           newScore = player.score - 3
           penaltyApplied = true
@@ -292,8 +290,7 @@ export function GameScreen() {
         </div>,
         [
           {
-            label: 'Neuen Song ziehen',
-            variant: 'primary',
+            text: 'Neuen Song ziehen',
             onClick: () => {
               // Reset skip counts for new song
               resetSkipCounts()
@@ -301,7 +298,6 @@ export function GameScreen() {
               // Draw new song
               const newSong = selectRandomSong(songs, playedSongs)
               if (newSong) {
-                const newPlayedSongs = addToPlayedSongs(playedSongs, newSong)
                 contextAddToPlayedSongs(newSong.spotifyId || newSong.id)
                 setCurrentSong(newSong)
               }
@@ -340,8 +336,7 @@ export function GameScreen() {
           </div>,
           [
             {
-              label: 'Verstanden',
-              variant: 'primary',
+              text: 'Verstanden',
               onClick: () => {
                 // Switch to next player but KEEP the song!
                 nextPlayerOnly()
@@ -447,8 +442,7 @@ export function GameScreen() {
       </div>,
       [
         {
-          label: gameMode === 'hardcore' ? 'Weiter' : 'Karte platzieren',
-          variant: 'primary',
+          text: gameMode === 'hardcore' ? 'Weiter' : 'Karte platzieren',
           onClick: () => {
             console.log('🟡 EVALUATION MODAL - BUTTON CLICKED! gameMode:', gameMode)
             console.log('🟡 result from closure:', result)
@@ -572,7 +566,7 @@ export function GameScreen() {
     const winCheck = checkWinCondition(updatedPlayers, currentPlayer, gameMode)
 
     if (winCheck.gameOver && winCheck.winner) {
-      showWinnerModal(winCheck.winner, winCheck.message)
+      showWinnerModal(winCheck.winner)
       return
     }
 
@@ -768,9 +762,7 @@ export function GameScreen() {
         </div>,
         [
           {
-            label: 'Nächster Spieler',
-            variant: 'primary',
-            closeOnClick: false,
+            text: 'Nächster Spieler',
             onClick: () => {
               console.log('🔴 Button clicked - closing modal')
               console.log('🔴 Before - currentPlayer:', currentPlayer, 'currentSong:', currentSong?.title)
@@ -790,8 +782,9 @@ export function GameScreen() {
               if (winCheck.gameOver && winCheck.winner) {
                 console.log('🏆 Game over! Winner:', winCheck.winner.name)
                 // Small delay to ensure modal is fully closed
+                const winner = winCheck.winner
                 setTimeout(() => {
-                  showWinnerModal(winCheck.winner, winCheck.message)
+                  showWinnerModal(winner)
                 }, 150)
               } else {
                 console.log('🔴 Calling nextTurn()')
@@ -820,9 +813,7 @@ export function GameScreen() {
         </div>,
         [
           {
-            label: 'Nächster Spieler',
-            variant: 'primary',
-            closeOnClick: false,
+            text: 'Nächster Spieler',
             onClick: () => {
               console.log('🔴 Button clicked (wrong placement) - closing modal and calling nextTurn()')
               console.log('🔴 Before - currentPlayer:', currentPlayer, 'currentSong:', currentSong?.title)
@@ -847,10 +838,19 @@ export function GameScreen() {
   // Win Modal
   // ============================================================================
 
-  const showWinnerModal = (winner: typeof players[0], message: string) => {
+  const showWinnerModal = (winner: typeof players[0]) => {
     // Save game to history
     try {
-      GameHistory.saveGame(winner, players, gameMode)
+      saveGame({
+        winner: {
+          name: winner.name,
+          cards: winner.cards,
+          score: winner.score
+        },
+        players,
+        gameMode,
+        gameVariant
+      })
       console.log('✅ Game saved to history')
       addToast('Spiel wurde zur Historie hinzugefügt!', 'success')
     } catch (error) {
@@ -866,11 +866,7 @@ export function GameScreen() {
       const gameDurationMinutes = gameDurationMs / 1000 / 60
       console.log(`⏱️ Game duration: ${gameDurationMinutes.toFixed(2)} minutes`)
 
-      // Sort players by score to determine rankings
-      const sortedPlayers = [...players].sort((a, b) => b.score - a.score)
-      const winnerIndex = players.findIndex(p => p.name === winner.name)
-
-      players.forEach((player, index) => {
+      players.forEach((player) => {
         console.log(`🏆 Checking achievements for player: ${player.name}`)
 
         // 1. HARDCORE_CHAMPION: 100+ points in one game
@@ -966,8 +962,8 @@ export function GameScreen() {
 
       // 8. UNBEATABLE & 9. MARATHON_RUNNER & 10. MUSIC_EXPERT:
       // Check from full game history
-      const historyData = GameHistory.loadAll()
-      if (historyData && historyData.games) {
+      if (history && history.length > 0) {
+        const historyData = { version: '1.0', games: history }
         players.forEach(player => {
           checkAchievements(player.name, historyData)
         })
@@ -1070,16 +1066,13 @@ export function GameScreen() {
                 </div>,
                 [
                   {
-                    label: 'Abbrechen',
-                    variant: 'secondary',
+                    text: 'Abbrechen',
                     onClick: () => {
                       // Just close modal
                     }
                   },
                   {
-                    label: 'Spiel beenden',
-                    variant: 'primary',
-                    closeOnClick: false,
+                    text: 'Spiel beenden',
                     onClick: () => {
                       // Stop music (non-blocking)
                       SpotifyPlayerService.pause().catch((error) => {

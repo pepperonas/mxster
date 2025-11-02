@@ -10,14 +10,14 @@ import {
   PlayerAchievements,
   ACHIEVEMENT_DEFINITIONS
 } from '@/types/achievements'
-import type { GameHistory } from '@/types'
+import type { GameHistoryData, HistoryEntry, Player } from '@/types'
 import { useSettings } from './SettingsContext'
 import { useAchievementNotifications } from './AchievementNotificationContext'
 
 interface AchievementContextType {
   playerAchievements: Map<string, PlayerAchievements>
   unlockAchievement: (playerName: string, achievementId: AchievementId) => void
-  checkAchievements: (playerName: string, gameHistory: GameHistory) => void
+  checkAchievements: (playerName: string, gameHistory: GameHistoryData) => void
   updateStats: (playerName: string, statsUpdate: Partial<PlayerAchievements['stats']>) => void
   updateProgress: (playerName: string, achievementId: AchievementId, progress: number) => void
   getPlayerAchievements: (playerName: string) => Achievement[]
@@ -158,24 +158,22 @@ export function AchievementProvider({ children }: { children: ReactNode }) {
   }
 
   // Check and unlock achievements based on game history
-  const checkAchievements = (playerName: string, gameHistory: GameHistory) => {
-    const achievements = getOrCreatePlayerAchievements(playerName)
-
+  const checkAchievements = (playerName: string, gameHistory: GameHistoryData) => {
     // Calculate stats from game history
-    const playerGames = gameHistory.games.filter((game) =>
-      game.players.some((p) => p.name === playerName)
+    const playerGames = gameHistory.games.filter((game: HistoryEntry) =>
+      game.players.some((p: Player) => p.name === playerName)
     )
 
     const totalGames = playerGames.length
-    const totalWins = playerGames.filter((game) => {
-      const winner = game.players.reduce((prev, current) =>
+    const totalWins = playerGames.filter((game: HistoryEntry) => {
+      const winner = game.players.reduce((prev: Player, current: Player) =>
         current.score > prev.score ? current : prev
       )
       return winner.name === playerName
     }).length
 
-    const totalPoints = playerGames.reduce((sum, game) => {
-      const player = game.players.find((p) => p.name === playerName)
+    const totalPoints = playerGames.reduce((sum: number, game: HistoryEntry) => {
+      const player = game.players.find((p: Player) => p.name === playerName)
       return sum + (player?.score || 0)
     }, 0)
 
@@ -198,8 +196,8 @@ export function AchievementProvider({ children }: { children: ReactNode }) {
     // Sort games by date
     const sortedGames = [...playerGames].sort((a, b) => a.timestamp - b.timestamp)
 
-    sortedGames.forEach(game => {
-      const winner = game.players.reduce((prev, current) =>
+    sortedGames.forEach((game: HistoryEntry) => {
+      const winner = game.players.reduce((prev: Player, current: Player) =>
         current.score > prev.score ? current : prev
       )
 

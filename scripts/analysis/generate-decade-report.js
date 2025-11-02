@@ -126,41 +126,52 @@ const html = `<!DOCTYPE html>
     }
 
     .stat-card {
-      background: rgba(255, 255, 255, 0.05);
-      border: 2px solid rgba(102, 126, 234, 0.3);
-      border-radius: 1rem;
+      background: #2C2E3B;
+      border: 2px solid rgba(74, 144, 226, 0.3);
+      border-radius: 0.75rem;
       padding: 1.5rem;
       text-align: center;
-      backdrop-filter: blur(10px);
+      transition: all 300ms cubic-bezier(0.4, 0, 0.2, 1);
+      backface-visibility: hidden;
+    }
+
+    .stat-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 0 20px rgba(74, 144, 226, 0.4);
+      border-color: rgba(74, 144, 226, 0.5);
     }
 
     .stat-value {
       font-size: 2.5rem;
-      font-weight: bold;
-      color: #667eea;
+      font-weight: 700;
+      color: #4A90E2;
       margin-bottom: 0.5rem;
+      line-height: 1;
     }
 
     .stat-label {
-      color: #a0a0a0;
-      font-size: 0.9rem;
+      color: #B0B3C1;
+      font-size: 0.875rem;
+      font-weight: 500;
       text-transform: uppercase;
-      letter-spacing: 1px;
+      letter-spacing: 0.05em;
     }
 
     .chart-container {
-      background: rgba(255, 255, 255, 0.05);
-      border: 2px solid rgba(102, 126, 234, 0.3);
-      border-radius: 1rem;
+      background: #2C2E3B;
+      border: 2px solid rgba(74, 144, 226, 0.3);
+      border-radius: 0.75rem;
       padding: 2rem;
       margin-bottom: 3rem;
-      backdrop-filter: blur(10px);
+      transition: all 300ms cubic-bezier(0.4, 0, 0.2, 1);
     }
 
     .chart-title {
       font-size: 1.5rem;
+      font-weight: 600;
       margin-bottom: 2rem;
-      color: #fff;
+      color: #FFFFFF;
+      line-height: 1.3;
     }
 
     .bar-chart {
@@ -177,18 +188,19 @@ const html = `<!DOCTYPE html>
 
     .bar-label {
       min-width: 80px;
-      font-weight: bold;
-      color: #fff;
-      font-size: 1.1rem;
+      font-weight: 600;
+      color: #FFFFFF;
+      font-size: 1rem;
     }
 
     .bar-wrapper {
       flex: 1;
       position: relative;
       height: 50px;
-      background: rgba(0, 0, 0, 0.2);
+      background: #1A1C27;
       border-radius: 0.5rem;
       overflow: hidden;
+      border: 1px solid rgba(74, 144, 226, 0.2);
     }
 
     .bar {
@@ -198,17 +210,21 @@ const html = `<!DOCTYPE html>
       align-items: center;
       justify-content: flex-end;
       padding-right: 1rem;
-      color: #fff;
-      font-weight: bold;
-      transition: width 1s ease-out;
-      box-shadow: 0 0 20px rgba(102, 126, 234, 0.3);
+      color: #FFFFFF;
+      font-weight: 600;
+      font-size: 0.875rem;
+      transition: width 1s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: 0 0 20px rgba(74, 144, 226, 0.3);
+      will-change: width;
+      backface-visibility: hidden;
     }
 
     .bar-count {
       min-width: 100px;
       text-align: right;
-      font-size: 1.1rem;
-      color: #a0a0a0;
+      font-size: 1rem;
+      font-weight: 500;
+      color: #B0B3C1;
     }
 
     .decade-details {
@@ -219,17 +235,26 @@ const html = `<!DOCTYPE html>
     }
 
     .decade-card {
-      background: rgba(255, 255, 255, 0.05);
-      border: 2px solid rgba(102, 126, 234, 0.3);
-      border-radius: 1rem;
+      background: #2C2E3B;
+      border: 2px solid rgba(74, 144, 226, 0.3);
+      border-radius: 0.75rem;
       padding: 1.5rem;
-      backdrop-filter: blur(10px);
+      transition: all 300ms cubic-bezier(0.4, 0, 0.2, 1);
+      backface-visibility: hidden;
+    }
+
+    .decade-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 0 20px rgba(74, 144, 226, 0.4);
+      border-color: rgba(74, 144, 226, 0.5);
     }
 
     .decade-card h3 {
-      color: #667eea;
+      color: #4A90E2;
       margin-bottom: 1rem;
       font-size: 1.5rem;
+      font-weight: 600;
+      line-height: 1.3;
     }
 
     .song-list {
@@ -241,53 +266,71 @@ const html = `<!DOCTYPE html>
     .song-item {
       padding: 0.75rem;
       margin-bottom: 0.5rem;
-      background: rgba(0, 0, 0, 0.2);
+      background: #1A1C27;
       border-radius: 0.5rem;
-      border-left: 3px solid #667eea;
+      border-left: 3px solid #4A90E2;
+      transition: all 200ms cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .song-item:hover {
+      background: rgba(74, 144, 226, 0.1);
+      border-left-color: #FF6B35;
+      transform: translateX(4px);
     }
 
     .song-title {
-      font-weight: bold;
-      color: #fff;
+      font-weight: 600;
+      color: #FFFFFF;
       margin-bottom: 0.25rem;
+      font-size: 0.9375rem;
     }
 
     .song-artist {
-      color: #a0a0a0;
-      font-size: 0.9rem;
+      color: #B0B3C1;
+      font-size: 0.875rem;
+      font-weight: 400;
     }
 
     .song-year {
-      color: #667eea;
-      font-size: 0.85rem;
+      color: #4A90E2;
+      font-size: 0.8125rem;
+      font-weight: 500;
       margin-top: 0.25rem;
     }
 
     footer {
       text-align: center;
-      color: #666;
+      color: #B0B3C1;
       margin-top: 3rem;
       padding-top: 2rem;
-      border-top: 1px solid rgba(102, 126, 234, 0.2);
+      border-top: 1px solid rgba(74, 144, 226, 0.2);
+      font-size: 0.875rem;
     }
 
     /* Scrollbar styling */
     .song-list::-webkit-scrollbar {
-      width: 8px;
+      width: 10px;
     }
 
     .song-list::-webkit-scrollbar-track {
-      background: rgba(0, 0, 0, 0.2);
+      background: #1A1C27;
       border-radius: 4px;
     }
 
     .song-list::-webkit-scrollbar-thumb {
-      background: rgba(102, 126, 234, 0.5);
+      background: #2C2E3B;
       border-radius: 4px;
+      border: 2px solid transparent;
     }
 
     .song-list::-webkit-scrollbar-thumb:hover {
-      background: rgba(102, 126, 234, 0.7);
+      background: #4A90E2;
+    }
+
+    /* Selection styling */
+    ::selection {
+      background: #4A90E2;
+      color: #FFFFFF;
     }
 
     /* Animation for bars */

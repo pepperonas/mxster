@@ -1425,6 +1425,37 @@ Dieses Projekt ist unter der **MIT-Lizenz** veröffentlicht. Siehe [LICENSE](LIC
 - **HTTPS erforderlich**: Kamera-Zugriff benötigt HTTPS (außer localhost)
 - **Browser-Kompatibilität**: Chrome, Firefox, Edge, Safari (neueste Versionen)
 
+## 📝 Changelog
+
+### v0.0.20 (2025-01-02)
+
+**🔧 TypeScript & Code Quality**
+- Fixed all TypeScript errors in AchievementContext, GameContext, and GameScreen
+- Migrated from GameHistory class to useGameHistory hook
+- Fixed modal button interface (removed invalid properties: label, variant, closeOnClick)
+- Added proper type annotations for all implicit `any` types
+- Removed unused variables and imports
+- Fixed SaveGameData structure for game history persistence
+- Improved code maintainability and type safety
+
+**🐛 Bug Fixes**
+- Fixed double winner dialog in Timeline modes
+- Fixed win condition check timing with proper state updates
+- Fixed Player type issues in winner modal
+- Fixed history data structure (Array vs Object with .games property)
+
+**📊 Analysis Tools**
+- Added decade distribution report generator (`scripts/analysis/generate-decade-report.js`)
+- Interactive HTML visualization showing song distribution across decades
+- Styled with celox design system for consistent branding
+
+**🎨 UI Improvements**
+- All modals now use consistent button structure
+- Improved error handling in game history operations
+- Better TypeScript IntelliSense support across the app
+
+---
+
 ## 📞 Kontakt
 
 - **Website**: [mxster.de](https://mxster.de)
