@@ -6,7 +6,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 **mxster** is a music timeline game that combines hardware (3D-printed cards with QR codes) and software (PWA with camera scanner). Players can either scan physical QR codes or play virtually without cards. The game features multiple modes: a guess game where players earn points by correctly identifying songs, and timeline modes where players manually place songs chronologically.
 
-**Current Song Database**: 207 songs spanning multiple decades and genres (as of 2025-02-01)
+**Current Song Database**: 207 songs spanning multiple decades and genres (as of 2025-11-02)
 
 ### Key Technologies
 - **Frontend**: React 19 + TypeScript + Vite 5.0
@@ -61,36 +61,64 @@ npm run filter-songs
 ```
 Removes songs without Spotify ID or preview URL. Creates automatic backup and saves removed songs to `songs_removed.json`.
 
-### 3D Card Generation (SCAD + STL)
+### 3D Card Generation (SCAD + STL + 3MF)
+
+**Three Generator Variants Available:**
+
+#### 1. Standard Generator (Full Size)
 ```bash
 cd card-generator
-
-# Generate SCAD files (3D models) from songs.json
 node generateCard.js
-
-# Generate STL files from SCAD files (requires OpenSCAD)
-node -e "
-const fs = require('fs');
-const { generateSTL } = require('./generateCard.js');
-const songs = JSON.parse(fs.readFileSync('../docs/songs.json', 'utf8'));
-
-async function generateAllSTLs() {
-  for (const song of songs) {
-    const sanitizeFilename = (str) => str.replace(/[^a-zA-Z0-9\s]/g, '').replace(/\s+/g, '_').substring(0, 30);
-    const artistSafe = sanitizeFilename(song.artist);
-    const titleSafe = sanitizeFilename(song.title);
-    const baseFilename = \`\${song.id}_\${artistSafe}_\${titleSafe}_\${song.year}\`;
-    const scadPath = \`./models/\${baseFilename}.scad\`;
-    await generateSTL(scadPath);
-  }
-}
-generateAllSTLs();
-"
 ```
-This creates:
-- `output/qr-codes/*.png` - Individual QR codes linking to Spotify tracks
-- `output/models/*.scad` - OpenSCAD 3D model files with embedded QR codes
-- `output/models/*.stl` - STL files ready for 3D printing
+Outputs: `output/models/*.scad`, `*.stl`
+- **Dimensions**: 85.6mm × 53.98mm × 1.6mm (credit card size)
+- **QR Code**: 48mm, engraved
+- **Text**: Engraved on back
+
+#### 2. XS Generator (50% Test Prints - Embossed)
+```bash
+cd card-generator
+node test-xs-generator.js
+```
+Outputs: `output/models-xs/*.scad`, `*.stl`
+- **Dimensions**: 42.8mm × 26.99mm × 0.96mm (50% width/length, 60% height)
+- **QR Code**: 24mm, **embossed** (raised) on top
+- **Text**: **Embossed** (raised) on bottom, mirrored for readability
+- **Use Case**: Quick test prints, manual color assignment in slicer
+- **Watermark**: Removed
+- **Documentation**: `README-XS.md`
+
+#### 3. XS-V2 Generator (50% Test Prints - Flat Multi-Color)
+```bash
+cd card-generator
+node test-xs-v2-generator.js
+```
+Outputs: `output/models-xs-v2/*.scad`, `*.3mf`
+- **Dimensions**: 42.8mm × 26.99mm × 0.96mm (same as XS)
+- **Surface**: Completely flat (no embossing)
+- **QR Code**: 24mm, flat with `color("black")` definition
+- **Text**: Flat with `color("black")` definition, mirrored
+- **Export Format**: **3MF with embedded colors** (not STL)
+- **Use Case**: Multi-material printers (MMU2, AMS), automatic color assignment
+- **Color Layers**: 0.02mm thin (just for color definition, not physical relief)
+- **Documentation**: `README-XS-V2.md`
+
+**File Structure:**
+```
+card-generator/output/
+├── qr-codes/           # Standard QR codes
+├── qr-codes-xs/        # XS QR codes (same as standard)
+├── qr-codes-xs-v2/     # XS-V2 QR codes (same as standard)
+├── models/             # Standard SCAD + STL
+│   └── all-cards.3mf   # Combined 3MF for all standard cards
+├── models-xs/          # XS SCAD + STL (embossed)
+└── models-xs-v2/       # XS-V2 SCAD + 3MF (flat multi-color)
+```
+
+**When to Use Each:**
+- **Standard**: Production cards, full size
+- **XS**: Test prints, single-material printer with manual color changes
+- **XS-V2**: Test prints, multi-material printer (MMU2/AMS), automatic workflow
 
 ## Architecture
 
