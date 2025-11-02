@@ -164,15 +164,25 @@ export function levenshteinDistance(a: string, b: string): number {
  *
  * @param guess - Guessed text
  * @param correct - Correct text
- * @param maxErrors - Maximum allowed typos (default: 3)
+ * @param maxErrors - Maximum allowed typos (optional - defaults to 15% of text length, min 2)
  * @returns true if match
  */
-export function fuzzyMatch(guess: string, correct: string, maxErrors: number = 3): boolean {
+export function fuzzyMatch(guess: string, correct: string, maxErrors?: number): boolean {
   if (!guess || !correct) return false
 
   // Normalize both texts
   const normalizedGuess = normalizeText(guess)
   const normalizedCorrect = normalizeText(correct)
+
+  // Calculate dynamic max errors if not provided
+  if (maxErrors === undefined) {
+    // Use 15% of the longer normalized text as tolerance (minimum 2 errors)
+    const longerLength = Math.max(normalizedGuess.length, normalizedCorrect.length)
+    maxErrors = Math.max(2, Math.floor(longerLength * 0.15))
+
+    console.log(`🔍 Dynamic fuzzy matching: "${normalizedGuess}" vs "${normalizedCorrect}"`)
+    console.log(`   Length: ${longerLength} chars → Tolerance: ${maxErrors} errors`)
+  }
 
   // Exact match after normalization
   if (normalizedGuess === normalizedCorrect) {
@@ -189,7 +199,13 @@ export function fuzzyMatch(guess: string, correct: string, maxErrors: number = 3
 
   // Levenshtein distance check
   const distance = levenshteinDistance(normalizedGuess, normalizedCorrect)
-  return distance <= maxErrors
+  const isMatch = distance <= maxErrors
+
+  if (maxErrors !== 3) { // Only log when using dynamic tolerance
+    console.log(`   Distance: ${distance}, Max: ${maxErrors} → ${isMatch ? '✅ Match' : '❌ No match'}`)
+  }
+
+  return isMatch
 }
 
 /**
@@ -198,17 +214,15 @@ export function fuzzyMatch(guess: string, correct: string, maxErrors: number = 3
  * @param guessTitle - Guessed title
  * @param guessArtist - Guessed artist
  * @param song - Song object with title and artist
- * @param maxErrors - Maximum typos per field (default: 3)
  * @returns Match results
  */
 export function checkSongGuess(
   guessTitle: string,
   guessArtist: string,
-  song: Song,
-  maxErrors: number = 3
+  song: Song
 ): GuessResult {
-  const titleMatch = fuzzyMatch(guessTitle, song.title, maxErrors)
-  const artistMatch = fuzzyMatch(guessArtist, song.artist, maxErrors)
+  const titleMatch = fuzzyMatch(guessTitle, song.title)
+  const artistMatch = fuzzyMatch(guessArtist, song.artist)
 
   return {
     titleMatch,
@@ -228,10 +242,15 @@ export function debugMatch(
   normalized1: string
   normalized2: string
   distance: number
+  dynamicMaxErrors: number
 } {
   const normalized1 = normalizeText(guess)
   const normalized2 = normalizeText(correct)
   const distance = levenshteinDistance(normalized1, normalized2)
+
+  // Calculate dynamic max errors
+  const longerLength = Math.max(normalized1.length, normalized2.length)
+  const dynamicMaxErrors = Math.max(2, Math.floor(longerLength * 0.15))
 
   console.log('🔍 Text Match Debug:')
   console.log('  Original Guess:', guess)
@@ -239,7 +258,8 @@ export function debugMatch(
   console.log('  Normalized Guess:', normalized1)
   console.log('  Normalized Correct:', normalized2)
   console.log('  Levenshtein Distance:', distance)
-  console.log('  Match (3 errors):', fuzzyMatch(guess, correct, 3))
+  console.log('  Dynamic Max Errors (15%):', dynamicMaxErrors)
+  console.log('  Match (dynamic):', fuzzyMatch(guess, correct))
 
-  return { normalized1, normalized2, distance }
+  return { normalized1, normalized2, distance, dynamicMaxErrors }
 }

@@ -13,9 +13,10 @@ interface GameEndStatsDialogProps {
   allPlayers: Player[]
   gameMode: string
   onClose: () => void
+  onNewRound: () => void
 }
 
-export function GameEndStatsDialog({ winner, allPlayers, gameMode, onClose }: GameEndStatsDialogProps) {
+export function GameEndStatsDialog({ winner, allPlayers, gameMode, onClose, onNewRound }: GameEndStatsDialogProps) {
   const { history } = useGameHistory()
   const [showStats, setShowStats] = useState(false)
 
@@ -256,10 +257,13 @@ export function GameEndStatsDialog({ winner, allPlayers, gameMode, onClose }: Ga
           </div>
         )}
 
-        {/* Close Button */}
-        <div className="mt-8 text-center">
-          <button onClick={onClose} className="btn btn-accent px-8 py-3 text-lg">
-            Schließen
+        {/* Action Buttons */}
+        <div className="mt-8 flex gap-4 justify-center">
+          <button onClick={onClose} className="btn btn-secondary px-6 py-3 text-lg">
+            🏠 Zur Startseite
+          </button>
+          <button onClick={onNewRound} className="btn btn-accent px-6 py-3 text-lg shadow-glow-accent">
+            🔄 Neue Runde
           </button>
         </div>
       </div>

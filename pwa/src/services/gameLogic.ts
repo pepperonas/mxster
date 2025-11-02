@@ -24,21 +24,19 @@ interface GuessValidationResult {
  * @param guessArtist - Guessed artist
  * @param guessYear - Guessed year
  * @param song - Correct song
- * @param maxErrors - Maximum allowed typos per field (default: 3)
  * @returns Validation result with matches and correct count
  */
 export function validateGuess(
   guessTitle: string,
   guessArtist: string,
   guessYear: string,
-  song: Song,
-  maxErrors: number = 3
+  song: Song
 ): GuessValidationResult {
-  // Title match (fuzzy matching with 3 typos tolerance)
-  const titleMatch = guessTitle ? fuzzyMatch(guessTitle, song.title, maxErrors) : false
+  // Title match (fuzzy matching with dynamic tolerance based on text length)
+  const titleMatch = guessTitle ? fuzzyMatch(guessTitle, song.title) : false
 
-  // Artist match (fuzzy matching with 3 typos tolerance)
-  const artistMatch = guessArtist ? fuzzyMatch(guessArtist, song.artist, maxErrors) : false
+  // Artist match (fuzzy matching with dynamic tolerance based on text length)
+  const artistMatch = guessArtist ? fuzzyMatch(guessArtist, song.artist) : false
 
   // Year match (exact match required)
   const yearNum = parseInt(guessYear)
@@ -220,9 +218,9 @@ export function checkWinCondition(
     return noWinner
   }
 
-  // TIMELINE MODES: First player to reach 11 cards wins (first card is 0)
+  // TIMELINE MODES: First player to reach 10 cards wins
   if (gameMode === 'timeline_personal' || gameMode === 'timeline_global') {
-    if (player.cards >= 11) {
+    if (player.cards >= 10) {
       return {
         gameOver: true,
         winner: player,

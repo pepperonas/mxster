@@ -746,22 +746,14 @@ export function GameScreen() {
         })
       }
 
-      // Get updated player for win check
+      // Get updated player for display
       const updatedPlayer = {
         ...player,
         cards: player.cards + 1,
         timeline: gameMode === 'timeline_global' ? player.timeline : newTimeline
       }
 
-      // Check win condition
-      const winCheck = checkWinCondition(players, playerIndex, gameMode)
-
-      if (winCheck.gameOver && winCheck.winner) {
-        showWinnerModal(winCheck.winner, winCheck.message)
-        return
-      }
-
-      // Show success feedback, dann Spielerwechsel im Button onClick
+      // Show success feedback, dann Win-Check im Button onClick
       showModal(
         '✅ Richtig platziert!',
         <div className="text-center py-6">
@@ -771,7 +763,7 @@ export function GameScreen() {
           <div className="text-3xl font-bold text-secondary mb-2">{songYear}</div>
           <div className="mt-6 p-4 glass border-2 border-accent/30 rounded-lg">
             <div className="text-sm text-text-secondary">Fortschritt</div>
-            <div className="text-2xl font-bold">{Math.max(0, updatedPlayer.cards - 1)}/10 Karten</div>
+            <div className="text-2xl font-bold">{updatedPlayer.cards}/10 Karten</div>
           </div>
         </div>,
         [
@@ -780,17 +772,34 @@ export function GameScreen() {
             variant: 'primary',
             closeOnClick: false,
             onClick: () => {
-              console.log('🔴 Button clicked - closing modal and calling nextTurn()')
+              console.log('🔴 Button clicked - closing modal')
               console.log('🔴 Before - currentPlayer:', currentPlayer, 'currentSong:', currentSong?.title)
 
-              // Modal schließen
+              // Create updated players array for win-check
+              const updatedPlayers = players.map((p, idx) =>
+                idx === playerIndex ? updatedPlayer : p
+              )
+
+              // Check win condition with updated data
+              const winCheck = checkWinCondition(updatedPlayers, playerIndex, gameMode)
+
+              // Close modal first
               closeModal()
 
-              // Spielerwechsel im nächsten Event-Loop
-              setTimeout(() => {
+              // Then show winner modal OR next turn
+              if (winCheck.gameOver && winCheck.winner) {
+                console.log('🏆 Game over! Winner:', winCheck.winner.name)
+                // Small delay to ensure modal is fully closed
+                setTimeout(() => {
+                  showWinnerModal(winCheck.winner, winCheck.message)
+                }, 150)
+              } else {
                 console.log('🔴 Calling nextTurn()')
-                nextTurn()
-              }, 0)
+                // Small delay to ensure modal is fully closed
+                setTimeout(() => {
+                  nextTurn()
+                }, 150)
+              }
             }
           }
         ]
@@ -973,9 +982,14 @@ export function GameScreen() {
         allPlayers={players}
         gameMode={gameMode}
         onClose={() => {
-          console.log('🔄 Resetting game state...')
+          console.log('🏠 Navigating to home page...')
           resetGame()
-          navigate('/mode-selection')
+          navigate('/')
+        }}
+        onNewRound={() => {
+          console.log('🔄 Starting new round with same players...')
+          resetGame()
+          navigate('/player-setup')
         }}
       />,
       [], // No default buttons - GameEndStatsDialog has its own close button
