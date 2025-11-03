@@ -8,7 +8,7 @@ export const APP_VERSION = '0.0.22'
 // LocalStorage Keys
 export const STORAGE_KEYS = {
   GAME_STATE: 'mxster_game_state',
-  GAME_HISTORY: 'mxster_history',
+  GAME_HISTORY: 'mxster_game_history',  // Keep compatibility with old GameHistory class
   SPOTIFY_TOKENS: 'spotify_auth_tokens',
   BEAT_SYNC_CONFIG: 'beat_sync_config',
   SETTINGS: 'app_settings'
