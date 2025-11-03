@@ -152,7 +152,7 @@ export function HowToPlayContent() {
     {
       id: 'timeline_personal',
       icon: '👤',
-      title: 'Timeline Personal',
+      title: 'Persönliche Timeline',
       content: (
         <div className="space-y-4">
           <p className="text-text-secondary">
@@ -217,7 +217,7 @@ export function HowToPlayContent() {
     {
       id: 'timeline_global',
       icon: '🌍',
-      title: 'Timeline Global',
+      title: 'Globale Timeline',
       content: (
         <div className="space-y-4">
           <p className="text-text-secondary">

@@ -4,9 +4,8 @@
  */
 
 import { useUI, useAuth, useGame, useSettings, useInteraction } from '@/contexts'
-import { useGameState } from '@/hooks'
+import { useGameState, useGameHistory } from '@/hooks'
 import { SaveIcon, LogoutIcon, DownloadIcon, HistoryIcon, SettingsIcon, ChartIcon, AchievementIcon } from '@/utils/icons'
-import { GameHistory } from '@/services'
 import { SettingsDialog } from './SettingsDialog'
 import { PlayerStatsDialog } from './PlayerStatsDialog'
 import { AchievementsDialog } from './AchievementsDialog'
@@ -18,6 +17,7 @@ export function ActionBar() {
   const { gameMode, players, currentPlayer } = useGame()
   const { saveGameState, hasGameState } = useGameState()
   const { settings, updateSettings } = useSettings()
+  const { history } = useGameHistory()
   const { registerInteraction } = useInteraction()
   const [showAchievements, setShowAchievements] = useState(false)
 
@@ -96,7 +96,6 @@ export function ActionBar() {
             {/* History */}
             <button
               onClick={() => {
-                const history = GameHistory.getAll()
                 showModal(
                   '📊 Spielhistorie',
                   <div className="py-4">

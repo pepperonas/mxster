@@ -134,13 +134,6 @@ export class SpotifyAuthService {
 
     const authUrl = `https://accounts.spotify.com/authorize?${params.toString()}`
 
-    // DEBUG: Log exact redirect URI and auth URL
-    console.log('=== SPOTIFY AUTH DEBUG ===')
-    console.log('Redirect URI:', redirectUri)
-    console.log('Client ID:', SpotifyConfig.clientId)
-    console.log('Full Auth URL:', authUrl)
-    console.log('=========================')
-
     // Redirect to Spotify login
     window.location.href = authUrl
   }

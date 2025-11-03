@@ -129,7 +129,10 @@ export interface ModalOptions {
 
 export interface ModalButton {
   text: string
-  onclick: string | (() => void)
+  onClick?: () => void
+  variant?: 'primary' | 'secondary' | 'danger'
+  disabled?: boolean
+  closeOnClick?: boolean
   className?: string
 }
 
