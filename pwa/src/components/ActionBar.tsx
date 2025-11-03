@@ -98,7 +98,7 @@ export function ActionBar() {
               onClick={() => {
                 showModal(
                   '📊 Spielhistorie',
-                  <div className="py-4">
+                  <div>
                     {history.length === 0 ? (
                       <div className="text-center py-8 text-text-secondary">
                         <p className="text-4xl mb-4">🎮</p>
@@ -106,12 +106,12 @@ export function ActionBar() {
                       </div>
                     ) : (
                       <>
-                        <div className="text-center mb-4 pb-4 border-b-2 border-accent/30">
+                        <div className="text-center py-3 border-b-2 border-accent/30">
                           <p className="text-sm text-text-secondary">
                             {history.length} {history.length === 1 ? 'Spiel' : 'Spiele'} gespielt
                           </p>
                         </div>
-                        <div className="space-y-4 max-h-[60vh] overflow-y-auto custom-scrollbar">
+                        <div className="space-y-4 max-h-[60vh] overflow-y-auto custom-scrollbar pt-4">
                           {history.map((game, index) => (
                           <div key={index} className="glass p-4 rounded-lg border-2 border-accent/30 hover:border-accent/50 transition-colors">
                             <div className="flex justify-between items-start mb-2">
