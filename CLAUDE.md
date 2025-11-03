@@ -360,6 +360,32 @@ All files hosted via GitHub raw URLs (auto-update, no manual releases):
 
 ## Recent Changes
 
+### v0.0.25 (2025-11-03) - Achievement System Bugfixes
+**Fixed 3 critical achievement bugs identified through thorough code analysis:**
+
+**1. NAME_DROPPER (Artist Streak)** ❌→✅
+- **Bug**: Used `points >= 10` to detect artist correctness (impossible - can't distinguish Title+Artist from Title+Year)
+- **Fix**: Added `guessDetails` to Song interface with `artistCorrect` boolean
+- **Impact**: Now accurately tracks 5-artist streaks without false positives
+
+**2. PERFECT_STREAK (3 Perfect Guesses)** ⚠️→✅
+- **Bug**: Only checked `points === 15`, may fail if points not persisted correctly
+- **Fix**: Dual verification - checks both `points === 15` OR all `guessDetails` fields correct
+- **Impact**: More reliable perfect streak detection
+
+**3. COMEBACK_PROFI (5 Comeback Wins)** ⚠️→✅
+- **Bug**: Weak logic - only checked final scores, didn't track actual comebacks
+- **Fix**: Checks if winner had fewer cards OR came from behind (opponent had equal/more cards but lower score)
+- **Impact**: Better comeback detection logic
+
+**Implementation Details:**
+- **Song Interface**: Added `guessDetails?: { titleCorrect, artistCorrect, yearPoints }` (v0.0.25)
+- **gameLogic.ts**: Updated `placeCardInTimeline()` to store guess details
+- **GameScreen.tsx**: Calculate and pass guessDetails when placing cards
+- **Achievement Debugging**: Added summary log after each game showing progress for all players
+
+**All 20 Achievements Now Fully Functional** ✅
+
 ### v0.0.24++ (2025-11-03) - Genre Analysis & Testing Tools
 **Analysis & Testing Improvements**:
 - ✅ **generate-decade-report.js**: Added genre distribution analysis alongside decade analysis
