@@ -478,7 +478,7 @@ export function LandingPage() {
               Achievements
             </h3>
             <p className="text-sm text-text-secondary leading-relaxed">
-              Schalte 10 coole Achievements frei! Volltreffer-Serien, Marathonläufer, Musikexperte und mehr.
+              Schalte 20 coole Achievements frei! Volltreffer-Serien, Marathonläufer, Musikexperte, Genre-Hopper und mehr.
             </p>
           </div>
         </div>
