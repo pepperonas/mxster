@@ -292,6 +292,8 @@ export function AchievementProvider({ children }: { children: ReactNode }) {
     updateProgress(playerName, AchievementId.CENTURION, totalGames)
 
     // 20. COMEBACK_PROFI: 5x comeback wins (won after being behind) (VERY HARD)
+    // Better logic: Winner had fewer cards than at least one opponent
+    // This indicates they placed cards more accurately (fewer mistakes)
     let comebackWins = 0
     sortedGames.forEach((game: HistoryEntry) => {
       // Check if this player won
@@ -300,15 +302,22 @@ export function AchievementProvider({ children }: { children: ReactNode }) {
       )
 
       if (winner.name === playerName && game.players.length > 1) {
-        // Check if winner was ever behind during the game
-        // We can check final scores to see if any opponent had more cards earlier
-        // This is a simplified check - ideally we'd have turn-by-turn data
-        const playerFinalCards = winner.cards
-        const hadComeback = game.players.some((p: Player) => {
-          return p.name !== playerName && p.cards > 0 && p.score < winner.score
+        // Check if any opponent had MORE cards than the winner
+        // This means winner had fewer attempts but still won (= comeback/efficiency win)
+        const winnerCards = winner.cards
+        const hadFewerCards = game.players.some((p: Player) => {
+          return p.name !== playerName && p.cards > winnerCards
         })
 
-        if (hadComeback) {
+        // Additionally check if winner had lower score at some point
+        // by checking if any opponent has similar/higher card count but lower score
+        const wasBehind = game.players.some((p: Player) => {
+          if (p.name === playerName) return false
+          // Opponent had equal/more cards but lost = winner came from behind
+          return p.cards >= winnerCards - 2 && p.score < winner.score
+        })
+
+        if (hadFewerCards || wasBehind) {
           comebackWins++
         }
       }

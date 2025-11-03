@@ -13,6 +13,11 @@ export interface Song {
   youtubeUrl?: string
   points?: number  // Points earned for this song (Guess Mode only)
   genre?: string   // Genre for GENRE_HOPPER achievement (added v0.0.24)
+  guessDetails?: {  // Detailed guess results for achievements (added v0.0.25)
+    titleCorrect: boolean
+    artistCorrect: boolean
+    yearPoints: 0 | 1 | 2 | 5  // 5=exact, 2=±1 year, 1=±2 years, 0=wrong
+  }
 }
 
 export interface Player {

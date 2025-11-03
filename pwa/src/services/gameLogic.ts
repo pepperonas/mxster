@@ -65,12 +65,27 @@ export function validateGuess(
  * Place song chronologically in timeline
  * @param timeline - Current timeline
  * @param song - Song to insert
+ * @param points - Points earned (optional)
+ * @param guessDetails - Detailed guess results (optional, for achievements)
  * @returns New timeline (sorted by year)
  */
-export function placeCardInTimeline(timeline: Song[], song: Song, points?: number): Song[] {
-  // Add points to song if provided (Guess Mode)
-  const songWithPoints = points !== undefined ? { ...song, points } : song
-  const newTimeline = [...timeline, songWithPoints]
+export function placeCardInTimeline(
+  timeline: Song[],
+  song: Song,
+  points?: number,
+  guessDetails?: {
+    titleCorrect: boolean
+    artistCorrect: boolean
+    yearPoints: 0 | 1 | 2 | 5
+  }
+): Song[] {
+  // Add points and guessDetails to song if provided (Guess Mode)
+  const songWithMetadata = {
+    ...song,
+    ...(points !== undefined && { points }),
+    ...(guessDetails && { guessDetails })
+  }
+  const newTimeline = [...timeline, songWithMetadata]
   return sortTimelineByYear(newTimeline)
 }
 

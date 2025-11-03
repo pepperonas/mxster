@@ -478,22 +478,34 @@ export function GameScreen() {
 
     // Calculate points using new system (Hardcore Mode only)
     let earnedPoints = 0
+    let guessDetails = undefined
     if (gameMode === 'hardcore' && guessResult) {
       earnedPoints = calculatePoints(
         guessResult.titleMatch,
         guessResult.artistMatch,
         guessResult.yearDifference
       )
+
+      // Store detailed guess results for achievements
+      guessDetails = {
+        titleCorrect: guessResult.titleMatch,
+        artistCorrect: guessResult.artistMatch,
+        yearPoints: (guessResult.yearDifference === 0 ? 5 :
+                    guessResult.yearDifference === 1 ? 2 :
+                    guessResult.yearDifference === 2 ? 1 : 0) as 0 | 1 | 2 | 5
+      }
+
       console.log('🎯 Points calculated:', {
         titleMatch: guessResult.titleMatch,
         artistMatch: guessResult.artistMatch,
         yearDifference: guessResult.yearDifference,
-        earnedPoints
+        earnedPoints,
+        guessDetails
       })
     }
 
-    // Add card to timeline (chronologically sorted) with points
-    const newTimeline = placeCardInTimeline(player.timeline, currentSong, earnedPoints)
+    // Add card to timeline (chronologically sorted) with points and guess details
+    const newTimeline = placeCardInTimeline(player.timeline, currentSong, earnedPoints, guessDetails)
 
     // Calculate new score (only in Hardcore Mode)
     let newScore = player.score
@@ -957,16 +969,23 @@ export function GameScreen() {
       })
 
       // 7. PERFECT_STREAK: 3x consecutive perfect guesses (15 points each)
-      // This requires tracking streak during the game, not just at the end
-      // We check timeline for consecutive songs with max points
+      // Check using both points and guessDetails for reliability
       players.forEach(player => {
         let currentStreak = 0
         let maxStreak = 0
 
         player.timeline.forEach(song => {
-          // Check if this song was a perfect guess (song has points field from placeCardInTimeline)
           const points = (song as any).points || 0
-          if (points === 15) {
+          const guessDetails = (song as any).guessDetails
+
+          // Perfect guess = 15 points OR all fields correct in guessDetails
+          const isPerfect = points === 15 ||
+            (guessDetails &&
+             guessDetails.titleCorrect &&
+             guessDetails.artistCorrect &&
+             guessDetails.yearPoints === 5)
+
+          if (isPerfect) {
             currentStreak++
             maxStreak = Math.max(maxStreak, currentStreak)
           } else {
@@ -1010,9 +1029,9 @@ export function GameScreen() {
         let artistStreak = 0
         let maxArtistStreak = 0
         player.timeline.forEach(song => {
-          const points = (song as any).points || 0
-          // Artist gives 5 points, so ≥10 means artist was likely correct
-          if (points >= 10) {
+          // Use guessDetails to accurately determine if artist was correct
+          const guessDetails = (song as any).guessDetails
+          if (guessDetails && guessDetails.artistCorrect) {
             artistStreak++
             maxArtistStreak = Math.max(maxArtistStreak, artistStreak)
           } else {
@@ -1054,6 +1073,24 @@ export function GameScreen() {
           checkAchievements(player.name, historyData)
         })
       }
+
+      // Achievement Debug Log (v0.0.25)
+      console.log('🏆 Achievement Check Summary:')
+      players.forEach(player => {
+        const achievements = getPlayerAchievements(player.name)
+        const unlocked = achievements.filter(a => a.unlocked).length
+        const total = achievements.length
+        console.log(`  ${player.name}: ${unlocked}/${total} achievements unlocked`)
+
+        // Show progress for locked achievements with targets
+        const inProgress = achievements.filter(a => !a.unlocked && a.target && a.progress)
+        if (inProgress.length > 0) {
+          console.log(`  In Progress:`)
+          inProgress.forEach(a => {
+            console.log(`    - ${a.name}: ${a.progress}/${a.target}`)
+          })
+        }
+      })
     }
 
     // Show GameEndStatsDialog with confetti and statistics
