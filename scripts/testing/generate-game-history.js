@@ -237,6 +237,102 @@ players.forEach(playerName => {
       target: 1000,
       unlocked: totalPoints >= 1000,
       progress: totalPoints
+    },
+    // NEW 10 ACHIEVEMENTS (v0.0.24)
+    {
+      id: 'zeitmaschine',
+      name: 'Zeitmaschine',
+      description: 'Songs aus 3 verschiedenen Dekaden erraten',
+      icon: '⏰',
+      target: 3,
+      unlocked: totalGames >= 10,
+      progress: Math.min(3, Math.floor(totalGames / 4))
+    },
+    {
+      id: 'genre_hopper',
+      name: 'Genre-Hopper',
+      description: 'Songs aus 4 verschiedenen Genres erraten',
+      icon: '🎸',
+      target: 4,
+      unlocked: totalGames >= 15,
+      progress: Math.min(4, Math.floor(totalGames / 5))
+    },
+    {
+      id: 'name_dropper',
+      name: 'Name-Dropper',
+      description: '5 Künstler hintereinander richtig erraten',
+      icon: '🎤',
+      target: 5,
+      unlocked: skillLevels[playerName] >= 0.7,
+      progress: skillLevels[playerName] >= 0.7 ? 5 : Math.floor(skillLevels[playerName] * 6)
+    },
+    {
+      id: 'social_butterfly',
+      name: 'Sozialschmetterling',
+      description: 'Mit 5 verschiedenen Spielern gespielt',
+      icon: '🦋',
+      target: 5,
+      unlocked: false, // Only 3 players in this script
+      progress: 3
+    },
+    {
+      id: 'punktejaeger',
+      name: 'Punktejäger',
+      description: '75+ Punkte in einem Spiel erreicht',
+      icon: '🎯',
+      target: 75,
+      unlocked: skillLevels[playerName] >= 0.6,
+      progress: Math.floor(Math.max(...playerGames.filter(g => g.gameMode === 'hardcore').map(g => g.players.find(p => p.name === playerName)?.score || 0)))
+    },
+    {
+      id: 'flawless_victory',
+      name: 'Makelloser Sieg',
+      description: 'Ein Spiel mit 150/150 Punkten gewonnen',
+      icon: '💎',
+      unlocked: skillLevels[playerName] >= 0.8
+    },
+    {
+      id: 'legendary_streak',
+      name: 'Legendäre Serie',
+      description: '10 Spiele in Folge gewonnen',
+      icon: '🔥',
+      target: 10,
+      unlocked: maxConsecutiveWins >= 10,
+      progress: maxConsecutiveWins
+    },
+    {
+      id: 'centurion',
+      name: 'Zenturio',
+      description: '100 Spiele gespielt',
+      icon: '💯',
+      target: 100,
+      unlocked: totalGames >= 100,
+      progress: totalGames
+    },
+    {
+      id: 'master_of_time',
+      name: 'Meister der Zeit',
+      description: 'Ein Spiel in unter 3 Minuten abgeschlossen',
+      icon: '⚡',
+      unlocked: playerGames.some(g => g.duration < 3 * 60 * 1000)
+    },
+    {
+      id: 'comeback_profi',
+      name: 'Comeback-Profi',
+      description: '5x vom Rückstand zum Sieg gekommen',
+      icon: '🔄',
+      target: 5,
+      unlocked: wins >= 10 && skillLevels[playerName] >= 0.7,
+      progress: Math.min(5, Math.floor(wins / 4))
+    },
+    {
+      id: 'grand_master',
+      name: 'Großmeister',
+      description: '5000 Gesamtpunkte über alle Spiele erreicht',
+      icon: '👑',
+      target: 5000,
+      unlocked: totalPoints >= 5000,
+      progress: totalPoints
     }
   ]
   
@@ -274,7 +370,7 @@ players.forEach(p => {
   const unlocked = achievements[p].achievements.filter(a => a.unlocked).length
   
   console.log(`Player "${p}":`)
-  console.log(`  Games: ${playerGames.length} | Wins: ${wins} (${winRate}%) | Achievements: ${unlocked}/10`)
+  console.log(`  Games: ${playerGames.length} | Wins: ${wins} (${winRate}%) | Achievements: ${unlocked}/20`)
 })
 
 console.log('\n🎉 SUCCESS! Reloading in 2 seconds...')

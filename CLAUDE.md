@@ -386,18 +386,24 @@ All files hosted via GitHub raw URLs (auto-update, no manual releases):
 
 **All 20 Achievements Now Fully Functional** ✅
 
-### v0.0.24++ (2025-11-03) - Genre Analysis & Testing Tools
+### v0.0.24++ (2025-11-04) - Genre Analysis & Testing Tools
 **Analysis & Testing Improvements**:
 - ✅ **generate-decade-report.js**: Added genre distribution analysis alongside decade analysis
   - Interactive HTML report with bar charts for both decades and genres
   - 208 songs across 7 decades and 9 genres
   - Genre color coding with vibrant colors per genre
   - Detailed song listings by decade and genre
-- ✅ **generate-game-history.js**: Updated to generate 1000 realistic test games
+- ✅ **generate-game-history.js**: Updated to generate 1000 realistic test games + ALL 20 ACHIEVEMENTS
   - 3 players (m, n, o) with different skill levels (80%, 60%, 40%)
   - Random game modes (hardcore, timeline_personal, timeline_global)
   - Random variants (physical, virtual)
+  - **CRITICAL FIX**: Now includes all 20 achievements (was missing 10 new ones)
+  - **GRAND_MASTER unlocks correctly** with 5000+ points (Player "m" gets ~35000 points)
   - For testing achievements, statistics, and history features
+- ✅ **unlock-all-achievements.js**: Updated to include all 20 achievements
+  - Player "m": All 20 unlocked (100%)
+  - Player "n": 10 unlocked, 10 locked with progress (50%)
+  - Includes GRAND_MASTER and GENRE_HOPPER
 
 ### v0.0.24+ (2025-11-03) - Genre Field Support
 **Added genre field to song management system** to support GENRE_HOPPER achievement:
