@@ -41,13 +41,18 @@ export function useGameHistory() {
    */
   const loadAll = useCallback(() => {
     try {
+      console.log('🔍 useGameHistory - loadAll called')
+      console.log('🔍 useGameHistory - Using key:', STORAGE_KEYS.GAME_HISTORY)
       const stored = localStorage.getItem(STORAGE_KEYS.GAME_HISTORY)
+      console.log('🔍 useGameHistory - Raw stored data:', stored)
       if (stored) {
         const data = JSON.parse(stored) as HistoryEntry[]
+        console.log('🔍 useGameHistory - Parsed data:', data)
         setHistory(data)
         console.log(`✅ Loaded ${data.length} game(s) from history`)
         return data
       }
+      console.log('🔍 useGameHistory - No stored data found')
       return []
     } catch (error) {
       console.error('❌ Error loading game history:', error)

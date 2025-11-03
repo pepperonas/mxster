@@ -21,6 +21,10 @@ export function ActionBar() {
   const { registerInteraction } = useInteraction()
   const [showAchievements, setShowAchievements] = useState(false)
 
+  // DEBUG: Log history data
+  console.log('🔍 ActionBar - History length:', history.length)
+  console.log('🔍 ActionBar - History data:', history)
+
   // Get current player name if in-game
   const currentPlayerName = players.length > 0 && currentPlayer >= 0
     ? players[currentPlayer]?.name
