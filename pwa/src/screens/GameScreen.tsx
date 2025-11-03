@@ -46,6 +46,9 @@ export function GameScreen() {
   // Game Duration Tracking (for LIGHTNING_FAST achievement)
   const gameStartTime = useRef<number | null>(null)
 
+  // Game Over flag to prevent duplicate winner modals and history entries
+  const [gameOver, setGameOver] = useState(false)
+
   // Player Rankings History (for COMEBACK_KING achievement)
   // Array of snapshots: [{turn: number, rankings: [playerName, playerName, ...]}, ...]
   const rankingsHistory = useRef<Array<{ turn: number; rankings: string[] }>>([])
@@ -581,6 +584,14 @@ export function GameScreen() {
 
   const showManualPlacementModal = () => {
     console.log('🟠 showManualPlacementModal called')
+
+    // Prevent placement if game is already over
+    if (gameOver) {
+      console.log('⚠️ Game already over, cannot place more cards')
+      addToast('Spiel ist bereits beendet!', 'error')
+      return
+    }
+
     if (!currentSong) {
       console.log('🟠 No currentSong, returning early')
       return
@@ -839,6 +850,16 @@ export function GameScreen() {
   // ============================================================================
 
   const showWinnerModal = (winner: typeof players[0]) => {
+    // Prevent duplicate winner modals and history entries
+    if (gameOver) {
+      console.log('⚠️ Game already over, skipping duplicate winner modal')
+      return
+    }
+
+    // Mark game as over
+    setGameOver(true)
+    console.log('🏁 Game marked as over')
+
     // Save game to history
     try {
       saveGame({
@@ -1007,7 +1028,8 @@ export function GameScreen() {
           <div className="space-y-6">
             {/* Song Selection (Physical = QR Scanner, Virtual = Button) */}
             {/* Timeline Mode: ALWAYS show button | Guess Mode: only when !currentSong */}
-            {(gameMode !== 'hardcore' || !currentSong) && (
+            {/* Hide buttons if game is over */}
+            {!gameOver && (gameMode !== 'hardcore' || !currentSong) && (
               <div>
                 {gameVariant === 'physical' ? (
                   <QRScanner />
