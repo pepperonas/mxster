@@ -60,22 +60,59 @@ export function AchievementProvider({ children }: { children: ReactNode }) {
   )
   const [isLoaded, setIsLoaded] = useState(false)
 
+  // Migrate existing player achievements to include new achievements (v0.0.23)
+  const migratePlayerAchievements = useCallback((playerData: PlayerAchievements): PlayerAchievements => {
+    const currentAchievementIds = Object.keys(ACHIEVEMENT_DEFINITIONS)
+    const existingAchievementIds = playerData.achievements.map(a => a.id)
+
+    // Find missing achievement IDs
+    const missingIds = currentAchievementIds.filter(id => !existingAchievementIds.includes(id as AchievementId))
+
+    if (missingIds.length > 0) {
+      console.log(`🔄 Migrating ${playerData.playerName}: Adding ${missingIds.length} new achievements`)
+
+      // Add missing achievements
+      const newAchievements = missingIds.map(id => {
+        const def = ACHIEVEMENT_DEFINITIONS[id as AchievementId]
+        return {
+          ...def,
+          unlocked: false,
+          progress: def.target ? 0 : undefined
+        }
+      })
+
+      return {
+        ...playerData,
+        achievements: [...playerData.achievements, ...newAchievements]
+      }
+    }
+
+    return playerData
+  }, [])
+
   // Load achievements from localStorage on mount
   useEffect(() => {
     try {
       const stored = localStorage.getItem(STORAGE_KEY)
       if (stored) {
         const data = JSON.parse(stored)
-        const map = new Map<string, PlayerAchievements>(Object.entries(data))
+        const entries = Object.entries(data) as [string, PlayerAchievements][]
+
+        // Migrate each player's achievements to include new ones
+        const migratedEntries = entries.map(([playerName, playerData]) => {
+          return [playerName, migratePlayerAchievements(playerData)] as [string, PlayerAchievements]
+        })
+
+        const map = new Map<string, PlayerAchievements>(migratedEntries)
         setPlayerAchievements(map)
-        console.log(`📥 Loaded achievements for ${map.size} player(s) from localStorage`)
+        console.log(`📥 Loaded and migrated achievements for ${map.size} player(s) from localStorage`)
       }
     } catch (error) {
       console.error('Failed to load achievements:', error)
     } finally {
       setIsLoaded(true)
     }
-  }, [])
+  }, [migratePlayerAchievements])
 
   // Auto-initialize achievements for all saved players
   useEffect(() => {
@@ -122,6 +159,14 @@ export function AchievementProvider({ children }: { children: ReactNode }) {
     if (!achievements) {
       achievements = initializePlayerAchievements(playerName)
       setPlayerAchievements(new Map(playerAchievements).set(playerName, achievements))
+    } else {
+      // Ensure player has all current achievements (migration for v0.0.23)
+      const migrated = migratePlayerAchievements(achievements)
+      if (migrated !== achievements) {
+        // Update if migration happened
+        setPlayerAchievements(new Map(playerAchievements).set(playerName, migrated))
+        achievements = migrated
+      }
     }
     return achievements
   }
@@ -281,7 +326,16 @@ export function AchievementProvider({ children }: { children: ReactNode }) {
   // Get all achievements for a player
   const getPlayerAchievements = (playerName: string): Achievement[] => {
     const achievements = playerAchievements.get(playerName)
-    return achievements?.achievements || []
+    if (!achievements) return []
+
+    // Migrate if needed
+    const migrated = migratePlayerAchievements(achievements)
+    if (migrated !== achievements) {
+      // Update the map if migration happened
+      setPlayerAchievements(prev => new Map(prev).set(playerName, migrated))
+    }
+
+    return migrated.achievements
   }
 
   // Get all player names who have achievements

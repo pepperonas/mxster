@@ -1,6 +1,6 @@
 /**
  * GENERATE REALISTIC GAME HISTORY
- * Creates 3 players (m, n, o) and 100 realistic games
+ * Creates 3 players (m, n, o) and 1000 realistic games
  * For testing statistics display
  */
 
@@ -24,8 +24,8 @@ const settings = {
 localStorage.setItem('mxster_settings', JSON.stringify(settings))
 console.log('✅ Players: m, n, o\n')
 
-// STEP 3: Generate 100 realistic games
-console.log('Step 3: Generating 100 games...')
+// STEP 3: Generate 1000 realistic games
+console.log('Step 3: Generating 1000 games...')
 
 const gameModes = ['hardcore', 'timeline_personal', 'timeline_global']
 const gameVariants = ['physical', 'virtual']
@@ -42,7 +42,7 @@ const games = []
 const now = Date.now()
 const oneDay = 24 * 60 * 60 * 1000
 
-for (let i = 0; i < 100; i++) {
+for (let i = 0; i < 1000; i++) {
   const gameMode = gameModes[Math.floor(Math.random() * gameModes.length)]
   const gameVariant = gameVariants[Math.floor(Math.random() * gameVariants.length)]
   
@@ -122,7 +122,7 @@ games.sort((a, b) => b.timestamp - a.timestamp)
 // useGameHistory expects: HistoryEntry[]
 // CRITICAL: Use correct localStorage key: 'mxster_history'
 localStorage.setItem('mxster_history', JSON.stringify(games))
-console.log('✅ Generated 100 games')
+console.log('✅ Generated 1000 games')
 
 // STEP 4: Generate achievements based on history
 console.log('\nStep 4: Generating achievements from games...')
