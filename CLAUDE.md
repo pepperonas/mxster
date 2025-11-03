@@ -278,16 +278,23 @@ npm test  # Runs test-integrity.js
 ```bash
 # Add new song (auto-generates all files)
 node scripts/song-management/add-song.js "spotify-url"
-node scripts/song-management/add-song.js --edit "spotify-url"  # Interactive
+node scripts/song-management/add-song.js --edit "spotify-url"  # Interactive with genre
 
 # Edit existing song (wizard, auto-backup)
-node scripts/song-management/edit-song.js
+node scripts/song-management/edit-song.js  # Includes genre editing
+
+# Exchange song (keeps ID, replaces metadata)
+node scripts/song-management/exchange-song.js  # Preserves genre if available
 
 # Generate PDFs (4 variants: color/bw, standard/duplex)
 ./scripts/build/generate-all-pdfs.sh
 ```
 
 **Auto-generated files**: QR codes, SCAD, STL, songs.json, songs.ts
+**Genre field**: Optional field for GENRE_HOPPER achievement (added v0.0.24)
+- Suggestions: Pop, Rock, Hip-Hop, Electronic, R&B, Country, Jazz, Metal, Reggae, Soul
+- Safely handled: GENRE_HOPPER filters `undefined`/`null` values
+- Scripts: All song management scripts support genre input/editing
 
 ### Deployment
 ```bash
@@ -353,6 +360,16 @@ All files hosted via GitHub raw URLs (auto-update, no manual releases):
 
 ## Recent Changes
 
+### v0.0.24+ (2025-11-03) - Genre Field Support
+**Added genre field to song management system** to support GENRE_HOPPER achievement:
+- ✅ **Genre field added** to Song interface (optional, already in v0.0.24)
+- ✅ **add-song.js**: Genre input with suggestions in `--edit` mode
+- ✅ **edit-song.js**: Genre editing with visual before/after comparison
+- ✅ **exchange-song.js**: Preserves genre field when exchanging songs
+- ✅ **GENRE_HOPPER**: Already safely filters `undefined`/`null` values
+- 📝 **Genre suggestions**: Pop, Rock, Hip-Hop, Electronic, R&B, Country, Jazz, Metal, Reggae, Soul
+- 🎯 **Next step**: Populate genre data for all 207 songs to enable GENRE_HOPPER achievement
+
 ### v0.0.24 (2025-11-03) - Achievement Fixes & Replacements
 **Fixed 5 broken achievements from v0.0.23** with creative, functional alternatives:
 - **Removed broken achievements**:
@@ -362,7 +379,7 @@ All files hosted via GitHub raw URLs (auto-update, no manual releases):
   - ARTIST_EXPERT (false positives: counted wrong songs)
 - **New functional achievements**:
   - ⏰ **ZEITMASCHINE**: 3 different decades (realistic + achievable)
-  - 🌈 **GENRE_HOPPER**: 4 different genres (requires genre field - TODO)
+  - 🌈 **GENRE_HOPPER**: 4 different genres (requires genre field)
   - 🎤 **NAME_DROPPER**: 5 artist streak (streak-based = more engaging)
   - 🏆 **PUNKTEJÄGER**: 75+ points (entry-level version of HARDCORE_CHAMPION)
   - 🔥 **COMEBACK_PROFI**: 5x comeback wins (cross-game achievement)
