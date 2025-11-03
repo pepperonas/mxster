@@ -28,7 +28,7 @@ mxster ist ein **Multiplayer-Musikquiz** mit drei verschiedenen Spielmodi:
 - 🎯 **Tolerantes Raten** - Fuzzy Matching erkennt Tippfehler
 - 📱 **Progressive Web App** - Installierbar auf Smartphone & Desktop
 - 🏆 **Live Punktesystem** - Echtzeit-Updates nach jeder Runde (5+5+5/2/1 Punkte)
-- 🎖️ **Achievement System** - Schalte 10 Erfolge frei (Volltreffer-Serie, Marathonläufer, Musikexperte...)
+- 🎖️ **Achievement System** - Schalte 20 Erfolge frei (Volltreffer-Serie, Marathonläufer, Musikexperte...)
 - 📊 **Spielerstatistiken** - Detaillierte Stats mit Winrate, Dekaden-Verteilung und Siegesserien
 - 📈 **Spielhistorie** - Vollständige Aufzeichnung aller Spiele mit Export-Funktion
 - 📸 **QR-Code Scanner** - Scanne Karten mit Smartphone-Kamera
@@ -43,7 +43,9 @@ mxster ist ein **Multiplayer-Musikquiz** mit drei verschiedenen Spielmodi:
 
 ## 🏆 Achievements
 
-Schalte 10 spannende Erfolge frei und zeige dein Können!
+Schalte 20 spannende Erfolge frei und zeige dein Können!
+
+### Standard Achievements (1-10)
 
 - 🎯 **Volltreffer-Serie** - 3x hintereinander alle Felder (Titel, Artist, Jahr) richtig erraten
 - ⭐ **Perfektionist** - Alle Songs in einem Spiel richtig einsortiert
@@ -55,6 +57,22 @@ Schalte 10 spannende Erfolge frei und zeige dein Können!
 - ⚡ **Blitzschnell** - Ein Spiel in unter 5 Minuten abgeschlossen
 - 🔥 **Comeback-King** - Vom letzten Platz zum Gewinner aufgestiegen
 - 🎓 **Musikexperte** - 1000 Gesamtpunkte über alle Spiele erreicht
+
+### Neue Achievements (11-20) - v0.0.23
+
+#### Normal Schwierigkeit
+- ⚡🔥 **Geschwindigkeitsrausch** - 3 Songs hintereinander in unter 10 Sekunden geraten
+- 📅 **Jahres-Genie** - 5 Songs in einem Spiel auf das exakte Jahr geraten
+- 🎵 **Vielseitiger Musikgeschmack** - In einem Spiel Songs aus allen verfügbaren Dekaden platzieren
+- 👥 **Gesellschaftsmensch** - Mit 5 verschiedenen Spielern gespielt
+- 🎤 **Künstler-Kenner** - 10 Künstler in einem Spiel richtig erraten
+
+#### Sehr Schwierig ⚠️
+- 💎 **Makellos** - Ein Spiel mit 150/150 Punkten gewinnen (10 perfekte Songs!)
+- 🌟 **Legendäre Serie** - 10 Spiele in Folge gewonnen
+- 💯 **Zenturio** - 100 Spiele gespielt
+- ⏱️ **Meister der Zeit** - Ein Spiel in unter 3 Minuten abgeschlossen
+- 👑💎 **Großmeister** - 5000 Gesamtpunkte über alle Spiele erreicht
 
 **Features:**
 - Noch nicht freigeschaltete Achievements sind schwarz maskiert

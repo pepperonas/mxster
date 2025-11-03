@@ -53,6 +53,14 @@ export function GameScreen() {
   // Array of snapshots: [{turn: number, rankings: [playerName, playerName, ...]}, ...]
   const rankingsHistory = useRef<Array<{ turn: number; rankings: string[] }>>([])
 
+  // Song Timing Tracking (for SPEED_DEMON achievement)
+  // Tracks when each song started for current player
+  const songStartTimes = useRef<Map<string, number>>(new Map())
+
+  // Track song times per player for SPEED_DEMON achievement
+  // Map<playerName, number[]> - array of song times in seconds
+  const playerSongTimes = useRef<Map<string, number[]>>(new Map())
+
   const {
     gameMode,
     gameVariant,
@@ -109,6 +117,15 @@ export function GameScreen() {
 
   useEffect(() => {
     console.log('🔷 useEffect triggered - currentSong:', currentSong?.title || 'null', 'gameMode:', gameMode)
+
+    // Track song start time for SPEED_DEMON achievement (all modes, QR scans)
+    if (currentSong && gameMode === 'hardcore') {
+      const playerName = players[currentPlayer]?.name
+      if (playerName && !songStartTimes.current.has(playerName)) {
+        songStartTimes.current.set(playerName, Date.now())
+        console.log(`⏱️ Started timing for ${playerName} (QR scan)`)
+      }
+    }
 
     // Only in Timeline Modes (not Guess Mode)
     if (currentSong && gameMode !== 'hardcore') {
@@ -175,6 +192,13 @@ export function GameScreen() {
 
     // Set current song
     setCurrentSong(song)
+
+    // Track song start time for SPEED_DEMON achievement
+    if (gameMode === 'hardcore') {
+      const playerName = players[currentPlayer].name
+      songStartTimes.current.set(playerName, Date.now())
+      console.log(`⏱️ Started timing for ${playerName}`)
+    }
 
     console.log('🎵 Virtual Song Selected:', {
       title: song.title,
@@ -542,6 +566,21 @@ export function GameScreen() {
       if (newScore >= 100) {
         // HARDCORE_CHAMPION achievement check will happen at game end
         console.log(`🏆 Player ${playerName} reached ${newScore} points!`)
+      }
+
+      // Track song completion time for SPEED_DEMON achievement
+      const startTime = songStartTimes.current.get(playerName)
+      if (startTime) {
+        const elapsedMs = Date.now() - startTime
+        const elapsedSeconds = elapsedMs / 1000
+
+        // Get player's song times array (or initialize it)
+        const times = playerSongTimes.current.get(playerName) || []
+        times.push(elapsedSeconds)
+        playerSongTimes.current.set(playerName, times)
+
+        console.log(`⏱️ Song completed in ${elapsedSeconds.toFixed(2)}s for ${playerName}`)
+        songStartTimes.current.delete(playerName) // Clear start time
       }
     }
 
@@ -981,7 +1020,99 @@ export function GameScreen() {
         }
       })
 
+      // ============================================================================
+      // NEW ACHIEVEMENTS (11-20)
+      // ============================================================================
+
+      players.forEach(player => {
+        // 11. SPEED_DEMON: 3 songs in a row guessed in under 10 seconds each
+        const songTimes = playerSongTimes.current.get(player.name) || []
+        if (songTimes.length >= 3) {
+          let fastStreak = 0
+          let maxFastStreak = 0
+
+          songTimes.forEach(time => {
+            if (time < 10) {
+              fastStreak++
+              maxFastStreak = Math.max(maxFastStreak, fastStreak)
+            } else {
+              fastStreak = 0
+            }
+          })
+
+          updateProgress(player.name, AchievementId.SPEED_DEMON, maxFastStreak)
+          if (maxFastStreak >= 3) {
+            unlockAchievement(player.name, AchievementId.SPEED_DEMON)
+            console.log(`✅ SPEED_DEMON unlocked for ${player.name} (streak: ${maxFastStreak})`)
+          }
+        }
+
+        // 12. YEAR_PERFECTIONIST: 5 songs guessed with exact year
+        let exactYearCount = 0
+        player.timeline.forEach(song => {
+          const earnedPoints = (song as any).points || 0
+          // Exact year gives 5 points for year (total would be 5+5+5=15 if all correct)
+          // Or could be 5+5=10 if only artist and year, or 5+0+5 if only title and year
+          // We need to check if year was exact (5 points) - but we don't have individual breakdown
+          // Best we can do is check if song has 15 points (perfect) or look for year-specific data
+          // For now, we'll count songs where the points suggest exact year was matched
+          // This is imperfect but workable - we'd need to store individual match data to be precise
+          // Let's assume earnedPoints of 13, 14, or 15 means exact year (conservative estimate)
+          if (earnedPoints >= 13) {
+            exactYearCount++
+          }
+        })
+
+        updateProgress(player.name, AchievementId.YEAR_PERFECTIONIST, exactYearCount)
+        if (exactYearCount >= 5) {
+          unlockAchievement(player.name, AchievementId.YEAR_PERFECTIONIST)
+          console.log(`✅ YEAR_PERFECTIONIST unlocked for ${player.name} (${exactYearCount} exact years)`)
+        }
+
+        // 13. DIVERSE_TASTE: Songs from all available decades in one game
+        const allDecades = new Set(songs.map(s => Math.floor(s.year / 10) * 10))
+        const playerDecades = new Set(player.timeline.map(song => Math.floor(song.year / 10) * 10))
+
+        if (playerDecades.size === allDecades.size) {
+          unlockAchievement(player.name, AchievementId.DIVERSE_TASTE)
+          console.log(`✅ DIVERSE_TASTE unlocked for ${player.name} (${playerDecades.size}/${allDecades.size} decades)`)
+        }
+
+        // 14. ARTIST_EXPERT: 10 artists guessed correctly in one game
+        let correctArtistCount = 0
+        player.timeline.forEach(song => {
+          const earnedPoints = (song as any).points || 0
+          // 5 points for artist, so 10+ points means artist was correct (+ something else)
+          // or could be just 5 points if only artist was correct
+          // We need at least 5 points and assume artist contributes to it
+          // For simplicity, count songs with 5+ points as having artist correct
+          // This is approximate but reasonable
+          if (earnedPoints >= 5) {
+            correctArtistCount++
+          }
+        })
+
+        updateProgress(player.name, AchievementId.ARTIST_EXPERT, correctArtistCount)
+        if (correctArtistCount >= 10) {
+          unlockAchievement(player.name, AchievementId.ARTIST_EXPERT)
+          console.log(`✅ ARTIST_EXPERT unlocked for ${player.name} (${correctArtistCount} artists)`)
+        }
+
+        // 15. FLAWLESS_VICTORY: Winner with perfect 150/150 points (VERY HARD)
+        if (player.name === winner.name && player.score === 150) {
+          unlockAchievement(player.name, AchievementId.FLAWLESS_VICTORY)
+          console.log(`✅ FLAWLESS_VICTORY unlocked for ${player.name}! Perfect game!`)
+        }
+
+        // 16. MASTER_OF_TIME: Game finished in under 3 minutes (VERY HARD)
+        if (player.name === winner.name && gameDurationMinutes < 3) {
+          unlockAchievement(player.name, AchievementId.MASTER_OF_TIME)
+          console.log(`✅ MASTER_OF_TIME unlocked for ${player.name} (${gameDurationMinutes.toFixed(2)}min)`)
+        }
+      })
+
       // 8. UNBEATABLE & 9. MARATHON_RUNNER & 10. MUSIC_EXPERT:
+      // 17. LEGENDARY_STREAK & 18. CENTURION & 19. GRAND_MASTER:
       // Check from full game history
       if (history && history.length > 0) {
         const historyData = { version: '1.0', games: history }

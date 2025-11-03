@@ -13,7 +13,18 @@ export enum AchievementId {
   DECADE_MASTER = 'decade_master',             // 10 Songs einer Dekade perfekt erraten
   LIGHTNING_FAST = 'lightning_fast',           // Spiel in unter 5 Minuten
   COMEBACK_KING = 'comeback_king',             // Aus letztem Platz zum Gewinner
-  MUSIC_EXPERT = 'music_expert'                // 1000 Gesamtpunkte über alle Spiele
+  MUSIC_EXPERT = 'music_expert',               // 1000 Gesamtpunkte über alle Spiele
+  // New achievements (10 additional)
+  SPEED_DEMON = 'speed_demon',                 // 3 Songs hintereinander in unter 10s geraten
+  YEAR_PERFECTIONIST = 'year_perfectionist',   // 5 Songs in einem Spiel auf das exakte Jahr geraten
+  DIVERSE_TASTE = 'diverse_taste',             // Songs aus allen verfügbaren Dekaden platzieren
+  SOCIAL_BUTTERFLY = 'social_butterfly',       // Mit 5 verschiedenen Spielern gespielt
+  ARTIST_EXPERT = 'artist_expert',             // 10 Künstler in einem Spiel richtig erraten
+  FLAWLESS_VICTORY = 'flawless_victory',       // Ein Spiel mit 150/150 Punkten gewinnen (SCHWER)
+  LEGENDARY_STREAK = 'legendary_streak',       // 10 Spiele in Folge gewonnen (SCHWER)
+  CENTURION = 'centurion',                     // 100 Spiele gespielt (SCHWER)
+  MASTER_OF_TIME = 'master_of_time',           // Ein Spiel in unter 3 Minuten abgeschlossen (SCHWER)
+  GRAND_MASTER = 'grand_master'                // 5000 Gesamtpunkte über alle Spiele (SCHWER)
 }
 
 export interface Achievement {
@@ -108,5 +119,72 @@ export const ACHIEVEMENT_DEFINITIONS: Record<AchievementId, Omit<Achievement, 'u
     description: '1000 Gesamtpunkte über alle Spiele erreicht',
     icon: '🎓',
     target: 1000
+  },
+  [AchievementId.SPEED_DEMON]: {
+    id: AchievementId.SPEED_DEMON,
+    name: 'Geschwindigkeitsrausch',
+    description: '3 Songs hintereinander in unter 10 Sekunden geraten',
+    icon: '⚡🔥',
+    target: 3
+  },
+  [AchievementId.YEAR_PERFECTIONIST]: {
+    id: AchievementId.YEAR_PERFECTIONIST,
+    name: 'Jahres-Genie',
+    description: '5 Songs in einem Spiel auf das exakte Jahr geraten',
+    icon: '📅',
+    target: 5
+  },
+  [AchievementId.DIVERSE_TASTE]: {
+    id: AchievementId.DIVERSE_TASTE,
+    name: 'Vielseitiger Musikgeschmack',
+    description: 'In einem Spiel Songs aus allen verfügbaren Dekaden platzieren',
+    icon: '🎵'
+  },
+  [AchievementId.SOCIAL_BUTTERFLY]: {
+    id: AchievementId.SOCIAL_BUTTERFLY,
+    name: 'Gesellschaftsmensch',
+    description: 'Mit 5 verschiedenen Spielern gespielt',
+    icon: '👥',
+    target: 5
+  },
+  [AchievementId.ARTIST_EXPERT]: {
+    id: AchievementId.ARTIST_EXPERT,
+    name: 'Künstler-Kenner',
+    description: '10 Künstler in einem Spiel richtig erraten',
+    icon: '🎤',
+    target: 10
+  },
+  [AchievementId.FLAWLESS_VICTORY]: {
+    id: AchievementId.FLAWLESS_VICTORY,
+    name: 'Makellos',
+    description: 'Ein Spiel mit 150/150 Punkten gewinnen',
+    icon: '💎'
+  },
+  [AchievementId.LEGENDARY_STREAK]: {
+    id: AchievementId.LEGENDARY_STREAK,
+    name: 'Legendäre Serie',
+    description: '10 Spiele in Folge gewonnen',
+    icon: '🌟',
+    target: 10
+  },
+  [AchievementId.CENTURION]: {
+    id: AchievementId.CENTURION,
+    name: 'Zenturio',
+    description: '100 Spiele gespielt',
+    icon: '💯',
+    target: 100
+  },
+  [AchievementId.MASTER_OF_TIME]: {
+    id: AchievementId.MASTER_OF_TIME,
+    name: 'Meister der Zeit',
+    description: 'Ein Spiel in unter 3 Minuten abgeschlossen',
+    icon: '⏱️'
+  },
+  [AchievementId.GRAND_MASTER]: {
+    id: AchievementId.GRAND_MASTER,
+    name: 'Großmeister',
+    description: '5000 Gesamtpunkte über alle Spiele erreicht',
+    icon: '👑💎',
+    target: 5000
   }
 }

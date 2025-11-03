@@ -214,6 +214,44 @@ export function AchievementProvider({ children }: { children: ReactNode }) {
     }
     updateProgress(playerName, AchievementId.UNBEATABLE, maxConsecutiveWins)
 
+    // ============================================================================
+    // NEW CROSS-GAME ACHIEVEMENTS (17-20)
+    // ============================================================================
+
+    // 17. SOCIAL_BUTTERFLY: Played with 5 different players
+    const uniquePlayers = new Set<string>()
+    playerGames.forEach((game: HistoryEntry) => {
+      game.players.forEach((p: Player) => {
+        if (p.name !== playerName) {
+          uniquePlayers.add(p.name)
+        }
+      })
+    })
+    const uniquePlayerCount = uniquePlayers.size
+
+    if (uniquePlayerCount >= 5) {
+      unlockAchievement(playerName, AchievementId.SOCIAL_BUTTERFLY)
+    }
+    updateProgress(playerName, AchievementId.SOCIAL_BUTTERFLY, uniquePlayerCount)
+
+    // 18. LEGENDARY_STREAK: 10 consecutive wins (VERY HARD)
+    if (maxConsecutiveWins >= 10) {
+      unlockAchievement(playerName, AchievementId.LEGENDARY_STREAK)
+    }
+    updateProgress(playerName, AchievementId.LEGENDARY_STREAK, maxConsecutiveWins)
+
+    // 19. CENTURION: 100 games played (VERY HARD)
+    if (totalGames >= 100) {
+      unlockAchievement(playerName, AchievementId.CENTURION)
+    }
+    updateProgress(playerName, AchievementId.CENTURION, totalGames)
+
+    // 20. GRAND_MASTER: 5000 total points (VERY HARD)
+    if (totalPoints >= 5000) {
+      unlockAchievement(playerName, AchievementId.GRAND_MASTER)
+    }
+    updateProgress(playerName, AchievementId.GRAND_MASTER, totalPoints)
+
     // Update stats
     updateStats(playerName, {
       totalGames,

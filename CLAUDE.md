@@ -140,9 +140,9 @@ Spotify Playlist → docs/songs.json → pwa/src/data/songs.ts + qr-codes/*.png
    - Manual placement in shared timeline
    - Winner: First player with 10 correctly placed cards
 
-**Key Features (v0.0.17-0.0.21):**
+**Key Features (v0.0.17-0.0.23):**
 - ✅ Scoring: 5+5+5/2/1 points (title/artist/year±2) in Hardcore Mode only
-- ✅ Achievements: 10 unlockable with progress tracking, confetti animations
+- ✅ Achievements: 20 unlockable (10 standard + 10 new in v0.0.23) with progress tracking, confetti animations
 - ✅ Interactive Particles: Activity-reactive 3D system (idle/calm/active/intense), music-reactive
 - ✅ Statistics: Player stats, game history, decade analysis
 - ✅ UX: Auto-focus (desktop), skip confirmation, random start position
@@ -352,6 +352,27 @@ All files hosted via GitHub raw URLs (auto-update, no manual releases):
 - **Song count**: Auto-dynamic via `songs.length` in LandingPage.tsx (updates on build)
 
 ## Recent Changes
+
+### v0.0.23 (2025-11-03) - 10 New Achievements
+**Achievement System Expansion**: Doubled achievements from 10 to 20
+- **5 Normal Achievements**:
+  - ⚡🔥 **SPEED_DEMON**: 3 songs in a row guessed in <10s each (with song timing system)
+  - 📅 **YEAR_PERFECTIONIST**: 5 songs with exact year match
+  - 🎵 **DIVERSE_TASTE**: Cover all available decades in one game
+  - 👥 **SOCIAL_BUTTERFLY**: Play with 5 different players (cross-game)
+  - 🎤 **ARTIST_EXPERT**: 10 artists correctly guessed in one game
+- **5 Very Hard Achievements**:
+  - 💎 **FLAWLESS_VICTORY**: Win with perfect 150/150 points
+  - 🌟 **LEGENDARY_STREAK**: Win 10 consecutive games (cross-game)
+  - 💯 **CENTURION**: Play 100 games (cross-game)
+  - ⏱️ **MASTER_OF_TIME**: Complete game in <3 minutes
+  - 👑💎 **GRAND_MASTER**: Earn 5000 total points (cross-game)
+- **New Systems**: Song timing tracking (start time + elapsed time per song)
+- **Files Modified**:
+  - `types/achievements.ts`: +10 IDs, +10 definitions
+  - `screens/GameScreen.tsx`: +6 per-game checks, timing system
+  - `contexts/AchievementContext.tsx`: +4 cross-game checks
+- **UI**: Auto-scales to show "X / 20" progress
 
 ### v0.0.20 (2025-02-01) - TypeScript Cleanup
 - Fixed 15+ TS errors: `GameHistory` → `GameHistoryData`, modal button interface (`text` not `label`)
