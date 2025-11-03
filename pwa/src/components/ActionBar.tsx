@@ -106,7 +106,7 @@ export function ActionBar() {
                       </div>
                     ) : (
                       <>
-                        <div className="text-center py-3 border-b-2 border-accent/30">
+                        <div className="flex items-center justify-center py-2 border-b-2 border-accent/30">
                           <p className="text-sm text-text-secondary">
                             {history.length} {history.length === 1 ? 'Spiel' : 'Spiele'} gespielt
                           </p>
