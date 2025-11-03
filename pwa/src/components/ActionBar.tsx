@@ -110,12 +110,12 @@ export function ActionBar() {
                           <div key={index} className="glass p-4 rounded-lg border-2 border-accent/30 hover:border-accent/50 transition-colors">
                             <div className="flex justify-between items-start mb-2">
                               <div>
-                                <p className="font-bold text-gradient">{game.mode === 'hardcore' ? '🎯 Ratespiel' : game.mode === 'timeline_personal' ? '👤 Persönliche Timeline' : '🌍 Globale Timeline'}</p>
+                                <p className="font-bold text-gradient">{game.gameMode === 'hardcore' ? '🎯 Ratespiel' : game.gameMode === 'timeline_personal' ? '👤 Persönliche Timeline' : '🌍 Globale Timeline'}</p>
                                 <p className="text-sm text-text-secondary">{new Date(game.date).toLocaleString('de-DE')}</p>
                               </div>
                               <div className="text-right">
                                 <p className="text-lg font-bold text-secondary">🏆 {game.winner.name}</p>
-                                {game.mode === 'hardcore' && <p className="text-sm text-text-secondary">{game.winner.score} Punkte</p>}
+                                {game.gameMode === 'hardcore' && <p className="text-sm text-text-secondary">{game.winner.score} Punkte</p>}
                               </div>
                             </div>
                             <div className="mt-3 pt-3 border-t border-accent/20">
@@ -123,7 +123,7 @@ export function ActionBar() {
                               <div className="flex flex-wrap gap-2">
                                 {game.players.map((player, pIdx) => (
                                   <span key={pIdx} className="glass px-3 py-1 rounded-full text-xs border border-accent/20">
-                                    {player.name}: {game.mode === 'hardcore' ? `${player.score} Punkte` : `${player.cards} Karten`}
+                                    {player.name}: {game.gameMode === 'hardcore' ? `${player.score} Punkte` : `${player.cards} Karten`}
                                   </span>
                                 ))}
                               </div>
