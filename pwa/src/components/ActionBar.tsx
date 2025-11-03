@@ -21,10 +21,6 @@ export function ActionBar() {
   const { registerInteraction } = useInteraction()
   const [showAchievements, setShowAchievements] = useState(false)
 
-  // DEBUG: Log history data
-  console.log('🔍 ActionBar - History length:', history.length)
-  console.log('🔍 ActionBar - History data:', history)
-
   // Get current player name if in-game
   const currentPlayerName = players.length > 0 && currentPlayer >= 0
     ? players[currentPlayer]?.name
@@ -109,8 +105,14 @@ export function ActionBar() {
                         <p>Noch keine Spiele gespielt</p>
                       </div>
                     ) : (
-                      <div className="space-y-4 max-h-[60vh] overflow-y-auto custom-scrollbar">
-                        {history.map((game, index) => (
+                      <>
+                        <div className="text-center mb-4 pb-4 border-b-2 border-accent/30">
+                          <p className="text-sm text-text-secondary">
+                            {history.length} {history.length === 1 ? 'Spiel' : 'Spiele'} gespielt
+                          </p>
+                        </div>
+                        <div className="space-y-4 max-h-[60vh] overflow-y-auto custom-scrollbar">
+                          {history.map((game, index) => (
                           <div key={index} className="glass p-4 rounded-lg border-2 border-accent/30 hover:border-accent/50 transition-colors">
                             <div className="flex justify-between items-start mb-2">
                               <div>
@@ -134,7 +136,8 @@ export function ActionBar() {
                             </div>
                           </div>
                         ))}
-                      </div>
+                        </div>
+                      </>
                     )}
                   </div>,
                   [{ text: 'Schließen', variant: 'secondary', onClick: () => {} }]

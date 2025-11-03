@@ -41,39 +41,31 @@ export function useGameHistory() {
    */
   const loadAll = useCallback(() => {
     try {
-      console.log('🔍 useGameHistory - loadAll called')
-      console.log('🔍 useGameHistory - Using key:', STORAGE_KEYS.GAME_HISTORY)
-
       // Try current key first
       let stored = localStorage.getItem(STORAGE_KEYS.GAME_HISTORY)
-      console.log('🔍 useGameHistory - Data from current key:', stored)
 
       // Migration: Try old key if current key is empty
       if (!stored) {
-        console.log('🔄 Checking old key: mxster_history')
         const oldStored = localStorage.getItem('mxster_history')
-        console.log('🔍 useGameHistory - Data from old key:', oldStored)
 
         if (oldStored) {
-          console.log('📦 Found data in old key! Migrating...')
+          console.log('📦 Migrating game history: mxster_history → mxster_game_history')
           stored = oldStored
           // Save to new key
           localStorage.setItem(STORAGE_KEYS.GAME_HISTORY, oldStored)
           // Remove old key
           localStorage.removeItem('mxster_history')
-          console.log('✅ Migration complete: mxster_history → mxster_game_history')
+          console.log('✅ Migration complete')
         }
       }
 
       if (stored) {
         const data = JSON.parse(stored) as HistoryEntry[]
-        console.log('🔍 useGameHistory - Parsed data:', data)
         setHistory(data)
         console.log(`✅ Loaded ${data.length} game(s) from history`)
         return data
       }
 
-      console.log('🔍 useGameHistory - No stored data found in either key')
       return []
     } catch (error) {
       console.error('❌ Error loading game history:', error)
