@@ -1446,6 +1446,29 @@ Dieses Projekt ist unter der **MIT-Lizenz** veröffentlicht. Siehe [LICENSE](LIC
 
 ## 📝 Changelog
 
+### v0.0.25 (2025-11-04)
+
+**🏆 Achievement System - Critical Bug Fixes**
+- Fixed 3 critical achievement detection bugs identified through code analysis
+- **NAME_DROPPER**: Added `guessDetails` interface to accurately track artist correctness (can't use points alone)
+- **PERFECT_STREAK**: Implemented dual verification (points OR guessDetails) for reliability
+- **COMEBACK_PROFI**: Improved comeback detection logic (checks fewer cards OR came from behind)
+
+**🧪 Test Scripts - Complete Overhaul**
+- **generate-game-history.js**: Now includes all 20 achievements (was missing 10 new ones)
+  - GRAND_MASTER now unlocks correctly with 5000+ points
+  - Player "m" reaches ~35,000 points in 1000 games
+  - All new achievements properly tracked
+- **unlock-all-achievements.js**: Updated to all 20 achievements
+  - Player "m": 20/20 unlocked (100%)
+  - Player "n": 10/20 unlocked with progress (50%)
+
+**🔧 Technical Improvements**
+- Added `guessDetails` to Song interface for accurate field tracking
+- Updated `placeCardInTimeline()` to store guess metadata
+- Enhanced achievement debugging with progress logs after each game
+- All 20 achievements now fully functional and tested
+
 ### v0.0.20 (2025-01-02)
 
 **🔧 TypeScript & Code Quality**
