@@ -110,7 +110,7 @@ export function ActionBar() {
                           <div key={index} className="glass p-4 rounded-lg border-2 border-accent/30 hover:border-accent/50 transition-colors">
                             <div className="flex justify-between items-start mb-2">
                               <div>
-                                <p className="font-bold text-gradient">{game.gameMode === 'hardcore' ? '🎯 Ratespiel' : game.gameMode === 'timeline_personal' ? '👤 Persönliche Timeline' : '🌍 Globale Timeline'}</p>
+                                <p className="font-bold text-gradient">{game.gameMode === 'hardcore' ? '🎯 Hardcore' : game.gameMode === 'timeline_personal' ? '👤 Persönliche Timeline' : '🌍 Globale Timeline'}</p>
                                 <p className="text-sm text-text-secondary">{new Date(game.date).toLocaleString('de-DE')}</p>
                               </div>
                               <div className="text-right">

@@ -346,7 +346,7 @@ export function LandingPage() {
                   Wähle Spielmodus & Variante
                 </h3>
                 <p className="text-text-secondary leading-relaxed">
-                  Entscheide dich für Ratespiel, Persönliche Timeline oder Globale Timeline. Wähle dann zwischen physischen Karten (mit QR-Codes) oder virtuellen Karten.
+                  Entscheide dich für Hardcore, Persönliche Timeline oder Globale Timeline. Wähle dann zwischen physischen Karten (mit QR-Codes) oder virtuellen Karten.
                 </p>
               </div>
             </div>

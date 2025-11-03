@@ -907,6 +907,7 @@ export function GameScreen() {
           unlockAchievement(player.name, AchievementId.HARDCORE_CHAMPION)
           console.log(`✅ HARDCORE_CHAMPION unlocked for ${player.name}`)
         }
+        updateProgress(player.name, AchievementId.HARDCORE_CHAMPION, player.score)
 
         // 2. TIME_TRAVELER: Songs from 5 different decades
         const decades = new Set(player.timeline.map(song => Math.floor(song.year / 10) * 10))
