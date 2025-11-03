@@ -6,7 +6,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 **mxster** is a music timeline game combining hardware (3D-printed QR cards) and software (PWA with camera scanner). Players scan physical cards or play virtually. Features guess mode (points-based) and timeline modes (chronological placement).
 
-**Current Song Database**: 207 songs (as of 2025-11-02)
+**Current Song Database**: 208 songs with full genre data (as of 2025-11-03)
 
 ### Key Technologies
 - **Frontend**: React 19 + TypeScript + Vite 5.0
@@ -360,6 +360,19 @@ All files hosted via GitHub raw URLs (auto-update, no manual releases):
 
 ## Recent Changes
 
+### v0.0.24++ (2025-11-03) - Genre Analysis & Testing Tools
+**Analysis & Testing Improvements**:
+- ✅ **generate-decade-report.js**: Added genre distribution analysis alongside decade analysis
+  - Interactive HTML report with bar charts for both decades and genres
+  - 208 songs across 7 decades and 9 genres
+  - Genre color coding with vibrant colors per genre
+  - Detailed song listings by decade and genre
+- ✅ **generate-game-history.js**: Updated to generate 1000 realistic test games
+  - 3 players (m, n, o) with different skill levels (80%, 60%, 40%)
+  - Random game modes (hardcore, timeline_personal, timeline_global)
+  - Random variants (physical, virtual)
+  - For testing achievements, statistics, and history features
+
 ### v0.0.24+ (2025-11-03) - Genre Field Support
 **Added genre field to song management system** to support GENRE_HOPPER achievement:
 - ✅ **Genre field added** to Song interface (optional, already in v0.0.24)
@@ -367,8 +380,10 @@ All files hosted via GitHub raw URLs (auto-update, no manual releases):
 - ✅ **edit-song.js**: Genre editing with visual before/after comparison
 - ✅ **exchange-song.js**: Preserves genre field when exchanging songs
 - ✅ **GENRE_HOPPER**: Already safely filters `undefined`/`null` values
+- ✅ **songs.json**: All 208 songs now have genre data (100% coverage)
+- ✅ **song_template.json**: Updated with genre field, removed deprecated fields
 - 📝 **Genre suggestions**: Pop, Rock, Hip-Hop, Electronic, R&B, Country, Jazz, Metal, Reggae, Soul
-- 🎯 **Next step**: Populate genre data for all 207 songs to enable GENRE_HOPPER achievement
+- 📊 **Genre distribution**: Pop (67), Rock (45), Electronic (44), Soul (18), Hip-Hop (17), R&B (7), Metal (6), Reggae (2), Country (1)
 
 ### v0.0.24 (2025-11-03) - Achievement Fixes & Replacements
 **Fixed 5 broken achievements from v0.0.23** with creative, functional alternatives:

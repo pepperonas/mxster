@@ -57,10 +57,57 @@ sortedDecades.forEach(decade => {
 // Find max count for bar chart scaling
 const maxCount = Math.max(...Object.values(decadeStats))
 
+// Analyze songs by genre
+const genreStats = {}
+const songsByGenre = {}
+
+songs.forEach(song => {
+  const genre = song.genre || 'Unbekannt'
+
+  if (!genreStats[genre]) {
+    genreStats[genre] = 0
+    songsByGenre[genre] = []
+  }
+
+  genreStats[genre]++
+  songsByGenre[genre].push(song)
+})
+
+// Sort genres by count (descending)
+const sortedGenres = Object.keys(genreStats).sort((a, b) => genreStats[b] - genreStats[a])
+
+// Calculate genre percentages
+const genrePercentages = {}
+sortedGenres.forEach(genre => {
+  genrePercentages[genre] = ((genreStats[genre] / totalSongs) * 100).toFixed(1)
+})
+
+// Find max genre count for bar chart scaling
+const maxGenreCount = Math.max(...Object.values(genreStats))
+
 // Generate color for each decade (gradient from purple to orange)
 const generateColor = (index, total) => {
   const hue = 270 - (index / total) * 90 // 270 (purple) to 180 (cyan) to 30 (orange)
   return `hsl(${hue}, 70%, 60%)`
+}
+
+// Generate color for each genre (vibrant colors)
+const genreColors = {
+  'Pop': '#FF6B9D',
+  'Rock': '#C44569',
+  'Electronic': '#4ECDC4',
+  'Hip-Hop': '#FFE66D',
+  'R&B': '#A8E6CF',
+  'Soul': '#FF8B94',
+  'Metal': '#556270',
+  'Jazz': '#F67280',
+  'Country': '#FFD93D',
+  'Reggae': '#6BCB77',
+  'Unbekannt': '#95A5A6'
+}
+
+const getGenreColor = (genre) => {
+  return genreColors[genre] || `hsl(${Math.random() * 360}, 70%, 60%)`
 }
 
 // Generate HTML
@@ -69,7 +116,7 @@ const html = `<!DOCTYPE html>
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>mxster - Dekaden-Verteilung</title>
+  <title>mxster - Song-Datenbank Analyse</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -348,8 +395,8 @@ const html = `<!DOCTYPE html>
 <body>
   <div class="container">
     <header>
-      <h1>🎵 mxster Dekaden-Verteilung</h1>
-      <p class="subtitle">Analyse der Song-Datenbank nach Erscheinungsjahrzehnt</p>
+      <h1>🎵 mxster Song-Datenbank Analyse</h1>
+      <p class="subtitle">Verteilung nach Dekaden & Genres</p>
     </header>
 
     <div class="stats-summary">
@@ -360,6 +407,10 @@ const html = `<!DOCTYPE html>
       <div class="stat-card">
         <div class="stat-value">${sortedDecades.length}</div>
         <div class="stat-label">Dekaden</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value">${sortedGenres.length}</div>
+        <div class="stat-label">Genres</div>
       </div>
       <div class="stat-card">
         <div class="stat-value">${sortedDecades[0]}</div>
@@ -395,7 +446,54 @@ const html = `<!DOCTYPE html>
       </div>
     </div>
 
-    <h2 class="chart-title" style="margin-bottom: 1.5rem;">📝 Details nach Dekaden</h2>
+    <div class="chart-container" style="margin-top: 3rem;">
+      <h2 class="chart-title">🎸 Verteilung nach Genres</h2>
+      <div class="bar-chart">
+        ${sortedGenres.map((genre) => {
+          const count = genreStats[genre]
+          const percentage = genrePercentages[genre]
+          const barWidth = (count / maxGenreCount) * 100
+          const color = getGenreColor(genre)
+
+          return `
+        <div class="bar-row">
+          <div class="bar-label">${genre}</div>
+          <div class="bar-wrapper">
+            <div class="bar" style="width: ${barWidth}%; background: linear-gradient(90deg, ${color} 0%, ${color}dd 100%);">
+              ${count} Songs
+            </div>
+          </div>
+          <div class="bar-count">${percentage}%</div>
+        </div>
+          `
+        }).join('')}
+      </div>
+    </div>
+
+    <h2 class="chart-title" style="margin-bottom: 1.5rem; margin-top: 3rem;">📝 Details nach Genres</h2>
+    <div class="decade-details">
+      ${sortedGenres.map(genre => {
+        const songs = songsByGenre[genre].sort((a, b) => a.year - b.year)
+        const color = getGenreColor(genre)
+
+        return `
+        <div class="decade-card">
+          <h3 style="color: ${color};">${genre} (${genreStats[genre]} Songs)</h3>
+          <div class="song-list">
+            ${songs.map(song => `
+            <div class="song-item" style="border-left-color: ${color};">
+              <div class="song-title">${song.title}</div>
+              <div class="song-artist">${song.artist}</div>
+              <div class="song-year">${song.year}</div>
+            </div>
+            `).join('')}
+          </div>
+        </div>
+        `
+      }).join('')}
+    </div>
+
+    <h2 class="chart-title" style="margin-bottom: 1.5rem; margin-top: 3rem;">📝 Details nach Dekaden</h2>
     <div class="decade-details">
       ${sortedDecades.map(decade => {
         const songs = songsByDecade[decade].sort((a, b) => a.year - b.year)

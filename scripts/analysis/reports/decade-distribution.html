@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>mxster - Dekaden-Verteilung</title>
+  <title>mxster - Song-Datenbank Analyse</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -282,18 +282,22 @@
 <body>
   <div class="container">
     <header>
-      <h1>🎵 mxster Dekaden-Verteilung</h1>
-      <p class="subtitle">Analyse der Song-Datenbank nach Erscheinungsjahrzehnt</p>
+      <h1>🎵 mxster Song-Datenbank Analyse</h1>
+      <p class="subtitle">Verteilung nach Dekaden & Genres</p>
     </header>
 
     <div class="stats-summary">
       <div class="stat-card">
-        <div class="stat-value">207</div>
+        <div class="stat-value">208</div>
         <div class="stat-label">Gesamt Songs</div>
       </div>
       <div class="stat-card">
         <div class="stat-value">7</div>
         <div class="stat-label">Dekaden</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value">9</div>
+        <div class="stat-label">Genres</div>
       </div>
       <div class="stat-card">
         <div class="stat-value">1960s</div>
@@ -326,7 +330,7 @@
               25 Songs
             </div>
           </div>
-          <div class="bar-count">12.1%</div>
+          <div class="bar-count">12.0%</div>
         </div>
           
         <div class="bar-row">
@@ -336,7 +340,7 @@
               60 Songs
             </div>
           </div>
-          <div class="bar-count">29.0%</div>
+          <div class="bar-count">28.8%</div>
         </div>
           
         <div class="bar-row">
@@ -346,7 +350,7 @@
               44 Songs
             </div>
           </div>
-          <div class="bar-count">21.3%</div>
+          <div class="bar-count">21.2%</div>
         </div>
           
         <div class="bar-row">
@@ -362,11 +366,11 @@
         <div class="bar-row">
           <div class="bar-label">2010s</div>
           <div class="bar-wrapper">
-            <div class="bar" style="width: 46.666666666666664%; background: linear-gradient(90deg, hsl(205.71428571428572, 70%, 60%) 0%, hsl(205.71428571428572, 70%, 60%)dd 100%);">
-              28 Songs
+            <div class="bar" style="width: 48.333333333333336%; background: linear-gradient(90deg, hsl(205.71428571428572, 70%, 60%) 0%, hsl(205.71428571428572, 70%, 60%)dd 100%);">
+              29 Songs
             </div>
           </div>
-          <div class="bar-count">13.5%</div>
+          <div class="bar-count">13.9%</div>
         </div>
           
         <div class="bar-row">
@@ -382,7 +386,1420 @@
       </div>
     </div>
 
-    <h2 class="chart-title" style="margin-bottom: 1.5rem;">📝 Details nach Dekaden</h2>
+    <div class="chart-container" style="margin-top: 3rem;">
+      <h2 class="chart-title">🎸 Verteilung nach Genres</h2>
+      <div class="bar-chart">
+        
+        <div class="bar-row">
+          <div class="bar-label">Pop</div>
+          <div class="bar-wrapper">
+            <div class="bar" style="width: 100%; background: linear-gradient(90deg, #FF6B9D 0%, #FF6B9Ddd 100%);">
+              67 Songs
+            </div>
+          </div>
+          <div class="bar-count">32.2%</div>
+        </div>
+          
+        <div class="bar-row">
+          <div class="bar-label">Rock</div>
+          <div class="bar-wrapper">
+            <div class="bar" style="width: 67.16417910447761%; background: linear-gradient(90deg, #C44569 0%, #C44569dd 100%);">
+              45 Songs
+            </div>
+          </div>
+          <div class="bar-count">21.6%</div>
+        </div>
+          
+        <div class="bar-row">
+          <div class="bar-label">Electronic</div>
+          <div class="bar-wrapper">
+            <div class="bar" style="width: 67.16417910447761%; background: linear-gradient(90deg, #4ECDC4 0%, #4ECDC4dd 100%);">
+              45 Songs
+            </div>
+          </div>
+          <div class="bar-count">21.6%</div>
+        </div>
+          
+        <div class="bar-row">
+          <div class="bar-label">Soul</div>
+          <div class="bar-wrapper">
+            <div class="bar" style="width: 26.865671641791046%; background: linear-gradient(90deg, #FF8B94 0%, #FF8B94dd 100%);">
+              18 Songs
+            </div>
+          </div>
+          <div class="bar-count">8.7%</div>
+        </div>
+          
+        <div class="bar-row">
+          <div class="bar-label">Hip-Hop</div>
+          <div class="bar-wrapper">
+            <div class="bar" style="width: 25.37313432835821%; background: linear-gradient(90deg, #FFE66D 0%, #FFE66Ddd 100%);">
+              17 Songs
+            </div>
+          </div>
+          <div class="bar-count">8.2%</div>
+        </div>
+          
+        <div class="bar-row">
+          <div class="bar-label">R&B</div>
+          <div class="bar-wrapper">
+            <div class="bar" style="width: 10.44776119402985%; background: linear-gradient(90deg, #A8E6CF 0%, #A8E6CFdd 100%);">
+              7 Songs
+            </div>
+          </div>
+          <div class="bar-count">3.4%</div>
+        </div>
+          
+        <div class="bar-row">
+          <div class="bar-label">Metal</div>
+          <div class="bar-wrapper">
+            <div class="bar" style="width: 8.955223880597014%; background: linear-gradient(90deg, #556270 0%, #556270dd 100%);">
+              6 Songs
+            </div>
+          </div>
+          <div class="bar-count">2.9%</div>
+        </div>
+          
+        <div class="bar-row">
+          <div class="bar-label">Reggae</div>
+          <div class="bar-wrapper">
+            <div class="bar" style="width: 2.9850746268656714%; background: linear-gradient(90deg, #6BCB77 0%, #6BCB77dd 100%);">
+              2 Songs
+            </div>
+          </div>
+          <div class="bar-count">1.0%</div>
+        </div>
+          
+        <div class="bar-row">
+          <div class="bar-label">Country</div>
+          <div class="bar-wrapper">
+            <div class="bar" style="width: 1.4925373134328357%; background: linear-gradient(90deg, #FFD93D 0%, #FFD93Ddd 100%);">
+              1 Songs
+            </div>
+          </div>
+          <div class="bar-count">0.5%</div>
+        </div>
+          
+      </div>
+    </div>
+
+    <h2 class="chart-title" style="margin-bottom: 1.5rem; margin-top: 3rem;">📝 Details nach Genres</h2>
+    <div class="decade-details">
+      
+        <div class="decade-card">
+          <h3 style="color: #FF6B9D;">Pop (67 Songs)</h3>
+          <div class="song-list">
+            
+            <div class="song-item" style="border-left-color: #FF6B9D;">
+              <div class="song-title">Gimme! Gimme! Gimme!</div>
+              <div class="song-artist">ABBA</div>
+              <div class="song-year">1979</div>
+            </div>
+            
+            <div class="song-item" style="border-left-color: #FF6B9D;">
+              <div class="song-title">The Tide Is High</div>
+              <div class="song-artist">Blondie</div>
+              <div class="song-year">1980</div>
+            </div>
+            
+            <div class="song-item" style="border-left-color: #FF6B9D;">
+              <div class="song-title">Bette Davis Eyes</div>
+              <div class="song-artist">Kim Carnes</div>
+              <div class="song-year">1981</div>
+            </div>
+            
+            <div class="song-item" style="border-left-color: #FF6B9D;">
+              <div class="song-title">Don't You Want Me</div>
+              <div class="song-artist">The Human League</div>
+              <div class="song-year">1981</div>
+            </div>
+            
+            <div class="song-item" style="border-left-color: #FF6B9D;">
+              <div class="song-title">Billie Jean</div>
+              <div class="song-artist">Michael Jackson</div>
+              <div class="song-year">1982</div>
+            </div>
+            
+            <div class="song-item" style="border-left-color: #FF6B9D;">
+              <div class="song-title">The Look Of Love, Pt.1</div>
+              <div class="song-artist">ABC</div>
+              <div class="song-year">1982</div>
+            </div>
+            
+            <div class="song-item" style="border-left-color: #FF6B9D;">
+              <div class="song-title">Major Tom</div>
+              <div class="song-artist">Peter Schilling</div>
+              <div class="song-year">1982</div>
+            </div>
+            
+            <div class="song-item" style="border-left-color: #FF6B9D;">
+              <div class="song-title">I'm So Excited</div>
+              <div class="song-artist">The Pointer Sisters</div>
+              <div class="song-year">1982</div>
+            </div>
+            
+            <div class="song-item" style="border-left-color: #FF6B9D;">
+              <div class="song-title">Beat It</div>
+              <div class="song-artist">Michael Jackson</div>
+              <div class="song-year">1982</div>
+            </div>
+            
+            <div class="song-item" style="border-left-color: #FF6B9D;">
+              <div class="song-title">Holiday</div>
+              <div class="song-artist">Madonna</div>
+              <div class="song-year">1983</div>
+            </div>
+            
+            <div class="song-item" style="border-left-color: #FF6B9D;">
+              <div class="song-title">99 Luftballons</div>
+              <div class="song-artist">Nena</div>
+              <div class="song-year">1983</div>
+            </div>
+            
+            <div class="song-item" style="border-left-color: #FF6B9D;">
+              <div class="song-title">Girls Just Want to Have Fun</div>
+              <div class="song-artist">Cyndi Lauper</div>
+              <div class="song-year">1983</div>
+            </div>
+            
+            <div class="song-item" style="border-left-color: #FF6B9D;">
+              <div class="song-title">Sweet Dreams</div>
+              <div class="song-artist">Eurythmics</div>
+              <div class="song-year">1983</div>
+            </div>
+            
+            <div class="song-item" style="border-left-color: #FF6B9D;">
+              <div class="song-title">Wouldn't It Be Good</div>
+              <div class="song-artist">Nik Kershaw</div>
+              <div class="song-year">1984</div>
+            </div>
+            
+            <div class="song-item" style="border-left-color: #FF6B9D;">
+              <div class="song-title">I Won't Let The Sun Go Down On Me</div>
+              <div class="song-artist">Nik Kershaw</div>
+              <div class="song-year">1984</div>
+            </div>
+            
+            <div class="song-item" style="border-left-color: #FF6B9D;">
+              <div class="song-title">Big in Japan</div>
+              <div class="song-artist">Alphaville</div>
+              <div class="song-year">1984</div>
+            </div>
+            
+            <div class="song-item" style="border-left-color: #FF6B9D;">
+              <div class="song-title">Self Control</div>
+              <div class="song-artist">Laura Branigan</div>
+              <div class="song-year">1984</div>
+            </div>
+            
+            <div class="song-item" style="border-left-color: #FF6B9D;">
+              <div class="song-title">The Power Of Love</div>
+              <div class="song-artist">Frankie Goes To Hollywood</div>
+              <div class="song-year">1984</div>
+            </div>
+            
+            <div class="song-item" style="border-left-color: #FF6B9D;">
+              <div class="song-title">Jeanny</div>
+              <div class="song-artist">Falco</div>
+              <div class="song-year">1985</div>
+            </div>
+            
+            <div class="song-item" style="border-left-color: #FF6B9D;">
+              <div class="song-title">How Will I Know</div>
+              <div class="song-artist">Whitney Houston</div>
+              <div class="song-year">1985</div>
+            </div>
+            
+            <div class="song-item" style="border-left-color: #FF6B9D;">
+              <div class="song-title">Take on Me</div>
+              <div class="song-artist">a-ha</div>
+              <div class="song-year">1985</div>
+            </div>
+            
+            <div class="song-item" style="border-left-color: #FF6B9D;">
+              <div class="song-title">Living a Boy's Adventure Tale</div>
+              <div class="song-artist">a-ha</div>
+              <div class="song-year">1985</div>
+            </div>
+            
+            <div class="song-item" style="border-left-color: #FF6B9D;">
+              <div class="song-title">You Spin Me Round</div>
+              <div class="song-artist">Dead Or Alive</div>
+              <div class="song-year">1985</div>
+            </div>
+            
+            <div class="song-item" style="border-left-color: #FF6B9D;">
+              <div class="song-title">In The Heat Of The Night</div>
+              <div class="song-artist">Sandra</div>
+              <div class="song-year">1985</div>
+            </div>
+            
+            <div class="song-item" style="border-left-color: #FF6B9D;">
+              <div class="song-title">You're My Heart, You're My Soul</div>
+              <div class="song-artist">Modern Talking</div>
+              <div class="song-year">1985</div>
+            </div>
+            
+            <div class="song-item" style="border-left-color: #FF6B9D;">
+              <div class="song-title">No No No Senor</div>
+              <div class="song-artist">Brenda Fassie</div>
+              <div class="song-year">1986</div>
+            </div>
+            
+            <div class="song-item" style="border-left-color: #FF6B9D;">
+              <div class="song-title">You Can Call Me Al</div>
+              <div class="song-artist">Paul Simon</div>
+              <div class="song-year">1986</div>
+            </div>
+            
+            <div class="song-item" style="border-left-color: #FF6B9D;">
+              <div class="song-title">Never Gonna Give You Up</div>
+              <div class="song-artist">Rick Astley</div>
+              <div class="song-year">1987</div>
+            </div>
+            
+            <div class="song-item" style="border-left-color: #FF6B9D;">
+              <div class="song-title">Ella, elle l'a</div>
+              <div class="song-artist">France Gall</div>
+              <div class="song-year">1987</div>
+            </div>
+            
+            <div class="song-item" style="border-left-color: #FF6B9D;">
+              <div class="song-title">She Drives Me Crazy</div>
+              <div class="song-artist">Fine Young Cannibals</div>
+              <div class="song-year">1988</div>
+            </div>
+            
+            <div class="song-item" style="border-left-color: #FF6B9D;">
+              <div class="song-title">Tell It to My Heart</div>
+              <div class="song-artist">Taylor Dayne</div>
+              <div class="song-year">1988</div>
+            </div>
+            
+            <div class="song-item" style="border-left-color: #FF6B9D;">
+              <div class="song-title">Girl You Know It's True</div>
+              <div class="song-artist">Milli Vanilli</div>
+              <div class="song-year">1988</div>
+            </div>
+            
+            <div class="song-item" style="border-left-color: #FF6B9D;">
+              <div class="song-title">Listen To Your Heart</div>
+              <div class="song-artist">Roxette</div>
+              <div class="song-year">1988</div>
+            </div>
+            
+            <div class="song-item" style="border-left-color: #FF6B9D;">
+              <div class="song-title">Like a Prayer</div>
+              <div class="song-artist">Madonna</div>
+              <div class="song-year">1989</div>
+            </div>
+            
+            <div class="song-item" style="border-left-color: #FF6B9D;">
+              <div class="song-title">Like a Prayer - 12" Extended Remix</div>
+              <div class="song-artist">Madonna</div>
+              <div class="song-year">1989</div>
+            </div>
+            
+            <div class="song-item" style="border-left-color: #FF6B9D;">
+              <div class="song-title">Nothing Compares 2 U</div>
+              <div class="song-artist">Sinéad O'Connor</div>
+              <div class="song-year">1990</div>
+            </div>
+            
+            <div class="song-item" style="border-left-color: #FF6B9D;">
+              <div class="song-title">Moving on Up</div>
+              <div class="song-artist">M People</div>
+              <div class="song-year">1993</div>
+            </div>
+            
+            <div class="song-item" style="border-left-color: #FF6B9D;">
+              <div class="song-title">All That She Wants</div>
+              <div class="song-artist">Ace of Base</div>
+              <div class="song-year">1993</div>
+            </div>
+            
+            <div class="song-item" style="border-left-color: #FF6B9D;">
+              <div class="song-title">Macarena</div>
+              <div class="song-artist">Los Del Rio</div>
+              <div class="song-year">1993</div>
+            </div>
+            
+            <div class="song-item" style="border-left-color: #FF6B9D;">
+              <div class="song-title">Fairground</div>
+              <div class="song-artist">Simply Red</div>
+              <div class="song-year">1995</div>
+            </div>
+            
+            <div class="song-item" style="border-left-color: #FF6B9D;">
+              <div class="song-title">How Bizarre</div>
+              <div class="song-artist">OMC</div>
+              <div class="song-year">1996</div>
+            </div>
+            
+            <div class="song-item" style="border-left-color: #FF6B9D;">
+              <div class="song-title">Dove c'è musica</div>
+              <div class="song-artist">Eros Ramazzotti</div>
+              <div class="song-year">1996</div>
+            </div>
+            
+            <div class="song-item" style="border-left-color: #FF6B9D;">
+              <div class="song-title">Step by Step</div>
+              <div class="song-artist">Whitney Houston</div>
+              <div class="song-year">1996</div>
+            </div>
+            
+            <div class="song-item" style="border-left-color: #FF6B9D;">
+              <div class="song-title">MMMBop</div>
+              <div class="song-artist">Hanson</div>
+              <div class="song-year">1997</div>
+            </div>
+            
+            <div class="song-item" style="border-left-color: #FF6B9D;">
+              <div class="song-title">Torn</div>
+              <div class="song-artist">Natalie Imbruglia</div>
+              <div class="song-year">1997</div>
+            </div>
+            
+            <div class="song-item" style="border-left-color: #FF6B9D;">
+              <div class="song-title">Truly Madly Deeply</div>
+              <div class="song-artist">Savage Garden</div>
+              <div class="song-year">1997</div>
+            </div>
+            
+            <div class="song-item" style="border-left-color: #FF6B9D;">
+              <div class="song-title">I Want It That Way</div>
+              <div class="song-artist">Backstreet Boys</div>
+              <div class="song-year">1999</div>
+            </div>
+            
+            <div class="song-item" style="border-left-color: #FF6B9D;">
+              <div class="song-title">Genie In a Bottle</div>
+              <div class="song-artist">Christina Aguilera</div>
+              <div class="song-year">1999</div>
+            </div>
+            
+            <div class="song-item" style="border-left-color: #FF6B9D;">
+              <div class="song-title">I'm Like A Bird</div>
+              <div class="song-artist">Nelly Furtado</div>
+              <div class="song-year">2000</div>
+            </div>
+            
+            <div class="song-item" style="border-left-color: #FF6B9D;">
+              <div class="song-title">Follow Me</div>
+              <div class="song-artist">Uncle Kracker</div>
+              <div class="song-year">2000</div>
+            </div>
+            
+            <div class="song-item" style="border-left-color: #FF6B9D;">
+              <div class="song-title">Bye Bye Bye</div>
+              <div class="song-artist">*NSYNC</div>
+              <div class="song-year">2000</div>
+            </div>
+            
+            <div class="song-item" style="border-left-color: #FF6B9D;">
+              <div class="song-title">Come Along</div>
+              <div class="song-artist">Titiyo</div>
+              <div class="song-year">2001</div>
+            </div>
+            
+            <div class="song-item" style="border-left-color: #FF6B9D;">
+              <div class="song-title">All The Things She Said</div>
+              <div class="song-artist">t.A.T.u.</div>
+              <div class="song-year">2002</div>
+            </div>
+            
+            <div class="song-item" style="border-left-color: #FF6B9D;">
+              <div class="song-title">Mensch</div>
+              <div class="song-artist">Herbert Grönemeyer</div>
+              <div class="song-year">2002</div>
+            </div>
+            
+            <div class="song-item" style="border-left-color: #FF6B9D;">
+              <div class="song-title">Complicated</div>
+              <div class="song-artist">Avril Lavigne</div>
+              <div class="song-year">2002</div>
+            </div>
+            
+            <div class="song-item" style="border-left-color: #FF6B9D;">
+              <div class="song-title">Nur ein Wort</div>
+              <div class="song-artist">Wir sind Helden</div>
+              <div class="song-year">2005</div>
+            </div>
+            
+            <div class="song-item" style="border-left-color: #FF6B9D;">
+              <div class="song-title">I Don't Feel Like Dancin'</div>
+              <div class="song-artist">Scissor Sisters</div>
+              <div class="song-year">2006</div>
+            </div>
+            
+            <div class="song-item" style="border-left-color: #FF6B9D;">
+              <div class="song-title">Say It Right</div>
+              <div class="song-artist">Nelly Furtado</div>
+              <div class="song-year">2006</div>
+            </div>
+            
+            <div class="song-item" style="border-left-color: #FF6B9D;">
+              <div class="song-title">Kids</div>
+              <div class="song-artist">MGMT</div>
+              <div class="song-year">2007</div>
+            </div>
+            
+            <div class="song-item" style="border-left-color: #FF6B9D;">
+              <div class="song-title">Electric Feel</div>
+              <div class="song-artist">MGMT</div>
+              <div class="song-year">2007</div>
+            </div>
+            
+            <div class="song-item" style="border-left-color: #FF6B9D;">
+              <div class="song-title">Bad Romance</div>
+              <div class="song-artist">Lady Gaga</div>
+              <div class="song-year">2009</div>
+            </div>
+            
+            <div class="song-item" style="border-left-color: #FF6B9D;">
+              <div class="song-title">Somebody That I Used To Know</div>
+              <div class="song-artist">Gotye</div>
+              <div class="song-year">2011</div>
+            </div>
+            
+            <div class="song-item" style="border-left-color: #FF6B9D;">
+              <div class="song-title">Timber</div>
+              <div class="song-artist">Pitbull, Kesha</div>
+              <div class="song-year">2012</div>
+            </div>
+            
+            <div class="song-item" style="border-left-color: #FF6B9D;">
+              <div class="song-title">Shake It Off</div>
+              <div class="song-artist">Taylor Swift</div>
+              <div class="song-year">2014</div>
+            </div>
+            
+            <div class="song-item" style="border-left-color: #FF6B9D;">
+              <div class="song-title">Chandelier</div>
+              <div class="song-artist">Sia</div>
+              <div class="song-year">2014</div>
+            </div>
+            
+            <div class="song-item" style="border-left-color: #FF6B9D;">
+              <div class="song-title">Rotweinmund</div>
+              <div class="song-artist">Buntspecht</div>
+              <div class="song-year">2019</div>
+            </div>
+            
+            <div class="song-item" style="border-left-color: #FF6B9D;">
+              <div class="song-title">Sweet but Psycho</div>
+              <div class="song-artist">Ava Max</div>
+              <div class="song-year">2020</div>
+            </div>
+            
+          </div>
+        </div>
+        
+        <div class="decade-card">
+          <h3 style="color: #C44569;">Rock (45 Songs)</h3>
+          <div class="song-list">
+            
+            <div class="song-item" style="border-left-color: #C44569;">
+              <div class="song-title">Like a Rolling Stone</div>
+              <div class="song-artist">Bob Dylan</div>
+              <div class="song-year">1965</div>
+            </div>
+            
+            <div class="song-item" style="border-left-color: #C44569;">
+              <div class="song-title">Paint It, Black</div>
+              <div class="song-artist">The Rolling Stones</div>
+              <div class="song-year">1966</div>
+            </div>
+            
+            <div class="song-item" style="border-left-color: #C44569;">
+              <div class="song-title">All Along the Watchtower</div>
+              <div class="song-artist">Bob Dylan</div>
+              <div class="song-year">1967</div>
+            </div>
+            
+            <div class="song-item" style="border-left-color: #C44569;">
+              <div class="song-title">A Horse with No Name</div>
+              <div class="song-artist">America</div>
+              <div class="song-year">1972</div>
+            </div>
+            
+            <div class="song-item" style="border-left-color: #C44569;">
+              <div class="song-title">Dream On</div>
+              <div class="song-artist">Aerosmith</div>
+              <div class="song-year">1973</div>
+            </div>
+            
+            <div class="song-item" style="border-left-color: #C44569;">
+              <div class="song-title">Sweet Home Alabama</div>
+              <div class="song-artist">Lynyrd Skynyrd</div>
+              <div class="song-year">1974</div>
+            </div>
+            
+            <div class="song-item" style="border-left-color: #C44569;">
+              <div class="song-title">Bohemian Rhapsody</div>
+              <div class="song-artist">Queen</div>
+              <div class="song-year">1975</div>
+            </div>
+            
+            <div class="song-item" style="border-left-color: #C44569;">
+              <div class="song-title">Born to Run</div>
+              <div class="song-artist">Bruce Springsteen</div>
+              <div class="song-year">1975</div>
+            </div>
+            
+            <div class="song-item" style="border-left-color: #C44569;">
+              <div class="song-title">Hotel California</div>
+              <div class="song-artist">Eagles</div>
+              <div class="song-year">1976</div>
+            </div>
+            
+            <div class="song-item" style="border-left-color: #C44569;">
+              <div class="song-title">More Than a Feeling</div>
+              <div class="song-artist">Boston</div>
+              <div class="song-year">1976</div>
+            </div>
+            
+            <div class="song-item" style="border-left-color: #C44569;">
+              <div class="song-title">(Don't Fear) The Reaper</div>
+              <div class="song-artist">Blue Öyster Cult</div>
+              <div class="song-year">1976</div>
+            </div>
+            
+            <div class="song-item" style="border-left-color: #C44569;">
+              <div class="song-title">Dreams</div>
+              <div class="song-artist">Fleetwood Mac</div>
+              <div class="song-year">1977</div>
+            </div>
+            
+            <div class="song-item" style="border-left-color: #C44569;">
+              <div class="song-title">Go Your Own Way - 2004 Remaster</div>
+              <div class="song-artist">Fleetwood Mac</div>
+              <div class="song-year">1977</div>
+            </div>
+            
+            <div class="song-item" style="border-left-color: #C44569;">
+              <div class="song-title">Heroes</div>
+              <div class="song-artist">David Bowie</div>
+              <div class="song-year">1977</div>
+            </div>
+            
+            <div class="song-item" style="border-left-color: #C44569;">
+              <div class="song-title">Sultans Of Swing</div>
+              <div class="song-artist">Dire Straits</div>
+              <div class="song-year">1978</div>
+            </div>
+            
+            <div class="song-item" style="border-left-color: #C44569;">
+              <div class="song-title">Ride Like the Wind</div>
+              <div class="song-artist">Christopher Cross</div>
+              <div class="song-year">1979</div>
+            </div>
+            
+            <div class="song-item" style="border-left-color: #C44569;">
+              <div class="song-title">For You</div>
+              <div class="song-artist">Manfred Mann's Earth Band</div>
+              <div class="song-year">1980</div>
+            </div>
+            
+            <div class="song-item" style="border-left-color: #C44569;">
+              <div class="song-title">In The Air Tonight</div>
+              <div class="song-artist">Phil Collins</div>
+              <div class="song-year">1981</div>
+            </div>
+            
+            <div class="song-item" style="border-left-color: #C44569;">
+              <div class="song-title">Don't Stop Believin'</div>
+              <div class="song-artist">Journey</div>
+              <div class="song-year">1981</div>
+            </div>
+            
+            <div class="song-item" style="border-left-color: #C44569;">
+              <div class="song-title">Africa</div>
+              <div class="song-artist">TOTO</div>
+              <div class="song-year">1982</div>
+            </div>
+            
+            <div class="song-item" style="border-left-color: #C44569;">
+              <div class="song-title">Here I Go Again</div>
+              <div class="song-artist">Whitesnake</div>
+              <div class="song-year">1982</div>
+            </div>
+            
+            <div class="song-item" style="border-left-color: #C44569;">
+              <div class="song-title">All You Zombies</div>
+              <div class="song-artist">The Hooters</div>
+              <div class="song-year">1982</div>
+            </div>
+            
+            <div class="song-item" style="border-left-color: #C44569;">
+              <div class="song-title">Nix Neues in Poona</div>
+              <div class="song-artist">Lusthansa</div>
+              <div class="song-year">1983</div>
+            </div>
+            
+            <div class="song-item" style="border-left-color: #C44569;">
+              <div class="song-title">The Power Of Love</div>
+              <div class="song-artist">Huey Lewis & The News</div>
+              <div class="song-year">1985</div>
+            </div>
+            
+            <div class="song-item" style="border-left-color: #C44569;">
+              <div class="song-title">Your Love</div>
+              <div class="song-artist">The Outfield</div>
+              <div class="song-year">1985</div>
+            </div>
+            
+            <div class="song-item" style="border-left-color: #C44569;">
+              <div class="song-title">Eye of the Tiger</div>
+              <div class="song-artist">Survivor</div>
+              <div class="song-year">1985</div>
+            </div>
+            
+            <div class="song-item" style="border-left-color: #C44569;">
+              <div class="song-title">Invisible Touch</div>
+              <div class="song-artist">Genesis</div>
+              <div class="song-year">1986</div>
+            </div>
+            
+            <div class="song-item" style="border-left-color: #C44569;">
+              <div class="song-title">Westerland</div>
+              <div class="song-artist">Die Ärzte</div>
+              <div class="song-year">1988</div>
+            </div>
+            
+            <div class="song-item" style="border-left-color: #C44569;">
+              <div class="song-title">Fast Car</div>
+              <div class="song-artist">Tracy Chapman</div>
+              <div class="song-year">1988</div>
+            </div>
+            
+            <div class="song-item" style="border-left-color: #C44569;">
+              <div class="song-title">Entre dos tierras</div>
+              <div class="song-artist">Heroes Del Silencio</div>
+              <div class="song-year">1990</div>
+            </div>
+            
+            <div class="song-item" style="border-left-color: #C44569;">
+              <div class="song-title">Smells Like Teen Spirit</div>
+              <div class="song-artist">Nirvana</div>
+              <div class="song-year">1991</div>
+            </div>
+            
+            <div class="song-item" style="border-left-color: #C44569;">
+              <div class="song-title">Learning To Fly</div>
+              <div class="song-artist">Tom Petty</div>
+              <div class="song-year">1991</div>
+            </div>
+            
+            <div class="song-item" style="border-left-color: #C44569;">
+              <div class="song-title">Two Princes</div>
+              <div class="song-artist">Spin Doctors</div>
+              <div class="song-year">1991</div>
+            </div>
+            
+            <div class="song-item" style="border-left-color: #C44569;">
+              <div class="song-title">Schrei nach Liebe</div>
+              <div class="song-artist">Die Ärzte</div>
+              <div class="song-year">1993</div>
+            </div>
+            
+            <div class="song-item" style="border-left-color: #C44569;">
+              <div class="song-title">Mr. Jones</div>
+              <div class="song-artist">Counting Crows</div>
+              <div class="song-year">1993</div>
+            </div>
+            
+            <div class="song-item" style="border-left-color: #C44569;">
+              <div class="song-title">I'd Do Anything For Love</div>
+              <div class="song-artist">Meat Loaf</div>
+              <div class="song-year">1993</div>
+            </div>
+            
+            <div class="song-item" style="border-left-color: #C44569;">
+              <div class="song-title">Wonderwall</div>
+              <div class="song-artist">Oasis</div>
+              <div class="song-year">1995</div>
+            </div>
+            
+            <div class="song-item" style="border-left-color: #C44569;">
+              <div class="song-title">Save Tonight</div>
+              <div class="song-artist">Eagle-Eye Cherry</div>
+              <div class="song-year">1997</div>
+            </div>
+            
+            <div class="song-item" style="border-left-color: #C44569;">
+              <div class="song-title">All The Small Things</div>
+              <div class="song-artist">blink-182</div>
+              <div class="song-year">1999</div>
+            </div>
+            
+            <div class="song-item" style="border-left-color: #C44569;">
+              <div class="song-title">Maria</div>
+              <div class="song-artist">Blondie</div>
+              <div class="song-year">1999</div>
+            </div>
+            
+            <div class="song-item" style="border-left-color: #C44569;">
+              <div class="song-title">Kryptonite</div>
+              <div class="song-artist">3 Doors Down</div>
+              <div class="song-year">2000</div>
+            </div>
+            
+            <div class="song-item" style="border-left-color: #C44569;">
+              <div class="song-title">Smooth Criminal</div>
+              <div class="song-artist">Alien Ant Farm</div>
+              <div class="song-year">2001</div>
+            </div>
+            
+            <div class="song-item" style="border-left-color: #C44569;">
+              <div class="song-title">In the Shadows</div>
+              <div class="song-artist">The Rasmus</div>
+              <div class="song-year">2003</div>
+            </div>
+            
+            <div class="song-item" style="border-left-color: #C44569;">
+              <div class="song-title">Seven Nation Army</div>
+              <div class="song-artist">The White Stripes</div>
+              <div class="song-year">2003</div>
+            </div>
+            
+            <div class="song-item" style="border-left-color: #C44569;">
+              <div class="song-title">Viva La Vida</div>
+              <div class="song-artist">Coldplay</div>
+              <div class="song-year">2008</div>
+            </div>
+            
+          </div>
+        </div>
+        
+        <div class="decade-card">
+          <h3 style="color: #4ECDC4;">Electronic (45 Songs)</h3>
+          <div class="song-list">
+            
+            <div class="song-item" style="border-left-color: #4ECDC4;">
+              <div class="song-title">Living On Video</div>
+              <div class="song-artist">Trans-X</div>
+              <div class="song-year">1986</div>
+            </div>
+            
+            <div class="song-item" style="border-left-color: #4ECDC4;">
+              <div class="song-title">The Great Commandment</div>
+              <div class="song-artist">Camouflage</div>
+              <div class="song-year">1988</div>
+            </div>
+            
+            <div class="song-item" style="border-left-color: #4ECDC4;">
+              <div class="song-title">Sing Hallelujah!</div>
+              <div class="song-artist">Dr. Alban</div>
+              <div class="song-year">1992</div>
+            </div>
+            
+            <div class="song-item" style="border-left-color: #4ECDC4;">
+              <div class="song-title">Rhythm Is a Dancer</div>
+              <div class="song-artist">SNAP!</div>
+              <div class="song-year">1992</div>
+            </div>
+            
+            <div class="song-item" style="border-left-color: #4ECDC4;">
+              <div class="song-title">Mr. Vain</div>
+              <div class="song-artist">Culture Beat</div>
+              <div class="song-year">1993</div>
+            </div>
+            
+            <div class="song-item" style="border-left-color: #4ECDC4;">
+              <div class="song-title">Sweet Dreams</div>
+              <div class="song-artist">La Bouche</div>
+              <div class="song-year">1994</div>
+            </div>
+            
+            <div class="song-item" style="border-left-color: #4ECDC4;">
+              <div class="song-title">Scatman (ski-ba-bop-ba-dop-bop)</div>
+              <div class="song-artist">Scatman John</div>
+              <div class="song-year">1995</div>
+            </div>
+            
+            <div class="song-item" style="border-left-color: #4ECDC4;">
+              <div class="song-title">Be My Lover</div>
+              <div class="song-artist">La Bouche</div>
+              <div class="song-year">1995</div>
+            </div>
+            
+            <div class="song-item" style="border-left-color: #4ECDC4;">
+              <div class="song-title">Number One</div>
+              <div class="song-artist">Ray Mang</div>
+              <div class="song-year">1996</div>
+            </div>
+            
+            <div class="song-item" style="border-left-color: #4ECDC4;">
+              <div class="song-title">It Feels So Good - 12" Breakbeat Mix</div>
+              <div class="song-artist">Sonique</div>
+              <div class="song-year">1998</div>
+            </div>
+            
+            <div class="song-item" style="border-left-color: #4ECDC4;">
+              <div class="song-title">Blue (Da Ba Dee)</div>
+              <div class="song-artist">Eiffel 65</div>
+              <div class="song-year">1999</div>
+            </div>
+            
+            <div class="song-item" style="border-left-color: #4ECDC4;">
+              <div class="song-title">The Riddle</div>
+              <div class="song-artist">Gigi D'Agostino</div>
+              <div class="song-year">1999</div>
+            </div>
+            
+            <div class="song-item" style="border-left-color: #4ECDC4;">
+              <div class="song-title">Flower</div>
+              <div class="song-artist">Moby</div>
+              <div class="song-year">1999</div>
+            </div>
+            
+            <div class="song-item" style="border-left-color: #4ECDC4;">
+              <div class="song-title">My Heart Goes Boom</div>
+              <div class="song-artist">French Affair</div>
+              <div class="song-year">2000</div>
+            </div>
+            
+            <div class="song-item" style="border-left-color: #4ECDC4;">
+              <div class="song-title">Such Great Heights</div>
+              <div class="song-artist">The Postal Service</div>
+              <div class="song-year">2003</div>
+            </div>
+            
+            <div class="song-item" style="border-left-color: #4ECDC4;">
+              <div class="song-title">Glücklich</div>
+              <div class="song-artist">Heiko & Maiko</div>
+              <div class="song-year">2005</div>
+            </div>
+            
+            <div class="song-item" style="border-left-color: #4ECDC4;">
+              <div class="song-title">Drop the Pressure - Club Mix</div>
+              <div class="song-artist">Mylo</div>
+              <div class="song-year">2006</div>
+            </div>
+            
+            <div class="song-item" style="border-left-color: #4ECDC4;">
+              <div class="song-title">U-Bahn</div>
+              <div class="song-artist">Oliver Koletzki</div>
+              <div class="song-year">2009</div>
+            </div>
+            
+            <div class="song-item" style="border-left-color: #4ECDC4;">
+              <div class="song-title">Levels - Original Version</div>
+              <div class="song-artist">Avicii</div>
+              <div class="song-year">2011</div>
+            </div>
+            
+            <div class="song-item" style="border-left-color: #4ECDC4;">
+              <div class="song-title">Midnight City</div>
+              <div class="song-artist">M83</div>
+              <div class="song-year">2011</div>
+            </div>
+            
+            <div class="song-item" style="border-left-color: #4ECDC4;">
+              <div class="song-title">Chicken or Beef</div>
+              <div class="song-artist">Day Din</div>
+              <div class="song-year">2012</div>
+            </div>
+            
+            <div class="song-item" style="border-left-color: #4ECDC4;">
+              <div class="song-title">Alexis</div>
+              <div class="song-artist">Electr3x</div>
+              <div class="song-year">2013</div>
+            </div>
+            
+            <div class="song-item" style="border-left-color: #4ECDC4;">
+              <div class="song-title">Giorgio by Moroder</div>
+              <div class="song-artist">Daft Punk</div>
+              <div class="song-year">2013</div>
+            </div>
+            
+            <div class="song-item" style="border-left-color: #4ECDC4;">
+              <div class="song-title">Train</div>
+              <div class="song-artist">Paul Kalkbrenner</div>
+              <div class="song-year">2013</div>
+            </div>
+            
+            <div class="song-item" style="border-left-color: #4ECDC4;">
+              <div class="song-title">She Moves</div>
+              <div class="song-artist">Alle Farben</div>
+              <div class="song-year">2014</div>
+            </div>
+            
+            <div class="song-item" style="border-left-color: #4ECDC4;">
+              <div class="song-title">Bring Me Home</div>
+              <div class="song-artist">Oliver Koletzki</div>
+              <div class="song-year">2014</div>
+            </div>
+            
+            <div class="song-item" style="border-left-color: #4ECDC4;">
+              <div class="song-title">It's Possible</div>
+              <div class="song-artist">Fre3 Fly</div>
+              <div class="song-year">2014</div>
+            </div>
+            
+            <div class="song-item" style="border-left-color: #4ECDC4;">
+              <div class="song-title">Africa</div>
+              <div class="song-artist">Lexer</div>
+              <div class="song-year">2015</div>
+            </div>
+            
+            <div class="song-item" style="border-left-color: #4ECDC4;">
+              <div class="song-title">Agfachrome RSX II</div>
+              <div class="song-artist">Skatebård</div>
+              <div class="song-year">2016</div>
+            </div>
+            
+            <div class="song-item" style="border-left-color: #4ECDC4;">
+              <div class="song-title">Glue</div>
+              <div class="song-artist">BICEP</div>
+              <div class="song-year">2017</div>
+            </div>
+            
+            <div class="song-item" style="border-left-color: #4ECDC4;">
+              <div class="song-title">Anthracene</div>
+              <div class="song-artist">Spectra</div>
+              <div class="song-year">2017</div>
+            </div>
+            
+            <div class="song-item" style="border-left-color: #4ECDC4;">
+              <div class="song-title">Together</div>
+              <div class="song-artist">CINTHIE</div>
+              <div class="song-year">2018</div>
+            </div>
+            
+            <div class="song-item" style="border-left-color: #4ECDC4;">
+              <div class="song-title">Der Komtur</div>
+              <div class="song-artist">Carlos Perón</div>
+              <div class="song-year">2018</div>
+            </div>
+            
+            <div class="song-item" style="border-left-color: #4ECDC4;">
+              <div class="song-title">Underwater</div>
+              <div class="song-artist">RÜFÜS DU SOL</div>
+              <div class="song-year">2019</div>
+            </div>
+            
+            <div class="song-item" style="border-left-color: #4ECDC4;">
+              <div class="song-title">Jack The Bear</div>
+              <div class="song-artist">Mind Over Matter</div>
+              <div class="song-year">2020</div>
+            </div>
+            
+            <div class="song-item" style="border-left-color: #4ECDC4;">
+              <div class="song-title">Something More</div>
+              <div class="song-artist">Róisín Murphy</div>
+              <div class="song-year">2020</div>
+            </div>
+            
+            <div class="song-item" style="border-left-color: #4ECDC4;">
+              <div class="song-title">Cosmic Noise</div>
+              <div class="song-artist">CIOZ</div>
+              <div class="song-year">2021</div>
+            </div>
+            
+            <div class="song-item" style="border-left-color: #4ECDC4;">
+              <div class="song-title">Blackpool Boulevard</div>
+              <div class="song-artist">Anish Kumar, Barry Can't Swim</div>
+              <div class="song-year">2021</div>
+            </div>
+            
+            <div class="song-item" style="border-left-color: #4ECDC4;">
+              <div class="song-title">Essentia - Extended Version</div>
+              <div class="song-artist">Krystal Klear</div>
+              <div class="song-year">2022</div>
+            </div>
+            
+            <div class="song-item" style="border-left-color: #4ECDC4;">
+              <div class="song-title">Bon Trip</div>
+              <div class="song-artist">Carlita</div>
+              <div class="song-year">2022</div>
+            </div>
+            
+            <div class="song-item" style="border-left-color: #4ECDC4;">
+              <div class="song-title">Totoish - Radio Cut</div>
+              <div class="song-artist">Storken, Gusteau</div>
+              <div class="song-year">2024</div>
+            </div>
+            
+            <div class="song-item" style="border-left-color: #4ECDC4;">
+              <div class="song-title">Say What</div>
+              <div class="song-artist">Keinemusik</div>
+              <div class="song-year">2024</div>
+            </div>
+            
+            <div class="song-item" style="border-left-color: #4ECDC4;">
+              <div class="song-title">Cheek</div>
+              <div class="song-artist">Phonk D</div>
+              <div class="song-year">2024</div>
+            </div>
+            
+            <div class="song-item" style="border-left-color: #4ECDC4;">
+              <div class="song-title">Galaxis 4000 - Marcus Christiansen Remix</div>
+              <div class="song-artist">Bizzarro Universe, Marcus Christiansen</div>
+              <div class="song-year">2024</div>
+            </div>
+            
+            <div class="song-item" style="border-left-color: #4ECDC4;">
+              <div class="song-title">Tanke</div>
+              <div class="song-artist">2hermanoz</div>
+              <div class="song-year">2025</div>
+            </div>
+            
+          </div>
+        </div>
+        
+        <div class="decade-card">
+          <h3 style="color: #FF8B94;">Soul (18 Songs)</h3>
+          <div class="song-list">
+            
+            <div class="song-item" style="border-left-color: #FF8B94;">
+              <div class="song-title">Let The Music Play</div>
+              <div class="song-artist">Barry White</div>
+              <div class="song-year">1972</div>
+            </div>
+            
+            <div class="song-item" style="border-left-color: #FF8B94;">
+              <div class="song-title">Across 110th Street</div>
+              <div class="song-artist">Bobby Womack</div>
+              <div class="song-year">1972</div>
+            </div>
+            
+            <div class="song-item" style="border-left-color: #FF8B94;">
+              <div class="song-title">Touch Me In The Morning</div>
+              <div class="song-artist">Marlena Shaw</div>
+              <div class="song-year">1973</div>
+            </div>
+            
+            <div class="song-item" style="border-left-color: #FF8B94;">
+              <div class="song-title">Give Me Love</div>
+              <div class="song-artist">Cerrone</div>
+              <div class="song-year">1977</div>
+            </div>
+            
+            <div class="song-item" style="border-left-color: #FF8B94;">
+              <div class="song-title">Le Freak</div>
+              <div class="song-artist">CHIC</div>
+              <div class="song-year">1978</div>
+            </div>
+            
+            <div class="song-item" style="border-left-color: #FF8B94;">
+              <div class="song-title">It's My House - 12" Remix</div>
+              <div class="song-artist">Diana Ross</div>
+              <div class="song-year">1979</div>
+            </div>
+            
+            <div class="song-item" style="border-left-color: #FF8B94;">
+              <div class="song-title">Good Times</div>
+              <div class="song-artist">CHIC</div>
+              <div class="song-year">1979</div>
+            </div>
+            
+            <div class="song-item" style="border-left-color: #FF8B94;">
+              <div class="song-title">Lost in Music</div>
+              <div class="song-artist">Sister Sledge</div>
+              <div class="song-year">1979</div>
+            </div>
+            
+            <div class="song-item" style="border-left-color: #FF8B94;">
+              <div class="song-title">Vertigo / Relight My Fire</div>
+              <div class="song-artist">Dan Hartman</div>
+              <div class="song-year">1979</div>
+            </div>
+            
+            <div class="song-item" style="border-left-color: #FF8B94;">
+              <div class="song-title">Take Me I'm Yours</div>
+              <div class="song-artist">Mary Clark</div>
+              <div class="song-year">1980</div>
+            </div>
+            
+            <div class="song-item" style="border-left-color: #FF8B94;">
+              <div class="song-title">Don't Stop - Remix</div>
+              <div class="song-artist">Sylvester</div>
+              <div class="song-year">1982</div>
+            </div>
+            
+            <div class="song-item" style="border-left-color: #FF8B94;">
+              <div class="song-title">Do You Wanna Funk?</div>
+              <div class="song-artist">Sylvester</div>
+              <div class="song-year">1982</div>
+            </div>
+            
+            <div class="song-item" style="border-left-color: #FF8B94;">
+              <div class="song-title">Love Comes Easy</div>
+              <div class="song-artist">Vera</div>
+              <div class="song-year">1983</div>
+            </div>
+            
+            <div class="song-item" style="border-left-color: #FF8B94;">
+              <div class="song-title">Rock the Box</div>
+              <div class="song-artist">Sylvester</div>
+              <div class="song-year">1984</div>
+            </div>
+            
+            <div class="song-item" style="border-left-color: #FF8B94;">
+              <div class="song-title">Only You</div>
+              <div class="song-artist">Steve Monite</div>
+              <div class="song-year">1984</div>
+            </div>
+            
+            <div class="song-item" style="border-left-color: #FF8B94;">
+              <div class="song-title">Sex</div>
+              <div class="song-artist">Sylvester</div>
+              <div class="song-year">1984</div>
+            </div>
+            
+            <div class="song-item" style="border-left-color: #FF8B94;">
+              <div class="song-title">Don't Let Me Be Misunderstood</div>
+              <div class="song-artist">Santa Esmeralda</div>
+              <div class="song-year">2015</div>
+            </div>
+            
+            <div class="song-item" style="border-left-color: #FF8B94;">
+              <div class="song-title">Back On 74</div>
+              <div class="song-artist">Jungle</div>
+              <div class="song-year">2023</div>
+            </div>
+            
+          </div>
+        </div>
+        
+        <div class="decade-card">
+          <h3 style="color: #FFE66D;">Hip-Hop (17 Songs)</h3>
+          <div class="song-list">
+            
+            <div class="song-item" style="border-left-color: #FFE66D;">
+              <div class="song-title">Rapper's Delight</div>
+              <div class="song-artist">The Sugarhill Gang</div>
+              <div class="song-year">1979</div>
+            </div>
+            
+            <div class="song-item" style="border-left-color: #FFE66D;">
+              <div class="song-title">Gangsta's Paradise</div>
+              <div class="song-artist">Coolio</div>
+              <div class="song-year">1995</div>
+            </div>
+            
+            <div class="song-item" style="border-left-color: #FFE66D;">
+              <div class="song-title">Freestyler</div>
+              <div class="song-artist">Bomfunk MC's</div>
+              <div class="song-year">1999</div>
+            </div>
+            
+            <div class="song-item" style="border-left-color: #FFE66D;">
+              <div class="song-title">Ms. Jackson</div>
+              <div class="song-artist">Outkast</div>
+              <div class="song-year">2000</div>
+            </div>
+            
+            <div class="song-item" style="border-left-color: #FFE66D;">
+              <div class="song-title">Ride Wit Me</div>
+              <div class="song-artist">Nelly</div>
+              <div class="song-year">2000</div>
+            </div>
+            
+            <div class="song-item" style="border-left-color: #FFE66D;">
+              <div class="song-title">Superman</div>
+              <div class="song-artist">Eminem</div>
+              <div class="song-year">2002</div>
+            </div>
+            
+            <div class="song-item" style="border-left-color: #FFE66D;">
+              <div class="song-title">Traumreise</div>
+              <div class="song-artist">Massive Töne</div>
+              <div class="song-year">2002</div>
+            </div>
+            
+            <div class="song-item" style="border-left-color: #FFE66D;">
+              <div class="song-title">Lose Yourself</div>
+              <div class="song-artist">Eminem</div>
+              <div class="song-year">2002</div>
+            </div>
+            
+            <div class="song-item" style="border-left-color: #FFE66D;">
+              <div class="song-title">An Tagen wie diesen</div>
+              <div class="song-artist">Fettes Brot</div>
+              <div class="song-year">2005</div>
+            </div>
+            
+            <div class="song-item" style="border-left-color: #FFE66D;">
+              <div class="song-title">Feel Good Inc.</div>
+              <div class="song-artist">Gorillaz</div>
+              <div class="song-year">2005</div>
+            </div>
+            
+            <div class="song-item" style="border-left-color: #FFE66D;">
+              <div class="song-title">Paper Planes</div>
+              <div class="song-artist">M.I.A.</div>
+              <div class="song-year">2007</div>
+            </div>
+            
+            <div class="song-item" style="border-left-color: #FFE66D;">
+              <div class="song-title">Klopapier</div>
+              <div class="song-artist">K.I.Z</div>
+              <div class="song-year">2009</div>
+            </div>
+            
+            <div class="song-item" style="border-left-color: #FFE66D;">
+              <div class="song-title">Good Feeling</div>
+              <div class="song-artist">Flo Rida</div>
+              <div class="song-year">2012</div>
+            </div>
+            
+            <div class="song-item" style="border-left-color: #FFE66D;">
+              <div class="song-title">Can't Hold Us</div>
+              <div class="song-artist">Macklemore</div>
+              <div class="song-year">2012</div>
+            </div>
+            
+            <div class="song-item" style="border-left-color: #FFE66D;">
+              <div class="song-title">Willst du</div>
+              <div class="song-artist">Alligatoah</div>
+              <div class="song-year">2013</div>
+            </div>
+            
+            <div class="song-item" style="border-left-color: #FFE66D;">
+              <div class="song-title">Fick ihn doch</div>
+              <div class="song-artist">Alligatoah</div>
+              <div class="song-year">2013</div>
+            </div>
+            
+            <div class="song-item" style="border-left-color: #FFE66D;">
+              <div class="song-title">Hey Porsche</div>
+              <div class="song-artist">Nelly</div>
+              <div class="song-year">2013</div>
+            </div>
+            
+          </div>
+        </div>
+        
+        <div class="decade-card">
+          <h3 style="color: #A8E6CF;">R&B (7 Songs)</h3>
+          <div class="song-list">
+            
+            <div class="song-item" style="border-left-color: #A8E6CF;">
+              <div class="song-title">I Wanna Be Your Lover</div>
+              <div class="song-artist">Prince</div>
+              <div class="song-year">1979</div>
+            </div>
+            
+            <div class="song-item" style="border-left-color: #A8E6CF;">
+              <div class="song-title">Ain't Nobody</div>
+              <div class="song-artist">Chaka Khan</div>
+              <div class="song-year">1983</div>
+            </div>
+            
+            <div class="song-item" style="border-left-color: #A8E6CF;">
+              <div class="song-title">All Night Long</div>
+              <div class="song-artist">Lionel Richie</div>
+              <div class="song-year">1983</div>
+            </div>
+            
+            <div class="song-item" style="border-left-color: #A8E6CF;">
+              <div class="song-title">17 Days</div>
+              <div class="song-artist">Prince</div>
+              <div class="song-year">1986</div>
+            </div>
+            
+            <div class="song-item" style="border-left-color: #A8E6CF;">
+              <div class="song-title">Finally</div>
+              <div class="song-artist">CeCe Peniston</div>
+              <div class="song-year">1992</div>
+            </div>
+            
+            <div class="song-item" style="border-left-color: #A8E6CF;">
+              <div class="song-title">Most Beautiful Girl in the World</div>
+              <div class="song-artist">Prince</div>
+              <div class="song-year">1994</div>
+            </div>
+            
+            <div class="song-item" style="border-left-color: #A8E6CF;">
+              <div class="song-title">Whatcha Say</div>
+              <div class="song-artist">Jason Derulo</div>
+              <div class="song-year">2010</div>
+            </div>
+            
+          </div>
+        </div>
+        
+        <div class="decade-card">
+          <h3 style="color: #556270;">Metal (6 Songs)</h3>
+          <div class="song-list">
+            
+            <div class="song-item" style="border-left-color: #556270;">
+              <div class="song-title">The Unforgiven</div>
+              <div class="song-artist">Metallica</div>
+              <div class="song-year">1991</div>
+            </div>
+            
+            <div class="song-item" style="border-left-color: #556270;">
+              <div class="song-title">Nothing Else Matters</div>
+              <div class="song-artist">Metallica</div>
+              <div class="song-year">1991</div>
+            </div>
+            
+            <div class="song-item" style="border-left-color: #556270;">
+              <div class="song-title">Engel</div>
+              <div class="song-artist">Rammstein</div>
+              <div class="song-year">1997</div>
+            </div>
+            
+            <div class="song-item" style="border-left-color: #556270;">
+              <div class="song-title">Whiskey In The Jar</div>
+              <div class="song-artist">Metallica</div>
+              <div class="song-year">1998</div>
+            </div>
+            
+            <div class="song-item" style="border-left-color: #556270;">
+              <div class="song-title">Through The Fire And Flames</div>
+              <div class="song-artist">DragonForce</div>
+              <div class="song-year">2006</div>
+            </div>
+            
+            <div class="song-item" style="border-left-color: #556270;">
+              <div class="song-title">Mary On A Cross</div>
+              <div class="song-artist">Ghost</div>
+              <div class="song-year">2019</div>
+            </div>
+            
+          </div>
+        </div>
+        
+        <div class="decade-card">
+          <h3 style="color: #6BCB77;">Reggae (2 Songs)</h3>
+          <div class="song-list">
+            
+            <div class="song-item" style="border-left-color: #6BCB77;">
+              <div class="song-title">Red Red Wine</div>
+              <div class="song-artist">UB40</div>
+              <div class="song-year">1983</div>
+            </div>
+            
+            <div class="song-item" style="border-left-color: #6BCB77;">
+              <div class="song-title">Bongo Bong</div>
+              <div class="song-artist">Manu Chao</div>
+              <div class="song-year">1998</div>
+            </div>
+            
+          </div>
+        </div>
+        
+        <div class="decade-card">
+          <h3 style="color: #FFD93D;">Country (1 Songs)</h3>
+          <div class="song-list">
+            
+            <div class="song-item" style="border-left-color: #FFD93D;">
+              <div class="song-title">Ring of Fire</div>
+              <div class="song-artist">Johnny Cash</div>
+              <div class="song-year">1963</div>
+            </div>
+            
+          </div>
+        </div>
+        
+    </div>
+
+    <h2 class="chart-title" style="margin-bottom: 1.5rem; margin-top: 3rem;">📝 Details nach Dekaden</h2>
     <div class="decade-details">
       
         <div class="decade-card">
@@ -1417,7 +2834,7 @@
         </div>
         
         <div class="decade-card">
-          <h3 style="color: hsl(205.71428571428572, 70%, 60%);">2010s (28 Songs)</h3>
+          <h3 style="color: hsl(205.71428571428572, 70%, 60%);">2010s (29 Songs)</h3>
           <div class="song-list">
             
             <div class="song-item" style="border-left-color: hsl(205.71428571428572, 70%, 60%);">
@@ -1588,6 +3005,12 @@
               <div class="song-year">2019</div>
             </div>
             
+            <div class="song-item" style="border-left-color: hsl(205.71428571428572, 70%, 60%);">
+              <div class="song-title">Underwater</div>
+              <div class="song-artist">RÜFÜS DU SOL</div>
+              <div class="song-year">2019</div>
+            </div>
+            
           </div>
         </div>
         
@@ -1679,7 +3102,7 @@
     </div>
 
     <footer>
-      <p>Generiert am 2. November 2025 um 02:46</p>
+      <p>Generiert am 4. November 2025 um 00:00</p>
       <p style="margin-top: 0.5rem;">mxster v0.0.19</p>
     </footer>
   </div>
