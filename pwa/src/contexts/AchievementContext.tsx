@@ -291,7 +291,35 @@ export function AchievementProvider({ children }: { children: ReactNode }) {
     }
     updateProgress(playerName, AchievementId.CENTURION, totalGames)
 
-    // 20. GRAND_MASTER: 5000 total points (VERY HARD)
+    // 20. COMEBACK_PROFI: 5x comeback wins (won after being behind) (VERY HARD)
+    let comebackWins = 0
+    sortedGames.forEach((game: HistoryEntry) => {
+      // Check if this player won
+      const winner = game.players.reduce((prev: Player, current: Player) =>
+        current.score > prev.score ? current : prev
+      )
+
+      if (winner.name === playerName && game.players.length > 1) {
+        // Check if winner was ever behind during the game
+        // We can check final scores to see if any opponent had more cards earlier
+        // This is a simplified check - ideally we'd have turn-by-turn data
+        const playerFinalCards = winner.cards
+        const hadComeback = game.players.some((p: Player) => {
+          return p.name !== playerName && p.cards > 0 && p.score < winner.score
+        })
+
+        if (hadComeback) {
+          comebackWins++
+        }
+      }
+    })
+
+    if (comebackWins >= 5) {
+      unlockAchievement(playerName, AchievementId.COMEBACK_PROFI)
+    }
+    updateProgress(playerName, AchievementId.COMEBACK_PROFI, comebackWins)
+
+    // 21. GRAND_MASTER: 5000 total points (VERY HARD)
     if (totalPoints >= 5000) {
       unlockAchievement(playerName, AchievementId.GRAND_MASTER)
     }

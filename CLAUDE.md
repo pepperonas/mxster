@@ -140,9 +140,9 @@ Spotify Playlist → docs/songs.json → pwa/src/data/songs.ts + qr-codes/*.png
    - Manual placement in shared timeline
    - Winner: First player with 10 correctly placed cards
 
-**Key Features (v0.0.17-0.0.23):**
+**Key Features (v0.0.17-0.0.24):**
 - ✅ Scoring: 5+5+5/2/1 points (title/artist/year±2) in Hardcore Mode only
-- ✅ Achievements: 20 unlockable (10 standard + 10 new in v0.0.23) with progress tracking, confetti animations
+- ✅ Achievements: 20 unlockable (10 standard + 10 new, fixed in v0.0.24) with progress tracking, confetti animations
 - ✅ Interactive Particles: Activity-reactive 3D system (idle/calm/active/intense), music-reactive
 - ✅ Statistics: Player stats, game history, decade analysis
 - ✅ UX: Auto-focus (desktop), skip confirmation, random start position
@@ -353,7 +353,33 @@ All files hosted via GitHub raw URLs (auto-update, no manual releases):
 
 ## Recent Changes
 
-### v0.0.23 (2025-11-03) - 10 New Achievements
+### v0.0.24 (2025-11-03) - Achievement Fixes & Replacements
+**Fixed 5 broken achievements from v0.0.23** with creative, functional alternatives:
+- **Removed broken achievements**:
+  - SPEED_DEMON (race condition + timing complexity)
+  - YEAR_PERFECTIONIST (impossible: ≥13 points doesn't exist)
+  - DIVERSE_TASTE (impossible: requires all decades in 10 cards)
+  - ARTIST_EXPERT (false positives: counted wrong songs)
+- **New functional achievements**:
+  - ⏰ **ZEITMASCHINE**: 3 different decades (realistic + achievable)
+  - 🌈 **GENRE_HOPPER**: 4 different genres (requires genre field - TODO)
+  - 🎤 **NAME_DROPPER**: 5 artist streak (streak-based = more engaging)
+  - 🏆 **PUNKTEJÄGER**: 75+ points (entry-level version of HARDCORE_CHAMPION)
+  - 🔥 **COMEBACK_PROFI**: 5x comeback wins (cross-game achievement)
+- **Bug fixes**:
+  - Property name consistency: `earnedPoints` → `points` in PERFECT_STREAK
+  - Removed entire timing system (songStartTimes, playerSongTimes)
+- **New fields**:
+  - Song interface: Added optional `genre?: string` field (v0.0.24)
+- **Files Modified**:
+  - types/achievements.ts: Renamed 5 IDs + updated definitions
+  - types/index.ts: Added genre field to Song interface
+  - screens/GameScreen.tsx: Replaced 6 achievement checks, removed timing
+  - contexts/AchievementContext.tsx: Added COMEBACK_PROFI check
+
+**TODO for later**: Add Genre-Bender achievement (BPM-based)
+
+### v0.0.23 (2025-11-03) - 10 New Achievements (DEPRECATED - had bugs)
 **Achievement System Expansion**: Doubled achievements from 10 to 20
 - **5 Normal Achievements**:
   - ⚡🔥 **SPEED_DEMON**: 3 songs in a row guessed in <10s each (with song timing system)

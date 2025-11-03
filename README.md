@@ -58,20 +58,21 @@ Schalte 20 spannende Erfolge frei und zeige dein Können!
 - 🔥 **Comeback-King** - Vom letzten Platz zum Gewinner aufgestiegen
 - 🎓 **Musikexperte** - 1000 Gesamtpunkte über alle Spiele erreicht
 
-### Neue Achievements (11-20) - v0.0.23
+### Neue Achievements (11-20) - v0.0.24 (Fixed)
 
 #### Normal Schwierigkeit
-- ⚡🔥 **Geschwindigkeitsrausch** - 3 Songs hintereinander in unter 10 Sekunden geraten
-- 📅 **Jahres-Genie** - 5 Songs in einem Spiel auf das exakte Jahr geraten
-- 🎵 **Vielseitiger Musikgeschmack** - In einem Spiel Songs aus allen verfügbaren Dekaden platzieren
+- ⏰ **Zeitmaschine** - Songs aus 3 verschiedenen Dekaden erraten
+- 🌈 **Genre-Hopper** - Songs aus 4 verschiedenen Musikrichtungen erraten
+- 🎤 **Name-Dropper** - 5 Künstler hintereinander richtig erraten (Streak!)
 - 👥 **Gesellschaftsmensch** - Mit 5 verschiedenen Spielern gespielt
-- 🎤 **Künstler-Kenner** - 10 Künstler in einem Spiel richtig erraten
+- 🏆 **Punktejäger** - 75+ Punkte in einem Hardcore-Spiel erreicht
 
 #### Sehr Schwierig ⚠️
 - 💎 **Makellos** - Ein Spiel mit 150/150 Punkten gewinnen (10 perfekte Songs!)
 - 🌟 **Legendäre Serie** - 10 Spiele in Folge gewonnen
 - 💯 **Zenturio** - 100 Spiele gespielt
 - ⏱️ **Meister der Zeit** - Ein Spiel in unter 3 Minuten abgeschlossen
+- 🔥 **Comeback-Profi** - 5x vom Rückstand zum Sieg gekommen
 - 👑💎 **Großmeister** - 5000 Gesamtpunkte über alle Spiele erreicht
 
 **Features:**

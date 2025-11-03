@@ -12,6 +12,7 @@ export interface Song {
   previewUrl?: string
   youtubeUrl?: string
   points?: number  // Points earned for this song (Guess Mode only)
+  genre?: string   // Genre for GENRE_HOPPER achievement (added v0.0.24)
 }
 
 export interface Player {
