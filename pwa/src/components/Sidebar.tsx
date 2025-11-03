@@ -221,7 +221,7 @@ export function Sidebar() {
                 <div className="flex justify-between">
                   <span className="text-text-secondary">Letzter Gewinner:</span>
                   <span className="text-gradient font-medium">
-                    {history[0]?.winner || 'Unbekannt'}
+                    {history[0]?.winner.name || 'Unbekannt'}
                   </span>
                 </div>
               </div>
