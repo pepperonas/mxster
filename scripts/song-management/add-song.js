@@ -133,6 +133,11 @@ async function main() {
           rl2.question(`Jahr [${trackData.year}]: `, resolve);
         });
 
+        console.log('\n💡 Genre-Vorschläge: Pop, Rock, Hip-Hop, Electronic, R&B, Country, Jazz, Metal, Reggae, Soul');
+        const newGenreInput = await new Promise(resolve => {
+          rl2.question(`Genre (optional): `, resolve);
+        });
+
         rl2.close();
 
         // Update trackData with user input (if provided)
@@ -145,11 +150,18 @@ async function main() {
         if (newYearInput.trim()) {
           trackData.year = parseInt(newYearInput.trim());
         }
+        if (newGenreInput.trim()) {
+          trackData.genre = newGenreInput.trim();
+        }
 
         console.log('\n✅ Verwendete Metadaten:');
         console.log(`   Titel:    ${trackData.title}`);
         console.log(`   Interpret: ${trackData.artist}`);
-        console.log(`   Jahr:     ${trackData.year}\n`);
+        console.log(`   Jahr:     ${trackData.year}`);
+        if (trackData.genre) {
+          console.log(`   Genre:    ${trackData.genre}`);
+        }
+        console.log('');
       }
 
       // 6. Create song object
@@ -161,6 +173,11 @@ async function main() {
         spotifyId: trackData.spotifyId,
         previewUrl: trackData.previewUrl
       };
+
+      // Add genre if provided
+      if (trackData.genre) {
+        newSong.genre = trackData.genre;
+      }
 
       // 6. Add to songs array
       songs.push(newSong);

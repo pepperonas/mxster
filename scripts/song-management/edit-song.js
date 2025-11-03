@@ -242,6 +242,10 @@ async function main() {
     const newArtist = await question(`Interpret [${oldSong.artist}]: `);
     const newYearInput = await question(`Jahr [${oldSong.year}]: `);
 
+    log('\n💡 Genre-Vorschläge: Pop, Rock, Hip-Hop, Electronic, R&B, Country, Jazz, Metal, Reggae, Soul', 'cyan');
+    const currentGenre = oldSong.genre || 'nicht gesetzt';
+    const newGenreInput = await question(`Genre [${currentGenre}]: `);
+
     // Neue Werte zusammenstellen
     const updatedSong = {
       ...oldSong,
@@ -250,15 +254,26 @@ async function main() {
       year: newYearInput.trim() ? parseInt(newYearInput.trim()) : oldSong.year
     };
 
+    // Genre update (nur wenn eingegeben)
+    if (newGenreInput.trim()) {
+      updatedSong.genre = newGenreInput.trim();
+    }
+
     // Schritt 3: Bestätigung
     log('\nSchritt 3/4: Änderungen bestätigen', 'bright');
     log('───────────────────────────────────', 'bright');
 
     log('\nVorher:', 'red');
     log(`  ${oldSong.artist} - ${oldSong.title} (${oldSong.year})`, 'red');
+    if (oldSong.genre) {
+      log(`  Genre: ${oldSong.genre}`, 'red');
+    }
 
     log('\nNachher:', 'green');
     log(`  ${updatedSong.artist} - ${updatedSong.title} (${updatedSong.year})`, 'green');
+    if (updatedSong.genre) {
+      log(`  Genre: ${updatedSong.genre}`, 'green');
+    }
 
     const confirm = await question('\nÄnderungen übernehmen? (j/n): ');
 

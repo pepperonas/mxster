@@ -304,6 +304,11 @@ async function main() {
       previewUrl: trackData.previewUrl || ''
     };
 
+    // Optional: Genre hinzufügen (falls vorhanden)
+    if (trackData.genre) {
+      newSong.genre = trackData.genre;
+    }
+
     // 3. In Array ersetzen
     songs[songIndex] = newSong;
 
