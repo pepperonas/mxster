@@ -54,7 +54,7 @@ export function Sidebar() {
         </div>,
         [
           {
-            label: 'Spiel fortsetzen',
+            text: 'Spiel fortsetzen',
             variant: 'secondary',
             onClick: () => {
               // Just close modal, stay in game
@@ -62,7 +62,7 @@ export function Sidebar() {
             }
           },
           {
-            label: 'Spiel beenden & zur Startseite',
+            text: 'Spiel beenden & zur Startseite',
             variant: 'danger',
             onClick: () => {
               console.log('🏠 User chose to end game and go home')
@@ -101,7 +101,7 @@ export function Sidebar() {
       <HowToPlayContent />,
       [
         {
-          label: 'Verstanden',
+          text: 'Verstanden',
           variant: 'primary',
           onClick: () => {}
         }

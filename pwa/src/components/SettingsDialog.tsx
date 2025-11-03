@@ -183,7 +183,7 @@ export function SettingsDialog() {
       </div>,
       [
         {
-          label: 'Abbrechen',
+          text: 'Abbrechen',
           variant: 'secondary',
           closeOnClick: true,
           onClick: () => {
@@ -191,7 +191,7 @@ export function SettingsDialog() {
           }
         },
         {
-          label: 'Alles unwiderruflich löschen',
+          text: 'Alles unwiderruflich löschen',
           variant: 'danger',
           closeOnClick: true,
           onClick: () => {

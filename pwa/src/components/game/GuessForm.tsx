@@ -57,7 +57,7 @@ export function GuessForm({ onSubmit, onSkip }: GuessFormProps) {
         </p>,
         [
           {
-            label: 'Verstanden',
+            text: 'Verstanden',
             variant: 'primary',
             onClick: () => {}
           }
@@ -83,9 +83,9 @@ export function GuessForm({ onSubmit, onSkip }: GuessFormProps) {
         Möchtest du diesen Song wirklich überspringen? Du erhältst keine Punkte.
       </p>,
       [
-        { label: 'Abbrechen', variant: 'secondary' },
+        { text: 'Abbrechen', variant: 'secondary' },
         {
-          label: 'Überspringen',
+          text: 'Überspringen',
           variant: 'danger',
           closeOnClick: false,
           onClick: () => {

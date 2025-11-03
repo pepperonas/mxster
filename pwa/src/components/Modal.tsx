@@ -195,7 +195,7 @@ export function Modal() {
                 `}
                 disabled={button.disabled}
               >
-                {button.label}
+                {button.text}
               </button>
             ))}
           </div>

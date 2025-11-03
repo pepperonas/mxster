@@ -45,12 +45,12 @@ export function ActionBar() {
       </div>,
       [
         {
-          label: 'Abbrechen',
+          text: 'Abbrechen',
           variant: 'secondary',
           onClick: () => {}
         },
         {
-          label: 'Ausloggen',
+          text: 'Ausloggen',
           variant: 'accent',
           onClick: logout
         }
@@ -133,7 +133,7 @@ export function ActionBar() {
                       </div>
                     )}
                   </div>,
-                  [{ label: 'Schließen', variant: 'secondary', onClick: () => {} }]
+                  [{ text: 'Schließen', variant: 'secondary', onClick: () => {} }]
                 )
               }}
               className="p-2 hover:bg-accent/20 rounded-lg transition-colors text-gray-300 hover:text-secondary border border-transparent hover:border-accent/30"
@@ -148,7 +148,7 @@ export function ActionBar() {
                 showModal(
                   '📈 Spielerstatistiken',
                   <PlayerStatsDialog />,
-                  [{ label: 'Schließen', variant: 'secondary', onClick: () => {} }]
+                  [{ text: 'Schließen', variant: 'secondary', onClick: () => {} }]
                 )
               }}
               className="p-2 hover:bg-accent/20 rounded-lg transition-colors text-gray-300 hover:text-secondary border border-transparent hover:border-accent/30"
@@ -172,7 +172,7 @@ export function ActionBar() {
                 showModal(
                   '⚙️ Einstellungen',
                   <SettingsDialog />,
-                  [{ label: 'Schließen', variant: 'secondary', onClick: () => {} }]
+                  [{ text: 'Schließen', variant: 'secondary', onClick: () => {} }]
                 )
               }}
               className="p-2 hover:bg-accent/20 rounded-lg transition-colors text-gray-300 hover:text-secondary border border-transparent hover:border-accent/30"

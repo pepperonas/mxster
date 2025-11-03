@@ -84,7 +84,7 @@ function AppContent() {
           </div>,
           [
             {
-              label: 'Verstanden',
+              text: 'Verstanden',
               variant: 'primary',
               onClick: () => {
                 console.log('🏠 User acknowledged game was lost')
