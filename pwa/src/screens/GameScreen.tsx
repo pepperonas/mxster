@@ -902,12 +902,17 @@ export function GameScreen() {
       players.forEach((player) => {
         console.log(`🏆 Checking achievements for player: ${player.name}`)
 
-        // 1. HARDCORE_CHAMPION: 100+ points in one game
+        // 1. HARDCORE_CHAMPION: 100+ points in one game (one-time achievement)
         if (player.score >= 100) {
           unlockAchievement(player.name, AchievementId.HARDCORE_CHAMPION)
           console.log(`✅ HARDCORE_CHAMPION unlocked for ${player.name}`)
         }
-        updateProgress(player.name, AchievementId.HARDCORE_CHAMPION, player.score)
+
+        // 1b. PUNKTEJAEGER: 75+ points in one game (one-time achievement)
+        if (player.score >= 75) {
+          unlockAchievement(player.name, AchievementId.PUNKTEJAEGER)
+          console.log(`✅ PUNKTEJAEGER unlocked for ${player.name}`)
+        }
 
         // 2. TIME_TRAVELER: Songs from 5 different decades
         const decades = new Set(player.timeline.map(song => Math.floor(song.year / 10) * 10))

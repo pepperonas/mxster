@@ -78,8 +78,8 @@ export const ACHIEVEMENT_DEFINITIONS: Record<AchievementId, Omit<Achievement, 'u
     id: AchievementId.HARDCORE_CHAMPION,
     name: 'Hardcore-Champion',
     description: '100+ Punkte in einem Hardcore-Spiel erreicht',
-    icon: '🏆',
-    target: 100
+    icon: '🏆'
+    // No target - one-time achievement (just unlock once)
   },
   [AchievementId.MARATHON_RUNNER]: {
     id: AchievementId.MARATHON_RUNNER,
@@ -153,8 +153,8 @@ export const ACHIEVEMENT_DEFINITIONS: Record<AchievementId, Omit<Achievement, 'u
     id: AchievementId.PUNKTEJAEGER,
     name: 'Punktejäger',
     description: '75+ Punkte in einem Hardcore-Spiel erreicht',
-    icon: '🏆',
-    target: 75
+    icon: '🏆'
+    // No target - one-time achievement (just unlock once)
   },
   [AchievementId.FLAWLESS_VICTORY]: {
     id: AchievementId.FLAWLESS_VICTORY,
