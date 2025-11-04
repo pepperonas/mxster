@@ -228,6 +228,24 @@ export function AchievementProvider({ children }: { children: ReactNode }) {
     }
     updateProgress(playerName, AchievementId.MARATHON_RUNNER, totalGames)
 
+    // Check score-based achievements (Punktejäger, Hardcore Champion)
+    const maxScore = Math.max(...playerGames.map((game: HistoryEntry) => {
+      const player = game.players.find((p: Player) => p.name === playerName)
+      return player?.score || 0
+    }))
+
+    // Check Punktejäger (75+ points in one game)
+    if (maxScore >= 75) {
+      unlockAchievement(playerName, AchievementId.PUNKTEJAEGER)
+    }
+    updateProgress(playerName, AchievementId.PUNKTEJAEGER, maxScore)
+
+    // Check Hardcore Champion (100+ points in one game)
+    if (maxScore >= 100) {
+      unlockAchievement(playerName, AchievementId.HARDCORE_CHAMPION)
+    }
+    updateProgress(playerName, AchievementId.HARDCORE_CHAMPION, maxScore)
+
     // Check Music Expert (1000 total points)
     if (totalPoints >= 1000) {
       unlockAchievement(playerName, AchievementId.MUSIC_EXPERT)
