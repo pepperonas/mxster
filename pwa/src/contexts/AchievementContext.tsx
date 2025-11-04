@@ -406,7 +406,15 @@ export function AchievementProvider({ children }: { children: ReactNode }) {
       setPlayerAchievements(prev => new Map(prev).set(playerName, migrated))
     }
 
-    return migrated.achievements
+    // ALWAYS clean achievements before returning (removes progress from one-time achievements)
+    return migrated.achievements.map(achievement => {
+      const def = ACHIEVEMENT_DEFINITIONS[achievement.id as AchievementId]
+      // If definition has no target but achievement has progress, clean it
+      if (def && !def.target && achievement.progress !== undefined) {
+        return { ...achievement, progress: undefined }
+      }
+      return achievement
+    })
   }
 
   // Get all player names who have achievements
