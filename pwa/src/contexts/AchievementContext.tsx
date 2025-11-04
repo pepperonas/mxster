@@ -61,15 +61,33 @@ export function AchievementProvider({ children }: { children: ReactNode }) {
   const [isLoaded, setIsLoaded] = useState(false)
 
   // Migrate existing player achievements to include new achievements (v0.0.23)
+  // AND clean up progress from one-time achievements (v0.0.25)
   const migratePlayerAchievements = useCallback((playerData: PlayerAchievements): PlayerAchievements => {
     const currentAchievementIds = Object.keys(ACHIEVEMENT_DEFINITIONS)
     const existingAchievementIds = playerData.achievements.map(a => a.id)
 
-    // Find missing achievement IDs
+    let hasChanges = false
+
+    // Step 1: Clean up existing achievements (remove progress if no target in definition)
+    const cleanedAchievements = playerData.achievements.map(achievement => {
+      const def = ACHIEVEMENT_DEFINITIONS[achievement.id as AchievementId]
+      if (def && !def.target && achievement.progress !== undefined) {
+        console.log(`🧹 Cleaning progress from one-time achievement: ${achievement.id}`)
+        hasChanges = true
+        return {
+          ...achievement,
+          progress: undefined
+        }
+      }
+      return achievement
+    })
+
+    // Step 2: Find missing achievement IDs
     const missingIds = currentAchievementIds.filter(id => !existingAchievementIds.includes(id as AchievementId))
 
     if (missingIds.length > 0) {
       console.log(`🔄 Migrating ${playerData.playerName}: Adding ${missingIds.length} new achievements`)
+      hasChanges = true
 
       // Add missing achievements
       const newAchievements = missingIds.map(id => {
@@ -83,11 +101,11 @@ export function AchievementProvider({ children }: { children: ReactNode }) {
 
       return {
         ...playerData,
-        achievements: [...playerData.achievements, ...newAchievements]
+        achievements: [...cleanedAchievements, ...newAchievements]
       }
     }
 
-    return playerData
+    return hasChanges ? { ...playerData, achievements: cleanedAchievements } : playerData
   }, [])
 
   // Load achievements from localStorage on mount
