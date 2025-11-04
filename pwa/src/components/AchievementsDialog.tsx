@@ -216,7 +216,7 @@ export function AchievementsDialog({ isOpen, onClose, playerName }: Achievements
                         <span
                           className={`font-bold ${achievement.unlocked ? 'text-accent' : 'text-gray-600'}`}
                         >
-                          {achievement.progress || 0} / {achievement.target}
+                          {achievement.unlocked ? achievement.target : (achievement.progress || 0)} / {achievement.target}
                         </span>
                       </div>
                       <div className="h-2 bg-primary-dark rounded-full overflow-hidden border border-border">
@@ -227,10 +227,11 @@ export function AchievementsDialog({ isOpen, onClose, playerName }: Achievements
                               : 'bg-gray-700'
                           }`}
                           style={{
-                            width: `${Math.min(
-                              ((achievement.progress || 0) / achievement.target) * 100,
-                              100
-                            )}%`
+                            width: `${
+                              achievement.unlocked
+                                ? 100
+                                : Math.min(((achievement.progress || 0) / achievement.target) * 100, 100)
+                            }%`
                           }}
                         />
                       </div>
