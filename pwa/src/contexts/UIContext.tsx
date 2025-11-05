@@ -1,26 +1,15 @@
 import React, { createContext, useContext, useReducer, ReactNode, useCallback } from 'react'
-import type { ModalOptions } from '@/types'
+import type { ModalOptions, ModalButton, Toast as ToastType } from '@/types'
 
 // ============================================================================
 // Types
 // ============================================================================
 
-interface Toast {
-  id: number
-  message: string
-  type: 'success' | 'error' | 'warning' | 'info'
-  duration: number
-}
-
 interface Modal {
   isOpen: boolean
   title: string
   content: ReactNode
-  buttons?: Array<{
-    text: string
-    onClick: () => void
-    className?: string
-  }>
+  buttons?: ModalButton[]
   options?: ModalOptions
 }
 
@@ -29,7 +18,7 @@ interface UIState {
   modal: Modal
 
   // Toast Notifications
-  toasts: Toast[]
+  toasts: ToastType[]
 
   // Sidebar
   isSidebarOpen: boolean
@@ -46,7 +35,7 @@ interface UIState {
 type UIAction =
   | { type: 'SHOW_MODAL'; payload: Omit<Modal, 'isOpen'> }
   | { type: 'CLOSE_MODAL' }
-  | { type: 'ADD_TOAST'; payload: Omit<Toast, 'id'> }
+  | { type: 'ADD_TOAST'; payload: Omit<ToastType, 'id'> }
   | { type: 'REMOVE_TOAST'; payload: number }
   | { type: 'OPEN_SIDEBAR' }
   | { type: 'CLOSE_SIDEBAR' }

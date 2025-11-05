@@ -24,21 +24,34 @@ export function TimelineDisplay({ playerId }: TimelineDisplayProps) {
   const playerName =
     playerId !== undefined ? players[playerId]?.name : players[currentPlayer]?.name
 
+  // Type guard for GlobalTimelineCard
+  const isGlobalTimelineCard = (item: any): item is GlobalTimelineCard => {
+    return item && 'song' in item && 'playerId' in item
+  }
+
   // Create 10 slots (filled or empty)
   const slots = Array.from({ length: 10 }, (_, index) => {
     if (gameMode === 'timeline_global') {
       // Global timeline: timeline is GlobalTimelineCard[]
-      const card = timeline[index] || null
+      const card = timeline[index]
+      if (card && isGlobalTimelineCard(card)) {
+        return {
+          slotNumber: index + 1,
+          song: card.song,
+          playerId: card.playerId
+        }
+      }
       return {
         slotNumber: index + 1,
-        song: card ? card.song : null,
-        playerId: card ? card.playerId : null
+        song: null,
+        playerId: null
       }
     } else {
       // Personal/Guess timeline: timeline is Song[]
+      const song = timeline[index]
       return {
         slotNumber: index + 1,
-        song: timeline[index] || null,
+        song: song && !isGlobalTimelineCard(song) ? song : null,
         playerId: null
       }
     }

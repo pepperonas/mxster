@@ -1,5 +1,15 @@
+/**
+ * Spotify Playlist Importer
+ *
+ * @deprecated This file is only used in Node.js build scripts, not in the browser.
+ * Should be moved to /scripts directory. Node.js imports (fs, path, Buffer) are intentional.
+ */
+
+// @ts-ignore - Node.js imports for build scripts only
 import axios from 'axios'
+// @ts-ignore - Node.js imports for build scripts only
 import fs from 'fs'
+// @ts-ignore - Node.js imports for build scripts only
 import path from 'path'
 
 class SpotifyImporter {

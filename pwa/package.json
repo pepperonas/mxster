@@ -1,6 +1,6 @@
 {
   "name": "mxster-pwa",
-  "version": "0.0.25",
+  "version": "0.0.26",
   "description": "mxster - Music Timeline Game PWA",
   "type": "module",
   "scripts": {
@@ -25,7 +25,9 @@
     "three": "^0.180.0"
   },
   "devDependencies": {
+    "@types/canvas-confetti": "^1.9.0",
     "@types/howler": "^2.2.12",
+    "@types/node": "^24.10.0",
     "@types/react": "^19.2.2",
     "@types/react-dom": "^19.2.2",
     "@types/three": "^0.180.0",

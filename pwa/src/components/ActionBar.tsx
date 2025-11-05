@@ -5,7 +5,7 @@
 
 import { useUI, useAuth, useGame, useSettings, useInteraction } from '@/contexts'
 import { useGameState, useGameHistory } from '@/hooks'
-import { SaveIcon, LogoutIcon, DownloadIcon, HistoryIcon, SettingsIcon, ChartIcon, AchievementIcon } from '@/utils/icons'
+import { SaveIcon, LogoutIcon, HistoryIcon, SettingsIcon, ChartIcon, AchievementIcon } from '@/utils/icons'
 import { SettingsDialog } from './SettingsDialog'
 import { PlayerStatsDialog } from './PlayerStatsDialog'
 import { AchievementsDialog } from './AchievementsDialog'

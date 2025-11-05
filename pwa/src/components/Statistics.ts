@@ -2,9 +2,12 @@
  * Statistics Component
  *
  * Shows detailed game statistics and player performance
+ * @deprecated This file is not used and should be removed
  */
 
-export function renderStatistics(players, gameHistory) {
+import type { Player, HistoryEntry } from '@/types'
+
+export function renderStatistics(players: Player[], gameHistory: HistoryEntry[]): string {
   // Calculate statistics
   const stats = calculateStats(players, gameHistory)
 
@@ -121,10 +124,25 @@ export function renderStatistics(players, gameHistory) {
   `
 }
 
+interface ScoreDistribution {
+  perfect: number
+  good: number
+  partial: number
+  wrong: number
+}
+
+interface Stats {
+  totalGames: number
+  totalSongs: number
+  successRate: number
+  avgScore: number
+  scoreDistribution: ScoreDistribution
+}
+
 /**
  * Calculate statistics from players and game history
  */
-function calculateStats(players, gameHistory) {
+function calculateStats(players: Player[], gameHistory: HistoryEntry[]): Stats {
   const totalGames = gameHistory ? gameHistory.length : 0
 
   // Calculate from current players
@@ -184,7 +202,7 @@ function calculateStats(players, gameHistory) {
 /**
  * Render leaderboard with player rankings
  */
-function renderLeaderboard(players) {
+function renderLeaderboard(players: Player[]): string {
   if (!players || players.length === 0) {
     return `<p class="text-text-secondary text-center py-8">Noch keine Spieler vorhanden</p>`
   }
@@ -228,8 +246,8 @@ function renderLeaderboard(players) {
 /**
  * Render performance chart (simple bar chart)
  */
-function renderPerformanceChart(scoreDistribution) {
-  const total = Object.values(scoreDistribution).reduce((sum, val) => sum + val, 0)
+function renderPerformanceChart(scoreDistribution: ScoreDistribution): string {
+  const total = Object.values(scoreDistribution).reduce((sum: number, val: number) => sum + val, 0)
 
   if (total === 0) {
     return `<p class="text-text-secondary text-center py-8">Noch keine Daten verfügbar</p>`
@@ -270,7 +288,7 @@ function renderPerformanceChart(scoreDistribution) {
 /**
  * Render game history list
  */
-function renderGameHistory(history) {
+function renderGameHistory(history: HistoryEntry[]): string {
   if (!history || history.length === 0) {
     return `<p class="text-text-secondary text-center py-8">Noch keine Spiele gespielt</p>`
   }
@@ -308,7 +326,7 @@ function renderGameHistory(history) {
 /**
  * Render achievements
  */
-function renderAchievements(stats) {
+function renderAchievements(stats: Stats): string {
   const achievements = [
     {
       icon: '🎯',

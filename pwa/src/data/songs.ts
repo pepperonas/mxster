@@ -1872,5 +1872,14 @@ export const songs: Song[] = [
     "spotifyId": "0IREzm51kz0WsClgje6jeP",
     "previewUrl": "",
     "genre": "Electronic"
+  },
+  {
+    "id": "song_208",
+    "title": "This Is the Right Time",
+    "artist": "Lisa Stansfield",
+    "year": 1989,
+    "spotifyId": "7gfMuyx2NauRQbrDiZcimh",
+    "previewUrl": "",
+    "genre": "Electronic"
   }
 ]

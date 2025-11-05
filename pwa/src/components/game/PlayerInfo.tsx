@@ -9,7 +9,7 @@ import { requiresDJ } from '@/utils/gameModes'
 export function PlayerInfo() {
   const { players, currentPlayer, currentDJ, gameMode, gameVariant } = useGame()
 
-  if (players.length === 0) return null
+  if (players.length === 0 || !gameMode || !gameVariant) return null
 
   const player = players[currentPlayer]
   const needsDJ = requiresDJ(gameMode, gameVariant)

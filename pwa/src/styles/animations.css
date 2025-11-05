@@ -1,0 +1,185 @@
+/**
+ * Custom Animations for mxster
+ * Keyframes for placement and guess animations
+ */
+
+/* ============================================================================
+   LIGHTNING / THUNDER ANIMATIONS
+   ============================================================================ */
+
+@keyframes lightning-flash {
+  0% {
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  20% {
+    opacity: 0;
+  }
+  30% {
+    opacity: 1;
+  }
+  40% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+/* ============================================================================
+   RAIN ANIMATIONS
+   ============================================================================ */
+
+@keyframes rain-fall {
+  0% {
+    top: -10%;
+    opacity: 0.8;
+  }
+  100% {
+    top: 110%;
+    opacity: 0.2;
+  }
+}
+
+/* ============================================================================
+   SCREEN SHAKE ANIMATIONS
+   ============================================================================ */
+
+@keyframes screen-shake {
+  0%, 100% {
+    transform: translate(0, 0) rotate(0deg);
+  }
+  10% {
+    transform: translate(-5px, 2px) rotate(-0.5deg);
+  }
+  20% {
+    transform: translate(5px, -2px) rotate(0.5deg);
+  }
+  30% {
+    transform: translate(-3px, 3px) rotate(-0.3deg);
+  }
+  40% {
+    transform: translate(3px, -3px) rotate(0.3deg);
+  }
+  50% {
+    transform: translate(-2px, 1px) rotate(-0.2deg);
+  }
+  60% {
+    transform: translate(2px, -1px) rotate(0.2deg);
+  }
+  70% {
+    transform: translate(-1px, 2px) rotate(-0.1deg);
+  }
+  80% {
+    transform: translate(1px, -2px) rotate(0.1deg);
+  }
+  90% {
+    transform: translate(-0.5px, 1px) rotate(-0.05deg);
+  }
+}
+
+@keyframes screen-shake-light {
+  0%, 100% {
+    transform: translate(0, 0);
+  }
+  10%, 30%, 50%, 70%, 90% {
+    transform: translate(-3px, 2px);
+  }
+  20%, 40%, 60%, 80% {
+    transform: translate(3px, -2px);
+  }
+}
+
+/* ============================================================================
+   TEXT ANIMATIONS
+   ============================================================================ */
+
+@keyframes text-pulse {
+  0% {
+    transform: translate(-50%, -50%) scale(0.8);
+    opacity: 0;
+  }
+  50% {
+    transform: translate(-50%, -50%) scale(1.1);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes fade-out {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* ============================================================================
+   FALLING X SYMBOLS
+   ============================================================================ */
+
+@keyframes fall-and-fade {
+  0% {
+    transform: translateY(0) rotate(0deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(100vh) rotate(360deg);
+    opacity: 0;
+  }
+}
+
+/* ============================================================================
+   FLASH EFFECT
+   ============================================================================ */
+
+@keyframes flash-fade {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+/* ============================================================================
+   SCORE GLOW EFFECT
+   ============================================================================ */
+
+@keyframes score-glow {
+  0%, 100% {
+    box-shadow: 0 0 0 rgba(255, 255, 255, 0);
+  }
+  50% {
+    box-shadow: 0 0 20px currentColor, 0 0 40px currentColor;
+  }
+}
+
+/* ============================================================================
+   REDUCED MOTION SUPPORT
+   ============================================================================ */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

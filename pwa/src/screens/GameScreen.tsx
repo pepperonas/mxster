@@ -30,6 +30,17 @@ import {
 } from '@/services'
 import { songs } from '@/data/songs'
 import { AchievementId } from '@/types/achievements'
+import {
+  triggerCorrectPlacementAnimation,
+  triggerIncorrectPlacementAnimation
+} from '@/utils/placementAnimations'
+import {
+  triggerPerfectGuessAnimation,
+  triggerGreatGuessAnimation,
+  triggerGoodGuessAnimation,
+  triggerPartialGuessAnimation,
+  triggerWrongGuessAnimation
+} from '@/utils/guessAnimations'
 
 export function GameScreen() {
   const navigate = useNavigate()
@@ -73,7 +84,7 @@ export function GameScreen() {
     resetGame
   } = useGame()
   const { showModal, closeModal, addToast } = useUI()
-  const { unlockAchievement, updateProgress, checkAchievements } = useAchievements()
+  const { unlockAchievement, updateProgress, checkAchievements, getPlayerAchievements } = useAchievements()
   const { saveGame, history } = useGameHistory()
 
   // ============================================================================
@@ -371,6 +382,19 @@ export function GameScreen() {
       result.yearDifference
     )
 
+    // Trigger animation based on points (async, non-blocking)
+    if (earnedPoints === 15) {
+      triggerPerfectGuessAnimation()
+    } else if (earnedPoints >= 10) {
+      triggerGreatGuessAnimation()
+    } else if (earnedPoints >= 5) {
+      triggerGoodGuessAnimation()
+    } else if (earnedPoints > 0) {
+      triggerPartialGuessAnimation(earnedPoints)
+    } else {
+      triggerWrongGuessAnimation()
+    }
+
     // Modal title based on points
     const title =
       earnedPoints === 15
@@ -446,6 +470,7 @@ export function GameScreen() {
       [
         {
           text: gameMode === 'hardcore' ? 'Weiter' : 'Karte platzieren',
+          variant: 'primary',
           onClick: () => {
             console.log('🟡 EVALUATION MODAL - BUTTON CLICKED! gameMode:', gameMode)
             console.log('🟡 result from closure:', result)
@@ -644,9 +669,9 @@ export function GameScreen() {
                 console.log('🟠 Position button clicked: 0 (erste Karte)')
                 handleManualPlacement(0)
               }}
-              className="w-full py-4 px-4 bg-primary/50 hover:bg-accent/50 border-2 border-accent/30 hover:border-accent rounded-lg transition-colors"
+              className="w-full py-6 px-6 bg-primary/50 hover:bg-accent/50 border-2 border-accent/30 hover:border-accent rounded-lg transition-colors"
             >
-              <div className="text-lg">📍 Erste Karte platzieren</div>
+              <div className="text-2xl md:text-3xl font-bold">📍 Erste Karte platzieren</div>
             </button>
           ) : (
             <>
@@ -656,9 +681,9 @@ export function GameScreen() {
                   console.log('🟠 Position button clicked: 0 (vor erstem)')
                   handleManualPlacement(0)
                 }}
-                className="w-full py-3 px-4 bg-primary/50 hover:bg-accent/50 border-2 border-accent/30 hover:border-accent rounded-lg transition-colors text-sm"
+                className="w-full py-4 px-6 bg-primary/50 hover:bg-accent/50 border-2 border-accent/30 hover:border-accent rounded-lg transition-colors"
               >
-                ⬆️ Vor {timeline[0].year}
+                <div className="text-2xl md:text-3xl font-bold">⬆️ Vor {timeline[0].year}</div>
               </button>
 
               {/* Cards and placement buttons */}
@@ -677,9 +702,11 @@ export function GameScreen() {
                         console.log('🟠 Position button clicked:', index + 1, '(zwischen)')
                         handleManualPlacement(index + 1)
                       }}
-                      className="w-full py-2 px-4 bg-primary/50 hover:bg-accent/50 border-2 border-accent/30 hover:border-accent rounded-lg transition-colors text-sm mt-3"
+                      className="w-full py-4 px-6 bg-primary/50 hover:bg-accent/50 border-2 border-accent/30 hover:border-accent rounded-lg transition-colors mt-3"
                     >
-                      📍 Zwischen {timeline[index].year} und {timeline[index + 1].year}
+                      <div className="text-2xl md:text-3xl font-bold">
+                        📍 Zwischen {timeline[index].year} und {timeline[index + 1].year}
+                      </div>
                     </button>
                   )}
                 </div>
@@ -691,9 +718,9 @@ export function GameScreen() {
                   console.log('🟠 Position button clicked:', timeline.length, '(nach letztem)')
                   handleManualPlacement(timeline.length)
                 }}
-                className="w-full py-3 px-4 bg-primary/50 hover:bg-accent/50 border-2 border-accent/30 hover:border-accent rounded-lg transition-colors text-sm"
+                className="w-full py-4 px-6 bg-primary/50 hover:bg-accent/50 border-2 border-accent/30 hover:border-accent rounded-lg transition-colors"
               >
-                ⬇️ Nach {timeline[timeline.length - 1].year}
+                <div className="text-2xl md:text-3xl font-bold">⬇️ Nach {timeline[timeline.length - 1].year}</div>
               </button>
             </>
           )}
@@ -745,6 +772,13 @@ export function GameScreen() {
     const songArtist = currentSong.artist
     const songYear = currentSong.year
 
+    // Trigger animation (async, non-blocking)
+    if (isCorrect) {
+      triggerCorrectPlacementAnimation()
+    } else {
+      triggerIncorrectPlacementAnimation()
+    }
+
     if (isCorrect) {
       console.log('🟡 Correct placement - updating player and showing modal')
       // Correct placement!
@@ -786,6 +820,7 @@ export function GameScreen() {
         [
           {
             text: 'Nächster Spieler',
+            variant: 'primary',
             onClick: () => {
               console.log('🔴 Button clicked - closing modal')
               console.log('🔴 Before - currentPlayer:', currentPlayer, 'currentSong:', currentSong?.title)
@@ -837,6 +872,7 @@ export function GameScreen() {
         [
           {
             text: 'Nächster Spieler',
+            variant: 'primary',
             onClick: () => {
               console.log('🔴 Button clicked (wrong placement) - closing modal and calling nextTurn()')
               console.log('🔴 Before - currentPlayer:', currentPlayer, 'currentSong:', currentSong?.title)

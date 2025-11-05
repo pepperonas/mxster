@@ -6,7 +6,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 **mxster** is a music timeline game combining hardware (3D-printed QR cards) and software (PWA with camera scanner). Players scan physical cards or play virtually. Features guess mode (points-based) and timeline modes (chronological placement).
 
-**Current Song Database**: 208 songs with full genre data (as of 2025-11-03)
+**Current Song Database**: 209 songs with full genre data (as of 2025-11-04)
 
 ### Key Technologies
 - **Frontend**: React 19 + TypeScript + Vite 5.0
@@ -416,6 +416,68 @@ All files hosted via GitHub raw URLs (auto-update, no manual releases):
 - ✅ **song_template.json**: Updated with genre field, removed deprecated fields
 - 📝 **Genre suggestions**: Pop, Rock, Hip-Hop, Electronic, R&B, Country, Jazz, Metal, Reggae, Soul
 - 📊 **Genre distribution**: Pop (67), Rock (45), Electronic (44), Soul (18), Hip-Hop (17), R&B (7), Metal (6), Reggae (2), Country (1)
+
+### v0.0.26 (2025-11-05) - Visual Feedback & UX Improvements
+
+**🎨 Animation System Implementation**
+
+**New Animation Files**:
+- `pwa/src/utils/placementAnimations.ts` - Timeline placement feedback (confetti + thunder/rain)
+- `pwa/src/utils/guessAnimations.ts` - Hardcore mode score-based animations (5 levels)
+- `pwa/src/utils/animationHelpers.ts` - Shared randomization utilities
+- `pwa/src/styles/animations.css` - CSS keyframes (lightning, rain, shake, pulse, fade)
+
+**Timeline Placement Animations**:
+- **Correct (✅)**: 3 randomized confetti patterns
+  - Center Burst: 360° explosion from center (80-150 particles)
+  - Side Cannons: Simultaneous left + right cannons (50-100 particles each)
+  - Spiral: Bottom-to-top spiral effect (2-3 seconds duration)
+- **Incorrect (❌)**: Thunder/rain animation
+  - Dark storm overlay (opacity 0.3-0.6, randomized)
+  - 30-60 falling raindrops (randomized positions & speeds)
+  - 2-4 lightning bolts (randomized positions & timing)
+  - Screen shake effect (0.5s)
+
+**Hardcore Mode Guess Animations** (score-based):
+- **15 Points (Perfect)**: Gold confetti + "PERFECT!" text + golden glow (3s)
+- **10-14 Points (Great)**: Silver confetti + "GREAT!" text + cyan glow (2s)
+- **5-9 Points (Good)**: Green particles + "NICE!" text + green glow (1.5s)
+- **1-4 Points (Partial)**: Yellow sparks + "+X" points + weak glow (1s)
+- **0 Points (Wrong)**: Falling ❌ symbols + screen shake + red flash (1s)
+
+**Randomization Features**:
+- 8 theme colors palette (indigo, orange, cyan, pink, purple, green, amber, red)
+- Randomized particle counts, spread angles, velocities, gravity
+- Randomized lightning positions, rain intensity, timing delays
+- Mobile optimization: 50% fewer particles on devices < 768px width
+- Accessibility: `prefers-reduced-motion` support
+
+**UI Improvements**:
+- **Enlarged Placement Buttons**: All timeline placement buttons now `text-2xl md:text-3xl font-bold`
+  - "📍 Erste Karte platzieren"
+  - "📍 Zwischen X und Y"
+  - "⬆️ Vor X"
+  - "⬇️ Nach X"
+- **Keyboard Shortcuts**: All evaluation/result modals now support:
+  - **Enter**: Trigger primary button action
+  - **ESC**: Close modal (if not `required: true`)
+  - Implemented via `variant: 'primary'` on modal buttons
+
+**Technical Details**:
+- Dependencies: Uses existing `canvas-confetti` v1.9.3
+- Build size: +7 KB (animations + CSS)
+- Integration: `GameScreen.tsx` - animations trigger before modals
+- Non-blocking: All animations run asynchronously
+- TypeScript: Fully typed
+
+**Files Modified**:
+- `pwa/src/main.tsx`: Import animations.css
+- `pwa/src/screens/GameScreen.tsx`:
+  - Added animation imports
+  - Trigger animations in `handleManualPlacement()` (line 761-766)
+  - Trigger animations in `showEvaluationModal()` (line 385-396)
+  - Enlarged placement button text (lines 660, 672, 694, 709)
+  - Added `variant: 'primary'` to 3 modal buttons (lines 473, 823, 875)
 
 ### v0.0.24 (2025-11-03) - Achievement Fixes & Replacements
 **Fixed 5 broken achievements from v0.0.23** with creative, functional alternatives:

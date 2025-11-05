@@ -3,8 +3,6 @@
  * Converted to React components for type safety and better integration
  */
 
-import React from 'react'
-
 interface IconProps {
   size?: number
   className?: string

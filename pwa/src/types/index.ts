@@ -131,6 +131,9 @@ export interface ModalOptions {
   required?: boolean  // Can't close by clicking outside
   wide?: boolean      // Wider modal
   noPadding?: boolean // No padding in modal body
+  disableEscapeKey?: boolean // Disable ESC key to close
+  disableBackdropClick?: boolean // Disable backdrop click to close
+  hideCloseButton?: boolean // Hide the X close button
 }
 
 export interface ModalButton {
@@ -140,6 +143,13 @@ export interface ModalButton {
   disabled?: boolean
   closeOnClick?: boolean
   className?: string
+}
+
+export interface Toast {
+  id: number
+  message: string
+  type: 'success' | 'error' | 'warning' | 'info'
+  duration: number
 }
 
 export interface ToastOptions {

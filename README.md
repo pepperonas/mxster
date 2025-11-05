@@ -4,7 +4,7 @@
 
 [![App](https://img.shields.io/badge/App-mxster.de-blue?style=for-the-badge)](https://mxster.de)
 [![License](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)](LICENSE)
-![Songs](https://img.shields.io/badge/Songs-208-orange?style=for-the-badge)
+![Songs](https://img.shields.io/badge/Songs-209-orange?style=for-the-badge)
 [![Tests](https://github.com/pepperonas/mxster/actions/workflows/test.yml/badge.svg)](https://github.com/pepperonas/mxster/actions/workflows/test.yml)
 
 ![mxster Banner](https://mxster.de/assets/mxster.jpg)
@@ -39,6 +39,9 @@ mxster ist ein **Multiplayer-Musikquiz** mit drei verschiedenen Spielmodi:
 - ✏️ **Song-Editor** - Bearbeite Songs nachträglich mit interaktivem Wizard
 - ✨ **Music-Reactive Particles** - 3D-Partikelhintergrund reagiert auf Musikwiedergabe mit intensiven Effekten
 - 🎉 **Achievement Unlock Animations** - Spektakuläre Animationen mit Konfetti beim Freischalten von Erfolgen (3 Sekunden pro Animation)
+- 🎨 **Gameplay Feedback Animations** - Konfetti bei richtigen, Gewitter bei falschen Antworten (randomisiert, mobile-optimiert)
+- 🏆 **Score-Based Visual Effects** - 5 verschiedene Animationen je nach Punktzahl (Gold-Konfetti, Blitze, etc.)
+- ⌨️ **Keyboard Shortcuts** - Enter/ESC zum Schließen von Dialogen (Desktop/Laptop)
 - ⌨️ **Auto-Focus Feature** - Automatischer Fokus auf Titel-Eingabefeld nach Song-Ziehung (nur Desktop/Laptop)
 
 ## 🏆 Achievements
@@ -1445,6 +1448,33 @@ Dieses Projekt ist unter der **MIT-Lizenz** veröffentlicht. Siehe [LICENSE](LIC
 - **Browser-Kompatibilität**: Chrome, Firefox, Edge, Safari (neueste Versionen)
 
 ## 📝 Changelog
+
+### v0.0.26 (2025-11-05)
+
+**🎨 Visual Feedback & UX Improvements**
+
+**New Animations:**
+- ✨ **Timeline Placement Animations**:
+  - ✅ Correct placement → 3 randomized confetti patterns (Center Burst, Side Cannons, Spiral)
+  - ❌ Wrong placement → Thunder/rain animation with lightning bolts and screen shake
+- 🏆 **Hardcore Mode Guess Animations**:
+  - 15 points (Perfect) → Gold confetti + "PERFECT!" overlay + golden glow
+  - 10-14 points (Great) → Silver confetti + "GREAT!" overlay + cyan glow
+  - 5-9 points (Good) → Green particles + "NICE!" overlay + green glow
+  - 1-4 points (Partial) → Yellow sparks + "+X" points display + weak yellow glow
+  - 0 points (Wrong) → Falling ❌ symbols + screen shake + red flash
+- 🎲 **Full Randomization**: Colors, particle counts, timing, and intensity all randomized
+- 📱 **Mobile Optimized**: 50% fewer particles on mobile devices
+- ♿ **Accessibility**: `prefers-reduced-motion` support
+
+**UI Improvements:**
+- 📏 **Enlarged Placement Buttons**: Timeline placement dialog text now 2-3x larger (`text-2xl md:text-3xl`)
+- ⌨️ **Keyboard Shortcuts**: Press Enter or ESC to close evaluation and placement result dialogs (desktop/laptop)
+
+**Technical:**
+- New Files: `placementAnimations.ts`, `guessAnimations.ts`, `animationHelpers.ts`, `animations.css`
+- Dependencies: Uses existing `canvas-confetti` library
+- Build Size: +7 KB (animations + CSS keyframes)
 
 ### v0.0.25 (2025-11-04)
 

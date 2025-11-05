@@ -4,6 +4,7 @@
  */
 
 import { SpotifyAuthService } from './SpotifyAuthService'
+import type { SpotifyPlayer } from '@/types/spotify'
 
 // ============================================================================
 // Types
@@ -28,13 +29,9 @@ export interface PlaybackError {
   message: string
 }
 
-// Extend Window interface for Spotify SDK
+// Extend beatAnimator to Window (Spotify types are in @/types/spotify.ts)
 declare global {
   interface Window {
-    Spotify?: {
-      Player: new (config: SpotifyPlayerConfig) => SpotifyPlayer
-    }
-    onSpotifyWebPlaybackSDKReady?: () => void
     beatAnimator?: {
       loadTrackAnalysis: (trackId: string, token: string) => Promise<void>
       start: (position: number) => void
@@ -42,23 +39,6 @@ declare global {
       updatePosition: (position: number) => void
     }
   }
-}
-
-interface SpotifyPlayerConfig {
-  name: string
-  getOAuthToken: (callback: (token: string) => void) => void
-  volume: number
-}
-
-interface SpotifyPlayer {
-  addListener: (event: string, callback: (data: any) => void) => void
-  connect: () => Promise<boolean>
-  disconnect: () => void
-  pause: () => Promise<void>
-  resume: () => Promise<void>
-  togglePlay: () => Promise<void>
-  seek: (positionMs: number) => Promise<void>
-  getCurrentState: () => Promise<SpotifyPlayerState | null>
 }
 
 // ============================================================================
