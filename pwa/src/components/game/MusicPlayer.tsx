@@ -1,128 +1,137 @@
 /**
  * Music Player Component
- * Spotify Web Playback SDK Integration
+ * Unified player supporting Spotify Premium + Preview fallback
  */
 
 import { useState, useEffect, useCallback, useRef } from 'react'
 import type { Song } from '@/types'
-import { SpotifyPlayerService, type SpotifyPlayerState } from '@/services/SpotifyPlayerService'
+import { getMusicPlayer, type AudioMode } from '@/services/MusicPlayerService'
+import type { PlayerState } from '@/services/PreviewPlayerService'
 import { MusicIcon } from '@/utils/icons'
 import { useUI, useAuth, useSettings, useInteraction } from '@/contexts'
 
 interface MusicPlayerProps {
   song: Song | null
-  onStateChange?: (state: SpotifyPlayerState) => void
+  onStateChange?: (state: PlayerState) => void
 }
 
 export function MusicPlayer({ song, onStateChange }: MusicPlayerProps) {
   const { addToast } = useUI()
-  const { accessToken } = useAuth()
+  const { accessToken, isLoggedIn } = useAuth()
   const { settings } = useSettings()
   const { registerInteraction, setActivityLevel } = useInteraction()
+
   const [isPlaying, setIsPlaying] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [currentPosition, setCurrentPosition] = useState(0)
   const [duration, setDuration] = useState(0)
   const [playerReady, setPlayerReady] = useState(false)
+  const [audioMode, setAudioMode] = useState<AudioMode>('none')
 
   // Track last played song to ensure we play each new song
   const lastPlayedSongId = useRef<string | null>(null)
+  const musicPlayer = useRef(getMusicPlayer())
+  const progressInterval = useRef<number | null>(null)
 
   /**
-   * Initialize Spotify Player on mount
+   * Initialize player on mount
    */
   useEffect(() => {
     const initPlayer = async () => {
-      // Get access token from AuthContext
-      if (!accessToken) {
-        console.error('❌ No Spotify access token found')
-        addToast('Spotify-Login erforderlich', 'error')
-        return
+      // Check user's audio mode preference from Landing Page
+      const preference = localStorage.getItem('audio_mode_preference') as AudioMode | null
+
+      // If Spotify mode + logged in, initialize Spotify player
+      if (preference === 'spotify' && isLoggedIn && accessToken) {
+        try {
+          console.log('🎧 Initializing Spotify Premium mode...')
+          await musicPlayer.current.initializeSpotifyPlayer(accessToken)
+          setPlayerReady(true)
+          setAudioMode('spotify')
+          console.log('✅ Spotify Premium mode ready!')
+        } catch (error) {
+          console.error('❌ Failed to initialize Spotify:', error)
+          addToast('Spotify konnte nicht initialisiert werden. Fallback zu Preview-Modus.', 'warning')
+          setPlayerReady(true)
+          setAudioMode('preview')
+        }
+      } else {
+        // Preview mode (default)
+        console.log('🎵 Using Preview mode (30s clips)')
+        setPlayerReady(true)
+        setAudioMode('preview')
       }
 
-      try {
-        // Check if player already ready
-        if (SpotifyPlayerService.isPlayerReady()) {
-          setPlayerReady(true)
-          return
-        }
+      // Register callbacks
+      musicPlayer.current.config = {
+        onStateChange: (state: PlayerState) => {
+          const nowPlaying = state === 'playing'
+          setIsPlaying(nowPlaying)
 
-        // Initialize player
-        console.log('🎵 Initializing Spotify Player...')
-        await SpotifyPlayerService.initialize(accessToken)
-        setPlayerReady(true)
-        console.log('✅ Spotify Player ready!')
-      } catch (error) {
-        console.error('❌ Failed to initialize player:', error)
-        addToast('Spotify Player konnte nicht initialisiert werden', 'error')
+          // Music-reactive animation
+          if (nowPlaying) {
+            registerInteraction('music', 85)
+          } else {
+            setActivityLevel('calm')
+          }
+
+          onStateChange?.(state)
+        },
+        onProgress: (progress: number) => {
+          // Progress from PreviewPlayer (0-100%)
+          const pos = (progress / 100) * musicPlayer.current.getDuration() * 1000
+          setCurrentPosition(pos)
+        },
+        onEnd: () => {
+          setIsPlaying(false)
+          setActivityLevel('calm')
+        },
+        onError: (error: string) => {
+          addToast(error, 'error')
+        },
+        onModeChange: (mode: AudioMode) => {
+          setAudioMode(mode)
+        }
       }
     }
 
     initPlayer()
 
-    // NOTE: We don't disconnect the player on unmount because the component
-    // might re-mount during game flow. The player will be cleaned up when
-    // the user actually leaves the game or logs out.
-  }, [accessToken, addToast])
-
-  /**
-   * Register player state change listener
-   */
-  useEffect(() => {
-    const handleStateChange = (state: SpotifyPlayerState) => {
-      const nowPlaying = !state.paused
-      setIsPlaying(nowPlaying)
-      setCurrentPosition(state.position)
-      setDuration(state.duration)
-
-      // 🎵 Music-reactive animation: Trigger intense activity when music plays
-      if (nowPlaying && !isPlaying) {
-        console.log('🎵 Music started playing → Intensifying particle animation')
-        registerInteraction('music', 85)
-      } else if (!nowPlaying && isPlaying) {
-        console.log('🎵 Music stopped → Calming particle animation')
-        setActivityLevel('calm')
-      }
-
-      // Notify parent component
-      if (onStateChange) {
-        onStateChange(state)
+    return () => {
+      // Clear progress interval
+      if (progressInterval.current) {
+        clearInterval(progressInterval.current)
       }
     }
-
-    SpotifyPlayerService.onStateChange(handleStateChange)
-  }, [onStateChange, isPlaying, registerInteraction, setActivityLevel])
+  }, [accessToken, isLoggedIn, addToast, onStateChange, registerInteraction, setActivityLevel])
 
   /**
-   * Update progress bar continuously while playing
+   * Update progress bar for Spotify mode
    */
   useEffect(() => {
-    if (!isPlaying || !playerReady) return
-
-    let lastKnownPosition = currentPosition
-    let lastUpdateTime = Date.now()
-
-    // Update every 500ms (2 times per second)
-    const interval = setInterval(async () => {
-      try {
-        const state = await SpotifyPlayerService.getState()
-        if (state && !state.paused) {
-          lastKnownPosition = state.position
-          lastUpdateTime = Date.now()
-          setCurrentPosition(state.position)
-        }
-      } catch (error) {
-        // If API call fails, estimate position based on elapsed time
-        const elapsed = Date.now() - lastUpdateTime
-        const estimatedPosition = lastKnownPosition + elapsed
-        if (estimatedPosition <= duration) {
-          setCurrentPosition(estimatedPosition)
-        }
+    if (audioMode !== 'spotify' || !isPlaying) {
+      if (progressInterval.current) {
+        clearInterval(progressInterval.current)
+        progressInterval.current = null
       }
+      return
+    }
+
+    // For Spotify: poll position every 500ms
+    progressInterval.current = window.setInterval(() => {
+      const pos = musicPlayer.current.getCurrentTime()
+      const dur = musicPlayer.current.getDuration()
+      setCurrentPosition(pos * 1000) // Convert to ms
+      setDuration(dur * 1000)
     }, 500)
 
-    return () => clearInterval(interval)
-  }, [isPlaying, playerReady, currentPosition, duration])
+    return () => {
+      if (progressInterval.current) {
+        clearInterval(progressInterval.current)
+        progressInterval.current = null
+      }
+    }
+  }, [audioMode, isPlaying])
 
   /**
    * Play song when song prop changes
@@ -147,47 +156,40 @@ export function MusicPlayer({ song, onStateChange }: MusicPlayerProps) {
       setIsLoading(true)
 
       try {
-        const trackUri = `spotify:track:${song.spotifyId}`
-
         // Calculate random start position if setting is enabled
         let startPosition = 0
-        if (settings.randomStartPosition) {
-          // Get track duration from Spotify API or use estimated 3 minutes (180000ms)
-          const estimatedDuration = 180000 // 3 minutes in ms
-          const minRemainingTime = 60000 // 60 seconds in ms
+        if (settings.randomStartPosition && (audioMode === 'spotify' || audioMode === 'preview')) {
+          // For both Spotify and self-hosted MP3s (full songs ~3-5 minutes)
+          const estimatedDuration = 210 // 3.5 minutes in seconds (average song length)
+          const minRemainingTime = 60 // 60 seconds guaranteed playback
 
-          // Random position: anywhere from 0 to (duration - 60s)
           const maxStartPosition = Math.max(0, estimatedDuration - minRemainingTime)
           startPosition = Math.floor(Math.random() * maxStartPosition)
 
-          console.log(`🎲 Random start position: ${Math.floor(startPosition / 1000)}s (ensuring 60s+ remaining)`)
+          console.log(`🎲 Random start position: ${startPosition}s (ensuring ${minRemainingTime}s+ remaining)`)
         }
 
-        console.log('▶️ Playing track:', trackUri, 'for song:', song.title, 'at position:', startPosition)
+        console.log(`▶️ Playing ${audioMode} mode:`, song.title, 'at position:', startPosition)
 
-        const success = await SpotifyPlayerService.playTrackWithPosition(trackUri, startPosition)
+        await musicPlayer.current.play(song, startPosition)
 
-        if (success) {
-          setIsPlaying(true)
-          console.log('✅ Playback started successfully')
+        setIsPlaying(true)
+        setDuration(musicPlayer.current.getDuration() * 1000) // Convert to ms
 
-          // 🎵 Trigger intense animation when new song starts
-          console.log('🎵 New song started → Intensifying particle animation')
-          registerInteraction('music', 85)
-        } else {
-          console.error('❌ Playback failed')
-          addToast('Playback fehlgeschlagen', 'error')
-        }
+        console.log('✅ Playback started successfully')
+
+        // Trigger intense animation when new song starts
+        registerInteraction('music', 85)
       } catch (error) {
         console.error('❌ Playback error:', error)
-        addToast('Playback fehlgeschlagen', 'error')
+        // Error toast already shown by musicPlayer
       } finally {
         setIsLoading(false)
       }
     }
 
     playSong()
-  }, [song, playerReady, addToast, settings.randomStartPosition])
+  }, [song, playerReady, settings.randomStartPosition, audioMode, registerInteraction])
 
   /**
    * Toggle play/pause
@@ -196,8 +198,13 @@ export function MusicPlayer({ song, onStateChange }: MusicPlayerProps) {
     if (!playerReady) return
 
     try {
-      await SpotifyPlayerService.togglePlay()
-      setIsPlaying(!isPlaying)
+      if (isPlaying) {
+        musicPlayer.current.pause()
+        setIsPlaying(false)
+      } else {
+        musicPlayer.current.resume()
+        setIsPlaying(true)
+      }
     } catch (error) {
       console.error('❌ Toggle play error:', error)
     }
@@ -210,10 +217,10 @@ export function MusicPlayer({ song, onStateChange }: MusicPlayerProps) {
     async (percentage: number) => {
       if (!playerReady || duration === 0) return
 
-      const positionMs = (percentage / 100) * duration
+      const positionSeconds = (percentage / 100) * (duration / 1000)
       try {
-        await SpotifyPlayerService.seek(positionMs)
-        setCurrentPosition(positionMs)
+        musicPlayer.current.seek(positionSeconds)
+        setCurrentPosition(positionSeconds * 1000)
       } catch (error) {
         console.error('❌ Seek error:', error)
       }
@@ -235,6 +242,24 @@ export function MusicPlayer({ song, onStateChange }: MusicPlayerProps) {
 
   const progress = duration > 0 ? (currentPosition / duration) * 100 : 0
 
+  // Mode badge configuration
+  const modeBadge = {
+    spotify: {
+      label: '🎧 Spotify Premium',
+      color: 'text-green-400 border-green-500/30 bg-green-500/10'
+    },
+    preview: {
+      label: '🎵 Preview (30s)',
+      color: 'text-orange-400 border-orange-500/30 bg-orange-500/10'
+    },
+    none: {
+      label: '⏸️ Kein Audio',
+      color: 'text-gray-400 border-gray-500/30 bg-gray-500/10'
+    }
+  }
+
+  const currentBadge = modeBadge[audioMode]
+
   return (
     <div className="glass rounded-2xl p-8 border-2 border-accent/30 hover:border-accent transition-colors">
       {/* Song Info */}
@@ -247,6 +272,13 @@ export function MusicPlayer({ song, onStateChange }: MusicPlayerProps) {
             {isLoading ? 'Wird geladen...' : 'Song wird abgespielt'}
           </h3>
           <p className="text-text-secondary">Rate Titel, Interpret und Jahr</p>
+
+          {/* Audio Mode Badge */}
+          <div className="mt-2">
+            <span className={`inline-block px-3 py-1 rounded-full text-xs font-medium border ${currentBadge.color}`}>
+              {currentBadge.label}
+            </span>
+          </div>
         </div>
       </div>
 
@@ -272,7 +304,7 @@ export function MusicPlayer({ song, onStateChange }: MusicPlayerProps) {
           </div>
           <div className="flex justify-between text-xs text-text-secondary">
             <span>{formatTime(currentPosition)}</span>
-            <span>{formatTime(duration)}</span>
+            <span>{formatTime(duration || (audioMode === 'preview' ? 30000 : 0))}</span>
           </div>
         </div>
 
@@ -281,7 +313,7 @@ export function MusicPlayer({ song, onStateChange }: MusicPlayerProps) {
           <button
             onClick={handleTogglePlay}
             disabled={!playerReady || isLoading}
-            className="w-16 h-16 bg-secondary rounded-full flex items-center justify-center hover:bg-secondary transition-colors text-2xl disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-16 h-16 bg-secondary rounded-full flex items-center justify-center hover:bg-secondary/80 transition-colors text-2xl disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {isLoading ? '⏳' : isPlaying ? '⏸' : '▶️'}
           </button>
@@ -290,7 +322,28 @@ export function MusicPlayer({ song, onStateChange }: MusicPlayerProps) {
         {/* Player Status */}
         {!playerReady && (
           <div className="text-center text-sm text-yellow-300">
-            ⏳ Spotify Player wird initialisiert...
+            ⏳ Player wird initialisiert...
+          </div>
+        )}
+
+        {/* Preview Mode Info */}
+        {audioMode === 'preview' && playerReady && (
+          <div className="text-center text-xs text-text-secondary border-t border-accent/20 pt-3">
+            {song.previewUrl ? (
+              <span>💡 Preview-Modus aktiv: 30s Clips · Unbegrenzte Spieler</span>
+            ) : (
+              <span className="text-yellow-400">⚠️ Kein Preview verfügbar für diesen Song</span>
+            )}
+          </div>
+        )}
+
+        {/* No Audio Mode Info */}
+        {audioMode === 'none' && playerReady && (
+          <div className="text-center text-xs border-t border-red-500/20 pt-3">
+            <p className="text-red-400 mb-2">❌ Kein Audio verfügbar</p>
+            <p className="text-text-secondary text-xs">
+              Dieser Song hat keine Preview-URL. Für Vollzugriff nutze Spotify Premium.
+            </p>
           </div>
         )}
       </div>

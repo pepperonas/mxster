@@ -233,14 +233,44 @@ export function checkWinCondition(
     return noWinner
   }
 
-  // TIMELINE MODES: First player to reach 10 cards wins
-  if (gameMode === 'timeline_personal' || gameMode === 'timeline_global') {
+  // TIMELINE PERSONAL: First player to reach 10 cards wins
+  if (gameMode === 'timeline_personal') {
     if (player.cards >= 10) {
       return {
         gameOver: true,
         winner: player,
         winnerIndex: currentPlayer,
         message: `${player.name} hat 10 Karten platziert und gewinnt!`
+      }
+    }
+
+    return noWinner
+  }
+
+  // TIMELINE GLOBAL: After 10 total cards placed, player with most cards wins
+  if (gameMode === 'timeline_global') {
+    // Count total cards placed across all players
+    const totalCards = players.reduce((sum, p) => sum + p.cards, 0)
+
+    if (totalCards >= 10) {
+      // Find player with most cards
+      let maxCards = -1
+      let winnerIdx = -1
+
+      players.forEach((p, idx) => {
+        if (p.cards > maxCards) {
+          maxCards = p.cards
+          winnerIdx = idx
+        }
+      })
+
+      const winner = players[winnerIdx]
+
+      return {
+        gameOver: true,
+        winner,
+        winnerIndex: winnerIdx,
+        message: `${winner.name} gewinnt mit ${winner.cards} korrekt platzierten Karten!`
       }
     }
 

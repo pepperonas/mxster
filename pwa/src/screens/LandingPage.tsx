@@ -5,20 +5,63 @@
 
 import { useNavigate } from 'react-router-dom'
 import { useSpotifyAuth } from '@/hooks'
+import { useUI } from '@/contexts'
 import { songs } from '@/data/songs'
 
 export function LandingPage() {
   const navigate = useNavigate()
   const { login, isLoggedIn } = useSpotifyAuth()
+  const { showModal } = useUI()
+
+  const handlePlayWithoutSpotify = () => {
+    // Show warning that preview mode might not work for all songs
+    showModal(
+      '⚠️ Preview-Modus Einschränkung',
+      <div className="text-center py-6">
+        <div className="text-6xl mb-4">🎵</div>
+        <p className="text-lg mb-4">
+          Viele Songs in dieser Datenbank haben <strong>keine Preview-URLs von Spotify</strong>.
+        </p>
+        <p className="text-text-secondary mb-6">
+          Im Preview-Modus können diese Songs nicht abgespielt werden.
+          Für die beste Erfahrung empfehlen wir <strong>Spotify Premium</strong>.
+        </p>
+        <div className="p-4 glass border-2 border-yellow-500/50 rounded-lg text-sm">
+          <p className="text-yellow-400">
+            💡 Du kannst trotzdem spielen, aber ohne Audio für viele Songs.
+          </p>
+        </div>
+      </div>,
+      [
+        {
+          text: 'Zurück',
+          onClick: () => {
+            // Just close modal
+          }
+        },
+        {
+          text: 'Trotzdem fortfahren',
+          onClick: () => {
+            localStorage.setItem('audio_mode_preference', 'preview')
+            console.log('🎵 Starting in Preview Mode (30s clips, unlimited users)')
+            navigate('/mode-selection')
+          }
+        }
+      ]
+    )
+  }
 
   const handleLogin = async () => {
     const storedToken = localStorage.getItem('spotify_auth_tokens')
 
     if (storedToken && isLoggedIn) {
       console.log('✅ Already logged in, navigating to mode selection')
+      // Set Spotify mode preference
+      localStorage.setItem('audio_mode_preference', 'spotify')
       navigate('/mode-selection')
     } else {
       console.log('🔑 Starting Spotify login...')
+      localStorage.setItem('audio_mode_preference', 'spotify')
       await login()
     }
   }
@@ -47,21 +90,113 @@ export function LandingPage() {
           </p>
 
           {/* CTA Buttons */}
-          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+          <div className="flex flex-col gap-4 justify-center items-center">
+            {/* Primary: Play without Spotify (Unlimited Users) */}
             <button
-              onClick={handleLogin}
+              onClick={handlePlayWithoutSpotify}
               className="btn btn-accent px-10 py-4 text-lg shadow-glow-accent w-full sm:w-auto group"
             >
-              <span>🎧</span>
-              Mit Spotify starten
+              <span>🎮</span>
+              Jetzt spielen (Gratis)
               <span className="transition-transform group-hover:translate-x-1">→</span>
             </button>
+
+            {/* Secondary: Spotify Premium */}
             <button
-              onClick={() => scrollToSection('game-modes')}
-              className="btn btn-secondary px-10 py-4 text-lg w-full sm:w-auto"
+              onClick={handleLogin}
+              className="btn btn-secondary px-10 py-4 text-lg w-full sm:w-auto group"
             >
-              📖 Mehr erfahren
+              <span>🎧</span>
+              Mit Spotify Premium
+              <span className="transition-transform group-hover:translate-x-1">→</span>
             </button>
+
+            {/* Info Link */}
+            <button
+              onClick={() => scrollToSection('audio-modes')}
+              className="text-sm text-text-secondary hover:text-secondary underline"
+            >
+              Was ist der Unterschied?
+            </button>
+          </div>
+        </div>
+      </section>
+
+      {/* Audio Modes Comparison */}
+      <section className="container mx-auto px-4 max-w-6xl mb-12" id="audio-modes">
+        <div className="glass p-8 rounded-2xl border-2 border-accent/30">
+          <h2 className="text-3xl font-bold text-gradient mb-6 text-center">
+            🎵 Zwei Audio-Modi zur Auswahl
+          </h2>
+
+          <div className="grid md:grid-cols-2 gap-6">
+            {/* Preview Mode (Free) */}
+            <div className="p-6 rounded-xl border-2 border-accent/20 bg-accent/5">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="text-3xl">🎮</div>
+                <div>
+                  <h3 className="text-xl font-bold text-white">Gratis-Modus</h3>
+                  <p className="text-sm text-secondary">30s Clips · Unbegrenzt</p>
+                </div>
+              </div>
+              <div className="space-y-2 text-sm text-text-secondary mb-4">
+                <div className="flex items-center gap-2">
+                  <span className="text-green-500">✓</span>
+                  <span>Kein Spotify-Login nötig</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="text-green-500">✓</span>
+                  <span>Unbegrenzte Spieler</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="text-green-500">✓</span>
+                  <span>Sofort spielbereit</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="text-green-500">✓</span>
+                  <span>30s Clips (ausreichend fürs Quiz)</span>
+                </div>
+              </div>
+              <div className="text-xs text-text-secondary border-t border-accent/20 pt-3">
+                💡 Perfekt für spontane Runden und Party-Spiele
+              </div>
+            </div>
+
+            {/* Spotify Premium Mode */}
+            <div className="p-6 rounded-xl border-2 border-secondary/30 bg-secondary/10">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="text-3xl">🎧</div>
+                <div>
+                  <h3 className="text-xl font-bold text-white">Spotify Premium</h3>
+                  <p className="text-sm text-secondary">Volle Songs · Max 25 Spieler</p>
+                </div>
+              </div>
+              <div className="space-y-2 text-sm text-text-secondary mb-4">
+                <div className="flex items-center gap-2">
+                  <span className="text-green-500">✓</span>
+                  <span>Volle Songs (unbegrenzte Länge)</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="text-green-500">✓</span>
+                  <span>Hochauflösendes Audio</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="text-green-500">✓</span>
+                  <span>Alle Spotify-Features</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="text-orange-500">⚠</span>
+                  <span>Spotify Premium Account nötig</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="text-orange-500">⚠</span>
+                  <span>Begrenzt auf 25 Spieler</span>
+                </div>
+              </div>
+              <div className="text-xs text-text-secondary border-t border-secondary/20 pt-3">
+                💎 Für die ultimative Spielerfahrung mit vollen Songs
+              </div>
+            </div>
           </div>
         </div>
       </section>

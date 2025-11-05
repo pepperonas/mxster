@@ -7,7 +7,7 @@ export const songs: Song[] = [
     "artist": "Rick Astley",
     "year": 1987,
     "spotifyId": "4PTG3Z6ehGkBFwjybzWkR8",
-    "previewUrl": "",
+    "previewUrl": "https://mxster.de/audio/song_000.mp3",
     "genre": "Pop"
   },
   {
@@ -16,7 +16,7 @@ export const songs: Song[] = [
     "artist": "Queen",
     "year": 1975,
     "spotifyId": "4u7EnebtmKWzUH433cf5Qv",
-    "previewUrl": "",
+    "previewUrl": "https://mxster.de/audio/song_001.mp3",
     "genre": "Rock"
   },
   {
@@ -25,7 +25,7 @@ export const songs: Song[] = [
     "artist": "Michael Jackson",
     "year": 1982,
     "spotifyId": "5ChkMS8OtdzJeqyybCc9R5",
-    "previewUrl": "",
+    "previewUrl": "https://mxster.de/audio/song_002.mp3",
     "genre": "Pop"
   },
   {
@@ -34,7 +34,7 @@ export const songs: Song[] = [
     "artist": "Madonna",
     "year": 1989,
     "spotifyId": "0apQVuKL33S64ivuHUQrQ3",
-    "previewUrl": "",
+    "previewUrl": "https://mxster.de/audio/song_003.mp3",
     "genre": "Pop"
   },
   {
@@ -43,7 +43,7 @@ export const songs: Song[] = [
     "artist": "Nirvana",
     "year": 1991,
     "spotifyId": "4CeeEOM32jQcH3eN9Q2dGj",
-    "previewUrl": "",
+    "previewUrl": "https://mxster.de/audio/song_004.mp3",
     "genre": "Rock"
   },
   {
@@ -52,7 +52,7 @@ export const songs: Song[] = [
     "artist": "Oasis",
     "year": 1995,
     "spotifyId": "5qqabIl2vWzo9ApSC317sa",
-    "previewUrl": "",
+    "previewUrl": "https://mxster.de/audio/song_005.mp3",
     "genre": "Rock"
   },
   {
@@ -61,7 +61,7 @@ export const songs: Song[] = [
     "artist": "Fine Young Cannibals",
     "year": 1988,
     "spotifyId": "4d6eqRtpDX7tydHJGDZUBQ",
-    "previewUrl": "",
+    "previewUrl": "https://mxster.de/audio/song_006.mp3",
     "genre": "Pop"
   },
   {
@@ -70,7 +70,7 @@ export const songs: Song[] = [
     "artist": "Madonna",
     "year": 1983,
     "spotifyId": "7arHM2KZ0KzIZXFVDRGClI",
-    "previewUrl": "",
+    "previewUrl": "https://mxster.de/audio/song_007.mp3",
     "genre": "Pop"
   },
   {
@@ -79,7 +79,7 @@ export const songs: Song[] = [
     "artist": "Taylor Dayne",
     "year": 1988,
     "spotifyId": "0uyoXwOQ3U5tGfNNmR5Y1p",
-    "previewUrl": "",
+    "previewUrl": "https://mxster.de/audio/song_008.mp3",
     "genre": "Pop"
   },
   {
@@ -88,7 +88,7 @@ export const songs: Song[] = [
     "artist": "Nelly Furtado",
     "year": 2000,
     "spotifyId": "2aGw77pZqli064JiPuXYRi",
-    "previewUrl": "",
+    "previewUrl": "https://mxster.de/audio/song_009.mp3",
     "genre": "Pop"
   },
   {
@@ -97,7 +97,7 @@ export const songs: Song[] = [
     "artist": "Electr3x",
     "year": 2013,
     "spotifyId": "3HxjYioUjnLHpSjtLqEPZm",
-    "previewUrl": "",
+    "previewUrl": "https://mxster.de/audio/song_010.mp3",
     "genre": "Electronic"
   },
   {
@@ -106,7 +106,7 @@ export const songs: Song[] = [
     "artist": "Jungle",
     "year": 2023,
     "spotifyId": "19kHhX6f6EfLU7rcO3RqjO",
-    "previewUrl": "",
+    "previewUrl": "https://mxster.de/audio/song_011.mp3",
     "genre": "Soul"
   },
   {
@@ -115,7 +115,7 @@ export const songs: Song[] = [
     "artist": "Prince",
     "year": 1979,
     "spotifyId": "4yrM5BVyJzy5Ed4GPO6e8j",
-    "previewUrl": "",
+    "previewUrl": "https://mxster.de/audio/song_012.mp3",
     "genre": "R&B"
   },
   {
@@ -124,7 +124,7 @@ export const songs: Song[] = [
     "artist": "Mylo",
     "year": 2006,
     "spotifyId": "4dmDrGySyxYklBQVkG66LB",
-    "previewUrl": "",
+    "previewUrl": "https://mxster.de/audio/song_013.mp3",
     "genre": "Electronic"
   },
   {
@@ -133,7 +133,7 @@ export const songs: Song[] = [
     "artist": "Santa Esmeralda",
     "year": 2015,
     "spotifyId": "0rCEfFfigLLYmAFeJXQvm6",
-    "previewUrl": "",
+    "previewUrl": "https://mxster.de/audio/song_014.mp3",
     "genre": "Soul"
   },
   {
@@ -142,7 +142,7 @@ export const songs: Song[] = [
     "artist": "Jason Derulo",
     "year": 2010,
     "spotifyId": "7xkQdy0cy5ymoWT7nedvLz",
-    "previewUrl": "",
+    "previewUrl": "https://mxster.de/audio/song_015.mp3",
     "genre": "R&B"
   },
   {
@@ -151,7 +151,7 @@ export const songs: Song[] = [
     "artist": "Daft Punk",
     "year": 2013,
     "spotifyId": "0oks4FnzhNp5QPTZtoet7c",
-    "previewUrl": "",
+    "previewUrl": "https://mxster.de/audio/song_016.mp3",
     "genre": "Electronic"
   },
   {
@@ -160,7 +160,7 @@ export const songs: Song[] = [
     "artist": "Ghost",
     "year": 2019,
     "spotifyId": "2HZLXBOnaSRhXStMLrq9fD",
-    "previewUrl": "",
+    "previewUrl": "https://mxster.de/audio/song_017.mp3",
     "genre": "Metal"
   },
   {
@@ -169,7 +169,7 @@ export const songs: Song[] = [
     "artist": "Sylvester",
     "year": 1984,
     "spotifyId": "6gzUi6an8slC9kR2A2GLiE",
-    "previewUrl": "",
+    "previewUrl": "https://mxster.de/audio/song_018.mp3",
     "genre": "Soul"
   },
   {
@@ -178,7 +178,7 @@ export const songs: Song[] = [
     "artist": "2hermanoz",
     "year": 2025,
     "spotifyId": "5e3kI3IzdLulXhIhfcoxXI",
-    "previewUrl": "",
+    "previewUrl": "https://mxster.de/audio/song_019.mp3",
     "genre": "Electronic"
   },
   {
@@ -187,7 +187,7 @@ export const songs: Song[] = [
     "artist": "Madonna",
     "year": 1989,
     "spotifyId": "5xAeXQqVX1eVC9ev9p5Ckv",
-    "previewUrl": "",
+    "previewUrl": "https://mxster.de/audio/song_020.mp3",
     "genre": "Pop"
   },
   {
@@ -196,7 +196,7 @@ export const songs: Song[] = [
     "artist": "Storken, Gusteau",
     "year": 2024,
     "spotifyId": "0xIdZ9u8lIGYl54UNOlFMn",
-    "previewUrl": "",
+    "previewUrl": "https://mxster.de/audio/song_021.mp3",
     "genre": "Electronic"
   },
   {
@@ -205,7 +205,7 @@ export const songs: Song[] = [
     "artist": "Nik Kershaw",
     "year": 1984,
     "spotifyId": "00FDHurakzVEiPutdUxXXq",
-    "previewUrl": "",
+    "previewUrl": "https://mxster.de/audio/song_022.mp3",
     "genre": "Pop"
   },
   {
@@ -214,7 +214,7 @@ export const songs: Song[] = [
     "artist": "Tom Petty",
     "year": 1991,
     "spotifyId": "17S4XrLvF5jlGvGCJHgF51",
-    "previewUrl": "",
+    "previewUrl": "https://mxster.de/audio/song_023.mp3",
     "genre": "Rock"
   },
   {
@@ -223,7 +223,7 @@ export const songs: Song[] = [
     "artist": "Fleetwood Mac",
     "year": 1977,
     "spotifyId": "0ofHAoxe9vBkTCp2UQIavz",
-    "previewUrl": "",
+    "previewUrl": "https://mxster.de/audio/song_024.mp3",
     "genre": "Rock"
   },
   {
@@ -232,7 +232,7 @@ export const songs: Song[] = [
     "artist": "t.A.T.u.",
     "year": 2002,
     "spotifyId": "4bJygwUKrRgq1stlNXcgMg",
-    "previewUrl": "",
+    "previewUrl": "https://mxster.de/audio/song_025.mp3",
     "genre": "Pop"
   },
   {
@@ -241,7 +241,7 @@ export const songs: Song[] = [
     "artist": "Eminem",
     "year": 2002,
     "spotifyId": "4woTEX1wYOTGDqNXuavlRC",
-    "previewUrl": "",
+    "previewUrl": "https://mxster.de/audio/song_026.mp3",
     "genre": "Hip-Hop"
   },
   {
@@ -250,7 +250,7 @@ export const songs: Song[] = [
     "artist": "OMC",
     "year": 1996,
     "spotifyId": "46q5BtHso0ECuTKeq70ZhW",
-    "previewUrl": "",
+    "previewUrl": "https://mxster.de/audio/song_027.mp3",
     "genre": "Pop"
   },
   {
@@ -259,7 +259,7 @@ export const songs: Song[] = [
     "artist": "CINTHIE",
     "year": 2018,
     "spotifyId": "7dyoyoetrANuq9z2KdknbD",
-    "previewUrl": "",
+    "previewUrl": "https://mxster.de/audio/song_028.mp3",
     "genre": "Electronic"
   },
   {
@@ -268,7 +268,7 @@ export const songs: Song[] = [
     "artist": "CIOZ",
     "year": 2021,
     "spotifyId": "3BpLvi63Sk9u1Aa1zfqZHV",
-    "previewUrl": "",
+    "previewUrl": "https://mxster.de/audio/song_029.mp3",
     "genre": "Electronic"
   },
   {
@@ -277,7 +277,7 @@ export const songs: Song[] = [
     "artist": "BICEP",
     "year": 2017,
     "spotifyId": "2aJDlirz6v2a4HREki98cP",
-    "previewUrl": "",
+    "previewUrl": "https://mxster.de/audio/song_030.mp3",
     "genre": "Electronic"
   },
   {
@@ -286,7 +286,7 @@ export const songs: Song[] = [
     "artist": "Steve Monite",
     "year": 1984,
     "spotifyId": "3d7lH2ppf2aIELQXY4nagn",
-    "previewUrl": "",
+    "previewUrl": "https://mxster.de/audio/song_031.mp3",
     "genre": "Soul"
   },
   {
@@ -295,7 +295,7 @@ export const songs: Song[] = [
     "artist": "Metallica",
     "year": 1991,
     "spotifyId": "5SnOyuBtyzufoXBAKOdcxD",
-    "previewUrl": "",
+    "previewUrl": "https://mxster.de/audio/song_032.mp3",
     "genre": "Metal"
   },
   {
@@ -304,7 +304,7 @@ export const songs: Song[] = [
     "artist": "Keinemusik",
     "year": 2024,
     "spotifyId": "2GwsSbo6IbNDVvcm9rtmal",
-    "previewUrl": "",
+    "previewUrl": "https://mxster.de/audio/song_033.mp3",
     "genre": "Electronic"
   },
   {
@@ -313,7 +313,7 @@ export const songs: Song[] = [
     "artist": "Eiffel 65",
     "year": 1999,
     "spotifyId": "5FgtdSf7I5lClThz2ptWvl",
-    "previewUrl": "",
+    "previewUrl": "https://mxster.de/audio/song_034.mp3",
     "genre": "Electronic"
   },
   {
@@ -322,7 +322,7 @@ export const songs: Song[] = [
     "artist": "Outkast",
     "year": 2000,
     "spotifyId": "0I3q5fE6wg7LIfHGngUTnV",
-    "previewUrl": "",
+    "previewUrl": "https://mxster.de/audio/song_035.mp3",
     "genre": "Hip-Hop"
   },
   {
@@ -331,7 +331,7 @@ export const songs: Song[] = [
     "artist": "Phonk D",
     "year": 2024,
     "spotifyId": "4SyAk2E6pBO7J4d2Pboc27",
-    "previewUrl": "",
+    "previewUrl": "https://mxster.de/audio/song_036.mp3",
     "genre": "Electronic"
   },
   {
@@ -340,7 +340,7 @@ export const songs: Song[] = [
     "artist": "ABC",
     "year": 1982,
     "spotifyId": "6HvUtPLqkP0t6zd6YNdWby",
-    "previewUrl": "",
+    "previewUrl": "https://mxster.de/audio/song_037.mp3",
     "genre": "Pop"
   },
   {
@@ -349,7 +349,7 @@ export const songs: Song[] = [
     "artist": "Brenda Fassie",
     "year": 1986,
     "spotifyId": "5xFw5Kw4hqhcwXXjFOZKIw",
-    "previewUrl": "",
+    "previewUrl": "https://mxster.de/audio/song_038.mp3",
     "genre": "Pop"
   },
   {
@@ -358,7 +358,7 @@ export const songs: Song[] = [
     "artist": "Bizzarro Universe, Marcus Christiansen",
     "year": 2024,
     "spotifyId": "5SXxursn0O3NZu5yan9Xer",
-    "previewUrl": "",
+    "previewUrl": "https://mxster.de/audio/song_039.mp3",
     "genre": "Electronic"
   },
   {
@@ -367,7 +367,7 @@ export const songs: Song[] = [
     "artist": "Lusthansa",
     "year": 1983,
     "spotifyId": "5MmXILyuHEWAQ0IqYHwm1G",
-    "previewUrl": "",
+    "previewUrl": "https://mxster.de/audio/song_040.mp3",
     "genre": "Rock"
   },
   {
@@ -376,7 +376,7 @@ export const songs: Song[] = [
     "artist": "Oliver Koletzki",
     "year": 2009,
     "spotifyId": "51lq1JlxFQztlTJpJYsyWL",
-    "previewUrl": "",
+    "previewUrl": "https://mxster.de/audio/song_041.mp3",
     "genre": "Electronic"
   },
   {
@@ -385,7 +385,7 @@ export const songs: Song[] = [
     "artist": "Alien Ant Farm",
     "year": 2001,
     "spotifyId": "5z6xHjCZr7a7AIcy8sPBKy",
-    "previewUrl": "",
+    "previewUrl": "https://mxster.de/audio/song_042.mp3",
     "genre": "Rock"
   },
   {
@@ -394,7 +394,7 @@ export const songs: Song[] = [
     "artist": "Carlos Perón",
     "year": 2018,
     "spotifyId": "7IdcCf2KAAkeI66vSLfAyC",
-    "previewUrl": "",
+    "previewUrl": "https://mxster.de/audio/song_043.mp3",
     "genre": "Electronic"
   },
   {
@@ -403,7 +403,7 @@ export const songs: Song[] = [
     "artist": "Mind Over Matter",
     "year": 2020,
     "spotifyId": "3nuSWxFEkdtGiP9huP3NoH",
-    "previewUrl": "",
+    "previewUrl": "https://mxster.de/audio/song_044.mp3",
     "genre": "Electronic"
   },
   {
@@ -412,7 +412,7 @@ export const songs: Song[] = [
     "artist": "Anish Kumar, Barry Can't Swim",
     "year": 2021,
     "spotifyId": "5TaNnFsq2RSPHpsb8euzib",
-    "previewUrl": "",
+    "previewUrl": "https://mxster.de/audio/song_045.mp3",
     "genre": "Electronic"
   },
   {
@@ -421,7 +421,7 @@ export const songs: Song[] = [
     "artist": "ABBA",
     "year": 1979,
     "spotifyId": "3vkQ5DAB1qQMYO4Mr9zJN6",
-    "previewUrl": "",
+    "previewUrl": "https://mxster.de/audio/song_046.mp3",
     "genre": "Pop"
   },
   {
@@ -430,7 +430,7 @@ export const songs: Song[] = [
     "artist": "Falco",
     "year": 1985,
     "spotifyId": "6a0lr0jt8lKDJhsAYA49NS",
-    "previewUrl": "",
+    "previewUrl": "https://mxster.de/audio/song_047.mp3",
     "genre": "Pop"
   },
   {
@@ -439,7 +439,7 @@ export const songs: Song[] = [
     "artist": "Buntspecht",
     "year": 2019,
     "spotifyId": "5hZQIDpkhRxKez0j8TZvoG",
-    "previewUrl": "",
+    "previewUrl": "https://mxster.de/audio/song_048.mp3",
     "genre": "Pop"
   },
   {
@@ -448,7 +448,7 @@ export const songs: Song[] = [
     "artist": "Prince",
     "year": 1986,
     "spotifyId": "7rwPVahewLXhDGKUjfbzU3",
-    "previewUrl": "",
+    "previewUrl": "https://mxster.de/audio/song_049.mp3",
     "genre": "R&B"
   },
   {
@@ -457,7 +457,7 @@ export const songs: Song[] = [
     "artist": "Prince",
     "year": 1994,
     "spotifyId": "0aPaGIX2QIMAH5SMp0VEMe",
-    "previewUrl": "",
+    "previewUrl": "https://mxster.de/audio/song_050.mp3",
     "genre": "R&B"
   },
   {
@@ -466,7 +466,7 @@ export const songs: Song[] = [
     "artist": "Barry White",
     "year": 1972,
     "spotifyId": "2sR6PY1YgPZTB8hZflRbFq",
-    "previewUrl": "",
+    "previewUrl": "https://mxster.de/audio/song_051.mp3",
     "genre": "Soul"
   },
   {
@@ -475,7 +475,7 @@ export const songs: Song[] = [
     "artist": "Sylvester",
     "year": 1982,
     "spotifyId": "391LWxtzGLesBcYnXF3apb",
-    "previewUrl": "",
+    "previewUrl": "https://mxster.de/audio/song_052.mp3",
     "genre": "Soul"
   },
   {
@@ -484,7 +484,7 @@ export const songs: Song[] = [
     "artist": "Whitney Houston",
     "year": 1985,
     "spotifyId": "5tdKaKLnC4SgtDZ6RlWeal",
-    "previewUrl": "",
+    "previewUrl": "https://mxster.de/audio/song_053.mp3",
     "genre": "Pop"
   },
   {
@@ -493,7 +493,7 @@ export const songs: Song[] = [
     "artist": "Diana Ross",
     "year": 1979,
     "spotifyId": "4IHuMACnW8IMUUVPss9rou",
-    "previewUrl": "",
+    "previewUrl": "https://mxster.de/audio/song_054.mp3",
     "genre": "Soul"
   },
   {
@@ -502,7 +502,7 @@ export const songs: Song[] = [
     "artist": "Bruce Springsteen",
     "year": 1975,
     "spotifyId": "6hTcuIQa0sxrrByu9wTD7s",
-    "previewUrl": "",
+    "previewUrl": "https://mxster.de/audio/song_055.mp3",
     "genre": "Rock"
   },
   {
@@ -511,7 +511,7 @@ export const songs: Song[] = [
     "artist": "Nik Kershaw",
     "year": 1984,
     "spotifyId": "65YtzNpiPhGVzg6GPzkotn",
-    "previewUrl": "",
+    "previewUrl": "https://mxster.de/audio/song_056.mp3",
     "genre": "Pop"
   },
   {
@@ -520,7 +520,7 @@ export const songs: Song[] = [
     "artist": "Nelly",
     "year": 2000,
     "spotifyId": "3Gf5nttwcX9aaSQXRWidEZ",
-    "previewUrl": "",
+    "previewUrl": "https://mxster.de/audio/song_057.mp3",
     "genre": "Hip-Hop"
   },
   {
@@ -529,7 +529,7 @@ export const songs: Song[] = [
     "artist": "Avicii",
     "year": 2011,
     "spotifyId": "6Xe9wT5xeZETPwtaP2ynUz",
-    "previewUrl": "",
+    "previewUrl": "https://mxster.de/audio/song_058.mp3",
     "genre": "Electronic"
   },
   {
@@ -538,7 +538,7 @@ export const songs: Song[] = [
     "artist": "Fleetwood Mac",
     "year": 1977,
     "spotifyId": "07GvNcU1WdyZJq3XxP0kZa",
-    "previewUrl": "",
+    "previewUrl": "https://mxster.de/audio/song_059.mp3",
     "genre": "Rock"
   },
   {
@@ -547,7 +547,7 @@ export const songs: Song[] = [
     "artist": "a-ha",
     "year": 1985,
     "spotifyId": "2WfaOiMkCvy7F5fcp2zZ8L",
-    "previewUrl": "",
+    "previewUrl": "https://mxster.de/audio/song_060.mp3",
     "genre": "Pop"
   },
   {
@@ -556,7 +556,7 @@ export const songs: Song[] = [
     "artist": "Sylvester",
     "year": 1982,
     "spotifyId": "708DnJC8l1b4Bf4xg0GiBv",
-    "previewUrl": "",
+    "previewUrl": "https://mxster.de/audio/song_061.mp3",
     "genre": "Soul"
   },
   {
@@ -565,7 +565,7 @@ export const songs: Song[] = [
     "artist": "Manu Chao",
     "year": 1998,
     "spotifyId": "00SmB7n85SKROGjybsyq5i",
-    "previewUrl": "",
+    "previewUrl": "https://mxster.de/audio/song_062.mp3",
     "genre": "Reggae"
   },
   {
@@ -574,7 +574,7 @@ export const songs: Song[] = [
     "artist": "Sonique",
     "year": 1998,
     "spotifyId": "39TChHld3lrragesFXhdkc",
-    "previewUrl": "",
+    "previewUrl": "https://mxster.de/audio/song_063.mp3",
     "genre": "Electronic"
   },
   {
@@ -583,7 +583,7 @@ export const songs: Song[] = [
     "artist": "MGMT",
     "year": 2007,
     "spotifyId": "1jJci4qxiYcOHhQR247rEU",
-    "previewUrl": "",
+    "previewUrl": "https://mxster.de/audio/song_064.mp3",
     "genre": "Pop"
   },
   {
@@ -592,7 +592,7 @@ export const songs: Song[] = [
     "artist": "Fettes Brot",
     "year": 2005,
     "spotifyId": "5gUXZV2Ir17qOWdtUJSh7l",
-    "previewUrl": "",
+    "previewUrl": "https://mxster.de/audio/song_065.mp3",
     "genre": "Hip-Hop"
   },
   {
@@ -601,7 +601,7 @@ export const songs: Song[] = [
     "artist": "K.I.Z",
     "year": 2009,
     "spotifyId": "3CFfSQD1HTpn2eeGu9xY7J",
-    "previewUrl": "",
+    "previewUrl": "https://mxster.de/audio/song_066.mp3",
     "genre": "Hip-Hop"
   },
   {
@@ -610,7 +610,7 @@ export const songs: Song[] = [
     "artist": "Alligatoah",
     "year": 2013,
     "spotifyId": "3FcqFCeCD6QRtRo6WGLCnC",
-    "previewUrl": "",
+    "previewUrl": "https://mxster.de/audio/song_067.mp3",
     "genre": "Hip-Hop"
   },
   {
@@ -619,7 +619,7 @@ export const songs: Song[] = [
     "artist": "a-ha",
     "year": 1985,
     "spotifyId": "13WPj6r2DVNU3GoZtMc9eU",
-    "previewUrl": "",
+    "previewUrl": "https://mxster.de/audio/song_068.mp3",
     "genre": "Pop"
   },
   {
@@ -628,7 +628,7 @@ export const songs: Song[] = [
     "artist": "Die Ärzte",
     "year": 1988,
     "spotifyId": "5aWpvFnByyWodgqYlC9kha",
-    "previewUrl": "",
+    "previewUrl": "https://mxster.de/audio/song_069.mp3",
     "genre": "Rock"
   },
   {
@@ -637,7 +637,7 @@ export const songs: Song[] = [
     "artist": "Peter Schilling",
     "year": 1982,
     "spotifyId": "6lXKNdOsnaLv9LwulZbxNl",
-    "previewUrl": "",
+    "previewUrl": "https://mxster.de/audio/song_070.mp3",
     "genre": "Pop"
   },
   {
@@ -646,7 +646,7 @@ export const songs: Song[] = [
     "artist": "Kim Carnes",
     "year": 1981,
     "spotifyId": "0odIT9B9BvOCnXfS0e4lB5",
-    "previewUrl": "",
+    "previewUrl": "https://mxster.de/audio/song_071.mp3",
     "genre": "Pop"
   },
   {
@@ -655,7 +655,7 @@ export const songs: Song[] = [
     "artist": "Paul Kalkbrenner",
     "year": 2013,
     "spotifyId": "0a2LIqhveniOMVXt1BzQKR",
-    "previewUrl": "",
+    "previewUrl": "https://mxster.de/audio/song_072.mp3",
     "genre": "Electronic"
   },
   {
@@ -664,7 +664,7 @@ export const songs: Song[] = [
     "artist": "Rammstein",
     "year": 1997,
     "spotifyId": "0xrkyEMkG4dVa5OMLQZOX8",
-    "previewUrl": "",
+    "previewUrl": "https://mxster.de/audio/song_073.mp3",
     "genre": "Metal"
   },
   {
@@ -673,7 +673,7 @@ export const songs: Song[] = [
     "artist": "MGMT",
     "year": 2007,
     "spotifyId": "3FtYbEfBqAlGO46NUDQSAt",
-    "previewUrl": "",
+    "previewUrl": "https://mxster.de/audio/song_074.mp3",
     "genre": "Pop"
   },
   {
@@ -682,7 +682,7 @@ export const songs: Song[] = [
     "artist": "Alligatoah",
     "year": 2013,
     "spotifyId": "1EC0COi0MYuxILNfvvVIkI",
-    "previewUrl": "",
+    "previewUrl": "https://mxster.de/audio/song_075.mp3",
     "genre": "Hip-Hop"
   },
   {
@@ -691,7 +691,7 @@ export const songs: Song[] = [
     "artist": "Skatebård",
     "year": 2016,
     "spotifyId": "7za2bHIESAb7RVIhQzwn6H",
-    "previewUrl": "",
+    "previewUrl": "https://mxster.de/audio/song_076.mp3",
     "genre": "Electronic"
   },
   {
@@ -700,7 +700,7 @@ export const songs: Song[] = [
     "artist": "Krystal Klear",
     "year": 2022,
     "spotifyId": "4mOlNiBOX1tjxp5wce0Dwe",
-    "previewUrl": "",
+    "previewUrl": "https://mxster.de/audio/song_077.mp3",
     "genre": "Electronic"
   },
   {
@@ -709,7 +709,7 @@ export const songs: Song[] = [
     "artist": "DragonForce",
     "year": 2006,
     "spotifyId": "1UMdbkqX19OiwfExH7gzYA",
-    "previewUrl": "",
+    "previewUrl": "https://mxster.de/audio/song_078.mp3",
     "genre": "Metal"
   },
   {
@@ -718,7 +718,7 @@ export const songs: Song[] = [
     "artist": "Herbert Grönemeyer",
     "year": 2002,
     "spotifyId": "2urspvjqMlyq8JVAudN3DK",
-    "previewUrl": "",
+    "previewUrl": "https://mxster.de/audio/song_079.mp3",
     "genre": "Pop"
   },
   {
@@ -727,7 +727,7 @@ export const songs: Song[] = [
     "artist": "Scatman John",
     "year": 1995,
     "spotifyId": "623rRTKwGmgjH6sjE9uWLh",
-    "previewUrl": "",
+    "previewUrl": "https://mxster.de/audio/song_080.mp3",
     "genre": "Electronic"
   },
   {
@@ -736,7 +736,7 @@ export const songs: Song[] = [
     "artist": "Culture Beat",
     "year": 1993,
     "spotifyId": "2rTYgHxgcndkUrRoU7x0Sv",
-    "previewUrl": "",
+    "previewUrl": "https://mxster.de/audio/song_081.mp3",
     "genre": "Electronic"
   },
   {
@@ -745,7 +745,7 @@ export const songs: Song[] = [
     "artist": "Vera",
     "year": 1983,
     "spotifyId": "3ExcEpHblGcPikCpcgNNAB",
-    "previewUrl": "",
+    "previewUrl": "https://mxster.de/audio/song_082.mp3",
     "genre": "Soul"
   },
   {
@@ -754,7 +754,7 @@ export const songs: Song[] = [
     "artist": "Chaka Khan",
     "year": 1983,
     "spotifyId": "2NVpYQqdraEcQwqT7GhUkh",
-    "previewUrl": "",
+    "previewUrl": "https://mxster.de/audio/song_083.mp3",
     "genre": "R&B"
   },
   {
@@ -763,7 +763,7 @@ export const songs: Song[] = [
     "artist": "Alphaville",
     "year": 1984,
     "spotifyId": "3BZGi1yUqQyCNC868AqUGG",
-    "previewUrl": "",
+    "previewUrl": "https://mxster.de/audio/song_084.mp3",
     "genre": "Pop"
   },
   {
@@ -772,7 +772,7 @@ export const songs: Song[] = [
     "artist": "Laura Branigan",
     "year": 1984,
     "spotifyId": "6JNJERZGJwDVgkmbohBw7u",
-    "previewUrl": "",
+    "previewUrl": "https://mxster.de/audio/song_085.mp3",
     "genre": "Pop"
   },
   {
@@ -781,7 +781,7 @@ export const songs: Song[] = [
     "artist": "Paul Simon",
     "year": 1986,
     "spotifyId": "0qxYx4F3vm1AOnfux6dDxP",
-    "previewUrl": "",
+    "previewUrl": "https://mxster.de/audio/song_086.mp3",
     "genre": "Pop"
   },
   {
@@ -790,7 +790,7 @@ export const songs: Song[] = [
     "artist": "TOTO",
     "year": 1982,
     "spotifyId": "2374M0fQpWi3dLnB54qaLX",
-    "previewUrl": "",
+    "previewUrl": "https://mxster.de/audio/song_087.mp3",
     "genre": "Rock"
   },
   {
@@ -799,7 +799,7 @@ export const songs: Song[] = [
     "artist": "France Gall",
     "year": 1987,
     "spotifyId": "67CfbIKKTCKFqmQLJwUftX",
-    "previewUrl": "",
+    "previewUrl": "https://mxster.de/audio/song_088.mp3",
     "genre": "Pop"
   },
   {
@@ -808,7 +808,7 @@ export const songs: Song[] = [
     "artist": "Tracy Chapman",
     "year": 1988,
     "spotifyId": "2M9ro2krNb7nr7HSprkEgo",
-    "previewUrl": "",
+    "previewUrl": "https://mxster.de/audio/song_089.mp3",
     "genre": "Rock"
   },
   {
@@ -817,7 +817,7 @@ export const songs: Song[] = [
     "artist": "Milli Vanilli",
     "year": 1988,
     "spotifyId": "0C7dYeCLF6ukChtW64UNge",
-    "previewUrl": "",
+    "previewUrl": "https://mxster.de/audio/song_090.mp3",
     "genre": "Pop"
   },
   {
@@ -826,7 +826,7 @@ export const songs: Song[] = [
     "artist": "Phil Collins",
     "year": 1981,
     "spotifyId": "18AXbzPzBS8Y3AkgSxzJPb",
-    "previewUrl": "",
+    "previewUrl": "https://mxster.de/audio/song_091.mp3",
     "genre": "Rock"
   },
   {
@@ -835,7 +835,7 @@ export const songs: Song[] = [
     "artist": "CeCe Peniston",
     "year": 1992,
     "spotifyId": "0uqvSVhGgQTIdj9G51vhvv",
-    "previewUrl": "",
+    "previewUrl": "https://mxster.de/audio/song_092.mp3",
     "genre": "R&B"
   },
   {
@@ -844,7 +844,7 @@ export const songs: Song[] = [
     "artist": "Bomfunk MC's",
     "year": 1999,
     "spotifyId": "2vlgOAH3M8Fmo19wOjeRyw",
-    "previewUrl": "",
+    "previewUrl": "https://mxster.de/audio/song_093.mp3",
     "genre": "Hip-Hop"
   },
   {
@@ -853,7 +853,7 @@ export const songs: Song[] = [
     "artist": "M People",
     "year": 1993,
     "spotifyId": "6vGW3d8X48CBaLdU0PQbey",
-    "previewUrl": "",
+    "previewUrl": "https://mxster.de/audio/song_094.mp3",
     "genre": "Pop"
   },
   {
@@ -862,7 +862,7 @@ export const songs: Song[] = [
     "artist": "La Bouche",
     "year": 1995,
     "spotifyId": "3vSn1frPgFcRXrjWOfhMLl",
-    "previewUrl": "",
+    "previewUrl": "https://mxster.de/audio/song_095.mp3",
     "genre": "Electronic"
   },
   {
@@ -871,7 +871,7 @@ export const songs: Song[] = [
     "artist": "CHIC",
     "year": 1979,
     "spotifyId": "0G3fbPbE1vGeABDEZF0jeG",
-    "previewUrl": "",
+    "previewUrl": "https://mxster.de/audio/song_096.mp3",
     "genre": "Soul"
   },
   {
@@ -880,7 +880,7 @@ export const songs: Song[] = [
     "artist": "Sister Sledge",
     "year": 1979,
     "spotifyId": "47eSFHsPDVJwssTTG62Af3",
-    "previewUrl": "",
+    "previewUrl": "https://mxster.de/audio/song_097.mp3",
     "genre": "Soul"
   },
   {
@@ -889,7 +889,7 @@ export const songs: Song[] = [
     "artist": "Uncle Kracker",
     "year": 2000,
     "spotifyId": "4KoecuyOpZaNFZ0UqVsllc",
-    "previewUrl": "",
+    "previewUrl": "https://mxster.de/audio/song_098.mp3",
     "genre": "Pop"
   },
   {
@@ -898,7 +898,7 @@ export const songs: Song[] = [
     "artist": "Coldplay",
     "year": 2008,
     "spotifyId": "1mea3bSkSGXuIRvnydlB5b",
-    "previewUrl": "",
+    "previewUrl": "https://mxster.de/audio/song_099.mp3",
     "genre": "Rock"
   },
   {
@@ -907,7 +907,7 @@ export const songs: Song[] = [
     "artist": "Eagle-Eye Cherry",
     "year": 1997,
     "spotifyId": "2hdhm6piUJnmKXmEmskXCg",
-    "previewUrl": "",
+    "previewUrl": "https://mxster.de/audio/song_100.mp3",
     "genre": "Rock"
   },
   {
@@ -916,7 +916,7 @@ export const songs: Song[] = [
     "artist": "Spin Doctors",
     "year": 1991,
     "spotifyId": "4ePP9So5xRzspjLFVVbj90",
-    "previewUrl": "",
+    "previewUrl": "https://mxster.de/audio/song_101.mp3",
     "genre": "Rock"
   },
   {
@@ -925,7 +925,7 @@ export const songs: Song[] = [
     "artist": "Simply Red",
     "year": 1995,
     "spotifyId": "1cPcbT9kuGAMCAwI9W8vAL",
-    "previewUrl": "",
+    "previewUrl": "https://mxster.de/audio/song_102.mp3",
     "genre": "Pop"
   },
   {
@@ -934,7 +934,7 @@ export const songs: Song[] = [
     "artist": "UB40",
     "year": 1983,
     "spotifyId": "4uOKFydzAejjSFqYbv1XPt",
-    "previewUrl": "",
+    "previewUrl": "https://mxster.de/audio/song_103.mp3",
     "genre": "Reggae"
   },
   {
@@ -943,7 +943,7 @@ export const songs: Song[] = [
     "artist": "Eros Ramazzotti",
     "year": 1996,
     "spotifyId": "6lbJyE7viZ7hKo5APRHymX",
-    "previewUrl": "",
+    "previewUrl": "https://mxster.de/audio/song_104.mp3",
     "genre": "Pop"
   },
   {
@@ -952,7 +952,7 @@ export const songs: Song[] = [
     "artist": "Cerrone",
     "year": 1977,
     "spotifyId": "2ffCT6Pe2LYriwN2Y5ObIg",
-    "previewUrl": "",
+    "previewUrl": "https://mxster.de/audio/song_105.mp3",
     "genre": "Soul"
   },
   {
@@ -961,7 +961,7 @@ export const songs: Song[] = [
     "artist": "Flo Rida",
     "year": 2012,
     "spotifyId": "2LEF1A8DOZ9wRYikWgVlZ8",
-    "previewUrl": "",
+    "previewUrl": "https://mxster.de/audio/song_106.mp3",
     "genre": "Hip-Hop"
   },
   {
@@ -970,7 +970,7 @@ export const songs: Song[] = [
     "artist": "Whitney Houston",
     "year": 1996,
     "spotifyId": "5dEBcymDDG9TUjJnAouOPp",
-    "previewUrl": "",
+    "previewUrl": "https://mxster.de/audio/song_107.mp3",
     "genre": "Pop"
   },
   {
@@ -979,7 +979,7 @@ export const songs: Song[] = [
     "artist": "M.I.A.",
     "year": 2007,
     "spotifyId": "1ixbwbeBi5ufN4noUKmW5a",
-    "previewUrl": "",
+    "previewUrl": "https://mxster.de/audio/song_108.mp3",
     "genre": "Hip-Hop"
   },
   {
@@ -988,7 +988,7 @@ export const songs: Song[] = [
     "artist": "Carlita",
     "year": 2022,
     "spotifyId": "5P1oT1yKRSlGWjDy5ijOm7",
-    "previewUrl": "",
+    "previewUrl": "https://mxster.de/audio/song_109.mp3",
     "genre": "Electronic"
   },
   {
@@ -997,7 +997,7 @@ export const songs: Song[] = [
     "artist": "Titiyo",
     "year": 2001,
     "spotifyId": "7GmHOAdriOnI9s5S79GAUr",
-    "previewUrl": "",
+    "previewUrl": "https://mxster.de/audio/song_110.mp3",
     "genre": "Pop"
   },
   {
@@ -1006,7 +1006,7 @@ export const songs: Song[] = [
     "artist": "The Rasmus",
     "year": 2003,
     "spotifyId": "1fr92Vupmcs2vgLMFVQ7rd",
-    "previewUrl": "",
+    "previewUrl": "https://mxster.de/audio/song_111.mp3",
     "genre": "Rock"
   },
   {
@@ -1015,7 +1015,7 @@ export const songs: Song[] = [
     "artist": "French Affair",
     "year": 2000,
     "spotifyId": "6ou0PY1UD7gdRnHbbyiHaA",
-    "previewUrl": "",
+    "previewUrl": "https://mxster.de/audio/song_112.mp3",
     "genre": "Electronic"
   },
   {
@@ -1024,7 +1024,7 @@ export const songs: Song[] = [
     "artist": "Heroes Del Silencio",
     "year": 1990,
     "spotifyId": "4rJdaSwOCHLBhxdMsymeMw",
-    "previewUrl": "",
+    "previewUrl": "https://mxster.de/audio/song_113.mp3",
     "genre": "Rock"
   },
   {
@@ -1033,7 +1033,7 @@ export const songs: Song[] = [
     "artist": "Gigi D'Agostino",
     "year": 1999,
     "spotifyId": "0ZqveF2rEFlz2oqF2xrriP",
-    "previewUrl": "",
+    "previewUrl": "https://mxster.de/audio/song_114.mp3",
     "genre": "Electronic"
   },
   {
@@ -1042,7 +1042,7 @@ export const songs: Song[] = [
     "artist": "Day Din",
     "year": 2012,
     "spotifyId": "593pYRPHQ17uYUECWqEEEL",
-    "previewUrl": "",
+    "previewUrl": "https://mxster.de/audio/song_115.mp3",
     "genre": "Electronic"
   },
   {
@@ -1051,7 +1051,7 @@ export const songs: Song[] = [
     "artist": "Ace of Base",
     "year": 1993,
     "spotifyId": "6kWJvPfC4DgUpRsXKNa9z9",
-    "previewUrl": "",
+    "previewUrl": "https://mxster.de/audio/song_116.mp3",
     "genre": "Pop"
   },
   {
@@ -1060,7 +1060,7 @@ export const songs: Song[] = [
     "artist": "Dr. Alban",
     "year": 1992,
     "spotifyId": "2qjDNbgLzfBpCvDwfw11Qg",
-    "previewUrl": "",
+    "previewUrl": "https://mxster.de/audio/song_117.mp3",
     "genre": "Electronic"
   },
   {
@@ -1069,7 +1069,7 @@ export const songs: Song[] = [
     "artist": "SNAP!",
     "year": 1992,
     "spotifyId": "5uFYYOyT3EclOVhiFzPJSz",
-    "previewUrl": "",
+    "previewUrl": "https://mxster.de/audio/song_118.mp3",
     "genre": "Electronic"
   },
   {
@@ -1078,7 +1078,7 @@ export const songs: Song[] = [
     "artist": "Massive Töne",
     "year": 2002,
     "spotifyId": "1tVhmi6ltumhZtd1pM8Tya",
-    "previewUrl": "",
+    "previewUrl": "https://mxster.de/audio/song_119.mp3",
     "genre": "Hip-Hop"
   },
   {
@@ -1087,7 +1087,7 @@ export const songs: Song[] = [
     "artist": "Nelly",
     "year": 2013,
     "spotifyId": "7rbWpbXVwY2DFrZpWYPtVj",
-    "previewUrl": "",
+    "previewUrl": "https://mxster.de/audio/song_120.mp3",
     "genre": "Hip-Hop"
   },
   {
@@ -1096,7 +1096,7 @@ export const songs: Song[] = [
     "artist": "Manfred Mann's Earth Band",
     "year": 1980,
     "spotifyId": "3iCUemj0xhPUqIQAH5Evx6",
-    "previewUrl": "",
+    "previewUrl": "https://mxster.de/audio/song_121.mp3",
     "genre": "Rock"
   },
   {
@@ -1105,7 +1105,7 @@ export const songs: Song[] = [
     "artist": "Bob Dylan",
     "year": 1967,
     "spotifyId": "0Fnb2pfBfu0ka33d6Yki17",
-    "previewUrl": "",
+    "previewUrl": "https://mxster.de/audio/song_122.mp3",
     "genre": "Rock"
   },
   {
@@ -1114,7 +1114,7 @@ export const songs: Song[] = [
     "artist": "Alle Farben",
     "year": 2014,
     "spotifyId": "6ggAYREO7PlFwI2vbOG3dp",
-    "previewUrl": "",
+    "previewUrl": "https://mxster.de/audio/song_123.mp3",
     "genre": "Electronic"
   },
   {
@@ -1123,7 +1123,7 @@ export const songs: Song[] = [
     "artist": "Lexer",
     "year": 2015,
     "spotifyId": "0eTScHHJpojI1zWkbwelg2",
-    "previewUrl": "",
+    "previewUrl": "https://mxster.de/audio/song_124.mp3",
     "genre": "Electronic"
   },
   {
@@ -1132,7 +1132,7 @@ export const songs: Song[] = [
     "artist": "Oliver Koletzki",
     "year": 2014,
     "spotifyId": "4xVtkEmgVrqKqiowB8NA9E",
-    "previewUrl": "",
+    "previewUrl": "https://mxster.de/audio/song_125.mp3",
     "genre": "Electronic"
   },
   {
@@ -1141,7 +1141,7 @@ export const songs: Song[] = [
     "artist": "Fre3 Fly",
     "year": 2014,
     "spotifyId": "2tHesZus3e0iUbrho2CmU9",
-    "previewUrl": "",
+    "previewUrl": "https://mxster.de/audio/song_126.mp3",
     "genre": "Electronic"
   },
   {
@@ -1150,7 +1150,7 @@ export const songs: Song[] = [
     "artist": "M83",
     "year": 2011,
     "spotifyId": "6GyFP1nfCDB8lbD2bG0Hq9",
-    "previewUrl": "",
+    "previewUrl": "https://mxster.de/audio/song_127.mp3",
     "genre": "Electronic"
   },
   {
@@ -1159,7 +1159,7 @@ export const songs: Song[] = [
     "artist": "Heiko & Maiko",
     "year": 2005,
     "spotifyId": "56ev3tFYAzuMEUIKUhLcTO",
-    "previewUrl": "",
+    "previewUrl": "https://mxster.de/audio/song_128.mp3",
     "genre": "Electronic"
   },
   {
@@ -1168,7 +1168,7 @@ export const songs: Song[] = [
     "artist": "Moby",
     "year": 1999,
     "spotifyId": "0jpk88zk40MjQ63ljrq7V2",
-    "previewUrl": "",
+    "previewUrl": "https://mxster.de/audio/song_129.mp3",
     "genre": "Electronic"
   },
   {
@@ -1177,7 +1177,7 @@ export const songs: Song[] = [
     "artist": "Eminem",
     "year": 2002,
     "spotifyId": "7MJQ9Nfxzh8LPZ9e9u68Fq",
-    "previewUrl": "",
+    "previewUrl": "https://mxster.de/audio/song_130.mp3",
     "genre": "Hip-Hop"
   },
   {
@@ -1186,7 +1186,7 @@ export const songs: Song[] = [
     "artist": "blink-182",
     "year": 1999,
     "spotifyId": "2m1hi0nfMR9vdGC8UcrnwU",
-    "previewUrl": "",
+    "previewUrl": "https://mxster.de/audio/song_131.mp3",
     "genre": "Rock"
   },
   {
@@ -1195,7 +1195,7 @@ export const songs: Song[] = [
     "artist": "Huey Lewis & The News",
     "year": 1985,
     "spotifyId": "2olVm1lHicpveMAo4AUDRB",
-    "previewUrl": "",
+    "previewUrl": "https://mxster.de/audio/song_132.mp3",
     "genre": "Rock"
   },
   {
@@ -1204,7 +1204,7 @@ export const songs: Song[] = [
     "artist": "Dan Hartman",
     "year": 1979,
     "spotifyId": "22P9rbM3of2anwOn9kz520",
-    "previewUrl": "",
+    "previewUrl": "https://mxster.de/audio/song_133.mp3",
     "genre": "Soul"
   },
   {
@@ -1213,7 +1213,7 @@ export const songs: Song[] = [
     "artist": "The Sugarhill Gang",
     "year": 1979,
     "spotifyId": "0tm6gsXe0LSm9zeSspyMQu",
-    "previewUrl": "",
+    "previewUrl": "https://mxster.de/audio/song_134.mp3",
     "genre": "Hip-Hop"
   },
   {
@@ -1222,7 +1222,7 @@ export const songs: Song[] = [
     "artist": "Marlena Shaw",
     "year": 1973,
     "spotifyId": "4RoYXfnJ0HHDPUDAlrXDPa",
-    "previewUrl": "",
+    "previewUrl": "https://mxster.de/audio/song_135.mp3",
     "genre": "Soul"
   },
   {
@@ -1231,7 +1231,7 @@ export const songs: Song[] = [
     "artist": "Mary Clark",
     "year": 1980,
     "spotifyId": "6F89XevB7pfe24xIsFIeqS",
-    "previewUrl": "",
+    "previewUrl": "https://mxster.de/audio/song_136.mp3",
     "genre": "Soul"
   },
   {
@@ -1240,7 +1240,7 @@ export const songs: Song[] = [
     "artist": "Ray Mang",
     "year": 1996,
     "spotifyId": "6Xkgtga1mMCl1hZh8a9d8E",
-    "previewUrl": "",
+    "previewUrl": "https://mxster.de/audio/song_137.mp3",
     "genre": "Electronic"
   },
   {
@@ -1249,7 +1249,7 @@ export const songs: Song[] = [
     "artist": "Róisín Murphy",
     "year": 2020,
     "spotifyId": "0kjRETCIY4HVUYlsPXvHXA",
-    "previewUrl": "",
+    "previewUrl": "https://mxster.de/audio/song_138.mp3",
     "genre": "Electronic"
   },
   {
@@ -1258,7 +1258,7 @@ export const songs: Song[] = [
     "artist": "The Postal Service",
     "year": 2003,
     "spotifyId": "2U7bhB1xvTrsO3v4rInXGn",
-    "previewUrl": "",
+    "previewUrl": "https://mxster.de/audio/song_139.mp3",
     "genre": "Electronic"
   },
   {
@@ -1267,7 +1267,7 @@ export const songs: Song[] = [
     "artist": "Trans-X",
     "year": 1986,
     "spotifyId": "1sySpMud8bvFU9SVfcrzrc",
-    "previewUrl": "",
+    "previewUrl": "https://mxster.de/audio/song_140.mp3",
     "genre": "Electronic"
   },
   {
@@ -1276,7 +1276,7 @@ export const songs: Song[] = [
     "artist": "The Outfield",
     "year": 1985,
     "spotifyId": "4oDZ5L8izBals6jKBJDBcX",
-    "previewUrl": "",
+    "previewUrl": "https://mxster.de/audio/song_141.mp3",
     "genre": "Rock"
   },
   {
@@ -1285,7 +1285,7 @@ export const songs: Song[] = [
     "artist": "Bobby Womack",
     "year": 1972,
     "spotifyId": "2zyTP97uGsIc1C4KNNEkyn",
-    "previewUrl": "",
+    "previewUrl": "https://mxster.de/audio/song_142.mp3",
     "genre": "Soul"
   },
   {
@@ -1294,7 +1294,7 @@ export const songs: Song[] = [
     "artist": "Spectra",
     "year": 2017,
     "spotifyId": "351hT2qfzHywu9sanfSn9o",
-    "previewUrl": "",
+    "previewUrl": "https://mxster.de/audio/song_143.mp3",
     "genre": "Electronic"
   },
   {
@@ -1303,7 +1303,7 @@ export const songs: Song[] = [
     "artist": "Dire Straits",
     "year": 1978,
     "spotifyId": "37Tmv4NnfQeb0ZgUC4fOJj",
-    "previewUrl": "",
+    "previewUrl": "https://mxster.de/audio/song_144.mp3",
     "genre": "Rock"
   },
   {
@@ -1312,7 +1312,7 @@ export const songs: Song[] = [
     "artist": "Christopher Cross",
     "year": 1979,
     "spotifyId": "7gUMShP1l20tC0xf17Zplk",
-    "previewUrl": "",
+    "previewUrl": "https://mxster.de/audio/song_145.mp3",
     "genre": "Rock"
   },
   {
@@ -1321,7 +1321,7 @@ export const songs: Song[] = [
     "artist": "Sylvester",
     "year": 1984,
     "spotifyId": "0jpUeBKN2J0sRIvmIpMD8y",
-    "previewUrl": "",
+    "previewUrl": "https://mxster.de/audio/song_146.mp3",
     "genre": "Soul"
   },
   {
@@ -1330,7 +1330,7 @@ export const songs: Song[] = [
     "artist": "David Bowie",
     "year": 1977,
     "spotifyId": "7Jh1bpe76CNTCgdgAdBw4Z",
-    "previewUrl": "",
+    "previewUrl": "https://mxster.de/audio/song_147.mp3",
     "genre": "Rock"
   },
   {
@@ -1339,7 +1339,7 @@ export const songs: Song[] = [
     "artist": "Eagles",
     "year": 1976,
     "spotifyId": "40riOy7x9W7GXjyGp4pjAv",
-    "previewUrl": "",
+    "previewUrl": "https://mxster.de/audio/song_148.mp3",
     "genre": "Rock"
   },
   {
@@ -1348,7 +1348,7 @@ export const songs: Song[] = [
     "artist": "Backstreet Boys",
     "year": 1999,
     "spotifyId": "47BBI51FKFwOMlIiX6m8ya",
-    "previewUrl": "",
+    "previewUrl": "https://mxster.de/audio/song_149.mp3",
     "genre": "Pop"
   },
   {
@@ -1357,7 +1357,7 @@ export const songs: Song[] = [
     "artist": "Lady Gaga",
     "year": 2009,
     "spotifyId": "0SiywuOBRcynK0uKGWdCnn",
-    "previewUrl": "",
+    "previewUrl": "https://mxster.de/audio/song_150.mp3",
     "genre": "Pop"
   },
   {
@@ -1366,7 +1366,7 @@ export const songs: Song[] = [
     "artist": "Die Ärzte",
     "year": 1993,
     "spotifyId": "4P4PHxZQ1FcwQKKnfEPsAZ",
-    "previewUrl": "",
+    "previewUrl": "https://mxster.de/audio/song_151.mp3",
     "genre": "Rock"
   },
   {
@@ -1375,7 +1375,7 @@ export const songs: Song[] = [
     "artist": "Survivor",
     "year": 1985,
     "spotifyId": "2KH16WveTQWT6KOG9Rg6e2",
-    "previewUrl": "",
+    "previewUrl": "https://mxster.de/audio/song_152.mp3",
     "genre": "Rock"
   },
   {
@@ -1384,7 +1384,7 @@ export const songs: Song[] = [
     "artist": "Johnny Cash",
     "year": 1963,
     "spotifyId": "5rDkA2TFOImbiVenmnE9r4",
-    "previewUrl": "",
+    "previewUrl": "https://mxster.de/audio/song_153.mp3",
     "genre": "Country"
   },
   {
@@ -1393,7 +1393,7 @@ export const songs: Song[] = [
     "artist": "Nena",
     "year": 1983,
     "spotifyId": "2IJftBfq7pJ43tfnOR0RB3",
-    "previewUrl": "",
+    "previewUrl": "https://mxster.de/audio/song_154.mp3",
     "genre": "Pop"
   },
   {
@@ -1402,7 +1402,7 @@ export const songs: Song[] = [
     "artist": "Taylor Swift",
     "year": 2014,
     "spotifyId": "0cqRj7pUJDkTCEsJkx8snD",
-    "previewUrl": "",
+    "previewUrl": "https://mxster.de/audio/song_155.mp3",
     "genre": "Pop"
   },
   {
@@ -1411,7 +1411,7 @@ export const songs: Song[] = [
     "artist": "Cyndi Lauper",
     "year": 1983,
     "spotifyId": "4y1LsJpmMti1PfRQV9AWWe",
-    "previewUrl": "",
+    "previewUrl": "https://mxster.de/audio/song_156.mp3",
     "genre": "Pop"
   },
   {
@@ -1420,7 +1420,7 @@ export const songs: Song[] = [
     "artist": "Bob Dylan",
     "year": 1965,
     "spotifyId": "3AhXZa8sUQht0UEdBJgpGc",
-    "previewUrl": "",
+    "previewUrl": "https://mxster.de/audio/song_157.mp3",
     "genre": "Rock"
   },
   {
@@ -1429,7 +1429,7 @@ export const songs: Song[] = [
     "artist": "The Rolling Stones",
     "year": 1966,
     "spotifyId": "63T7DJ1AFDD6Bn8VzG6JE8",
-    "previewUrl": "",
+    "previewUrl": "https://mxster.de/audio/song_158.mp3",
     "genre": "Rock"
   },
   {
@@ -1438,7 +1438,7 @@ export const songs: Song[] = [
     "artist": "The White Stripes",
     "year": 2003,
     "spotifyId": "3dPQuX8Gs42Y7b454ybpMR",
-    "previewUrl": "",
+    "previewUrl": "https://mxster.de/audio/song_159.mp3",
     "genre": "Rock"
   },
   {
@@ -1447,7 +1447,7 @@ export const songs: Song[] = [
     "artist": "Lynyrd Skynyrd",
     "year": 1974,
     "spotifyId": "7e89621JPkKaeDSTQ3avtg",
-    "previewUrl": "",
+    "previewUrl": "https://mxster.de/audio/song_160.mp3",
     "genre": "Rock"
   },
   {
@@ -1456,7 +1456,7 @@ export const songs: Song[] = [
     "artist": "CHIC",
     "year": 1978,
     "spotifyId": "4qL9VYPB4XwJKAOq4xn2Mh",
-    "previewUrl": "",
+    "previewUrl": "https://mxster.de/audio/song_161.mp3",
     "genre": "Soul"
   },
   {
@@ -1465,7 +1465,7 @@ export const songs: Song[] = [
     "artist": "Camouflage",
     "year": 1988,
     "spotifyId": "2hUINMzSnrhcqpdcWiY0oa",
-    "previewUrl": "",
+    "previewUrl": "https://mxster.de/audio/song_162.mp3",
     "genre": "Electronic"
   },
   {
@@ -1474,7 +1474,7 @@ export const songs: Song[] = [
     "artist": "Hanson",
     "year": 1997,
     "spotifyId": "0lnxrQAd9ZxbhBBe7d8FO8",
-    "previewUrl": "",
+    "previewUrl": "https://mxster.de/audio/song_163.mp3",
     "genre": "Pop"
   },
   {
@@ -1483,7 +1483,7 @@ export const songs: Song[] = [
     "artist": "Scissor Sisters",
     "year": 2006,
     "spotifyId": "1q9l6c8bAzqWcvO3DM6FsR",
-    "previewUrl": "",
+    "previewUrl": "https://mxster.de/audio/song_164.mp3",
     "genre": "Pop"
   },
   {
@@ -1492,7 +1492,7 @@ export const songs: Song[] = [
     "artist": "Wir sind Helden",
     "year": 2005,
     "spotifyId": "4hYinIaRxdaoEFSQni6K6I",
-    "previewUrl": "",
+    "previewUrl": "https://mxster.de/audio/song_165.mp3",
     "genre": "Pop"
   },
   {
@@ -1501,7 +1501,7 @@ export const songs: Song[] = [
     "artist": "Pitbull, Kesha",
     "year": 2012,
     "spotifyId": "3cHyrEgdyYRjgJKSOiOtcS",
-    "previewUrl": "",
+    "previewUrl": "https://mxster.de/audio/song_166.mp3",
     "genre": "Pop"
   },
   {
@@ -1510,7 +1510,7 @@ export const songs: Song[] = [
     "artist": "Sia",
     "year": 2014,
     "spotifyId": "4VrWlk8IQxevMvERoX08iC",
-    "previewUrl": "",
+    "previewUrl": "https://mxster.de/audio/song_167.mp3",
     "genre": "Pop"
   },
   {
@@ -1519,7 +1519,7 @@ export const songs: Song[] = [
     "artist": "Sinéad O'Connor",
     "year": 1990,
     "spotifyId": "5GHY1DFWKz3Prg2V0Iodqo",
-    "previewUrl": "",
+    "previewUrl": "https://mxster.de/audio/song_168.mp3",
     "genre": "Pop"
   },
   {
@@ -1528,7 +1528,7 @@ export const songs: Song[] = [
     "artist": "Coolio",
     "year": 1995,
     "spotifyId": "1DIXPcTDzTj8ZMHt3PDt8p",
-    "previewUrl": "",
+    "previewUrl": "https://mxster.de/audio/song_169.mp3",
     "genre": "Hip-Hop"
   },
   {
@@ -1537,7 +1537,7 @@ export const songs: Song[] = [
     "artist": "Gorillaz",
     "year": 2005,
     "spotifyId": "0d28khcov6AiegSCpG5TuT",
-    "previewUrl": "",
+    "previewUrl": "https://mxster.de/audio/song_170.mp3",
     "genre": "Hip-Hop"
   },
   {
@@ -1546,7 +1546,7 @@ export const songs: Song[] = [
     "artist": "Journey",
     "year": 1981,
     "spotifyId": "77NNZQSqzLNqh2A9JhLRkg",
-    "previewUrl": "",
+    "previewUrl": "https://mxster.de/audio/song_171.mp3",
     "genre": "Rock"
   },
   {
@@ -1555,7 +1555,7 @@ export const songs: Song[] = [
     "artist": "The Pointer Sisters",
     "year": 1982,
     "spotifyId": "1ot6jEe4w4hYnsOPjd3xKQ",
-    "previewUrl": "",
+    "previewUrl": "https://mxster.de/audio/song_172.mp3",
     "genre": "Pop"
   },
   {
@@ -1564,7 +1564,7 @@ export const songs: Song[] = [
     "artist": "Lionel Richie",
     "year": 1983,
     "spotifyId": "7gaQtc0vrSpmRJpSMDiPEk",
-    "previewUrl": "",
+    "previewUrl": "https://mxster.de/audio/song_173.mp3",
     "genre": "R&B"
   },
   {
@@ -1573,7 +1573,7 @@ export const songs: Song[] = [
     "artist": "The Human League",
     "year": 1981,
     "spotifyId": "3L7RtEcu1Hw3OXrpnthngx",
-    "previewUrl": "",
+    "previewUrl": "https://mxster.de/audio/song_174.mp3",
     "genre": "Pop"
   },
   {
@@ -1582,7 +1582,7 @@ export const songs: Song[] = [
     "artist": "Boston",
     "year": 1976,
     "spotifyId": "1QEEqeFIZktqIpPI4jSVSF",
-    "previewUrl": "",
+    "previewUrl": "https://mxster.de/audio/song_175.mp3",
     "genre": "Rock"
   },
   {
@@ -1591,7 +1591,7 @@ export const songs: Song[] = [
     "artist": "Michael Jackson",
     "year": 1982,
     "spotifyId": "3BovdzfaX4jb5KFQwoPfAw",
-    "previewUrl": "",
+    "previewUrl": "https://mxster.de/audio/song_176.mp3",
     "genre": "Pop"
   },
   {
@@ -1600,7 +1600,7 @@ export const songs: Song[] = [
     "artist": "Aerosmith",
     "year": 1973,
     "spotifyId": "1xsYj84j7hUDDnTTerGWlH",
-    "previewUrl": "",
+    "previewUrl": "https://mxster.de/audio/song_177.mp3",
     "genre": "Rock"
   },
   {
@@ -1609,7 +1609,7 @@ export const songs: Song[] = [
     "artist": "Roxette",
     "year": 1988,
     "spotifyId": "2MaBAGBIttgv86bYytdx1f",
-    "previewUrl": "",
+    "previewUrl": "https://mxster.de/audio/song_178.mp3",
     "genre": "Pop"
   },
   {
@@ -1618,7 +1618,7 @@ export const songs: Song[] = [
     "artist": "America",
     "year": 1972,
     "spotifyId": "54eZmuggBFJbV7k248bTTt",
-    "previewUrl": "",
+    "previewUrl": "https://mxster.de/audio/song_179.mp3",
     "genre": "Rock"
   },
   {
@@ -1627,7 +1627,7 @@ export const songs: Song[] = [
     "artist": "Blue Öyster Cult",
     "year": 1976,
     "spotifyId": "5QTxFnGygVM4jFQiBovmRo",
-    "previewUrl": "",
+    "previewUrl": "https://mxster.de/audio/song_180.mp3",
     "genre": "Rock"
   },
   {
@@ -1636,7 +1636,7 @@ export const songs: Song[] = [
     "artist": "Whitesnake",
     "year": 1982,
     "spotifyId": "1tQ5TSr1tyeQUbHKBee0jv",
-    "previewUrl": "",
+    "previewUrl": "https://mxster.de/audio/song_181.mp3",
     "genre": "Rock"
   },
   {
@@ -1645,7 +1645,7 @@ export const songs: Song[] = [
     "artist": "Counting Crows",
     "year": 1993,
     "spotifyId": "5DiXcVovI0FcY2s0icWWUu",
-    "previewUrl": "",
+    "previewUrl": "https://mxster.de/audio/song_182.mp3",
     "genre": "Rock"
   },
   {
@@ -1654,7 +1654,7 @@ export const songs: Song[] = [
     "artist": "Ava Max",
     "year": 2020,
     "spotifyId": "7DnAm9FOTWE3cUvso43HhI",
-    "previewUrl": "",
+    "previewUrl": "https://mxster.de/audio/song_183.mp3",
     "genre": "Pop"
   },
   {
@@ -1663,7 +1663,7 @@ export const songs: Song[] = [
     "artist": "Los Del Rio",
     "year": 1993,
     "spotifyId": "6mhw2fEPH4fMF0wolNm96e",
-    "previewUrl": "",
+    "previewUrl": "https://mxster.de/audio/song_184.mp3",
     "genre": "Pop"
   },
   {
@@ -1672,7 +1672,7 @@ export const songs: Song[] = [
     "artist": "Natalie Imbruglia",
     "year": 1997,
     "spotifyId": "1Jaah2tmN9Hv81A87KZ1MU",
-    "previewUrl": "",
+    "previewUrl": "https://mxster.de/audio/song_185.mp3",
     "genre": "Pop"
   },
   {
@@ -1681,7 +1681,7 @@ export const songs: Song[] = [
     "artist": "Christina Aguilera",
     "year": 1999,
     "spotifyId": "11mwFrKvLXCbcVGNxffGyP",
-    "previewUrl": "",
+    "previewUrl": "https://mxster.de/audio/song_186.mp3",
     "genre": "Pop"
   },
   {
@@ -1690,7 +1690,7 @@ export const songs: Song[] = [
     "artist": "*NSYNC",
     "year": 2000,
     "spotifyId": "4r8lRYnoOGdEi6YyI5OC1o",
-    "previewUrl": "",
+    "previewUrl": "https://mxster.de/audio/song_187.mp3",
     "genre": "Pop"
   },
   {
@@ -1699,7 +1699,7 @@ export const songs: Song[] = [
     "artist": "Dead Or Alive",
     "year": 1985,
     "spotifyId": "1ChulFMnwxoD74Me8eX2TU",
-    "previewUrl": "",
+    "previewUrl": "https://mxster.de/audio/song_188.mp3",
     "genre": "Pop"
   },
   {
@@ -1708,7 +1708,7 @@ export const songs: Song[] = [
     "artist": "Genesis",
     "year": 1986,
     "spotifyId": "0xpBr84T3FTm9j4D1MdPtk",
-    "previewUrl": "",
+    "previewUrl": "https://mxster.de/audio/song_189.mp3",
     "genre": "Rock"
   },
   {
@@ -1717,7 +1717,7 @@ export const songs: Song[] = [
     "artist": "Gotye",
     "year": 2011,
     "spotifyId": "6md4w95cnKaW64JyEQ3A0L",
-    "previewUrl": "",
+    "previewUrl": "https://mxster.de/audio/song_190.mp3",
     "genre": "Pop"
   },
   {
@@ -1726,7 +1726,7 @@ export const songs: Song[] = [
     "artist": "Avril Lavigne",
     "year": 2002,
     "spotifyId": "5xEM5hIgJ1jjgcEBfpkt2F",
-    "previewUrl": "",
+    "previewUrl": "https://mxster.de/audio/song_191.mp3",
     "genre": "Pop"
   },
   {
@@ -1735,7 +1735,7 @@ export const songs: Song[] = [
     "artist": "Blondie",
     "year": 1980,
     "spotifyId": "52Rp3xBJFYYdmpgzDy0Quf",
-    "previewUrl": "",
+    "previewUrl": "https://mxster.de/audio/song_192.mp3",
     "genre": "Pop"
   },
   {
@@ -1744,7 +1744,7 @@ export const songs: Song[] = [
     "artist": "Meat Loaf",
     "year": 1993,
     "spotifyId": "4iZKamIcoFKiPO2URL3UJO",
-    "previewUrl": "",
+    "previewUrl": "https://mxster.de/audio/song_193.mp3",
     "genre": "Rock"
   },
   {
@@ -1753,7 +1753,7 @@ export const songs: Song[] = [
     "artist": "Savage Garden",
     "year": 1997,
     "spotifyId": "013AWvizllIUEC2FOBzOnh",
-    "previewUrl": "",
+    "previewUrl": "https://mxster.de/audio/song_194.mp3",
     "genre": "Pop"
   },
   {
@@ -1762,7 +1762,7 @@ export const songs: Song[] = [
     "artist": "3 Doors Down",
     "year": 2000,
     "spotifyId": "6ZOBP3NvffbU4SZcrnt1k6",
-    "previewUrl": "",
+    "previewUrl": "https://mxster.de/audio/song_195.mp3",
     "genre": "Rock"
   },
   {
@@ -1771,7 +1771,7 @@ export const songs: Song[] = [
     "artist": "Blondie",
     "year": 1999,
     "spotifyId": "43117dpRPkEXz7euANdYDV",
-    "previewUrl": "",
+    "previewUrl": "https://mxster.de/audio/song_196.mp3",
     "genre": "Rock"
   },
   {
@@ -1780,7 +1780,7 @@ export const songs: Song[] = [
     "artist": "Nelly Furtado",
     "year": 2006,
     "spotifyId": "2aI21FnmY7TJVKeMaoQZ0t",
-    "previewUrl": "",
+    "previewUrl": "https://mxster.de/audio/song_197.mp3",
     "genre": "Pop"
   },
   {
@@ -1789,7 +1789,7 @@ export const songs: Song[] = [
     "artist": "Metallica",
     "year": 1991,
     "spotifyId": "6QAsrXPnMSXIbV0yEJHlEX",
-    "previewUrl": "",
+    "previewUrl": "https://mxster.de/audio/song_198.mp3",
     "genre": "Metal"
   },
   {
@@ -1798,7 +1798,7 @@ export const songs: Song[] = [
     "artist": "Metallica",
     "year": 1998,
     "spotifyId": "2R6UrJ8uWbSIiHWmvRQvN8",
-    "previewUrl": "",
+    "previewUrl": "https://mxster.de/audio/song_199.mp3",
     "genre": "Metal"
   },
   {
@@ -1807,7 +1807,7 @@ export const songs: Song[] = [
     "artist": "Macklemore",
     "year": 2012,
     "spotifyId": "3bidbhpOYeV4knp8AIu8Xn",
-    "previewUrl": "",
+    "previewUrl": "https://mxster.de/audio/song_200.mp3",
     "genre": "Hip-Hop"
   },
   {
@@ -1816,7 +1816,7 @@ export const songs: Song[] = [
     "artist": "La Bouche",
     "year": 1994,
     "spotifyId": "2wz5weI4PREzpexKfrKgwv",
-    "previewUrl": "",
+    "previewUrl": "https://mxster.de/audio/song_201.mp3",
     "genre": "Electronic"
   },
   {
@@ -1825,7 +1825,7 @@ export const songs: Song[] = [
     "artist": "Eurythmics",
     "year": 1983,
     "spotifyId": "1TfqLAPs4K3s2rJMoCokcS",
-    "previewUrl": "",
+    "previewUrl": "https://mxster.de/audio/song_202.mp3",
     "genre": "Pop"
   },
   {
@@ -1834,7 +1834,7 @@ export const songs: Song[] = [
     "artist": "Sandra",
     "year": 1985,
     "spotifyId": "0MSAWjq5aWfTUNL9hv7Epd",
-    "previewUrl": "",
+    "previewUrl": "https://mxster.de/audio/song_203.mp3",
     "genre": "Pop"
   },
   {
@@ -1843,7 +1843,7 @@ export const songs: Song[] = [
     "artist": "Modern Talking",
     "year": 1985,
     "spotifyId": "0Zn63G0XTiqXwr1KSmARWz",
-    "previewUrl": "",
+    "previewUrl": "https://mxster.de/audio/song_204.mp3",
     "genre": "Pop"
   },
   {
@@ -1852,7 +1852,7 @@ export const songs: Song[] = [
     "artist": "Frankie Goes To Hollywood",
     "year": 1984,
     "spotifyId": "1GbyYL0B0Mjn3kSbrEwKKI",
-    "previewUrl": "",
+    "previewUrl": "https://mxster.de/audio/song_205.mp3",
     "genre": "Pop"
   },
   {
@@ -1861,7 +1861,7 @@ export const songs: Song[] = [
     "artist": "The Hooters",
     "year": 1982,
     "spotifyId": "0jvrac0ac39rXsPgG2MSZ3",
-    "previewUrl": "",
+    "previewUrl": "https://mxster.de/audio/song_206.mp3",
     "genre": "Rock"
   },
   {
@@ -1870,7 +1870,7 @@ export const songs: Song[] = [
     "artist": "RÜFÜS DU SOL",
     "year": 2019,
     "spotifyId": "0IREzm51kz0WsClgje6jeP",
-    "previewUrl": "",
+    "previewUrl": "https://mxster.de/audio/song_207.mp3",
     "genre": "Electronic"
   },
   {
@@ -1879,7 +1879,7 @@ export const songs: Song[] = [
     "artist": "Lisa Stansfield",
     "year": 1989,
     "spotifyId": "7gfMuyx2NauRQbrDiZcimh",
-    "previewUrl": "",
+    "previewUrl": "https://mxster.de/audio/song_208.mp3",
     "genre": "Electronic"
   }
 ]

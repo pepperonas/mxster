@@ -24,7 +24,7 @@ mxster ist ein **Multiplayer-Musikquiz** mit drei verschiedenen Spielmodi:
 
 ## ✨ Features
 
-- 🎵 **Spotify Premium Integration** - Volle Song-Wiedergabe (keine 30s Previews!)
+- 🎵 **Hybrid Audio System** - Spotify Premium (volle Songs) + Preview-Modus (30s Clips, unbegrenzte Nutzer)
 - 🎯 **Tolerantes Raten** - Fuzzy Matching erkennt Tippfehler
 - 📱 **Progressive Web App** - Installierbar auf Smartphone & Desktop
 - 🏆 **Live Punktesystem** - Echtzeit-Updates nach jeder Runde (5+5+5/2/1 Punkte)
@@ -90,11 +90,12 @@ Schalte 20 spannende Erfolge frei und zeige dein Können!
 ### Option 1: Online spielen (am einfachsten!)
 
 1. Öffne [mxster.de](https://mxster.de)
-2. Klicke auf "Mit Spotify starten"
-3. Logge dich mit deinem **Spotify Premium Account** ein
-4. Wähle Spielmodus und Variante
-5. Füge Spieler hinzu
-6. Los geht's! 🎉
+2. Wähle Audio-Modus:
+   - **"Jetzt spielen (Gratis)"** - 30s Clips, unbegrenzte Spieler, kein Login nötig
+   - **"Mit Spotify Premium"** - Volle Songs, max. 25 Spieler, Spotify Premium erforderlich
+3. Wähle Spielmodus und Variante
+4. Füge Spieler hinzu
+5. Los geht's! 🎉
 
 **Fertig!** Du brauchst nichts zu installieren.
 
@@ -1448,6 +1449,94 @@ Dieses Projekt ist unter der **MIT-Lizenz** veröffentlicht. Siehe [LICENSE](LIC
 - **Browser-Kompatibilität**: Chrome, Firefox, Edge, Safari (neueste Versionen)
 
 ## 📝 Changelog
+
+### v0.0.27 (2025-11-05)
+
+**🎵 Hybrid Audio System - Spotify 25-User Limit Lösung**
+
+**Problem:**
+Seit Mai 2025 limitiert Spotify alle Indie-Developer-Apps auf maximal 25 authentifizierte Nutzer im Development Mode. Extended Quota Mode ist nur für registrierte Firmen mit 250.000+ aktiven Nutzern verfügbar.
+
+**Lösung:**
+Implementierung eines Hybrid Audio Systems mit zwei Modi:
+
+**Audio-Modi:**
+- 🎵 **Preview-Modus (Gratis)** - Standard für alle Nutzer:
+  - 30-Sekunden-Clips von Spotify
+  - Kein Login erforderlich
+  - Unbegrenzte Spieler
+  - Ausreichend für Quiz-Gameplay
+
+- 🎧 **Spotify Premium** - Optional für VIP-Nutzer (max. 25):
+  - Volle Song-Wiedergabe
+  - Hochauflösendes Audio
+  - Spotify Premium Account erforderlich
+  - Begrenzt auf 25 Spieler
+
+**Technische Implementation:**
+- `PreviewPlayerService.ts` - Howler.js-basierter Player für 30s Clips
+- `MusicPlayerService.ts` - Abstraktionsschicht mit automatischem Fallback
+- `LandingPage.tsx` - Zwei-Button-Auswahl mit Vergleichstabelle
+- `MusicPlayer.tsx` - Mode-Badges und unified Player-Interface
+- `GameScreen.tsx` - Transparente Integration ohne Gameplay-Änderungen
+
+**User Experience:**
+- Klarer Mode-Indikator im Player (🎧 Spotify Premium / 🎵 Preview 30s)
+- Automatischer Fallback bei Spotify-Fehlern
+- localStorage-basierte Präferenz-Speicherung
+- Keine Änderungen am Gameplay erforderlich
+
+**Dependencies:**
+- `howler@2.2.3` - HTML5 Audio Player für Preview-Clips
+- Bestehende Spotify Web Playback SDK Integration beibehalten
+
+### v0.0.27 (2025-11-05)
+
+**🎵 Self-Hosted Audio System**
+
+**Complete Self-Hosting Infrastructure:**
+- ✅ **Full Song Downloads**: 209 songs (128 kbps MP3, ~933 MB total) via yt-dlp
+- ✅ **VPS Integration**: Automated upload to https://mxster.de/audio/
+- ✅ **URL Management**: Auto-update of previewUrl fields in songs.json and songs.ts
+- ✅ **Validation**: HTTPS accessibility checks for all 209 audio files
+- ✅ **nginx Configuration**: Optimized audio serving with CORS, caching, and range requests
+
+**New Scripts (`scripts/audio-hosting/`):**
+- `download-songs.js` - Downloads full songs from YouTube (128 kbps MP3)
+  - Options: `--limit N` (test mode), `--resume` (skip existing files)
+  - Features: 3 concurrent downloads, 3 retries per song, batch processing
+  - Output: ~3.5 MB per song average, progress tracking
+- `upload-to-vps.js` - Uploads MP3s to VPS via rsync
+  - Options: `--dry-run` (preview changes)
+  - Features: Incremental sync, permission setting, nginx verification
+- `update-song-urls.js` - Updates previewUrl in songs.json and songs.ts
+  - Options: `--dry-run` (preview changes)
+  - Features: Auto-backup, 100% coverage verification
+- `validate-audio.js` - Validates HTTPS accessibility
+  - Options: `--full` (all 209 songs), default: 10 sample songs
+  - Features: HTTP status, content-type, file size checks
+
+**Benefits:**
+- 🌟 **Unlimited Users**: No 25-user Development Mode limit
+- 🎵 **Full Songs**: 3-5 minute tracks instead of 30-second previews
+- 🔓 **No Auth Required**: Direct audio playback without Spotify login
+- 💾 **Offline-Ready**: PWA can cache songs for offline playback
+
+**Technical Details:**
+- Average Song Size: 4.47 MB (128 kbps MP3)
+- Total Storage: 933.43 MB on VPS
+- Quality: 128 kbps MP3 (balance of size vs quality)
+- nginx: Range requests enabled for seeking, 1-year cache, CORS enabled
+
+**🐛 Bug Fixes**
+- Fixed random start position feature for self-hosted audio (now works in preview mode)
+- Fixed Timeline Global win condition (now counts total cards across all players, winner = most cards after 10 total)
+- Fixed game end dialog not closing when clicking "Zur Startseite" or "Neue Runde"
+
+**🧪 Tests**
+- Added comprehensive tests for Timeline Global win condition
+- All 64 unit tests passing
+- HTTP/2 compatibility fix in validation script
 
 ### v0.0.26 (2025-11-05)
 

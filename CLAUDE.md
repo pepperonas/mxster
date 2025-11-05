@@ -10,8 +10,8 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ### Key Technologies
 - **Frontend**: React 19 + TypeScript + Vite 5.0
-- **Audio**: Spotify Web Playback SDK (Premium) / Howler.js fallback
-- **Auth**: Spotify OAuth2 PKCE
+- **Audio**: Hybrid System - Spotify Web Playback SDK (Premium, max 25 users) + Howler.js (Preview, unlimited users)
+- **Auth**: Spotify OAuth2 PKCE (optional for Premium mode)
 - **PWA**: vite-plugin-pwa
 - **3D Graphics**: Three.js particle animations
 - **State**: React Context API
@@ -107,9 +107,71 @@ card-generator/output/
 Spotify Playlist → docs/songs.json → pwa/src/data/songs.ts + qr-codes/*.png
 ```
 
-### Auth & Playback
-- **Auth**: OAuth PKCE → localStorage token → Web Playback SDK
-- **Playback**: Spotify SDK (Premium, full tracks) / Howler.js fallback (30s clips)
+### Hybrid Audio System (v0.0.27)
+
+**Problem:** Spotify Development Mode limits apps to 25 authenticated users. Extended Quota Mode requires registered company + 250k users.
+
+**Solution:** Dual-mode audio system with automatic fallback:
+
+**Audio Modes:**
+1. **Preview Mode** (Default, Unlimited Users):
+   - 30-second clips from `song.previewUrl`
+   - No authentication required
+   - Howler.js HTML5 Audio player
+   - Pre-fetched URLs stored in songs.ts
+   - Ideal for quiz gameplay
+
+2. **Spotify Premium** (Optional, Max 25 Users):
+   - Full song playback via Web Playback SDK
+   - Requires Spotify Premium + OAuth login
+   - High-quality audio streaming
+   - Optional for VIP experience
+
+**Architecture:**
+```
+MusicPlayerService (Abstraction Layer)
+├── SpotifyPlayerService (Spotify Web Playback SDK)
+│   ├── Full songs, Premium only, max 25 users
+│   └── OAuth PKCE authentication
+└── PreviewPlayerService (Howler.js)
+    ├── 30s clips, no auth, unlimited users
+    └── Static preview URLs from songs.ts
+```
+
+**User Flow:**
+```
+Landing Page
+├── Button 1: "Jetzt spielen (Gratis)" → Preview Mode
+└── Button 2: "Mit Spotify Premium" → Spotify Mode
+    ↓
+localStorage.setItem('audio_mode_preference', mode)
+    ↓
+MusicPlayer reads preference → initializes correct player
+    ↓
+Automatic fallback: Spotify fails → Preview → Error
+```
+
+**Key Files:**
+- `pwa/src/services/PreviewPlayerService.ts` - Howler.js wrapper (270 lines)
+- `pwa/src/services/MusicPlayerService.ts` - Unified abstraction (298 lines)
+- `pwa/src/screens/LandingPage.tsx` - Two-button selection + comparison
+- `pwa/src/components/game/MusicPlayer.tsx` - Mode badges, unified controls
+- `pwa/src/screens/GameScreen.tsx` - Transparent integration
+
+**Preview URL Management:**
+```bash
+# Fetch all preview URLs (requires Spotify token, one-time operation)
+cd pwa
+npm run update-previews
+
+# Updates songs.json with current preview URLs
+# Then commit to git - users access cached URLs without auth
+```
+
+**Auth & Playback:**
+- **Spotify Mode**: OAuth PKCE → localStorage token → Web Playback SDK
+- **Preview Mode**: No auth → Direct URL playback via Howler.js
+- **Fallback Chain**: Spotify → Preview → Error toast
 
 ### Game Modes & Variants
 
@@ -359,6 +421,55 @@ All files hosted via GitHub raw URLs (auto-update, no manual releases):
 - **Song count**: Auto-dynamic via `songs.length` in LandingPage.tsx (updates on build)
 
 ## Recent Changes
+
+### v0.0.27 (2025-11-05) - Self-Hosted Audio System
+**Complete self-hosting infrastructure for unlimited users without Spotify limitations:**
+
+**Core Implementation:**
+- ✅ **download-songs.js**: Downloads 209 songs from YouTube (128 kbps MP3, ~933 MB total)
+  - 3 concurrent downloads, 3 retries per song, batch processing
+  - Options: `--limit N` (test mode), `--resume` (skip existing)
+  - Output: `pwa/public/audio/*.mp3` (gitignored)
+- ✅ **upload-to-vps.js**: Uploads to VPS via rsync
+  - Incremental sync, permission setting (644), nginx verification
+  - Options: `--dry-run` (preview changes)
+  - Target: `root@mrx3k1.de:/var/www/html/mxster/audio/`
+- ✅ **update-song-urls.js**: Updates previewUrl in songs.json and songs.ts
+  - Auto-backup (.backup-YYYY-MM-DD), 100% coverage verification
+  - Options: `--dry-run` (preview changes)
+  - URL format: `https://mxster.de/audio/song_XXX.mp3`
+- ✅ **validate-audio.js**: HTTPS accessibility validation
+  - HTTP status 200, content-type audio/mpeg, file size checks (1-15 MB)
+  - Options: `--full` (all 209 songs), default: 10 sample songs
+  - Report: `docs/validation-report.json`
+
+**nginx Configuration:**
+```nginx
+location /audio/ {
+    alias /var/www/html/mxster/audio/;
+    add_header Cache-Control "public, max-age=31536000";
+    add_header Access-Control-Allow-Origin "*";
+    add_header Content-Type "audio/mpeg";
+    add_header Accept-Ranges bytes;
+}
+```
+
+**Bug Fixes:**
+- Fixed random start position for preview mode (now works with self-hosted audio)
+- Fixed Timeline Global win condition (counts total cards across all players, winner = most cards after 10 total)
+- Fixed game end dialog not closing when clicking buttons
+
+**Benefits:**
+- 🌟 Unlimited users (no 25-user Development Mode limit)
+- 🎵 Full songs (3-5 minutes) instead of 30-second previews
+- 🔓 No authentication required
+- 💾 Offline-ready (PWA can cache songs)
+
+**Technical Details:**
+- Average song size: 4.47 MB (128 kbps MP3)
+- Total storage: 933.43 MB on VPS
+- Quality: 128 kbps MP3 (balance of size vs quality)
+- All 64 unit tests passing
 
 ### v0.0.25 (2025-11-03) - Achievement System Bugfixes
 **Fixed 3 critical achievement bugs identified through thorough code analysis:**

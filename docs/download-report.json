@@ -1,0 +1,26 @@
+{
+  "timestamp": "2025-11-05T08:30:02.595Z",
+  "summary": {
+    "total": 209,
+    "successful": 2,
+    "skipped": 207,
+    "failed": 0,
+    "totalSizeMB": "11.16",
+    "quality": "128 kbps MP3"
+  },
+  "successful": [
+    {
+      "id": "song_054",
+      "title": "It's My House - 12\" Remix",
+      "artist": "Diana Ross",
+      "sizeMB": "5.61"
+    },
+    {
+      "id": "song_063",
+      "title": "It Feels So Good - 12\" Breakbeat Mix",
+      "artist": "Sonique",
+      "sizeMB": "5.55"
+    }
+  ],
+  "failed": []
+}

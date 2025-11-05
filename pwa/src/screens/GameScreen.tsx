@@ -18,7 +18,7 @@ import {
   MusicPlayer
 } from '@/components/game'
 import { GameEndStatsDialog } from '@/components'
-import { SpotifyPlayerService } from '@/services/SpotifyPlayerService'
+import { getMusicPlayer } from '@/services/MusicPlayerService'
 import {
   validateGuess,
   placeCardInTimeline,
@@ -99,13 +99,19 @@ export function GameScreen() {
       return
     }
 
-    // Check if logged in to Spotify (required for music playback)
-    if (!accessToken || !isLoggedIn) {
-      console.log('⚠️ No Spotify access token found, redirecting to login')
-      addToast('Bitte melde dich bei Spotify an, um das Spiel zu starten', 'error')
+    // Check audio mode preference
+    const audioModePreference = localStorage.getItem('audio_mode_preference')
+
+    // Only require Spotify login if user selected Spotify mode
+    if (audioModePreference === 'spotify' && (!accessToken || !isLoggedIn)) {
+      console.log('⚠️ Spotify mode selected but no access token found')
+      addToast('Bitte melde dich bei Spotify an, um im Premium-Modus zu spielen', 'error')
       navigate('/')
       return
     }
+
+    // Preview mode needs no authentication
+    console.log(`✅ Audio mode: ${audioModePreference || 'preview'} - Starting game`)
 
     // Start game timer (for LIGHTNING_FAST achievement)
     if (gameStartTime.current === null) {
@@ -1144,11 +1150,13 @@ export function GameScreen() {
         gameMode={gameMode}
         onClose={() => {
           console.log('🏠 Navigating to home page...')
+          closeModal()
           resetGame()
           navigate('/')
         }}
         onNewRound={() => {
           console.log('🔄 Starting new round with same players...')
+          closeModal()
           resetGame()
           navigate('/player-setup')
         }}
@@ -1240,10 +1248,12 @@ export function GameScreen() {
                   {
                     text: 'Spiel beenden',
                     onClick: () => {
-                      // Stop music (non-blocking)
-                      SpotifyPlayerService.pause().catch((error) => {
+                      // Stop music using MusicPlayerService
+                      try {
+                        getMusicPlayer().stop()
+                      } catch (error) {
                         console.error('❌ Error stopping music:', error)
-                      })
+                      }
 
                       // Clear game state first
                       resetGame()
