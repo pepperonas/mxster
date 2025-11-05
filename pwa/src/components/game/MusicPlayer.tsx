@@ -287,7 +287,7 @@ export function MusicPlayer({ song, onStateChange }: MusicPlayerProps) {
         {/* Progress Bar */}
         <div className="space-y-2">
           <div
-            className="h-2 bg-primary rounded-full overflow-hidden cursor-pointer"
+            className="h-3 bg-primary/50 rounded-full overflow-hidden cursor-pointer border border-accent/20 hover:border-accent/50 transition-colors"
             onClick={(e) => {
               const rect = e.currentTarget.getBoundingClientRect()
               const x = e.clientX - rect.left
@@ -296,15 +296,15 @@ export function MusicPlayer({ song, onStateChange }: MusicPlayerProps) {
             }}
           >
             <div
-              className={`h-full bg-gradient-to-r from-secondary to-accent transition-all ${
+              className={`h-full bg-gradient-to-r from-secondary via-accent to-secondary transition-all shadow-lg ${
                 isPlaying ? '' : 'animate-pulse'
               }`}
               style={{ width: `${progress}%` }}
             />
           </div>
-          <div className="flex justify-between text-xs text-text-secondary">
-            <span>{formatTime(currentPosition)}</span>
-            <span>{formatTime(duration || (audioMode === 'preview' ? 30000 : 0))}</span>
+          <div className="flex justify-between text-sm font-medium">
+            <span className="text-secondary">{formatTime(currentPosition)}</span>
+            <span className="text-text-secondary">{formatTime(duration || (audioMode === 'preview' ? 30000 : 0))}</span>
           </div>
         </div>
 
@@ -313,9 +313,12 @@ export function MusicPlayer({ song, onStateChange }: MusicPlayerProps) {
           <button
             onClick={handleTogglePlay}
             disabled={!playerReady || isLoading}
-            className="w-16 h-16 bg-secondary rounded-full flex items-center justify-center hover:bg-secondary/80 transition-colors text-2xl disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-14 h-14 bg-gradient-to-br from-secondary to-accent rounded-full flex items-center justify-center hover:scale-110 transition-all shadow-lg shadow-secondary/50 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
+            aria-label={isPlaying ? 'Pause' : 'Play'}
           >
-            {isLoading ? '⏳' : isPlaying ? '⏸' : '▶️'}
+            <span className="text-white text-xl flex items-center justify-center">
+              {isLoading ? '⏳' : isPlaying ? '⏸️' : '▶️'}
+            </span>
           </button>
         </div>
 
