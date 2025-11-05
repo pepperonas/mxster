@@ -190,11 +190,22 @@ export function LandingPage() {
                 </div>
                 <div className="flex items-center gap-2">
                   <span className="text-orange-500">⚠</span>
-                  <span>Begrenzt auf 25 Spieler</span>
+                  <span>Begrenzt auf 25 Spieler (Development Mode)</span>
                 </div>
               </div>
-              <div className="text-xs text-text-secondary border-t border-secondary/20 pt-3">
-                💎 Für die ultimative Spielerfahrung mit vollen Songs
+              <div className="text-xs text-text-secondary border-t border-secondary/20 pt-3 space-y-2">
+                <p>💎 Für die ultimative Spielerfahrung mit vollen Songs</p>
+                <p className="text-yellow-400">
+                  ℹ️ Spotify Development Mode: Der Entwickler muss jeden Spieler manuell in der
+                  <a
+                    href="https://developer.spotify.com/dashboard"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="underline hover:text-secondary ml-1"
+                  >
+                    Spotify Developer Console
+                  </a> freischalten. Nur 25 Slots verfügbar.
+                </p>
               </div>
             </div>
           </div>

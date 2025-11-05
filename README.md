@@ -93,6 +93,7 @@ Schalte 20 spannende Erfolge frei und zeige dein Können!
 2. Wähle Audio-Modus:
    - **"Jetzt spielen (Gratis)"** - 30s Clips, unbegrenzte Spieler, kein Login nötig
    - **"Mit Spotify Premium"** - Volle Songs, max. 25 Spieler, Spotify Premium erforderlich
+     - ⚠️ **Hinweis:** Spotify Development Mode - Der Entwickler muss jeden Spieler manuell in der [Spotify Developer Console](https://developer.spotify.com/dashboard) freischalten. Nur 25 Slots verfügbar.
 3. Wähle Spielmodus und Variante
 4. Füge Spieler hinzu
 5. Los geht's! 🎉
@@ -1471,7 +1472,8 @@ Implementierung eines Hybrid Audio Systems mit zwei Modi:
   - Volle Song-Wiedergabe
   - Hochauflösendes Audio
   - Spotify Premium Account erforderlich
-  - Begrenzt auf 25 Spieler
+  - Begrenzt auf 25 Spieler (Development Mode)
+  - ⚠️ **Wichtig:** Der Entwickler muss jeden Spieler manuell in der [Spotify Developer Console](https://developer.spotify.com/dashboard) unter "Users and Access" hinzufügen. Nur 25 Slots verfügbar.
 
 **Technische Implementation:**
 - `PreviewPlayerService.ts` - Howler.js-basierter Player für 30s Clips
