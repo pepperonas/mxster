@@ -19,10 +19,10 @@ interface MusicPlayerConfig {
 }
 
 export class MusicPlayerService {
-  private spotifyPlayer: SpotifyPlayerService | null = null
+  private spotifyPlayer: typeof SpotifyPlayerService | null = null
   private previewPlayer: PreviewPlayerService
   private currentMode: AudioMode = 'none'
-  private config: MusicPlayerConfig = {}
+  public config: MusicPlayerConfig = {} // Public so MusicPlayer component can set callbacks
   private preferredMode: AudioMode = 'preview' // Default to preview for unlimited users
 
   constructor(config: MusicPlayerConfig = {}) {
@@ -41,7 +41,8 @@ export class MusicPlayerService {
    */
   async initializeSpotifyPlayer(accessToken: string): Promise<void> {
     try {
-      this.spotifyPlayer = new SpotifyPlayerService()
+      // Use singleton instance
+      this.spotifyPlayer = SpotifyPlayerService
       await this.spotifyPlayer.initialize(accessToken)
 
       // Set up callbacks
@@ -69,7 +70,7 @@ export class MusicPlayerService {
    */
   async play(song: Song, startTime: number = 0): Promise<void> {
     // Try Spotify first if available and preferred
-    if (this.preferredMode === 'spotify' && this.spotifyPlayer) {
+    if (this.preferredMode === 'spotify' && this.spotifyPlayer && song.spotifyId) {
       try {
         await this.spotifyPlayer.play(song.spotifyId, startTime)
         this.setMode('spotify')

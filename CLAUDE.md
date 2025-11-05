@@ -422,6 +422,44 @@ All files hosted via GitHub raw URLs (auto-update, no manual releases):
 
 ## Recent Changes
 
+### v0.0.28 (2025-11-05) - Audio Player Critical Bugfixes
+**Fixed critical bugs preventing music playback in both Spotify and Preview modes:**
+
+**🐛 Root Cause Analysis:**
+- **SpotifyPlayerService** was exported as singleton but instantiated incorrectly
+- Missing methods (`play()`, `stop()`, etc.) that MusicPlayerService expected
+- Missing callback properties (`onStateChange`, `onProgress`, `onEnd`, `onError`)
+- Type incompatibility between singleton instance and class type
+
+**✅ Fixes Applied:**
+1. **SpotifyPlayerService.ts**:
+   - Added missing methods: `play()`, `stop()`, `getCurrentTime()`, `getDuration()`, `getState()`, `isPlaying()`, `setVolume()`, `getVolume()`, `destroy()`
+   - Added public callback properties for MusicPlayerService compatibility
+   - Removed duplicate `onStateChange()` method that conflicted with property
+   - Added state change notifications in pause/resume methods
+
+2. **MusicPlayerService.ts**:
+   - Fixed singleton usage: Changed from `new SpotifyPlayerService()` to `SpotifyPlayerService`
+   - Fixed type declaration: `private spotifyPlayer: typeof SpotifyPlayerService | null`
+   - Made `config` property public so MusicPlayer component can set callbacks
+   - Added null check for `song.spotifyId` before attempting Spotify playback
+
+3. **UI Improvements**:
+   - Restored prominent yellow warning box for Spotify Development Mode on LandingPage
+   - Improved MusicPlayer play button styling (gradient, hover effects, shadow)
+   - Enhanced progress bar (increased height, better gradient, hover border effects)
+
+**📝 Technical Details:**
+- Bug caused by interface mismatch between MusicPlayerService expectations and SpotifyPlayerService implementation
+- Preview mode also affected because initialization errors prevented proper player setup
+- All audio player services now properly implement callback pattern
+
+**Files Modified:**
+- `pwa/src/services/SpotifyPlayerService.ts`
+- `pwa/src/services/MusicPlayerService.ts`
+- `pwa/src/screens/LandingPage.tsx`
+- `pwa/src/components/game/MusicPlayer.tsx`
+
 ### v0.0.27 (2025-11-05) - Self-Hosted Audio System
 **Complete self-hosting infrastructure for unlimited users without Spotify limitations:**
 

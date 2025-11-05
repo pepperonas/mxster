@@ -54,6 +54,12 @@ class SpotifyPlayerServiceClass {
   private accessToken: string | null = null
   private stateChangeCallbacks: Array<(state: SpotifyPlayerState) => void> = []
 
+  // Public callback properties for MusicPlayerService
+  public onStateChange?: (state: 'idle' | 'loading' | 'playing' | 'paused' | 'stopped' | 'error') => void
+  public onProgress?: (progress: number) => void
+  public onEnd?: () => void
+  public onError?: (error: string) => void
+
   /**
    * Get current access token (with automatic refresh if needed)
    */
@@ -269,13 +275,6 @@ class SpotifyPlayerServiceClass {
   }
 
   /**
-   * Register callback for player state changes
-   */
-  onStateChange(callback: (state: SpotifyPlayerState) => void) {
-    this.stateChangeCallbacks.push(callback)
-  }
-
-  /**
    * Transfer playback to this device
    */
   private async transferPlayback(token: string): Promise<boolean> {
@@ -303,6 +302,35 @@ class SpotifyPlayerServiceClass {
       console.warn('⚠️ Device transfer error:', error)
       return false
     }
+  }
+
+  /**
+   * Play song by Spotify ID (convenience method for MusicPlayerService)
+   * @param spotifyId Spotify track ID (without "spotify:track:" prefix)
+   * @param startPosition Start position in seconds (optional)
+   */
+  async play(spotifyId: string, startPosition: number = 0): Promise<void> {
+    const trackUri = `spotify:track:${spotifyId}`
+
+    // Notify loading state
+    this.onStateChange?.('loading')
+
+    if (startPosition > 0) {
+      const success = await this.playTrackWithPosition(trackUri, startPosition * 1000)
+      if (!success) {
+        this.onError?.('Failed to play track')
+        throw new Error('Playback failed')
+      }
+    } else {
+      const success = await this.playTrack(trackUri)
+      if (!success) {
+        this.onError?.('Failed to play track')
+        throw new Error('Playback failed')
+      }
+    }
+
+    // Notify playing state
+    this.onStateChange?.('playing')
   }
 
   /**
@@ -431,6 +459,7 @@ class SpotifyPlayerServiceClass {
   async pause() {
     if (!this.player) return
     await this.player.pause()
+    this.onStateChange?.('paused')
   }
 
   /**
@@ -439,6 +468,16 @@ class SpotifyPlayerServiceClass {
   async resume() {
     if (!this.player) return
     await this.player.resume()
+    this.onStateChange?.('playing')
+  }
+
+  /**
+   * Stop playback
+   */
+  stop() {
+    if (!this.player) return
+    this.player.pause()
+    this.onStateChange?.('stopped')
   }
 
   /**
@@ -450,19 +489,76 @@ class SpotifyPlayerServiceClass {
   }
 
   /**
-   * Seek to position (ms)
+   * Seek to position (seconds) - MusicPlayerService compatible
    */
-  async seek(positionMs: number) {
+  seek(positionSeconds: number) {
     if (!this.player) return
-    await this.player.seek(positionMs)
+    this.player.seek(positionSeconds * 1000)
   }
 
   /**
-   * Get current playback state
+   * Get current playback position in seconds
    */
-  async getState(): Promise<SpotifyPlayerState | null> {
+  getCurrentTime(): number {
+    // Not available directly from SDK, return 0 for now
+    // Position tracking would require polling getCurrentState()
+    return 0
+  }
+
+  /**
+   * Get duration in seconds
+   */
+  getDuration(): number {
+    // Duration would need to be fetched from track info
+    // Return estimated 3.5 minutes (210s) as default
+    return 210
+  }
+
+  /**
+   * Get current playback state (compatible with PreviewPlayer)
+   */
+  getState(): 'idle' | 'loading' | 'playing' | 'paused' | 'stopped' | 'error' {
+    if (!this.isReady) return 'idle'
+    // This is simplified - full state would require polling getCurrentState()
+    return 'playing'
+  }
+
+  /**
+   * Get current playback state (original Spotify format)
+   */
+  async getSpotifyState(): Promise<SpotifyPlayerState | null> {
     if (!this.player) return null
     return await this.player.getCurrentState()
+  }
+
+  /**
+   * Check if currently playing
+   */
+  isPlaying(): boolean {
+    return this.isReady && this.currentTrackUri !== null
+  }
+
+  /**
+   * Set volume (0.0 to 1.0)
+   */
+  async setVolume(volume: number) {
+    if (!this.player) return
+    await this.player.setVolume(volume)
+  }
+
+  /**
+   * Get current volume (estimated)
+   */
+  getVolume(): number {
+    // Volume is set in player initialization to 0.8
+    return 0.8
+  }
+
+  /**
+   * Destroy/cleanup player
+   */
+  destroy() {
+    this.disconnect()
   }
 
   /**
