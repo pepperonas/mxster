@@ -43,7 +43,8 @@ export function validateGuess(
   const yearMatch = !isNaN(yearNum) && yearNum === song.year
 
   // Calculate year difference for feedback
-  const yearDifference = !isNaN(yearNum) ? Math.abs(yearNum - song.year) : 0
+  // If year is not provided or invalid, set difference to 9999 (no points)
+  const yearDifference = !isNaN(yearNum) ? Math.abs(yearNum - song.year) : 9999
 
   // Count correct answers
   const correctCount = (titleMatch ? 1 : 0) + (artistMatch ? 1 : 0) + (yearMatch ? 1 : 0)

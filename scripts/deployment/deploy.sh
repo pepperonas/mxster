@@ -34,11 +34,23 @@ ssh $VPS_HOST "
     # Create production directory if it doesn't exist
     sudo mkdir -p $VPS_ROOT
 
-    # Remove old files
+    # Backup audio directory if exists
+    if [ -d \"$VPS_ROOT/audio\" ]; then
+        echo \"💾 Backing up audio directory...\"
+        sudo mv $VPS_ROOT/audio /tmp/audio-backup-$$
+    fi
+
+    # Remove old files (but keep audio)
     sudo rm -rf $VPS_ROOT/*
 
     # Copy new files
     sudo cp -r /tmp/$APP_NAME-deploy/* $VPS_ROOT/
+
+    # Restore audio directory
+    if [ -d \"/tmp/audio-backup-$$\" ]; then
+        echo \"♻️ Restoring audio directory...\"
+        sudo mv /tmp/audio-backup-$$ $VPS_ROOT/audio
+    fi
 
     # Set correct permissions
     sudo chown -R www-data:www-data $VPS_ROOT

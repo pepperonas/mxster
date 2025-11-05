@@ -53,6 +53,9 @@ class SpotifyPlayerServiceClass {
   private currentTrackId: string | null = null
   private accessToken: string | null = null
   private stateChangeCallbacks: Array<(state: SpotifyPlayerState) => void> = []
+  private lastKnownPosition: number = 0 // ms
+  private lastKnownDuration: number = 0 // ms
+  private lastUpdateTime: number = 0
 
   // Public callback properties for MusicPlayerService
   public onStateChange?: (state: 'idle' | 'loading' | 'playing' | 'paused' | 'stopped' | 'error') => void
@@ -229,6 +232,17 @@ class SpotifyPlayerServiceClass {
         duration: state.duration,
         track: state.track_window.current_track.name
       })
+
+      // Update position and duration tracking
+      this.lastKnownPosition = state.position
+      this.lastKnownDuration = state.duration
+      this.lastUpdateTime = Date.now()
+
+      // Notify progress callback
+      if (this.onProgress && state.duration > 0) {
+        const progress = (state.position / state.duration) * 100
+        this.onProgress(progress)
+      }
 
       // Notify registered callbacks
       this.stateChangeCallbacks.forEach((callback) => callback(state))
@@ -459,6 +473,8 @@ class SpotifyPlayerServiceClass {
   async pause() {
     if (!this.player) return
     await this.player.pause()
+    // Update last known position when pausing
+    this.lastUpdateTime = Date.now()
     this.onStateChange?.('paused')
   }
 
@@ -468,6 +484,8 @@ class SpotifyPlayerServiceClass {
   async resume() {
     if (!this.player) return
     await this.player.resume()
+    // Update timestamp when resuming
+    this.lastUpdateTime = Date.now()
     this.onStateChange?.('playing')
   }
 
@@ -477,6 +495,10 @@ class SpotifyPlayerServiceClass {
   stop() {
     if (!this.player) return
     this.player.pause()
+    // Reset position tracking
+    this.lastKnownPosition = 0
+    this.lastKnownDuration = 0
+    this.lastUpdateTime = 0
     this.onStateChange?.('stopped')
   }
 
@@ -498,20 +520,29 @@ class SpotifyPlayerServiceClass {
 
   /**
    * Get current playback position in seconds
+   * Estimates position based on last known state + elapsed time
    */
   getCurrentTime(): number {
-    // Not available directly from SDK, return 0 for now
-    // Position tracking would require polling getCurrentState()
-    return 0
+    if (this.lastKnownPosition === 0) return 0
+
+    // Calculate estimated position based on time elapsed since last update
+    const elapsedMs = Date.now() - this.lastUpdateTime
+    const estimatedPositionMs = this.lastKnownPosition + elapsedMs
+
+    // Clamp to duration
+    const clampedMs = Math.min(estimatedPositionMs, this.lastKnownDuration)
+
+    return clampedMs / 1000 // Convert to seconds
   }
 
   /**
    * Get duration in seconds
    */
   getDuration(): number {
-    // Duration would need to be fetched from track info
-    // Return estimated 3.5 minutes (210s) as default
-    return 210
+    if (this.lastKnownDuration > 0) {
+      return this.lastKnownDuration / 1000 // Convert ms to seconds
+    }
+    return 210 // Fallback to 3.5 minutes
   }
 
   /**

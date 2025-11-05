@@ -619,6 +619,19 @@ export function GameScreen() {
     // Next turn
     nextTurn()
     addToast('Karte platziert!', 'success')
+
+    // Virtual mode + Timeline modes: Automatically draw new song for next player
+    // Hardcore mode: User manually clicks "Zufälliger Song" button
+    if (gameVariant === 'virtual' && gameMode !== 'hardcore') {
+      setTimeout(() => {
+        const newSong = selectRandomSong(songs, playedSongs)
+        if (newSong) {
+          contextAddToPlayedSongs(newSong.spotifyId || newSong.id)
+          setCurrentSong(newSong)
+          console.log('🎲 Auto-drew new song for next player:', newSong.title)
+        }
+      }, 200)
+    }
   }
 
   // ============================================================================
@@ -855,6 +868,19 @@ export function GameScreen() {
                 // Small delay to ensure modal is fully closed
                 setTimeout(() => {
                   nextTurn()
+
+                  // Virtual mode + Timeline modes: Automatically draw new song for next player
+                  // Note: Timeline modes always auto-draw (no hardcore mode here)
+                  if (gameVariant === 'virtual') {
+                    setTimeout(() => {
+                      const newSong = selectRandomSong(songs, playedSongs)
+                      if (newSong) {
+                        contextAddToPlayedSongs(newSong.spotifyId || newSong.id)
+                        setCurrentSong(newSong)
+                        console.log('🎲 Auto-drew new song for next player:', newSong.title)
+                      }
+                    }, 200)
+                  }
                 }, 150)
               }
             }
@@ -890,6 +916,19 @@ export function GameScreen() {
               setTimeout(() => {
                 console.log('🔴 Calling nextTurn()')
                 nextTurn()
+
+                // Virtual mode + Timeline modes: Automatically draw new song for next player
+                // Note: Timeline modes always auto-draw (no hardcore mode here)
+                if (gameVariant === 'virtual') {
+                  setTimeout(() => {
+                    const newSong = selectRandomSong(songs, playedSongs)
+                    if (newSong) {
+                      contextAddToPlayedSongs(newSong.spotifyId || newSong.id)
+                      setCurrentSong(newSong)
+                      console.log('🎲 Auto-drew new song for next player:', newSong.title)
+                    }
+                  }, 200)
+                }
               }, 0)
             }
           }

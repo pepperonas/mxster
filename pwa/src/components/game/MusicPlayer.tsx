@@ -119,10 +119,11 @@ export function MusicPlayer({ song, onStateChange }: MusicPlayerProps) {
   }, []) // Empty deps - initialize ONLY ONCE on mount
 
   /**
-   * Update progress bar for Spotify mode
+   * Update progress bar for both Spotify and Preview modes
    */
   useEffect(() => {
-    if (audioMode !== 'spotify' || !isPlaying) {
+    // Clear interval if not playing or no mode
+    if (!isPlaying || audioMode === 'none') {
       if (progressInterval.current) {
         clearInterval(progressInterval.current)
         progressInterval.current = null
@@ -130,7 +131,7 @@ export function MusicPlayer({ song, onStateChange }: MusicPlayerProps) {
       return
     }
 
-    // For Spotify: poll position every 500ms
+    // Poll position every 500ms for both modes
     progressInterval.current = window.setInterval(() => {
       const pos = musicPlayer.current.getCurrentTime()
       const dur = musicPlayer.current.getDuration()

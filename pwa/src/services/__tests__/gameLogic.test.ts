@@ -84,14 +84,14 @@ describe('validateGuess', () => {
     expect(result.artistMatch).toBe(false)
     expect(result.yearMatch).toBe(false)
     expect(result.correctCount).toBe(0)
-    expect(result.yearDifference).toBe(0)
+    expect(result.yearDifference).toBe(9999) // Empty input = no points
   })
 
   it('should handle invalid year input', () => {
     const result = validateGuess('Title', 'Artist', 'abc', testSong)
 
     expect(result.yearMatch).toBe(false)
-    expect(result.yearDifference).toBe(0)
+    expect(result.yearDifference).toBe(9999) // Invalid input = no points
   })
 
   it('should match only title correctly', () => {
@@ -181,6 +181,11 @@ describe('calculatePoints', () => {
 
   it('should award 0 points for all wrong', () => {
     const points = calculatePoints(false, false, 10)
+    expect(points).toBe(0)
+  })
+
+  it('should award 0 points when year is empty/invalid (9999)', () => {
+    const points = calculatePoints(false, false, 9999)
     expect(points).toBe(0)
   })
 
