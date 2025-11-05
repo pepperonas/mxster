@@ -34,12 +34,24 @@ export function MusicPlayer({ song, onStateChange }: MusicPlayerProps) {
   const progressInterval = useRef<number | null>(null)
 
   /**
-   * Initialize player on mount
+   * Initialize player on mount (ONLY ONCE)
    */
+  const playerInitialized = useRef(false)
+
   useEffect(() => {
+    // Prevent multiple initializations
+    if (playerInitialized.current) {
+      console.log('⚠️ Player already initialized, skipping...')
+      return
+    }
+
     const initPlayer = async () => {
+      playerInitialized.current = true
+
       // Check user's audio mode preference from Landing Page
       const preference = localStorage.getItem('audio_mode_preference') as AudioMode | null
+
+      console.log('🎵 Initializing player with preference:', preference)
 
       // If Spotify mode + logged in, initialize Spotify player
       if (preference === 'spotify' && isLoggedIn && accessToken) {
@@ -103,7 +115,8 @@ export function MusicPlayer({ song, onStateChange }: MusicPlayerProps) {
         clearInterval(progressInterval.current)
       }
     }
-  }, [accessToken, isLoggedIn, addToast, onStateChange, registerInteraction, setActivityLevel])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []) // Empty deps - initialize ONLY ONCE on mount
 
   /**
    * Update progress bar for Spotify mode
