@@ -1,7 +1,7 @@
 /**
  * Preview Player Service
- * Handles 30-second preview playback using Howler.js
- * No authentication required - uses public preview URLs from songs.ts
+ * Handles self-hosted audio playback using Howler.js
+ * No authentication required - uses self-hosted MP3 files (128 kbps)
  */
 
 import { Howl } from 'howler'
@@ -156,7 +156,7 @@ export class PreviewPlayerService {
   }
 
   /**
-   * Get total duration (should be ~30s for previews)
+   * Get total duration (full song length, typically 3-5 minutes)
    */
   getDuration(): number {
     if (this.sound) {

@@ -87,7 +87,7 @@ export class MusicPlayerService {
       try {
         await this.previewPlayer.play(song, startTime)
         this.setMode('preview')
-        console.log(`▶️ Playing via Preview (30s): ${song.title}`)
+        console.log(`▶️ Playing via Preview (128 kbps MP3): ${song.title}`)
         return
       } catch (error) {
         console.error('❌ Preview playback failed:', error)

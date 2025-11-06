@@ -1451,6 +1451,35 @@ Dieses Projekt ist unter der **MIT-Lizenz** veröffentlicht. Siehe [LICENSE](LIC
 
 ## 📝 Changelog
 
+### v0.0.29 (2025-11-06)
+
+**🎯 Sidebar Navigation - 3-State System Overhaul**
+
+**Complete Restructure:**
+- Implemented context-aware navigation with 3 distinct states (Landing/Setup/Game)
+- Consolidated duplicate warning logic into single parameterized function
+- Progressive disclosure - only show relevant options for current context
+
+**Navigation States:**
+1. **Landing Page** - 6 buttons (Anleitung + 5 scroll sections)
+2. **Setup Phase** - 2 buttons (Anleitung + Zurück zum Menü with warning)
+3. **In Game** - 2 buttons (Hilfe + Spiel beenden with red highlighting)
+
+**Improvements:**
+- ✅ State-based logic using `location.pathname` + `isGameStarted`
+- ✅ Context-aware button labels ("Anleitung" → "Hilfe" in game)
+- ✅ Smart warnings only when data would be lost
+- ✅ Red destructive action styling for "Spiel beenden"
+- ✅ Removed redundant "Startseite" button during games
+- ✅ Hidden scroll buttons during active gameplay
+- ✅ Added warnings when leaving setup phase with configured players
+
+**Technical:**
+- File: `pwa/src/components/Sidebar.tsx` (complete rewrite, 372 lines)
+- Reduced code duplication with unified `showNavigationWarning()` function
+- Conditional rendering for 3 distinct menu structures
+- Improved UX with focused, clutter-free navigation
+
 ### v0.0.27 (2025-11-05)
 
 **🎵 Hybrid Audio System - Spotify 25-User Limit Lösung**

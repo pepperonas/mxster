@@ -4,8 +4,8 @@
  */
 
 import { useUI, useAuth, useGame, useSettings, useInteraction } from '@/contexts'
-import { useGameState, useGameHistory } from '@/hooks'
-import { SaveIcon, LogoutIcon, HistoryIcon, SettingsIcon, ChartIcon, AchievementIcon } from '@/utils/icons'
+import { useGameHistory } from '@/hooks'
+import { LogoutIcon, HistoryIcon, SettingsIcon, ChartIcon, AchievementIcon } from '@/utils/icons'
 import { SettingsDialog } from './SettingsDialog'
 import { PlayerStatsDialog } from './PlayerStatsDialog'
 import { AchievementsDialog } from './AchievementsDialog'
@@ -15,7 +15,6 @@ export function ActionBar() {
   const { toggleSidebar, showModal } = useUI()
   const { isLoggedIn, logout } = useAuth()
   const { gameMode, players, currentPlayer } = useGame()
-  const { saveGameState, hasGameState } = useGameState()
   const { settings, updateSettings } = useSettings()
   const { history } = useGameHistory()
   const { registerInteraction } = useInteraction()
@@ -25,15 +24,6 @@ export function ActionBar() {
   const currentPlayerName = players.length > 0 && currentPlayer >= 0
     ? players[currentPlayer]?.name
     : undefined
-
-  const handleSave = () => {
-    registerInteraction('click', 40)
-    const success = saveGameState()
-    if (success) {
-      // Toast will be shown by useGameState
-      console.log('✅ Game state saved')
-    }
-  }
 
   const handleLogout = () => {
     registerInteraction('click', 40)
@@ -82,17 +72,6 @@ export function ActionBar() {
 
           {/* Right: Actions */}
           <div className="flex items-center gap-2">
-            {/* Save Game (only if game active) */}
-            {hasGameState() && (
-              <button
-                onClick={handleSave}
-                className="p-2 hover:bg-accent/20 rounded-lg transition-colors text-gray-300 hover:text-secondary border border-transparent hover:border-accent/30"
-                title="Spielstand speichern"
-              >
-                <SaveIcon size={20} />
-              </button>
-            )}
-
             {/* History */}
             <button
               onClick={() => {

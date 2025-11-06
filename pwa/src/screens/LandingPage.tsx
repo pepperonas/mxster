@@ -3,52 +3,32 @@
  * Complete marketing page for mxster game - like https://mxster.de/
  */
 
+import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useSpotifyAuth } from '@/hooks'
 import { useUI } from '@/contexts'
 import { songs } from '@/data/songs'
+import { PasswordProtectionDialog } from '@/components/PasswordProtectionDialog'
 
 export function LandingPage() {
   const navigate = useNavigate()
   const { login, isLoggedIn } = useSpotifyAuth()
   const { showModal } = useUI()
+  const [showPasswordDialog, setShowPasswordDialog] = useState(false)
 
   const handlePlayWithoutSpotify = () => {
-    // Show warning that preview mode might not work for all songs
-    showModal(
-      '⚠️ Preview-Modus Einschränkung',
-      <div className="text-center py-6">
-        <div className="text-6xl mb-4">🎵</div>
-        <p className="text-lg mb-4">
-          Viele Songs in dieser Datenbank haben <strong>keine Preview-URLs von Spotify</strong>.
-        </p>
-        <p className="text-text-secondary mb-6">
-          Im Preview-Modus können diese Songs nicht abgespielt werden.
-          Für die beste Erfahrung empfehlen wir <strong>Spotify Premium</strong>.
-        </p>
-        <div className="p-4 glass border-2 border-yellow-500/50 rounded-lg text-sm">
-          <p className="text-yellow-400">
-            💡 Du kannst trotzdem spielen, aber ohne Audio für viele Songs.
-          </p>
-        </div>
-      </div>,
-      [
-        {
-          text: 'Zurück',
-          onClick: () => {
-            // Just close modal
-          }
-        },
-        {
-          text: 'Trotzdem fortfahren',
-          onClick: () => {
-            localStorage.setItem('audio_mode_preference', 'preview')
-            console.log('🎵 Starting in Preview Mode (30s clips, unlimited users)')
-            navigate('/mode-selection')
-          }
-        }
-      ]
-    )
+    // Check if access already granted
+    const accessGranted = localStorage.getItem('audio_access_granted')
+
+    if (accessGranted === 'true') {
+      // Already unlocked - proceed directly
+      localStorage.setItem('audio_mode_preference', 'preview')
+      console.log('🎵 Starting in Standard Audio Mode (128 kbps MP3, unlimited users)')
+      navigate('/mode-selection')
+    } else {
+      // Show password dialog
+      setShowPasswordDialog(true)
+    }
   }
 
   const handleLogin = async () => {
@@ -130,13 +110,13 @@ export function LandingPage() {
           </h2>
 
           <div className="grid md:grid-cols-2 gap-6">
-            {/* Preview Mode (Free) */}
+            {/* Standard Audio Mode (Free) */}
             <div className="p-6 rounded-xl border-2 border-accent/20 bg-accent/5">
               <div className="flex items-center gap-3 mb-4">
                 <div className="text-3xl">🎮</div>
                 <div>
                   <h3 className="text-xl font-bold text-white">Gratis-Modus</h3>
-                  <p className="text-sm text-secondary">30s Clips · Unbegrenzt</p>
+                  <p className="text-sm text-secondary">Volle Songs · 128 kbps · Unbegrenzt</p>
                 </div>
               </div>
               <div className="space-y-2 text-sm text-text-secondary mb-4">
@@ -154,11 +134,15 @@ export function LandingPage() {
                 </div>
                 <div className="flex items-center gap-2">
                   <span className="text-green-500">✓</span>
-                  <span>30s Clips (ausreichend fürs Quiz)</span>
+                  <span>Volle Songs (128 kbps MP3)</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="text-green-500">✓</span>
+                  <span>Gute Audioqualität</span>
                 </div>
               </div>
               <div className="text-xs text-text-secondary border-t border-accent/20 pt-3">
-                💡 Perfekt für spontane Runden und Party-Spiele
+                💡 Empfohlen für die meisten Spieler - perfekt für spontane Runden
               </div>
             </div>
 
@@ -168,7 +152,7 @@ export function LandingPage() {
                 <div className="text-3xl">🎧</div>
                 <div>
                   <h3 className="text-xl font-bold text-white">Spotify Premium</h3>
-                  <p className="text-sm text-secondary">Volle Songs · Max 25 Spieler</p>
+                  <p className="text-sm text-secondary">Volle Songs · 320 kbps · Max 25 Spieler</p>
                 </div>
               </div>
               <div className="space-y-2 text-sm text-text-secondary mb-4">
@@ -178,7 +162,7 @@ export function LandingPage() {
                 </div>
                 <div className="flex items-center gap-2">
                   <span className="text-green-500">✓</span>
-                  <span>Hochauflösendes Audio</span>
+                  <span>Höchste Audioqualität (320 kbps)</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <span className="text-green-500">✓</span>
@@ -190,26 +174,32 @@ export function LandingPage() {
                 </div>
                 <div className="flex items-center gap-2">
                   <span className="text-orange-500">⚠</span>
-                  <span>Begrenzt auf 25 Spieler (Development Mode)</span>
+                  <span>Nur 25 Spieler insgesamt möglich</span>
                 </div>
               </div>
               <div className="border-t border-secondary/20 pt-3 space-y-2">
-                <p className="text-xs text-text-secondary">💎 Für die ultimative Spielerfahrung mit vollen Songs</p>
-                <div className="p-3 bg-yellow-500/10 border border-yellow-500/30 rounded-lg">
-                  <p className="text-sm text-yellow-400 font-medium">
-                    ⚠️ Spotify Development Mode: Der Entwickler muss jeden Spieler manuell in der
-                    <a
-                      href="https://developer.spotify.com/dashboard"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="underline hover:text-white ml-1"
-                    >
-                      Spotify Developer Console
-                    </a> freischalten. Nur 25 Slots verfügbar.
+                <div className="p-3 bg-blue-500/10 border border-blue-500/30 rounded-lg mb-2">
+                  <p className="text-sm text-blue-300">
+                    <strong>ℹ️ Warum nur 25 Spieler?</strong><br/>
+                    Spotify erlaubt Apps im Entwicklermodus maximal 25 registrierte Nutzer.
+                    Für mehr müsste die App offiziell bei Spotify angemeldet werden -
+                    das würde aber eine Firma und 250.000+ Nutzer voraussetzen.
                   </p>
                 </div>
+                <p className="text-xs text-text-secondary">
+                  💎 Für Audiophile mit Spotify Premium Account
+                </p>
               </div>
             </div>
+          </div>
+
+          {/* Quality Comparison */}
+          <div className="mt-6 p-4 bg-primary/30 rounded-lg border border-accent/20">
+            <p className="text-sm text-text-secondary text-center">
+              <strong className="text-white">Audioqualität im Vergleich:</strong><br/>
+              Gratis-Modus (128 kbps) = gute Qualität, ausreichend für Quiz-Spiele ·
+              Spotify Premium (320 kbps) = Studio-Qualität, nur minimal besser hörbar
+            </p>
           </div>
         </div>
       </section>
@@ -768,6 +758,22 @@ export function LandingPage() {
           </div>
         </div>
       </footer>
+
+      {/* Password Protection Dialog */}
+      {showPasswordDialog && (
+        <PasswordProtectionDialog
+          onSuccess={() => {
+            setShowPasswordDialog(false)
+            localStorage.setItem('audio_mode_preference', 'preview')
+            console.log('🔓 Access granted - Starting in Standard Audio Mode')
+            navigate('/mode-selection')
+          }}
+          onCancel={() => {
+            setShowPasswordDialog(false)
+            console.log('🚫 Password dialog cancelled')
+          }}
+        />
+      )}
     </div>
   )
 }

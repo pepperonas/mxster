@@ -422,6 +422,59 @@ All files hosted via GitHub raw URLs (auto-update, no manual releases):
 
 ## Recent Changes
 
+### v0.0.29 (2025-11-06) - Sidebar Navigation Overhaul
+
+**🎯 3-State Navigation System**
+Completely restructured sidebar navigation to provide context-aware menus based on app state:
+
+**Navigation States:**
+1. **Landing Page State** - Marketing and exploration:
+   - 📖 Anleitung
+   - 🎮 Spielmodi (scroll to section)
+   - 🎴 Spielvarianten (scroll to section)
+   - 📥 Downloads (scroll to section)
+   - ✨ Features (scroll to section)
+   - 💬 Support (scroll to section)
+
+2. **Setup Phase State** - Configuration mode:
+   - 📖 Anleitung
+   - 🏠 Zurück zum Menü (with warning if players configured)
+
+3. **In-Game State** - Active gameplay:
+   - ❓ Hilfe (contextual help)
+   - 🚪 Spiel beenden (red highlighted, with confirmation)
+
+**Key Improvements:**
+- ✅ **State-Based Logic**: Precise state detection using `location.pathname` + `isGameStarted` combination
+- ✅ **Consolidated Warnings**: Single `showNavigationWarning()` function replaces duplicate logic
+- ✅ **Context-Aware Labels**: Button names change based on state ("Anleitung" → "Hilfe" in game)
+- ✅ **Smart Warnings**: Only warns when data would be lost (active game or configured players)
+- ✅ **Progressive Disclosure**: Only shows relevant options for current context
+- ✅ **Destructive Action Feedback**: Red styling for "Spiel beenden" button emphasizes impact
+
+**Technical Details:**
+- **File Modified**: `pwa/src/components/Sidebar.tsx` (complete rewrite, 372 lines)
+- **State Detection**:
+  ```typescript
+  const isOnLandingPage = location.pathname === '/'
+  const isInSetup = ['/mode-selection', '/player-setup'].includes(location.pathname)
+  const isInGame = location.pathname === '/game' && isGameStarted
+  ```
+- **Warning Consolidation**: Reduced from 2 duplicate functions to 1 parameterized function
+- **Conditional Rendering**: 3 distinct menu structures instead of dynamic visibility toggles
+
+**UX Benefits:**
+- 🎯 Focused menus - no irrelevant options visible
+- ⚡ Faster navigation - fewer decisions to make
+- 🔒 Data protection - clear warnings before losing progress
+- 📱 Cleaner interface - no clutter during active gameplay
+
+**Bug Fixes:**
+- Fixed redundant "Startseite" button during games
+- Fixed scroll buttons appearing during active games
+- Fixed missing warnings when leaving setup phase with configured players
+- Fixed inconsistent state checking across navigation handlers
+
 ### v0.0.28 (2025-11-05) - Audio Player Critical Bugfixes
 **Fixed critical bugs preventing music playback in both Spotify and Preview modes:**
 

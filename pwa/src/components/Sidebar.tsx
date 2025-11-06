@@ -1,6 +1,7 @@
 /**
  * Sidebar Component
  * Side navigation panel with game info, player list, and quick actions
+ * Implements 3-state navigation system: Landing / Setup / Playing
  */
 
 import { useNavigate, useLocation } from 'react-router-dom'
@@ -20,8 +21,10 @@ export function Sidebar() {
 
   if (!isSidebarOpen) return null
 
-  // Determine if user is in game (not on landing page)
-  const isInGame = location.pathname !== '/'
+  // Determine app state based on route and game state
+  const isOnLandingPage = location.pathname === '/'
+  const isInSetup = ['/mode-selection', '/player-setup'].includes(location.pathname)
+  const isInGame = location.pathname === '/game' && isGameStarted
 
   // Helper to navigate and close sidebar
   const handleNavigation = (path: string) => {
@@ -36,59 +39,80 @@ export function Sidebar() {
     }
   }
 
-  // Helper to navigate to home with game end warning
-  const handleHomeNavigation = () => {
-    // If game is running, show warning
-    if (isGameStarted && players.length > 0) {
-      showModal(
-        '⚠️ Spiel beenden?',
-        <div className="space-y-4">
-          <p className="text-gray-300">
-            Du bist gerade in einem laufenden Spiel. Wenn du zur Startseite zurückkehrst, wird das Spiel beendet.
-          </p>
-          <div className="glass p-4 border border-accent/30 rounded-lg">
-            <p className="text-sm text-text-secondary">
-              <strong className="text-white">Hinweis:</strong> Der aktuelle Spielstand wird nicht gespeichert und alle Daten gehen verloren.
-            </p>
-          </div>
-        </div>,
-        [
-          {
-            text: 'Spiel fortsetzen',
-            variant: 'secondary',
-            onClick: () => {
-              // Just close modal, stay in game
-              console.log('🎮 User chose to continue game')
-            }
-          },
-          {
-            text: 'Spiel beenden & zur Startseite',
-            variant: 'danger',
-            onClick: () => {
-              console.log('🏠 User chose to end game and go home')
+  // Unified warning logic for game/setup interruption
+  const showNavigationWarning = (
+    title: string,
+    message: string,
+    confirmText: string,
+    onConfirm: () => void
+  ) => {
+    showModal(
+      title,
+      <div className="text-center py-4">
+        <p className="text-lg font-semibold text-white mb-2">{message}</p>
+        <p className="text-sm text-text-secondary">Der Spielstand geht verloren.</p>
+      </div>,
+      [
+        {
+          text: 'Abbrechen',
+          variant: 'secondary',
+          onClick: () => {
+            console.log('❌ User cancelled navigation')
+          }
+        },
+        {
+          text: confirmText,
+          variant: 'danger',
+          onClick: () => {
+            console.log(`✅ User confirmed: ${confirmText}`)
+            if (isGameStarted) {
               endGame()
               resetGame()
-              handleNavigation('/')
             }
+            onConfirm()
           }
-        ]
+        }
+      ]
+    )
+    toggleSidebar()
+  }
+
+  // Handle back to menu navigation
+  const handleBackToMenu = () => {
+    if (isInGame) {
+      // Active game - show warning
+      showNavigationWarning(
+        '⚠️ Spiel beenden?',
+        'Möchtest du das Spiel wirklich beenden?',
+        'Spiel beenden',
+        () => handleNavigation('/')
       )
-      toggleSidebar()
+    } else if (isInSetup && players.length > 0) {
+      // Setup phase with players - show warning
+      showNavigationWarning(
+        '⚠️ Zurück zum Menü?',
+        'Die Spielerkonfiguration geht verloren.',
+        'Zurück zum Menü',
+        () => {
+          resetGame() // Clear players
+          handleNavigation('/')
+        }
+      )
     } else {
-      // No active game, navigate directly
+      // No data to lose - navigate directly
       handleNavigation('/')
     }
   }
 
-  // Helper to scroll to section on landing page
+  // Helper to scroll to section on landing page (only for landing page state)
   const scrollToSection = (sectionId: string) => {
-    if (location.pathname !== '/') {
+    if (location.pathname === '/') {
+      document.getElementById(sectionId)?.scrollIntoView({ behavior: 'smooth' })
+    } else {
       navigate('/')
       setTimeout(() => {
         document.getElementById(sectionId)?.scrollIntoView({ behavior: 'smooth' })
       }, 300)
-    } else {
-      document.getElementById(sectionId)?.scrollIntoView({ behavior: 'smooth' })
     }
     toggleSidebar()
   }
@@ -97,7 +121,7 @@ export function Sidebar() {
   const openHowToPlayModal = () => {
     registerInteraction('modal', 60)
     showModal(
-      '📖 Anleitung',
+      isInGame ? '❓ Hilfe' : '📖 Anleitung',
       <HowToPlayContent />,
       [
         {
@@ -228,35 +252,22 @@ export function Sidebar() {
             </div>
           )}
 
-          {/* Navigation - Context-aware */}
+          {/* Navigation - 3-State System */}
           <nav className="p-4">
             <h3 className="text-sm font-semibold text-text-secondary mb-2">Navigation</h3>
             <ul className="space-y-1">
-              {/* Help/Instructions - always visible */}
-              <li>
-                <button
-                  onClick={openHowToPlayModal}
-                  className="w-full text-left px-3 py-2 rounded-lg hover:bg-accent/20 text-gray-300 hover:text-secondary transition-colors border border-transparent hover:border-accent/30"
-                >
-                  {isInGame ? '❓ Hilfe' : '📖 Anleitung'}
-                </button>
-              </li>
 
-              {/* Always show home link when in game */}
-              {isInGame && (
-                <li>
-                  <button
-                    onClick={handleHomeNavigation}
-                    className="w-full text-left px-3 py-2 rounded-lg hover:bg-accent/20 text-gray-300 hover:text-secondary transition-colors border border-transparent hover:border-accent/30"
-                  >
-                    🏠 Startseite
-                  </button>
-                </li>
-              )}
-
-              {/* Landing page navigation - only show on landing page */}
-              {!isInGame && (
+              {/* STATE 1: LANDING PAGE */}
+              {isOnLandingPage && (
                 <>
+                  <li>
+                    <button
+                      onClick={openHowToPlayModal}
+                      className="w-full text-left px-3 py-2 rounded-lg hover:bg-accent/20 text-gray-300 hover:text-secondary transition-colors border border-transparent hover:border-accent/30"
+                    >
+                      📖 Anleitung
+                    </button>
+                  </li>
                   <li>
                     <button
                       onClick={() => scrollToSection('game-modes')}
@@ -299,6 +310,51 @@ export function Sidebar() {
                   </li>
                 </>
               )}
+
+              {/* STATE 2: SETUP PHASE */}
+              {isInSetup && (
+                <>
+                  <li>
+                    <button
+                      onClick={openHowToPlayModal}
+                      className="w-full text-left px-3 py-2 rounded-lg hover:bg-accent/20 text-gray-300 hover:text-secondary transition-colors border border-transparent hover:border-accent/30"
+                    >
+                      📖 Anleitung
+                    </button>
+                  </li>
+                  <li>
+                    <button
+                      onClick={handleBackToMenu}
+                      className="w-full text-left px-3 py-2 rounded-lg hover:bg-accent/20 text-gray-300 hover:text-secondary transition-colors border border-transparent hover:border-accent/30"
+                    >
+                      🏠 Zurück zum Menü
+                    </button>
+                  </li>
+                </>
+              )}
+
+              {/* STATE 3: IN GAME */}
+              {isInGame && (
+                <>
+                  <li>
+                    <button
+                      onClick={openHowToPlayModal}
+                      className="w-full text-left px-3 py-2 rounded-lg hover:bg-accent/20 text-gray-300 hover:text-secondary transition-colors border border-transparent hover:border-accent/30"
+                    >
+                      ❓ Hilfe
+                    </button>
+                  </li>
+                  <li>
+                    <button
+                      onClick={handleBackToMenu}
+                      className="w-full text-left px-3 py-2 rounded-lg hover:bg-red-500/20 text-gray-300 hover:text-red-400 transition-colors border border-transparent hover:border-red-500/30"
+                    >
+                      🚪 Spiel beenden
+                    </button>
+                  </li>
+                </>
+              )}
+
             </ul>
           </nav>
         </div>
@@ -307,7 +363,7 @@ export function Sidebar() {
         <div className="p-4 border-t-2 border-accent/30 flex-shrink-0">
           <div className="text-center">
             <p className="text-xs text-text-secondary mb-1">mxster</p>
-            <p className="text-sm text-gradient font-medium">Version 0.0.28</p>
+            <p className="text-sm text-gradient font-medium">Version 0.0.29</p>
           </div>
         </div>
       </aside>

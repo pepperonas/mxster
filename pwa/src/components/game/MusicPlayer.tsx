@@ -69,7 +69,7 @@ export function MusicPlayer({ song, onStateChange }: MusicPlayerProps) {
         }
       } else {
         // Preview mode (default)
-        console.log('🎵 Using Preview mode (30s clips)')
+        console.log('🎵 Using Preview mode (128 kbps MP3)')
         setPlayerReady(true)
         setAudioMode('preview')
       }
@@ -259,11 +259,11 @@ export function MusicPlayer({ song, onStateChange }: MusicPlayerProps) {
   // Mode badge configuration
   const modeBadge = {
     spotify: {
-      label: '🎧 Spotify Premium',
+      label: '🎧 Spotify Premium (320 kbps)',
       color: 'text-green-400 border-green-500/30 bg-green-500/10'
     },
     preview: {
-      label: '🎵 Preview (30s)',
+      label: '🎵 Standard Audio (128 kbps)',
       color: 'text-orange-400 border-orange-500/30 bg-orange-500/10'
     },
     none: {
@@ -318,7 +318,7 @@ export function MusicPlayer({ song, onStateChange }: MusicPlayerProps) {
           </div>
           <div className="flex justify-between text-sm font-medium">
             <span className="text-secondary">{formatTime(currentPosition)}</span>
-            <span className="text-text-secondary">{formatTime(duration || (audioMode === 'preview' ? 30000 : 0))}</span>
+            <span className="text-text-secondary">{formatTime(duration)}</span>
           </div>
         </div>
 
@@ -347,9 +347,9 @@ export function MusicPlayer({ song, onStateChange }: MusicPlayerProps) {
         {audioMode === 'preview' && playerReady && (
           <div className="text-center text-xs text-text-secondary border-t border-accent/20 pt-3">
             {song.previewUrl ? (
-              <span>💡 Preview-Modus aktiv: 30s Clips · Unbegrenzte Spieler</span>
+              <span>💡 Standard Audio-Modus: Volle Songs · 128 kbps MP3 · Unbegrenzte Spieler</span>
             ) : (
-              <span className="text-yellow-400">⚠️ Kein Preview verfügbar für diesen Song</span>
+              <span className="text-yellow-400">⚠️ Kein Audio verfügbar für diesen Song</span>
             )}
           </div>
         )}
