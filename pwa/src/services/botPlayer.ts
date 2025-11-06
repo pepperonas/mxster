@@ -11,15 +11,15 @@ import { TimelineBotStrategy } from './botStrategies/timelineBotStrategy'
 const DIFFICULTY_CONFIGS: Record<'easy' | 'medium' | 'hard', BotConfig> = {
   easy: {
     difficulty: 'easy',
-    thinkingTimeMs: { min: 1500, max: 3000 }
+    thinkingTimeMs: { min: 500, max: 800 } // Fast response
   },
   medium: {
     difficulty: 'medium',
-    thinkingTimeMs: { min: 2000, max: 4000 }
+    thinkingTimeMs: { min: 500, max: 800 } // Same speed as easy
   },
   hard: {
     difficulty: 'hard',
-    thinkingTimeMs: { min: 2500, max: 5000 }
+    thinkingTimeMs: { min: 500, max: 800 } // Same speed - only accuracy differs
   }
 }
 

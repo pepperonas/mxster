@@ -285,9 +285,9 @@ export function PlayerSetup() {
               {/* Difficulty Description */}
               <div className="bg-primary/50 rounded-lg p-4 border border-white/10">
                 <p className="text-sm text-text-secondary">
-                  {botDifficulty === 'easy' && '😊 Leicht: Perfekt für Einsteiger. Der Bot macht öfter Fehler und braucht länger zum Überlegen.'}
-                  {botDifficulty === 'medium' && '🎯 Mittel: Eine faire Herausforderung. Der Bot ist kompetent, aber nicht unschlagbar.'}
-                  {botDifficulty === 'hard' && '🔥 Schwer: Nur für Profis! Der Bot spielt fast perfekt und reagiert blitzschnell.'}
+                  {botDifficulty === 'easy' && '😊 Leicht: Perfekt für Einsteiger. Der Bot macht häufig Fehler (~30% Trefferquote).'}
+                  {botDifficulty === 'medium' && '🎯 Mittel: Eine faire Herausforderung. Der Bot hat eine solide Trefferquote (~60%).'}
+                  {botDifficulty === 'hard' && '🔥 Schwer: Nur für Profis! Der Bot spielt fast perfekt (~90% Trefferquote).'}
                 </p>
               </div>
 

@@ -15,7 +15,7 @@ export function Sidebar() {
   const navigate = useNavigate()
   const location = useLocation()
   const { isSidebarOpen, toggleSidebar, showModal, closeSidebar } = useUI()
-  const { players, currentPlayer, gameMode, gameVariant, isGameStarted, endGame, resetGame } = useGame()
+  const { players, currentPlayer, gameMode, gameVariant, isGameStarted, endGame, resetGame, setGameMode, setGameVariant } = useGame()
   const { isLoggedIn } = useAuth()
   const { history } = useGameHistory()
   const { registerInteraction } = useInteraction()
@@ -102,7 +102,12 @@ export function Sidebar() {
         '⚠️ Spiel beenden?',
         'Möchtest du das Spiel wirklich beenden?',
         'Spiel beenden',
-        () => handleNavigation('/')
+        () => {
+          // Clear game state before navigation
+          setGameMode(null)
+          setGameVariant(null)
+          handleNavigation('/')
+        }
       )
     } else if (isInSetup && players.length > 0) {
       // Setup phase with players - show warning
@@ -112,6 +117,8 @@ export function Sidebar() {
         'Zurück zum Menü',
         () => {
           resetGame() // Clear players
+          setGameMode(null)
+          setGameVariant(null)
           handleNavigation('/')
         }
       )
