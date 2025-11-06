@@ -14,8 +14,7 @@ import { useState } from 'react'
 export function ActionBar() {
   const { toggleSidebar, showModal } = useUI()
   const { isLoggedIn, logout } = useAuth()
-  const { gameMode, players, currentPlayer } = useGame()
-  const { settings, updateSettings } = useSettings()
+  const { players, currentPlayer } = useGame()
   const { history } = useGameHistory()
   const { registerInteraction } = useInteraction()
   const [showAchievements, setShowAchievements] = useState(false)
@@ -41,7 +40,7 @@ export function ActionBar() {
         },
         {
           text: 'Ausloggen',
-          variant: 'accent',
+          variant: 'danger',
           onClick: logout
         }
       ]

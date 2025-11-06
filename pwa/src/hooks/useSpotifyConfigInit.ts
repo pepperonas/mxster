@@ -3,7 +3,6 @@
  */
 
 import { useState, useEffect } from 'react'
-import { SpotifyAuthService } from '@/services/SpotifyAuthService'
 
 export function useSpotifyConfigInit() {
   const [isReady, setIsReady] = useState(false)

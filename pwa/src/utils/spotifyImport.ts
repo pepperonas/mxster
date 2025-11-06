@@ -13,7 +13,11 @@ import fs from 'fs'
 import path from 'path'
 
 class SpotifyImporter {
-  constructor(clientId, clientSecret) {
+  private clientId: string
+  private clientSecret: string
+  private accessToken: string | null
+
+  constructor(clientId: string, clientSecret: string) {
     this.clientId = clientId
     this.clientSecret = clientSecret
     this.accessToken = null
@@ -35,13 +39,13 @@ class SpotifyImporter {
       this.accessToken = response.data.access_token
       console.log('✅ Spotify authentifiziert')
       return true
-    } catch (error) {
+    } catch (error: any) {
       console.error('❌ Authentifizierung fehlgeschlagen:', error.message)
       return false
     }
   }
 
-  async getPlaylistTracks(playlistId) {
+  async getPlaylistTracks(playlistId: string) {
     if (!this.accessToken) {
       await this.authenticate()
     }
@@ -53,7 +57,7 @@ class SpotifyImporter {
         }
       })
 
-      const tracks = response.data.items.map((item, index) => {
+      const tracks = response.data.items.map((item: any, index: number) => {
         const track = item.track
         return {
           id: `song_${String(index + 1).padStart(3, '0')}`,
@@ -68,13 +72,13 @@ class SpotifyImporter {
 
       console.log(`✅ ${tracks.length} Songs von Playlist geladen`)
       return tracks
-    } catch (error) {
+    } catch (error: any) {
       console.error('❌ Fehler beim Laden der Playlist:', error.message)
       return []
     }
   }
 
-  async searchTrack(title, artist) {
+  async searchTrack(title: string, artist: string) {
     if (!this.accessToken) {
       await this.authenticate()
     }
@@ -99,13 +103,13 @@ class SpotifyImporter {
         }
       }
       return null
-    } catch (error) {
+    } catch (error: any) {
       console.error('❌ Suche fehlgeschlagen:', error.message)
       return null
     }
   }
 
-  saveSongsToFile(songs, outputPath) {
+  saveSongsToFile(songs: any[], outputPath: string) {
     const songsJs = `export const songs = ${JSON.stringify(songs, null, 2)}`
     fs.writeFileSync(outputPath, songsJs, 'utf-8')
     console.log(`✅ Songs gespeichert in: ${outputPath}`)
@@ -117,9 +121,10 @@ async function main() {
   // Config laden
   let config
   try {
+    // @ts-ignore - Dynamic import for build script
     const configModule = await import('../../../spotify.config.js')
     config = configModule.default
-  } catch (error) {
+  } catch (error: any) {
     console.error('❌ spotify.config.js nicht gefunden')
     process.exit(1)
   }

@@ -162,7 +162,7 @@ export function GameEndStatsDialog({ winner, allPlayers, gameMode, onClose, onNe
           </h3>
 
           <div className="space-y-4">
-            {roundStats.map((playerStat, index) => (
+            {roundStats.map((playerStat) => (
               <div
                 key={playerStat.name}
                 className="glass p-4 rounded-lg border-2 border-accent/30 hover:border-accent/50 transition-colors"

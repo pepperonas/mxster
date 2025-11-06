@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useReducer, ReactNode, useCallback } from 'react'
+import { createContext, useContext, useReducer, ReactNode, useCallback } from 'react'
 import type { ModalOptions, ModalButton, Toast as ToastType } from '@/types'
 
 // ============================================================================
@@ -49,7 +49,7 @@ type UIAction =
 interface UIContextValue extends UIState {
   showModal: (title: string, content: ReactNode, buttons?: Modal['buttons'], options?: ModalOptions) => void
   closeModal: () => void
-  addToast: (message: string, type?: Toast['type'], duration?: number) => void
+  addToast: (message: string, type?: ToastType['type'], duration?: number) => void
   removeToast: (id: number) => void
   openSidebar: () => void
   closeSidebar: () => void
@@ -112,7 +112,7 @@ function uiReducer(state: UIState, action: UIAction): UIState {
 
     case 'ADD_TOAST': {
       const id = toastIdCounter++
-      const newToast: Toast = {
+      const newToast: ToastType = {
         ...action.payload,
         id
       }
@@ -196,7 +196,7 @@ export function UIProvider({ children }: UIProviderProps) {
     dispatch({ type: 'CLOSE_MODAL' })
   }, [])
 
-  const addToast = useCallback((message: string, type: Toast['type'] = 'info', duration: number = 3000) => {
+  const addToast = useCallback((message: string, type: ToastType['type'] = 'info', duration: number = 3000) => {
     dispatch({
       type: 'ADD_TOAST',
       payload: { message, type, duration }

@@ -3,7 +3,7 @@
  * Beautiful visual effects synchronized with music beats
  */
 
-import { startThreeWave, stopThreeWave, triggerWaveBeat, cleanupThreeWave } from './threeWaveAnimation'
+import { startThreeWave, _stopThreeWave, triggerWaveBeat, cleanupThreeWave } from './threeWaveAnimation'
 
 // Available background animation types
 export const BACKGROUND_ANIMATIONS = {

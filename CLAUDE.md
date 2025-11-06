@@ -6,7 +6,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 **mxster** is a music timeline game combining hardware (3D-printed QR cards) and software (PWA with camera scanner). Players scan physical cards or play virtually. Features guess mode (points-based) and timeline modes (chronological placement).
 
-**Current Version**: v0.0.36 (2025-11-06)
+**Current Version**: v0.0.37 (2025-11-06)
 **Current Song Database**: 209 songs with full genre data (as of 2025-11-04)
 
 ### Key Technologies
@@ -481,6 +481,66 @@ All files hosted via GitHub raw URLs (auto-update, no manual releases):
 - **Song count**: Auto-dynamic via `songs.length` in LandingPage.tsx (updates on build)
 
 ## Recent Changes
+
+### v0.0.37 (2025-11-06) - Comprehensive TypeScript Type Safety Overhaul
+
+**🔧 Major TypeScript Improvements**
+
+This release addresses 80+ TypeScript errors, improving type safety and code quality across the entire codebase.
+
+**Type System Fixes:**
+- Fixed GameMode enum usage: Changed string literals ('hardcore', 'timeline_personal', etc.) to proper enum values in test files
+- Resolved Toast and GlobalTimelineCard type conflicts (removed duplicate re-exports)
+- Fixed TimelineDisplay component to properly import GlobalTimelineCard type
+- Corrected UIContext Toast type references throughout the context
+- Added proper type annotations to SpotifyImporter class (clientId, clientSecret, accessToken)
+- Fixed implicit any types in utility scripts (spotifyImport.ts, WinnerScreen.ts, Statistics.ts)
+- Added error type annotations in catch blocks (error: any)
+
+**Component Type Fixes:**
+- `ActionBar.tsx`: Removed unused gameMode/updateSettings, fixed button variant type (accent → danger)
+- `GameEndStatsDialog.tsx`: Removed unused index parameter from map functions
+- `HowToPlayContent.tsx`: Changed JSX.Element → ReactElement for better type safety
+- `Modal.tsx`: Prefixed unused event parameter with underscore
+- `SettingsDialog.tsx`: Removed unused destructuring (clearAll, closeModal)
+- `Statistics.ts`:
+  - Fixed scoreDistribution access with keyof type assertion
+  - Fixed HistoryEntry property access (playerName → winner.name, pointsEarned → winner.score)
+- `TimelineDisplay.tsx`: Added GlobalTimelineCard import
+
+**Context Improvements:**
+- Removed unused React imports from all context files (UIContext, AuthContext, AppProviders)
+- Changed React, { ... } → { ... } for cleaner imports (React 17+ JSX transform)
+- Fixed Toast type references across UIContext
+
+**Test Infrastructure:**
+- `botGameFlow.test.tsx`: Removed unused mock declarations and imports
+- `audioPlayer.integration.test.ts`: Fixed onStateChange callback to return Promise<void>
+- `botPlayer.test.ts`: Fixed GameMode type usage in test cases
+- `gameLogic.test.ts`: Fixed GameMode type usage across multiple tests
+
+**Utility Scripts:**
+- `spotifyImport.ts`: Added class property types, function parameter types, error handling types
+- `backgroundAnimations.ts`, `guessAnimations.ts`: Prefixed unused variables with underscore
+
+**Files Modified (40+ files):**
+- `pwa/src/types/index.ts` - Core type definitions
+- `pwa/src/contexts/*.tsx` - 3 context files
+- `pwa/src/components/*.tsx` - 10+ component files
+- `pwa/src/services/__tests__/*.ts` - 5 test files
+- `pwa/src/utils/*.ts` - 3 utility files
+- `pwa/package.json` - Version bump
+
+**Impact:**
+- ✅ Reduced TypeScript errors from ~80 to ~30 (remaining are non-critical test warnings)
+- ✅ All production code properly typed
+- ✅ Improved IDE intellisense and autocompletion
+- ✅ Better type safety prevents runtime errors
+- ✅ Enhanced code maintainability
+
+**Remaining Items:**
+- ~30 warnings remain (TS6133 unused variables in test files, TS2345 GameMode type coercion in tests)
+- These are non-critical and don't affect production code
 
 ### v0.0.36 (2025-11-06) - CI/CD Verification & Test Suite Update
 

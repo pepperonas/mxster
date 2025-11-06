@@ -66,7 +66,7 @@ export function Modal() {
     }, 100)
 
     // Handle browser back button
-    const handlePopState = (e: PopStateEvent) => {
+    const handlePopState = (_e: PopStateEvent) => {
       // If user clicks back, close the modal
       if (modal.isOpen) {
         console.log('🔙 Browser back button pressed, closing modal')

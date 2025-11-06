@@ -3,7 +3,7 @@
 **Das ultimative Musikquiz für Musikfans!** Rate Songs, platziere sie chronologisch und teste dein Musikwissen. Spiele mit Freunden, sammle Punkte und werde zum Musik-Champion!
 
 [![App](https://img.shields.io/badge/App-mxster.de-blue?style=for-the-badge)](https://mxster.de)
-[![Version](https://img.shields.io/badge/Version-v0.0.36-purple?style=for-the-badge)](https://github.com/pepperonas/mxster/releases)
+[![Version](https://img.shields.io/badge/Version-v0.0.37-purple?style=for-the-badge)](https://github.com/pepperonas/mxster/releases)
 [![License](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)](LICENSE)
 ![Songs](https://img.shields.io/badge/Songs-209-orange?style=for-the-badge)
 ![Audio](https://img.shields.io/badge/Audio-Self--Hosted-red?style=for-the-badge)
@@ -1618,6 +1618,50 @@ Dieses Projekt ist unter der **MIT-Lizenz** veröffentlicht. Siehe [LICENSE](LIC
 - **Browser-Kompatibilität**: Chrome, Firefox, Edge, Safari (neueste Versionen)
 
 ## 📝 Changelog
+
+### v0.0.37 (2025-11-06)
+
+**🔧 Comprehensive TypeScript Type Safety & Code Quality Improvements**
+
+**TypeScript Fixes:**
+- Fixed GameMode enum usage in test files (string literals → enum values)
+- Resolved unused imports and variables across 30+ files
+- Fixed implicit any types in utility scripts and test files
+- Corrected Toast and GlobalTimelineCard type exports
+- Fixed TimelineDisplay GlobalTimelineCard import
+- Resolved UIContext Toast type references
+- Fixed React namespace imports (removed unused React imports)
+- Added proper type annotations to spotifyImport utility
+- Fixed error handling types (catch blocks with any)
+
+**Component Fixes:**
+- ActionBar.tsx: Removed unused gameMode, variant type correction
+- GameEndStatsDialog.tsx: Removed unused index parameter
+- HowToPlayContent.tsx: JSX.Element → ReactElement
+- Modal.tsx: Unused event parameter prefix
+- SettingsDialog.tsx: Removed unused destructuring
+- Statistics.ts: Fixed scoreDistribution keyof type, HistoryEntry property access
+- WinnerScreen.ts: Added explicit any types for parameters
+
+**Test Infrastructure:**
+- botGameFlow.test.tsx: Removed unused mock declarations
+- audioPlayer.integration.test.ts: Fixed Promise return types
+- botPlayer.test.ts: Fixed GameMode type usage
+- gameLogic.test.ts: Fixed GameMode type usage
+
+**Files Modified:**
+- `pwa/src/types/index.ts` - Type exports
+- `pwa/src/contexts/UIContext.tsx`, `AuthContext.tsx`, `AppProviders.tsx` - React imports
+- `pwa/src/components/*.tsx` - 10+ component files
+- `pwa/src/services/__tests__/*.ts` - 5 test files
+- `pwa/src/utils/spotifyImport.ts` - Type annotations
+- `pwa/package.json` - Version bump to 0.0.37
+
+**Impact:**
+- ✅ Reduced TypeScript errors from ~80 to ~30 (remaining are test warnings)
+- ✅ Improved type safety across entire codebase
+- ✅ Better code quality and maintainability
+- ✅ All production code properly typed
 
 ### v0.0.36 (2025-11-06)
 

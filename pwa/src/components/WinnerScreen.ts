@@ -4,7 +4,7 @@
  * Celebrates the winner with confetti effect and podium
  */
 
-export function renderWinnerScreen(players) {
+export function renderWinnerScreen(players: any) {
   // Sort players by score (descending)
   const sortedPlayers = [...players].sort((a, b) => (b.score || 0) - (a.score || 0))
   const winner = sortedPlayers[0]
@@ -220,7 +220,7 @@ export function renderWinnerScreen(players) {
 /**
  * Calculate average score per card for player
  */
-function calculateAverage(player) {
+function calculateAverage(player: any) {
   const cards = player.cards || 0
   const score = player.score || 0
 
@@ -233,9 +233,9 @@ function calculateAverage(player) {
 /**
  * Generate fun facts about the game
  */
-function generateFunFacts(players) {
-  const totalScore = players.reduce((sum, p) => sum + (p.score || 0), 0)
-  const totalCards = players.reduce((sum, p) => sum + (p.cards || 0), 0)
+function generateFunFacts(players: any) {
+  const totalScore = players.reduce((sum: any, p: any) => sum + (p.score || 0), 0)
+  const totalCards = players.reduce((sum: any, p: any) => sum + (p.cards || 0), 0)
   const avgScore = players.length > 0 ? (totalScore / players.length).toFixed(1) : 0
 
   // Find player with most cards

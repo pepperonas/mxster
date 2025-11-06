@@ -4,6 +4,7 @@
  */
 
 import { useGame, useSettings } from '@/contexts'
+import type { GlobalTimelineCard } from '@/types'
 
 interface TimelineDisplayProps {
   playerId?: number // Optional: Show specific player's timeline (Timeline Personal mode)

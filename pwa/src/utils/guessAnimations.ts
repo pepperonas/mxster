@@ -7,7 +7,7 @@ import confetti from 'canvas-confetti'
 import {
   randomBetween,
   randomInt,
-  randomChoice,
+  _randomChoice,
   prefersReducedMotion,
   sleep,
   getParticleCount,

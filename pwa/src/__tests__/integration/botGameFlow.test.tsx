@@ -4,17 +4,10 @@
  */
 
 import { describe, it, expect, beforeEach, vi } from 'vitest'
-import { render, screen, waitFor } from '@testing-library/react'
-import { GameProvider } from '@/contexts/GameContext'
-import { UIProvider } from '@/contexts/UIContext'
 import { createBotPlayers } from '@/services/botPlayer'
 import type { Player } from '@/types'
 
 describe('Bot Game Flow Integration', () => {
-  const mockAddPlayer = vi.fn()
-  const mockSetGameMode = vi.fn()
-  const mockSetGameVariant = vi.fn()
-
   beforeEach(() => {
     vi.clearAllMocks()
   })
@@ -101,7 +94,7 @@ describe('Bot Game Flow Integration', () => {
       expect(players.length).toBe(1)
 
       // Bot panel condition: gameVariant === 'virtual' && players.length === 1
-      const shouldShowBotPanel = gameVariant === 'virtual' && players.length === 1
+      const shouldShowBotPanel = gameVariant !== 'physical' && players.length === 1
 
       expect(shouldShowBotPanel).toBe(false)
     })

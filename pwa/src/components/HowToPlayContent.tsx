@@ -4,12 +4,13 @@
  */
 
 import { useState } from 'react'
+import type { ReactElement } from 'react'
 
 interface AccordionSection {
   id: string
   icon: string
   title: string
-  content: JSX.Element
+  content: ReactElement
 }
 
 export function HowToPlayContent() {

@@ -70,7 +70,7 @@ describe('Audio Player Integration Tests', () => {
     })
 
     it('should allow setting onStateChange callback', () => {
-      const mockCallback = () => {}
+      const mockCallback = () => Promise.resolve()
       SpotifyPlayerService.onStateChange = mockCallback
       expect(SpotifyPlayerService.onStateChange).toBe(mockCallback)
     })
@@ -272,7 +272,7 @@ describe('Audio Player Integration Tests', () => {
 
       // Verify that MusicPlayerService has logic to check spotifyId
       // This test ensures the null check exists in the code
-      const songWithoutSpotifyId = {
+      const _songWithoutSpotifyId = {
         id: 'test-001',
         title: 'Test Song',
         artist: 'Test Artist',

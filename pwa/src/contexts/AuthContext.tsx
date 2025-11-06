@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useReducer, useEffect, ReactNode } from 'react'
+import { createContext, useContext, useReducer, useEffect, ReactNode } from 'react'
 import type { SpotifyTokens } from '@/types/spotify'
 import { STORAGE_KEYS } from '@/utils/constants'
 

@@ -80,7 +80,7 @@ export class HardcoreBotStrategy {
     return Math.random() < 0.5 ? '' : correctTitle.substring(0, Math.floor(correctTitle.length / 2))
   }
 
-  private generateWrongArtist(correctArtist: string): string {
+  private generateWrongArtist(_correctArtist: string): string {
     return Math.random() < 0.5 ? '' : 'Unknown Artist'
   }
 }

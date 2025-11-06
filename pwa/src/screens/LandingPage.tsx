@@ -14,7 +14,6 @@ import spotifySlots from '../../spotify.slots.json'
 export function LandingPage() {
   const navigate = useNavigate()
   const { login, isLoggedIn } = useSpotifyAuth()
-  const { showModal } = useUI()
   const [showPasswordDialog, setShowPasswordDialog] = useState(false)
 
   const handlePlayWithoutSpotify = () => {

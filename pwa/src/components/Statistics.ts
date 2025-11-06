@@ -263,7 +263,7 @@ function renderPerformanceChart(scoreDistribution: ScoreDistribution): string {
   return `
     <div class="space-y-4">
       ${categories.map(cat => {
-        const count = scoreDistribution[cat.key]
+        const count = scoreDistribution[cat.key as keyof ScoreDistribution] || 0
         const percentage = Math.round((count / total) * 100)
 
         return `
@@ -303,7 +303,7 @@ function renderGameHistory(history: HistoryEntry[]): string {
         <div class="flex items-center justify-between">
           <div>
             <div class="font-semibold text-text-primary">
-              ${game.playerName || 'Unbekannt'}
+              ${game.winner?.name || 'Unbekannt'}
             </div>
             <div class="text-sm text-text-secondary">
               ${dateStr} • ${timeStr}
@@ -311,10 +311,10 @@ function renderGameHistory(history: HistoryEntry[]): string {
           </div>
           <div class="text-right">
             <div class="font-bold text-gradient">
-              ${game.pointsEarned !== undefined ? `+${game.pointsEarned} Punkte` : 'Keine Daten'}
+              ${game.winner?.score !== undefined ? `${game.winner.score} Punkte` : `${game.winner?.cards || 0} Karten`}
             </div>
             <div class="text-xs text-text-secondary">
-              ${game.songTitle || ''}
+              ${game.gameMode} • ${game.players.length} Spieler
             </div>
           </div>
         </div>
