@@ -70,6 +70,7 @@ export function GameScreen() {
   // Bot Execution State
   const [isBotExecuting, setIsBotExecuting] = useState(false)
   const botExecutionRef = useRef(false) // Prevent duplicate executions
+  const lastBotSongRef = useRef<string | null>(null) // Track last song bot played
 
   const {
     gameMode,
@@ -160,6 +161,7 @@ export function GameScreen() {
 
   useEffect(() => {
     const currentPlayerObj = players[currentPlayer]
+    const songId = currentSong?.spotifyId || currentSong?.id
 
     // Only execute bot turns if:
     // 1. Current player is a bot
@@ -167,11 +169,15 @@ export function GameScreen() {
     // 3. Game is not over
     // 4. Bot is not already executing
     // 5. In Virtual Mode (bots only available in Virtual Mode)
-    if (!currentPlayerObj?.isBot || !currentSong || gameOver || isBotExecuting || botExecutionRef.current || gameVariant !== 'virtual') {
+    // 6. This song hasn't been played by this bot yet (prevent duplicate executions)
+    if (!currentPlayerObj?.isBot || !currentSong || gameOver || isBotExecuting || botExecutionRef.current || gameVariant !== 'virtual' || lastBotSongRef.current === songId) {
       return
     }
 
     console.log('🤖 Bot turn detected:', currentPlayerObj.name, 'Difficulty:', currentPlayerObj.botDifficulty)
+
+    // Mark this song as played by this bot to prevent duplicate executions
+    lastBotSongRef.current = songId
 
     // Mark as executing to prevent duplicate calls
     botExecutionRef.current = true
@@ -227,6 +233,11 @@ export function GameScreen() {
 
     executeBotTurn()
   }, [currentPlayer, currentSong, gameOver, isBotExecuting, gameVariant, gameMode])
+
+  // Reset lastBotSongRef when player changes (allow next bot to execute)
+  useEffect(() => {
+    lastBotSongRef.current = null
+  }, [currentPlayer])
 
   // Debug logging
   console.log('🔵 GameScreen render - currentPlayer:', currentPlayer, 'currentSong:', currentSong?.title || 'null')

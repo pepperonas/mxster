@@ -6,7 +6,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 **mxster** is a music timeline game combining hardware (3D-printed QR cards) and software (PWA with camera scanner). Players scan physical cards or play virtually. Features guess mode (points-based) and timeline modes (chronological placement).
 
-**Current Version**: v0.0.32 (2025-11-06)
+**Current Version**: v0.0.32+ (2025-11-06)
 **Current Song Database**: 209 songs with full genre data (as of 2025-11-04)
 
 ### Key Technologies
@@ -539,6 +539,49 @@ Added full AI opponent system for single-player gameplay in Virtual Mode:
 - `pwa/src/services/botStrategies/timelineBotStrategy.ts`
 - `pwa/src/services/botStrategies/__tests__/*.test.ts`
 - `pwa/src/__tests__/integration/botGameFlow.test.tsx`
+
+### v0.0.32+ (2025-11-06) - Bot Multiple Execution Bug Fix
+
+**🐛 Critical Bug Fix: Bot Executing Multiple Turns**
+
+Fixed critical bug where bot players executed multiple placement actions per turn instead of just one.
+
+**Root Cause:**
+- Bot execution useEffect was triggering multiple times for the same song
+- State changes during bot execution caused component re-renders
+- Each re-render triggered the useEffect again before the execution flag was reset
+- Bot executed 3-5 placement actions before the loop stopped
+
+**Solution:**
+1. Added `lastBotSongRef` to track which song the bot already played:
+   ```typescript
+   const lastBotSongRef = useRef<string | null>(null)
+   ```
+
+2. Extended useEffect condition to prevent duplicate executions for same song:
+   ```typescript
+   const songId = currentSong?.spotifyId || currentSong?.id
+   if (...existing conditions... || lastBotSongRef.current === songId) {
+     return
+   }
+   lastBotSongRef.current = songId
+   ```
+
+3. Added separate useEffect to reset reference when player changes:
+   ```typescript
+   useEffect(() => {
+     lastBotSongRef.current = null
+   }, [currentPlayer])
+   ```
+
+**Impact:**
+- ✅ Bot now executes exactly ONE action per turn
+- ✅ Proper turn-based gameplay flow restored
+- ✅ No more rapid-fire bot placements
+- ✅ All 231 tests still passing
+
+**File Modified:**
+- `pwa/src/screens/GameScreen.tsx` (lines 73, 164, 173, 180, 237-240)
 
 ### v0.0.30 (2025-11-06) - Genre Statistics & CI Test Fixes
 
