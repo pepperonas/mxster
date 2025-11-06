@@ -6,7 +6,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 **mxster** is a music timeline game combining hardware (3D-printed QR cards) and software (PWA with camera scanner). Players scan physical cards or play virtually. Features guess mode (points-based) and timeline modes (chronological placement).
 
-**Current Version**: v0.0.40 (2025-11-06)
+**Current Version**: v0.0.41 (2025-11-06)
 **Current Song Database**: 209 songs with full genre data (as of 2025-11-04)
 
 ### Key Technologies
@@ -481,6 +481,54 @@ All files hosted via GitHub raw URLs (auto-update, no manual releases):
 - **Song count**: Auto-dynamic via `songs.length` in LandingPage.tsx (updates on build)
 
 ## Recent Changes
+
+### v0.0.41 (2025-11-06) - Progressive Achievement Display
+
+**🎯 Verbesserte Fortschrittsanzeige mit gestaffelten Zielen**
+
+Fixed misleading progress display by implementing progressive achievement milestones:
+
+**Problem (v0.0.40):**
+- Showed "14% bis Großmeister" for 687 points (target: 5000)
+- Too distant goal demotivating for new players
+- Ignored intermediate MUSIC_EXPERT achievement (1000 points)
+
+**Solution:**
+Progressive display with 3 states:
+
+1. **< 1000 Punkte**: Shows progress to MUSIC_EXPERT (🎓)
+   ```
+   687 Punkte
+   69% bis Musikexperte (🎓)
+   ```
+
+2. **1000-4999 Punkte**: Shows MUSIC_EXPERT achieved + progress to GRAND_MASTER
+   ```
+   1247 Punkte
+   🎓 Musikexperte erreicht!
+   25% bis Großmeister (👑💎)
+   ```
+
+3. **≥ 5000 Punkte**: Shows both achievements completed
+   ```
+   5342 Punkte
+   🎓 Musikexperte erreicht!
+   👑💎 Großmeister erreicht!
+   ```
+
+**Benefits:**
+- More motivating for new players (achievable short-term goals)
+- Highlights intermediate achievements
+- Better UX progression (1000 → 5000 instead of direct 5000)
+- Clearer milestone communication
+
+**Implementation:**
+- File: `pwa/src/components/PlayerStatsDialog.tsx` (lines 166-194)
+- Three conditional rendering blocks based on score thresholds
+- Maintained yellow-gold theme with green success badges
+
+**Files Modified:**
+- `pwa/src/components/PlayerStatsDialog.tsx` - Progressive achievement display
 
 ### v0.0.40 (2025-11-06) - GRAND_MASTER Achievement Progress Display
 

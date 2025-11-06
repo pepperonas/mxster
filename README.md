@@ -1619,6 +1619,16 @@ Dieses Projekt ist unter der **MIT-Lizenz** veröffentlicht. Siehe [LICENSE](LIC
 
 ## 📝 Changelog
 
+### v0.0.41 (2025-11-06)
+
+**🎯 Progressive Achievement Display**
+
+Fixed misleading progress indicator with staged achievement goals:
+- **< 1000 pts**: Shows progress to "Musikexperte" (69% for 687 pts) ✅
+- **1000-4999 pts**: Shows "Musikexperte" achieved + progress to "Großmeister"
+- **≥ 5000 pts**: Shows both achievements completed
+- More motivating short-term goals for new players
+
 ### v0.0.40 (2025-11-06)
 
 **👑 GRAND_MASTER Achievement Progress Display**
