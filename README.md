@@ -3,7 +3,7 @@
 **Das ultimative Musikquiz für Musikfans!** Rate Songs, platziere sie chronologisch und teste dein Musikwissen. Spiele mit Freunden, sammle Punkte und werde zum Musik-Champion!
 
 [![App](https://img.shields.io/badge/App-mxster.de-blue?style=for-the-badge)](https://mxster.de)
-[![Version](https://img.shields.io/badge/Version-v0.0.34-purple?style=for-the-badge)](https://github.com/pepperonas/mxster/releases)
+[![Version](https://img.shields.io/badge/Version-v0.0.35-purple?style=for-the-badge)](https://github.com/pepperonas/mxster/releases)
 [![License](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)](LICENSE)
 ![Songs](https://img.shields.io/badge/Songs-209-orange?style=for-the-badge)
 ![Audio](https://img.shields.io/badge/Audio-Self--Hosted-red?style=for-the-badge)
@@ -1618,6 +1618,30 @@ Dieses Projekt ist unter der **MIT-Lizenz** veröffentlicht. Siehe [LICENSE](LIC
 - **Browser-Kompatibilität**: Chrome, Firefox, Edge, Safari (neueste Versionen)
 
 ## 📝 Changelog
+
+### v0.0.35 (2025-11-06)
+
+**🔧 Critical TypeScript Fixes for CI/CD**
+
+**GameContext Null Value Support:**
+- Fixed `GameAction` types to accept `GameMode | null` and `GameVariant | null`
+- Ensures proper state reset when navigating between screens
+- Resolves "Type 'null' is not assignable to type 'GameMode'" errors
+
+**Test Infrastructure:**
+- Fixed TypeScript error in `test/setup.ts` for spotify config mock import
+- Added `as any` type assertion to handle dynamic mock imports
+- Resolves "implicitly has an 'any' type" error in CI/CD pipeline
+
+**Files Modified:**
+- `pwa/src/contexts/GameContext.tsx` - GameAction type updates
+- `pwa/src/test/setup.ts` - Mock import type assertion
+- `pwa/package.json` - Version bump to 0.0.35
+
+**Impact:**
+- ✅ Fixes critical TypeScript errors preventing CI/CD builds
+- ✅ Maintains type safety while allowing null state resets
+- ✅ Improves test reliability across environments
 
 ### v0.0.34 (2025-11-06)
 

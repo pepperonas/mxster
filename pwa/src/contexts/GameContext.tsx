@@ -38,8 +38,8 @@ interface GameState {
 }
 
 type GameAction =
-  | { type: 'SET_GAME_MODE'; payload: GameMode }
-  | { type: 'SET_GAME_VARIANT'; payload: GameVariant }
+  | { type: 'SET_GAME_MODE'; payload: GameMode | null }
+  | { type: 'SET_GAME_VARIANT'; payload: GameVariant | null }
   | { type: 'SET_RANDOM_START_POSITION'; payload: boolean }
   | { type: 'ADD_PLAYER'; payload: string; playerData?: Partial<Player> }
   | { type: 'REMOVE_PLAYER'; payload: number }

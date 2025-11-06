@@ -6,7 +6,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 **mxster** is a music timeline game combining hardware (3D-printed QR cards) and software (PWA with camera scanner). Players scan physical cards or play virtually. Features guess mode (points-based) and timeline modes (chronological placement).
 
-**Current Version**: v0.0.34 (2025-11-06)
+**Current Version**: v0.0.35 (2025-11-06)
 **Current Song Database**: 209 songs with full genre data (as of 2025-11-04)
 
 ### Key Technologies
@@ -481,6 +481,44 @@ All files hosted via GitHub raw URLs (auto-update, no manual releases):
 - **Song count**: Auto-dynamic via `songs.length` in LandingPage.tsx (updates on build)
 
 ## Recent Changes
+
+### v0.0.35 (2025-11-06) - Critical TypeScript Fixes for CI/CD
+
+**🔧 GameContext Type System Improvements**
+
+Fixed critical TypeScript errors that were preventing CI/CD builds:
+
+**GameContext Null Value Support:**
+- Updated `GameAction` union types to accept `GameMode | null` and `GameVariant | null`
+- Changes in `src/contexts/GameContext.tsx`:
+  ```typescript
+  type GameAction =
+    | { type: 'SET_GAME_MODE'; payload: GameMode | null }  // was: GameMode
+    | { type: 'SET_GAME_VARIANT'; payload: GameVariant | null }  // was: GameVariant
+  ```
+- Ensures proper state reset when navigating between landing/setup/game screens
+- Maintains type safety while allowing intentional null resets
+
+**Test Infrastructure Fix:**
+- Fixed `test/setup.ts` TypeScript error for spotify config mock
+- Added `as any` type assertion for dynamic mock imports
+- Resolves CI/CD error: "Could not find a declaration file for module '../../spotify.config.mock.js'"
+- Change: `await import('../../spotify.config.mock.js') as any`
+
+**Error Resolution:**
+- ✅ Fixed: "Type 'null' is not assignable to type 'GameMode'"
+- ✅ Fixed: "Type 'null' is not assignable to type 'GameVariant'"
+- ✅ Fixed: "implicitly has an 'any' type" in test setup
+
+**Files Modified:**
+- `pwa/src/contexts/GameContext.tsx` (lines 41-42)
+- `pwa/src/test/setup.ts` (line 101)
+- `pwa/package.json` (v0.0.35)
+
+**Impact:**
+- Unblocks CI/CD pipeline
+- Maintains type safety for game state management
+- Improves test reliability across environments
 
 ### v0.0.34 (2025-11-06) - Production Deployment & Verification
 
