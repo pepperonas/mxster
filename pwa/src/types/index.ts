@@ -25,6 +25,8 @@ export interface Player {
   timeline: Song[]  // Songs with optional points property
   cards: number  // Count of correctly placed cards
   score: number  // Points (Guess Mode only)
+  isBot?: boolean  // Bot player flag (v0.0.32)
+  botDifficulty?: 'easy' | 'medium' | 'hard'  // Bot difficulty level (v0.0.32)
 }
 
 // ============================================================================

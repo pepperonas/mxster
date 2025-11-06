@@ -6,7 +6,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 **mxster** is a music timeline game combining hardware (3D-printed QR cards) and software (PWA with camera scanner). Players scan physical cards or play virtually. Features guess mode (points-based) and timeline modes (chronological placement).
 
-**Current Version**: v0.0.30 (2025-11-06)
+**Current Version**: v0.0.32 (2025-11-06)
 **Current Song Database**: 209 songs with full genre data (as of 2025-11-04)
 
 ### Key Technologies
@@ -481,6 +481,64 @@ All files hosted via GitHub raw URLs (auto-update, no manual releases):
 - **Song count**: Auto-dynamic via `songs.length` in LandingPage.tsx (updates on build)
 
 ## Recent Changes
+
+### v0.0.32 (2025-11-06) - Bot Player System (AI Opponents)
+
+**🤖 Complete Bot Player Implementation**
+
+Added full AI opponent system for single-player gameplay in Virtual Mode:
+
+**Core Features:**
+- **Bot Creation UI**: Dedicated panel in PlayerSetup (Virtual Mode only)
+  - Select 1-3 AI opponents
+  - Choose difficulty: Easy (😊), Medium (🎯), Hard (🔥)
+  - Cyan-themed gradient design
+  - Only visible with exactly 1 human player
+
+- **Difficulty Levels**:
+  - **Easy (30-50% win rate)**: 1.5-3s thinking time, 30% title/artist accuracy, 10% exact year
+  - **Medium (60-75% win rate)**: 2-4s thinking time, 60% title/artist accuracy, 40% exact year
+  - **Hard (90-95% win rate)**: 2.5-5s thinking time, 90% title/artist accuracy, 70% exact year
+
+- **Bot Strategies**:
+  - `HardcoreBotStrategy`: Generates guesses with typos, partial matches, and year estimation
+  - `TimelineBotStrategy`: Places cards chronologically with difficulty-based precision
+  - Strategy Pattern for mode-specific behavior
+
+- **Visual Indicators**:
+  - 🤖 Bot emoji in player lists
+  - Color-coded difficulty badges (green/orange/red)
+  - "KI-Gegner" label
+  - Cyan border for active bot players
+  - "Bot denkt nach..." animation with spinner
+
+- **Game Integration**:
+  - Automatic turn detection via useEffect
+  - Async execution with simulated thinking time
+  - Seamless integration with existing game logic
+  - Error handling with automatic turn skip
+
+**Technical Implementation:**
+- `src/services/botPlayer.ts`: Orchestrator with name generation
+- `src/services/botStrategies/`: Strategy classes (Hardcore, Timeline)
+- `src/types/index.ts`: Player interface extensions
+- `src/contexts/GameContext.tsx`: Optional playerData support
+- Comprehensive test suite (231 tests, 100% pass)
+
+**Files Modified:**
+- `pwa/src/types/index.ts`
+- `pwa/src/contexts/GameContext.tsx`
+- `pwa/src/screens/PlayerSetup.tsx`
+- `pwa/src/screens/GameScreen.tsx`
+- `pwa/src/components/game/PlayerInfo.tsx`
+
+**New Files:**
+- `pwa/src/services/botPlayer.ts`
+- `pwa/src/services/botStrategies/types.ts`
+- `pwa/src/services/botStrategies/hardcoreBotStrategy.ts`
+- `pwa/src/services/botStrategies/timelineBotStrategy.ts`
+- `pwa/src/services/botStrategies/__tests__/*.test.ts`
+- `pwa/src/__tests__/integration/botGameFlow.test.tsx`
 
 ### v0.0.30 (2025-11-06) - Genre Statistics & CI Test Fixes
 

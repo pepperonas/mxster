@@ -28,6 +28,8 @@ import {
   calculatePoints,
   type SpotifyPlayerState
 } from '@/services'
+import { BotPlayer } from '@/services/botPlayer'
+import type { BotAction } from '@/services/botStrategies/types'
 import { songs } from '@/data/songs'
 import { AchievementId } from '@/types/achievements'
 import {
@@ -64,6 +66,10 @@ export function GameScreen() {
   // Player Rankings History (for COMEBACK_KING achievement)
   // Array of snapshots: [{turn: number, rankings: [playerName, playerName, ...]}, ...]
   const rankingsHistory = useRef<Array<{ turn: number; rankings: string[] }>>([])
+
+  // Bot Execution State
+  const [isBotExecuting, setIsBotExecuting] = useState(false)
+  const botExecutionRef = useRef(false) // Prevent duplicate executions
 
   const {
     gameMode,
@@ -147,6 +153,80 @@ export function GameScreen() {
       console.log('🔷 Not in Timeline Mode or no currentSong, skipping')
     }
   }, [currentSong, gameMode])
+
+  // ============================================================================
+  // Bot Turn Detection & Execution
+  // ============================================================================
+
+  useEffect(() => {
+    const currentPlayerObj = players[currentPlayer]
+
+    // Only execute bot turns if:
+    // 1. Current player is a bot
+    // 2. There's a current song to play
+    // 3. Game is not over
+    // 4. Bot is not already executing
+    // 5. In Virtual Mode (bots only available in Virtual Mode)
+    if (!currentPlayerObj?.isBot || !currentSong || gameOver || isBotExecuting || botExecutionRef.current || gameVariant !== 'virtual') {
+      return
+    }
+
+    console.log('🤖 Bot turn detected:', currentPlayerObj.name, 'Difficulty:', currentPlayerObj.botDifficulty)
+
+    // Mark as executing to prevent duplicate calls
+    botExecutionRef.current = true
+    setIsBotExecuting(true)
+
+    // Execute bot turn asynchronously
+    const executeBotTurn = async () => {
+      try {
+        const botPlayer = new BotPlayer(currentPlayerObj)
+
+        // Get current timeline (mode-specific)
+        const timeline = gameMode === 'timeline_global'
+          ? globalTimeline.map(card => card.song)
+          : currentPlayerObj.timeline
+
+        // Execute bot turn with callback
+        await botPlayer.executeTurn(
+          gameMode!,
+          currentSong,
+          timeline,
+          (action: BotAction) => {
+            console.log('🤖 Bot action received:', action.type, action.data)
+
+            if (action.type === 'guess') {
+              // Hardcore Mode: Submit guess
+              const { title, artist, year } = action.data
+              console.log('🤖 Bot guessing:', { title, artist, year })
+
+              // Simulate guess submission (same flow as human player)
+              handleGuessSubmit(title, artist, year)
+            } else if (action.type === 'place') {
+              // Timeline Mode: Place card
+              const { position } = action.data
+              console.log('🤖 Bot placing card at position:', position)
+
+              // Simulate manual placement (same flow as human player)
+              handleManualPlacement(position)
+            }
+          }
+        )
+      } catch (error) {
+        console.error('❌ Bot execution error:', error)
+        addToast('Bot-Fehler aufgetreten', 'error')
+
+        // Skip bot turn on error
+        nextTurn()
+      } finally {
+        // Reset execution flag
+        botExecutionRef.current = false
+        setIsBotExecuting(false)
+      }
+    }
+
+    executeBotTurn()
+  }, [currentPlayer, currentSong, gameOver, isBotExecuting, gameVariant, gameMode])
 
   // Debug logging
   console.log('🔵 GameScreen render - currentPlayer:', currentPlayer, 'currentSong:', currentSong?.title || 'null')
@@ -1221,7 +1301,7 @@ export function GameScreen() {
       <div className="container mx-auto px-4 max-w-7xl">
         {/* Player Info */}
         <div className="mb-6">
-          <PlayerInfo />
+          <PlayerInfo isBotExecuting={isBotExecuting} />
         </div>
 
         {/* Main Game Grid */}

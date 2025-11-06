@@ -41,7 +41,7 @@ type GameAction =
   | { type: 'SET_GAME_MODE'; payload: GameMode }
   | { type: 'SET_GAME_VARIANT'; payload: GameVariant }
   | { type: 'SET_RANDOM_START_POSITION'; payload: boolean }
-  | { type: 'ADD_PLAYER'; payload: string }
+  | { type: 'ADD_PLAYER'; payload: string; playerData?: Partial<Player> }
   | { type: 'REMOVE_PLAYER'; payload: number }
   | { type: 'UPDATE_PLAYER'; payload: { index: number; player: Partial<Player> } }
   | { type: 'SET_CURRENT_PLAYER'; payload: number }
@@ -63,7 +63,7 @@ interface GameContextValue extends GameState {
   setGameMode: (mode: GameMode) => void
   setGameVariant: (variant: GameVariant) => void
   setRandomStartPosition: (enabled: boolean) => void
-  addPlayer: (name: string) => void
+  addPlayer: (name: string, playerData?: Partial<Player>) => void
   removePlayer: (index: number) => void
   updatePlayer: (index: number, player: Partial<Player>) => void
   setCurrentPlayer: (index: number) => void
@@ -127,7 +127,8 @@ function gameReducer(state: GameState, action: GameAction): GameState {
         name: action.payload,
         timeline: [],
         cards: 0,
-        score: 0
+        score: 0,
+        ...action.playerData // Merge optional bot data (isBot, botDifficulty)
       }
       return { ...state, players: [...state.players, newPlayer] }
     }
@@ -371,7 +372,7 @@ export function GameProvider({ children }: GameProviderProps) {
     setGameMode: (mode) => dispatch({ type: 'SET_GAME_MODE', payload: mode }),
     setGameVariant: (variant) => dispatch({ type: 'SET_GAME_VARIANT', payload: variant }),
     setRandomStartPosition: (enabled) => dispatch({ type: 'SET_RANDOM_START_POSITION', payload: enabled }),
-    addPlayer: (name) => dispatch({ type: 'ADD_PLAYER', payload: name }),
+    addPlayer: (name, playerData) => dispatch({ type: 'ADD_PLAYER', payload: name, playerData }),
     removePlayer: (index) => dispatch({ type: 'REMOVE_PLAYER', payload: index }),
     updatePlayer: (index, player) => dispatch({ type: 'UPDATE_PLAYER', payload: { index, player } }),
     setCurrentPlayer: (index) => dispatch({ type: 'SET_CURRENT_PLAYER', payload: index }),

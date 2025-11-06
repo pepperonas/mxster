@@ -3,7 +3,7 @@
 **Das ultimative Musikquiz für Musikfans!** Rate Songs, platziere sie chronologisch und teste dein Musikwissen. Spiele mit Freunden, sammle Punkte und werde zum Musik-Champion!
 
 [![App](https://img.shields.io/badge/App-mxster.de-blue?style=for-the-badge)](https://mxster.de)
-[![Version](https://img.shields.io/badge/Version-v0.0.30-purple?style=for-the-badge)](https://github.com/pepperonas/mxster/releases)
+[![Version](https://img.shields.io/badge/Version-v0.0.32-purple?style=for-the-badge)](https://github.com/pepperonas/mxster/releases)
 [![License](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)](LICENSE)
 ![Songs](https://img.shields.io/badge/Songs-209-orange?style=for-the-badge)
 ![Audio](https://img.shields.io/badge/Audio-Self--Hosted-red?style=for-the-badge)
@@ -46,6 +46,11 @@ mxster ist ein **Multiplayer-Musikquiz** mit drei verschiedenen Spielmodi:
 - 🏆 **Score-Based Effects** - 5 Animationen je nach Punktzahl (Gold-Konfetti, Blitze, etc.)
 - ⌨️ **Keyboard Shortcuts** - Enter/ESC zum Schließen von Dialogen
 - ⌨️ **Auto-Focus** - Automatischer Fokus auf Eingabefelder (Desktop/Laptop)
+- 🤖 **Bot-Spieler (NEU v0.0.32)** - Spiele gegen 1-3 KI-Gegner (Virtual Mode)
+  - **3 Schwierigkeitsgrade**: Easy (😊), Medium (🎯), Hard (🔥)
+  - **Realistische KI**: Tippfehler-Simulation, Denkzeit-Delays, schwierigkeitsbasierte Genauigkeit
+  - **Visuelle Indikatoren**: Bot-Emoji, farbcodierte Schwierigkeits-Badges, "Bot denkt nach..." Animation
+  - **Alle Modi unterstützt**: Hardcore, Timeline Personal, Timeline Global
 
 ## 🎵 Audio-Modi
 
