@@ -10,9 +10,9 @@ import { useUI } from '@/contexts'
 
 export function SettingsDialog() {
   const { settings, updateSettings, removePlayer } = useSettings()
-  const { history, importGames, deleteGame, clearAll } = useGameHistory()
+  const { history, importGames, deleteGame } = useGameHistory()
   const { exportAchievements, importAchievements, playerAchievements } = useAchievements()
-  const { addToast, showModal, closeModal } = useUI()
+  const { addToast, showModal } = useUI()
 
   const [isDragging, setIsDragging] = useState(false)
   const [playerToDelete, setPlayerToDelete] = useState<string | null>(null)

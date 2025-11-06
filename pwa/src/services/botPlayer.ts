@@ -24,7 +24,6 @@ const DIFFICULTY_CONFIGS: Record<'easy' | 'medium' | 'hard', BotConfig> = {
 }
 
 export class BotPlayer {
-  private player: Player
   private config: BotConfig
 
   constructor(player: Player) {
@@ -32,7 +31,6 @@ export class BotPlayer {
       throw new Error('Player must be a bot with difficulty set')
     }
 
-    this.player = player
     this.config = DIFFICULTY_CONFIGS[player.botDifficulty]
   }
 

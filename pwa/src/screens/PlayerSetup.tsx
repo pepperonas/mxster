@@ -9,7 +9,6 @@ import { useGame, useUI, useSettings } from '@/contexts'
 import { PlusIcon, CloseIcon } from '@/utils/icons'
 import { requiresDJ } from '@/utils/gameModes'
 import { createBotPlayers } from '@/services/botPlayer'
-import type { Player } from '@/types'
 
 export function PlayerSetup() {
   const navigate = useNavigate()

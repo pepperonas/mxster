@@ -3,7 +3,7 @@
  * Beautiful visual effects synchronized with music beats
  */
 
-import { startThreeWave, _stopThreeWave, triggerWaveBeat, cleanupThreeWave } from './threeWaveAnimation'
+import { startThreeWave, triggerWaveBeat, cleanupThreeWave } from './threeWaveAnimation'
 
 // Available background animation types
 export const BACKGROUND_ANIMATIONS = {
@@ -58,13 +58,13 @@ export function cleanupBackgroundAnimations(): void {
 /**
  * Get animation display name
  */
-export function getAnimationName(type: BackgroundAnimationType): string {
+export function getAnimationName(_type: BackgroundAnimationType): string {
   return '3D Partikelwelle'
 }
 
 /**
  * Get animation description
  */
-export function getAnimationDescription(type: BackgroundAnimationType): string {
+export function getAnimationDescription(_type: BackgroundAnimationType): string {
   return '3D Wellen-Animation mit Three.js'
 }

@@ -6,7 +6,6 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useSpotifyAuth } from '@/hooks'
-import { useUI } from '@/contexts'
 import { songs } from '@/data/songs'
 import { PasswordProtectionDialog } from '@/components/PasswordProtectionDialog'
 import spotifySlots from '../../spotify.slots.json'

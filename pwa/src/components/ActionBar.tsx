@@ -3,7 +3,7 @@
  * Top navigation bar with logo, actions, and settings
  */
 
-import { useUI, useAuth, useGame, useSettings, useInteraction } from '@/contexts'
+import { useUI, useAuth, useGame, useInteraction } from '@/contexts'
 import { useGameHistory } from '@/hooks'
 import { LogoutIcon, HistoryIcon, SettingsIcon, ChartIcon, AchievementIcon } from '@/utils/icons'
 import { SettingsDialog } from './SettingsDialog'

@@ -64,6 +64,7 @@ describe('Audio Player Integration Tests', () => {
       it(`should have ${callback} property`, () => {
         // Should be able to set these properties
         expect(() => {
+          // @ts-ignore - Testing callback property assignment
           SpotifyPlayerService[callback as keyof typeof SpotifyPlayerService] = () => {}
         }).not.toThrow()
       })

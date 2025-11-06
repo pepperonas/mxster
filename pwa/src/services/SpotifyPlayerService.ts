@@ -51,7 +51,6 @@ class SpotifyPlayerServiceClass {
   private isReady: boolean = false
   private currentTrackUri: string | null = null
   private currentTrackId: string | null = null
-  private accessToken: string | null = null
   private stateChangeCallbacks: Array<(state: SpotifyPlayerState) => void> = []
   private lastKnownPosition: number = 0 // ms
   private lastKnownDuration: number = 0 // ms
@@ -143,8 +142,6 @@ class SpotifyPlayerServiceClass {
    * Initialize Spotify Web Playback SDK
    */
   async initialize(accessToken: string): Promise<string> {
-    this.accessToken = accessToken
-
     return new Promise((resolve, reject) => {
       // Load Spotify SDK script if not already loaded
       if (!window.Spotify) {
@@ -167,7 +164,7 @@ class SpotifyPlayerServiceClass {
    * Create Player Instance
    */
   private createPlayer(
-    accessToken: string,
+    _accessToken: string,
     resolve: (deviceId: string) => void,
     reject: (error: Error) => void
   ) {

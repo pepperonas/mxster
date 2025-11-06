@@ -3,7 +3,8 @@
  * Comprehensive tests for core game mechanics
  */
 
-import { describe, it, expect, vi } from 'vitest'
+import { describe, it, expect } from 'vitest'
+import { GameMode } from '@/types'
 import {
   validateGuess,
   calculatePoints,
@@ -20,7 +21,7 @@ import {
   addToPlayedSongs,
   isSongPlayed
 } from '../gameLogic'
-import type { Song, Player, GameMode } from '@/types'
+import type { Song, Player } from '@/types'
 
 // ============================================================================
 // Test Data
@@ -315,7 +316,7 @@ describe('isTimelineValid', () => {
 // ============================================================================
 
 describe('checkWinCondition - Hardcore Mode', () => {
-  const gameMode: GameMode = 'hardcore'
+  const gameMode: GameMode = GameMode.HARDCORE
 
   it('should NOT declare winner if not all players finished', () => {
     const players = [
@@ -377,7 +378,7 @@ describe('checkWinCondition - Timeline Modes', () => {
       createTestPlayer({ name: 'Bob', cards: 7 }) // Bob still playing
     ]
 
-    const result = checkWinCondition(players, 0, 'timeline_personal')
+    const result = checkWinCondition(players, 0, GameMode.TIMELINE_PERSONAL)
 
     expect(result.gameOver).toBe(true)
     expect(result.winner?.name).toBe('Alice')
@@ -391,7 +392,7 @@ describe('checkWinCondition - Timeline Modes', () => {
       createTestPlayer({ name: 'Bob', cards: 4 }) // Total: 10 cards, Alice wins with 6
     ]
 
-    const result = checkWinCondition(players, 1, 'timeline_global')
+    const result = checkWinCondition(players, 1, GameMode.TIMELINE_GLOBAL)
 
     expect(result.gameOver).toBe(true)
     expect(result.winner?.name).toBe('Alice')
@@ -405,7 +406,7 @@ describe('checkWinCondition - Timeline Modes', () => {
       createTestPlayer({ name: 'Bob', cards: 4 }) // Total: 9 cards
     ]
 
-    const result = checkWinCondition(players, 0, 'timeline_global')
+    const result = checkWinCondition(players, 0, GameMode.TIMELINE_GLOBAL)
 
     expect(result.gameOver).toBe(false)
     expect(result.winner).toBeNull()
@@ -417,7 +418,7 @@ describe('checkWinCondition - Timeline Modes', () => {
       createTestPlayer({ name: 'Bob', cards: 7 })
     ]
 
-    const result = checkWinCondition(players, 0, 'timeline_personal')
+    const result = checkWinCondition(players, 0, GameMode.TIMELINE_PERSONAL)
 
     expect(result.gameOver).toBe(false)
     expect(result.winner).toBeNull()
@@ -515,7 +516,7 @@ describe('getNextPlayerIndex', () => {
 
 describe('getNextDJIndex', () => {
   it('should keep same DJ in Virtual mode', () => {
-    const result = getNextDJIndex(0, 0, 3, 'hardcore', 'virtual')
+    const result = getNextDJIndex(0, 0, 3, GameMode.HARDCORE, 'virtual')
 
     expect(result.nextPlayer).toBe(1)
     expect(result.nextDJ).toBe(0) // DJ stays same
@@ -524,21 +525,21 @@ describe('getNextDJIndex', () => {
   it('should rotate DJ when turn returns to DJ (Physical Hardcore)', () => {
     // Current: Player 2, DJ 0, 3 total players
     // Next player would be 0 (DJ) → rotate DJ to 1, skip to player 1
-    const result = getNextDJIndex(2, 0, 3, 'hardcore', 'physical')
+    const result = getNextDJIndex(2, 0, 3, GameMode.HARDCORE, 'physical')
 
     expect(result.nextPlayer).toBe(1) // Skip DJ (0), move to 1
     expect(result.nextDJ).toBe(1) // DJ rotates
   })
 
   it('should NOT rotate DJ in middle of round (Physical Hardcore)', () => {
-    const result = getNextDJIndex(0, 0, 3, 'hardcore', 'physical')
+    const result = getNextDJIndex(0, 0, 3, GameMode.HARDCORE, 'physical')
 
     expect(result.nextPlayer).toBe(1)
     expect(result.nextDJ).toBe(0) // DJ stays same
   })
 
   it('should keep DJ unchanged in Timeline modes (even Physical)', () => {
-    const result = getNextDJIndex(2, 0, 3, 'timeline_personal', 'physical')
+    const result = getNextDJIndex(2, 0, 3, GameMode.TIMELINE_PERSONAL, 'physical')
 
     expect(result.nextPlayer).toBe(0)
     expect(result.nextDJ).toBe(0) // DJ doesn't rotate in Timeline modes

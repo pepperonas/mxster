@@ -98,7 +98,8 @@ vi.mock('howler', () => ({
 // Mock spotify.config.js (optional config file, gitignored)
 // Points to spotify.config.mock.js for tests
 vi.mock('../../spotify.config.js', async () => {
-  const mockConfig = await import('../../spotify.config.mock.js') as any
+  // @ts-ignore - Dynamic import of mock file
+  const mockConfig = await import('../../spotify.config.mock.js')
   return mockConfig
 })
 

@@ -443,7 +443,7 @@ export function getIcon(iconName: keyof typeof iconComponents) {
 }
 
 // Legacy HTML string getter (for gradual migration)
-export function getIconHTML(iconName: string): string {
+export function getIconHTML(_iconName: string): string {
   console.warn('getIconHTML is deprecated, use React icon components instead')
   return ''
 }

@@ -5,7 +5,7 @@
 
 import { describe, it, expect, vi } from 'vitest'
 import { BotPlayer, generateBotName, createBotPlayers } from '../botPlayer'
-import type { Player, Song } from '@/types'
+import { GameMode, type Player, type Song } from '@/types'
 
 describe('BotPlayer', () => {
   const createTestPlayer = (name: string, difficulty: 'easy' | 'medium' | 'hard'): Player => ({
@@ -68,7 +68,7 @@ describe('BotPlayer', () => {
 
       const mockCallback = vi.fn()
 
-      await botPlayer.executeTurn('hardcore', testSong, [], mockCallback)
+      await botPlayer.executeTurn(GameMode.HARDCORE, testSong, [], mockCallback)
 
       // Callback should be called with guess action
       expect(mockCallback).toHaveBeenCalledOnce()
@@ -87,7 +87,7 @@ describe('BotPlayer', () => {
       const mockCallback = vi.fn()
       const startTime = Date.now()
 
-      await botPlayer.executeTurn('hardcore', testSong, [], mockCallback)
+      await botPlayer.executeTurn(GameMode.HARDCORE, testSong, [], mockCallback)
 
       const elapsed = Date.now() - startTime
 
@@ -109,7 +109,7 @@ describe('BotPlayer', () => {
 
       const mockCallback = vi.fn()
 
-      await botPlayer.executeTurn('timeline_personal', testSong, timeline, mockCallback)
+      await botPlayer.executeTurn(GameMode.TIMELINE_PERSONAL, testSong, timeline, mockCallback)
 
       // Callback should be called with place action
       expect(mockCallback).toHaveBeenCalledOnce()
@@ -128,7 +128,7 @@ describe('BotPlayer', () => {
 
       const mockCallback = vi.fn()
 
-      await botPlayer.executeTurn('timeline_global', testSong, [], mockCallback)
+      await botPlayer.executeTurn(GameMode.TIMELINE_GLOBAL, testSong, [], mockCallback)
 
       expect(mockCallback).toHaveBeenCalledOnce()
       const action = mockCallback.mock.calls[0][0]
