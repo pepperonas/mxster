@@ -95,6 +95,13 @@ vi.mock('howler', () => ({
   },
 }))
 
+// Mock spotify.config.js (optional config file, gitignored)
+// Points to spotify.config.mock.js for tests
+vi.mock('../../spotify.config.js', async () => {
+  const mockConfig = await import('../../spotify.config.mock.js')
+  return mockConfig
+})
+
 // Mock QR Scanner (qr-scanner library)
 vi.mock('qr-scanner', () => ({
   default: vi.fn().mockImplementation(() => ({
