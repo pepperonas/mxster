@@ -131,7 +131,7 @@ export function TimelineDisplay({ playerId }: TimelineDisplayProps) {
                 {/* Player Badge (Global Timeline only) - Responsive */}
                 {gameMode === 'timeline_global' && slot.playerId !== null && (
                   <div
-                    className="absolute top-1 left-1 px-1.5 py-0.5 bg-primary/90 border border-accent/50 rounded text-[10px] sm:text-[8px] font-bold text-secondary shadow-glow-sm"
+                    className="absolute top-1 left-1 px-1.5 py-0.5 bg-primary/90 border border-accent/50 rounded text-[8px] sm:text-[10px] font-bold text-secondary shadow-glow-sm"
                     title={`Platziert von: ${players[slot.playerId]?.name}`}
                   >
                     {/* Show single letter on mobile, 3 letters on desktop */}
@@ -141,13 +141,13 @@ export function TimelineDisplay({ playerId }: TimelineDisplayProps) {
                 )}
 
                 {/* Year - Responsive */}
-                <div className={`text-2xl sm:text-xl font-bold text-gradient mb-1 ${settings.hideYearsInTimeline ? 'blur-md select-none' : ''}`}>
+                <div className={`text-xl sm:text-2xl font-bold text-gradient mb-1 ${settings.hideYearsInTimeline ? 'blur-md select-none' : ''}`}>
                   {slot.song.year}
                 </div>
 
                 {/* Title (truncated) - Responsive */}
                 <div
-                  className="text-xs sm:text-[11px] text-text-secondary overflow-hidden text-ellipsis whitespace-nowrap w-full text-center"
+                  className="text-[11px] sm:text-xs text-text-secondary overflow-hidden text-ellipsis whitespace-nowrap w-full text-center"
                   title={`${slot.song.title} - ${slot.song.artist}`}
                 >
                   {slot.song.title}
@@ -155,7 +155,7 @@ export function TimelineDisplay({ playerId }: TimelineDisplayProps) {
 
                 {/* Artist (truncated) - Responsive */}
                 <div
-                  className="text-[10px] sm:text-[9px] text-text-secondary/60 overflow-hidden text-ellipsis whitespace-nowrap w-full text-center mt-0.5"
+                  className="text-[9px] sm:text-[10px] text-text-secondary/60 overflow-hidden text-ellipsis whitespace-nowrap w-full text-center mt-0.5"
                   title={slot.song.artist}
                 >
                   {slot.song.artist}

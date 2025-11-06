@@ -143,7 +143,7 @@ export function Sidebar() {
       />
 
       {/* Sidebar Panel */}
-      <aside className="fixed top-0 left-0 bottom-0 w-80 glass border-r-2 border-accent/30 z-50 flex flex-col">
+      <aside className="fixed top-0 left-0 bottom-0 w-[90vw] sm:w-80 glass border-r-2 border-accent/30 z-50 flex flex-col">
         {/* Header */}
         <div className="flex items-center justify-between p-4 border-b-2 border-accent/30 flex-shrink-0">
           <h2 className="text-xl font-bold text-gradient">Menu</h2>

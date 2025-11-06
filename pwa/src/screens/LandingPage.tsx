@@ -59,7 +59,7 @@ export function LandingPage() {
       <section className="container mx-auto px-4 max-w-6xl mb-12">
         <div className="text-center mb-12 animate-fade-in">
           {/* Logo / Title */}
-          <h1 className="text-5xl md:text-6xl font-bold text-gradient mb-4">
+          <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold text-gradient mb-4">
             mxster
           </h1>
           <p className="text-xl text-text-secondary mb-6">
@@ -145,7 +145,7 @@ export function LandingPage() {
 
               {/* YDL Legal Grey Area Disclaimer */}
               <div className="p-3 bg-orange-500/10 border border-orange-500/30 rounded-lg mb-3">
-                <p className="text-xs text-orange-300">
+                <p className="text-xs sm:text-sm text-orange-300">
                   <strong>⚠️ Rechtlicher Hinweis:</strong><br/>
                   Die Audiodateien wurden von YouTube heruntergeladen (ydl).
                   Die Nutzung liegt in einer rechtlichen Grauzone und erfolgt auf eigene Verantwortung.

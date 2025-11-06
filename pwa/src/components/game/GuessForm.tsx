@@ -121,7 +121,7 @@ export function GuessForm({ onSubmit, onSkip }: GuessFormProps) {
             onChange={(e) => setTitle(e.target.value)}
             placeholder="Song-Titel eingeben..."
             autoComplete="off"
-            className="w-full px-4 py-3 bg-primary border-2 border-accent/30 rounded-lg text-white placeholder-gray-500 focus:border-accent focus:shadow-glow-accent focus:outline-none focus:ring-0 transition-all"
+            className="w-full px-4 py-4 bg-primary border-2 border-accent/30 rounded-lg text-white placeholder-gray-500 focus:border-accent focus:shadow-glow-accent focus:outline-none focus:ring-0 transition-all"
           />
         </div>
 
@@ -137,7 +137,7 @@ export function GuessForm({ onSubmit, onSkip }: GuessFormProps) {
             onChange={(e) => setArtist(e.target.value)}
             placeholder="Interpret eingeben..."
             autoComplete="off"
-            className="w-full px-4 py-3 bg-primary border-2 border-accent/30 rounded-lg text-white placeholder-gray-500 focus:border-accent focus:shadow-glow-accent focus:outline-none focus:ring-0 transition-all"
+            className="w-full px-4 py-4 bg-primary border-2 border-accent/30 rounded-lg text-white placeholder-gray-500 focus:border-accent focus:shadow-glow-accent focus:outline-none focus:ring-0 transition-all"
           />
         </div>
 
@@ -155,7 +155,7 @@ export function GuessForm({ onSubmit, onSkip }: GuessFormProps) {
             min="1950"
             max={new Date().getFullYear()}
             autoComplete="off"
-            className="w-full px-4 py-3 bg-primary border-2 border-accent/30 rounded-lg text-white placeholder-gray-500 focus:border-accent focus:shadow-glow-accent focus:outline-none focus:ring-0 transition-all"
+            className="w-full px-4 py-4 bg-primary border-2 border-accent/30 rounded-lg text-white placeholder-gray-500 focus:border-accent focus:shadow-glow-accent focus:outline-none focus:ring-0 transition-all"
           />
         </div>
 

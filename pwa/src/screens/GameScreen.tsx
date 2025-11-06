@@ -802,7 +802,7 @@ export function GameScreen() {
               }}
               className="w-full py-6 px-6 bg-primary/50 hover:bg-accent/50 border-2 border-accent/30 hover:border-accent rounded-lg transition-colors"
             >
-              <div className="text-lg md:text-xl font-bold">📍 Erste Karte platzieren</div>
+              <div className="text-base sm:text-lg md:text-xl font-bold">📍 Erste Karte platzieren</div>
             </button>
           ) : (
             <>
@@ -814,7 +814,7 @@ export function GameScreen() {
                 }}
                 className="w-full py-4 px-6 bg-primary/50 hover:bg-accent/50 border-2 border-accent/30 hover:border-accent rounded-lg transition-colors"
               >
-                <div className="text-lg md:text-xl font-bold">⬆️ Vor {timeline[0].year}</div>
+                <div className="text-base sm:text-lg md:text-xl font-bold">⬆️ Vor {timeline[0].year}</div>
               </button>
 
               {/* Cards and placement buttons */}
@@ -822,8 +822,8 @@ export function GameScreen() {
                 <div key={song.id}>
                   {/* Existing card */}
                   <div className="py-3 px-4 bg-primary/30 border border-white/10 rounded-lg">
-                    <div className="font-semibold">{song.title}</div>
-                    <div className="text-sm text-text-secondary">{song.artist} • {song.year}</div>
+                    <div className="font-semibold text-sm sm:text-base">{song.title}</div>
+                    <div className="text-xs sm:text-sm text-text-secondary">{song.artist} • {song.year}</div>
                   </div>
 
                   {/* Placement button after this card */}
@@ -835,7 +835,7 @@ export function GameScreen() {
                       }}
                       className="w-full py-4 px-6 bg-primary/50 hover:bg-accent/50 border-2 border-accent/30 hover:border-accent rounded-lg transition-colors mt-3"
                     >
-                      <div className="text-lg md:text-xl font-bold">
+                      <div className="text-base sm:text-lg md:text-xl font-bold">
                         📍 Zwischen {timeline[index].year} und {timeline[index + 1].year}
                       </div>
                     </button>
@@ -851,7 +851,7 @@ export function GameScreen() {
                 }}
                 className="w-full py-4 px-6 bg-primary/50 hover:bg-accent/50 border-2 border-accent/30 hover:border-accent rounded-lg transition-colors"
               >
-                <div className="text-lg md:text-xl font-bold">⬇️ Nach {timeline[timeline.length - 1].year}</div>
+                <div className="text-base sm:text-lg md:text-xl font-bold">⬇️ Nach {timeline[timeline.length - 1].year}</div>
               </button>
             </>
           )}

@@ -240,7 +240,7 @@ export function PlayerSetup() {
                 <label className="block text-sm font-semibold text-text-secondary mb-3">
                   Schwierigkeitsgrad
                 </label>
-                <div className="flex gap-3">
+                <div className="flex flex-col sm:flex-row gap-3">
                   <button
                     onClick={() => setBotDifficulty('easy')}
                     className={`

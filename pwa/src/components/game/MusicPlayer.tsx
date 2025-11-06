@@ -301,7 +301,7 @@ export function MusicPlayer({ song, onStateChange }: MusicPlayerProps) {
         {/* Progress Bar */}
         <div className="space-y-2">
           <div
-            className="h-3 bg-primary/50 rounded-full overflow-hidden cursor-pointer border border-accent/20 hover:border-accent/50 transition-colors"
+            className="h-4 sm:h-3 bg-primary/50 rounded-full overflow-hidden cursor-pointer border border-accent/20 hover:border-accent/50 transition-colors"
             onClick={(e) => {
               const rect = e.currentTarget.getBoundingClientRect()
               const x = e.clientX - rect.left

@@ -109,7 +109,7 @@ export function Modal() {
       onClick={handleBackdropClick}
     >
       <div
-        className="relative glass rounded-2xl shadow-glow-accent border-2 border-accent/30 max-w-2xl w-full mx-4 max-h-[90vh] overflow-auto"
+        className="relative glass rounded-2xl shadow-glow-accent border-2 border-accent/30 max-w-[95vw] sm:max-w-md md:max-w-2xl w-full mx-4 max-h-[90vh] overflow-auto"
         role="dialog"
         aria-modal="true"
         aria-labelledby="modal-title"
