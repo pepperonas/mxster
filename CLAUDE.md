@@ -391,11 +391,39 @@ node scripts/song-management/exchange-song.js  # Preserves genre if available
 - Scripts: All song management scripts support genre input/editing
 
 ### Deployment
+
+**Deployment Script**: `scripts/deployment/deploy.sh` (position-independent, works from any directory)
+
+**Quick Deploy** (from project root):
 ```bash
-./scripts/deployment/deploy.sh  # Quick deploy to mxster.de
+cd /Users/martin/WebstormProjects/mrx3k1/mxster
+./scripts/deployment/deploy.sh
 ```
 
-**Production**: https://mxster.de (VPS: root@mrx3k1.de, `/var/www/html/mxster`)
+**What the script does**:
+1. Calculates absolute PROJECT_ROOT (works from any directory)
+2. Changes to `pwa/` directory
+3. Runs `npm run build` → outputs to `pwa/dist/`
+4. Uploads `pwa/dist/` to VPS via rsync (excludes `audio/`)
+5. Preserves existing audio files on VPS
+6. Deploys to `/var/www/html/mxster/`
+
+**Build Output**: `pwa/dist/` (Vite 5.0 default)
+- `dist/index.html` (6.5 KB)
+- `dist/assets/` (JS/CSS bundles ~130 KB)
+- `dist/sw.js`, `dist/workbox-*.js` (Service Worker)
+- `dist/manifest.webmanifest` (PWA config)
+- `dist/audio/` (self-hosted MP3s, if exists - gitignored)
+
+**Production**:
+- Domain: https://mxster.de
+- VPS: root@mrx3k1.de
+- Deploy Path: `/var/www/html/mxster/`
+- nginx config: `nginx-mxster.conf`
+
+**Important**: The deploy script uses absolute path calculation (`$(dirname "$0")/../..`), so it works reliably from:
+- Project root: `./scripts/deployment/deploy.sh` ✓
+- Any directory: `bash /full/path/to/scripts/deployment/deploy.sh` ✓
 
 ### Downloads
 All files hosted via GitHub raw URLs (auto-update, no manual releases):
