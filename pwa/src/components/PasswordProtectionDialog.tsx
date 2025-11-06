@@ -63,6 +63,18 @@ export function PasswordProtectionDialog({ onSuccess, onCancel }: PasswordProtec
           </p>
         </div>
 
+        {/* Legal Grey Area Explanation */}
+        <div className="mb-6 p-4 bg-orange-500/10 border border-orange-500/30 rounded-lg">
+          <p className="text-sm text-orange-300 mb-2">
+            <strong>⚠️ Rechtlicher Hinweis:</strong>
+          </p>
+          <p className="text-xs text-orange-200">
+            Diese Audiodateien stammen aus YouTube-Downloads (ydl) und befinden sich in einer rechtlichen Grauzone.
+            Die Passwortabfrage dient dem rechtlichen Schutz des Entwicklers.
+            Die Nutzung erfolgt auf eigene Verantwortung - nur für private, nicht-kommerzielle, bildungsbasierte Zwecke.
+          </p>
+        </div>
+
         {/* Password Hint */}
         <div className="mb-6 p-4 bg-blue-500/10 border border-blue-500/30 rounded-lg">
           <p className="text-sm text-blue-300 text-center">

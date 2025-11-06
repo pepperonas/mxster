@@ -9,6 +9,7 @@ import { useSpotifyAuth } from '@/hooks'
 import { useUI } from '@/contexts'
 import { songs } from '@/data/songs'
 import { PasswordProtectionDialog } from '@/components/PasswordProtectionDialog'
+import spotifySlots from '../../spotify.slots.json'
 
 export function LandingPage() {
   const navigate = useNavigate()
@@ -138,9 +139,20 @@ export function LandingPage() {
                 </div>
                 <div className="flex items-center gap-2">
                   <span className="text-green-500">✓</span>
-                  <span>Gute Audioqualität</span>
+                  <span>Gute Audioqualität für Quiz-Spiele</span>
                 </div>
               </div>
+
+              {/* YDL Legal Grey Area Disclaimer */}
+              <div className="p-3 bg-orange-500/10 border border-orange-500/30 rounded-lg mb-3">
+                <p className="text-xs text-orange-300">
+                  <strong>⚠️ Rechtlicher Hinweis:</strong><br/>
+                  Die Audiodateien wurden von YouTube heruntergeladen (ydl).
+                  Die Nutzung liegt in einer rechtlichen Grauzone und erfolgt auf eigene Verantwortung.
+                  Nur für private, nicht-kommerzielle Zwecke.
+                </p>
+              </div>
+
               <div className="text-xs text-text-secondary border-t border-accent/20 pt-3">
                 💡 Empfohlen für die meisten Spieler - perfekt für spontane Runden
               </div>
@@ -166,7 +178,7 @@ export function LandingPage() {
                 </div>
                 <div className="flex items-center gap-2">
                   <span className="text-green-500">✓</span>
-                  <span>Alle Spotify-Features</span>
+                  <span>100% legal über Spotify API</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <span className="text-orange-500">⚠</span>
@@ -174,18 +186,44 @@ export function LandingPage() {
                 </div>
                 <div className="flex items-center gap-2">
                   <span className="text-orange-500">⚠</span>
-                  <span>Nur 25 Spieler insgesamt möglich</span>
+                  <span>Nur {spotifySlots.availableSlots}/{spotifySlots.totalSlots} Slots verfügbar</span>
                 </div>
               </div>
-              <div className="border-t border-secondary/20 pt-3 space-y-2">
-                <div className="p-3 bg-blue-500/10 border border-blue-500/30 rounded-lg mb-2">
-                  <p className="text-sm text-blue-300">
-                    <strong>ℹ️ Warum nur 25 Spieler?</strong><br/>
-                    Spotify erlaubt Apps im Entwicklermodus maximal 25 registrierte Nutzer.
-                    Für mehr müsste die App offiziell bei Spotify angemeldet werden -
-                    das würde aber eine Firma und 250.000+ Nutzer voraussetzen.
+
+              <div className="border-t border-secondary/20 pt-3 space-y-3">
+                {/* Spotify API Limitation Explanation */}
+                <div className="p-3 bg-blue-500/10 border border-blue-500/30 rounded-lg">
+                  <p className="text-sm text-blue-300 mb-2">
+                    <strong>🚧 Spotify API Hürde:</strong>
+                  </p>
+                  <ul className="text-xs text-blue-200 space-y-1 list-disc list-inside">
+                    <li><strong>Development Mode:</strong> Max 25 Nutzer (aktuell aktiv)</li>
+                    <li><strong>Extended Quota Mode:</strong> Benötigt registrierte Firma + 250.000+ Nutzer</li>
+                    <li><strong>Indie-Sperre:</strong> Seit Mai 2025 keine Anträge von Einzelpersonen möglich</li>
+                  </ul>
+                  <p className="text-xs text-blue-200 mt-2 italic">
+                    Das ist absurd: Von 25 direkt auf 250.000 - kein organisches Wachstum möglich.
+                    Spotify blockiert damit kreative Indie-Projekte systematisch.
                   </p>
                 </div>
+
+                {/* Registration CTA */}
+                <div className="p-3 bg-green-500/10 border border-green-500/30 rounded-lg">
+                  <p className="text-sm text-green-300 mb-2">
+                    <strong>✉️ Möchtest du einen Spotify-Slot?</strong>
+                  </p>
+                  <p className="text-xs text-green-200 mb-3">
+                    Noch {spotifySlots.availableSlots} von {spotifySlots.totalSlots} Slots frei.
+                    Sende einfach eine Anfrage mit deinem Spotify-Nutzernamen.
+                  </p>
+                  <a
+                    href={`mailto:${spotifySlots.contactEmail}?subject=Spotify%20Premium%20Zugang%20für%20mxster&body=Hallo%20Martin,%0D%0A%0D%0Aich%20würde%20gerne%20die%20Spotify%20Premium%20Integration%20von%20mxster%20nutzen.%0D%0A%0D%0AMein%20Spotify-Nutzername:%20[HIER%20EINTRAGEN]%0D%0AMeine%20E-Mail:%20[HIER%20EINTRAGEN]%0D%0A%0D%0AVielen%20Dank!`}
+                    className="btn btn-secondary w-full text-sm py-2"
+                  >
+                    📧 Zugang anfragen
+                  </a>
+                </div>
+
                 <p className="text-xs text-text-secondary">
                   💎 Für Audiophile mit Spotify Premium Account
                 </p>
@@ -197,8 +235,8 @@ export function LandingPage() {
           <div className="mt-6 p-4 bg-primary/30 rounded-lg border border-accent/20">
             <p className="text-sm text-text-secondary text-center">
               <strong className="text-white">Audioqualität im Vergleich:</strong><br/>
-              Gratis-Modus (128 kbps) = gute Qualität, ausreichend für Quiz-Spiele ·
-              Spotify Premium (320 kbps) = Studio-Qualität, nur minimal besser hörbar
+              Gratis-Modus (128 kbps) = gut genug für Quiz-Spiele, die meisten merken keinen Unterschied ·
+              Spotify Premium (320 kbps) = Studio-Qualität, nur für echte Audiophile wahrnehmbar besser
             </p>
           </div>
         </div>
