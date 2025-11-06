@@ -6,7 +6,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 **mxster** is a music timeline game combining hardware (3D-printed QR cards) and software (PWA with camera scanner). Players scan physical cards or play virtually. Features guess mode (points-based) and timeline modes (chronological placement).
 
-**Current Version**: v0.0.33 (2025-11-06)
+**Current Version**: v0.0.34 (2025-11-06)
 **Current Song Database**: 209 songs with full genre data (as of 2025-11-04)
 
 ### Key Technologies
@@ -481,6 +481,46 @@ All files hosted via GitHub raw URLs (auto-update, no manual releases):
 - **Song count**: Auto-dynamic via `songs.length` in LandingPage.tsx (updates on build)
 
 ## Recent Changes
+
+### v0.0.34 (2025-11-06) - Production Deployment & Verification
+
+**🚀 Deployment to Production**
+
+Successfully deployed v0.0.33 TypeScript fixes to production environment:
+
+**Deployment Details:**
+- **Build Time**: 5.55s (Vite production build)
+- **Bundle Size**: 1.05 MB JavaScript (gzipped: 284 KB)
+- **Transfer**: 1.84 MB total (21 files via rsync)
+- **Audio Preservation**: 209 songs (933 MB) safely preserved during deployment
+- **Permissions**: Correct ownership (www-data:www-data) and permissions (755) set
+
+**Deployment Process:**
+1. Local production build via `npm run build`
+2. rsync upload to VPS (excluding audio directory)
+3. Audio directory backup and restore during deployment
+4. File permissions configuration
+5. Live verification at https://mxster.de
+
+**Production Verification:**
+- ✅ Zero TypeScript compilation errors
+- ✅ All 41/41 integration tests passing locally
+- ✅ Build optimization successful (code splitting, tree shaking)
+- ✅ PWA service worker generation (12 precached entries)
+- ✅ Audio files not precached (intentional, too large)
+- ✅ Application live and functional
+
+**CI/CD Status:**
+- Awaiting GitHub Actions pipeline run for commit 682640a
+- Expected: All tests pass with vitest config fix
+- Local tests confirmed working
+
+**VPS Configuration:**
+- **Domain**: https://mxster.de
+- **Host**: root@mrx3k1.de (69.62.121.168)
+- **Deploy Path**: /var/www/html/mxster
+- **SSL**: Let's Encrypt (auto-renewing)
+- **Nginx**: Configured with proper routing
 
 ### v0.0.33 (2025-11-06) - TypeScript Type Safety & Test Infrastructure
 

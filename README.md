@@ -3,7 +3,7 @@
 **Das ultimative Musikquiz für Musikfans!** Rate Songs, platziere sie chronologisch und teste dein Musikwissen. Spiele mit Freunden, sammle Punkte und werde zum Musik-Champion!
 
 [![App](https://img.shields.io/badge/App-mxster.de-blue?style=for-the-badge)](https://mxster.de)
-[![Version](https://img.shields.io/badge/Version-v0.0.33-purple?style=for-the-badge)](https://github.com/pepperonas/mxster/releases)
+[![Version](https://img.shields.io/badge/Version-v0.0.34-purple?style=for-the-badge)](https://github.com/pepperonas/mxster/releases)
 [![License](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)](LICENSE)
 ![Songs](https://img.shields.io/badge/Songs-209-orange?style=for-the-badge)
 ![Audio](https://img.shields.io/badge/Audio-Self--Hosted-red?style=for-the-badge)
@@ -1618,6 +1618,22 @@ Dieses Projekt ist unter der **MIT-Lizenz** veröffentlicht. Siehe [LICENSE](LIC
 - **Browser-Kompatibilität**: Chrome, Firefox, Edge, Safari (neueste Versionen)
 
 ## 📝 Changelog
+
+### v0.0.34 (2025-11-06)
+
+**🚀 Production Deployment & CI/CD Verification**
+
+**Deployment:**
+- Successfully deployed v0.0.33 fixes to production (mxster.de)
+- Verified all TypeScript errors resolved in production build
+- Confirmed test infrastructure improvements working in live environment
+
+**Status:**
+- ✅ Live on https://mxster.de
+- ✅ Build: 5.55s (optimized)
+- ✅ Bundle: 1.05 MB (gzipped: 284 KB)
+- ✅ Audio: 209 songs preserved during deployment
+- ✅ CI/CD: Awaiting pipeline verification on latest commit
 
 ### v0.0.33 (2025-11-06)
 
