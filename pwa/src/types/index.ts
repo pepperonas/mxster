@@ -110,6 +110,7 @@ export interface HistoryEntry {
       title: string
       artist: string
       year: number
+      genre?: string  // Genre for statistics (added v0.0.31)
     }>
   }>
   gameMode: GameMode

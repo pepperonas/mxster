@@ -128,7 +128,8 @@ export function GameHistoryProvider({ children }: { children: ReactNode }) {
             id: song.id,
             title: song.title,
             artist: song.artist,
-            year: song.year
+            year: song.year,
+            genre: song.genre  // Include genre for statistics (v0.0.31)
           }))
         })),
         gameMode: gameData.gameMode as any,
