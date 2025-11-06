@@ -110,9 +110,13 @@ export function TimelinePersonalView() {
   return (
     <div className="space-y-6">
       <div className="text-center mb-4">
-        <h2 className="text-2xl font-bold text-white">Persönliche Timeline</h2>
+        <h2 className="text-2xl font-bold text-white">
+          {gameMode === 'hardcore' ? 'Spieler-Timelines' : 'Persönliche Timeline'}
+        </h2>
         <p className="text-text-secondary text-sm mt-1">
-          Jeder Spieler baut seine eigene Timeline auf
+          {gameMode === 'hardcore'
+            ? 'Songs werden automatisch chronologisch basierend auf den Vermutungen platziert'
+            : 'Jeder Spieler baut seine eigene Timeline auf'}
         </p>
       </div>
 
