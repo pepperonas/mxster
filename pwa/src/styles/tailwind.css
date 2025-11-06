@@ -662,6 +662,6 @@
   --hardcore-secondary: #9333EA;  /* Deep Purple */
   --hardcore-accent: #FF3B7F;     /* Pink/Magenta */
 
-  /* Subtle background tint */
-  background: linear-gradient(135deg, rgba(255, 107, 53, 0.03) 0%, rgba(147, 51, 234, 0.03) 100%);
+  /* Stronger orange background tint */
+  background: linear-gradient(135deg, rgba(255, 107, 53, 0.08) 0%, rgba(255, 69, 0, 0.05) 50%, rgba(147, 51, 234, 0.04) 100%);
 }

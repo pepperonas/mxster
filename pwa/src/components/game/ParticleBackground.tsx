@@ -156,9 +156,9 @@ export function ParticleBackground({
       const material = new THREE.PointsMaterial({
         map: createParticleTexture(1.0),
         color: isHardcoreMode ? 0xFF6B35 : 0x6366f1, // Hardcore: Orange | Timeline: Indigo
-        size: 1.5,
+        size: isHardcoreMode ? 2.0 : 1.5, // Larger particles in hardcore mode
         transparent: true,
-        opacity: 0.8,
+        opacity: isHardcoreMode ? 0.95 : 0.8, // Higher opacity in hardcore mode
         blending: THREE.AdditiveBlending,
         sizeAttenuation: true,
         depthWrite: false
@@ -190,10 +190,10 @@ export function ParticleBackground({
 
       const material = new THREE.PointsMaterial({
         map: createParticleTexture(1.2),
-        color: isHardcoreMode ? 0x9333EA : 0xFF6B35, // Hardcore: Deep Purple | Timeline: Orange
-        size: 1.0,
+        color: isHardcoreMode ? 0xFF8C42 : 0xFF6B35, // Hardcore: Light Orange | Timeline: Orange
+        size: isHardcoreMode ? 1.3 : 1.0, // Larger in hardcore mode
         transparent: true,
-        opacity: 0.6,
+        opacity: isHardcoreMode ? 0.75 : 0.6, // Higher opacity in hardcore mode
         blending: THREE.AdditiveBlending,
         sizeAttenuation: true,
         depthWrite: false
@@ -219,10 +219,10 @@ export function ParticleBackground({
 
       const material = new THREE.PointsMaterial({
         map: createParticleTexture(0.8),
-        color: isHardcoreMode ? 0xFF3B7F : 0x4AEDC4, // Hardcore: Pink/Magenta | Timeline: Cyan
-        size: 0.8,
+        color: isHardcoreMode ? 0xFF4500 : 0x4AEDC4, // Hardcore: Orange-Red | Timeline: Cyan
+        size: isHardcoreMode ? 1.0 : 0.8, // Larger in hardcore mode
         transparent: true,
-        opacity: 0.5,
+        opacity: isHardcoreMode ? 0.65 : 0.5, // Higher opacity in hardcore mode
         blending: THREE.AdditiveBlending,
         sizeAttenuation: true,
         depthWrite: false
