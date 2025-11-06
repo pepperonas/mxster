@@ -620,18 +620,8 @@ export function GameScreen() {
     nextTurn()
     addToast('Karte platziert!', 'success')
 
-    // Virtual mode + Timeline modes: Automatically draw new song for next player
-    // Hardcore mode: User manually clicks "Zufälliger Song" button
-    if (gameVariant === 'virtual' && gameMode !== 'hardcore') {
-      setTimeout(() => {
-        const newSong = selectRandomSong(songs, playedSongs)
-        if (newSong) {
-          contextAddToPlayedSongs(newSong.spotifyId || newSong.id)
-          setCurrentSong(newSong)
-          console.log('🎲 Auto-drew new song for next player:', newSong.title)
-        }
-      }, 200)
-    }
+    // Note: Removed automatic song drawing for Timeline modes
+    // All virtual modes now require manual button click ("Zufälliger Song")
   }
 
   // ============================================================================
@@ -869,15 +859,15 @@ export function GameScreen() {
                 setTimeout(() => {
                   nextTurn()
 
-                  // Virtual mode + Timeline modes: Automatically draw new song for next player
-                  // Note: Timeline modes always auto-draw (no hardcore mode here)
-                  if (gameVariant === 'virtual') {
+                  // Virtual mode + Hardcore Mode: Automatically draw new song for next player
+                  // Timeline modes: User manually clicks "Zufälligen Song spielen" button
+                  if (gameVariant === 'virtual' && gameMode === 'hardcore') {
                     setTimeout(() => {
                       const newSong = selectRandomSong(songs, playedSongs)
                       if (newSong) {
                         contextAddToPlayedSongs(newSong.spotifyId || newSong.id)
                         setCurrentSong(newSong)
-                        console.log('🎲 Auto-drew new song for next player:', newSong.title)
+                        console.log('🎲 Auto-drew new song for next player (Hardcore):', newSong.title)
                       }
                     }, 200)
                   }
@@ -917,15 +907,15 @@ export function GameScreen() {
                 console.log('🔴 Calling nextTurn()')
                 nextTurn()
 
-                // Virtual mode + Timeline modes: Automatically draw new song for next player
-                // Note: Timeline modes always auto-draw (no hardcore mode here)
-                if (gameVariant === 'virtual') {
+                // Virtual mode + Hardcore: Automatically draw new song for next player
+                // Note: Timeline modes now use manual button (no auto-draw)
+                if (gameVariant === 'virtual' && gameMode === 'hardcore') {
                   setTimeout(() => {
                     const newSong = selectRandomSong(songs, playedSongs)
                     if (newSong) {
                       contextAddToPlayedSongs(newSong.spotifyId || newSong.id)
                       setCurrentSong(newSong)
-                      console.log('🎲 Auto-drew new song for next player:', newSong.title)
+                      console.log('🎲 Auto-drew new song for next player in Hardcore mode:', newSong.title)
                     }
                   }, 200)
                 }
