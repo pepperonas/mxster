@@ -28,13 +28,13 @@ export function Sidebar() {
     const prevPath = prevPathnameRef.current
     const currentPath = location.pathname
 
-    // Only close if we just navigated TO '/' from a different page
-    if (currentPath === '/' && prevPath !== '/' && isSidebarOpen) {
+    // Close sidebar when navigating TO '/' from any other page
+    if (currentPath === '/' && prevPath !== '/') {
       closeSidebar()
     }
 
     prevPathnameRef.current = currentPath
-  }, [location.pathname]) // Only depend on pathname, not on isSidebarOpen or closeSidebar
+  }, [location.pathname, closeSidebar])
 
   if (!isSidebarOpen) return null
 
