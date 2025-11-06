@@ -422,6 +422,52 @@ All files hosted via GitHub raw URLs (auto-update, no manual releases):
 
 ## Recent Changes
 
+### v0.0.30 (2025-11-06) - Genre Statistics & CI Test Fixes
+
+**📊 Genre Statistics in Player Stats**
+
+Added comprehensive genre tracking and visualization to player statistics:
+
+**New Statistics:**
+- **bestGenre**: Most played genre per player
+- **genreStats**: `Record<string, number>` - Complete genre distribution
+- Genre analysis from player timeline (safe null-checking)
+
+**UI Components:**
+- 🎸 **"Lieblings-Genre" Card**: Pink-themed stats card spanning 2 columns
+- 📊 **Genre Distribution Chart**:
+  - Sorted by play count (descending)
+  - Pink-orange gradient for favorite genre
+  - Cyan-blue gradient for other genres
+  - Truncated genre names with tooltip (max 20 chars)
+  - Relative percentage bars to maximum count
+
+**Implementation:**
+- Parallel analysis alongside decade statistics
+- Safe null-checking for songs without genre field
+- Calculation from `player.timeline` during stats collection
+- File: `pwa/src/components/PlayerStatsDialog.tsx` (+59 lines)
+
+**🧪 CI/CD Test Improvements**
+
+Fixed GitHub Actions test failures:
+
+**Problem:**
+- `spotify.config.js` is gitignored (contains credentials)
+- `SpotifyAuthService` imports this file
+- CI tests failed with "Failed to resolve import" error
+
+**Solution:**
+- Created `spotify.config.mock.js` with test credentials
+- Updated `src/test/setup.ts` to mock `spotify.config.js`
+- Mock redirects to `spotify.config.mock.js` during tests
+- All 41/41 integration tests now pass in CI
+
+**Files:**
+- `pwa/spotify.config.mock.js` (new)
+- `pwa/src/test/setup.ts` (updated mock)
+- `pwa/src/components/PlayerStatsDialog.tsx` (genre stats)
+
 ### v0.0.29 (2025-11-06) - Sidebar Navigation Overhaul
 
 **🎯 3-State Navigation System**

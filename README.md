@@ -1451,6 +1451,35 @@ Dieses Projekt ist unter der **MIT-Lizenz** veröffentlicht. Siehe [LICENSE](LIC
 
 ## 📝 Changelog
 
+### v0.0.30 (2025-11-06)
+
+**📊 Genre Statistics & CI Test Fixes**
+
+**Genre Analysis in Player Stats:**
+- Added `bestGenre` and `genreStats` tracking to player statistics
+- New "Lieblings-Genre" stats card (pink theme, 🎸 icon)
+- Genre distribution chart with color-coded bars
+  - Pink-orange gradient for favorite genre
+  - Cyan-blue gradient for other genres
+  - Sorted by play count (descending)
+  - Truncated names with tooltip support
+
+**Implementation:**
+- Parallel genre analysis alongside decade statistics
+- Safe null-checking for songs without genre field
+- Visual bars show relative percentages
+
+**CI/CD Improvements:**
+- Fixed GitHub Actions test failures
+- Created `spotify.config.mock.js` for test environment
+- Updated test setup to mock gitignored config file
+- All 41/41 integration tests now pass in CI
+
+**Files Modified:**
+- `pwa/src/components/PlayerStatsDialog.tsx` (+59 lines)
+- `pwa/spotify.config.mock.js` (new)
+- `pwa/src/test/setup.ts` (updated)
+
 ### v0.0.29 (2025-11-06)
 
 **🎯 Sidebar Navigation - 3-State System Overhaul**
