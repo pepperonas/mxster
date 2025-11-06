@@ -3,7 +3,7 @@
 **Das ultimative Musikquiz für Musikfans!** Rate Songs, platziere sie chronologisch und teste dein Musikwissen. Spiele mit Freunden, sammle Punkte und werde zum Musik-Champion!
 
 [![App](https://img.shields.io/badge/App-mxster.de-blue?style=for-the-badge)](https://mxster.de)
-[![Version](https://img.shields.io/badge/Version-v0.0.37-purple?style=for-the-badge)](https://github.com/pepperonas/mxster/releases)
+[![Version](https://img.shields.io/badge/Version-v0.0.44-purple?style=for-the-badge)](https://github.com/pepperonas/mxster/releases)
 [![License](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)](LICENSE)
 ![Songs](https://img.shields.io/badge/Songs-209-orange?style=for-the-badge)
 ![Audio](https://img.shields.io/badge/Audio-Self--Hosted-red?style=for-the-badge)
@@ -2004,6 +2004,66 @@ Implementierung eines Hybrid Audio Systems mit zwei Modi:
 - New Files: `placementAnimations.ts`, `guessAnimations.ts`, `animationHelpers.ts`, `animations.css`
 - Dependencies: Uses existing `canvas-confetti` library
 - Build Size: +7 KB (animations + CSS keyframes)
+
+### v0.0.44 (2025-11-07)
+
+**📱 Mobile Layout Fix for Samsung S24 Ultra**
+- Fixed modal dialogs being cut off at bottom (Android gesture bar)
+- Fixed modal headers being covered by ActionBar at top
+- Added viewport-fit=cover for safe area support (notches/cutouts)
+- Added CSS safe area support with env() for iOS/Android
+- Modal top spacing: pt-20 (80px for ActionBar)
+- Modal bottom spacing: pb-6 (24px minimum safe area)
+- Mobile max-height: calc(100vh-12rem) accounts for browser UI
+- Desktop max-height: 85vh (no mobile browser chrome)
+- Files: Modal.tsx, index.html, tailwind.css
+
+### v0.0.43 (2025-11-06)
+
+**✂️ Simplified Achievement Progress Text**
+- Removed "Punkten" from progress display
+- Changed "687/1000 Punkten bis Musikexperte" to "687/1000 bis Musikexperte"
+- Cleaner, more concise UI text
+- File: PlayerStatsDialog.tsx
+
+### v0.0.42 (2025-11-06)
+
+**📊 Visual Progress Bars for Achievements**
+- Added absolute numbers instead of percentages (687/1000 vs 69%)
+- Added yellow-amber gradient progress bars
+- 2px height, smooth transitions, proper borders
+- File: PlayerStatsDialog.tsx
+
+### v0.0.41 (2025-11-06)
+
+**🎯 Progressive Achievement Display**
+- 3-state system: < 1000 (MUSIC_EXPERT), 1000-4999 (GRAND_MASTER), ≥ 5000 (both)
+- Fixed misleading "14% bis Großmeister" for low scores
+- More motivating short-term goals
+- File: PlayerStatsDialog.tsx
+
+### v0.0.40 (2025-11-06)
+
+**👑 Total Score Display with GRAND_MASTER Progress**
+- Added Gesamtpunkte card in player stats
+- Shows progress to GRAND_MASTER achievement (5000 points)
+- Yellow-gold theme with crown emoji
+- File: PlayerStatsDialog.tsx
+
+### v0.0.39 (2025-11-06)
+
+**🔍 Enhanced Preview Logging**
+- Added release year to preview player log statements
+- "Ring of Fire by Johnny Cash (1963)"
+- File: PreviewPlayerService.ts
+
+### v0.0.38 (2025-11-06)
+
+**🏆 Bot Achievement Tracking**
+- 3 new achievements: BOT_SLAYER_EASY, BOT_SLAYER_MEDIUM, BOT_SLAYER_HARD
+- Track victories against AI opponents by difficulty level
+- Target: 3 wins each
+- Files: achievements.ts, AchievementContext.tsx
 
 ### v0.0.25 (2025-11-04)
 

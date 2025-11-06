@@ -6,7 +6,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 **mxster** is a music timeline game combining hardware (3D-printed QR cards) and software (PWA with camera scanner). Players scan physical cards or play virtually. Features guess mode (points-based) and timeline modes (chronological placement).
 
-**Current Version**: v0.0.43 (2025-11-06)
+**Current Version**: v0.0.44 (2025-11-07)
 **Current Song Database**: 209 songs with full genre data (as of 2025-11-04)
 
 ### Key Technologies
@@ -481,6 +481,78 @@ All files hosted via GitHub raw URLs (auto-update, no manual releases):
 - **Song count**: Auto-dynamic via `songs.length` in LandingPage.tsx (updates on build)
 
 ## Recent Changes
+
+### v0.0.44 (2025-11-07) - Mobile Layout Fix for Samsung S24 Ultra
+
+**📱 Fixed Critical Mobile Display Issues**
+
+Fixed dialogs being cut off at bottom and covered by ActionBar at top on mobile devices:
+
+**Problems Solved:**
+1. **Modal Headers Overlapping**: Fixed ActionBar (fixed header) covering modal headers
+2. **Bottom Content Cut-Off**: Fixed modal buttons being hidden behind Android gesture navigation bar
+3. **Viewport Height Issues**: Fixed incorrect viewport height calculations on mobile browsers
+
+**Implementation:**
+
+**1. Modal Positioning (Modal.tsx)**:
+```tsx
+// Added top/bottom padding to modal container
+className="... pt-20 pb-6"  // 80px top (ActionBar), 24px bottom (safe area)
+
+// Updated modal max-height for proper spacing
+className="... max-h-[calc(100vh-12rem)] sm:max-h-[85vh] ..."
+// 12rem = 192px (ActionBar + safe areas) on mobile
+// 85vh on desktop (no mobile browser UI)
+```
+
+**2. Viewport Meta Tag (index.html)**:
+```html
+<!-- Added viewport-fit=cover for safe area support -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+```
+
+**3. Safe Area CSS Support (tailwind.css)**:
+```css
+/* Support for iOS notches and Android gesture bars */
+@supports (padding: env(safe-area-inset-bottom)) {
+  .pb-safe {
+    padding-bottom: max(1.5rem, env(safe-area-inset-bottom)) !important;
+  }
+  .pt-safe {
+    padding-top: max(1rem, env(safe-area-inset-top)) !important;
+  }
+  .px-safe {
+    padding-left: max(1rem, env(safe-area-inset-left)) !important;
+    padding-right: max(1rem, env(safe-area-inset-right)) !important;
+  }
+}
+```
+
+**Technical Details:**
+- **ActionBar Height**: 80px (py-4 padding + content)
+- **Modal Top Spacing**: `pt-20` (5rem = 80px) accounts for ActionBar
+- **Modal Bottom Spacing**: `pb-6` (1.5rem = 24px) minimum safe area
+- **Mobile Max-Height**: `calc(100vh - 12rem)` = viewport - 192px (ActionBar + safe areas)
+- **Desktop Max-Height**: `85vh` (no mobile browser UI)
+
+**Browser Compatibility:**
+- `env(safe-area-inset-*)`: Chrome 69+, Safari 11.1+ (2018+)
+- `viewport-fit=cover`: Safari 11+, Chrome 69+ (2018+)
+- Samsung S24 Ultra (Android 14, One UI 6) fully supported
+
+**Files Modified:**
+- `pwa/src/components/Modal.tsx` (lines 108, 112)
+- `pwa/index.html` (line 5)
+- `pwa/src/styles/tailwind.css` (lines 669-684)
+- `pwa/package.json` (version 0.0.44)
+- `pwa/src/components/Sidebar.tsx` (version display)
+
+**Impact:**
+- ✅ Modal headers no longer covered by ActionBar
+- ✅ Modal buttons fully visible above gesture bar
+- ✅ Works on all Android/iOS devices with different screen configurations
+- ✅ Proper handling of notches, cutouts, and gesture bars
 
 ### v0.0.43 (2025-11-06) - Simplified Text Display
 

@@ -665,3 +665,20 @@
   /* Stronger orange background tint */
   background: linear-gradient(135deg, rgba(255, 107, 53, 0.08) 0%, rgba(255, 69, 0, 0.05) 50%, rgba(147, 51, 234, 0.04) 100%);
 }
+
+/* ========== MOBILE SAFE AREA SUPPORT ========== */
+/* Support for iOS notches and Android gesture bars */
+@supports (padding: env(safe-area-inset-bottom)) {
+  .pb-safe {
+    padding-bottom: max(1.5rem, env(safe-area-inset-bottom)) !important;
+  }
+
+  .pt-safe {
+    padding-top: max(1rem, env(safe-area-inset-top)) !important;
+  }
+
+  .px-safe {
+    padding-left: max(1rem, env(safe-area-inset-left)) !important;
+    padding-right: max(1rem, env(safe-area-inset-right)) !important;
+  }
+}

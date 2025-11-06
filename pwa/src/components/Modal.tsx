@@ -105,11 +105,11 @@ export function Modal() {
   // Render modal via React Portal
   return createPortal(
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm pt-20 pb-6"
       onClick={handleBackdropClick}
     >
       <div
-        className="relative glass rounded-2xl shadow-glow-accent border-2 border-accent/30 max-w-[95vw] sm:max-w-md md:max-w-2xl w-full mx-4 max-h-[90vh] overflow-auto"
+        className="relative glass rounded-2xl shadow-glow-accent border-2 border-accent/30 max-w-[95vw] sm:max-w-md md:max-w-2xl w-full mx-4 max-h-[calc(100vh-12rem)] sm:max-h-[85vh] overflow-auto"
         role="dialog"
         aria-modal="true"
         aria-labelledby="modal-title"
