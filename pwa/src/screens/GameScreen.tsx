@@ -1292,7 +1292,7 @@ export function GameScreen() {
   }
 
   return (
-    <div className="min-h-screen pt-28 pb-8 relative z-10">
+    <div className={`min-h-screen pt-28 pb-8 relative z-10 ${gameMode === 'hardcore' ? 'hardcore-theme' : ''}`}>
       <div className="container mx-auto px-4 max-w-7xl">
         {/* Player Info */}
         <div className="mb-6">

@@ -25,7 +25,7 @@ function AppContent() {
   // Page Refresh Check
   const navigate = useNavigate()
   const location = useLocation()
-  const { players, isGameStarted, endGame, resetGame } = useGame()
+  const { players, isGameStarted, endGame, resetGame, gameMode } = useGame()
   const { showModal } = useUI()
   const hasShownRefreshWarning = useRef(false)
 
@@ -109,6 +109,7 @@ function AppContent() {
         isPlaying={true}
         beatIntensity={pulseIntensity}
         activityLevel={activityLevel}
+        isHardcoreMode={gameMode === 'hardcore'}
       />
 
       {/* Layout Components */}

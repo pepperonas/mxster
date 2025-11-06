@@ -24,12 +24,14 @@ interface ParticleBackgroundProps {
   isPlaying?: boolean
   beatIntensity?: number
   activityLevel?: ActivityLevel
+  isHardcoreMode?: boolean
 }
 
 export function ParticleBackground({
   isPlaying = false,
   beatIntensity = 0,
-  activityLevel = 'calm'
+  activityLevel = 'calm',
+  isHardcoreMode = false
 }: ParticleBackgroundProps) {
   const containerRef = useRef<HTMLDivElement>(null)
   const sceneRef = useRef<THREE.Scene | null>(null)
@@ -153,7 +155,7 @@ export function ParticleBackground({
 
       const material = new THREE.PointsMaterial({
         map: createParticleTexture(1.0),
-        color: 0x6366f1, // Indigo
+        color: isHardcoreMode ? 0xFF6B35 : 0x6366f1, // Hardcore: Orange | Timeline: Indigo
         size: 1.5,
         transparent: true,
         opacity: 0.8,
@@ -188,7 +190,7 @@ export function ParticleBackground({
 
       const material = new THREE.PointsMaterial({
         map: createParticleTexture(1.2),
-        color: 0xFF6B35, // Orange accent
+        color: isHardcoreMode ? 0x9333EA : 0xFF6B35, // Hardcore: Deep Purple | Timeline: Orange
         size: 1.0,
         transparent: true,
         opacity: 0.6,
@@ -217,7 +219,7 @@ export function ParticleBackground({
 
       const material = new THREE.PointsMaterial({
         map: createParticleTexture(0.8),
-        color: 0x4AEDC4, // Cyan
+        color: isHardcoreMode ? 0xFF3B7F : 0x4AEDC4, // Hardcore: Pink/Magenta | Timeline: Cyan
         size: 0.8,
         transparent: true,
         opacity: 0.5,
