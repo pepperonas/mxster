@@ -4,7 +4,7 @@
  * Implements 3-state navigation system: Landing / Setup / Playing
  */
 
-import { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { useUI, useGame, useAuth, useInteraction } from '@/contexts'
 import { useGameHistory } from '@/hooks'
@@ -20,12 +20,21 @@ export function Sidebar() {
   const { history } = useGameHistory()
   const { registerInteraction } = useInteraction()
 
-  // Close sidebar when navigating to landing page
+  // Track previous pathname to detect navigation
+  const prevPathnameRef = useRef(location.pathname)
+
+  // Close sidebar when navigating TO landing page from another page
   useEffect(() => {
-    if (location.pathname === '/' && isSidebarOpen) {
+    const prevPath = prevPathnameRef.current
+    const currentPath = location.pathname
+
+    // Only close if we just navigated TO '/' from a different page
+    if (currentPath === '/' && prevPath !== '/' && isSidebarOpen) {
       closeSidebar()
     }
-  }, [location.pathname, isSidebarOpen, closeSidebar])
+
+    prevPathnameRef.current = currentPath
+  }, [location.pathname]) // Only depend on pathname, not on isSidebarOpen or closeSidebar
 
   if (!isSidebarOpen) return null
 
