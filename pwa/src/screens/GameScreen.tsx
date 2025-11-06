@@ -481,13 +481,20 @@ export function GameScreen() {
           onClick: () => {
             console.log('🟡 EVALUATION MODAL - BUTTON CLICKED! gameMode:', gameMode)
             console.log('🟡 result from closure:', result)
-            if (gameMode === 'hardcore') {
-              console.log('🟡 Calling placeCardAndContinue() with result:', result.correctCount)
-              placeCardAndContinue(result)
-            } else {
-              console.log('🟡 Calling showManualPlacementModal()')
-              showManualPlacementModal()
-            }
+
+            // Fix 1: Close evaluation modal first to prevent blocking winner modal
+            closeModal()
+
+            // Small delay for clean modal transition
+            setTimeout(() => {
+              if (gameMode === 'hardcore') {
+                console.log('🟡 Calling placeCardAndContinue() with result:', result.correctCount)
+                placeCardAndContinue(result)
+              } else {
+                console.log('🟡 Calling showManualPlacementModal()')
+                showManualPlacementModal()
+              }
+            }, 100)
           }
         }
       ]
@@ -562,6 +569,26 @@ export function GameScreen() {
     })
 
     // ============================================================================
+    // Real-Time Achievement Unlocks (Fix 2)
+    // ============================================================================
+    if (gameMode === 'hardcore') {
+      const playerName = player.name
+      const oldScore = player.score
+
+      // PUNKTEJÄGER: 75+ points (unlock when crossing threshold)
+      if (newScore >= 75 && oldScore < 75) {
+        unlockAchievement(playerName, AchievementId.PUNKTEJAEGER)
+        console.log(`🏆 PUNKTEJÄGER unlocked in-game for ${playerName} at ${newScore} points!`)
+      }
+
+      // HARDCORE_CHAMPION: 125+ points (unlock when crossing threshold)
+      if (newScore >= 125 && oldScore < 125) {
+        unlockAchievement(playerName, AchievementId.HARDCORE_CHAMPION)
+        console.log(`🏆 HARDCORE_CHAMPION unlocked in-game for ${playerName} at ${newScore} points!`)
+      }
+    }
+
+    // ============================================================================
     // Achievement Tracking (Hardcore Mode only)
     // ============================================================================
     if (gameMode === 'hardcore' && guessResult) {
@@ -613,7 +640,10 @@ export function GameScreen() {
     const winCheck = checkWinCondition(updatedPlayers, currentPlayer, gameMode)
 
     if (winCheck.gameOver && winCheck.winner) {
-      showWinnerModal(winCheck.winner)
+      // Fix 3: Add delay to ensure evaluation modal is fully closed
+      setTimeout(() => {
+        showWinnerModal(winCheck.winner)
+      }, 150)
       return
     }
 
@@ -977,17 +1007,7 @@ export function GameScreen() {
       players.forEach((player) => {
         console.log(`🏆 Checking achievements for player: ${player.name}`)
 
-        // 1. HARDCORE_CHAMPION: 100+ points in one game (one-time achievement)
-        if (player.score >= 100) {
-          unlockAchievement(player.name, AchievementId.HARDCORE_CHAMPION)
-          console.log(`✅ HARDCORE_CHAMPION unlocked for ${player.name}`)
-        }
-
-        // 1b. PUNKTEJAEGER: 75+ points in one game (one-time achievement)
-        if (player.score >= 75) {
-          unlockAchievement(player.name, AchievementId.PUNKTEJAEGER)
-          console.log(`✅ PUNKTEJAEGER unlocked for ${player.name}`)
-        }
+        // Fix 4: HARDCORE_CHAMPION + PUNKTEJAEGER removed (now unlocked real-time in placeCardAndContinue)
 
         // 2. TIME_TRAVELER: Songs from 5 different decades
         const decades = new Set(player.timeline.map(song => Math.floor(song.year / 10) * 10))
@@ -1125,11 +1145,8 @@ export function GameScreen() {
           console.log(`✅ NAME_DROPPER unlocked for ${player.name} (streak: ${maxArtistStreak})`)
         }
 
-        // 14. PUNKTEJÄGER: 75+ points in one game
-        if (player.score >= 75) {
-          unlockAchievement(player.name, AchievementId.PUNKTEJAEGER)
-          console.log(`✅ PUNKTEJÄGER unlocked for ${player.name} (${player.score} points)`)
-        }
+        // Fix 4: PUNKTEJÄGER removed (now unlocked real-time in placeCardAndContinue)
+        // Progress tracking kept for stats
         updateProgress(player.name, AchievementId.PUNKTEJAEGER, player.score)
 
         // 15. FLAWLESS_VICTORY: Winner with perfect 150/150 points (VERY HARD)
