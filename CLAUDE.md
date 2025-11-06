@@ -6,7 +6,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 **mxster** is a music timeline game combining hardware (3D-printed QR cards) and software (PWA with camera scanner). Players scan physical cards or play virtually. Features guess mode (points-based) and timeline modes (chronological placement).
 
-**Current Version**: v0.0.35 (2025-11-06)
+**Current Version**: v0.0.36 (2025-11-06)
 **Current Song Database**: 209 songs with full genre data (as of 2025-11-04)
 
 ### Key Technologies
@@ -481,6 +481,33 @@ All files hosted via GitHub raw URLs (auto-update, no manual releases):
 - **Song count**: Auto-dynamic via `songs.length` in LandingPage.tsx (updates on build)
 
 ## Recent Changes
+
+### v0.0.36 (2025-11-06) - CI/CD Verification & Test Suite Update
+
+**🔄 Verification Release**
+
+This is a verification release to confirm all TypeScript fixes from v0.0.35 are properly integrated into CI/CD pipeline and production deployment.
+
+**Purpose:**
+- Validate TypeScript type safety improvements across CI/CD environments
+- Confirm production build matches CI/CD expectations
+- Document test suite status and remaining non-critical warnings
+
+**Status:**
+- ✅ All critical TypeScript errors resolved (GameContext null types, test mock imports)
+- ✅ Production deployment successful to mxster.de
+- ✅ Test suite passes: 41/41 tests passing
+- ℹ️ Remaining warnings in CI output are non-critical (unused variables in test files, implicit any in utility scripts)
+
+**Technical Notes:**
+- CI/CD pipeline now builds cleanly with TypeScript strict mode
+- Vitest test infrastructure properly handles dynamic mock imports
+- Game state management correctly supports null value resets for navigation flow
+
+**Files Modified:**
+- `pwa/package.json` - Version bump to 0.0.36
+- `README.md` - Added changelog entry
+- `CLAUDE.md` - Updated version and documentation
 
 ### v0.0.35 (2025-11-06) - Critical TypeScript Fixes for CI/CD
 

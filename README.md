@@ -3,7 +3,7 @@
 **Das ultimative Musikquiz für Musikfans!** Rate Songs, platziere sie chronologisch und teste dein Musikwissen. Spiele mit Freunden, sammle Punkte und werde zum Musik-Champion!
 
 [![App](https://img.shields.io/badge/App-mxster.de-blue?style=for-the-badge)](https://mxster.de)
-[![Version](https://img.shields.io/badge/Version-v0.0.35-purple?style=for-the-badge)](https://github.com/pepperonas/mxster/releases)
+[![Version](https://img.shields.io/badge/Version-v0.0.36-purple?style=for-the-badge)](https://github.com/pepperonas/mxster/releases)
 [![License](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)](LICENSE)
 ![Songs](https://img.shields.io/badge/Songs-209-orange?style=for-the-badge)
 ![Audio](https://img.shields.io/badge/Audio-Self--Hosted-red?style=for-the-badge)
@@ -1618,6 +1618,26 @@ Dieses Projekt ist unter der **MIT-Lizenz** veröffentlicht. Siehe [LICENSE](LIC
 - **Browser-Kompatibilität**: Chrome, Firefox, Edge, Safari (neueste Versionen)
 
 ## 📝 Changelog
+
+### v0.0.36 (2025-11-06)
+
+**🔄 CI/CD Verification & Test Suite Update**
+
+**Purpose:**
+- Verification release to validate all TypeScript fixes from v0.0.35
+- Confirms production deployment matches CI/CD build expectations
+- Validates test infrastructure improvements
+
+**Status:**
+- ✅ All critical TypeScript errors resolved (GameContext null types, test mocks)
+- ✅ Production build deploys successfully to mxster.de
+- ✅ Test suite passes with 41/41 tests
+- ℹ️ Remaining non-critical warnings in CI output (unused variables, test utility types)
+
+**Files Modified:**
+- `pwa/package.json` - Version bump to 0.0.36
+- `README.md` - Changelog update
+- `CLAUDE.md` - Documentation update
 
 ### v0.0.35 (2025-11-06)
 
