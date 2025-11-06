@@ -3,8 +3,10 @@
 **Das ultimative Musikquiz für Musikfans!** Rate Songs, platziere sie chronologisch und teste dein Musikwissen. Spiele mit Freunden, sammle Punkte und werde zum Musik-Champion!
 
 [![App](https://img.shields.io/badge/App-mxster.de-blue?style=for-the-badge)](https://mxster.de)
+[![Version](https://img.shields.io/badge/Version-v0.0.30-purple?style=for-the-badge)](https://github.com/pepperonas/mxster/releases)
 [![License](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)](LICENSE)
 ![Songs](https://img.shields.io/badge/Songs-209-orange?style=for-the-badge)
+![Audio](https://img.shields.io/badge/Audio-Self--Hosted-red?style=for-the-badge)
 [![Tests](https://github.com/pepperonas/mxster/actions/workflows/test.yml/badge.svg)](https://github.com/pepperonas/mxster/actions/workflows/test.yml)
 
 ![mxster Banner](https://mxster.de/assets/mxster.jpg)
@@ -24,25 +26,187 @@ mxster ist ein **Multiplayer-Musikquiz** mit drei verschiedenen Spielmodi:
 
 ## ✨ Features
 
-- 🎵 **Hybrid Audio System** - Spotify Premium (volle Songs) + Preview-Modus (30s Clips, unbegrenzte Nutzer)
-- 🎯 **Tolerantes Raten** - Fuzzy Matching erkennt Tippfehler
-- 📱 **Progressive Web App** - Installierbar auf Smartphone & Desktop
+- 🎵 **Self-Hosted Audio** - 209 volle Songs (3-5 Min), unbegrenzte Nutzer, keine Authentifizierung
+- 🎧 **Optional: Spotify Premium** - 320 kbps Studio-Qualität, 20/25 Slots verfügbar
+- 🎯 **Tolerantes Raten** - Fuzzy Matching erkennt Tippfehler (bis zu 3 Fehler)
+- 📱 **Progressive Web App** - Installierbar auf Smartphone & Desktop, offline-fähig
 - 🏆 **Live Punktesystem** - Echtzeit-Updates nach jeder Runde (5+5+5/2/1 Punkte)
-- 🎖️ **Achievement System** - Schalte 20 Erfolge frei (Volltreffer-Serie, Marathonläufer, Musikexperte...)
-- 📊 **Spielerstatistiken** - Detaillierte Stats mit Winrate, Dekaden-Verteilung und Siegesserien
+- 🎖️ **20 Achievements** - Volltreffer-Serie, Marathonläufer, Genre-Hopper, Großmeister
+- 📊 **Spielerstatistiken** - Winrate, Dekaden-Verteilung, Genre-Analyse, Siegesserien
 - 📈 **Spielhistorie** - Vollständige Aufzeichnung aller Spiele mit Export-Funktion
 - 📸 **QR-Code Scanner** - Scanne Karten mit Smartphone-Kamera
-- 💾 **Automatische Spielstand-Speicherung** - Kein Fortschritt geht verloren, selbst bei Page Refresh!
+- 💾 **Auto-Save** - Kein Fortschritt geht verloren, selbst bei Page Refresh
 - 🔄 **Backup & Restore** - Exportiere und importiere alle Daten als JSON
 - 🗑️ **Datenverwaltung** - Lösche einzelne Spieler oder alle Daten mit Bestätigung
 - 🎮 **Multiplayer** - Spiele mit beliebig vielen Freunden
 - ✏️ **Song-Editor** - Bearbeite Songs nachträglich mit interaktivem Wizard
-- ✨ **Music-Reactive Particles** - 3D-Partikelhintergrund reagiert auf Musikwiedergabe mit intensiven Effekten
-- 🎉 **Achievement Unlock Animations** - Spektakuläre Animationen mit Konfetti beim Freischalten von Erfolgen (3 Sekunden pro Animation)
-- 🎨 **Gameplay Feedback Animations** - Konfetti bei richtigen, Gewitter bei falschen Antworten (randomisiert, mobile-optimiert)
-- 🏆 **Score-Based Visual Effects** - 5 verschiedene Animationen je nach Punktzahl (Gold-Konfetti, Blitze, etc.)
-- ⌨️ **Keyboard Shortcuts** - Enter/ESC zum Schließen von Dialogen (Desktop/Laptop)
-- ⌨️ **Auto-Focus Feature** - Automatischer Fokus auf Titel-Eingabefeld nach Song-Ziehung (nur Desktop/Laptop)
+- ✨ **Music-Reactive Particles** - 3D-Partikelhintergrund reagiert auf Musikwiedergabe
+- 🎉 **Unlock Animations** - Konfetti beim Freischalten von Achievements
+- 🎨 **Gameplay Feedback** - Konfetti bei richtigen, Gewitter bei falschen Antworten
+- 🏆 **Score-Based Effects** - 5 Animationen je nach Punktzahl (Gold-Konfetti, Blitze, etc.)
+- ⌨️ **Keyboard Shortcuts** - Enter/ESC zum Schließen von Dialogen
+- ⌨️ **Auto-Focus** - Automatischer Fokus auf Eingabefelder (Desktop/Laptop)
+
+## 🎵 Audio-Modi
+
+### 1. Gratis-Modus (Empfohlen) ⭐
+
+**Self-Hosted Audio System** - Die Hauptlösung für unbegrenztes Spielen:
+
+- ✅ **Volle Songs** (3-5 Minuten, 128 kbps MP3)
+- ✅ **Unbegrenzte Spieler** (keine 25-User-Limitierung)
+- ✅ **Keine Authentifizierung** (kein Spotify-Login nötig)
+- ✅ **Sofort verfügbar** (209 Songs auf VPS gehostet)
+- ⚠️ **Rechtlicher Hinweis**: YouTube-Downloads via yt-dlp, rechtliche Grauzone, nur für private/nicht-kommerzielle/bildungsbasierte Zwecke
+
+**Technische Details:**
+- 209 Songs auf `https://mxster.de/audio/` gehostet
+- Gesamtgröße: ~933 MB (Ø 4.47 MB pro Song)
+- Qualität: 128 kbps MP3 (gut genug für Quiz-Spiele)
+- nginx-served mit CORS und Caching
+- Passwortschutz: `ydl` (einmalig, rechtlicher Schutz)
+
+**Architektur:**
+```
+YouTube → yt-dlp → MP3 (128kbps) → VPS → nginx → Browser
+```
+
+### 2. Spotify Premium (Optional) 🎧
+
+**Nur für Audiophile mit Spotify Premium Account:**
+
+- ✅ **Höchste Audioqualität** (320 kbps)
+- ✅ **100% legal** über Spotify Web Playback SDK
+- ✅ **Unbegrenzte Songlänge**
+- ⚠️ **Nur 20/25 Slots verfügbar** (Spotify Development Mode Limitierung)
+- ⚠️ **Spotify Premium erforderlich**
+
+**Warum nur 25 Slots? - Spotify API Hürde:**
+
+Die App mxster nutzt Spotifys Standard-Web-API mit Playback-Scopes. Damit läuft sie automatisch im **Development Mode**, der auf **25 registrierte Nutzer** begrenzt ist.
+
+**Spotify's Quota-Modelle:**
+- **Development Mode**: Max 25 Nutzer (aktuell aktiv)
+- **Extended Quota Mode**: Benötigt registrierte Firma + 250.000+ aktive Nutzer
+- **Indie-Sperre**: Seit Mai 2025 keine Anträge von Einzelpersonen möglich
+
+**Realität**: Von 25 direkt auf 250.000 ist kein "Wachstumsmodell", sondern eine Sperre. Spotify will damit verhindern, dass kleine Projekte massenhaft Musik streamen. Das schneidet genau jene kreative Nische ab, aus der viele innovative Ideen kommen.
+
+**Slot anfragen**: Noch **20 von 25 Slots** frei. Sende eine E-Mail an **martin.pfeffer@celox.io** mit der E-Mail-Adresse deines Spotify-Kontos.
+
+### Audioqualität im Vergleich
+
+- **Gratis-Modus** (128 kbps): Gut genug für Quiz-Spiele, die meisten merken keinen Unterschied
+- **Spotify Premium** (320 kbps): Studio-Qualität, nur für echte Audiophile wahrnehmbar besser
+
+## 🎫 Spotify Slot Management
+
+**Slot-Konfiguration:** `pwa/spotify.slots.json`
+
+```json
+{
+  "totalSlots": 25,
+  "usedSlots": 5,
+  "availableSlots": 20,
+  "contactEmail": "martin.pfeffer@celox.io"
+}
+```
+
+### Slot-Counter aktualisieren
+
+1. JSON-Datei bearbeiten (`usedSlots` ändern)
+2. `cd pwa && npm run build`
+3. `./scripts/deployment/deploy.sh`
+4. Dynamisch: Anzeige aktualisiert sich automatisch auf Landing Page
+
+### Nutzer hinzufügen (Spotify Developer Dashboard)
+
+1. Öffne https://developer.spotify.com/dashboard
+2. Wähle mxster App
+3. User Management → E-Mail-Adresse eintragen
+4. `spotify.slots.json` aktualisieren (usedSlots++)
+
+## 🎵 Self-Hosted Audio System
+
+**Architektur:**
+```
+YouTube → yt-dlp → MP3 (128kbps) → VPS → nginx → Browser
+```
+
+**Scripts:** `scripts/audio-hosting/` (siehe [Audio Hosting README](scripts/audio-hosting/README.md) für Details)
+
+### 1. Download (download-songs.js)
+
+```bash
+cd scripts/audio-hosting
+node download-songs.js         # Alle 209 Songs (~933 MB, ~20 Min)
+node download-songs.js --limit 5   # Test mit 5 Songs
+node download-songs.js --resume    # Überspringe existierende
+```
+
+**Features:**
+- Concurrent: 3 parallele Downloads
+- Retries: 3 Versuche pro Song
+- Qualität: 128 kbps MP3
+- Output: `pwa/public/audio/*.mp3`
+
+### 2. Upload (upload-to-vps.js)
+
+```bash
+node upload-to-vps.js           # Upload via rsync
+node upload-to-vps.js --dry-run # Preview Änderungen
+```
+
+**Features:**
+- Incremental sync
+- Permission: 644
+- Target: `root@mrx3k1.de:/var/www/html/mxster/audio/`
+
+### 3. Update URLs (update-song-urls.js)
+
+```bash
+node update-song-urls.js           # Aktualisiere songs.json + songs.ts
+node update-song-urls.js --dry-run # Preview Änderungen
+```
+
+**Features:**
+- Auto-backup (.backup-YYYY-MM-DD)
+- URL-Format: `https://mxster.de/audio/song_XXX.mp3`
+- 100% Coverage Verification
+
+### 4. Validate (validate-audio.js)
+
+```bash
+node validate-audio.js        # Test 10 Sample-Songs
+node validate-audio.js --full # Test alle 209 Songs
+```
+
+**Checks:**
+- HTTP Status 200
+- Content-Type: audio/mpeg
+- File Size: 1-15 MB
+- Report: `docs/validation-report.json`
+
+### nginx Konfiguration
+
+```nginx
+location /audio/ {
+    alias /var/www/html/mxster/audio/;
+    add_header Cache-Control "public, max-age=31536000";
+    add_header Access-Control-Allow-Origin "*";
+    add_header Content-Type "audio/mpeg";
+    add_header Accept-Ranges bytes;
+}
+```
+
+### Rechtlicher Hinweis
+
+- ⚠️ **YouTube-Downloads** via yt-dlp
+- ⚠️ **Rechtliche Grauzone** - Urheberrechtlich bedenklich
+- ⚠️ **Passwortschutz** als rechtlicher Schutz (Passwort: `ydl`)
+- ⚠️ **Nur für private, nicht-kommerzielle, bildungsbasierte Zwecke**
+
+Die Passwortabfrage dient dem rechtlichen Schutz des Entwicklers und signalisiert, dass die Nutzung auf eigene Verantwortung erfolgt.
 
 ## 🏆 Achievements
 
@@ -89,14 +253,13 @@ Schalte 20 spannende Erfolge frei und zeige dein Können!
 
 ### Option 1: Online spielen (am einfachsten!)
 
-1. Öffne [mxster.de](https://mxster.de)
-2. Wähle Audio-Modus:
-   - **"Jetzt spielen (Gratis)"** - 30s Clips, unbegrenzte Spieler, kein Login nötig
-   - **"Mit Spotify Premium"** - Volle Songs, max. 25 Spieler, Spotify Premium erforderlich
-     - ⚠️ **Hinweis:** Spotify Development Mode - Der Entwickler muss jeden Spieler manuell in der [Spotify Developer Console](https://developer.spotify.com/dashboard) freischalten. Nur 25 Slots verfügbar.
-3. Wähle Spielmodus und Variante
-4. Füge Spieler hinzu
-5. Los geht's! 🎉
+1. **Öffne** [mxster.de](https://mxster.de)
+2. **Klicke** "Jetzt spielen (Gratis)" → Passwort: `ydl`
+3. **Wähle** Spielmodus & Variante
+4. **Füge** Spieler hinzu (min. 2)
+5. **Los geht's!** 🎉
+
+**Optional**: Spotify Premium nutzen → "Mit Spotify Premium" → OAuth Login (20/25 Slots verfügbar)
 
 **Fertig!** Du brauchst nichts zu installieren.
 
@@ -1453,9 +1616,27 @@ Dieses Projekt ist unter der **MIT-Lizenz** veröffentlicht. Siehe [LICENSE](LIC
 
 ### v0.0.30 (2025-11-06)
 
-**📊 Genre Statistics & CI Test Fixes**
+**📊 Genre Statistics & Landing Page UX Overhaul**
 
-**Genre Analysis in Player Stats:**
+**🎨 Landing Page - Spotify API Transparenz & Slot Management:**
+- **Spotify API Hürden-Erklärung**: Ausführliche Dokumentation der Spotify Development Mode Limitierung
+  - Development Mode: Max 25 authentifizierte Nutzer
+  - Extended Quota Mode: Erfordert registrierte Firma + 250.000+ aktive Nutzer
+  - Indie-Sperre: Seit Mai 2025 keine Anträge von Einzelpersonen möglich
+  - "Absurd"-Hinweis: Kein organisches Wachstum von 25 auf 250.000 möglich
+- **YDL Rechtlicher Hinweis**: Umfassende Disclaimer zur rechtlichen Grauzone
+  - Orange Warning Box auf Landing Page
+  - Erklärung in PasswordProtectionDialog
+  - Hinweis auf private, nicht-kommerzielle, bildungsbasierte Nutzung
+  - Passwortschutz als rechtliche Absicherung für Entwickler
+- **Spotify Slot Management System**:
+  - Neue Datei: `pwa/spotify.slots.json` - Zentrale Konfiguration für verfügbare Slots
+  - Dynamischer Slot-Counter: "Noch 20 von 25 Slots frei"
+  - Pre-filled mailto: Link zum Anfordern von Spotify-Zugang
+  - User muss E-Mail-Adresse des Spotify-Kontos senden (für Developer Dashboard)
+  - Contact Email: martin.pfeffer@celox.io
+
+**📊 Genre Statistics in Player Stats:**
 - Added `bestGenre` and `genreStats` tracking to player statistics
 - New "Lieblings-Genre" stats card (pink theme, 🎸 icon)
 - Genre distribution chart with color-coded bars
@@ -1469,16 +1650,19 @@ Dieses Projekt ist unter der **MIT-Lizenz** veröffentlicht. Siehe [LICENSE](LIC
 - Safe null-checking for songs without genre field
 - Visual bars show relative percentages
 
-**CI/CD Improvements:**
+**🧪 CI/CD Improvements:**
 - Fixed GitHub Actions test failures
 - Created `spotify.config.mock.js` for test environment
 - Updated test setup to mock gitignored config file
 - All 41/41 integration tests now pass in CI
 
 **Files Modified:**
-- `pwa/src/components/PlayerStatsDialog.tsx` (+59 lines)
-- `pwa/spotify.config.mock.js` (new)
-- `pwa/src/test/setup.ts` (updated)
+- `pwa/spotify.slots.json` (new) - Slot configuration
+- `pwa/src/screens/LandingPage.tsx` (+150 lines) - API explanations, slot management, mailto: link
+- `pwa/src/components/PasswordProtectionDialog.tsx` (+15 lines) - YDL grey area explanation
+- `pwa/src/components/PlayerStatsDialog.tsx` (+59 lines) - Genre statistics
+- `pwa/spotify.config.mock.js` (new) - Test mock
+- `pwa/src/test/setup.ts` (updated) - Mock configuration
 
 ### v0.0.29 (2025-11-06)
 

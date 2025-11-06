@@ -6,11 +6,12 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 **mxster** is a music timeline game combining hardware (3D-printed QR cards) and software (PWA with camera scanner). Players scan physical cards or play virtually. Features guess mode (points-based) and timeline modes (chronological placement).
 
+**Current Version**: v0.0.30 (2025-11-06)
 **Current Song Database**: 209 songs with full genre data (as of 2025-11-04)
 
 ### Key Technologies
 - **Frontend**: React 19 + TypeScript + Vite 5.0
-- **Audio**: Hybrid System - Spotify Web Playback SDK (Premium, max 25 users) + Howler.js (Preview, unlimited users)
+- **Audio**: Self-Hosted Primary System (209 songs @ 128 kbps MP3, ~933 MB) + Optional Spotify Premium (max 25 users)
 - **Auth**: Spotify OAuth2 PKCE (optional for Premium mode)
 - **PWA**: vite-plugin-pwa
 - **3D Graphics**: Three.js particle animations
@@ -107,71 +108,102 @@ card-generator/output/
 Spotify Playlist → docs/songs.json → pwa/src/data/songs.ts + qr-codes/*.png
 ```
 
-### Hybrid Audio System (v0.0.27)
+### Self-Hosted Audio System (v0.0.27+)
 
-**Problem:** Spotify Development Mode limits apps to 25 authenticated users. Extended Quota Mode requires registered company + 250k users.
+**Problem:** Spotify Development Mode limits apps to 25 authenticated users. Extended Quota Mode requires:
+- Registered company (not individuals since May 2025)
+- 250,000+ active users
+- No organic growth path from 25 to 250k users ("absurd" limitation)
 
-**Solution:** Dual-mode audio system with automatic fallback:
+**Solution:** Self-hosted audio files as PRIMARY system, Spotify Premium as optional fallback:
 
 **Audio Modes:**
-1. **Preview Mode** (Default, Unlimited Users):
-   - 30-second clips from `song.previewUrl`
+1. **Self-Hosted (Gratis)** - Primary, Recommended:
+   - Full songs (3-5 minutes) via YouTube downloads (yt-dlp)
+   - 209 songs @ 128 kbps MP3 (~933 MB total, avg 4.47 MB per song)
    - No authentication required
-   - Howler.js HTML5 Audio player
-   - Pre-fetched URLs stored in songs.ts
-   - Ideal for quiz gameplay
+   - Unlimited users
+   - Password protection (`ydl`) for legal grey area safeguard
+   - Hosted on VPS: `https://mxster.de/audio/song_XXX.mp3`
+   - nginx serving with CORS, caching, range requests
 
-2. **Spotify Premium** (Optional, Max 25 Users):
+2. **Spotify Premium** - Optional (Max 25 Users):
    - Full song playback via Web Playback SDK
-   - Requires Spotify Premium + OAuth login
+   - Requires Spotify Premium + OAuth login + developer whitelisting
    - High-quality audio streaming
-   - Optional for VIP experience
+   - **Slot-based access**: Only 25 slots available (Development Mode)
+   - Users request access via mailto: link with Spotify account email
 
 **Architecture:**
 ```
-MusicPlayerService (Abstraction Layer)
-├── SpotifyPlayerService (Spotify Web Playback SDK)
-│   ├── Full songs, Premium only, max 25 users
-│   └── OAuth PKCE authentication
-└── PreviewPlayerService (Howler.js)
-    ├── 30s clips, no auth, unlimited users
-    └── Static preview URLs from songs.ts
+Self-Hosted Audio (Primary)
+├── YouTube → yt-dlp → MP3 (128 kbps) → VPS → nginx → Browser
+├── Password protection: PasswordProtectionDialog (password: "ydl")
+├── Legal safeguard: YDL grey area disclaimers
+└── Howler.js HTML5 Audio player
+
+Spotify Premium (Optional Fallback)
+├── OAuth PKCE → Developer Dashboard Whitelisting → Web Playback SDK
+├── Slot Management: spotify.slots.json (25 total, 5 used, 20 available)
+└── User Registration: mailto: link → Developer adds email → Update slots
 ```
 
-**User Flow:**
+**Spotify Slot Management (v0.0.30):**
+
+**Configuration File**: `pwa/spotify.slots.json`
+```json
+{
+  "totalSlots": 25,
+  "usedSlots": 5,
+  "availableSlots": 20,
+  "contactEmail": "martin.pfeffer@celox.io",
+  "lastUpdated": "2025-11-06"
+}
 ```
-Landing Page
-├── Button 1: "Jetzt spielen (Gratis)" → Preview Mode
-└── Button 2: "Mit Spotify Premium" → Spotify Mode
-    ↓
-localStorage.setItem('audio_mode_preference', mode)
-    ↓
-MusicPlayer reads preference → initializes correct player
-    ↓
-Automatic fallback: Spotify fails → Preview → Error
+
+**User Registration Workflow:**
+1. User clicks "📧 Zugang anfragen" on Landing Page
+2. mailto: link opens pre-filled email template
+3. User sends email with Spotify account email address
+4. Developer adds email to Spotify Developer Dashboard → Users and Access
+5. Developer updates `spotify.slots.json` (`usedSlots++`, `availableSlots--`)
+6. Rebuild + redeploy → Landing page shows updated slot count
+
+**Audio Hosting Workflow:**
+```bash
+# 1. Download songs (one-time setup)
+cd scripts/audio-hosting
+node download-songs.js         # All 209 songs (~20 min)
+node download-songs.js --limit 5   # Test mode
+node download-songs.js --resume    # Skip existing
+
+# 2. Upload to VPS
+node upload-to-vps.js           # Incremental rsync
+node upload-to-vps.js --dry-run # Preview
+
+# 3. Update songs.json + songs.ts
+node update-song-urls.js           # Auto-backup, 100% coverage check
+node update-song-urls.js --dry-run # Preview
+
+# 4. Validate accessibility
+node validate-audio.js        # Test 10 samples
+node validate-audio.js --full # Test all 209 songs
 ```
+
+**Legal Grey Area (YDL):**
+- ⚠️ YouTube downloads via yt-dlp (rechtliche Grauzone)
+- ⚠️ Password protection (`ydl`) as legal safeguard
+- ⚠️ Disclaimers on Landing Page (orange warning box) and PasswordProtectionDialog
+- ⚠️ Only for private, non-commercial, educational purposes
+- ⚠️ Usage at own risk
 
 **Key Files:**
-- `pwa/src/services/PreviewPlayerService.ts` - Howler.js wrapper (270 lines)
-- `pwa/src/services/MusicPlayerService.ts` - Unified abstraction (298 lines)
-- `pwa/src/screens/LandingPage.tsx` - Two-button selection + comparison
-- `pwa/src/components/game/MusicPlayer.tsx` - Mode badges, unified controls
-- `pwa/src/screens/GameScreen.tsx` - Transparent integration
-
-**Preview URL Management:**
-```bash
-# Fetch all preview URLs (requires Spotify token, one-time operation)
-cd pwa
-npm run update-previews
-
-# Updates songs.json with current preview URLs
-# Then commit to git - users access cached URLs without auth
-```
-
-**Auth & Playback:**
-- **Spotify Mode**: OAuth PKCE → localStorage token → Web Playback SDK
-- **Preview Mode**: No auth → Direct URL playback via Howler.js
-- **Fallback Chain**: Spotify → Preview → Error toast
+- `pwa/spotify.slots.json` - Slot configuration (NEW in v0.0.30)
+- `pwa/src/screens/LandingPage.tsx` - Slot counter, mailto: link, API limitations explanation
+- `pwa/src/components/PasswordProtectionDialog.tsx` - YDL legal disclaimer
+- `pwa/src/services/PreviewPlayerService.ts` - Howler.js wrapper
+- `pwa/src/services/MusicPlayerService.ts` - Unified abstraction
+- `scripts/audio-hosting/*.js` - Download, upload, update URLs, validate
 
 ### Game Modes & Variants
 
