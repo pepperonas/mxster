@@ -1342,11 +1342,11 @@ export function GameScreen() {
 
             {/* Timeline Display */}
             <div>
-              {gameMode === 'timeline_personal' ? (
-                /* Persönliche Timeline: Show all players' timelines */
+              {gameMode === 'timeline_personal' || gameMode === 'hardcore' ? (
+                /* Persönliche Timeline + Hardcore Mode: Show all players' timelines */
                 <TimelinePersonalView />
               ) : (
-                /* Globale Timeline or Guess Mode: Show single timeline */
+                /* Globale Timeline: Show single global timeline */
                 <TimelineDisplay />
               )}
             </div>
