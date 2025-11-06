@@ -83,7 +83,8 @@ export function GuessForm({ onSubmit, onSkip }: GuessFormProps) {
         Möchtest du diesen Song wirklich überspringen? Du erhältst keine Punkte.
       </p>,
       [
-        { text: 'Abbrechen', variant: 'secondary' },
+        // In Hardcore mode: Make "Abbrechen" primary so Enter closes modal instead of skipping
+        { text: 'Abbrechen', variant: gameMode === 'hardcore' ? 'primary' : 'secondary' },
         {
           text: 'Überspringen',
           variant: 'danger',
