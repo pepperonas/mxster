@@ -6,7 +6,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 **mxster** is a music timeline game combining hardware (3D-printed QR cards) and software (PWA with camera scanner). Players scan physical cards or play virtually. Features guess mode (points-based) and timeline modes (chronological placement).
 
-**Current Version**: v0.0.42 (2025-11-06)
+**Current Version**: v0.0.43 (2025-11-06)
 **Current Song Database**: 209 songs with full genre data (as of 2025-11-04)
 
 ### Key Technologies
@@ -481,6 +481,26 @@ All files hosted via GitHub raw URLs (auto-update, no manual releases):
 - **Song count**: Auto-dynamic via `songs.length` in LandingPage.tsx (updates on build)
 
 ## Recent Changes
+
+### v0.0.43 (2025-11-06) - Simplified Text Display
+
+**✂️ Kürzere, klarere Text-Anzeige**
+
+Removed "Punkten" from progress text for better readability:
+
+**Changes:**
+- Before: "687/1000 Punkten bis Musikexperte (🎓)"
+- After: "687/1000 bis Musikexperte (🎓)"
+- Also updated Großmeister text: "1247/5000 bis Großmeister (👑💎)"
+
+**Benefits:**
+- Shorter, cleaner text
+- Easier to read at a glance
+- Less visual clutter
+- More concise progress indication
+
+**Files Modified:**
+- `pwa/src/components/PlayerStatsDialog.tsx` (lines 171, 189)
 
 ### v0.0.42 (2025-11-06) - Visual Progress Bars & Absolute Numbers
 

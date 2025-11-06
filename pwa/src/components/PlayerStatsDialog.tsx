@@ -168,7 +168,7 @@ export function PlayerStatsDialog() {
                 {player.totalScore < 1000 && (
                   <div className="mt-2">
                     <div className="text-xs text-text-secondary mb-1">
-                      {player.totalScore}/1000 Punkten bis Musikexperte (🎓)
+                      {player.totalScore}/1000 bis Musikexperte (🎓)
                     </div>
                     <div className="h-2 bg-primary/50 rounded-full overflow-hidden border border-yellow-500/20">
                       <div
@@ -186,7 +186,7 @@ export function PlayerStatsDialog() {
                       <span>🎓</span> Musikexperte erreicht!
                     </div>
                     <div className="text-xs text-text-secondary mb-1">
-                      {player.totalScore}/5000 Punkten bis Großmeister (👑💎)
+                      {player.totalScore}/5000 bis Großmeister (👑💎)
                     </div>
                     <div className="h-2 bg-primary/50 rounded-full overflow-hidden border border-yellow-500/20">
                       <div

@@ -1619,6 +1619,14 @@ Dieses Projekt ist unter der **MIT-Lizenz** veröffentlicht. Siehe [LICENSE](LIC
 
 ## 📝 Changelog
 
+### v0.0.43 (2025-11-06)
+
+**✂️ Simplified Text Display**
+
+Removed "Punkten" for cleaner, shorter text:
+- Before: "687/1000 Punkten bis Musikexperte"
+- After: "687/1000 bis Musikexperte" ✅
+
 ### v0.0.42 (2025-11-06)
 
 **📊 Visual Progress Bars & Absolute Numbers**
