@@ -4,6 +4,7 @@
  * Implements 3-state navigation system: Landing / Setup / Playing
  */
 
+import { useEffect } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { useUI, useGame, useAuth, useInteraction } from '@/contexts'
 import { useGameHistory } from '@/hooks'
@@ -13,11 +14,18 @@ import { HowToPlayContent } from './HowToPlayContent'
 export function Sidebar() {
   const navigate = useNavigate()
   const location = useLocation()
-  const { isSidebarOpen, toggleSidebar, showModal } = useUI()
+  const { isSidebarOpen, toggleSidebar, showModal, closeSidebar } = useUI()
   const { players, currentPlayer, gameMode, gameVariant, isGameStarted, endGame, resetGame } = useGame()
   const { isLoggedIn } = useAuth()
   const { history } = useGameHistory()
   const { registerInteraction } = useInteraction()
+
+  // Close sidebar when navigating to landing page
+  useEffect(() => {
+    if (location.pathname === '/' && isSidebarOpen) {
+      closeSidebar()
+    }
+  }, [location.pathname, isSidebarOpen, closeSidebar])
 
   if (!isSidebarOpen) return null
 

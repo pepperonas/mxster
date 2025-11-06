@@ -22,12 +22,19 @@ class SpotifyConfig {
     this._initPromise = (async () => {
       try {
         // Try to load config from spotify.config.js (for development)
-        // @ts-ignore - Dynamic import for optional config
-        const config = await import('../../spotify.config.js')
-        if (config.default) {
-          this._clientId = config.default.clientId
-          this._scopes = config.default.scopes || SPOTIFY_CONFIG.SCOPES
-          console.log('✅ Loaded Spotify config from spotify.config.js')
+        // Use import.meta.glob for optional file loading that works with Vite build
+        const configs = import.meta.glob('../../spotify.config.js', { eager: false })
+        const configPath = '../../spotify.config.js'
+
+        if (configs[configPath]) {
+          const module = await configs[configPath]() as any
+          if (module.default) {
+            this._clientId = module.default.clientId
+            this._scopes = module.default.scopes || SPOTIFY_CONFIG.SCOPES
+            console.log('✅ Loaded Spotify config from spotify.config.js')
+          }
+        } else {
+          throw new Error('Config file not found')
         }
       } catch (error) {
         // Fallback to environment variables (production)
