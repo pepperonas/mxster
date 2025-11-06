@@ -273,14 +273,7 @@ describe('Audio Player Integration Tests', () => {
 
       // Verify that MusicPlayerService has logic to check spotifyId
       // This test ensures the null check exists in the code
-      const _songWithoutSpotifyId = {
-        id: 'test-001',
-        title: 'Test Song',
-        artist: 'Test Artist',
-        year: 2024,
-        // spotifyId is undefined
-        previewUrl: 'https://example.com/preview.mp3'
-      }
+      // (songWithoutSpotifyId test removed as the actual test is below)
 
       // The play method should exist and accept songs
       expect(musicPlayer.play).toBeDefined()
