@@ -358,16 +358,46 @@ describe('checkWinCondition - Hardcore Mode', () => {
     expect(result.winnerIndex).toBe(1)
   })
 
-  it('should handle tied scores (first player wins)', () => {
+  it('should handle tied scores with equal cards (currentPlayer wins)', () => {
     const players = [
       createTestPlayer({ name: 'Alice', cards: 10, score: 100 }),
       createTestPlayer({ name: 'Bob', cards: 10, score: 100 })
     ]
 
-    const result = checkWinCondition(players, 0, gameMode)
+    // Bob is currentPlayer (just finished)
+    const result = checkWinCondition(players, 1, gameMode)
 
     expect(result.gameOver).toBe(true)
-    expect(result.winner?.name).toBe('Alice') // First player with highest score
+    expect(result.winner?.name).toBe('Bob') // currentPlayer wins tie
+    expect(result.winnerIndex).toBe(1)
+  })
+
+  it('should handle tied scores with different cards (most cards wins)', () => {
+    const players = [
+      createTestPlayer({ name: 'Alice', cards: 12, score: 100 }),
+      createTestPlayer({ name: 'Bob', cards: 10, score: 100 })
+    ]
+
+    const result = checkWinCondition(players, 1, gameMode)
+
+    expect(result.gameOver).toBe(true)
+    expect(result.winner?.name).toBe('Alice') // Most cards wins
+    expect(result.winnerIndex).toBe(0)
+  })
+
+  it('should handle 3-way tie (currentPlayer wins)', () => {
+    const players = [
+      createTestPlayer({ name: 'Alice', cards: 10, score: 100 }),
+      createTestPlayer({ name: 'Bob', cards: 10, score: 100 }),
+      createTestPlayer({ name: 'Charlie', cards: 10, score: 100 })
+    ]
+
+    // Charlie is currentPlayer (just finished)
+    const result = checkWinCondition(players, 2, gameMode)
+
+    expect(result.gameOver).toBe(true)
+    expect(result.winner?.name).toBe('Charlie') // currentPlayer wins 3-way tie
+    expect(result.winnerIndex).toBe(2)
   })
 })
 
@@ -422,6 +452,65 @@ describe('checkWinCondition - Timeline Modes', () => {
 
     expect(result.gameOver).toBe(false)
     expect(result.winner).toBeNull()
+  })
+
+  it('should handle equal cards in Timeline Global (currentPlayer wins)', () => {
+    // This is the bug scenario: Martin vs Bot Alpha, both with 5 cards
+    const players = [
+      createTestPlayer({ name: 'Martin', cards: 5, score: 0 }),
+      createTestPlayer({ name: 'Bot Alpha', cards: 5, score: 0 })
+    ]
+
+    // Martin is currentPlayer (just placed 10th card)
+    const result = checkWinCondition(players, 0, GameMode.TIMELINE_GLOBAL)
+
+    expect(result.gameOver).toBe(true)
+    expect(result.winner?.name).toBe('Martin') // currentPlayer wins when tied
+    expect(result.winnerIndex).toBe(0)
+  })
+
+  it('should handle equal cards in Timeline Global with different currentPlayer', () => {
+    const players = [
+      createTestPlayer({ name: 'Alice', cards: 5, score: 0 }),
+      createTestPlayer({ name: 'Bob', cards: 5, score: 0 })
+    ]
+
+    // Bob is currentPlayer (just placed 10th card)
+    const result = checkWinCondition(players, 1, GameMode.TIMELINE_GLOBAL)
+
+    expect(result.gameOver).toBe(true)
+    expect(result.winner?.name).toBe('Bob') // currentPlayer wins when tied
+    expect(result.winnerIndex).toBe(1)
+  })
+
+  it('should use score as tiebreaker in Timeline Global when not currentPlayer', () => {
+    const players = [
+      createTestPlayer({ name: 'Alice', cards: 5, score: 25 }),
+      createTestPlayer({ name: 'Bob', cards: 5, score: 30 }), // Higher score
+      createTestPlayer({ name: 'Charlie', cards: 3, score: 20 })
+    ]
+
+    // Charlie is currentPlayer (placed 10th card but has fewer cards)
+    const result = checkWinCondition(players, 2, GameMode.TIMELINE_GLOBAL)
+
+    expect(result.gameOver).toBe(true)
+    expect(result.winner?.name).toBe('Bob') // Most cards + highest score among tied
+    expect(result.winnerIndex).toBe(1)
+  })
+
+  it('should handle 3-player Timeline Global with equal cards', () => {
+    const players = [
+      createTestPlayer({ name: 'Alice', cards: 3, score: 0 }),
+      createTestPlayer({ name: 'Bob', cards: 4, score: 0 }),
+      createTestPlayer({ name: 'Charlie', cards: 3, score: 0 })
+    ]
+
+    // Alice is currentPlayer (total = 10 cards)
+    const result = checkWinCondition(players, 0, GameMode.TIMELINE_GLOBAL)
+
+    expect(result.gameOver).toBe(true)
+    expect(result.winner?.name).toBe('Bob') // Most cards wins
+    expect(result.winnerIndex).toBe(1)
   })
 })
 

@@ -53,7 +53,7 @@ export class PreviewPlayerService {
       volume: 0.8,
       preload: true,
       onload: () => {
-        console.log(`✅ Preview loaded: ${song.title} by ${song.artist}`)
+        console.log(`✅ Preview loaded: ${song.title} by ${song.artist} (${song.year})`)
         this.setState('playing')
 
         // Seek to start position if specified

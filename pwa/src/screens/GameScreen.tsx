@@ -1273,11 +1273,29 @@ export function GameScreen() {
         gameMode={gameMode}
         onClose={() => {
           console.log('🏠 Navigating to home page...')
+
+          // Stop music player FIRST
+          const musicPlayer = getMusicPlayer()
+          musicPlayer.stop()
+          console.log('🎵 Music stopped')
+
+          // Clear game state
           closeModal()
-          resetGame()
+
+          // Clear mode/variant BEFORE resetGame to prevent redirect
           setGameMode(null)
           setGameVariant(null)
-          navigate('/')
+
+          // Reset game
+          resetGame()
+
+          // Navigate to landing page with replace to prevent back navigation
+          navigate('/', { replace: true })
+
+          // Scroll to top
+          setTimeout(() => {
+            window.scrollTo({ top: 0, behavior: 'smooth' })
+          }, 100)
         }}
         onNewRound={() => {
           console.log('🔄 Starting new round with same players...')

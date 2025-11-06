@@ -190,11 +190,16 @@ export function fuzzyMatch(guess: string, correct: string, maxErrors?: number): 
   }
 
   // Substring match (one text contains the other)
-  if (
-    normalizedCorrect.includes(normalizedGuess) ||
-    normalizedGuess.includes(normalizedCorrect)
-  ) {
-    return true
+  // ONLY if the guess is at least 50% of the correct text length (minimum 5 chars)
+  const minSubstringLength = Math.max(5, Math.ceil(normalizedCorrect.length * 0.5))
+  if (normalizedGuess.length >= minSubstringLength) {
+    if (
+      normalizedCorrect.includes(normalizedGuess) ||
+      normalizedGuess.includes(normalizedCorrect)
+    ) {
+      console.log(`   ✅ Substring match (guess length: ${normalizedGuess.length} >= min: ${minSubstringLength})`)
+      return true
+    }
   }
 
   // Levenshtein distance check

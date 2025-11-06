@@ -6,7 +6,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 **mxster** is a music timeline game combining hardware (3D-printed QR cards) and software (PWA with camera scanner). Players scan physical cards or play virtually. Features guess mode (points-based) and timeline modes (chronological placement).
 
-**Current Version**: v0.0.37 (2025-11-06)
+**Current Version**: v0.0.39 (2025-11-06)
 **Current Song Database**: 209 songs with full genre data (as of 2025-11-04)
 
 ### Key Technologies
@@ -481,6 +481,60 @@ All files hosted via GitHub raw URLs (auto-update, no manual releases):
 - **Song count**: Auto-dynamic via `songs.length` in LandingPage.tsx (updates on build)
 
 ## Recent Changes
+
+### v0.0.39 (2025-11-06) - Enhanced Preview Logging
+
+**🔍 Improved Console Logging**
+
+Enhanced preview player log statement to include release year for better debugging:
+
+**Change:**
+- Updated `PreviewPlayerService.ts` log statement
+- Before: `✅ Preview loaded: Ring of Fire by Johnny Cash`
+- After: `✅ Preview loaded: Ring of Fire by Johnny Cash (1963)`
+
+**Technical Details:**
+- File: `pwa/src/services/PreviewPlayerService.ts` (line 56)
+- Added `(${song.year})` to console.log output
+- Helps identify song context during debugging and testing
+- No functional changes, purely improved developer experience
+
+**Files Modified:**
+- `pwa/src/services/PreviewPlayerService.ts` - Enhanced log format
+
+### v0.0.38 (2025-11-06) - Bot Achievements
+
+**🏆 3 New Achievements for Bot Victories**
+
+Added achievements to track victories against AI opponents of different difficulty levels:
+
+**New Achievements:**
+1. **🤖 Bot-Jäger** (BOT_SLAYER_EASY): Beat 3 easy bots
+2. **🤖🎯 Bot-Bezwinger** (BOT_SLAYER_MEDIUM): Beat 3 medium bots
+3. **🤖🔥 Bot-Meister** (BOT_SLAYER_HARD): Beat 3 hard bots
+
+**Implementation:**
+- Added 3 new achievement IDs to `AchievementId` enum
+- Added 3 new achievement definitions with icons and targets
+- Implemented bot difficulty tracking in `AchievementContext.checkAchievements()`
+- Detection logic checks `player.isBot` and `player.botDifficulty` properties
+- Progress tracking increments on each bot victory by difficulty level
+- Auto-unlock when target of 3 victories reached
+
+**Technical Details:**
+- File: `pwa/src/types/achievements.ts` (lines 29-32, 203-223)
+- File: `pwa/src/contexts/AchievementContext.tsx` (lines 371-414)
+- Cross-game tracking: Counts bot wins across entire game history
+- Difficulty-specific: Easy/Medium/Hard tracked independently
+- Requires Bot Player System (v0.0.32) for `isBot` and `botDifficulty` flags
+
+**Total Achievements:** 23 (was 20)
+
+**Files Modified:**
+- `pwa/src/types/achievements.ts` - Added 3 enum values + definitions
+- `pwa/src/contexts/AchievementContext.tsx` - Added bot victory detection
+- `pwa/package.json` - Version bump to 0.0.38
+- `pwa/src/components/Sidebar.tsx` - Version display updated
 
 ### v0.0.37 (2025-11-06) - Comprehensive TypeScript Type Safety Overhaul
 

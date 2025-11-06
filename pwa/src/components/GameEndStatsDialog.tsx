@@ -68,15 +68,15 @@ export function GameEndStatsDialog({ winner, allPlayers, gameMode, onClose, onNe
   // Calculate round statistics
   const roundStats = useMemo(() => {
     return allPlayers.map((player) => {
-      const correctSongs = player.timeline.length
-      const totalAttempts = player.cards // This is the count of correctly placed cards
-      const accuracy = totalAttempts > 0 ? (correctSongs / totalAttempts) * 100 : 0
+      // In Timeline modes: cards = correctly placed cards
+      // In Hardcore mode: cards = total attempts (can be >10 if wrong placements)
+      const correctCards = player.cards
+      const songsInTimeline = player.timeline.length
 
       return {
         name: player.name,
-        correctSongs,
-        totalAttempts,
-        accuracy,
+        correctCards,
+        songsInTimeline,
         score: player.score,
         cards: player.cards
       }
@@ -183,16 +183,16 @@ export function GameEndStatsDialog({ winner, allPlayers, gameMode, onClose, onNe
                   </div>
                 </div>
 
-                {/* Song accuracy visualization */}
+                {/* Progress bar showing cards placed towards goal of 10 */}
                 <div className="mt-3">
                   <div className="flex justify-between text-xs text-text-secondary mb-2">
-                    <span>Songs in Timeline</span>
-                    <span>{playerStat.correctSongs} Songs</span>
+                    <span>Fortschritt</span>
+                    <span>{playerStat.cards} / 10 Karten</span>
                   </div>
                   <div className="h-4 bg-primary/50 rounded-full overflow-hidden border border-accent/20">
                     <div
                       className="h-full bg-gradient-to-r from-green-500 to-accent transition-all duration-500"
-                      style={{ width: `${Math.min((playerStat.correctSongs / 10) * 100, 100)}%` }}
+                      style={{ width: `${Math.min((playerStat.cards / 10) * 100, 100)}%` }}
                     />
                   </div>
                 </div>

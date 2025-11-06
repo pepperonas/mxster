@@ -25,7 +25,11 @@ export enum AchievementId {
   CENTURION = 'centurion',                     // 100 Spiele gespielt (SCHWER)
   MASTER_OF_TIME = 'master_of_time',           // Ein Spiel in unter 3 Minuten abgeschlossen (SCHWER)
   COMEBACK_PROFI = 'comeback_profi',           // 5x vom Rückstand zum Sieg gekommen (SCHWER)
-  GRAND_MASTER = 'grand_master'                // 5000 Gesamtpunkte über alle Spiele (SCHWER)
+  GRAND_MASTER = 'grand_master',               // 5000 Gesamtpunkte über alle Spiele (SCHWER)
+  // Bot Achievements (v0.0.38)
+  BOT_SLAYER_EASY = 'bot_slayer_easy',         // 3x einfachen Bot besiegt
+  BOT_SLAYER_MEDIUM = 'bot_slayer_medium',     // 3x mittleren Bot besiegt
+  BOT_SLAYER_HARD = 'bot_slayer_hard'          // 3x schweren Bot besiegt
 }
 
 export interface Achievement {
@@ -195,5 +199,26 @@ export const ACHIEVEMENT_DEFINITIONS: Record<AchievementId, Omit<Achievement, 'u
     description: '5000 Gesamtpunkte über alle Spiele erreicht',
     icon: '👑💎',
     target: 5000
+  },
+  [AchievementId.BOT_SLAYER_EASY]: {
+    id: AchievementId.BOT_SLAYER_EASY,
+    name: 'Bot-Jäger',
+    description: '3x einen einfachen Bot besiegt',
+    icon: '🤖',
+    target: 3
+  },
+  [AchievementId.BOT_SLAYER_MEDIUM]: {
+    id: AchievementId.BOT_SLAYER_MEDIUM,
+    name: 'Bot-Bezwinger',
+    description: '3x einen mittleren Bot besiegt',
+    icon: '🤖🎯',
+    target: 3
+  },
+  [AchievementId.BOT_SLAYER_HARD]: {
+    id: AchievementId.BOT_SLAYER_HARD,
+    name: 'Bot-Meister',
+    description: '3x einen schweren Bot besiegt',
+    icon: '🤖🔥',
+    target: 3
   }
 }

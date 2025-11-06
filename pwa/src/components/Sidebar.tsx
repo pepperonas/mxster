@@ -10,6 +10,7 @@ import { useUI, useGame, useAuth, useInteraction } from '@/contexts'
 import { useGameHistory } from '@/hooks'
 import { GAME_MODE_INFO } from '@/utils/gameModes'
 import { HowToPlayContent } from './HowToPlayContent'
+import { getMusicPlayer } from '@/services/MusicPlayerService'
 
 export function Sidebar() {
   const navigate = useNavigate()
@@ -82,10 +83,6 @@ export function Sidebar() {
           variant: 'danger',
           onClick: () => {
             console.log(`✅ User confirmed: ${confirmText}`)
-            if (isGameStarted) {
-              endGame()
-              resetGame()
-            }
             onConfirm()
           }
         }
@@ -103,10 +100,28 @@ export function Sidebar() {
         'Möchtest du das Spiel wirklich beenden?',
         'Spiel beenden',
         () => {
-          // Clear game state before navigation
+          console.log('🛑 Ending game - stopping music and clearing state')
+
+          // Stop music player FIRST
+          const musicPlayer = getMusicPlayer()
+          musicPlayer.stop()
+
+          // Clear mode/variant BEFORE resetGame to prevent any redirect logic
           setGameMode(null)
           setGameVariant(null)
-          handleNavigation('/')
+
+          // Then reset game and end it
+          resetGame()
+          endGame()
+
+          // Navigate directly without toggleSidebar (already closed by showNavigationWarning)
+          registerInteraction('sidebar', 50)
+
+          // Small delay to ensure state is cleared before navigation
+          setTimeout(() => {
+            navigate('/', { replace: true })
+            window.scrollTo({ top: 0, behavior: 'smooth' })
+          }, 50)
         }
       )
     } else if (isInSetup && players.length > 0) {
@@ -116,10 +131,16 @@ export function Sidebar() {
         'Die Spielerkonfiguration geht verloren.',
         'Zurück zum Menü',
         () => {
-          resetGame() // Clear players
+          // Clear all state
+          resetGame()
           setGameMode(null)
           setGameVariant(null)
-          handleNavigation('/')
+          // Navigate directly without toggleSidebar (already closed by showNavigationWarning)
+          registerInteraction('sidebar', 50)
+          navigate('/', { replace: true })
+          setTimeout(() => {
+            window.scrollTo({ top: 0, behavior: 'smooth' })
+          }, 100)
         }
       )
     } else {
@@ -387,7 +408,7 @@ export function Sidebar() {
         <div className="p-4 border-t-2 border-accent/30 flex-shrink-0">
           <div className="text-center">
             <p className="text-xs text-text-secondary mb-1">mxster</p>
-            <p className="text-sm text-gradient font-medium">Version 0.0.32</p>
+            <p className="text-sm text-gradient font-medium">Version 0.0.39</p>
           </div>
         </div>
       </aside>

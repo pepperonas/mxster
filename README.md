@@ -1619,6 +1619,27 @@ Dieses Projekt ist unter der **MIT-Lizenz** veröffentlicht. Siehe [LICENSE](LIC
 
 ## 📝 Changelog
 
+### v0.0.39 (2025-11-06)
+
+**🔍 Enhanced Preview Logging**
+
+Improved console logging for better debugging:
+- Preview player now logs release year: `✅ Preview loaded: Ring of Fire by Johnny Cash (1963)`
+- Helps identify song context during testing
+
+### v0.0.38 (2025-11-06)
+
+**🏆 Bot Achievements**
+
+Added 3 new achievements for beating AI opponents:
+- 🤖 **Bot-Jäger**: Beat 3 easy bots
+- 🤖🎯 **Bot-Bezwinger**: Beat 3 medium bots
+- 🤖🔥 **Bot-Meister**: Beat 3 hard bots
+
+Cross-game tracking counts victories against each bot difficulty level. Requires Bot Player System (v0.0.32).
+
+**Total Achievements:** 23
+
 ### v0.0.37 (2025-11-06)
 
 **🔧 Comprehensive TypeScript Type Safety & Code Quality Improvements**

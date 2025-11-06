@@ -209,24 +209,38 @@ export function checkWinCondition(
       const allPlayersFinished = players.every((p) => p.cards >= 10)
 
       if (allPlayersFinished) {
-        // Find player with highest score
-        let highestScore = -1
-        let winnerIdx = -1
+        // Find maximum score
+        const highestScore = Math.max(...players.map((p) => p.score))
 
-        players.forEach((p, idx) => {
-          if (p.score > highestScore) {
-            highestScore = p.score
-            winnerIdx = idx
-          }
-        })
+        // Find all players with highest score
+        const playersWithHighestScore = players
+          .map((p, idx) => ({ player: p, index: idx }))
+          .filter(({ player }) => player.score === highestScore)
 
-        const winner = players[winnerIdx]
+        // Tie-breaking logic:
+        // 1. Most cards wins (more attempts with equal score = better)
+        // 2. If still tied, currentPlayer wins (last to finish)
+        let winner = playersWithHighestScore[0]
+
+        // Find player with most cards among tied players
+        const maxCards = Math.max(...playersWithHighestScore.map((p) => p.player.cards))
+        const playersWithMostCards = playersWithHighestScore.filter(
+          (p) => p.player.cards === maxCards
+        )
+
+        // If still tied, currentPlayer wins
+        const currentPlayerInTie = playersWithMostCards.find(({ index }) => index === currentPlayer)
+        if (currentPlayerInTie) {
+          winner = currentPlayerInTie
+        } else {
+          winner = playersWithMostCards[0]
+        }
 
         return {
           gameOver: true,
-          winner,
-          winnerIndex: winnerIdx,
-          message: `${winner.name} gewinnt mit ${winner.score} Punkten!`
+          winner: winner.player,
+          winnerIndex: winner.index,
+          message: `${winner.player.name} gewinnt mit ${winner.player.score} Punkten!`
         }
       }
     }
@@ -254,24 +268,38 @@ export function checkWinCondition(
     const totalCards = players.reduce((sum, p) => sum + p.cards, 0)
 
     if (totalCards >= 10) {
-      // Find player with most cards
-      let maxCards = -1
-      let winnerIdx = -1
+      // Find maximum card count
+      const maxCards = Math.max(...players.map((p) => p.cards))
 
-      players.forEach((p, idx) => {
-        if (p.cards > maxCards) {
-          maxCards = p.cards
-          winnerIdx = idx
+      // Find all players with maximum card count
+      const playersWithMaxCards = players
+        .map((p, idx) => ({ player: p, index: idx }))
+        .filter(({ player }) => player.cards === maxCards)
+
+      // Tie-breaking logic:
+      // 1. If currentPlayer has max cards, they win (just placed the 10th card)
+      // 2. Otherwise, the player with highest score wins
+      // 3. If still tied or no scores, first player in list wins
+      let winner = playersWithMaxCards[0]
+
+      // Check if currentPlayer is in the tie
+      const currentPlayerInTie = playersWithMaxCards.find(({ index }) => index === currentPlayer)
+      if (currentPlayerInTie) {
+        winner = currentPlayerInTie
+      } else {
+        // Find player with highest score among tied players
+        for (const p of playersWithMaxCards) {
+          if (p.player.score > winner.player.score) {
+            winner = p
+          }
         }
-      })
-
-      const winner = players[winnerIdx]
+      }
 
       return {
         gameOver: true,
-        winner,
-        winnerIndex: winnerIdx,
-        message: `${winner.name} gewinnt mit ${winner.cards} korrekt platzierten Karten!`
+        winner: winner.player,
+        winnerIndex: winner.index,
+        message: `${winner.player.name} gewinnt mit ${winner.player.cards} korrekt platzierten Karten!`
       }
     }
 

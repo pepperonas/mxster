@@ -368,6 +368,51 @@ export function AchievementProvider({ children }: { children: ReactNode }) {
     }
     updateProgress(playerName, AchievementId.GRAND_MASTER, totalPoints)
 
+    // ============================================================================
+    // BOT SLAYER ACHIEVEMENTS (v0.0.38)
+    // ============================================================================
+
+    // Count wins against bots of each difficulty
+    let easyBotWins = 0
+    let mediumBotWins = 0
+    let hardBotWins = 0
+
+    sortedGames.forEach((game: HistoryEntry) => {
+      // Check if this player won
+      const winner = game.players.reduce((prev: Player, current: Player) =>
+        current.score > prev.score ? current : prev
+      )
+
+      if (winner.name === playerName) {
+        // Check if any opponent was a bot and track difficulty
+        game.players.forEach((p: Player) => {
+          if (p.name !== playerName && p.isBot && p.botDifficulty) {
+            if (p.botDifficulty === 'easy') easyBotWins++
+            else if (p.botDifficulty === 'medium') mediumBotWins++
+            else if (p.botDifficulty === 'hard') hardBotWins++
+          }
+        })
+      }
+    })
+
+    // 22. BOT_SLAYER_EASY: Beat 3 easy bots
+    if (easyBotWins >= 3) {
+      unlockAchievement(playerName, AchievementId.BOT_SLAYER_EASY)
+    }
+    updateProgress(playerName, AchievementId.BOT_SLAYER_EASY, easyBotWins)
+
+    // 23. BOT_SLAYER_MEDIUM: Beat 3 medium bots
+    if (mediumBotWins >= 3) {
+      unlockAchievement(playerName, AchievementId.BOT_SLAYER_MEDIUM)
+    }
+    updateProgress(playerName, AchievementId.BOT_SLAYER_MEDIUM, mediumBotWins)
+
+    // 24. BOT_SLAYER_HARD: Beat 3 hard bots
+    if (hardBotWins >= 3) {
+      unlockAchievement(playerName, AchievementId.BOT_SLAYER_HARD)
+    }
+    updateProgress(playerName, AchievementId.BOT_SLAYER_HARD, hardBotWins)
+
     // Update stats
     updateStats(playerName, {
       totalGames,
