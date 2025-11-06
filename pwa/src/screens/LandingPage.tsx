@@ -214,10 +214,10 @@ export function LandingPage() {
                   </p>
                   <p className="text-xs text-green-200 mb-3">
                     Noch {spotifySlots.availableSlots} von {spotifySlots.totalSlots} Slots frei.
-                    Sende einfach eine Anfrage mit deinem Spotify-Nutzernamen.
+                    Sende einfach die E-Mail-Adresse deines Spotify-Kontos.
                   </p>
                   <a
-                    href={`mailto:${spotifySlots.contactEmail}?subject=Spotify%20Premium%20Zugang%20für%20mxster&body=Hallo%20Martin,%0D%0A%0D%0Aich%20würde%20gerne%20die%20Spotify%20Premium%20Integration%20von%20mxster%20nutzen.%0D%0A%0D%0AMein%20Spotify-Nutzername:%20[HIER%20EINTRAGEN]%0D%0AMeine%20E-Mail:%20[HIER%20EINTRAGEN]%0D%0A%0D%0AVielen%20Dank!`}
+                    href={`mailto:${spotifySlots.contactEmail}?subject=Spotify%20Premium%20Zugang%20für%20mxster&body=Hallo%20Martin,%0D%0A%0D%0Aich%20würde%20gerne%20die%20Spotify%20Premium%20Integration%20von%20mxster%20nutzen.%0D%0A%0D%0AE-Mail-Adresse%20meines%20Spotify-Kontos:%20[HIER%20EINTRAGEN]%0D%0A%0D%0AVielen%20Dank!`}
                     className="btn btn-secondary w-full text-sm py-2"
                   >
                     📧 Zugang anfragen
