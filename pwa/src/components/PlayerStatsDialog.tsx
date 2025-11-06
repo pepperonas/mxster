@@ -16,6 +16,8 @@ interface PlayerStats {
   avgScore: number
   bestDecade: string
   decadeStats: Record<string, number> // decade -> correct cards
+  bestGenre: string
+  genreStats: Record<string, number> // genre -> correct cards
 }
 
 export function PlayerStatsDialog() {
@@ -39,7 +41,9 @@ export function PlayerStatsDialog() {
             totalScore: 0,
             avgScore: 0,
             bestDecade: 'N/A',
-            decadeStats: {}
+            decadeStats: {},
+            bestGenre: 'N/A',
+            genreStats: {}
           })
         }
 
@@ -57,6 +61,11 @@ export function PlayerStatsDialog() {
           const decade = Math.floor(song.year / 10) * 10
           const decadeKey = `${decade}s`
           stats.decadeStats[decadeKey] = (stats.decadeStats[decadeKey] || 0) + 1
+
+          // Analyze genre knowledge from timeline
+          if (song.genre) {
+            stats.genreStats[song.genre] = (stats.genreStats[song.genre] || 0) + 1
+          }
         })
       })
     })
@@ -73,6 +82,14 @@ export function PlayerStatsDialog() {
           current[1] > max[1] ? current : max
         )
         stats.bestDecade = bestDecadeEntry[0]
+      }
+
+      // Find best genre
+      if (Object.keys(stats.genreStats).length > 0) {
+        const bestGenreEntry = Object.entries(stats.genreStats).reduce((max, current) =>
+          current[1] > max[1] ? current : max
+        )
+        stats.bestGenre = bestGenreEntry[0]
       }
     })
 
@@ -156,6 +173,15 @@ export function PlayerStatsDialog() {
                 </div>
                 <div className="text-2xl font-bold text-purple-400">{player.bestDecade}</div>
               </div>
+
+              {/* Best Genre */}
+              <div className="glass p-4 rounded-lg border border-pink-500/30 bg-pink-900/10 col-span-2">
+                <div className="flex items-center gap-2 mb-2">
+                  <span className="text-2xl">🎸</span>
+                  <span className="text-sm text-text-secondary">Lieblings-Genre</span>
+                </div>
+                <div className="text-2xl font-bold text-pink-400">{player.bestGenre}</div>
+              </div>
             </div>
 
             {/* Win Rate Bar */}
@@ -192,6 +218,38 @@ export function PlayerStatsDialog() {
                                 player.bestDecade === decade
                                   ? 'bg-gradient-to-r from-purple-500 to-pink-500 shadow-glow-accent'
                                   : 'bg-gradient-to-r from-accent/70 to-secondary/70'
+                              }`}
+                              style={{ width: `${percentage}%` }}
+                            />
+                          </div>
+                          <span className="text-xs text-text-secondary w-8 text-right">{count}</span>
+                        </div>
+                      )
+                    })}
+                </div>
+              </div>
+            )}
+
+            {/* Genre Distribution */}
+            {Object.keys(player.genreStats).length > 0 && (
+              <div className="mt-4 pt-4 border-t border-accent/20">
+                <p className="text-sm text-text-secondary mb-3">Genre-Verteilung</p>
+                <div className="space-y-2">
+                  {Object.entries(player.genreStats)
+                    .sort(([, countA], [, countB]) => countB - countA) // Sort by count descending
+                    .map(([genre, count]) => {
+                      const maxCount = Math.max(...Object.values(player.genreStats))
+                      const percentage = (count / maxCount) * 100
+
+                      return (
+                        <div key={genre} className="flex items-center gap-3">
+                          <span className="text-xs text-text-secondary w-20 truncate" title={genre}>{genre}</span>
+                          <div className="flex-1 h-2 bg-primary/50 rounded-full overflow-hidden border border-accent/10">
+                            <div
+                              className={`h-full transition-all duration-500 ${
+                                player.bestGenre === genre
+                                  ? 'bg-gradient-to-r from-pink-500 to-orange-500 shadow-glow-accent'
+                                  : 'bg-gradient-to-r from-cyan-500/70 to-blue-500/70'
                               }`}
                               style={{ width: `${percentage}%` }}
                             />
