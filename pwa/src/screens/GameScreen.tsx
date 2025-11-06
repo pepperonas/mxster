@@ -1293,6 +1293,8 @@ export function GameScreen() {
           console.log('🏠 Navigating to home page...')
           closeModal()
           resetGame()
+          setGameMode(null)
+          setGameVariant(null)
           navigate('/')
         }}
         onNewRound={() => {
