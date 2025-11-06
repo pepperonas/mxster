@@ -261,3 +261,97 @@ export const triggerIncorrectPlacementAnimation = async (): Promise<void> => {
   rain.remove()
   bolts.forEach(bolt => bolt.remove())
 }
+
+// ============================================================================
+// FIRST CARD PLACEMENT - Timeline Draw Animation
+// ============================================================================
+
+/**
+ * Create sparkle particle
+ */
+const createSparkle = (delay: number, leftPosition: number): HTMLDivElement => {
+  const sparkle = document.createElement('div')
+  sparkle.className = 'timeline-sparkle'
+  sparkle.style.cssText = `
+    position: fixed;
+    top: 50%;
+    left: ${leftPosition}%;
+    width: 8px;
+    height: 8px;
+    background: ${randomColor()};
+    border-radius: 50%;
+    box-shadow: 0 0 10px currentColor, 0 0 20px currentColor;
+    z-index: 10000;
+    pointer-events: none;
+    opacity: 0;
+    animation: sparkle-fade 1s ease-in-out ${delay}s;
+  `
+
+  return sparkle
+}
+
+/**
+ * Create timeline draw line (horizontal)
+ */
+const createTimelineLine = (): SVGSVGElement => {
+  const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg')
+  svg.setAttribute('class', 'timeline-draw-svg')
+  svg.style.cssText = `
+    position: fixed;
+    top: 50%;
+    left: 10%;
+    width: 80%;
+    height: 4px;
+    z-index: 9999;
+    pointer-events: none;
+    transform: translateY(-50%);
+  `
+
+  const line = document.createElementNS('http://www.w3.org/2000/svg', 'line')
+  line.setAttribute('x1', '0')
+  line.setAttribute('y1', '2')
+  line.setAttribute('x2', '100%')
+  line.setAttribute('y2', '2')
+  line.setAttribute('stroke', randomColor())
+  line.setAttribute('stroke-width', '4')
+  line.setAttribute('stroke-linecap', 'round')
+
+  // Calculate line length for dash animation
+  const lineLength = typeof window !== 'undefined' ? window.innerWidth * 0.8 : 1000
+  line.setAttribute('stroke-dasharray', `${lineLength}`)
+  line.setAttribute('stroke-dashoffset', `${lineLength}`)
+  line.style.filter = 'drop-shadow(0 0 8px currentColor)'
+  line.style.animation = 'timeline-draw 1s ease-out forwards'
+
+  svg.appendChild(line)
+  return svg
+}
+
+/**
+ * Main function: Trigger first card placement animation (Timeline Draw)
+ */
+export const triggerFirstCardAnimation = async (): Promise<void> => {
+  if (prefersReducedMotion()) return
+
+  // Create timeline line
+  const line = createTimelineLine()
+  document.body.appendChild(line)
+
+  // Create sparkles along the line
+  const sparkleCount = getParticleCount(randomInt(10, 15))
+  const sparkles: HTMLDivElement[] = []
+
+  for (let i = 0; i < sparkleCount; i++) {
+    const delay = (i / sparkleCount) * 0.8 // Staggered along the animation
+    const leftPosition = 10 + (i / sparkleCount) * 80 // Spread across the line
+    const sparkle = createSparkle(delay, leftPosition)
+    sparkles.push(sparkle)
+    document.body.appendChild(sparkle)
+  }
+
+  // Cleanup after animation
+  await sleep(1500)
+
+  line.remove()
+  sparkles.forEach(sparkle => sparkle.remove())
+}
