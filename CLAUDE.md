@@ -6,7 +6,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 **mxster** is a music timeline game combining hardware (3D-printed QR cards) and software (PWA with camera scanner). Players scan physical cards or play virtually. Features guess mode (points-based) and timeline modes (chronological placement).
 
-**Current Version**: v0.0.41 (2025-11-06)
+**Current Version**: v0.0.42 (2025-11-06)
 **Current Song Database**: 209 songs with full genre data (as of 2025-11-04)
 
 ### Key Technologies
@@ -481,6 +481,52 @@ All files hosted via GitHub raw URLs (auto-update, no manual releases):
 - **Song count**: Auto-dynamic via `songs.length` in LandingPage.tsx (updates on build)
 
 ## Recent Changes
+
+### v0.0.42 (2025-11-06) - Visual Progress Bars & Absolute Numbers
+
+**📊 Enhanced Achievement Progress Display**
+
+Improved progress display with absolute numbers and visual progress bars:
+
+**Changes:**
+- Replaced percentage with absolute numbers: "687/1000 Punkten bis Musikexperte"
+- Added yellow-amber gradient progress bars for visual feedback
+- Maintained 3-state progressive system (< 1000, 1000-4999, ≥ 5000)
+
+**Visual Examples:**
+
+1. **< 1000 points** (e.g., 687):
+   ```
+   687/1000 Punkten bis Musikexperte (🎓)
+   [████████████░░░░░░░░] (yellow-amber bar, 69%)
+   ```
+
+2. **1000-4999 points** (e.g., 1247):
+   ```
+   🎓 Musikexperte erreicht!
+   1247/5000 Punkten bis Großmeister (👑💎)
+   [████░░░░░░░░░░░░░░░░] (yellow-amber bar, 25%)
+   ```
+
+3. **≥ 5000 points**:
+   ```
+   🎓 Musikexperte erreicht!
+   👑💎 Großmeister erreicht!
+   ```
+
+**Implementation:**
+- File: `pwa/src/components/PlayerStatsDialog.tsx` (lines 167-211)
+- Progress bar: 2px height, rounded, yellow-amber gradient
+- Smooth transitions (duration-500)
+- Border: yellow-500/20 opacity
+
+**Benefits:**
+- More concrete progress indication (687/1000 vs 69%)
+- Visual feedback via progress bar
+- Consistent with other UI elements
+
+**Files Modified:**
+- `pwa/src/components/PlayerStatsDialog.tsx` - Added progress bars + absolute numbers
 
 ### v0.0.41 (2025-11-06) - Progressive Achievement Display
 

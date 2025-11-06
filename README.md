@@ -1619,6 +1619,15 @@ Dieses Projekt ist unter der **MIT-Lizenz** veröffentlicht. Siehe [LICENSE](LIC
 
 ## 📝 Changelog
 
+### v0.0.42 (2025-11-06)
+
+**📊 Visual Progress Bars & Absolute Numbers**
+
+Enhanced achievement progress display:
+- Replaced percentages with absolute numbers: "687/1000 Punkten"
+- Added yellow-amber gradient progress bars for visual feedback
+- Example: 687 pts → "687/1000 Punkten bis Musikexperte (🎓)" + progress bar
+
 ### v0.0.41 (2025-11-06)
 
 **🎯 Progressive Achievement Display**

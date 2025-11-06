@@ -163,30 +163,47 @@ export function PlayerStatsDialog() {
                   <span className="text-sm text-text-secondary">Gesamtpunkte</span>
                 </div>
                 <div className="text-2xl font-bold text-yellow-400">{player.totalScore}</div>
+
                 {/* Under 1000: Show progress to Musikexperte */}
                 {player.totalScore < 1000 && (
-                  <div className="text-xs text-text-secondary mt-1">
-                    {((player.totalScore / 1000) * 100).toFixed(0)}% bis Musikexperte (🎓)
+                  <div className="mt-2">
+                    <div className="text-xs text-text-secondary mb-1">
+                      {player.totalScore}/1000 Punkten bis Musikexperte (🎓)
+                    </div>
+                    <div className="h-2 bg-primary/50 rounded-full overflow-hidden border border-yellow-500/20">
+                      <div
+                        className="h-full bg-gradient-to-r from-yellow-500 to-amber-500 transition-all duration-500"
+                        style={{ width: `${(player.totalScore / 1000) * 100}%` }}
+                      />
+                    </div>
                   </div>
                 )}
+
                 {/* 1000-4999: Show Musikexperte achieved, progress to Großmeister */}
                 {player.totalScore >= 1000 && player.totalScore < 5000 && (
-                  <div className="text-xs mt-1">
-                    <div className="text-green-400 flex items-center gap-1 mb-1">
+                  <div className="mt-2">
+                    <div className="text-xs text-green-400 flex items-center gap-1 mb-2">
                       <span>🎓</span> Musikexperte erreicht!
                     </div>
-                    <div className="text-text-secondary">
-                      {((player.totalScore / 5000) * 100).toFixed(0)}% bis Großmeister (👑💎)
+                    <div className="text-xs text-text-secondary mb-1">
+                      {player.totalScore}/5000 Punkten bis Großmeister (👑💎)
+                    </div>
+                    <div className="h-2 bg-primary/50 rounded-full overflow-hidden border border-yellow-500/20">
+                      <div
+                        className="h-full bg-gradient-to-r from-yellow-500 to-amber-500 transition-all duration-500"
+                        style={{ width: `${(player.totalScore / 5000) * 100}%` }}
+                      />
                     </div>
                   </div>
                 )}
+
                 {/* 5000+: Show Großmeister achieved */}
                 {player.totalScore >= 5000 && (
-                  <div className="text-xs mt-1">
-                    <div className="text-green-400 flex items-center gap-1 mb-1">
+                  <div className="mt-2 space-y-1">
+                    <div className="text-xs text-green-400 flex items-center gap-1">
                       <span>🎓</span> Musikexperte erreicht!
                     </div>
-                    <div className="text-green-400 flex items-center gap-1">
+                    <div className="text-xs text-green-400 flex items-center gap-1">
                       <span>👑💎</span> Großmeister erreicht!
                     </div>
                   </div>
