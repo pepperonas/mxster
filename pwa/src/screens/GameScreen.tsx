@@ -25,13 +25,13 @@ import {
   checkWinCondition,
   selectRandomSong,
   addToPlayedSongs,
-  calculatePoints,
-  type SpotifyPlayerState
+  calculatePoints
 } from '@/services'
 import { BotPlayer } from '@/services/botPlayer'
 import type { BotAction } from '@/services/botStrategies/types'
 import { songs } from '@/data/songs'
 import { AchievementId } from '@/types/achievements'
+import type { Player } from '@/types'
 import {
   triggerCorrectPlacementAnimation,
   triggerIncorrectPlacementAnimation,
@@ -48,11 +48,6 @@ import {
 export function GameScreen() {
   const navigate = useNavigate()
   const { accessToken, isLoggedIn } = useAuth()
-
-  // Beat Sync State
-  const [, setIsPlaying] = useState(false)
-  const [, setCurrentPosition] = useState(0)
-  const [trackId, setTrackId] = useState<string | null>(null)
 
   // Timeline Mode: Track which song we already showed modal for
   const lastSongIdShown = useRef<string | null>(null)
@@ -89,7 +84,9 @@ export function GameScreen() {
     resetSkipCounts,
     nextTurn,
     nextPlayerOnly,
-    resetGame
+    resetGame,
+    setGameMode,
+    setGameVariant
   } = useGame()
   const { showModal, closeModal, addToast } = useUI()
   const { unlockAchievement, updateProgress, checkAchievements, getPlayerAchievements } = useAchievements()
@@ -177,7 +174,7 @@ export function GameScreen() {
     console.log('🤖 Bot turn detected:', currentPlayerObj.name, 'Difficulty:', currentPlayerObj.botDifficulty)
 
     // Mark this song as played by this bot to prevent duplicate executions
-    lastBotSongRef.current = songId
+    lastBotSongRef.current = songId ?? null
 
     // Mark as executing to prevent duplicate calls
     botExecutionRef.current = true
@@ -245,21 +242,6 @@ export function GameScreen() {
   // Don't render if not initialized
   if (!gameMode || !gameVariant || players.length === 0) {
     return null
-  }
-
-  // ============================================================================
-  // Player State Change Handler (for BeatAnimator)
-  // ============================================================================
-
-  const handlePlayerStateChange = (state: SpotifyPlayerState) => {
-    setIsPlaying(!state.paused)
-    setCurrentPosition(state.position)
-
-    // Update track ID
-    const newTrackId = state.track_window.current_track.id
-    if (newTrackId !== trackId) {
-      setTrackId(newTrackId)
-    }
   }
 
   // ============================================================================
@@ -1057,10 +1039,10 @@ export function GameScreen() {
   // Win Modal
   // ============================================================================
 
-  const showWinnerModal = (winner: typeof players[0]) => {
+  const showWinnerModal = (winner: Player | null) => {
     // Prevent duplicate winner modals and history entries
-    if (gameOver) {
-      console.log('⚠️ Game already over, skipping duplicate winner modal')
+    if (gameOver || !winner) {
+      console.log('⚠️ Game already over or no winner, skipping duplicate winner modal')
       return
     }
 
@@ -1337,7 +1319,7 @@ export function GameScreen() {
             {/* Music Player (when song is playing) */}
             {currentSong && (
               <div>
-                <MusicPlayer song={currentSong} onStateChange={handlePlayerStateChange} />
+                <MusicPlayer song={currentSong} />
               </div>
             )}
 

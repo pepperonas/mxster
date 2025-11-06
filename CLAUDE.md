@@ -6,7 +6,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 **mxster** is a music timeline game combining hardware (3D-printed QR cards) and software (PWA with camera scanner). Players scan physical cards or play virtually. Features guess mode (points-based) and timeline modes (chronological placement).
 
-**Current Version**: v0.0.32+ (2025-11-06)
+**Current Version**: v0.0.33 (2025-11-06)
 **Current Song Database**: 209 songs with full genre data (as of 2025-11-04)
 
 ### Key Technologies
@@ -481,6 +481,42 @@ All files hosted via GitHub raw URLs (auto-update, no manual releases):
 - **Song count**: Auto-dynamic via `songs.length` in LandingPage.tsx (updates on build)
 
 ## Recent Changes
+
+### v0.0.33 (2025-11-06) - TypeScript Type Safety & Test Infrastructure
+
+**🔧 Critical Bug Fixes & Type System Improvements**
+
+**Test Infrastructure:**
+- Fixed Vitest dynamic import resolution for `spotify.config.js` during test execution
+  - Added path alias in `vitest.config.ts`: `'../../spotify.config.js'` → `spotify.config.mock.js`
+  - Resolved "Failed to resolve import" error that was breaking CI/CD pipeline
+  - All 41/41 audio player integration tests now pass consistently
+
+**TypeScript Errors Fixed in GameScreen.tsx:**
+- **Type Mismatch**: Changed `showWinnerModal` parameter from `typeof players[0]` to `Player | null`
+- **Missing Imports**: Added `Player` type import from `@/types`
+- **Missing Context Methods**: Added `setGameMode` and `setGameVariant` to `useGame()` destructuring
+- **Nullish Coalescing**: Fixed `string | undefined` vs `string | null` for `lastBotSongRef.current`
+- **Unused Code Removal**:
+  - Removed unused beat sync state variables (`isPlaying`, `currentPosition`, `trackId`)
+  - Removed unused `handlePlayerStateChange` function
+  - Removed unused `SpotifyPlayerState` import
+  - Eliminated `SpotifyPlayerState` vs `PlayerState` type conflict
+
+**Context API Updates (GameContext.tsx):**
+- Updated `setGameMode` signature: `(mode: GameMode)` → `(mode: GameMode | null)`
+- Updated `setGameVariant` signature: `(variant: GameVariant)` → `(variant: GameVariant | null)`
+- Ensures proper game state reset when navigating away from game screen
+
+**Test Results:**
+- ✅ All 41/41 audio player integration tests passing
+- ✅ Zero TypeScript errors in GameScreen.tsx
+- ✅ CI/CD pipeline stable and green
+
+**Files Modified:**
+- `pwa/vitest.config.ts` - Added spotify config path alias for tests
+- `pwa/src/screens/GameScreen.tsx` - Type fixes, removed unused code (30 lines removed)
+- `pwa/src/contexts/GameContext.tsx` - Updated setter function signatures
 
 ### v0.0.32 (2025-11-06) - Bot Player System (AI Opponents)
 

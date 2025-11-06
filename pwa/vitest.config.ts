@@ -45,7 +45,9 @@ export default defineConfig({
       '@contexts': path.resolve(__dirname, './src/contexts'),
       '@services': path.resolve(__dirname, './src/services'),
       '@utils': path.resolve(__dirname, './src/utils'),
-      '@types': path.resolve(__dirname, './src/types')
+      '@types': path.resolve(__dirname, './src/types'),
+      // Resolve spotify.config.js imports to mock file during tests
+      '../../spotify.config.js': path.resolve(__dirname, './spotify.config.mock.js')
     }
   }
 })

@@ -60,8 +60,8 @@ type GameAction =
   | { type: 'NEXT_PLAYER_ONLY' } // Switch player, keep currentSong
 
 interface GameContextValue extends GameState {
-  setGameMode: (mode: GameMode) => void
-  setGameVariant: (variant: GameVariant) => void
+  setGameMode: (mode: GameMode | null) => void
+  setGameVariant: (variant: GameVariant | null) => void
   setRandomStartPosition: (enabled: boolean) => void
   addPlayer: (name: string, playerData?: Partial<Player>) => void
   removePlayer: (index: number) => void

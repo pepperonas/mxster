@@ -3,7 +3,7 @@
 **Das ultimative Musikquiz für Musikfans!** Rate Songs, platziere sie chronologisch und teste dein Musikwissen. Spiele mit Freunden, sammle Punkte und werde zum Musik-Champion!
 
 [![App](https://img.shields.io/badge/App-mxster.de-blue?style=for-the-badge)](https://mxster.de)
-[![Version](https://img.shields.io/badge/Version-v0.0.32-purple?style=for-the-badge)](https://github.com/pepperonas/mxster/releases)
+[![Version](https://img.shields.io/badge/Version-v0.0.33-purple?style=for-the-badge)](https://github.com/pepperonas/mxster/releases)
 [![License](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)](LICENSE)
 ![Songs](https://img.shields.io/badge/Songs-209-orange?style=for-the-badge)
 ![Audio](https://img.shields.io/badge/Audio-Self--Hosted-red?style=for-the-badge)
@@ -1618,6 +1618,35 @@ Dieses Projekt ist unter der **MIT-Lizenz** veröffentlicht. Siehe [LICENSE](LIC
 - **Browser-Kompatibilität**: Chrome, Firefox, Edge, Safari (neueste Versionen)
 
 ## 📝 Changelog
+
+### v0.0.33 (2025-11-06)
+
+**🔧 TypeScript Type Safety & Test Infrastructure**
+
+**Critical Bug Fixes:**
+- Fixed Vitest dynamic import resolution for `spotify.config.js` during test execution
+  - Added path alias in `vitest.config.ts` to map `../../spotify.config.js` → `spotify.config.mock.js`
+  - Resolved "Failed to resolve import" error in CI/CD pipeline
+- Fixed multiple TypeScript errors in `GameScreen.tsx`:
+  - Type mismatch: `Player | null` vs `typeof players[0]` in `showWinnerModal()`
+  - Missing imports: Added `Player` type from `@/types`
+  - Missing context methods: Added `setGameMode` and `setGameVariant` to `useGame()` destructuring
+  - Nullish coalescing: Fixed `string | undefined` vs `string | null` for `lastBotSongRef`
+  - Removed unused beat sync state and handler to eliminate `SpotifyPlayerState` vs `PlayerState` conflict
+
+**Type System Improvements:**
+- Updated `GameContext.tsx` interface to accept `GameMode | null` and `GameVariant | null` in setter functions
+- Ensures game state can be properly reset when navigating away from game screen
+
+**Test Results:**
+- ✅ All 41/41 audio player integration tests passing
+- ✅ Zero TypeScript errors in `GameScreen.tsx`
+- ✅ CI/CD pipeline stable
+
+**Files Modified:**
+- `pwa/vitest.config.ts` - Added spotify config path alias
+- `pwa/src/screens/GameScreen.tsx` - Type fixes, removed unused code
+- `pwa/src/contexts/GameContext.tsx` - Updated setter signatures
 
 ### v0.0.30 (2025-11-06)
 
