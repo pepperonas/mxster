@@ -171,34 +171,6 @@
 }
 
 /* ============================================================================
-   TIMELINE DRAW ANIMATION (First Card Placement)
-   ============================================================================ */
-
-@keyframes timeline-draw {
-  from {
-    stroke-dashoffset: inherit;
-  }
-  to {
-    stroke-dashoffset: 0;
-  }
-}
-
-@keyframes sparkle-fade {
-  0% {
-    opacity: 0;
-    transform: scale(0);
-  }
-  50% {
-    opacity: 1;
-    transform: scale(1.2);
-  }
-  100% {
-    opacity: 0;
-    transform: scale(0.8);
-  }
-}
-
-/* ============================================================================
    REDUCED MOTION SUPPORT
    ============================================================================ */
 
