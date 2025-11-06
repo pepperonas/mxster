@@ -1619,6 +1619,16 @@ Dieses Projekt ist unter der **MIT-Lizenz** veröffentlicht. Siehe [LICENSE](LIC
 
 ## 📝 Changelog
 
+### v0.0.40 (2025-11-06)
+
+**👑 GRAND_MASTER Achievement Progress Display**
+
+Player statistics now show total score with achievement progress:
+- New "Gesamtpunkte" card shows total points earned across all games
+- Progress indicator: "X% bis Großmeister" (target: 5000 points)
+- Achievement badge: "💎 Großmeister erreicht!" when unlocked
+- GRAND_MASTER achievement is fully functional and trackable
+
 ### v0.0.39 (2025-11-06)
 
 **🔍 Enhanced Preview Logging**

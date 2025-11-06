@@ -6,7 +6,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 **mxster** is a music timeline game combining hardware (3D-printed QR cards) and software (PWA with camera scanner). Players scan physical cards or play virtually. Features guess mode (points-based) and timeline modes (chronological placement).
 
-**Current Version**: v0.0.39 (2025-11-06)
+**Current Version**: v0.0.40 (2025-11-06)
 **Current Song Database**: 209 songs with full genre data (as of 2025-11-04)
 
 ### Key Technologies
@@ -481,6 +481,42 @@ All files hosted via GitHub raw URLs (auto-update, no manual releases):
 - **Song count**: Auto-dynamic via `songs.length` in LandingPage.tsx (updates on build)
 
 ## Recent Changes
+
+### v0.0.40 (2025-11-06) - GRAND_MASTER Achievement Progress Display
+
+**👑 Gesamtpunkte-Anzeige im Spielerstatistiken-Dialog**
+
+Added total score display with GRAND_MASTER achievement progress tracking:
+
+**New Features:**
+- **Gesamtpunkte Card**: Prominent display of total points earned across all games
+- **Progress Indicator**: Shows percentage progress towards GRAND_MASTER (5000 points)
+- **Achievement Notification**: Shows "💎 Großmeister erreicht!" when target reached
+- **Visual Design**: Yellow-gold theme with crown emoji (👑)
+
+**Implementation Details:**
+- File: `pwa/src/components/PlayerStatsDialog.tsx` (lines 159-176)
+- Replaces one of the stat cards in the grid layout
+- Dynamic progress calculation: `(totalScore / 5000) * 100`
+- Conditional rendering: Progress bar < 5000, achievement badge ≥ 5000
+- Color scheme: Yellow border/background for gold/treasure theme
+
+**GRAND_MASTER Achievement Confirmation:**
+- ✅ Yes, achievement is fully functional
+- Target: 5000 total points across all games
+- Tracked in: `AchievementContext.tsx` (lines 365-369)
+- Cross-game tracking via game history
+- Auto-unlock when threshold reached
+
+**Example Output:**
+```
+👑 Gesamtpunkte
+   1247
+   25% bis Großmeister
+```
+
+**Files Modified:**
+- `pwa/src/components/PlayerStatsDialog.tsx` - Added total score card with progress
 
 ### v0.0.39 (2025-11-06) - Enhanced Preview Logging
 

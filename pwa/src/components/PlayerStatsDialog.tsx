@@ -156,6 +156,25 @@ export function PlayerStatsDialog() {
                 <div className="text-2xl font-bold text-red-400">{player.losses}</div>
               </div>
 
+              {/* Total Score (GRAND_MASTER Progress) */}
+              <div className="glass p-4 rounded-lg border border-yellow-500/30 bg-yellow-900/10">
+                <div className="flex items-center gap-2 mb-2">
+                  <span className="text-2xl">👑</span>
+                  <span className="text-sm text-text-secondary">Gesamtpunkte</span>
+                </div>
+                <div className="text-2xl font-bold text-yellow-400">{player.totalScore}</div>
+                {player.totalScore < 5000 && (
+                  <div className="text-xs text-text-secondary mt-1">
+                    {((player.totalScore / 5000) * 100).toFixed(0)}% bis Großmeister
+                  </div>
+                )}
+                {player.totalScore >= 5000 && (
+                  <div className="text-xs text-green-400 mt-1 flex items-center gap-1">
+                    <span>💎</span> Großmeister erreicht!
+                  </div>
+                )}
+              </div>
+
               {/* Average Score */}
               <div className="glass p-4 rounded-lg border border-accent/30">
                 <div className="flex items-center gap-2 mb-2">
