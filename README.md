@@ -3,7 +3,7 @@
 **Das ultimative Musikquiz für Musikfans!** Rate Songs, platziere sie chronologisch und teste dein Musikwissen. Spiele mit Freunden, sammle Punkte und werde zum Musik-Champion!
 
 [![App](https://img.shields.io/badge/App-mxster.de-blue?style=for-the-badge)](https://mxster.de)
-[![Version](https://img.shields.io/badge/Version-v0.0.48-purple?style=for-the-badge)](https://github.com/pepperonas/mxster/releases)
+[![Version](https://img.shields.io/badge/Version-v0.0.49-purple?style=for-the-badge)](https://github.com/pepperonas/mxster/releases)
 [![License](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)](LICENSE)
 ![Songs](https://img.shields.io/badge/Songs-209-orange?style=for-the-badge)
 ![Audio](https://img.shields.io/badge/Audio-Self--Hosted-red?style=for-the-badge)
@@ -1627,6 +1627,20 @@ Dieses Projekt ist unter der **MIT-Lizenz** veröffentlicht. Siehe [LICENSE](LIC
 - **Browser-Kompatibilität**: Chrome, Firefox, Edge, Safari (neueste Versionen)
 
 ## 📝 Changelog
+
+### v0.0.49 (2025-11-07) - 8-Bit Pixel Cookie Banner
+
+**🎮 Retro-Style Cookie/LocalStorage Notice**
+
+Completely redesigned cookie banner in authentic 8-bit pixel style with improved legal compliance:
+
+- **8-Bit Design**: Green neon pixel borders, retro game aesthetics, "Press Start 2P" font
+- **Legal Improvements**: Removed misleading "Ablehnen" button, single "Verstanden" button
+- **Clear Communication**: Explains LocalStorage is technically necessary, no external data transmission
+- **Pixel Animations**: Pulse, float, and bounce effects for authentic retro feel
+- **Icon**: 💾 Floppy disk instead of 🍪 cookie (fitting for "storage")
+
+Files modified: `pwa/src/components/CookieBanner.tsx`, `pwa/src/styles/tailwind.css`
 
 ### v0.0.48 (2025-11-07) - Tie-Breaking Documentation in How To Play
 

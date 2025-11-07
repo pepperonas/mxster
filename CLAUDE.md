@@ -6,7 +6,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 **mxster** is a music timeline game with virtual and physical gameplay. Play digitally (recommended) or with 3D-printed QR cards. Features guess mode (points-based) and timeline modes (chronological placement).
 
-**Current Version**: v0.0.48 (2025-11-07)
+**Current Version**: v0.0.49 (2025-11-07)
 **Current Song Database**: 209 songs with full genre data (as of 2025-11-04)
 
 ### Key Technologies
@@ -483,6 +483,53 @@ All files hosted via GitHub raw URLs (auto-update, no manual releases):
 - **Song count**: Auto-dynamic via `songs.length` in LandingPage.tsx (updates on build)
 
 ## Recent Changes
+
+### v0.0.49 (2025-11-07) - 8-Bit Pixel Cookie Banner
+
+**🎮 Retro-Style Cookie/LocalStorage Notice**
+
+Completely redesigned cookie banner in authentic 8-bit pixel style with improved legal compliance.
+
+**Design Changes:**
+- **8-Bit Aesthetics**: Green neon pixel borders (#00ff00), retro game style
+- **Pixel Animations**: Pulse effect for icon, float animation for emoji, bounce slide-up entrance
+- **Typography**: "Press Start 2P" font for title + button, Courier New for body text
+- **Visual Elements**: 8x8px pixel corners, 4px border strips, double-border effect
+- **Icon**: 💾 Floppy disk (fitting for "storage") instead of 🍪 cookie
+- **Color Scheme**: Dark background (#1a1a2e) with bright green accents
+
+**Legal Improvements:**
+- ✅ Removed "Ablehnen" button (legally incorrect - continued use implies consent)
+- ✅ Single "Verstanden" button (correct approach)
+- ✅ Clear language: LocalStorage is **technically necessary** for app functionality
+- ✅ Transparency: "No data sent to external servers"
+- ℹ️ Info box: "Without storage, the app won't work fully"
+
+**New Text Content:**
+```
+Speicher-Hinweis
+
+Diese App nutzt LocalStorage, um deine Spielstände lokal auf deinem Gerät zu speichern.
+Es werden keine Daten an externe Server gesendet. Die Speicherung ist technisch notwendig,
+damit dein Fortschritt nicht verloren geht.
+
+ℹ️ Ohne Speicherung funktioniert die App nicht vollständig.
+
+[✓ Verstanden]
+```
+
+**Technical Details:**
+- File: `pwa/src/components/CookieBanner.tsx` (complete rewrite)
+- File: `pwa/src/styles/tailwind.css` (new 8-bit styles, lines 686-1003)
+- Animations: pixelSlideUp (bounce), pixelPulse (icon), pixelFloat (emoji)
+- Mobile optimized: Smaller fonts, adjusted padding
+- 3D button effect with shadow press
+
+**Impact:**
+- ✅ Better legal compliance (no misleading "decline" option)
+- ✅ Authentic retro gaming aesthetic
+- ✅ Clearer user communication about data storage
+- ✅ More fun and memorable first impression
 
 ### v0.0.48 (2025-11-07) - Tie-Breaking Documentation in How To Play
 
