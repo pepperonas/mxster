@@ -41,7 +41,7 @@ export function HowToPlayContent() {
               <ol className="space-y-2 text-sm text-text-secondary">
                 <li className="flex gap-2">
                   <span className="text-accent font-bold">1.</span>
-                  <span>DJ scannt QR-Code oder virtueller Modus zieht Song</span>
+                  <span>Song wird gezogen (virtuell oder per QR-Scan)</span>
                 </li>
                 <li className="flex gap-2">
                   <span className="text-accent font-bold">2.</span>
@@ -170,7 +170,7 @@ export function HowToPlayContent() {
                 </li>
                 <li className="flex gap-2">
                   <span className="text-accent font-bold">2.</span>
-                  <span>DJ scannt QR-Code oder virtueller Modus zieht Song</span>
+                  <span>Song wird gezogen (virtuell oder per QR-Scan)</span>
                 </li>
                 <li className="flex gap-2">
                   <span className="text-accent font-bold">3.</span>
@@ -235,7 +235,7 @@ export function HowToPlayContent() {
                 </li>
                 <li className="flex gap-2">
                   <span className="text-accent font-bold">2.</span>
-                  <span>DJ scannt QR-Code oder virtueller Modus zieht Song</span>
+                  <span>Song wird gezogen (virtuell oder per QR-Scan)</span>
                 </li>
                 <li className="flex gap-2">
                   <span className="text-accent font-bold">3.</span>
@@ -293,14 +293,18 @@ export function HowToPlayContent() {
           <div className="space-y-3">
             <div className="glass p-3 rounded-lg border border-accent/20">
               <h4 className="font-semibold text-secondary mb-2">🎮 Spielvarianten:</h4>
-              <div className="space-y-2 text-sm text-text-secondary">
+              <div className="space-y-3 text-sm text-text-secondary">
                 <div>
-                  <strong className="text-white">📷 Physischer Modus:</strong>
-                  <p className="ml-4 mt-1">Scanne QR-Codes von gedruckten oder 3D-gedruckten Karten. Ein Spieler übernimmt die Rolle des DJs.</p>
+                  <strong className="text-white">🎮 Virtueller Modus (⭐ Empfohlen):</strong>
+                  <p className="ml-4 mt-1">
+                    <strong className="text-accent">Am einfachsten!</strong> Keine Karten nötig - Songs werden automatisch gezogen. Kein DJ, kein Setup. Perfekt für spontane Runden und ideal für die meisten Spieler.
+                  </p>
                 </div>
-                <div>
-                  <strong className="text-white">🎲 Virtueller Modus:</strong>
-                  <p className="ml-4 mt-1">Keine Karten nötig! Songs werden zufällig aus der Datenbank gezogen. Kein DJ erforderlich.</p>
+                <div className="mt-3">
+                  <strong className="text-white">📷 Physischer Modus (Optional):</strong>
+                  <p className="ml-4 mt-1">
+                    Für Enthusiasten: Scanne QR-Codes von gedruckten oder 3D-gedruckten Karten. Ein Spieler übernimmt die DJ-Rolle.
+                  </p>
                 </div>
               </div>
             </div>

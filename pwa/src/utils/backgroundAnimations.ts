@@ -18,7 +18,11 @@ let active3DAnimation: string | null = null
 /**
  * Apply beat animation to background
  */
-export function applyBackgroundBeat(animationType: BackgroundAnimationType, intensity: number = 50): void {
+export function applyBackgroundBeat(
+  animationType: BackgroundAnimationType,
+  intensity: number = 50,
+  isHardcoreMode: boolean = false
+): void {
   const background = document.getElementById('beat-background')
 
   if (!background) {
@@ -30,7 +34,7 @@ export function applyBackgroundBeat(animationType: BackgroundAnimationType, inte
     // Start 3D wave if not already running
     if (active3DAnimation !== 'wave3d') {
       cleanup3DAnimations()
-      startThreeWave(intensity)
+      startThreeWave(intensity, isHardcoreMode)
       active3DAnimation = 'wave3d'
     }
     // Trigger beat pulse in the wave

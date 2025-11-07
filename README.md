@@ -3,7 +3,7 @@
 **Das ultimative Musikquiz für Musikfans!** Rate Songs, platziere sie chronologisch und teste dein Musikwissen. Spiele mit Freunden, sammle Punkte und werde zum Musik-Champion!
 
 [![App](https://img.shields.io/badge/App-mxster.de-blue?style=for-the-badge)](https://mxster.de)
-[![Version](https://img.shields.io/badge/Version-v0.0.45-purple?style=for-the-badge)](https://github.com/pepperonas/mxster/releases)
+[![Version](https://img.shields.io/badge/Version-v0.0.46-purple?style=for-the-badge)](https://github.com/pepperonas/mxster/releases)
 [![License](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)](LICENSE)
 ![Songs](https://img.shields.io/badge/Songs-209-orange?style=for-the-badge)
 ![Audio](https://img.shields.io/badge/Audio-Self--Hosted-red?style=for-the-badge)
@@ -21,8 +21,17 @@ mxster ist ein **Multiplayer-Musikquiz** mit drei verschiedenen Spielmodi:
 
 ### 🃏 Zwei Spielvarianten
 
-- **Physische Karten**: Drucke PDF-Karten aus oder erstelle 3D-gedruckte Karten mit QR-Codes
-- **Virtuelle Karten**: Spiele komplett digital ohne physische Karten
+- **Virtuelle Karten** (⭐ Empfohlen): Spiele komplett digital ohne physische Karten - sofort spielbereit!
+- **Physische Karten** (Optional): Drucke PDF-Karten aus oder erstelle 3D-gedruckte Karten für ein haptisches Erlebnis
+
+#### ⭐ Warum Virtual Mode?
+
+- ✅ **Sofort spielbereit** - Keine Vorbereitung, kein Setup
+- ✅ **Alle 209 Songs** - Voller Zugriff auf die komplette Datenbank
+- ✅ **Kein Hardware nötig** - Weder Drucker noch 3D-Drucker erforderlich
+- ✅ **Spontane Runden** - Jederzeit und überall spielbar
+- ✅ **Bot-Gegner** - Spiele gegen KI in 3 Schwierigkeitsgraden
+- ✅ **Für 95% der Nutzer ideal** - Unkompliziert und direkt
 
 ## ✨ Features
 
@@ -332,7 +341,7 @@ npm run dev
 
 **Ziel:** Sammle die meisten Punkte durch richtiges Raten! **Maximum: 150 Punkte (15 pro Song × 10 Songs)**
 
-1. **Song abspielen:** DJ scannt QR-Code oder virtueller Modus zieht zufälligen Song
+1. **Song abspielen:** Song wird gezogen (virtuell oder per QR-Scan)
 2. **Raten:** Spieler gibt Titel, Künstler und Jahr ein
 3. **Fuzzy Matching:** System akzeptiert auch ähnliche Schreibweisen (z.B. "Fleetwood Mac" = "Fleetwood Mack")
 4. **Punkte vergeben:**
@@ -378,7 +387,7 @@ Diese Mechanik verhindert, dass schwierige Songs permanent übersprungen werden 
 **Ziel:** Baue deine eigene Timeline mit 10 Karten auf!
 
 1. **Individuelle Timelines:** Jeder Spieler baut seine eigene separate Timeline
-2. **Song abspielen:** DJ scannt QR-Code oder virtueller Modus
+2. **Song abspielen:** Song wird gezogen (virtuell oder per QR-Scan)
 3. **Optional raten:** Spieler kann zum Spaß raten (keine Punkte)
 4. **Automatische Platzierung:** Karte wird chronologisch in die persönliche Timeline eingefügt
 5. **Bestätigung:** Dialog zeigt an, an welcher Position die Karte eingefügt wurde
@@ -396,7 +405,7 @@ Diese Mechanik verhindert, dass schwierige Songs permanent übersprungen werden 
 **Ziel:** Gemeinsam eine Timeline aufbauen - Wer erreicht zuerst 10 Karten?
 
 1. **Geteilte Timeline:** ALLE Spieler teilen EINE gemeinsame Timeline
-2. **Song abspielen:** DJ scannt QR-Code oder virtueller Modus
+2. **Song abspielen:** Song wird gezogen (virtuell oder per QR-Scan)
 3. **Optional raten:** Spieler kann zum Spaß raten (keine Punkte)
 4. **Automatische Platzierung:** Karte wird in die globale Timeline eingefügt
 5. **Timeline bleibt gleich:** Beim Spielerwechsel sehen alle die gleiche Timeline
@@ -414,7 +423,7 @@ Diese Mechanik verhindert, dass schwierige Songs permanent übersprungen werden 
 
 ### DJ-Rotation System
 - DJ wechselt jede Runde im Uhrzeigersinn
-- DJ scannt die Karte (sichtbar im Header: 🎧 DJ: Name)
+- Im Physical Mode: DJ scannt die Karte (sichtbar im Header: 🎧 DJ: Name)
 - Aktiver Spieler platziert die Karte (🎮 Spieler: Name)
 - Spieler links vom DJ beginnt
 - Nach jedem Spielerzug wechselt zum nächsten Spieler
@@ -424,7 +433,7 @@ Diese Mechanik verhindert, dass schwierige Songs permanent übersprungen werden 
 ### Spielfluss
 
 #### Phase 1: Song scannen
-- DJ scannt QR-Code mit Kamera (oder virtuelle Karte wird gezogen)
+- Song wird gezogen: Virtuell automatisch oder DJ scannt QR-Code mit Kamera (Physical Mode)
 - Song beginnt zu spielen (Spotify oder Preview)
 - Titel & Artist werden **nicht** angezeigt
 
@@ -1618,6 +1627,133 @@ Dieses Projekt ist unter der **MIT-Lizenz** veröffentlicht. Siehe [LICENSE](LIC
 - **Browser-Kompatibilität**: Chrome, Firefox, Edge, Safari (neueste Versionen)
 
 ## 📝 Changelog
+
+### v0.0.46 (2025-11-07) - Symmetric Animation Transitions
+
+**🎨 Improved Interaction-Reactive Particle Animations**
+
+Made particle animation transitions equally smooth in both directions:
+
+**Changes:**
+- **Before**: Fast ramp-up (cubic easing), slow fade-out (0.3 multiplier)
+- **After**: Symmetrically smooth transitions - both directions use 0.3 multiplier
+- Removed asymmetric easing for rising intensity
+- Both scroll start and scroll end now have same 1-2 second smooth transitions
+
+**Technical Details:**
+- File: `pwa/src/utils/interactionActivityTracker.ts` (lines 114-120)
+- Rising intensity: Changed from `easedDelta * easingFactor` to `easedDelta * 0.3`
+- Falling intensity: Already was `easedDelta * 0.3`
+- Result: Perfectly balanced, gentle transitions for all user interactions
+
+**User Experience:**
+- ✅ No harsh contrasts when scrolling starts
+- ✅ Smooth 1-2 second delay for both directions
+- ✅ Consistent feel across all interactions (mouse, touch, scroll)
+- ✅ More predictable and pleasant animation behavior
+
+### v0.0.45 (2025-11-07) - Fixed All Custom Dialogs on Mobile
+
+**📱 Completed Mobile Layout Fixes**
+
+Fixed all remaining custom dialogs that were still cut off on mobile:
+
+**Additional Dialogs Fixed:**
+1. **PasswordProtectionDialog** - Self-hosted audio access dialog
+2. **AchievementsDialog** - Both main dialog and onboarding screen
+3. **AchievementUnlockAnimation** - Achievement unlock notifications
+
+**Implementation:**
+Applied same mobile fixes to all custom dialogs:
+- Added `pt-20 pb-6 px-4` to backdrop containers
+- Updated `max-h-[90vh]` to `max-h-[calc(100vh-12rem)] sm:max-h-[85vh]`
+- Added `overflow-auto` where needed for scrollable content
+
+**Files Modified:**
+- `pwa/src/components/PasswordProtectionDialog.tsx` (lines 55-56)
+- `pwa/src/components/AchievementsDialog.tsx` (lines 48, 88, 93)
+- `pwa/src/components/AchievementUnlockAnimation.tsx` (line 73)
+- `pwa/package.json`, `pwa/src/components/Sidebar.tsx` (version 0.0.45)
+
+**Coverage:**
+- ✅ Modal.tsx (standard modals)
+- ✅ PasswordProtectionDialog (audio access)
+- ✅ AchievementsDialog (achievements + onboarding)
+- ✅ AchievementUnlockAnimation (notifications)
+- ✅ SettingsDialog (uses Modal.tsx, already fixed)
+- ✅ All other dialogs (use Modal.tsx, already fixed)
+
+### v0.0.44 (2025-11-07) - Mobile Layout Fix for Samsung S24 Ultra
+
+**📱 Fixed Critical Mobile Display Issues**
+
+Fixed dialogs being cut off at bottom and covered by ActionBar at top on mobile devices:
+
+**Problems Solved:**
+1. **Modal Headers Overlapping**: Fixed ActionBar (fixed header) covering modal headers
+2. **Bottom Content Cut-Off**: Fixed modal buttons being hidden behind Android gesture navigation bar
+3. **Viewport Height Issues**: Fixed incorrect viewport height calculations on mobile browsers
+
+**Implementation:**
+
+**1. Modal Positioning (Modal.tsx)**:
+```tsx
+// Added top/bottom padding to modal container
+className="... pt-20 pb-6"  // 80px top (ActionBar), 24px bottom (safe area)
+
+// Updated modal max-height for proper spacing
+className="... max-h-[calc(100vh-12rem)] sm:max-h-[85vh] ..."
+// 12rem = 192px (ActionBar + safe areas) on mobile
+// 85vh on desktop (no mobile browser UI)
+```
+
+**2. Viewport Meta Tag (index.html)**:
+```html
+<!-- Added viewport-fit=cover for safe area support -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+```
+
+**3. Safe Area CSS Support (tailwind.css)**:
+```css
+/* Support for iOS notches and Android gesture bars */
+@supports (padding: env(safe-area-inset-bottom)) {
+  .pb-safe {
+    padding-bottom: max(1.5rem, env(safe-area-inset-bottom)) !important;
+  }
+  .pt-safe {
+    padding-top: max(1rem, env(safe-area-inset-top)) !important;
+  }
+  .px-safe {
+    padding-left: max(1rem, env(safe-area-inset-left)) !important;
+    padding-right: max(1rem, env(safe-area-inset-right)) !important;
+  }
+}
+```
+
+**Technical Details:**
+- **ActionBar Height**: 80px (py-4 padding + content)
+- **Modal Top Spacing**: `pt-20` (5rem = 80px) accounts for ActionBar
+- **Modal Bottom Spacing**: `pb-6` (1.5rem = 24px) minimum safe area
+- **Mobile Max-Height**: `calc(100vh - 12rem)` = viewport - 192px (ActionBar + safe areas)
+- **Desktop Max-Height**: `85vh` (no mobile browser UI)
+
+**Browser Compatibility:**
+- `env(safe-area-inset-*)`: Chrome 69+, Safari 11.1+ (2018+)
+- `viewport-fit=cover`: Safari 11+, Chrome 69+ (2018+)
+- Samsung S24 Ultra (Android 14, One UI 6) fully supported
+
+**Files Modified:**
+- `pwa/src/components/Modal.tsx` (lines 108, 112)
+- `pwa/index.html` (line 5)
+- `pwa/src/styles/tailwind.css` (lines 669-684)
+- `pwa/package.json` (version 0.0.44)
+- `pwa/src/components/Sidebar.tsx` (version display)
+
+**Impact:**
+- ✅ Modal headers no longer covered by ActionBar
+- ✅ Modal buttons fully visible above gesture bar
+- ✅ Works on all Android/iOS devices with different screen configurations
+- ✅ Proper handling of notches, cutouts, and gesture bars
 
 ### v0.0.43 (2025-11-06)
 

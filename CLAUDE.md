@@ -4,9 +4,9 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-**mxster** is a music timeline game combining hardware (3D-printed QR cards) and software (PWA with camera scanner). Players scan physical cards or play virtually. Features guess mode (points-based) and timeline modes (chronological placement).
+**mxster** is a music timeline game with virtual and physical gameplay. Play digitally (recommended) or with 3D-printed QR cards. Features guess mode (points-based) and timeline modes (chronological placement).
 
-**Current Version**: v0.0.45 (2025-11-07)
+**Current Version**: v0.0.46 (2025-11-07)
 **Current Song Database**: 209 songs with full genre data (as of 2025-11-04)
 
 ### Key Technologies
@@ -208,8 +208,10 @@ node validate-audio.js --full # Test all 209 songs
 ### Game Modes & Variants
 
 **Game Variants:**
-- **Physical Mode**: Scan QR codes from physical cards, one player acts as DJ
-- **Virtual Mode**: No QR scanner needed, songs randomly drawn from database
+- **Virtual Mode** (Primary): No setup needed, songs randomly drawn from database, recommended for most users
+- **Physical Mode** (Optional): Scan QR codes from physical cards, one player acts as DJ
+
+**Note:** Virtual Mode is the primary variant. Physical Mode remains available for users who want a tactile experience.
 
 **Game Modes:**
 1. **Hardcore Mode (GAME_MODES.HARDCORE)**:
@@ -481,6 +483,30 @@ All files hosted via GitHub raw URLs (auto-update, no manual releases):
 - **Song count**: Auto-dynamic via `songs.length` in LandingPage.tsx (updates on build)
 
 ## Recent Changes
+
+### v0.0.46 (2025-11-07) - Symmetric Animation Transitions
+
+**🎨 Improved Interaction-Reactive Particle Animations**
+
+Made particle animation transitions equally smooth in both directions:
+
+**Changes:**
+- **Before**: Fast ramp-up (cubic easing), slow fade-out (0.3 multiplier)
+- **After**: Symmetrically smooth transitions - both directions use 0.3 multiplier
+- Removed asymmetric easing for rising intensity
+- Both scroll start and scroll end now have same 1-2 second smooth transitions
+
+**Technical Details:**
+- File: `pwa/src/utils/interactionActivityTracker.ts` (lines 114-120)
+- Rising intensity: Changed from `easedDelta * easingFactor` to `easedDelta * 0.3`
+- Falling intensity: Already was `easedDelta * 0.3`
+- Result: Perfectly balanced, gentle transitions for all user interactions
+
+**User Experience:**
+- ✅ No harsh contrasts when scrolling starts
+- ✅ Smooth 1-2 second delay for both directions
+- ✅ Consistent feel across all interactions (mouse, touch, scroll)
+- ✅ More predictable and pleasant animation behavior
 
 ### v0.0.45 (2025-11-07) - Fixed All Custom Dialogs on Mobile
 

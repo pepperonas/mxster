@@ -24,13 +24,36 @@ export interface AnimationParameters {
   // Wave parameters
   waveAmplitude: number
   rotationSpeed: number
+  turbulenceStrength: number // NEW: 0.0 (idle) → 1.0 (intense)
 
   // Camera
   cameraSpeed: number
   cameraRadius: number
+
+  // Colors (hex numbers for Three.js)
+  mainColor: number
+  accentColor: number
+  starColor: number
+  backgroundColor: string // Radial gradient string
 }
 
-// Base parameters (current "calm" state)
+// Timeline mode colors (Blue/Cyan theme)
+const TIMELINE_COLORS = {
+  mainColor: 0x6366f1, // Indigo
+  accentColor: 0xff6b35, // Orange
+  starColor: 0x4aedc4, // Cyan
+  backgroundColor: 'radial-gradient(circle at center, #0a0a1f 0%, #000000 100%)'
+}
+
+// Hardcore mode colors (Orange theme)
+const HARDCORE_COLORS = {
+  mainColor: 0xff8c00, // Dark Orange
+  accentColor: 0xffa500, // Bright Orange
+  starColor: 0xff6b35, // Deep Orange
+  backgroundColor: 'radial-gradient(circle at center, #1f0a00 0%, #0a0500 50%, #000000 100%)'
+}
+
+// Base parameters (current "calm" state) - Timeline mode by default
 const BASE_PARAMS: AnimationParameters = {
   mainWaveCount: 12000,
   accentWaveCount: 8000,
@@ -43,12 +66,14 @@ const BASE_PARAMS: AnimationParameters = {
   starOpacity: 0.5,
   waveAmplitude: 1.0,
   rotationSpeed: 0.08,
+  turbulenceStrength: 0.2,
   cameraSpeed: 0.15,
-  cameraRadius: 200
+  cameraRadius: 200,
+  ...TIMELINE_COLORS
 }
 
-// Activity level multipliers
-export const ACTIVITY_PARAMS: Record<ActivityLevel, AnimationParameters> = {
+// Activity level multipliers (without colors - colors added dynamically by getParametersForActivity)
+const ACTIVITY_PARAMS_BASE: Record<ActivityLevel, Omit<AnimationParameters, 'mainColor' | 'accentColor' | 'starColor' | 'backgroundColor'>> = {
   idle: {
     mainWaveCount: Math.floor(BASE_PARAMS.mainWaveCount * 0.5), // 50%
     accentWaveCount: Math.floor(BASE_PARAMS.accentWaveCount * 0.5),
@@ -61,12 +86,25 @@ export const ACTIVITY_PARAMS: Record<ActivityLevel, AnimationParameters> = {
     starOpacity: BASE_PARAMS.starOpacity * 0.5,
     waveAmplitude: 0.3,
     rotationSpeed: BASE_PARAMS.rotationSpeed * 0.5,
+    turbulenceStrength: 0.0, // No turbulence when idle
     cameraSpeed: BASE_PARAMS.cameraSpeed * 0.5,
     cameraRadius: BASE_PARAMS.cameraRadius
   },
   calm: {
-    ...BASE_PARAMS,
-    waveAmplitude: 0.7
+    mainWaveCount: BASE_PARAMS.mainWaveCount,
+    accentWaveCount: BASE_PARAMS.accentWaveCount,
+    starLayerCount: BASE_PARAMS.starLayerCount,
+    mainParticleSize: BASE_PARAMS.mainParticleSize,
+    accentParticleSize: BASE_PARAMS.accentParticleSize,
+    starParticleSize: BASE_PARAMS.starParticleSize,
+    mainOpacity: BASE_PARAMS.mainOpacity,
+    accentOpacity: BASE_PARAMS.accentOpacity,
+    starOpacity: BASE_PARAMS.starOpacity,
+    waveAmplitude: 0.7,
+    rotationSpeed: BASE_PARAMS.rotationSpeed,
+    turbulenceStrength: 0.2, // Subtle turbulence
+    cameraSpeed: BASE_PARAMS.cameraSpeed,
+    cameraRadius: BASE_PARAMS.cameraRadius
   },
   active: {
     mainWaveCount: Math.floor(BASE_PARAMS.mainWaveCount * 1.3), // 130%
@@ -80,6 +118,7 @@ export const ACTIVITY_PARAMS: Record<ActivityLevel, AnimationParameters> = {
     starOpacity: BASE_PARAMS.starOpacity * 1.1,
     waveAmplitude: 1.3,
     rotationSpeed: BASE_PARAMS.rotationSpeed * 1.5,
+    turbulenceStrength: 0.6, // Noticeable turbulence
     cameraSpeed: BASE_PARAMS.cameraSpeed * 1.5,
     cameraRadius: BASE_PARAMS.cameraRadius * 1.1
   },
@@ -95,6 +134,7 @@ export const ACTIVITY_PARAMS: Record<ActivityLevel, AnimationParameters> = {
     starOpacity: Math.min(1.0, BASE_PARAMS.starOpacity * 1.25),
     waveAmplitude: 1.8,
     rotationSpeed: BASE_PARAMS.rotationSpeed * 2.0,
+    turbulenceStrength: 1.0, // Maximum turbulence/chaos
     cameraSpeed: BASE_PARAMS.cameraSpeed * 2.0,
     cameraRadius: BASE_PARAMS.cameraRadius * 1.2
   }
@@ -108,6 +148,32 @@ export function lerp(start: number, end: number, progress: number): number {
 }
 
 /**
+ * Interpolate between two hex colors (RGB component-wise)
+ * @param from Starting color (hex number, e.g., 0xFF8C00)
+ * @param to Target color (hex number)
+ * @param progress Progress from 0 to 1
+ * @returns Interpolated color as hex number
+ */
+export function interpolateColor(from: number, to: number, progress: number): number {
+  // Extract RGB components
+  const r1 = (from >> 16) & 0xff
+  const g1 = (from >> 8) & 0xff
+  const b1 = from & 0xff
+
+  const r2 = (to >> 16) & 0xff
+  const g2 = (to >> 8) & 0xff
+  const b2 = to & 0xff
+
+  // Interpolate each component
+  const r = Math.round(lerp(r1, r2, progress))
+  const g = Math.round(lerp(g1, g2, progress))
+  const b = Math.round(lerp(b1, b2, progress))
+
+  // Combine back to hex
+  return (r << 16) | (g << 8) | b
+}
+
+/**
  * Ease-out cubic function for natural animations
  */
 export function easeOutCubic(t: number): number {
@@ -115,7 +181,7 @@ export function easeOutCubic(t: number): number {
 }
 
 /**
- * Interpolate between two animation parameter sets
+ * Interpolate between two animation parameter sets (including colors!)
  * @param from Starting parameters
  * @param to Target parameters
  * @param progress Progress from 0 to 1
@@ -141,16 +207,34 @@ export function interpolateParameters(
     starOpacity: lerp(from.starOpacity, to.starOpacity, t),
     waveAmplitude: lerp(from.waveAmplitude, to.waveAmplitude, t),
     rotationSpeed: lerp(from.rotationSpeed, to.rotationSpeed, t),
+    turbulenceStrength: lerp(from.turbulenceStrength, to.turbulenceStrength, t),
     cameraSpeed: lerp(from.cameraSpeed, to.cameraSpeed, t),
-    cameraRadius: lerp(from.cameraRadius, to.cameraRadius, t)
+    cameraRadius: lerp(from.cameraRadius, to.cameraRadius, t),
+    // NEW: Smooth color transitions
+    mainColor: interpolateColor(from.mainColor, to.mainColor, t),
+    accentColor: interpolateColor(from.accentColor, to.accentColor, t),
+    starColor: interpolateColor(from.starColor, to.starColor, t),
+    // Background gradient can't be interpolated easily, so we switch at 50% progress
+    backgroundColor: t < 0.5 ? from.backgroundColor : to.backgroundColor
   }
 }
 
 /**
- * Get animation parameters for a specific activity level
+ * Get animation parameters for a specific activity level and game mode
+ * @param level Activity level (idle, calm, active, intense)
+ * @param isHardcoreMode Whether game is in Hardcore mode (affects colors)
  */
-export function getParametersForActivity(level: ActivityLevel): AnimationParameters {
-  return ACTIVITY_PARAMS[level]
+export function getParametersForActivity(
+  level: ActivityLevel,
+  isHardcoreMode: boolean = false
+): AnimationParameters {
+  const baseParams = ACTIVITY_PARAMS_BASE[level]
+  const colors = isHardcoreMode ? HARDCORE_COLORS : TIMELINE_COLORS
+
+  return {
+    ...baseParams,
+    ...colors
+  }
 }
 
 /**

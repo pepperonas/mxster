@@ -1,13 +1,15 @@
 /**
  * Three.js Particle Wave Animation
- * Beautiful 3D particle wave effect synchronized with music beats
+ * Beautiful 3D particle wave effect synchronized with music beats and user interaction
  */
 
 import * as THREE from 'three'
+import { startInteractionTracking, stopInteractionTracking } from './interactionActivityTracker'
 
 interface AnimationState {
   time: number
   waveIntensity: number
+  interactionIntensity: number // 0-100 from mouse/touch activity
 }
 
 let scene: THREE.Scene | null = null
@@ -18,7 +20,8 @@ let animationFrameId: number | null = null
 let isInitialized = false
 let animationState: AnimationState = {
   time: 0,
-  waveIntensity: 0
+  waveIntensity: 0,
+  interactionIntensity: 0
 }
 
 /**
@@ -115,9 +118,10 @@ export function initThreeWave(): void {
   texture.needsUpdate = true
 
   // Particle Material - PERFECTLY ROUND particles, larger for distance viewing
+  // Default to blue, will be updated based on game mode
   const material = new THREE.PointsMaterial({
     map: texture,
-    color: 0x6366f1, // Accent blue
+    color: 0x6366f1, // Default: Accent blue
     size: 1.2, // Much larger for viewing from distance
     transparent: true,
     opacity: 0.85,
@@ -153,9 +157,26 @@ function onWindowResize(): void {
 }
 
 /**
+ * Update particle color based on game mode
+ */
+export function updateParticleColor(isHardcoreMode: boolean): void {
+  if (!particleSystem) return
+
+  const material = particleSystem.material as THREE.PointsMaterial
+
+  if (isHardcoreMode) {
+    // HARDCORE MODE: Deep orange/amber (#f97316 = orange-500)
+    material.color.setHex(0xf97316)
+  } else {
+    // TIMELINE MODES: Cool indigo/blue (#6366f1 = indigo-500)
+    material.color.setHex(0x6366f1)
+  }
+}
+
+/**
  * Start wave animation
  */
-export function startThreeWave(intensity: number = 50): void {
+export function startThreeWave(intensity: number = 50, isHardcoreMode: boolean = false): void {
   if (!isInitialized) {
     initThreeWave()
   }
@@ -167,8 +188,16 @@ export function startThreeWave(intensity: number = 50): void {
     cancelAnimationFrame(animationFrameId)
   }
 
+  // Update particle color based on game mode
+  updateParticleColor(isHardcoreMode)
+
   // Normalize intensity (0-100 to 0-1)
   const normalizedIntensity = intensity / 100
+
+  // Start interaction tracking
+  startInteractionTracking((interactionIntensity: number) => {
+    animationState.interactionIntensity = interactionIntensity
+  })
 
   // Animation loop - BUTTER SMOOTH 60fps with optimized calculations
   let lastTime = performance.now()
@@ -192,38 +221,52 @@ export function startThreeWave(intensity: number = 50): void {
     const t2 = time * 2.0
     const t3 = time * 2.5
 
+    // Combined intensity from beats AND interaction
+    const totalIntensity = Math.max(
+      normalizedIntensity, // Base intensity
+      animationState.interactionIntensity / 100 // Interaction-based intensity
+    )
+
     for (let i = 0; i < positions.length; i += 3) {
       const x = positions[i]
       const z = positions[i + 2]
 
       // Large, smooth waves with multiple harmonics
-      const wave1 = Math.sin(x * 0.15 + t1) * 5 * normalizedIntensity
-      const wave2 = Math.cos(z * 0.15 + t1) * 5 * normalizedIntensity
+      const wave1 = Math.sin(x * 0.15 + t1) * 5 * totalIntensity
+      const wave2 = Math.cos(z * 0.15 + t1) * 5 * totalIntensity
 
       // Circular ripple effect
       const distance = Math.sqrt(x * x + z * z) * 0.05
-      const wave3 = Math.sin(distance - t2) * 8 * normalizedIntensity
+      const wave3 = Math.sin(distance - t2) * 8 * totalIntensity
 
       // Cross pattern for visual interest
-      const wave4 = Math.sin((x + z) * 0.1 + t3) * 3 * normalizedIntensity
+      const wave4 = Math.sin((x + z) * 0.1 + t3) * 3 * totalIntensity
 
       // DRAMATIC BEAT PULSE - Multiplied by distance for ripple effect
       const beatIntensity = animationState.waveIntensity
-      const beatPulse = beatIntensity * 25 * normalizedIntensity // Much stronger!
+      const beatPulse = beatIntensity * 25 * totalIntensity // Much stronger!
 
       // Beat ripple spreads from center
       const beatRipple = Math.sin(distance * 2 - beatIntensity * 10) * beatIntensity * 15
 
-      // Combine all waves with STRONG beat reaction
-      positions[i + 1] = wave1 + wave2 + wave3 + wave4 + beatPulse + beatRipple
+      // INTERACTION RIPPLE - Responds to mouse/touch movement
+      const interactionNormalized = animationState.interactionIntensity / 100
+      const interactionWave = Math.sin(distance * 3 - time * 3) * interactionNormalized * 12
+
+      // Combine all waves with STRONG beat AND interaction reaction
+      positions[i + 1] = wave1 + wave2 + wave3 + wave4 + beatPulse + beatRipple + interactionWave
     }
 
     // Flag geometry for update
     positionsAttr.needsUpdate = true
 
-    // Beat-reactive particle color - flash brighter on beats
+    // Beat-reactive AND interaction-reactive particle color
     const material = particleSystem.material as THREE.PointsMaterial
-    material.opacity = 0.85 + (animationState.waveIntensity * 0.15) // Pulse opacity
+    const combinedPulse = Math.max(
+      animationState.waveIntensity, // Beat pulse
+      animationState.interactionIntensity / 100 // Interaction pulse
+    )
+    material.opacity = 0.85 + (combinedPulse * 0.15) // Pulse opacity
 
     // Very slow rotation for dynamic view
     particleSystem.rotation.y += deltaTime * 0.1
@@ -257,6 +300,10 @@ export function stopThreeWave(): void {
     cancelAnimationFrame(animationFrameId)
     animationFrameId = null
   }
+
+  // Stop interaction tracking
+  stopInteractionTracking()
+
   console.log('🌊 Three.js Wave stopped')
 }
 
@@ -265,6 +312,9 @@ export function stopThreeWave(): void {
  */
 export function cleanupThreeWave(): void {
   stopThreeWave()
+
+  // Ensure interaction tracking is stopped
+  stopInteractionTracking()
 
   if (renderer && renderer.domElement && renderer.domElement.parentNode) {
     renderer.domElement.parentNode.removeChild(renderer.domElement)

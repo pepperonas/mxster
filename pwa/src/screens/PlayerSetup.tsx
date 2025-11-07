@@ -131,9 +131,23 @@ export function PlayerSetup() {
           <p className="text-xl text-text-secondary mb-2">
             Mindestens {minPlayers} Spieler benötigt
           </p>
+
+          {/* Virtual Mode Banner (Prominent) */}
+          {!needsDJ && (
+            <div className="mt-4 p-4 bg-gradient-to-r from-accent/20 to-secondary/20 border-2 border-accent/50 rounded-xl">
+              <p className="text-lg font-semibold text-white mb-1">
+                🎮 Virtueller Modus - Sofort loslegen!
+              </p>
+              <p className="text-sm text-text-secondary">
+                Keine Karten nötig · Songs werden automatisch gezogen · Keine DJ-Rolle erforderlich
+              </p>
+            </div>
+          )}
+
+          {/* DJ Info (Less Prominent for Physical Mode) */}
           {needsDJ && (
-            <p className="text-sm text-yellow-400">
-              ℹ️ Der erste Spieler ist DJ (scannt QR-Codes) und spielt mit
+            <p className="text-xs text-gray-400 mt-2">
+              ℹ️ DJ-Modus: Der erste Spieler scannt QR-Codes und spielt mit
             </p>
           )}
         </div>

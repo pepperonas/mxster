@@ -31,8 +31,8 @@ export function VariantSelection() {
   }
 
   const variants: GameVariant[] = [
-    GAME_VARIANTS.PHYSICAL,
-    GAME_VARIANTS.VIRTUAL
+    GAME_VARIANTS.VIRTUAL,  // Virtual FIRST (recommended)
+    GAME_VARIANTS.PHYSICAL
   ]
 
   return (
@@ -44,7 +44,7 @@ export function VariantSelection() {
             Wähle deine Spielvariante
           </h1>
           <p className="text-xl text-text-secondary">
-            Mit echten Karten oder komplett digital
+            Komplett digital oder mit echten Karten
           </p>
         </div>
 
@@ -52,12 +52,26 @@ export function VariantSelection() {
         <div className="grid md:grid-cols-2 gap-8">
           {variants.map((variant) => {
             const info = GAME_VARIANT_INFO[variant]
+            const isVirtual = variant === GAME_VARIANTS.VIRTUAL
             return (
               <button
                 key={variant}
                 onClick={() => handleVariantSelect(variant)}
-                className="glass rounded-2xl p-10 border-2 border-accent/30 hover:border-accent hover:shadow-glow-accent transition-all text-left group"
+                className={`glass rounded-2xl p-10 border-2 transition-all text-left group relative ${
+                  isVirtual
+                    ? 'border-accent hover:border-accent hover:shadow-glow-accent'
+                    : 'border-accent/30 hover:border-accent hover:shadow-glow-accent'
+                }`}
               >
+                {/* EMPFOHLEN Badge for Virtual Mode */}
+                {isVirtual && (
+                  <div className="absolute top-4 right-4">
+                    <span className="px-3 py-1 bg-accent text-white text-xs font-bold rounded-full shadow-glow-accent">
+                      ⭐ EMPFOHLEN
+                    </span>
+                  </div>
+                )}
+
                 {/* Icon */}
                 <div className="text-7xl mb-6 group-hover:scale-110 transition-transform">
                   {info.icon}

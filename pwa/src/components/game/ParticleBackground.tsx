@@ -19,6 +19,11 @@ import {
   getTransitionDuration,
   type AnimationParameters
 } from '@/utils/activityAnimations'
+import {
+  startInteractionTracking,
+  stopInteractionTracking,
+  getInteractionIntensity
+} from '@/utils/interactionActivityTracker'
 
 interface ParticleBackgroundProps {
   isPlaying?: boolean
@@ -41,17 +46,19 @@ export function ParticleBackground({
   const animationIdRef = useRef<number | null>(null)
   const timeRef = useRef(0)
   const beatPulseRef = useRef(0)
+  const interactionIntensityRef = useRef(0)
 
-  // Activity-based animation parameters
+  // Activity-based animation parameters (includes colors now!)
   const [currentParams, setCurrentParams] = useState<AnimationParameters>(() =>
-    getParametersForActivity('calm')
+    getParametersForActivity('calm', isHardcoreMode)
   )
   const [targetParams, setTargetParams] = useState<AnimationParameters>(() =>
-    getParametersForActivity('calm')
+    getParametersForActivity('calm', isHardcoreMode)
   )
   const transitionStartTimeRef = useRef(0)
   const transitionDurationRef = useRef(0)
   const previousActivityRef = useRef<ActivityLevel>('calm')
+  const previousHardcoreModeRef = useRef(isHardcoreMode)
 
   useEffect(() => {
     if (!containerRef.current) return
@@ -155,10 +162,10 @@ export function ParticleBackground({
 
       const material = new THREE.PointsMaterial({
         map: createParticleTexture(1.0),
-        color: isHardcoreMode ? 0xFF6B35 : 0x6366f1, // Hardcore: Orange | Timeline: Indigo
-        size: isHardcoreMode ? 2.0 : 1.5, // Larger particles in hardcore mode
+        color: currentParams.mainColor, // Color from interpolated parameters
+        size: currentParams.mainParticleSize,
         transparent: true,
-        opacity: isHardcoreMode ? 0.95 : 0.8, // Higher opacity in hardcore mode
+        opacity: currentParams.mainOpacity,
         blending: THREE.AdditiveBlending,
         sizeAttenuation: true,
         depthWrite: false
@@ -190,10 +197,10 @@ export function ParticleBackground({
 
       const material = new THREE.PointsMaterial({
         map: createParticleTexture(1.2),
-        color: isHardcoreMode ? 0xFF8C42 : 0xFF6B35, // Hardcore: Light Orange | Timeline: Orange
-        size: isHardcoreMode ? 1.3 : 1.0, // Larger in hardcore mode
+        color: currentParams.accentColor, // Color from interpolated parameters
+        size: currentParams.accentParticleSize,
         transparent: true,
-        opacity: isHardcoreMode ? 0.75 : 0.6, // Higher opacity in hardcore mode
+        opacity: currentParams.accentOpacity,
         blending: THREE.AdditiveBlending,
         sizeAttenuation: true,
         depthWrite: false
@@ -219,10 +226,10 @@ export function ParticleBackground({
 
       const material = new THREE.PointsMaterial({
         map: createParticleTexture(0.8),
-        color: isHardcoreMode ? 0xFF4500 : 0x4AEDC4, // Hardcore: Orange-Red | Timeline: Cyan
-        size: isHardcoreMode ? 1.0 : 0.8, // Larger in hardcore mode
+        color: currentParams.starColor, // Color from interpolated parameters
+        size: currentParams.starParticleSize,
         transparent: true,
-        opacity: isHardcoreMode ? 0.65 : 0.5, // Higher opacity in hardcore mode
+        opacity: currentParams.starOpacity,
         blending: THREE.AdditiveBlending,
         sizeAttenuation: true,
         depthWrite: false
@@ -244,6 +251,16 @@ export function ParticleBackground({
     particleSystemsRef.current = particleSystems
 
     // ============================================================================
+    // Start Interaction Tracking
+    // ============================================================================
+
+    startInteractionTracking((intensity: number) => {
+      interactionIntensityRef.current = intensity
+    })
+
+    console.log('🖱️ Interaction tracking started for ParticleBackground')
+
+    // ============================================================================
     // Animation Loop
     // ============================================================================
 
@@ -260,6 +277,10 @@ export function ParticleBackground({
       // Decay beat pulse
       beatPulseRef.current *= Math.pow(0.9, deltaTime * 60)
 
+      // Combined intensity from beat AND mouse/touch interaction
+      const interactionBoost = interactionIntensityRef.current / 100 // 0-1
+      const combinedPulse = Math.max(beatPulseRef.current, interactionBoost)
+
       // ============================================================================
       // Main Wave Animation - Complex multi-wave patterns
       // ============================================================================
@@ -271,8 +292,8 @@ export function ParticleBackground({
         const x = mainPositions[i]
         const z = mainPositions[i + 2]
 
-        // Multiple wave harmonics (scaled by activity)
-        const baseAmplitude = currentParams.waveAmplitude
+        // Multiple wave harmonics (scaled by activity AND interaction)
+        const baseAmplitude = currentParams.waveAmplitude * (1 + interactionBoost * 0.5)
         const wave1 = Math.sin(x * 0.12 + time * 1.5) * (6 * baseAmplitude)
         const wave2 = Math.cos(z * 0.12 + time * 1.8) * (6 * baseAmplitude)
         const wave3 = Math.sin((x + z) * 0.08 + time * 2.2) * (4 * baseAmplitude)
@@ -290,20 +311,31 @@ export function ParticleBackground({
         const beatWave = Math.sin(beatDistance - beatPulseRef.current * 15) * beatPulseRef.current * 40
         const beatExplosion = beatPulseRef.current * 35 * Math.exp(-beatDistance * 0.5)
 
-        // Combine all effects
-        mainPositions[i + 1] = wave1 + wave2 + wave3 + ripple1 + ripple2 + cross + beatWave + beatExplosion
+        // NEW: Turbulence/Noise for organic chaos (activity-based)
+        const turbulence =
+          currentParams.turbulenceStrength > 0
+            ? Math.sin(x * 0.05 + time * 3) * Math.cos(z * 0.05 - time * 2.5) * currentParams.turbulenceStrength * 15
+            : 0
 
-        // Add subtle organic drift
-        mainPositions[i] += mainVelocities[i] * deltaTime * 10
-        mainPositions[i + 2] += mainVelocities[i + 2] * deltaTime * 10
+        // NEW: Interaction ripple - responds to mouse/touch movement
+        const interactionRipple = Math.sin(distFromCenter * 0.08 - time * 4) * interactionBoost * 20
+
+        // Combine all effects (including turbulence AND interaction)
+        mainPositions[i + 1] = wave1 + wave2 + wave3 + ripple1 + ripple2 + cross + beatWave + beatExplosion + turbulence + interactionRipple
+
+        // NEW: Activity-based velocity multiplier (more dynamic drift based on user interaction)
+        const velocityMultiplier = currentParams.rotationSpeed / 0.08 // Base rotation is 0.08, scales with activity
+        mainPositions[i] += mainVelocities[i] * deltaTime * 10 * velocityMultiplier
+        mainPositions[i + 2] += mainVelocities[i + 2] * deltaTime * 10 * velocityMultiplier
       }
 
       mainWave.geometry.attributes.position.needsUpdate = true
 
-      // Beat-reactive material properties with activity-based parameters
+      // Beat-reactive AND interaction-reactive material properties
       const mainMaterial = mainWave.material as THREE.PointsMaterial
-      mainMaterial.opacity = currentParams.mainOpacity + beatPulseRef.current * 0.2
-      mainMaterial.size = currentParams.mainParticleSize + beatPulseRef.current * 1.5
+      mainMaterial.color.setHex(currentParams.mainColor) // Update color smoothly
+      mainMaterial.opacity = currentParams.mainOpacity + combinedPulse * 0.2
+      mainMaterial.size = currentParams.mainParticleSize + combinedPulse * 1.5
 
       // Activity-based rotation
       mainWave.rotation.y += deltaTime * currentParams.rotationSpeed
@@ -336,8 +368,9 @@ export function ParticleBackground({
       accentWave.geometry.attributes.position.needsUpdate = true
 
       const accentMaterial = accentWave.material as THREE.PointsMaterial
-      accentMaterial.opacity = currentParams.accentOpacity + beatPulseRef.current * 0.3
-      accentMaterial.size = currentParams.accentParticleSize + beatPulseRef.current * 2.0
+      accentMaterial.color.setHex(currentParams.accentColor) // Update color smoothly
+      accentMaterial.opacity = currentParams.accentOpacity + combinedPulse * 0.3
+      accentMaterial.size = currentParams.accentParticleSize + combinedPulse * 2.0
 
       accentWave.rotation.y -= deltaTime * (currentParams.rotationSpeed * 1.5) // Counter-rotation (faster)
 
@@ -363,7 +396,8 @@ export function ParticleBackground({
       starLayer.geometry.attributes.position.needsUpdate = true
 
       const starMaterial = starLayer.material as THREE.PointsMaterial
-      starMaterial.opacity = currentParams.starOpacity + Math.sin(time * 0.8) * 0.2 + beatPulseRef.current * 0.3
+      starMaterial.color.setHex(currentParams.starColor) // Update color smoothly
+      starMaterial.opacity = currentParams.starOpacity + Math.sin(time * 0.8) * 0.2 + combinedPulse * 0.3
       starMaterial.size = currentParams.starParticleSize
 
       // ============================================================================
@@ -423,6 +457,10 @@ export function ParticleBackground({
         cancelAnimationFrame(animationIdRef.current)
       }
 
+      // Stop interaction tracking
+      stopInteractionTracking()
+      console.log('🖱️ Interaction tracking stopped for ParticleBackground')
+
       window.removeEventListener('resize', handleResize)
 
       particleSystems.forEach((system) => {
@@ -450,20 +488,31 @@ export function ParticleBackground({
     }
   }, [beatIntensity])
 
-  // Handle activity level changes with smooth transitions
+  // Handle activity level AND game mode changes with smooth transitions
   useEffect(() => {
-    if (activityLevel !== previousActivityRef.current) {
-      console.log(`🎨 Activity level changed: ${previousActivityRef.current} → ${activityLevel}`)
+    const activityChanged = activityLevel !== previousActivityRef.current
+    const gameModeChanged = isHardcoreMode !== previousHardcoreModeRef.current
 
-      const newParams = getParametersForActivity(activityLevel)
-      const duration = getTransitionDuration(previousActivityRef.current, activityLevel)
+    if (activityChanged || gameModeChanged) {
+      if (activityChanged) {
+        console.log(`🎨 Activity level changed: ${previousActivityRef.current} → ${activityLevel}`)
+      }
+      if (gameModeChanged) {
+        console.log(`🎨 Game mode changed: ${previousHardcoreModeRef.current ? 'HARDCORE' : 'TIMELINE'} → ${isHardcoreMode ? 'HARDCORE' : 'TIMELINE'}`)
+      }
+
+      const newParams = getParametersForActivity(activityLevel, isHardcoreMode)
+      const duration = activityChanged
+        ? getTransitionDuration(previousActivityRef.current, activityLevel)
+        : 800 // 800ms for game mode changes
 
       setTargetParams(newParams)
       transitionStartTimeRef.current = Date.now()
       transitionDurationRef.current = duration
       previousActivityRef.current = activityLevel
+      previousHardcoreModeRef.current = isHardcoreMode
     }
-  }, [activityLevel])
+  }, [activityLevel, isHardcoreMode])
 
   // Smooth parameter interpolation
   useEffect(() => {
@@ -486,11 +535,15 @@ export function ParticleBackground({
     }
   }, [currentParams, targetParams])
 
+  // Colors are now handled by the smooth interpolation system above - no separate useEffect needed!
+
   return (
     <div
       ref={containerRef}
       className="fixed inset-0 -z-10 pointer-events-none"
-      style={{ background: 'radial-gradient(circle at center, #0a0a1f 0%, #000000 100%)' }}
+      style={{
+        background: currentParams.backgroundColor // Smooth background transition
+      }}
       aria-hidden="true"
     />
   )

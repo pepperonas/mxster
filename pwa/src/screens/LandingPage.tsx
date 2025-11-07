@@ -351,20 +351,58 @@ export function LandingPage() {
             Spielvarianten
           </h2>
           <p className="text-xl text-text-secondary">
-            Mit echten Karten oder komplett digital
+            Komplett digital oder mit echten Karten
           </p>
         </div>
 
         <div className="grid md:grid-cols-2 gap-6">
-          {/* Physical Cards */}
+          {/* Virtual Cards - NOW FIRST */}
+          <div className="glass p-8 rounded-2xl border-2 border-accent/30 hover:border-accent hover:shadow-glow-accent transition-all group relative">
+            {/* EMPFOHLEN Badge */}
+            <div className="absolute top-4 right-4">
+              <span className="px-3 py-1 bg-accent text-white text-xs font-bold rounded-full shadow-glow-accent">
+                ⭐ EMPFOHLEN
+              </span>
+            </div>
+            <div className="text-6xl mb-6 group-hover:scale-110 transition-transform">📱</div>
+            <h3 className="text-2xl font-bold mb-4 text-white group-hover:text-gradient">
+              Virtuelle Karten
+            </h3>
+            <p className="text-text-secondary leading-relaxed mb-6">
+              <strong className="text-accent">Empfohlen für die meisten Spieler:</strong> Spiele sofort los ohne Setup. Songs werden automatisch gezogen. Perfekt für spontane Spielrunden!
+            </p>
+            <div className="space-y-3 text-sm">
+              <div className="flex items-start gap-3">
+                <span className="text-secondary flex-shrink-0">✓</span>
+                <span className="text-text-secondary">Kein Drucker oder 3D-Drucker nötig</span>
+              </div>
+              <div className="flex items-start gap-3">
+                <span className="text-secondary flex-shrink-0">✓</span>
+                <span className="text-text-secondary">Sofort spielbereit - kein Setup</span>
+              </div>
+              <div className="flex items-start gap-3">
+                <span className="text-secondary flex-shrink-0">✓</span>
+                <span className="text-text-secondary">Alle {songCount} Songs verfügbar</span>
+              </div>
+              <div className="flex items-start gap-3">
+                <span className="text-secondary flex-shrink-0">✓</span>
+                <span className="text-text-secondary">Bot-Gegner in 3 Schwierigkeitsgraden</span>
+              </div>
+              <div className="flex items-start gap-3">
+                <span className="text-secondary flex-shrink-0">✓</span>
+                <span className="text-text-secondary">Perfekt für spontane Runden</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Physical Cards - NOW SECOND */}
           <div className="glass p-8 rounded-2xl border-2 border-accent/30 hover:border-accent hover:shadow-glow-accent transition-all group">
             <div className="text-6xl mb-6 group-hover:scale-110 transition-transform">🃏</div>
             <h3 className="text-2xl font-bold mb-4 text-white group-hover:text-gradient">
               Physische Karten
             </h3>
             <p className="text-text-secondary leading-relaxed mb-6">
-              Drucke deine eigenen Karten aus oder erstelle 3D-gedruckte Karten mit QR-Codes.
-              Der erste Spieler ist DJ (scannt die Karten) und spielt mit.
+              Für Enthusiasten: Drucke deine eigenen Karten aus oder erstelle 3D-gedruckte Karten mit QR-Codes. Der erste Spieler ist DJ (scannt die Karten) und spielt mit.
             </p>
             <div className="space-y-3 text-sm">
               <div className="flex items-start gap-3">
@@ -385,117 +423,9 @@ export function LandingPage() {
               </div>
             </div>
           </div>
-
-          {/* Virtual Cards */}
-          <div className="glass p-8 rounded-2xl border-2 border-accent/30 hover:border-accent hover:shadow-glow-accent transition-all group">
-            <div className="text-6xl mb-6 group-hover:scale-110 transition-transform">📱</div>
-            <h3 className="text-2xl font-bold mb-4 text-white group-hover:text-gradient">
-              Virtuelle Karten
-            </h3>
-            <p className="text-text-secondary leading-relaxed mb-6">
-              Spiele komplett digital ohne physische Karten. Songs werden zufällig aus der Datenbank gezogen.
-            </p>
-            <div className="space-y-3 text-sm">
-              <div className="flex items-start gap-3">
-                <span className="text-secondary flex-shrink-0">✓</span>
-                <span className="text-text-secondary">Kein Drucker oder 3D-Drucker nötig</span>
-              </div>
-              <div className="flex items-start gap-3">
-                <span className="text-secondary flex-shrink-0">✓</span>
-                <span className="text-text-secondary">Sofort loslegen</span>
-              </div>
-              <div className="flex items-start gap-3">
-                <span className="text-secondary flex-shrink-0">✓</span>
-                <span className="text-text-secondary">Perfekt zum Testen</span>
-              </div>
-            </div>
-          </div>
         </div>
       </section>
 
-      {/* Downloads Section */}
-      <section className="container mx-auto px-4 max-w-6xl mb-12" id="downloads">
-        <div className="text-center mb-12 animate-fade-in">
-          <h2 className="text-5xl md:text-6xl font-bold text-gradient mb-4">
-            Downloads
-          </h2>
-          <p className="text-xl text-text-secondary">
-            Drucke deine eigenen Karten oder erstelle 3D-Modelle
-          </p>
-        </div>
-
-        <div className="grid md:grid-cols-2 gap-6">
-          {/* PDF Cards */}
-          <div className="glass p-8 rounded-2xl border-2 border-accent/30 hover:border-accent transition-colors group">
-            <div className="text-6xl mb-6 group-hover:scale-110 transition-transform">🖨️</div>
-            <h3 className="text-2xl font-bold mb-4 text-white group-hover:text-gradient">
-              PDF Druckkarten
-            </h3>
-            <p className="text-text-secondary leading-relaxed mb-6">
-              Lade druckfertige PDF-Dateien herunter. 4 Karten pro A4-Seite in verschiedenen Varianten.
-            </p>
-            <div className="space-y-3 mb-6">
-              <a href="https://github.com/pepperonas/mxster/releases/latest/download/mxster-cards.pdf" download className="btn btn-secondary w-full justify-between">
-                📄 Standard (Farbig)
-                <span>↓</span>
-              </a>
-              <a href="https://github.com/pepperonas/mxster/releases/latest/download/mxster-cards-bw.pdf" download className="btn btn-secondary w-full justify-between">
-                📄 Schwarz-Weiß
-                <span>↓</span>
-              </a>
-              <a href="https://github.com/pepperonas/mxster/releases/latest/download/mxster-cards-duplex.pdf" download className="btn btn-secondary w-full justify-between">
-                📄 Duplex (Farbig)
-                <span>↓</span>
-              </a>
-              <a href="https://github.com/pepperonas/mxster/releases/latest/download/mxster-cards-bw-duplex.pdf" download className="btn btn-secondary w-full justify-between">
-                📄 Duplex (Schwarz-Weiß)
-                <span>↓</span>
-              </a>
-            </div>
-            <div className="glass p-4 rounded-lg border border-accent/20">
-              <p className="text-xs text-text-secondary">
-                💡 <strong>Tipp:</strong> Duplex-Modus für beidseitigen Druck verwenden. Standard-Modus für einfaches Falten und Kleben.
-              </p>
-            </div>
-          </div>
-
-          {/* 3D Models */}
-          <div className="glass p-8 rounded-2xl border-2 border-accent/30 hover:border-accent transition-colors group">
-            <div className="text-6xl mb-6 group-hover:scale-110 transition-transform">🎲</div>
-            <h3 className="text-2xl font-bold mb-4 text-white group-hover:text-gradient">
-              3D-Druckmodelle
-            </h3>
-            <p className="text-text-secondary leading-relaxed mb-6">
-              Lade STL-Dateien für hochwertige 3D-gedruckte Karten herunter. Dual-sided Design mit QR-Code.
-            </p>
-            <div className="space-y-3 mb-6">
-              <a href="https://github.com/pepperonas/mxster/releases/latest/download/all-cards.3mf" download className="btn btn-secondary w-full justify-between">
-                📦 All-Cards (3MF)
-                <span>↓</span>
-              </a>
-              <a href="https://github.com/pepperonas/mxster/releases/latest/download/mxster-stl-models.zip" download className="btn btn-secondary w-full justify-between">
-                📦 STL Modelle (ZIP)
-                <span>↓</span>
-              </a>
-              <a href="https://github.com/pepperonas/mxster/releases/latest/download/mxster-scad-models.zip" download className="btn btn-secondary w-full justify-between">
-                📦 SCAD Modelle (ZIP)
-                <span>↓</span>
-              </a>
-              <a href="https://github.com/pepperonas/mxster/tree/main/card-generator/models" target="_blank" rel="noopener noreferrer" className="btn btn-secondary w-full justify-between">
-                📂 Einzelne Modelle (GitHub)
-                <span>→</span>
-              </a>
-            </div>
-            <div className="glass p-4 rounded-lg border border-accent/20 space-y-1 text-xs text-text-secondary">
-              <p className="font-semibold text-white mb-2">⚙️ Druckeinstellungen:</p>
-              <p>• Layer Height: 0.1-0.15mm</p>
-              <p>• Infill: 100%</p>
-              <p>• Material: PLA oder PETG</p>
-              <p>• Support: Nicht nötig</p>
-            </div>
-          </div>
-        </div>
-      </section>
 
       {/* How it works Section */}
       <section className="container mx-auto px-4 max-w-6xl mb-12" id="how-it-works">
@@ -764,6 +694,78 @@ export function LandingPage() {
             <p className="mt-6 text-sm text-text-secondary">
               Jeder Beitrag hilft, mxster noch besser zu machen. Vielen Dank! ❤️
             </p>
+          </div>
+        </div>
+      </section>
+
+      {/* Downloads Section - FOR ENTHUSIASTS */}
+      <section className="container mx-auto px-4 max-w-6xl mb-12" id="downloads">
+        <div className="text-center mb-8 animate-fade-in">
+          <h2 className="text-3xl md:text-4xl font-bold text-gradient mb-3">
+            🃏 Für Enthusiasten: Physische Karten
+          </h2>
+          <p className="text-lg text-text-secondary">
+            Drucke deine eigenen Karten oder erstelle 3D-Modelle
+          </p>
+        </div>
+
+        <div className="grid md:grid-cols-2 gap-4">
+          {/* PDF Cards - Smaller */}
+          <div className="glass p-6 rounded-xl border-2 border-accent/20 hover:border-accent/40 transition-colors">
+            <div className="text-4xl mb-4">🖨️</div>
+            <h3 className="text-xl font-bold mb-3 text-white">
+              PDF Druckkarten
+            </h3>
+            <p className="text-sm text-text-secondary mb-4">
+              Druckfertige PDFs - 4 Karten pro A4-Seite
+            </p>
+            <div className="space-y-2">
+              <a href="https://github.com/pepperonas/mxster/releases/latest/download/mxster-cards.pdf" download className="btn btn-secondary text-sm w-full justify-between py-2">
+                📄 Farbig
+                <span>↓</span>
+              </a>
+              <a href="https://github.com/pepperonas/mxster/releases/latest/download/mxster-cards-bw.pdf" download className="btn btn-secondary text-sm w-full justify-between py-2">
+                📄 Schwarz-Weiß
+                <span>↓</span>
+              </a>
+              <a href="https://github.com/pepperonas/mxster/releases/latest/download/mxster-cards-duplex.pdf" download className="btn btn-secondary text-sm w-full justify-between py-2">
+                📄 Duplex Farbig
+                <span>↓</span>
+              </a>
+              <a href="https://github.com/pepperonas/mxster/releases/latest/download/mxster-cards-bw-duplex.pdf" download className="btn btn-secondary text-sm w-full justify-between py-2">
+                📄 Duplex S/W
+                <span>↓</span>
+              </a>
+            </div>
+          </div>
+
+          {/* 3D Models - Smaller */}
+          <div className="glass p-6 rounded-xl border-2 border-accent/20 hover:border-accent/40 transition-colors">
+            <div className="text-4xl mb-4">🎲</div>
+            <h3 className="text-xl font-bold mb-3 text-white">
+              3D-Druckmodelle
+            </h3>
+            <p className="text-sm text-text-secondary mb-4">
+              STL/SCAD-Dateien für 3D-Druck
+            </p>
+            <div className="space-y-2">
+              <a href="https://github.com/pepperonas/mxster/releases/latest/download/all-cards.3mf" download className="btn btn-secondary text-sm w-full justify-between py-2">
+                📦 All-Cards (3MF)
+                <span>↓</span>
+              </a>
+              <a href="https://github.com/pepperonas/mxster/releases/latest/download/mxster-stl-models.zip" download className="btn btn-secondary text-sm w-full justify-between py-2">
+                📦 STL (ZIP)
+                <span>↓</span>
+              </a>
+              <a href="https://github.com/pepperonas/mxster/releases/latest/download/mxster-scad-models.zip" download className="btn btn-secondary text-sm w-full justify-between py-2">
+                📦 SCAD (ZIP)
+                <span>↓</span>
+              </a>
+              <a href="https://github.com/pepperonas/mxster/tree/main/card-generator/models" target="_blank" rel="noopener noreferrer" className="btn btn-secondary text-sm w-full justify-between py-2">
+                📂 GitHub
+                <span>→</span>
+              </a>
+            </div>
           </div>
         </div>
       </section>
