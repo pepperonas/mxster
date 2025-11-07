@@ -3,7 +3,7 @@
 **Das ultimative Musikquiz für Musikfans!** Rate Songs, platziere sie chronologisch und teste dein Musikwissen. Spiele mit Freunden, sammle Punkte und werde zum Musik-Champion!
 
 [![App](https://img.shields.io/badge/App-mxster.de-blue?style=for-the-badge)](https://mxster.de)
-[![Version](https://img.shields.io/badge/Version-v0.0.46-purple?style=for-the-badge)](https://github.com/pepperonas/mxster/releases)
+[![Version](https://img.shields.io/badge/Version-v0.0.48-purple?style=for-the-badge)](https://github.com/pepperonas/mxster/releases)
 [![License](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)](LICENSE)
 ![Songs](https://img.shields.io/badge/Songs-209-orange?style=for-the-badge)
 ![Audio](https://img.shields.io/badge/Audio-Self--Hosted-red?style=for-the-badge)
@@ -1627,6 +1627,26 @@ Dieses Projekt ist unter der **MIT-Lizenz** veröffentlicht. Siehe [LICENSE](LIC
 - **Browser-Kompatibilität**: Chrome, Firefox, Edge, Safari (neueste Versionen)
 
 ## 📝 Changelog
+
+### v0.0.48 (2025-11-07) - Tie-Breaking Documentation in How To Play
+
+**📖 Improved In-App Documentation**
+
+Added comprehensive tie-breaking rules to the How To Play guide for better player understanding:
+
+- **Hardcore Mode**: Added tie-breaking explanation (most cards → last finisher)
+- **Timeline Global**: Clarified win condition + tie-breaking (last finisher → first in list)
+- **Timeline Personal**: No changes needed (race to 10 cards)
+
+Files modified: `pwa/src/components/HowToPlayContent.tsx`
+
+### v0.0.47 (2025-11-07) - Timeline Global Tie-Breaking Bug Fix
+
+**🐛 Critical Logic Fix**
+
+Fixed incorrect tie-breaking logic in Timeline Global mode that attempted to use score as a tiebreaker despite Timeline Global having no scoring system. Simplified to: currentPlayer wins (finisher advantage) → first player in list wins.
+
+Files modified: `pwa/src/services/gameLogic.ts`, `pwa/src/services/__tests__/gameLogic.test.ts`
 
 ### v0.0.46 (2025-11-07) - Symmetric Animation Transitions
 

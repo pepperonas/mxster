@@ -14,6 +14,7 @@ export { GameEndStatsDialog } from './GameEndStatsDialog'
 export { AchievementsDialog } from './AchievementsDialog'
 export { AchievementUnlockAnimation } from './AchievementUnlockAnimation'
 export { PasswordProtectionDialog } from './PasswordProtectionDialog'
+export { CookieBanner } from './CookieBanner'
 
 // Layout Components
 // TODO: Phase 7 - Game Setup Flow Components

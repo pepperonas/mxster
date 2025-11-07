@@ -103,9 +103,20 @@ export function HowToPlayContent() {
 
             <div className="glass p-3 rounded-lg border border-accent/20">
               <h4 className="font-semibold text-secondary mb-2">🏆 Gewinner:</h4>
-              <p className="text-sm text-text-secondary">
-                Spieler mit den <strong className="text-white">meisten Punkten</strong> nach 10 Karten gewinnt!
-              </p>
+              <div className="space-y-2 text-sm text-text-secondary">
+                <p>
+                  Spieler mit den <strong className="text-white">meisten Punkten</strong> nach 10 Karten gewinnt!
+                </p>
+                <div className="bg-accent/10 p-2 rounded border border-accent/30">
+                  <p className="text-xs">
+                    <strong className="text-accent">Bei Gleichstand:</strong>
+                  </p>
+                  <ol className="text-xs space-y-1 mt-1 ml-4">
+                    <li>1. Spieler mit den <strong className="text-white">meisten Karten</strong> gewinnt</li>
+                    <li>2. Bei weiterem Gleichstand: <strong className="text-white">Letzter Finisher</strong> gewinnt</li>
+                  </ol>
+                </div>
+              </div>
             </div>
 
             <div className="glass p-3 rounded-lg border border-yellow-500/30 bg-yellow-900/10">
@@ -276,9 +287,20 @@ export function HowToPlayContent() {
 
             <div className="glass p-3 rounded-lg border border-accent/20">
               <h4 className="font-semibold text-secondary mb-2">🏆 Gewinner:</h4>
-              <p className="text-sm text-text-secondary">
-                <strong className="text-white">Erster Spieler</strong>, der insgesamt 10 Karten platziert hat!
-              </p>
+              <div className="space-y-2 text-sm text-text-secondary">
+                <p>
+                  Spieler mit den <strong className="text-white">meisten Karten</strong>, nachdem insgesamt 10 Karten in der Timeline platziert wurden!
+                </p>
+                <div className="bg-accent/10 p-2 rounded border border-accent/30">
+                  <p className="text-xs">
+                    <strong className="text-accent">Bei Gleichstand:</strong>
+                  </p>
+                  <ol className="text-xs space-y-1 mt-1 ml-4">
+                    <li>1. <strong className="text-white">Letzter Finisher</strong> gewinnt (hat gerade 10. Karte gesetzt)</li>
+                    <li>2. Sonst: <strong className="text-white">Erster Spieler in der Liste</strong> gewinnt</li>
+                  </ol>
+                </div>
+              </div>
             </div>
           </div>
         </div>

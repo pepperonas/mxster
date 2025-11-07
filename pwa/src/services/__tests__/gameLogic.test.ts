@@ -483,19 +483,19 @@ describe('checkWinCondition - Timeline Modes', () => {
     expect(result.winnerIndex).toBe(1)
   })
 
-  it('should use score as tiebreaker in Timeline Global when not currentPlayer', () => {
+  it('should use first-in-list as tiebreaker in Timeline Global when not currentPlayer', () => {
     const players = [
-      createTestPlayer({ name: 'Alice', cards: 5, score: 25 }),
-      createTestPlayer({ name: 'Bob', cards: 5, score: 30 }), // Higher score
-      createTestPlayer({ name: 'Charlie', cards: 3, score: 20 })
+      createTestPlayer({ name: 'Alice', cards: 5, score: 0 }),
+      createTestPlayer({ name: 'Bob', cards: 5, score: 0 }), // Same cards as Alice
+      createTestPlayer({ name: 'Charlie', cards: 3, score: 0 })
     ]
 
     // Charlie is currentPlayer (placed 10th card but has fewer cards)
     const result = checkWinCondition(players, 2, GameMode.TIMELINE_GLOBAL)
 
     expect(result.gameOver).toBe(true)
-    expect(result.winner?.name).toBe('Bob') // Most cards + highest score among tied
-    expect(result.winnerIndex).toBe(1)
+    expect(result.winner?.name).toBe('Alice') // First in list when cards tied
+    expect(result.winnerIndex).toBe(0)
   })
 
   it('should handle 3-player Timeline Global with equal cards', () => {

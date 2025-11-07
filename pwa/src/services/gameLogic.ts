@@ -277,23 +277,16 @@ export function checkWinCondition(
         .filter(({ player }) => player.cards === maxCards)
 
       // Tie-breaking logic:
-      // 1. If currentPlayer has max cards, they win (just placed the 10th card)
-      // 2. Otherwise, the player with highest score wins
-      // 3. If still tied or no scores, first player in list wins
+      // 1. If currentPlayer has max cards, they win (just placed the 10th card - "Finisher advantage")
+      // 2. Otherwise, first player in list wins (Timeline Global has no points system)
       let winner = playersWithMaxCards[0]
 
-      // Check if currentPlayer is in the tie
+      // Check if currentPlayer is in the tie - give them advantage as "finisher"
       const currentPlayerInTie = playersWithMaxCards.find(({ index }) => index === currentPlayer)
       if (currentPlayerInTie) {
         winner = currentPlayerInTie
-      } else {
-        // Find player with highest score among tied players
-        for (const p of playersWithMaxCards) {
-          if (p.player.score > winner.player.score) {
-            winner = p
-          }
-        }
       }
+      // Note: No score comparison needed - Timeline Global only tracks correct/incorrect placements (no points)
 
       return {
         gameOver: true,

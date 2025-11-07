@@ -6,7 +6,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 **mxster** is a music timeline game with virtual and physical gameplay. Play digitally (recommended) or with 3D-printed QR cards. Features guess mode (points-based) and timeline modes (chronological placement).
 
-**Current Version**: v0.0.46 (2025-11-07)
+**Current Version**: v0.0.48 (2025-11-07)
 **Current Song Database**: 209 songs with full genre data (as of 2025-11-04)
 
 ### Key Technologies
@@ -483,6 +483,65 @@ All files hosted via GitHub raw URLs (auto-update, no manual releases):
 - **Song count**: Auto-dynamic via `songs.length` in LandingPage.tsx (updates on build)
 
 ## Recent Changes
+
+### v0.0.48 (2025-11-07) - Tie-Breaking Documentation in How To Play
+
+**📖 Improved In-App Documentation**
+
+Added comprehensive tie-breaking rules to the How To Play guide for better player understanding.
+
+**Changes:**
+- **Hardcore Mode**: Added tie-breaking explanation box
+  - 1st tiebreaker: Player with most cards wins
+  - 2nd tiebreaker: Last finisher (current player) wins
+- **Timeline Global**: Added tie-breaking explanation box + clarified win condition
+  - Win condition clarified: "Player with most cards after 10 total cards placed"
+  - 1st tiebreaker: Last finisher wins (just placed 10th card)
+  - 2nd tiebreaker: First player in list wins
+- **Timeline Personal**: No changes needed (race to 10 cards, no ties possible)
+
+**UI Design:**
+- Yellow-accent info boxes for visual emphasis
+- Numbered list format for clarity
+- Same styling as other important notices in guide
+- File: `pwa/src/components/HowToPlayContent.tsx` (lines 104-120, 288-304)
+
+**Impact:**
+- ✅ Players now understand tie-breaking rules before playing
+- ✅ Reduces confusion during gameplay
+- ✅ Consistent with actual game logic implementation
+- ✅ Better UX through transparent rules
+
+### v0.0.47 (2025-11-07) - Timeline Global Tie-Breaking Bug Fix
+
+**🐛 Critical Logic Fix**
+
+Fixed incorrect tie-breaking logic in Timeline Global mode that attempted to use score as a tiebreaker despite Timeline Global having no scoring system.
+
+**Problem:**
+- Timeline Global mode only tracks correct/incorrect placements (binary: right/wrong)
+- No points are awarded for partial correctness
+- Code incorrectly tried to compare player scores (always 0) as tiebreaker
+- This made the score comparison meaningless and confusing
+
+**Solution:**
+- Removed score-based tie-breaking logic from `checkWinCondition()` in Timeline Global
+- Simplified to two clear rules:
+  1. **Current player advantage**: If current player has max cards, they win (finisher advantage)
+  2. **First-in-list wins**: Otherwise, first player in list with max cards wins
+- Added comment documenting Timeline Global has no points system
+
+**Technical Details:**
+- File: `pwa/src/services/gameLogic.ts` (lines 279-289)
+- Removed dead code: Score comparison loop (lines 290-295)
+- Updated unit test: Changed test name and expectations to match corrected behavior
+- Test file: `pwa/src/services/__tests__/gameLogic.test.ts` (lines 486-499)
+
+**Impact:**
+- ✅ Clearer game logic - no confusion about scoring in Timeline Global
+- ✅ More predictable tie-breaking behavior
+- ✅ Better code maintainability (removed meaningless comparison)
+- ✅ All 71/71 game logic tests passing
 
 ### v0.0.46 (2025-11-07) - Symmetric Animation Transitions
 
