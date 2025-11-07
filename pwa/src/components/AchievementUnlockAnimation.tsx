@@ -70,7 +70,7 @@ export function AchievementUnlockAnimation() {
 
   return createPortal(
     <div
-      className="fixed inset-0 z-[9999] flex items-center justify-center pointer-events-none"
+      className="fixed inset-0 z-[9999] flex items-center justify-center pt-20 pb-6 px-4 pointer-events-none"
       role="alert"
       aria-live="assertive"
     >

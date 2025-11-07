@@ -45,7 +45,7 @@ export function AchievementsDialog({ isOpen, onClose, playerName }: Achievements
   // No players exist yet - show onboarding
   if (allPlayerNames.length === 0) {
     return (
-      <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4">
+      <div className="fixed inset-0 z-[9999] flex items-center justify-center pt-20 pb-6 px-4">
         {/* Backdrop */}
         <div className="absolute inset-0 bg-black/70 backdrop-blur-sm" onClick={onClose} />
 
@@ -85,12 +85,12 @@ export function AchievementsDialog({ isOpen, onClose, playerName }: Achievements
   const totalCount = achievements.length
 
   return (
-    <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4">
+    <div className="fixed inset-0 z-[9999] flex items-center justify-center pt-20 pb-6 px-4">
       {/* Backdrop */}
       <div className="absolute inset-0 bg-black/70 backdrop-blur-sm" onClick={onClose} />
 
       {/* Dialog */}
-      <div className="relative bg-primary rounded-2xl shadow-2xl max-w-4xl w-full max-h-[90vh] border-2 border-accent/30 flex flex-col overflow-hidden">
+      <div className="relative bg-primary rounded-2xl shadow-2xl max-w-4xl w-full max-h-[calc(100vh-12rem)] sm:max-h-[85vh] border-2 border-accent/30 flex flex-col overflow-hidden">
         {/* Header */}
         <div className="flex-shrink-0 bg-gradient-to-r from-primary to-primary-dark border-b border-accent/20 p-6 z-10">
           <div className="flex items-center justify-between mb-4">

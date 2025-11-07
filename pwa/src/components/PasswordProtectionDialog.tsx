@@ -52,8 +52,8 @@ export function PasswordProtectionDialog({ onSuccess, onCancel }: PasswordProtec
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm animate-fade-in">
-      <div className="glass rounded-2xl p-8 max-w-md w-full border-2 border-accent/30 animate-scale-in">
+    <div className="fixed inset-0 z-50 flex items-center justify-center pt-20 pb-6 px-4 bg-black/70 backdrop-blur-sm animate-fade-in">
+      <div className="glass rounded-2xl p-8 max-w-md w-full max-h-[calc(100vh-12rem)] sm:max-h-[85vh] overflow-auto border-2 border-accent/30 animate-scale-in">
         {/* Header */}
         <div className="text-center mb-6">
           <div className="text-6xl mb-4">🔒</div>

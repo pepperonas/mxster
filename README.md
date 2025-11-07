@@ -3,7 +3,7 @@
 **Das ultimative Musikquiz für Musikfans!** Rate Songs, platziere sie chronologisch und teste dein Musikwissen. Spiele mit Freunden, sammle Punkte und werde zum Musik-Champion!
 
 [![App](https://img.shields.io/badge/App-mxster.de-blue?style=for-the-badge)](https://mxster.de)
-[![Version](https://img.shields.io/badge/Version-v0.0.44-purple?style=for-the-badge)](https://github.com/pepperonas/mxster/releases)
+[![Version](https://img.shields.io/badge/Version-v0.0.45-purple?style=for-the-badge)](https://github.com/pepperonas/mxster/releases)
 [![License](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)](LICENSE)
 ![Songs](https://img.shields.io/badge/Songs-209-orange?style=for-the-badge)
 ![Audio](https://img.shields.io/badge/Audio-Self--Hosted-red?style=for-the-badge)
@@ -2004,6 +2004,16 @@ Implementierung eines Hybrid Audio Systems mit zwei Modi:
 - New Files: `placementAnimations.ts`, `guessAnimations.ts`, `animationHelpers.ts`, `animations.css`
 - Dependencies: Uses existing `canvas-confetti` library
 - Build Size: +7 KB (animations + CSS keyframes)
+
+### v0.0.45 (2025-11-07)
+
+**📱 Fixed All Custom Dialogs on Mobile**
+- Fixed PasswordProtectionDialog (audio access)
+- Fixed AchievementsDialog (main + onboarding)
+- Fixed AchievementUnlockAnimation (notifications)
+- Applied pt-20 pb-6 px-4 spacing to all custom dialogs
+- Updated max-height to calc(100vh-12rem) on mobile
+- Complete mobile dialog coverage
 
 ### v0.0.44 (2025-11-07)
 

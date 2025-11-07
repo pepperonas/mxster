@@ -6,7 +6,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 **mxster** is a music timeline game combining hardware (3D-printed QR cards) and software (PWA with camera scanner). Players scan physical cards or play virtually. Features guess mode (points-based) and timeline modes (chronological placement).
 
-**Current Version**: v0.0.44 (2025-11-07)
+**Current Version**: v0.0.45 (2025-11-07)
 **Current Song Database**: 209 songs with full genre data (as of 2025-11-04)
 
 ### Key Technologies
@@ -481,6 +481,37 @@ All files hosted via GitHub raw URLs (auto-update, no manual releases):
 - **Song count**: Auto-dynamic via `songs.length` in LandingPage.tsx (updates on build)
 
 ## Recent Changes
+
+### v0.0.45 (2025-11-07) - Fixed All Custom Dialogs on Mobile
+
+**📱 Completed Mobile Layout Fixes**
+
+Fixed all remaining custom dialogs that were still cut off on mobile:
+
+**Additional Dialogs Fixed:**
+1. **PasswordProtectionDialog** - Self-hosted audio access dialog
+2. **AchievementsDialog** - Both main dialog and onboarding screen
+3. **AchievementUnlockAnimation** - Achievement unlock notifications
+
+**Implementation:**
+Applied same mobile fixes to all custom dialogs:
+- Added `pt-20 pb-6 px-4` to backdrop containers
+- Updated `max-h-[90vh]` to `max-h-[calc(100vh-12rem)] sm:max-h-[85vh]`
+- Added `overflow-auto` where needed for scrollable content
+
+**Files Modified:**
+- `pwa/src/components/PasswordProtectionDialog.tsx` (lines 55-56)
+- `pwa/src/components/AchievementsDialog.tsx` (lines 48, 88, 93)
+- `pwa/src/components/AchievementUnlockAnimation.tsx` (line 73)
+- `pwa/package.json`, `pwa/src/components/Sidebar.tsx` (version 0.0.45)
+
+**Coverage:**
+- ✅ Modal.tsx (standard modals)
+- ✅ PasswordProtectionDialog (audio access)
+- ✅ AchievementsDialog (achievements + onboarding)
+- ✅ AchievementUnlockAnimation (notifications)
+- ✅ SettingsDialog (uses Modal.tsx, already fixed)
+- ✅ All other dialogs (use Modal.tsx, already fixed)
 
 ### v0.0.44 (2025-11-07) - Mobile Layout Fix for Samsung S24 Ultra
 
