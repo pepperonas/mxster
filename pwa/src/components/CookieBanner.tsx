@@ -6,7 +6,7 @@
 import { useState, useEffect } from 'react'
 
 export function CookieBanner() {
-  const [isVisible, setIsVisible] = useState(false)
+  const [shouldShow, setShouldShow] = useState(false)
 
   useEffect(() => {
     // Check if user has already made a choice
@@ -14,7 +14,7 @@ export function CookieBanner() {
     if (!cookieConsent) {
       // Show banner after a short delay
       const timer = setTimeout(() => {
-        setIsVisible(true)
+        setShouldShow(true)
       }, 1500)
       return () => clearTimeout(timer)
     }
@@ -22,13 +22,13 @@ export function CookieBanner() {
 
   const handleAccept = () => {
     localStorage.setItem('mxster-cookie-consent', 'accepted')
-    setIsVisible(false)
+    setShouldShow(false)
   }
 
-  if (!isVisible) return null
+  if (!shouldShow) return null
 
   return (
-    <div className={`cookie-banner-8bit ${isVisible ? 'show' : ''}`}>
+    <div className="cookie-banner-8bit show">
       {/* 8-Bit Pixel Border */}
       <div className="pixel-border-top"></div>
       <div className="pixel-border-right"></div>

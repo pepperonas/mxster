@@ -702,15 +702,10 @@
     0 8px 32px rgba(0, 0, 0, 0.8),
     inset 0 2px 0 rgba(0, 255, 0, 0.3);
   z-index: 9999;
-  opacity: 0;
-  animation: pixelSlideUp 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55) 0.2s forwards;
+  animation: pixelSlideUp 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards;
   image-rendering: pixelated;
   image-rendering: -moz-crisp-edges;
   image-rendering: crisp-edges;
-}
-
-.cookie-banner-8bit.show {
-  opacity: 1;
 }
 
 @keyframes pixelSlideUp {
