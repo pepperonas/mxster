@@ -54,11 +54,6 @@ export function CookieBanner() {
           damit dein Fortschritt nicht verloren geht.
         </p>
 
-        <div className="cookie-info-box">
-          <span className="info-icon">ℹ️</span>
-          <span className="info-text">Ohne Speicherung funktioniert die App nicht vollständig.</span>
-        </div>
-
         <button className="cookie-btn-8bit cookie-btn-accept-8bit" onClick={handleAccept}>
           <span className="btn-icon">✓</span>
           <span className="btn-text">Verstanden</span>
