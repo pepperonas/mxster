@@ -91,9 +91,10 @@ describe('BotPlayer', () => {
 
       const elapsed = Date.now() - startTime
 
-      // Easy difficulty: 1500-3000ms thinking time
-      expect(elapsed).toBeGreaterThanOrEqual(1400) // Allow 100ms tolerance
-      expect(elapsed).toBeLessThan(3200) // Allow 200ms tolerance
+      // All difficulties: 500-800ms thinking time (see botPlayer.ts DIFFICULTY_CONFIGS)
+      // CI environments have overhead, so we allow generous tolerance
+      expect(elapsed).toBeGreaterThanOrEqual(400) // Allow 100ms tolerance for CI
+      expect(elapsed).toBeLessThan(1000) // Allow 200ms tolerance for CI
     })
   })
 

@@ -190,8 +190,8 @@ export function fuzzyMatch(guess: string, correct: string, maxErrors?: number): 
   }
 
   // Substring match (one text contains the other)
-  // ONLY if the guess is at least 50% of the correct text length (minimum 5 chars)
-  const minSubstringLength = Math.max(5, Math.ceil(normalizedCorrect.length * 0.5))
+  // ONLY if the guess is at least 40% of the correct text length (minimum 4 chars)
+  const minSubstringLength = Math.max(4, Math.ceil(normalizedCorrect.length * 0.4))
   if (normalizedGuess.length >= minSubstringLength) {
     if (
       normalizedCorrect.includes(normalizedGuess) ||

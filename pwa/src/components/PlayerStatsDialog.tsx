@@ -9,6 +9,7 @@ import { useMemo } from 'react'
 interface PlayerStats {
   name: string
   totalGames: number
+  hardcoreGames: number // NEW: Count only hardcore mode games for avgScore
   wins: number
   losses: number
   winRate: number
@@ -35,6 +36,7 @@ export function PlayerStatsDialog() {
           statsMap.set(player.name, {
             name: player.name,
             totalGames: 0,
+            hardcoreGames: 0,
             wins: 0,
             losses: 0,
             winRate: 0,
@@ -50,6 +52,11 @@ export function PlayerStatsDialog() {
         const stats = statsMap.get(player.name)!
         stats.totalGames++
         stats.totalScore += player.score
+
+        // Count hardcore mode games for avgScore calculation
+        if (game.gameMode === 'hardcore') {
+          stats.hardcoreGames++
+        }
 
         // Check if winner
         if (game.winner.name === player.name) {
@@ -74,7 +81,8 @@ export function PlayerStatsDialog() {
     statsMap.forEach((stats) => {
       stats.losses = stats.totalGames - stats.wins
       stats.winRate = stats.totalGames > 0 ? (stats.wins / stats.totalGames) * 100 : 0
-      stats.avgScore = stats.totalGames > 0 ? stats.totalScore / stats.totalGames : 0
+      // FIXED: Calculate avgScore only from hardcore games (where points are earned)
+      stats.avgScore = stats.hardcoreGames > 0 ? stats.totalScore / stats.hardcoreGames : 0
 
       // Find best decade
       if (Object.keys(stats.decadeStats).length > 0) {
