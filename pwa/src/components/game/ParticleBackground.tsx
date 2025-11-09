@@ -21,8 +21,7 @@ import {
 } from '@/utils/activityAnimations'
 import {
   startInteractionTracking,
-  stopInteractionTracking,
-  getInteractionIntensity
+  stopInteractionTracking
 } from '@/utils/interactionActivityTracker'
 
 interface ParticleBackgroundProps {

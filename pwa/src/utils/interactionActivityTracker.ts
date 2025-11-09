@@ -78,13 +78,6 @@ function calculateVelocity(currentX: number, currentY: number, currentTime: numb
 }
 
 /**
- * Smooth easing function (ease-out)
- */
-function easeOut(t: number, power: number = 2.0): number {
-  return 1 - Math.pow(1 - t, power)
-}
-
-/**
  * Update intensity based on current velocity with smooth transitions
  */
 function updateIntensity(): void {
