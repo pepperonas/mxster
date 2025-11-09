@@ -210,7 +210,7 @@ class SpotifyPlayerServiceClass {
       console.log('✅ Spotify Player Ready! Device ID:', device_id)
       this.deviceId = device_id
       this.isReady = true
-      resolve(device_id)
+      // Note: Don't resolve here - wait for connect() to succeed
     })
 
     // Player Not Ready
@@ -279,6 +279,20 @@ class SpotifyPlayerServiceClass {
     this.player.connect().then((success) => {
       if (success) {
         console.log('✅ Player successfully connected')
+        // Wait for device to be ready before resolving
+        const waitForReady = setInterval(() => {
+          if (this.isReady && this.deviceId) {
+            clearInterval(waitForReady)
+            resolve(this.deviceId)
+          }
+        }, 100)
+        // Timeout after 10 seconds
+        setTimeout(() => {
+          clearInterval(waitForReady)
+          if (!this.isReady) {
+            reject(new Error('Player ready timeout'))
+          }
+        }, 10000)
       } else {
         reject(new Error('Player could not be connected'))
       }
@@ -323,6 +337,11 @@ class SpotifyPlayerServiceClass {
   async play(spotifyId: string, startPosition: number = 0): Promise<void> {
     const trackUri = `spotify:track:${spotifyId}`
 
+    // Note: MusicPlayerService already calls stop() before this, no need to stop again
+    console.log('🎵 SpotifyPlayerService.play() called for:', spotifyId)
+    console.log('🎵 Current track URI:', this.currentTrackUri)
+    console.log('🎵 New track URI:', trackUri)
+
     // Notify loading state
     this.onStateChange?.('loading')
 
@@ -362,11 +381,12 @@ class SpotifyPlayerServiceClass {
         return false
       }
 
-      // First, try to transfer playback to our device
+      // CRITICAL: Always transfer playback to ensure device is active
+      // Without this, Spotify API ignores play requests after first song
+      console.log('🔄 Transferring playback to device')
       await this.transferPlayback(token)
-
       // Small delay to let transfer complete
-      await new Promise(resolve => setTimeout(resolve, 500))
+      await new Promise(resolve => setTimeout(resolve, 300))
 
       const response = await fetch(
         `https://api.spotify.com/v1/me/player/play?device_id=${this.deviceId}`,
@@ -424,11 +444,12 @@ class SpotifyPlayerServiceClass {
         return false
       }
 
-      // Transfer playback to our device
+      // CRITICAL: Always transfer playback to ensure device is active
+      // Without this, Spotify API ignores play requests after first song
+      console.log('🔄 Transferring playback to device')
       await this.transferPlayback(token)
-
       // Small delay to let transfer complete
-      await new Promise(resolve => setTimeout(resolve, 500))
+      await new Promise(resolve => setTimeout(resolve, 300))
 
       const response = await fetch(
         `https://api.spotify.com/v1/me/player/play?device_id=${this.deviceId}`,
@@ -496,6 +517,8 @@ class SpotifyPlayerServiceClass {
     this.lastKnownPosition = 0
     this.lastKnownDuration = 0
     this.lastUpdateTime = 0
+    // CRITICAL: Reset current track URI so next play() knows it's a new track
+    this.currentTrackUri = null
     this.onStateChange?.('stopped')
   }
 
@@ -642,6 +665,7 @@ class SpotifyPlayerServiceClass {
       this.player = null
       this.isReady = false
       this.deviceId = null
+      this.currentTrackUri = null // Reset current track
       this.stateChangeCallbacks = []
       console.log('🔌 Player disconnected')
     }

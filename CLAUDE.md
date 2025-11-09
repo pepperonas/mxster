@@ -6,7 +6,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 **mxster** is a music timeline game with virtual and physical gameplay. Play digitally (recommended) or with 3D-printed QR cards. Features guess mode (points-based) and timeline modes (chronological placement).
 
-**Current Version**: v0.0.49 (2025-11-07)
+**Current Version**: v0.0.50 (2025-11-09)
 **Current Song Database**: 209 songs with full genre data (as of 2025-11-04)
 
 ### Key Technologies
@@ -483,6 +483,57 @@ All files hosted via GitHub raw URLs (auto-update, no manual releases):
 - **Song count**: Auto-dynamic via `songs.length` in LandingPage.tsx (updates on build)
 
 ## Recent Changes
+
+### v0.0.50 (2025-11-09) - Critical Spotify Player Fixes
+
+**🎵 Fixed Song Switching in Both Timeline and Hardcore Modes**
+
+Fixed critical bugs preventing Spotify playback from working correctly in both game modes.
+
+**Problems Fixed:**
+
+1. **Timeline Mode - Component Re-mounting Issue**:
+   - **Problem**: `MusicPlayer` component was unmounted when `currentSong` was set to `null` during turn changes
+   - **Symptom**: Player was re-initialized for every new song, causing delay and failed playback
+   - **Root Cause**: Conditional rendering `{currentSong && <MusicPlayer />}` unmounted component on `null`
+   - **Solution**: Keep `MusicPlayer` always mounted: `<MusicPlayer song={currentSong} />`
+   - **Impact**: Player initializes once and remains active for all songs
+
+2. **Hardcore Mode - Initialization Race Condition**:
+   - **Problem**: `player.connect()` resolved before `ready` event fired, causing premature `playerReady = true`
+   - **Symptom**: Songs played before player was actually ready, causing playback failures
+   - **Root Cause**: Promise resolved immediately after `connect()`, not waiting for SDK `ready` event
+   - **Solution**: Added polling mechanism to wait for both `connect()` success AND `isReady === true`
+   - **Implementation**:
+     ```typescript
+     // Wait for device to be ready before resolving
+     const waitForReady = setInterval(() => {
+       if (this.isReady && this.deviceId) {
+         clearInterval(waitForReady)
+         resolve(this.deviceId)
+       }
+     }, 100)
+     // 10 second timeout
+     ```
+   - **Impact**: Player only reports ready when fully initialized
+
+**Technical Details:**
+- **File Modified**: `pwa/src/screens/GameScreen.tsx` (line 1338) - Removed conditional rendering
+- **File Modified**: `pwa/src/services/SpotifyPlayerService.ts` (lines 213, 279-299) - Added ready-state polling
+- **File Modified**: `pwa/src/components/game/MusicPlayer.tsx` (unchanged, benefits from fixes)
+
+**Testing:**
+- ✅ Timeline Mode: Songs switch correctly for all players
+- ✅ Hardcore Mode: First song plays immediately
+- ✅ Both Modes: No re-initialization delays
+- ✅ Spotify Premium: Full 320 kbps playback working
+- ✅ Device Transfer: Happens on every song (v0.0.33 fix maintained)
+
+**Files Changed:**
+- `pwa/src/screens/GameScreen.tsx`
+- `pwa/src/services/SpotifyPlayerService.ts`
+- `pwa/package.json` (v0.0.50)
+- `pwa/src/components/Sidebar.tsx` (version display)
 
 ### v0.0.49 (2025-11-07) - 8-Bit Pixel Cookie Banner
 

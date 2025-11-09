@@ -69,6 +69,13 @@ export class MusicPlayerService {
    * Auto-fallback: Spotify → Preview
    */
   async play(song: Song, startTime: number = 0): Promise<void> {
+    // CRITICAL: Stop any currently playing track first
+    console.log('🛑 Stopping current playback before playing new song')
+    this.stop()
+
+    // Small delay to ensure stop completes
+    await new Promise(resolve => setTimeout(resolve, 100))
+
     // Try Spotify first if available and preferred
     if (this.preferredMode === 'spotify' && this.spotifyPlayer && song.spotifyId) {
       try {
@@ -134,7 +141,7 @@ export class MusicPlayerService {
     } else if (this.currentMode === 'preview') {
       this.previewPlayer.stop()
     }
-    this.setMode('none')
+    // Note: Don't set mode to 'none' here - let play() set the new mode
   }
 
   /**

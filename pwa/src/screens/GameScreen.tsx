@@ -1334,12 +1334,10 @@ export function GameScreen() {
               </div>
             )}
 
-            {/* Music Player (when song is playing) */}
-            {currentSong && (
-              <div>
-                <MusicPlayer song={currentSong} />
-              </div>
-            )}
+            {/* Music Player (always mounted to prevent re-initialization) */}
+            <div>
+              <MusicPlayer song={currentSong} />
+            </div>
 
             {/* Guess Form (only in Guess Mode!) */}
             {currentSong && gameMode === 'hardcore' && (

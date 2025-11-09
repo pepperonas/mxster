@@ -156,13 +156,9 @@ export function MusicPlayer({ song, onStateChange }: MusicPlayerProps) {
       return
     }
 
-    // Only play if this is a different song
+    // Note: Removed lastPlayedSongId check - MusicPlayerService.play() already handles
+    // stopping the old track before playing new one, so duplicate prevention is not needed here
     const songId = song.spotifyId || song.id
-    if (lastPlayedSongId.current === songId) {
-      console.log('🔇 Same song, skipping playback:', songId)
-      return
-    }
-
     console.log('🎵 New song detected:', song.title, 'ID:', songId)
     lastPlayedSongId.current = songId
 
