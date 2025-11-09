@@ -53,8 +53,9 @@ export function PlayerStatsDialog() {
         stats.totalGames++
         stats.totalScore += player.score
 
-        // Count hardcore mode games for avgScore calculation
-        if (game.gameMode === 'hardcore') {
+        // Count COMPLETED hardcore mode games for avgScore calculation
+        // Only count games where player actually finished (10 cards in timeline)
+        if (game.gameMode === 'hardcore' && player.timeline.length === 10) {
           stats.hardcoreGames++
         }
 
