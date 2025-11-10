@@ -1881,5 +1881,23 @@ export const songs: Song[] = [
     "spotifyId": "7gfMuyx2NauRQbrDiZcimh",
     "previewUrl": "https://mxster.de/audio/song_208.mp3",
     "genre": "Electronic"
+  },
+  {
+    "id": "song_209",
+    "title": "Justified & Ancient",
+    "artist": "The KLF",
+    "year": 2021,
+    "spotifyId": "4t32A4kkfs2hNqa8g7aC2U",
+    "previewUrl": "https://mxster.de/audio/song_209.mp3",
+    "genre": "Pop"
+  },
+  {
+    "id": "song_210",
+    "title": "Die With A Smile",
+    "artist": "Lady Gaga, Bruno Mars",
+    "year": 2024,
+    "spotifyId": "2plbrEY59IikOBgBGLjaoe",
+    "previewUrl": "https://mxster.de/audio/song_210.mp3",
+    "genre": ""
   }
 ]
