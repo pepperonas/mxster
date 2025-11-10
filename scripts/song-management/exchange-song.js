@@ -309,6 +309,23 @@ async function main() {
       newSong.genre = trackData.genre;
     }
 
+    // 2.5. Download from YouTube and upload to VPS
+    log('\n🎵 Downloading and uploading audio...', 'cyan');
+    try {
+      const { downloadAndUploadSong } = await import('../audio-hosting/download-single-song.js');
+      const selfHostedUrl = await downloadAndUploadSong(newSong);
+
+      if (selfHostedUrl) {
+        newSong.previewUrl = selfHostedUrl;
+        log(`✅ Updated previewUrl to self-hosted: ${selfHostedUrl}`, 'green');
+      } else {
+        log(`⚠️  Using Spotify preview URL as fallback: ${trackData.previewUrl || 'none'}`, 'yellow');
+      }
+    } catch (error) {
+      log(`❌ Audio download/upload failed: ${error.message}`, 'red');
+      log(`⚠️  Using Spotify preview URL as fallback: ${trackData.previewUrl || 'none'}`, 'yellow');
+    }
+
     // 3. In Array ersetzen
     songs[songIndex] = newSong;
 

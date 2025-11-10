@@ -28,8 +28,8 @@ const __dirname = path.dirname(__filename)
 dotenv.config({ path: path.join(__dirname, '../../.env') })
 
 // Configuration
-const SONGS_JSON_PATH = '../../docs/songs.json';
-const PWA_SONGS_PATH = '../../pwa/src/data/songs.ts';
+const SONGS_JSON_PATH = path.join(__dirname, '../../docs/songs.json');
+const PWA_SONGS_PATH = path.join(__dirname, '../../pwa/src/data/songs.ts');
 
 /**
  * Main function
@@ -182,6 +182,22 @@ async function main() {
       // 6. Add to songs array
       songs.push(newSong);
       console.log(`   ✅ Added as ${newSong.id}\n`);
+
+      // 6.5. Download from YouTube and upload to VPS
+      try {
+        const { downloadAndUploadSong } = await import('../audio-hosting/download-single-song.js');
+        const selfHostedUrl = await downloadAndUploadSong(newSong);
+
+        if (selfHostedUrl) {
+          newSong.previewUrl = selfHostedUrl;
+          console.log(`   ✅ Updated previewUrl to self-hosted: ${selfHostedUrl}\n`);
+        } else {
+          console.log(`   ⚠️  Using Spotify preview URL as fallback: ${trackData.previewUrl || 'none'}\n`);
+        }
+      } catch (error) {
+        console.error(`   ❌ Audio download/upload failed: ${error.message}`);
+        console.log(`   ⚠️  Using Spotify preview URL as fallback: ${trackData.previewUrl || 'none'}\n`);
+      }
 
       // 7. Save updated songs.json
       console.log('💾 Saving songs.json...');
