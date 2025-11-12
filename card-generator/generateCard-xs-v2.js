@@ -370,9 +370,9 @@ async function generate3MF(scadPath) {
 
     console.log(`   🔨 Generating 3MF file with embedded colors...`);
 
-    // Generate 3MF with color information
+    // Generate 3MF with color information (with faster Manifold backend)
     await execPromise(
-        `openscad -o "${mfPath}" "${scadPath}"`
+        `openscad -o "${mfPath}" --enable=manifold --enable=fast-csg "${scadPath}"`
     );
     console.log(`   ✅ 3MF saved: ${mfPath}`);
 

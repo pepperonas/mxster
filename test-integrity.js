@@ -541,7 +541,7 @@ if (fs.existsSync(modelsDir)) {
       if (fs.existsSync(scadPath)) {
         try {
           // Try to parse the SCAD file (doesn't render, just checks syntax)
-          await execAsync(`openscad -o /dev/null --check-parameters true "${scadPath}" 2>&1`, { timeout: 5000 });
+          await execAsync(`openscad -o /dev/null --check-parameters true --enable=manifold --enable=fast-csg "${scadPath}" 2>&1`, { timeout: 5000 });
           validSyntax++;
         } catch (error) {
           if (!error.message.includes('No such file')) {

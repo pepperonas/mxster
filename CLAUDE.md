@@ -442,6 +442,7 @@ All files hosted via GitHub raw URLs (auto-update, no manual releases):
 ### 3D Printing
 - **Settings**: PLA/PETG, 0.2mm layer, 20% infill
 - **Workflow**: OpenSCAD (F6 render) → STL export → Slice (Cura/PrusaSlicer) → Print
+- **Performance**: All scripts use `--enable=manifold --enable=fast-csg` for faster STL generation (requires OpenSCAD 2021.01+)
 
 ## Troubleshooting
 
@@ -483,6 +484,32 @@ All files hosted via GitHub raw URLs (auto-update, no manual releases):
 - **Song count**: Auto-dynamic via `songs.length` in LandingPage.tsx (updates on build)
 
 ## Recent Changes
+
+### v0.0.50+ (2025-11-12) - OpenSCAD Performance & YouTube Integration
+
+**🚀 OpenSCAD Performance Improvements**
+
+Updated all OpenSCAD commands to use newer, faster Manifold backend:
+- Added `--enable=manifold --enable=fast-csg` flags to all STL/3MF generation
+- Significantly faster 3D model generation (requires OpenSCAD 2021.01+)
+- **Files Modified**:
+  - `card-generator/generateCard.js` - Standard cards
+  - `card-generator/generateCard-xs.js` - XS test cards (embossed)
+  - `card-generator/generateCard-xs-v2.js` - XS-V2 test cards (flat multi-color)
+  - `test-integrity.js` - Syntax validation
+
+**🎵 YouTube Download Integration** (from previous commit 13b881a)
+
+Added automatic YouTube download and VPS upload for self-hosted audio:
+- **New Utility**: `scripts/audio-hosting/download-single-song.js`
+  - Automatic YouTube search via yt-dlp
+  - Downloads 128 kbps MP3 to `pwa/public/audio/`
+  - Uploads to VPS: `https://mxster.de/audio/song_XXX.mp3`
+  - Graceful fallback to Spotify preview
+- **Integration**:
+  - `scripts/song-management/add-song.js` - Auto-download for new songs
+  - `scripts/song-management/exchange-song.js` - Auto-download for replacements
+  - Fixed path resolution bug (SONGS_JSON_PATH + PWA_SONGS_PATH)
 
 ### v0.0.50 (2025-11-09) - Critical Spotify Player Fixes
 

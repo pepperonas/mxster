@@ -418,9 +418,9 @@ async function generateSTL(scadPath) {
 
     console.log(`   🔨 Generating STL file...`);
 
-    // Generate single dual-sided STL
+    // Generate single dual-sided STL (with faster Manifold backend)
     await execPromise(
-        `openscad -o "${stlPath}" "${scadPath}"`
+        `openscad -o "${stlPath}" --enable=manifold --enable=fast-csg "${scadPath}"`
     );
     console.log(`   ✅ STL saved: ${stlPath}`);
 

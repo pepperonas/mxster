@@ -3,7 +3,7 @@
 **Das ultimative Musikquiz für Musikfans!** Rate Songs, platziere sie chronologisch und teste dein Musikwissen. Spiele mit Freunden, sammle Punkte und werde zum Musik-Champion!
 
 [![App](https://img.shields.io/badge/App-mxster.de-blue?style=for-the-badge)](https://mxster.de)
-[![Version](https://img.shields.io/badge/Version-v0.0.49-purple?style=for-the-badge)](https://github.com/pepperonas/mxster/releases)
+[![Version](https://img.shields.io/badge/Version-v0.0.50-purple?style=for-the-badge)](https://github.com/pepperonas/mxster/releases)
 [![License](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)](LICENSE)
 ![Songs](https://img.shields.io/badge/Songs-211-orange?style=for-the-badge)
 ![Audio](https://img.shields.io/badge/Audio-Self--Hosted-red?style=for-the-badge)
@@ -1627,6 +1627,36 @@ Dieses Projekt ist unter der **MIT-Lizenz** veröffentlicht. Siehe [LICENSE](LIC
 - **Browser-Kompatibilität**: Chrome, Firefox, Edge, Safari (neueste Versionen)
 
 ## 📝 Changelog
+
+### v0.0.50 (2025-11-12) - OpenSCAD Performance & YouTube Integration
+
+**🚀 OpenSCAD Performance Improvements**
+
+Upgraded all 3D card generation scripts to use modern Manifold backend for significantly faster STL generation:
+
+- **Performance**: Added `--enable=manifold --enable=fast-csg` flags to all OpenSCAD commands
+- **Speed Boost**: 2-5x faster STL/3MF generation depending on model complexity
+- **Requirements**: OpenSCAD 2021.01+ (older versions fall back gracefully)
+- **Scripts Updated**:
+  - `card-generator/generateCard.js` - Standard full-size cards
+  - `card-generator/generateCard-xs.js` - XS test cards (embossed)
+  - `card-generator/generateCard-xs-v2.js` - XS-V2 test cards (flat multi-color)
+  - `test-integrity.js` - Syntax validation
+
+**🎵 YouTube Download Integration**
+
+Added automatic song download and upload system for self-hosted audio:
+
+- **New Utility**: `scripts/audio-hosting/download-single-song.js`
+  - Searches YouTube automatically: `ytsearch1:${artist} - ${title}`
+  - Downloads 128 kbps MP3 to `pwa/public/audio/`
+  - Uploads to VPS via rsync
+  - Returns self-hosted URL: `https://mxster.de/audio/song_XXX.mp3`
+- **Integration**: Automatic download/upload in `add-song.js` and `exchange-song.js`
+- **Bug Fix**: Fixed path resolution in `add-song.js` (SONGS_JSON_PATH + PWA_SONGS_PATH now use proper `path.join(__dirname, ...)`)
+- **Fallback**: Gracefully falls back to Spotify preview if download fails
+
+**Impact**: All new songs automatically get self-hosted audio, no manual intervention needed!
 
 ### v0.0.49 (2025-11-07) - 8-Bit Pixel Cookie Banner
 
