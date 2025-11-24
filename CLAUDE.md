@@ -17,6 +17,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - **3D Graphics**: Three.js particle animations
 - **State**: React Context API
 - **Cards**: Node.js + qrcode + Canvas
+- **Analytics**: Google Analytics (G-SY6JTRCVG5)
 
 ## Development Commands
 
