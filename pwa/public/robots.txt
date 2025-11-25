@@ -1,0 +1,18 @@
+# mxster.de - Robots.txt
+# Music Timeline Game PWA
+
+User-agent: *
+Allow: /
+Allow: /mode-selection
+Allow: /variant-selection
+Allow: /player-setup
+
+# Exclude OAuth callback and active game routes from indexing
+Disallow: /callback
+Disallow: /game
+
+# Sitemap location
+Sitemap: https://mxster.de/sitemap.xml
+
+# Crawl delay (be nice to servers)
+Crawl-delay: 10

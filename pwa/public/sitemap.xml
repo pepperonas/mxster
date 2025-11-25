@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <!-- Main Landing Page -->
+  <url>
+    <loc>https://mxster.de/</loc>
+    <lastmod>2025-11-25</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+
+  <!-- Game Mode Selection -->
+  <url>
+    <loc>https://mxster.de/mode-selection</loc>
+    <lastmod>2025-11-25</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- Game Variant Selection -->
+  <url>
+    <loc>https://mxster.de/variant-selection</loc>
+    <lastmod>2025-11-25</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- Player Setup -->
+  <url>
+    <loc>https://mxster.de/player-setup</loc>
+    <lastmod>2025-11-25</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+</urlset>
