@@ -6,7 +6,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 **mxster** is a music timeline game with virtual and physical gameplay. Play digitally (recommended) or with 3D-printed QR cards. Features guess mode (points-based) and timeline modes (chronological placement).
 
-**Current Version**: v0.0.50 (2025-11-09)
+**Current Version**: v0.1.0 (2025-11-25)
 **Current Song Database**: 209 songs with full genre data (as of 2025-11-04)
 
 ### Key Technologies
@@ -18,6 +18,24 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - **State**: React Context API
 - **Cards**: Node.js + qrcode + Canvas
 - **Analytics**: Google Analytics (G-SY6JTRCVG5)
+- **SEO**: sitemap.xml + robots.txt
+
+## Versioning Scheme
+
+**Semantic Versioning**: MAJOR.MINOR.PATCH
+
+**Rules:**
+- After 9 patches (e.g., 0.0.9) → increment MINOR version (0.1.0)
+- After 9 minors (e.g., 0.9.x) → increment MAJOR version (1.0.0)
+- PATCH increments for bug fixes and small changes
+- MINOR increments for new features
+- MAJOR increments for breaking changes or major milestones
+
+**Examples:**
+```
+0.0.9 → 0.1.0 (10th patch triggers minor increment)
+0.9.9 → 1.0.0 (10th minor triggers major increment)
+```
 
 ## Development Commands
 
@@ -247,6 +265,82 @@ node validate-audio.js --full # Test all 209 songs
 ### State & Particles
 - **State**: LocalStorage persistence, JSON export/import, auto-save
 - **Particles**: 3-layer Three.js system (indigo/orange/cyan), 4 activity levels, music-reactive, auto-decay (60s/30s)
+
+### SEO & Discoverability
+
+**Files:**
+- `pwa/public/sitemap.xml` - XML sitemap for search engines
+- `pwa/public/robots.txt` - Crawler directives
+
+**sitemap.xml Structure:**
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>https://mxster.de/</loc>
+    <lastmod>2025-11-25</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+  <!-- Additional URLs: /mode-selection, /variant-selection, /player-setup -->
+</urlset>
+```
+
+**robots.txt Directives:**
+```
+User-agent: *
+Allow: /
+Allow: /mode-selection
+Allow: /variant-selection
+Allow: /player-setup
+
+# Exclude OAuth callback and active game routes
+Disallow: /callback
+Disallow: /game
+
+Sitemap: https://mxster.de/sitemap.xml
+Crawl-delay: 10
+```
+
+**nginx Configuration (VPS):**
+The security rules in nginx block `.txt` files by default. Special exceptions are configured for SEO files:
+
+```nginx
+# In /etc/nginx/sites-enabled/mxster.de
+
+# SEO: Allow robots.txt and sitemap.xml (exact match has priority)
+location = /robots.txt {
+    allow all;
+    add_header Content-Type text/plain;
+    log_not_found off;
+}
+
+location = /sitemap.xml {
+    allow all;
+    add_header Content-Type text/xml;
+    log_not_found off;
+}
+
+# Security: Block other .txt files
+location ~* \.(md|env|log|py|sh|sql|bak|backup|key|pem|conf|txt)$ {
+    deny all;
+    access_log off;
+    log_not_found off;
+    return 404;
+}
+```
+
+**Why This Configuration:**
+- `location =` (exact match) has higher priority than regex `location ~*`
+- Allows robots.txt while keeping security rules for other .txt files
+- Proper Content-Type headers for search engine compatibility
+- Deployed via `./scripts/deployment/deploy.sh` (SEO files included in `pwa/public/`)
+
+**Verification:**
+```bash
+curl -I https://mxster.de/robots.txt  # Should return 200
+curl -I https://mxster.de/sitemap.xml # Should return 200
+```
 
 ## Critical Configuration
 
@@ -485,6 +579,67 @@ All files hosted via GitHub raw URLs (auto-update, no manual releases):
 - **Song count**: Auto-dynamic via `songs.length` in LandingPage.tsx (updates on build)
 
 ## Recent Changes
+
+### v0.1.0 (2025-11-25) - SEO Optimization & First Minor Release
+
+**🎯 Major Milestone: First Minor Release**
+
+After 51 patches, the project reached v0.1.0 following the semantic versioning scheme (after 9 patches → increment MINOR).
+
+**🔍 SEO Implementation:**
+- ✅ **sitemap.xml**: XML sitemap with 4 URLs (/, /mode-selection, /variant-selection, /player-setup)
+  - Proper priority and changefreq settings
+  - Last updated: 2025-11-25
+  - Accessible at: https://mxster.de/sitemap.xml
+
+- ✅ **robots.txt**: Search engine directives
+  - Allows indexing of setup pages
+  - Blocks /callback (OAuth) and /game (active gameplay)
+  - Includes sitemap reference
+  - Crawl-delay: 10 seconds
+  - Accessible at: https://mxster.de/robots.txt
+
+- ✅ **nginx Configuration**: Special handling for SEO files
+  - Added explicit `location =` blocks for robots.txt and sitemap.xml
+  - Overrides security rules that block .txt files
+  - Proper Content-Type headers (text/plain, text/xml)
+  - Configuration in `/etc/nginx/sites-enabled/mxster.de`
+
+**nginx SEO Configuration:**
+```nginx
+# Exception: Allow robots.txt and sitemap.xml for SEO
+location = /robots.txt {
+    allow all;
+    add_header Content-Type text/plain;
+    log_not_found off;
+}
+
+location = /sitemap.xml {
+    allow all;
+    add_header Content-Type text/xml;
+    log_not_found off;
+}
+```
+
+**📊 Version Statistics:**
+- Version progression: 0.0.50 → 0.0.51 → 0.1.0
+- Total features: 209 songs, 23 achievements, Bot AI system, Self-hosted audio
+- Bundle size: 1.06 MB JS (gzipped: 288 KB)
+- Build time: ~9.5s average
+
+**Files Modified:**
+- `pwa/public/sitemap.xml` - New file
+- `pwa/public/robots.txt` - New file
+- `pwa/package.json` - Version 0.1.0
+- `pwa/src/components/Sidebar.tsx` - Version display
+- `CLAUDE.md` - Updated version, added versioning scheme
+- `/etc/nginx/sites-enabled/mxster.de` (VPS) - SEO exception rules
+
+**Deployment:**
+- Build: 9.45s
+- Transfer: 23 files, 1.85 MB
+- Audio preserved: 209 songs (~933 MB)
+- Live: https://mxster.de
 
 ### v0.0.50+ (2025-11-12) - OpenSCAD Performance & YouTube Integration
 

@@ -792,6 +792,10 @@ export function LandingPage() {
               <a href="https://github.com/pepperonas/mxster" target="_blank" rel="noopener noreferrer" className="text-text-secondary hover:text-secondary transition-colors">
                 GitHub
               </a>
+              <span className="text-text-secondary">•</span>
+              <a href="https://www.linkedin.com/in/martin-pfeffer-020831134/" target="_blank" rel="noopener noreferrer" className="text-text-secondary hover:text-secondary transition-colors">
+                LinkedIn
+              </a>
             </div>
           </div>
         </div>
