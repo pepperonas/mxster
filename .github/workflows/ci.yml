@@ -15,6 +15,7 @@ on:
       - 'pwa/src/components/game/MusicPlayer.tsx'
       - 'pwa/package.json'
       - '.github/workflows/ci.yml'
+  workflow_dispatch:
 
 jobs:
   test:
@@ -39,10 +40,10 @@ jobs:
       run: npm ci
 
     - name: Run audio player integration tests
-      run: npm test -- src/services/__tests__/audioPlayer.integration.test.ts --run
+      run: npx vitest run src/services/__tests__/audioPlayer.integration.test.ts
 
     - name: Run all tests
-      run: npm test --run
+      run: npx vitest run
 
     - name: Build TypeScript
       run: npx tsc --noEmit
