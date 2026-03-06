@@ -761,7 +761,7 @@ export function LandingPage() {
                 📦 SCAD (ZIP)
                 <span>↓</span>
               </a>
-              <a href="https://github.com/pepperonas/mxster/tree/main/card-generator/models" target="_blank" rel="noopener noreferrer" className="btn btn-secondary text-sm w-full justify-between py-2">
+              <a href="https://github.com/pepperonas/mxster/tree/main/extras/card-generator/models" target="_blank" rel="noopener noreferrer" className="btn btn-secondary text-sm w-full justify-between py-2">
                 📂 GitHub
                 <span>→</span>
               </a>

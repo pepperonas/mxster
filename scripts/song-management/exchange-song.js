@@ -14,8 +14,8 @@ import path from 'path'
 import { fileURLToPath } from 'url'
 import readline from 'readline'
 import { execSync } from 'child_process'
-import { getTrackMetadata } from '../../card-generator/spotifyApi.js'
-import { generateCard, generateSTL } from '../../card-generator/generateCard.js'
+import { getTrackMetadata } from '../../extras/card-generator/spotifyApi.js'
+import { generateCard, generateSTL } from '../../extras/card-generator/generateCard.js'
 
 // ES Module equivalent of __dirname
 const __filename = fileURLToPath(import.meta.url)
@@ -86,8 +86,8 @@ async function deleteOldFiles(songId) {
 
   // Finde alle Dateien mit dieser Song-ID
   const docsDir = path.join(__dirname, '../../docs');
-  const qrCodesDir = path.join(__dirname, '../../card-generator', 'output', 'qr-codes');
-  const modelsDir = path.join(__dirname, '../../card-generator', 'output', 'models');
+  const qrCodesDir = path.join(__dirname, '../../extras/card-generator', 'output', 'qr-codes');
+  const modelsDir = path.join(__dirname, '../../extras/card-generator', 'output', 'models');
 
   // Suche in docs/
   try {
@@ -358,11 +358,11 @@ async function main() {
     log('  • docs/songs.json', 'cyan');
     log('  • pwa/src/data/songs.ts', 'cyan');
     log(`  • docs/${songId}_*.png`, 'cyan');
-    log(`  • card-generator/output/qr-codes/${songId}_*.png`, 'cyan');
-    log(`  • card-generator/output/models/${songId}_*.scad`, 'cyan');
-    log(`  • card-generator/output/models/${songId}_*.stl`, 'cyan');
+    log(`  • extras/card-generator/output/qr-codes/${songId}_*.png`, 'cyan');
+    log(`  • extras/card-generator/output/models/${songId}_*.scad`, 'cyan');
+    log(`  • extras/card-generator/output/models/${songId}_*.stl`, 'cyan');
     if (generatePDF.toLowerCase() === 'j' || generatePDF.toLowerCase() === 'ja') {
-      log(`  • card-generator/output/pdfs/mxster-cards-*.pdf`, 'cyan');
+      log(`  • extras/card-generator/output/pdfs/mxster-cards-*.pdf`, 'cyan');
     }
 
     log('\n📊 Song-Details:', 'cyan');

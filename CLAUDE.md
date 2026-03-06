@@ -6,1817 +6,225 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 **mxster** is a music timeline game with virtual and physical gameplay. Play digitally (recommended) or with 3D-printed QR cards. Features guess mode (points-based) and timeline modes (chronological placement).
 
-**Current Version**: v0.1.0 (2025-11-25)
-**Current Song Database**: 209 songs with full genre data (as of 2025-11-04)
+**Current Version**: v0.1.1
+**Song Database**: 209 songs with full genre data
 
 ### Key Technologies
-- **Frontend**: React 19 + TypeScript + Vite 5.0
-- **Audio**: Self-Hosted Primary System (209 songs @ 128 kbps MP3, ~933 MB) + Optional Spotify Premium (max 25 users)
+- **Frontend**: React 19 + TypeScript + Vite 5.0 + TailwindCSS 3.4
+- **Audio**: Self-Hosted Primary (209 songs @ 128 kbps MP3, ~933 MB) + Optional Spotify Premium (max 25 users)
 - **Auth**: Spotify OAuth2 PKCE (optional for Premium mode)
-- **PWA**: vite-plugin-pwa
+- **PWA**: vite-plugin-pwa (Workbox service worker)
 - **3D Graphics**: Three.js particle animations
-- **State**: React Context API
-- **Cards**: Node.js + qrcode + Canvas
-- **Analytics**: Google Analytics (G-SY6JTRCVG5)
-- **SEO**: sitemap.xml + robots.txt
+- **State**: React Context API (10 contexts)
+- **Cards**: Node.js + qrcode + OpenSCAD + pdfkit
+- **Testing**: Vitest + @testing-library/react
 
 ## Versioning Scheme
 
-**Semantic Versioning**: MAJOR.MINOR.PATCH
+Semantic Versioning with auto-increment: after 9 patches (e.g., 0.0.9) → increment MINOR (0.1.0). After 9 minors (e.g., 0.9.x) → increment MAJOR (1.0.0).
 
-**Rules:**
-- After 9 patches (e.g., 0.0.9) → increment MINOR version (0.1.0)
-- After 9 minors (e.g., 0.9.x) → increment MAJOR version (1.0.0)
-- PATCH increments for bug fixes and small changes
-- MINOR increments for new features
-- MAJOR increments for breaking changes or major milestones
-
-**Examples:**
-```
-0.0.9 → 0.1.0 (10th patch triggers minor increment)
-0.9.9 → 1.0.0 (10th minor triggers major increment)
-```
+**Version locations**: `pwa/package.json` + `pwa/src/components/Sidebar.tsx`
 
 ## Development Commands
 
-### PWA Development
 ```bash
-cd pwa
+# PWA dev server (http://127.0.0.1:5174)
+cd pwa && npm run dev
 
-# Development server (localhost:5174)
-npm run dev
+# Production build → pwa/dist/
+cd pwa && npm run build
 
-# Production build
-npm run build
+# Root integrity tests (15 tests: JSON structure, sync, fields, IDs, years)
+npm test
 
-# Preview production build
-npm run preview
+# PWA unit/integration tests (Vitest, watch mode)
+cd pwa && npm test
+
+# PWA tests single run
+cd pwa && npm run test:run
+
+# PWA test coverage (target: 80% lines/functions, 75% branches)
+cd pwa && npm run test:coverage
+
+# TypeScript check
+cd pwa && npx tsc --noEmit
+
+# Deploy to production (https://mxster.de)
+./scripts/deployment/deploy.sh
 ```
 
-### Spotify Integration
+### Song Management
 ```bash
-cd pwa
-npm run import-spotify  # Import from playlist (creates songs.ts + songs.json)
-npm run update-previews # Fetch current preview URLs
-npm run filter-songs    # Remove invalid songs (auto-backup)
+node scripts/song-management/add-song.js "spotify-url"        # Add song
+node scripts/song-management/add-song.js --edit "spotify-url"  # Add with interactive genre
+node scripts/song-management/edit-song.js                      # Edit existing (wizard)
+node scripts/song-management/exchange-song.js                  # Replace song (keeps ID)
 ```
 
-### 3D Card Generation (SCAD + STL + 3MF)
-
-**Three Generator Variants Available:**
-
-#### 1. Standard Generator (Full Size)
+### Audio Hosting (Self-Hosted Mode)
 ```bash
-cd card-generator
-node generateCard.js
+cd scripts/audio-hosting
+node download-songs.js              # Download all from YouTube (~20 min)
+node download-songs.js --limit 5    # Test mode
+node upload-to-vps.js               # Upload to VPS via rsync
+node update-song-urls.js            # Update previewUrl in songs.json/songs.ts
+node validate-audio.js --full       # Test all 209 URLs
 ```
-Outputs: `output/models/*.scad`, `*.stl`
-- **Dimensions**: 85.6mm × 53.98mm × 1.6mm (credit card size)
-- **QR Code**: 48mm, engraved
-- **Text**: Engraved on back
 
-#### 2. XS Generator (50% Test Prints - Embossed)
+### Card Generation
 ```bash
-cd card-generator
-node test-xs-generator.js
+cd extras/card-generator
+node generateCard.js            # Standard cards (85.6×53.98mm, STL)
+node test-xs-generator.js       # XS 50% embossed (STL)
+node test-xs-v2-generator.js    # XS 50% flat multi-color (3MF)
+./scripts/build/generate-all-pdfs.sh  # 4 PDF variants
 ```
-Outputs: `output/models-xs/*.scad`, `*.stl`
-- **Dimensions**: 42.8mm × 26.99mm × 0.96mm (50% width/length, 60% height)
-- **QR Code**: 24mm, **embossed** (raised) on top
-- **Text**: **Embossed** (raised) on bottom, mirrored for readability
-- **Use Case**: Quick test prints, manual color assignment in slicer
-- **Watermark**: Removed
-- **Documentation**: `README-XS.md`
-
-#### 3. XS-V2 Generator (50% Test Prints - Flat Multi-Color)
-```bash
-cd card-generator
-node test-xs-v2-generator.js
-```
-Outputs: `output/models-xs-v2/*.scad`, `*.3mf`
-- **Dimensions**: 42.8mm × 26.99mm × 0.96mm (same as XS)
-- **Surface**: Completely flat (no embossing)
-- **QR Code**: 24mm, flat with `color("black")` definition
-- **Text**: Flat with `color("black")` definition, mirrored
-- **Export Format**: **3MF with embedded colors** (not STL)
-- **Use Case**: Multi-material printers (MMU2, AMS), automatic color assignment
-- **Color Layers**: 0.02mm thin (just for color definition, not physical relief)
-- **Documentation**: `README-XS-V2.md`
-
-**File Structure:**
-```
-card-generator/output/
-├── qr-codes/           # Standard QR codes
-├── qr-codes-xs/        # XS QR codes (same as standard)
-├── qr-codes-xs-v2/     # XS-V2 QR codes (same as standard)
-├── models/             # Standard SCAD + STL
-│   └── all-cards.3mf   # Combined 3MF for all standard cards
-├── models-xs/          # XS SCAD + STL (embossed)
-└── models-xs-v2/       # XS-V2 SCAD + 3MF (flat multi-color)
-```
-
-**When to Use Each:**
-- **Standard**: Production cards, full size
-- **XS**: Test prints, single-material printer with manual color changes
-- **XS-V2**: Test prints, multi-material printer (MMU2/AMS), automatic workflow
 
 ## Architecture
 
 ### Data Flow
 ```
-Spotify Playlist → docs/songs.json → pwa/src/data/songs.ts + qr-codes/*.png
+Spotify Playlist → docs/songs.json → pwa/src/data/songs.ts + QR codes
+YouTube → yt-dlp → MP3 → VPS (mxster.de/audio/) → Howler.js playback
 ```
 
-### Self-Hosted Audio System (v0.0.27+)
+### State Management (React Contexts)
+- **GameContext** — Game mode, variant, players, turns, current song
+- **AchievementContext** — 23 achievements, progress tracking, cross-game stats
+- **GameHistoryContext** — Game history, statistics persistence
+- **AuthContext** — Spotify OAuth PKCE flow
+- **UIContext** — Modals, toasts, notifications
+- **InteractionContext** — Particle animation activity levels
+- **SettingsContext** — User preferences
+- **AchievementNotificationContext** — Unlock animations
 
-**Problem:** Spotify Development Mode limits apps to 25 authenticated users. Extended Quota Mode requires:
-- Registered company (not individuals since May 2025)
-- 250,000+ active users
-- No organic growth path from 25 to 250k users ("absurd" limitation)
+### Services Layer
+- **MusicPlayerService** — Unified audio abstraction, delegates to Spotify or Preview
+- **SpotifyPlayerService** — Singleton, Web Playback SDK wrapper
+- **PreviewPlayerService** — Howler.js wrapper for self-hosted MP3s
+- **SpotifyAuthService** — OAuth PKCE implementation
+- **gameLogic** — Game rules, scoring (5+5+5/2/1), win conditions, tie-breaking
+- **botPlayer** + **botStrategies/** — AI opponents (Easy/Medium/Hard)
 
-**Solution:** Self-hosted audio files as PRIMARY system, Spotify Premium as optional fallback:
+### Audio System (Dual-Mode)
+1. **Self-Hosted (Primary)**: Full songs via `mxster.de/audio/song_XXX.mp3`, password-protected (`ydl`), unlimited users
+2. **Spotify Premium (Optional)**: 25 slots max (Development Mode), slot management via `pwa/spotify.slots.json`
 
-**Audio Modes:**
-1. **Self-Hosted (Gratis)** - Primary, Recommended:
-   - Full songs (3-5 minutes) via YouTube downloads (yt-dlp)
-   - 209 songs @ 128 kbps MP3 (~933 MB total, avg 4.47 MB per song)
-   - No authentication required
-   - Unlimited users
-   - Password protection (`ydl`) for legal grey area safeguard
-   - Hosted on VPS: `https://mxster.de/audio/song_XXX.mp3`
-   - nginx serving with CORS, caching, range requests
+### Game Modes
+- **Hardcore**: Guess title/artist/year → points (0-15 per song, max 150) → auto-place in timeline
+- **Timeline Personal**: Each player builds own chronological timeline → race to 10 correct
+- **Timeline Global**: Shared timeline → most cards after 10 total placed
 
-2. **Spotify Premium** - Optional (Max 25 Users):
-   - Full song playback via Web Playback SDK
-   - Requires Spotify Premium + OAuth login + developer whitelisting
-   - High-quality audio streaming
-   - **Slot-based access**: Only 25 slots available (Development Mode)
-   - Users request access via mailto: link with Spotify account email
-
-**Architecture:**
-```
-Self-Hosted Audio (Primary)
-├── YouTube → yt-dlp → MP3 (128 kbps) → VPS → nginx → Browser
-├── Password protection: PasswordProtectionDialog (password: "ydl")
-├── Legal safeguard: YDL grey area disclaimers
-└── Howler.js HTML5 Audio player
-
-Spotify Premium (Optional Fallback)
-├── OAuth PKCE → Developer Dashboard Whitelisting → Web Playback SDK
-├── Slot Management: spotify.slots.json (25 total, 5 used, 20 available)
-└── User Registration: mailto: link → Developer adds email → Update slots
-```
-
-**Spotify Slot Management (v0.0.30):**
-
-**Configuration File**: `pwa/spotify.slots.json`
-```json
-{
-  "totalSlots": 25,
-  "usedSlots": 5,
-  "availableSlots": 20,
-  "contactEmail": "martin.pfeffer@celox.io",
-  "lastUpdated": "2025-11-06"
-}
-```
-
-**User Registration Workflow:**
-1. User clicks "📧 Zugang anfragen" on Landing Page
-2. mailto: link opens pre-filled email template
-3. User sends email with Spotify account email address
-4. Developer adds email to Spotify Developer Dashboard → Users and Access
-5. Developer updates `spotify.slots.json` (`usedSlots++`, `availableSlots--`)
-6. Rebuild + redeploy → Landing page shows updated slot count
-
-**Audio Hosting Workflow:**
-```bash
-# 1. Download songs (one-time setup)
-cd scripts/audio-hosting
-node download-songs.js         # All 209 songs (~20 min)
-node download-songs.js --limit 5   # Test mode
-node download-songs.js --resume    # Skip existing
-
-# 2. Upload to VPS
-node upload-to-vps.js           # Incremental rsync
-node upload-to-vps.js --dry-run # Preview
-
-# 3. Update songs.json + songs.ts
-node update-song-urls.js           # Auto-backup, 100% coverage check
-node update-song-urls.js --dry-run # Preview
-
-# 4. Validate accessibility
-node validate-audio.js        # Test 10 samples
-node validate-audio.js --full # Test all 209 songs
-```
-
-**Legal Grey Area (YDL):**
-- ⚠️ YouTube downloads via yt-dlp (rechtliche Grauzone)
-- ⚠️ Password protection (`ydl`) as legal safeguard
-- ⚠️ Disclaimers on Landing Page (orange warning box) and PasswordProtectionDialog
-- ⚠️ Only for private, non-commercial, educational purposes
-- ⚠️ Usage at own risk
-
-**Key Files:**
-- `pwa/spotify.slots.json` - Slot configuration (NEW in v0.0.30)
-- `pwa/src/screens/LandingPage.tsx` - Slot counter, mailto: link, API limitations explanation
-- `pwa/src/components/PasswordProtectionDialog.tsx` - YDL legal disclaimer
-- `pwa/src/services/PreviewPlayerService.ts` - Howler.js wrapper
-- `pwa/src/services/MusicPlayerService.ts` - Unified abstraction
-- `scripts/audio-hosting/*.js` - Download, upload, update URLs, validate
-
-### Game Modes & Variants
-
-**Game Variants:**
-- **Virtual Mode** (Primary): No setup needed, songs randomly drawn from database, recommended for most users
-- **Physical Mode** (Optional): Scan QR codes from physical cards, one player acts as DJ
-
-**Note:** Virtual Mode is the primary variant. Physical Mode remains available for users who want a tactile experience.
-
-**Game Modes:**
-1. **Hardcore Mode (GAME_MODES.HARDCORE)**:
-   - Players guess title, artist, and year
-   - **New Scoring System**:
-     - Title correct: **+5 points**
-     - Artist correct: **+5 points**
-     - Year exact: **+5 points** | ±1 year: **+2 points** | ±2 years: **+1 point**
-     - Maximum: **15 points per song** (150 points total)
-   - Cards automatically placed chronologically in timeline
-   - Score overview displayed with live updates
-   - Winner: Most points after 10 cards
-
-2. **Timeline Personal (GAME_MODES.TIMELINE_PERSONAL)**:
-   - Each player builds their own timeline
-   - Manual placement of cards in chronological order
-   - No points system, only card count
-   - Winner: First player with 10 correctly placed cards
-
-3. **Timeline Global (GAME_MODES.TIMELINE_GLOBAL)**:
-   - All players share one global timeline
-   - Manual placement in shared timeline
-   - Winner: First player with 10 correctly placed cards
-
-**Key Features (v0.0.17-0.0.24):**
-- ✅ Scoring: 5+5+5/2/1 points (title/artist/year±2) in Hardcore Mode only
-- ✅ Achievements: 20 unlockable (10 standard + 10 new, fixed in v0.0.24) with progress tracking, confetti animations
-- ✅ Interactive Particles: Activity-reactive 3D system (idle/calm/active/intense), music-reactive
-- ✅ Statistics: Player stats, game history, decade analysis
-- ✅ UX: Auto-focus (desktop), skip confirmation, random start position
-
-### State & Particles
-- **State**: LocalStorage persistence, JSON export/import, auto-save
-- **Particles**: 3-layer Three.js system (indigo/orange/cyan), 4 activity levels, music-reactive, auto-decay (60s/30s)
-
-### SEO & Discoverability
-
-**Files:**
-- `pwa/public/sitemap.xml` - XML sitemap for search engines
-- `pwa/public/robots.txt` - Crawler directives
-
-**sitemap.xml Structure:**
-```xml
-<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url>
-    <loc>https://mxster.de/</loc>
-    <lastmod>2025-11-25</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>1.0</priority>
-  </url>
-  <!-- Additional URLs: /mode-selection, /variant-selection, /player-setup -->
-</urlset>
-```
-
-**robots.txt Directives:**
-```
-User-agent: *
-Allow: /
-Allow: /mode-selection
-Allow: /variant-selection
-Allow: /player-setup
-
-# Exclude OAuth callback and active game routes
-Disallow: /callback
-Disallow: /game
-
-Sitemap: https://mxster.de/sitemap.xml
-Crawl-delay: 10
-```
-
-**nginx Configuration (VPS):**
-The security rules in nginx block `.txt` files by default. Special exceptions are configured for SEO files:
-
-```nginx
-# In /etc/nginx/sites-enabled/mxster.de
-
-# SEO: Allow robots.txt and sitemap.xml (exact match has priority)
-location = /robots.txt {
-    allow all;
-    add_header Content-Type text/plain;
-    log_not_found off;
-}
-
-location = /sitemap.xml {
-    allow all;
-    add_header Content-Type text/xml;
-    log_not_found off;
-}
-
-# Security: Block other .txt files
-location ~* \.(md|env|log|py|sh|sql|bak|backup|key|pem|conf|txt)$ {
-    deny all;
-    access_log off;
-    log_not_found off;
-    return 404;
-}
-```
-
-**Why This Configuration:**
-- `location =` (exact match) has higher priority than regex `location ~*`
-- Allows robots.txt while keeping security rules for other .txt files
-- Proper Content-Type headers for search engine compatibility
-- Deployed via `./scripts/deployment/deploy.sh` (SEO files included in `pwa/public/`)
-
-**Verification:**
-```bash
-curl -I https://mxster.de/robots.txt  # Should return 200
-curl -I https://mxster.de/sitemap.xml # Should return 200
-```
+### Game Variants
+- **Virtual Mode** (Primary): Random songs from database, no setup
+- **Physical Mode**: Scan QR codes from 3D-printed cards
 
 ## Critical Configuration
 
-### Spotify Developer Setup
-**Required before running the app:**
-1. Create app at https://developer.spotify.com/dashboard
-2. Add Redirect URIs in app settings:
-   - Development: `http://localhost:5174/callback`
-   - Production: `https://your-domain.com/callback`
-3. Copy Client ID and Client Secret
+### Environment Files (gitignored)
+```bash
+# .env (project root) — needed for song management scripts
+SPOTIFY_CLIENT_ID=your_client_id
+SPOTIFY_CLIENT_SECRET=your_client_secret
 
-### spotify.config.js Structure
-```javascript
-export default {
-  clientId: 'YOUR_CLIENT_ID',
-  clientSecret: 'YOUR_CLIENT_SECRET',
-  redirectUri: 'http://localhost:5174/callback',
-  playlistId: 'SPOTIFY_PLAYLIST_ID',
-  scopes: [
-    'streaming',
-    'user-read-email',
-    'user-read-private',
-    'user-read-playback-state',
-    'user-modify-playback-state'
-  ]
-}
+# pwa/spotify.config.js — needed for Spotify Premium mode
+# Copy from pwa/spotify.config.example.js
 ```
 
-**Note**: This file is gitignored. Must be created manually for development.
+### Path Aliases (Vite + Vitest)
+`@/` → `src/`, `@components/`, `@hooks/`, `@contexts/`, `@services/`, `@utils/`, `@types/`
+
+### Test Setup (`pwa/src/test/setup.ts`)
+Mocks: localStorage, matchMedia, Howler, Spotify SDK, QR Scanner, Three.js, IntersectionObserver. `spotify.config.js` is aliased to `spotify.config.mock.js` in test environment.
 
 ## Project Structure
 
 ```
 mxster/
-├── docs/                              # Source of Truth
-│   ├── songs.json                     # Primary song database
-│   ├── song_template.json
-│   ├── songs_removed.json
-│   └── *.png                          # QR code PNGs (in Git for docs)
-├── card-generator/                    # Card generation tools
-│   ├── *.js                          # Generation scripts (generateCard.js, qrToScad.js, spotifyApi.js)
-│   ├── template.scad
-│   └── output/                       # All generated files (gitignored)
-│       ├── qr-codes/                 # Generated QR codes
-│       ├── models/                   # SCAD, STL, 3MF files
-│       │   ├── *.scad               # OpenSCAD 3D models
-│       │   ├── *.stl                # STL files for 3D printing
-│       │   └── all-cards.3mf        # Combined 3MF file
-│       └── pdfs/                     # Generated PDF cards
-│           ├── mxster-cards.pdf
-│           ├── mxster-cards-bw.pdf
-│           ├── mxster-cards-duplex.pdf
-│           └── mxster-cards-bw-duplex.pdf
-├── build/                             # Release artifacts (gitignored)
-│   └── archives/                     # ZIP archives for releases
-│       ├── mxster-scad-models.zip
-│       ├── mxster-stl-models.zip
-│       └── mxster-source.zip
-├── pwa/                               # Progressive Web App (React + TypeScript)
+├── pwa/                        # React PWA (main application)
 │   ├── src/
-│   │   ├── main.tsx                  # App entry point
-│   │   ├── data/songs.ts             # Generated song data
-│   │   ├── components/               # React components
-│   │   ├── utils/
-│   │   │   ├── spotifyAuth.js       # OAuth PKCE implementation
-│   │   │   ├── spotifyPlayer.js     # Web Playback SDK wrapper
-│   │   │   ├── spotifyImport.js     # Playlist import utility
-│   │   │   └── gameState.js         # LocalStorage persistence
-│   │   └── styles/
-│   ├── public/
-│   │   ├── manifest.webmanifest     # PWA configuration
-│   │   └── assets/
-│   ├── vite.config.js               # Vite + PWA plugin config
-│   ├── spotify.config.js            # Spotify credentials (gitignored)
-│   ├── filter-valid-songs.js        # Song validation script
-│   ├── update-preview-urls.js       # Preview URL updater
-│   ├── generate-cards.js            # PDF card generator script
-│   └── package.json
-└── scripts/                           # Organized utility scripts
-    ├── song-management/
-    │   ├── add-song.js              # CLI: Add new song with Spotify metadata
-    │   ├── edit-song.js             # CLI: Edit existing song (interactive wizard)
-    │   ├── exchange-song.js         # CLI: Replace existing song
-    │   └── update-song-count.js     # CLI: Update song count in README
-    ├── build/
-    │   ├── generate-all-pdfs.sh     # Generate all 4 PDF variants at once
-    │   └── update-and-release.sh    # Automated build and release workflow
-    ├── deployment/
-    │   └── deploy.sh                # Deploy PWA to production server
-    └── setup/
-        └── install_dependencies.sh  # Install project dependencies
+│   │   ├── main.tsx           # Entry point
+│   │   ├── App.tsx            # Router + context providers
+│   │   ├── screens/           # Page components (LandingPage, GameScreen, PlayerSetup, etc.)
+│   │   ├── components/        # Reusable UI (Modal, Sidebar, MusicPlayer, etc.)
+│   │   ├── contexts/          # 10 React contexts for state management
+│   │   ├── services/          # Business logic (audio, game, bot AI)
+│   │   ├── types/             # TypeScript definitions (index.ts, achievements.ts, spotify.ts)
+│   │   ├── utils/             # Animations, auth, persistence
+│   │   ├── hooks/             # Custom React hooks
+│   │   └── data/songs.ts      # Generated song data (auto-generated from songs.json)
+│   ├── public/                # Static assets, sitemap.xml, robots.txt
+│   ├── vite.config.ts         # Build config (port 5174, PWA plugin, path aliases)
+│   ├── vitest.config.ts       # Test config (jsdom, coverage thresholds)
+│   └── spotify.slots.json     # Spotify slot management (25 total)
+├── docs/songs.json            # Source of truth for song database
+├── extras/
+│   ├── card-generator/        # OpenSCAD card generation (STL, 3MF, PDF)
+│   └── build/                 # Release archives
+├── scripts/
+│   ├── song-management/       # add-song.js, edit-song.js, exchange-song.js
+│   ├── audio-hosting/         # download-songs.js, upload-to-vps.js, validate-audio.js
+│   ├── deployment/deploy.sh   # Production deploy (rsync to VPS, preserves audio)
+│   └── build/                 # PDF generation, release workflow
+├── test-integrity.js          # 15 cross-project integrity tests
+└── .github/workflows/         # CI: test.yml (integrity), ci.yml (vitest + build)
 ```
 
-## Game Flow
+## Deployment
 
-### Hardcore Mode
-1. Song → Guess (title/artist/year) → `checkGuess()` → Points (0-15) → Auto-place in timeline → Next player
-2. Win: 10 cards → Confetti + stats modal
+- **Domain**: https://mxster.de
+- **VPS**: root@mrx3k1.de → `/var/www/html/mxster/`
+- **SSL**: Let's Encrypt (auto-renewing)
+- **Deploy**: `./scripts/deployment/deploy.sh` — builds PWA, rsync uploads (excludes audio/), preserves 209 audio files on VPS
+- **nginx**: SEO exceptions for `robots.txt`/`sitemap.xml` via exact-match `location =` blocks overriding security rules that block `.txt` files
 
-### Timeline Modes
-1. Song → Optional guess → Manual placement → Validation → Next player
-2. Win: First to 10 correct cards
+## Key Implementation Details
 
-### Key Methods
-- `checkGuess()`: Fuzzy matching, point calc (5+5+5/2/1), auto-placement
-- `showWinnerModal()`: Game end, confetti, stats (requires `gameOver` flag)
-- `placeCardAndContinue()`: Timeline update, win check, next turn
+### Scoring System (Hardcore Mode)
+- Title correct: +5 points (fuzzy matching)
+- Artist correct: +5 points (fuzzy matching)
+- Year exact: +5 | ±1 year: +2 | ±2 years: +1
+- Maximum: 15 points per song, 150 total (10 songs)
 
-## Testing
+### Achievement System
+23 achievements total. Cross-game tracking via game history. Key thresholds: MUSIC_EXPERT (1000 pts), GRAND_MASTER (5000 pts). Bot victory achievements track by difficulty. `guessDetails` on Song interface enables accurate tracking (titleCorrect, artistCorrect, yearPoints).
 
-### Integrity Test Suite
-```bash
-npm test  # Runs test-integrity.js
-```
+### Bot Player System
+- 3 difficulties: Easy (30-50% win), Medium (60-75%), Hard (90-95%)
+- Strategy Pattern: `HardcoreBotStrategy` and `TimelineBotStrategy`
+- Anti-double-execution: `lastBotSongRef` prevents multiple actions per turn
+- Only available in Virtual Mode with exactly 1 human player
 
-**15 Tests**: 10 basic (always run) + 5 advanced (optional deps)
-- Basic: JSON structure, sync, fields, IDs, years, file existence
-- Advanced: QR decode, Spotify API, dimensions, OpenSCAD syntax, PDFs
-- Philosophy: Graceful degradation, sample-based (3-5 songs), CI/CD friendly
+### MusicPlayer Component
+Always kept mounted (never conditionally rendered) — unmounting causes re-initialization delays. SpotifyPlayerService uses polling to wait for both `connect()` success AND `isReady === true` before resolving.
 
-**Optional deps**: `npm install --save-dev jsqr pngjs sharp` + `brew install openscad`
-
-## Workflows
-
-### Song Management
-```bash
-# Add new song (auto-generates all files)
-node scripts/song-management/add-song.js "spotify-url"
-node scripts/song-management/add-song.js --edit "spotify-url"  # Interactive with genre
-
-# Edit existing song (wizard, auto-backup)
-node scripts/song-management/edit-song.js  # Includes genre editing
-
-# Exchange song (keeps ID, replaces metadata)
-node scripts/song-management/exchange-song.js  # Preserves genre if available
-
-# Generate PDFs (4 variants: color/bw, standard/duplex)
-./scripts/build/generate-all-pdfs.sh
-```
-
-**Auto-generated files**: QR codes, SCAD, STL, songs.json, songs.ts
-**Genre field**: Optional field for GENRE_HOPPER achievement (added v0.0.24)
-- Suggestions: Pop, Rock, Hip-Hop, Electronic, R&B, Country, Jazz, Metal, Reggae, Soul
-- Safely handled: GENRE_HOPPER filters `undefined`/`null` values
-- Scripts: All song management scripts support genre input/editing
-
-### Deployment
-
-**Deployment Script**: `scripts/deployment/deploy.sh` (position-independent, works from any directory)
-
-**Quick Deploy** (from project root):
-```bash
-cd /Users/martin/WebstormProjects/mrx3k1/mxster
-./scripts/deployment/deploy.sh
-```
-
-**What the script does**:
-1. Calculates absolute PROJECT_ROOT (works from any directory)
-2. Changes to `pwa/` directory
-3. Runs `npm run build` → outputs to `pwa/dist/`
-4. Uploads `pwa/dist/` to VPS via rsync (excludes `audio/`)
-5. Preserves existing audio files on VPS
-6. Deploys to `/var/www/html/mxster/`
-
-**Build Output**: `pwa/dist/` (Vite 5.0 default)
-- `dist/index.html` (6.5 KB)
-- `dist/assets/` (JS/CSS bundles ~130 KB)
-- `dist/sw.js`, `dist/workbox-*.js` (Service Worker)
-- `dist/manifest.webmanifest` (PWA config)
-- `dist/audio/` (self-hosted MP3s, if exists - gitignored)
-
-**Production**:
-- Domain: https://mxster.de
-- VPS: root@mrx3k1.de
-- Deploy Path: `/var/www/html/mxster/`
-- nginx config: `nginx-mxster.conf`
-
-**Important**: The deploy script uses absolute path calculation (`$(dirname "$0")/../..`), so it works reliably from:
-- Project root: `./scripts/deployment/deploy.sh` ✓
-- Any directory: `bash /full/path/to/scripts/deployment/deploy.sh` ✓
-
-### Downloads
-All files hosted via GitHub raw URLs (auto-update, no manual releases):
-- PDFs: `card-generator/output/pdfs/*.pdf` (4 variants)
-- 3D: `all-cards.3mf`, `build/archives/*.zip` (SCAD/STL)
-- Commit: `git add -f` (files are gitignored by default)
-
-## QR & 3D Printing
-
-### QR Codes
-- **Content**: Spotify URLs (`https://open.spotify.com/track/{spotifyId}`)
-- **Specs**: Error correction H (30%), 20px box, 8px border
-
-### 3D Printing
-- **Settings**: PLA/PETG, 0.2mm layer, 20% infill
-- **Workflow**: OpenSCAD (F6 render) → STL export → Slice (Cura/PrusaSlicer) → Print
-- **Performance**: All scripts use `--enable=manifold --enable=fast-csg` for faster STL generation (requires OpenSCAD 2021.01+)
-
-## Troubleshooting
-
-### Common Issues
-- **Scores not updating**: Hard refresh (CTRL+SHIFT+R) to clear service worker cache
-- **Spotify errors**: Check console, verify Redirect URI, ensure Premium account, check token expiry (1h)
-- **Dialog issues**: Ensure `checkGuess()` shows modal BEFORE `placeCardAndContinue()`
-
-### Known Limitations
-- Spotify Premium required, HTTPS required (camera), online-only streaming
+### Sidebar Navigation
+3-state system based on `location.pathname` + `isGameStarted`: Landing Page (marketing links), Setup Phase (config links + back warning), In-Game (help + exit with confirmation).
 
 ## Best Practices
 
 ### TypeScript
-- **Song Type**: Always use `export const songs: Song[] = [...]` (not `export const songs = [...]`)
-- **Fields**: Only interface-defined fields allowed (no `audioUrl`, `youtubeUrl` deprecated)
-- **Test Regex**: `/export const songs(?:: Song\[\])? = (\[[\s\S]*\])/` for TS/JS compatibility
+- Song type: Always use `export const songs: Song[] = [...]` (not untyped)
+- Test regex for songs.ts: `/export const songs(?:: Song\[\])? = (\[[\s\S]*\])/`
+- Song interface: Only interface-defined fields allowed
 
-### Scripts
-- **add-song.js**: Auto/interactive mode, Spotify metadata
-- **edit-song.js**: Interactive wizard, auto-backup, regenerates files
-- **exchange-song.js**: Keeps ID, replaces metadata (requires `import 'dotenv/config'`)
-- **Common**: Require `.env`, generate identical QR codes (1000px, margin 1, B&W), update songs.json + songs.ts
+### Song Management
+- All scripts require `.env` with Spotify credentials
+- Auto-generated files: QR codes, SCAD, STL, songs.json, songs.ts
+- Genre field: Optional, suggestions: Pop, Rock, Hip-Hop, Electronic, R&B, Country, Jazz, Metal, Reggae, Soul
+- `exchange-song.js` requires `import 'dotenv/config'`
 
-### Deprecated
-- **v0.0.15**: Removed `audioUrl` (never used), deprecated `youtubeUrl` (Spotify-only now)
-- **v0.0.16**: Cleanup - removed duplicate QR codes from `docs/`, consolidated to `card-generator/output/qr-codes/`
+### Modals on Mobile
+- Modals use `pt-20 pb-6` backdrop (80px top for ActionBar, 24px bottom safe area)
+- Max height: `max-h-[calc(100vh-12rem)] sm:max-h-[85vh]`
+- `viewport-fit=cover` in meta tag for iOS/Android safe areas
+- All custom dialogs (PasswordProtection, Achievements, etc.) must follow same pattern
+
+### OpenSCAD Performance
+All scripts use `--enable=manifold --enable=fast-csg` flags for faster STL generation (requires OpenSCAD 2021.01+).
 
 ### Release Checklist
-1. Update `package.json` + `Sidebar.tsx` version
+1. Update version in `pwa/package.json` + `pwa/src/components/Sidebar.tsx`
 2. Run `node scripts/song-management/update-song-count.js`
-3. Update `CLAUDE.md` song count
-4. Commit → `git tag v0.0.X` → `git push origin v0.0.X` → `gh release create`
-
-### Common Pitfalls
-- **TS6133**: Missing type annotation → Use `export const songs: Song[] = [...]`
-- **Integrity test fails**: Regex issue → Use `/export const songs(?:: Song\[\])? = (\[[\s\S]*\])/`
-- **Missing credentials**: Add `import 'dotenv/config'` to exchange-song.js
-- **Song count**: Auto-dynamic via `songs.length` in LandingPage.tsx (updates on build)
-
-## Recent Changes
-
-### v0.1.0 (2025-11-25) - SEO Optimization & First Minor Release
-
-**🎯 Major Milestone: First Minor Release**
-
-After 51 patches, the project reached v0.1.0 following the semantic versioning scheme (after 9 patches → increment MINOR).
-
-**🔍 SEO Implementation:**
-- ✅ **sitemap.xml**: XML sitemap with 4 URLs (/, /mode-selection, /variant-selection, /player-setup)
-  - Proper priority and changefreq settings
-  - Last updated: 2025-11-25
-  - Accessible at: https://mxster.de/sitemap.xml
-
-- ✅ **robots.txt**: Search engine directives
-  - Allows indexing of setup pages
-  - Blocks /callback (OAuth) and /game (active gameplay)
-  - Includes sitemap reference
-  - Crawl-delay: 10 seconds
-  - Accessible at: https://mxster.de/robots.txt
-
-- ✅ **nginx Configuration**: Special handling for SEO files
-  - Added explicit `location =` blocks for robots.txt and sitemap.xml
-  - Overrides security rules that block .txt files
-  - Proper Content-Type headers (text/plain, text/xml)
-  - Configuration in `/etc/nginx/sites-enabled/mxster.de`
-
-**nginx SEO Configuration:**
-```nginx
-# Exception: Allow robots.txt and sitemap.xml for SEO
-location = /robots.txt {
-    allow all;
-    add_header Content-Type text/plain;
-    log_not_found off;
-}
-
-location = /sitemap.xml {
-    allow all;
-    add_header Content-Type text/xml;
-    log_not_found off;
-}
-```
-
-**📊 Version Statistics:**
-- Version progression: 0.0.50 → 0.0.51 → 0.1.0
-- Total features: 209 songs, 23 achievements, Bot AI system, Self-hosted audio
-- Bundle size: 1.06 MB JS (gzipped: 288 KB)
-- Build time: ~9.5s average
-
-**Files Modified:**
-- `pwa/public/sitemap.xml` - New file
-- `pwa/public/robots.txt` - New file
-- `pwa/package.json` - Version 0.1.0
-- `pwa/src/components/Sidebar.tsx` - Version display
-- `CLAUDE.md` - Updated version, added versioning scheme
-- `/etc/nginx/sites-enabled/mxster.de` (VPS) - SEO exception rules
-
-**Deployment:**
-- Build: 9.45s
-- Transfer: 23 files, 1.85 MB
-- Audio preserved: 209 songs (~933 MB)
-- Live: https://mxster.de
-
-### v0.0.50+ (2025-11-12) - OpenSCAD Performance & YouTube Integration
-
-**🚀 OpenSCAD Performance Improvements**
-
-Updated all OpenSCAD commands to use newer, faster Manifold backend:
-- Added `--enable=manifold --enable=fast-csg` flags to all STL/3MF generation
-- Significantly faster 3D model generation (requires OpenSCAD 2021.01+)
-- **Files Modified**:
-  - `card-generator/generateCard.js` - Standard cards
-  - `card-generator/generateCard-xs.js` - XS test cards (embossed)
-  - `card-generator/generateCard-xs-v2.js` - XS-V2 test cards (flat multi-color)
-  - `test-integrity.js` - Syntax validation
-
-**🎵 YouTube Download Integration** (from previous commit 13b881a)
-
-Added automatic YouTube download and VPS upload for self-hosted audio:
-- **New Utility**: `scripts/audio-hosting/download-single-song.js`
-  - Automatic YouTube search via yt-dlp
-  - Downloads 128 kbps MP3 to `pwa/public/audio/`
-  - Uploads to VPS: `https://mxster.de/audio/song_XXX.mp3`
-  - Graceful fallback to Spotify preview
-- **Integration**:
-  - `scripts/song-management/add-song.js` - Auto-download for new songs
-  - `scripts/song-management/exchange-song.js` - Auto-download for replacements
-  - Fixed path resolution bug (SONGS_JSON_PATH + PWA_SONGS_PATH)
-
-### v0.0.50 (2025-11-09) - Critical Spotify Player Fixes
-
-**🎵 Fixed Song Switching in Both Timeline and Hardcore Modes**
-
-Fixed critical bugs preventing Spotify playback from working correctly in both game modes.
-
-**Problems Fixed:**
-
-1. **Timeline Mode - Component Re-mounting Issue**:
-   - **Problem**: `MusicPlayer` component was unmounted when `currentSong` was set to `null` during turn changes
-   - **Symptom**: Player was re-initialized for every new song, causing delay and failed playback
-   - **Root Cause**: Conditional rendering `{currentSong && <MusicPlayer />}` unmounted component on `null`
-   - **Solution**: Keep `MusicPlayer` always mounted: `<MusicPlayer song={currentSong} />`
-   - **Impact**: Player initializes once and remains active for all songs
-
-2. **Hardcore Mode - Initialization Race Condition**:
-   - **Problem**: `player.connect()` resolved before `ready` event fired, causing premature `playerReady = true`
-   - **Symptom**: Songs played before player was actually ready, causing playback failures
-   - **Root Cause**: Promise resolved immediately after `connect()`, not waiting for SDK `ready` event
-   - **Solution**: Added polling mechanism to wait for both `connect()` success AND `isReady === true`
-   - **Implementation**:
-     ```typescript
-     // Wait for device to be ready before resolving
-     const waitForReady = setInterval(() => {
-       if (this.isReady && this.deviceId) {
-         clearInterval(waitForReady)
-         resolve(this.deviceId)
-       }
-     }, 100)
-     // 10 second timeout
-     ```
-   - **Impact**: Player only reports ready when fully initialized
-
-**Technical Details:**
-- **File Modified**: `pwa/src/screens/GameScreen.tsx` (line 1338) - Removed conditional rendering
-- **File Modified**: `pwa/src/services/SpotifyPlayerService.ts` (lines 213, 279-299) - Added ready-state polling
-- **File Modified**: `pwa/src/components/game/MusicPlayer.tsx` (unchanged, benefits from fixes)
-
-**Testing:**
-- ✅ Timeline Mode: Songs switch correctly for all players
-- ✅ Hardcore Mode: First song plays immediately
-- ✅ Both Modes: No re-initialization delays
-- ✅ Spotify Premium: Full 320 kbps playback working
-- ✅ Device Transfer: Happens on every song (v0.0.33 fix maintained)
-
-**Files Changed:**
-- `pwa/src/screens/GameScreen.tsx`
-- `pwa/src/services/SpotifyPlayerService.ts`
-- `pwa/package.json` (v0.0.50)
-- `pwa/src/components/Sidebar.tsx` (version display)
-
-### v0.0.49 (2025-11-07) - 8-Bit Pixel Cookie Banner
-
-**🎮 Retro-Style Cookie/LocalStorage Notice**
-
-Completely redesigned cookie banner in authentic 8-bit pixel style with improved legal compliance.
-
-**Design Changes:**
-- **8-Bit Aesthetics**: Green neon pixel borders (#00ff00), retro game style
-- **Pixel Animations**: Pulse effect for icon, float animation for emoji, bounce slide-up entrance
-- **Typography**: "Press Start 2P" font for title + button, Courier New for body text
-- **Visual Elements**: 8x8px pixel corners, 4px border strips, double-border effect
-- **Icon**: 💾 Floppy disk (fitting for "storage") instead of 🍪 cookie
-- **Color Scheme**: Dark background (#1a1a2e) with bright green accents
-
-**Legal Improvements:**
-- ✅ Removed "Ablehnen" button (legally incorrect - continued use implies consent)
-- ✅ Single "Verstanden" button (correct approach)
-- ✅ Clear language: LocalStorage is **technically necessary** for app functionality
-- ✅ Transparency: "No data sent to external servers"
-- ℹ️ Info box: "Without storage, the app won't work fully"
-
-**New Text Content:**
-```
-Speicher-Hinweis
-
-Diese App nutzt LocalStorage, um deine Spielstände lokal auf deinem Gerät zu speichern.
-Es werden keine Daten an externe Server gesendet. Die Speicherung ist technisch notwendig,
-damit dein Fortschritt nicht verloren geht.
-
-ℹ️ Ohne Speicherung funktioniert die App nicht vollständig.
-
-[✓ Verstanden]
-```
-
-**Technical Details:**
-- File: `pwa/src/components/CookieBanner.tsx` (complete rewrite)
-- File: `pwa/src/styles/tailwind.css` (new 8-bit styles, lines 686-1003)
-- Animations: pixelSlideUp (bounce), pixelPulse (icon), pixelFloat (emoji)
-- Mobile optimized: Smaller fonts, adjusted padding
-- 3D button effect with shadow press
-
-**Impact:**
-- ✅ Better legal compliance (no misleading "decline" option)
-- ✅ Authentic retro gaming aesthetic
-- ✅ Clearer user communication about data storage
-- ✅ More fun and memorable first impression
-
-### v0.0.48 (2025-11-07) - Tie-Breaking Documentation in How To Play
-
-**📖 Improved In-App Documentation**
-
-Added comprehensive tie-breaking rules to the How To Play guide for better player understanding.
-
-**Changes:**
-- **Hardcore Mode**: Added tie-breaking explanation box
-  - 1st tiebreaker: Player with most cards wins
-  - 2nd tiebreaker: Last finisher (current player) wins
-- **Timeline Global**: Added tie-breaking explanation box + clarified win condition
-  - Win condition clarified: "Player with most cards after 10 total cards placed"
-  - 1st tiebreaker: Last finisher wins (just placed 10th card)
-  - 2nd tiebreaker: First player in list wins
-- **Timeline Personal**: No changes needed (race to 10 cards, no ties possible)
-
-**UI Design:**
-- Yellow-accent info boxes for visual emphasis
-- Numbered list format for clarity
-- Same styling as other important notices in guide
-- File: `pwa/src/components/HowToPlayContent.tsx` (lines 104-120, 288-304)
-
-**Impact:**
-- ✅ Players now understand tie-breaking rules before playing
-- ✅ Reduces confusion during gameplay
-- ✅ Consistent with actual game logic implementation
-- ✅ Better UX through transparent rules
-
-### v0.0.47 (2025-11-07) - Timeline Global Tie-Breaking Bug Fix
-
-**🐛 Critical Logic Fix**
-
-Fixed incorrect tie-breaking logic in Timeline Global mode that attempted to use score as a tiebreaker despite Timeline Global having no scoring system.
-
-**Problem:**
-- Timeline Global mode only tracks correct/incorrect placements (binary: right/wrong)
-- No points are awarded for partial correctness
-- Code incorrectly tried to compare player scores (always 0) as tiebreaker
-- This made the score comparison meaningless and confusing
-
-**Solution:**
-- Removed score-based tie-breaking logic from `checkWinCondition()` in Timeline Global
-- Simplified to two clear rules:
-  1. **Current player advantage**: If current player has max cards, they win (finisher advantage)
-  2. **First-in-list wins**: Otherwise, first player in list with max cards wins
-- Added comment documenting Timeline Global has no points system
-
-**Technical Details:**
-- File: `pwa/src/services/gameLogic.ts` (lines 279-289)
-- Removed dead code: Score comparison loop (lines 290-295)
-- Updated unit test: Changed test name and expectations to match corrected behavior
-- Test file: `pwa/src/services/__tests__/gameLogic.test.ts` (lines 486-499)
-
-**Impact:**
-- ✅ Clearer game logic - no confusion about scoring in Timeline Global
-- ✅ More predictable tie-breaking behavior
-- ✅ Better code maintainability (removed meaningless comparison)
-- ✅ All 71/71 game logic tests passing
-
-### v0.0.46 (2025-11-07) - Symmetric Animation Transitions
-
-**🎨 Improved Interaction-Reactive Particle Animations**
-
-Made particle animation transitions equally smooth in both directions:
-
-**Changes:**
-- **Before**: Fast ramp-up (cubic easing), slow fade-out (0.3 multiplier)
-- **After**: Symmetrically smooth transitions - both directions use 0.3 multiplier
-- Removed asymmetric easing for rising intensity
-- Both scroll start and scroll end now have same 1-2 second smooth transitions
-
-**Technical Details:**
-- File: `pwa/src/utils/interactionActivityTracker.ts` (lines 114-120)
-- Rising intensity: Changed from `easedDelta * easingFactor` to `easedDelta * 0.3`
-- Falling intensity: Already was `easedDelta * 0.3`
-- Result: Perfectly balanced, gentle transitions for all user interactions
-
-**User Experience:**
-- ✅ No harsh contrasts when scrolling starts
-- ✅ Smooth 1-2 second delay for both directions
-- ✅ Consistent feel across all interactions (mouse, touch, scroll)
-- ✅ More predictable and pleasant animation behavior
-
-### v0.0.45 (2025-11-07) - Fixed All Custom Dialogs on Mobile
-
-**📱 Completed Mobile Layout Fixes**
-
-Fixed all remaining custom dialogs that were still cut off on mobile:
-
-**Additional Dialogs Fixed:**
-1. **PasswordProtectionDialog** - Self-hosted audio access dialog
-2. **AchievementsDialog** - Both main dialog and onboarding screen
-3. **AchievementUnlockAnimation** - Achievement unlock notifications
-
-**Implementation:**
-Applied same mobile fixes to all custom dialogs:
-- Added `pt-20 pb-6 px-4` to backdrop containers
-- Updated `max-h-[90vh]` to `max-h-[calc(100vh-12rem)] sm:max-h-[85vh]`
-- Added `overflow-auto` where needed for scrollable content
-
-**Files Modified:**
-- `pwa/src/components/PasswordProtectionDialog.tsx` (lines 55-56)
-- `pwa/src/components/AchievementsDialog.tsx` (lines 48, 88, 93)
-- `pwa/src/components/AchievementUnlockAnimation.tsx` (line 73)
-- `pwa/package.json`, `pwa/src/components/Sidebar.tsx` (version 0.0.45)
-
-**Coverage:**
-- ✅ Modal.tsx (standard modals)
-- ✅ PasswordProtectionDialog (audio access)
-- ✅ AchievementsDialog (achievements + onboarding)
-- ✅ AchievementUnlockAnimation (notifications)
-- ✅ SettingsDialog (uses Modal.tsx, already fixed)
-- ✅ All other dialogs (use Modal.tsx, already fixed)
-
-### v0.0.44 (2025-11-07) - Mobile Layout Fix for Samsung S24 Ultra
-
-**📱 Fixed Critical Mobile Display Issues**
-
-Fixed dialogs being cut off at bottom and covered by ActionBar at top on mobile devices:
-
-**Problems Solved:**
-1. **Modal Headers Overlapping**: Fixed ActionBar (fixed header) covering modal headers
-2. **Bottom Content Cut-Off**: Fixed modal buttons being hidden behind Android gesture navigation bar
-3. **Viewport Height Issues**: Fixed incorrect viewport height calculations on mobile browsers
-
-**Implementation:**
-
-**1. Modal Positioning (Modal.tsx)**:
-```tsx
-// Added top/bottom padding to modal container
-className="... pt-20 pb-6"  // 80px top (ActionBar), 24px bottom (safe area)
-
-// Updated modal max-height for proper spacing
-className="... max-h-[calc(100vh-12rem)] sm:max-h-[85vh] ..."
-// 12rem = 192px (ActionBar + safe areas) on mobile
-// 85vh on desktop (no mobile browser UI)
-```
-
-**2. Viewport Meta Tag (index.html)**:
-```html
-<!-- Added viewport-fit=cover for safe area support -->
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-```
-
-**3. Safe Area CSS Support (tailwind.css)**:
-```css
-/* Support for iOS notches and Android gesture bars */
-@supports (padding: env(safe-area-inset-bottom)) {
-  .pb-safe {
-    padding-bottom: max(1.5rem, env(safe-area-inset-bottom)) !important;
-  }
-  .pt-safe {
-    padding-top: max(1rem, env(safe-area-inset-top)) !important;
-  }
-  .px-safe {
-    padding-left: max(1rem, env(safe-area-inset-left)) !important;
-    padding-right: max(1rem, env(safe-area-inset-right)) !important;
-  }
-}
-```
-
-**Technical Details:**
-- **ActionBar Height**: 80px (py-4 padding + content)
-- **Modal Top Spacing**: `pt-20` (5rem = 80px) accounts for ActionBar
-- **Modal Bottom Spacing**: `pb-6` (1.5rem = 24px) minimum safe area
-- **Mobile Max-Height**: `calc(100vh - 12rem)` = viewport - 192px (ActionBar + safe areas)
-- **Desktop Max-Height**: `85vh` (no mobile browser UI)
-
-**Browser Compatibility:**
-- `env(safe-area-inset-*)`: Chrome 69+, Safari 11.1+ (2018+)
-- `viewport-fit=cover`: Safari 11+, Chrome 69+ (2018+)
-- Samsung S24 Ultra (Android 14, One UI 6) fully supported
-
-**Files Modified:**
-- `pwa/src/components/Modal.tsx` (lines 108, 112)
-- `pwa/index.html` (line 5)
-- `pwa/src/styles/tailwind.css` (lines 669-684)
-- `pwa/package.json` (version 0.0.44)
-- `pwa/src/components/Sidebar.tsx` (version display)
-
-**Impact:**
-- ✅ Modal headers no longer covered by ActionBar
-- ✅ Modal buttons fully visible above gesture bar
-- ✅ Works on all Android/iOS devices with different screen configurations
-- ✅ Proper handling of notches, cutouts, and gesture bars
-
-### v0.0.43 (2025-11-06) - Simplified Text Display
-
-**✂️ Kürzere, klarere Text-Anzeige**
-
-Removed "Punkten" from progress text for better readability:
-
-**Changes:**
-- Before: "687/1000 Punkten bis Musikexperte (🎓)"
-- After: "687/1000 bis Musikexperte (🎓)"
-- Also updated Großmeister text: "1247/5000 bis Großmeister (👑💎)"
-
-**Benefits:**
-- Shorter, cleaner text
-- Easier to read at a glance
-- Less visual clutter
-- More concise progress indication
-
-**Files Modified:**
-- `pwa/src/components/PlayerStatsDialog.tsx` (lines 171, 189)
-
-### v0.0.42 (2025-11-06) - Visual Progress Bars & Absolute Numbers
-
-**📊 Enhanced Achievement Progress Display**
-
-Improved progress display with absolute numbers and visual progress bars:
-
-**Changes:**
-- Replaced percentage with absolute numbers: "687/1000 Punkten bis Musikexperte"
-- Added yellow-amber gradient progress bars for visual feedback
-- Maintained 3-state progressive system (< 1000, 1000-4999, ≥ 5000)
-
-**Visual Examples:**
-
-1. **< 1000 points** (e.g., 687):
-   ```
-   687/1000 Punkten bis Musikexperte (🎓)
-   [████████████░░░░░░░░] (yellow-amber bar, 69%)
-   ```
-
-2. **1000-4999 points** (e.g., 1247):
-   ```
-   🎓 Musikexperte erreicht!
-   1247/5000 Punkten bis Großmeister (👑💎)
-   [████░░░░░░░░░░░░░░░░] (yellow-amber bar, 25%)
-   ```
-
-3. **≥ 5000 points**:
-   ```
-   🎓 Musikexperte erreicht!
-   👑💎 Großmeister erreicht!
-   ```
-
-**Implementation:**
-- File: `pwa/src/components/PlayerStatsDialog.tsx` (lines 167-211)
-- Progress bar: 2px height, rounded, yellow-amber gradient
-- Smooth transitions (duration-500)
-- Border: yellow-500/20 opacity
-
-**Benefits:**
-- More concrete progress indication (687/1000 vs 69%)
-- Visual feedback via progress bar
-- Consistent with other UI elements
-
-**Files Modified:**
-- `pwa/src/components/PlayerStatsDialog.tsx` - Added progress bars + absolute numbers
-
-### v0.0.41 (2025-11-06) - Progressive Achievement Display
-
-**🎯 Verbesserte Fortschrittsanzeige mit gestaffelten Zielen**
-
-Fixed misleading progress display by implementing progressive achievement milestones:
-
-**Problem (v0.0.40):**
-- Showed "14% bis Großmeister" for 687 points (target: 5000)
-- Too distant goal demotivating for new players
-- Ignored intermediate MUSIC_EXPERT achievement (1000 points)
-
-**Solution:**
-Progressive display with 3 states:
-
-1. **< 1000 Punkte**: Shows progress to MUSIC_EXPERT (🎓)
-   ```
-   687 Punkte
-   69% bis Musikexperte (🎓)
-   ```
-
-2. **1000-4999 Punkte**: Shows MUSIC_EXPERT achieved + progress to GRAND_MASTER
-   ```
-   1247 Punkte
-   🎓 Musikexperte erreicht!
-   25% bis Großmeister (👑💎)
-   ```
-
-3. **≥ 5000 Punkte**: Shows both achievements completed
-   ```
-   5342 Punkte
-   🎓 Musikexperte erreicht!
-   👑💎 Großmeister erreicht!
-   ```
-
-**Benefits:**
-- More motivating for new players (achievable short-term goals)
-- Highlights intermediate achievements
-- Better UX progression (1000 → 5000 instead of direct 5000)
-- Clearer milestone communication
-
-**Implementation:**
-- File: `pwa/src/components/PlayerStatsDialog.tsx` (lines 166-194)
-- Three conditional rendering blocks based on score thresholds
-- Maintained yellow-gold theme with green success badges
-
-**Files Modified:**
-- `pwa/src/components/PlayerStatsDialog.tsx` - Progressive achievement display
-
-### v0.0.40 (2025-11-06) - GRAND_MASTER Achievement Progress Display
-
-**👑 Gesamtpunkte-Anzeige im Spielerstatistiken-Dialog**
-
-Added total score display with GRAND_MASTER achievement progress tracking:
-
-**New Features:**
-- **Gesamtpunkte Card**: Prominent display of total points earned across all games
-- **Progress Indicator**: Shows percentage progress towards GRAND_MASTER (5000 points)
-- **Achievement Notification**: Shows "💎 Großmeister erreicht!" when target reached
-- **Visual Design**: Yellow-gold theme with crown emoji (👑)
-
-**Implementation Details:**
-- File: `pwa/src/components/PlayerStatsDialog.tsx` (lines 159-176)
-- Replaces one of the stat cards in the grid layout
-- Dynamic progress calculation: `(totalScore / 5000) * 100`
-- Conditional rendering: Progress bar < 5000, achievement badge ≥ 5000
-- Color scheme: Yellow border/background for gold/treasure theme
-
-**GRAND_MASTER Achievement Confirmation:**
-- ✅ Yes, achievement is fully functional
-- Target: 5000 total points across all games
-- Tracked in: `AchievementContext.tsx` (lines 365-369)
-- Cross-game tracking via game history
-- Auto-unlock when threshold reached
-
-**Example Output:**
-```
-👑 Gesamtpunkte
-   1247
-   25% bis Großmeister
-```
-
-**Files Modified:**
-- `pwa/src/components/PlayerStatsDialog.tsx` - Added total score card with progress
-
-### v0.0.39 (2025-11-06) - Enhanced Preview Logging
-
-**🔍 Improved Console Logging**
-
-Enhanced preview player log statement to include release year for better debugging:
-
-**Change:**
-- Updated `PreviewPlayerService.ts` log statement
-- Before: `✅ Preview loaded: Ring of Fire by Johnny Cash`
-- After: `✅ Preview loaded: Ring of Fire by Johnny Cash (1963)`
-
-**Technical Details:**
-- File: `pwa/src/services/PreviewPlayerService.ts` (line 56)
-- Added `(${song.year})` to console.log output
-- Helps identify song context during debugging and testing
-- No functional changes, purely improved developer experience
-
-**Files Modified:**
-- `pwa/src/services/PreviewPlayerService.ts` - Enhanced log format
-
-### v0.0.38 (2025-11-06) - Bot Achievements
-
-**🏆 3 New Achievements for Bot Victories**
-
-Added achievements to track victories against AI opponents of different difficulty levels:
-
-**New Achievements:**
-1. **🤖 Bot-Jäger** (BOT_SLAYER_EASY): Beat 3 easy bots
-2. **🤖🎯 Bot-Bezwinger** (BOT_SLAYER_MEDIUM): Beat 3 medium bots
-3. **🤖🔥 Bot-Meister** (BOT_SLAYER_HARD): Beat 3 hard bots
-
-**Implementation:**
-- Added 3 new achievement IDs to `AchievementId` enum
-- Added 3 new achievement definitions with icons and targets
-- Implemented bot difficulty tracking in `AchievementContext.checkAchievements()`
-- Detection logic checks `player.isBot` and `player.botDifficulty` properties
-- Progress tracking increments on each bot victory by difficulty level
-- Auto-unlock when target of 3 victories reached
-
-**Technical Details:**
-- File: `pwa/src/types/achievements.ts` (lines 29-32, 203-223)
-- File: `pwa/src/contexts/AchievementContext.tsx` (lines 371-414)
-- Cross-game tracking: Counts bot wins across entire game history
-- Difficulty-specific: Easy/Medium/Hard tracked independently
-- Requires Bot Player System (v0.0.32) for `isBot` and `botDifficulty` flags
-
-**Total Achievements:** 23 (was 20)
-
-**Files Modified:**
-- `pwa/src/types/achievements.ts` - Added 3 enum values + definitions
-- `pwa/src/contexts/AchievementContext.tsx` - Added bot victory detection
-- `pwa/package.json` - Version bump to 0.0.38
-- `pwa/src/components/Sidebar.tsx` - Version display updated
-
-### v0.0.37 (2025-11-06) - Comprehensive TypeScript Type Safety Overhaul
-
-**🔧 Major TypeScript Improvements**
-
-This release addresses 80+ TypeScript errors, improving type safety and code quality across the entire codebase.
-
-**Type System Fixes:**
-- Fixed GameMode enum usage: Changed string literals ('hardcore', 'timeline_personal', etc.) to proper enum values in test files
-- Resolved Toast and GlobalTimelineCard type conflicts (removed duplicate re-exports)
-- Fixed TimelineDisplay component to properly import GlobalTimelineCard type
-- Corrected UIContext Toast type references throughout the context
-- Added proper type annotations to SpotifyImporter class (clientId, clientSecret, accessToken)
-- Fixed implicit any types in utility scripts (spotifyImport.ts, WinnerScreen.ts, Statistics.ts)
-- Added error type annotations in catch blocks (error: any)
-
-**Component Type Fixes:**
-- `ActionBar.tsx`: Removed unused gameMode/updateSettings, fixed button variant type (accent → danger)
-- `GameEndStatsDialog.tsx`: Removed unused index parameter from map functions
-- `HowToPlayContent.tsx`: Changed JSX.Element → ReactElement for better type safety
-- `Modal.tsx`: Prefixed unused event parameter with underscore
-- `SettingsDialog.tsx`: Removed unused destructuring (clearAll, closeModal)
-- `Statistics.ts`:
-  - Fixed scoreDistribution access with keyof type assertion
-  - Fixed HistoryEntry property access (playerName → winner.name, pointsEarned → winner.score)
-- `TimelineDisplay.tsx`: Added GlobalTimelineCard import
-
-**Context Improvements:**
-- Removed unused React imports from all context files (UIContext, AuthContext, AppProviders)
-- Changed React, { ... } → { ... } for cleaner imports (React 17+ JSX transform)
-- Fixed Toast type references across UIContext
-
-**Test Infrastructure:**
-- `botGameFlow.test.tsx`: Removed unused mock declarations and imports
-- `audioPlayer.integration.test.ts`: Fixed onStateChange callback to return Promise<void>
-- `botPlayer.test.ts`: Fixed GameMode type usage in test cases
-- `gameLogic.test.ts`: Fixed GameMode type usage across multiple tests
-
-**Utility Scripts:**
-- `spotifyImport.ts`: Added class property types, function parameter types, error handling types
-- `backgroundAnimations.ts`, `guessAnimations.ts`: Prefixed unused variables with underscore
-
-**Files Modified (40+ files):**
-- `pwa/src/types/index.ts` - Core type definitions
-- `pwa/src/contexts/*.tsx` - 3 context files
-- `pwa/src/components/*.tsx` - 10+ component files
-- `pwa/src/services/__tests__/*.ts` - 5 test files
-- `pwa/src/utils/*.ts` - 3 utility files
-- `pwa/package.json` - Version bump
-
-**Impact:**
-- ✅ Reduced TypeScript errors from ~80 to ~30 (remaining are non-critical test warnings)
-- ✅ All production code properly typed
-- ✅ Improved IDE intellisense and autocompletion
-- ✅ Better type safety prevents runtime errors
-- ✅ Enhanced code maintainability
-
-**Remaining Items:**
-- ~30 warnings remain (TS6133 unused variables in test files, TS2345 GameMode type coercion in tests)
-- These are non-critical and don't affect production code
-
-### v0.0.36 (2025-11-06) - CI/CD Verification & Test Suite Update
-
-**🔄 Verification Release**
-
-This is a verification release to confirm all TypeScript fixes from v0.0.35 are properly integrated into CI/CD pipeline and production deployment.
-
-**Purpose:**
-- Validate TypeScript type safety improvements across CI/CD environments
-- Confirm production build matches CI/CD expectations
-- Document test suite status and remaining non-critical warnings
-
-**Status:**
-- ✅ All critical TypeScript errors resolved (GameContext null types, test mock imports)
-- ✅ Production deployment successful to mxster.de
-- ✅ Test suite passes: 41/41 tests passing
-- ℹ️ Remaining warnings in CI output are non-critical (unused variables in test files, implicit any in utility scripts)
-
-**Technical Notes:**
-- CI/CD pipeline now builds cleanly with TypeScript strict mode
-- Vitest test infrastructure properly handles dynamic mock imports
-- Game state management correctly supports null value resets for navigation flow
-
-**Files Modified:**
-- `pwa/package.json` - Version bump to 0.0.36
-- `README.md` - Added changelog entry
-- `CLAUDE.md` - Updated version and documentation
-
-### v0.0.35 (2025-11-06) - Critical TypeScript Fixes for CI/CD
-
-**🔧 GameContext Type System Improvements**
-
-Fixed critical TypeScript errors that were preventing CI/CD builds:
-
-**GameContext Null Value Support:**
-- Updated `GameAction` union types to accept `GameMode | null` and `GameVariant | null`
-- Changes in `src/contexts/GameContext.tsx`:
-  ```typescript
-  type GameAction =
-    | { type: 'SET_GAME_MODE'; payload: GameMode | null }  // was: GameMode
-    | { type: 'SET_GAME_VARIANT'; payload: GameVariant | null }  // was: GameVariant
-  ```
-- Ensures proper state reset when navigating between landing/setup/game screens
-- Maintains type safety while allowing intentional null resets
-
-**Test Infrastructure Fix:**
-- Fixed `test/setup.ts` TypeScript error for spotify config mock
-- Added `as any` type assertion for dynamic mock imports
-- Resolves CI/CD error: "Could not find a declaration file for module '../../spotify.config.mock.js'"
-- Change: `await import('../../spotify.config.mock.js') as any`
-
-**Error Resolution:**
-- ✅ Fixed: "Type 'null' is not assignable to type 'GameMode'"
-- ✅ Fixed: "Type 'null' is not assignable to type 'GameVariant'"
-- ✅ Fixed: "implicitly has an 'any' type" in test setup
-
-**Files Modified:**
-- `pwa/src/contexts/GameContext.tsx` (lines 41-42)
-- `pwa/src/test/setup.ts` (line 101)
-- `pwa/package.json` (v0.0.35)
-
-**Impact:**
-- Unblocks CI/CD pipeline
-- Maintains type safety for game state management
-- Improves test reliability across environments
-
-### v0.0.34 (2025-11-06) - Production Deployment & Verification
-
-**🚀 Deployment to Production**
-
-Successfully deployed v0.0.33 TypeScript fixes to production environment:
-
-**Deployment Details:**
-- **Build Time**: 5.55s (Vite production build)
-- **Bundle Size**: 1.05 MB JavaScript (gzipped: 284 KB)
-- **Transfer**: 1.84 MB total (21 files via rsync)
-- **Audio Preservation**: 209 songs (933 MB) safely preserved during deployment
-- **Permissions**: Correct ownership (www-data:www-data) and permissions (755) set
-
-**Deployment Process:**
-1. Local production build via `npm run build`
-2. rsync upload to VPS (excluding audio directory)
-3. Audio directory backup and restore during deployment
-4. File permissions configuration
-5. Live verification at https://mxster.de
-
-**Production Verification:**
-- ✅ Zero TypeScript compilation errors
-- ✅ All 41/41 integration tests passing locally
-- ✅ Build optimization successful (code splitting, tree shaking)
-- ✅ PWA service worker generation (12 precached entries)
-- ✅ Audio files not precached (intentional, too large)
-- ✅ Application live and functional
-
-**CI/CD Status:**
-- Awaiting GitHub Actions pipeline run for commit 682640a
-- Expected: All tests pass with vitest config fix
-- Local tests confirmed working
-
-**VPS Configuration:**
-- **Domain**: https://mxster.de
-- **Host**: root@mrx3k1.de (69.62.121.168)
-- **Deploy Path**: /var/www/html/mxster
-- **SSL**: Let's Encrypt (auto-renewing)
-- **Nginx**: Configured with proper routing
-
-### v0.0.33 (2025-11-06) - TypeScript Type Safety & Test Infrastructure
-
-**🔧 Critical Bug Fixes & Type System Improvements**
-
-**Test Infrastructure:**
-- Fixed Vitest dynamic import resolution for `spotify.config.js` during test execution
-  - Added path alias in `vitest.config.ts`: `'../../spotify.config.js'` → `spotify.config.mock.js`
-  - Resolved "Failed to resolve import" error that was breaking CI/CD pipeline
-  - All 41/41 audio player integration tests now pass consistently
-
-**TypeScript Errors Fixed in GameScreen.tsx:**
-- **Type Mismatch**: Changed `showWinnerModal` parameter from `typeof players[0]` to `Player | null`
-- **Missing Imports**: Added `Player` type import from `@/types`
-- **Missing Context Methods**: Added `setGameMode` and `setGameVariant` to `useGame()` destructuring
-- **Nullish Coalescing**: Fixed `string | undefined` vs `string | null` for `lastBotSongRef.current`
-- **Unused Code Removal**:
-  - Removed unused beat sync state variables (`isPlaying`, `currentPosition`, `trackId`)
-  - Removed unused `handlePlayerStateChange` function
-  - Removed unused `SpotifyPlayerState` import
-  - Eliminated `SpotifyPlayerState` vs `PlayerState` type conflict
-
-**Context API Updates (GameContext.tsx):**
-- Updated `setGameMode` signature: `(mode: GameMode)` → `(mode: GameMode | null)`
-- Updated `setGameVariant` signature: `(variant: GameVariant)` → `(variant: GameVariant | null)`
-- Ensures proper game state reset when navigating away from game screen
-
-**Test Results:**
-- ✅ All 41/41 audio player integration tests passing
-- ✅ Zero TypeScript errors in GameScreen.tsx
-- ✅ CI/CD pipeline stable and green
-
-**Files Modified:**
-- `pwa/vitest.config.ts` - Added spotify config path alias for tests
-- `pwa/src/screens/GameScreen.tsx` - Type fixes, removed unused code (30 lines removed)
-- `pwa/src/contexts/GameContext.tsx` - Updated setter function signatures
-
-### v0.0.32 (2025-11-06) - Bot Player System (AI Opponents)
-
-**🤖 Complete Bot Player Implementation**
-
-Added full AI opponent system for single-player gameplay in Virtual Mode:
-
-**Core Features:**
-- **Bot Creation UI**: Dedicated panel in PlayerSetup (Virtual Mode only)
-  - Select 1-3 AI opponents
-  - Choose difficulty: Easy (😊), Medium (🎯), Hard (🔥)
-  - Cyan-themed gradient design
-  - Only visible with exactly 1 human player
-
-- **Difficulty Levels**:
-  - **Easy (30-50% win rate)**: 1.5-3s thinking time, 30% title/artist accuracy, 10% exact year
-  - **Medium (60-75% win rate)**: 2-4s thinking time, 60% title/artist accuracy, 40% exact year
-  - **Hard (90-95% win rate)**: 2.5-5s thinking time, 90% title/artist accuracy, 70% exact year
-
-- **Bot Strategies**:
-  - `HardcoreBotStrategy`: Generates guesses with typos, partial matches, and year estimation
-  - `TimelineBotStrategy`: Places cards chronologically with difficulty-based precision
-  - Strategy Pattern for mode-specific behavior
-
-- **Visual Indicators**:
-  - 🤖 Bot emoji in player lists
-  - Color-coded difficulty badges (green/orange/red)
-  - "KI-Gegner" label
-  - Cyan border for active bot players
-  - "Bot denkt nach..." animation with spinner
-
-- **Game Integration**:
-  - Automatic turn detection via useEffect
-  - Async execution with simulated thinking time
-  - Seamless integration with existing game logic
-  - Error handling with automatic turn skip
-
-**Technical Implementation:**
-- `src/services/botPlayer.ts`: Orchestrator with name generation
-- `src/services/botStrategies/`: Strategy classes (Hardcore, Timeline)
-- `src/types/index.ts`: Player interface extensions
-- `src/contexts/GameContext.tsx`: Optional playerData support
-- Comprehensive test suite (231 tests, 100% pass)
-
-**Files Modified:**
-- `pwa/src/types/index.ts`
-- `pwa/src/contexts/GameContext.tsx`
-- `pwa/src/screens/PlayerSetup.tsx`
-- `pwa/src/screens/GameScreen.tsx`
-- `pwa/src/components/game/PlayerInfo.tsx`
-
-**New Files:**
-- `pwa/src/services/botPlayer.ts`
-- `pwa/src/services/botStrategies/types.ts`
-- `pwa/src/services/botStrategies/hardcoreBotStrategy.ts`
-- `pwa/src/services/botStrategies/timelineBotStrategy.ts`
-- `pwa/src/services/botStrategies/__tests__/*.test.ts`
-- `pwa/src/__tests__/integration/botGameFlow.test.tsx`
-
-### v0.0.32+ (2025-11-06) - Bot Multiple Execution Bug Fix
-
-**🐛 Critical Bug Fix: Bot Executing Multiple Turns**
-
-Fixed critical bug where bot players executed multiple placement actions per turn instead of just one.
-
-**Root Cause:**
-- Bot execution useEffect was triggering multiple times for the same song
-- State changes during bot execution caused component re-renders
-- Each re-render triggered the useEffect again before the execution flag was reset
-- Bot executed 3-5 placement actions before the loop stopped
-
-**Solution:**
-1. Added `lastBotSongRef` to track which song the bot already played:
-   ```typescript
-   const lastBotSongRef = useRef<string | null>(null)
-   ```
-
-2. Extended useEffect condition to prevent duplicate executions for same song:
-   ```typescript
-   const songId = currentSong?.spotifyId || currentSong?.id
-   if (...existing conditions... || lastBotSongRef.current === songId) {
-     return
-   }
-   lastBotSongRef.current = songId
-   ```
-
-3. Added separate useEffect to reset reference when player changes:
-   ```typescript
-   useEffect(() => {
-     lastBotSongRef.current = null
-   }, [currentPlayer])
-   ```
-
-**Impact:**
-- ✅ Bot now executes exactly ONE action per turn
-- ✅ Proper turn-based gameplay flow restored
-- ✅ No more rapid-fire bot placements
-- ✅ All 231 tests still passing
-
-**File Modified:**
-- `pwa/src/screens/GameScreen.tsx` (lines 73, 164, 173, 180, 237-240)
-
-### v0.0.30 (2025-11-06) - Genre Statistics & CI Test Fixes
-
-**📊 Genre Statistics in Player Stats**
-
-Added comprehensive genre tracking and visualization to player statistics:
-
-**New Statistics:**
-- **bestGenre**: Most played genre per player
-- **genreStats**: `Record<string, number>` - Complete genre distribution
-- Genre analysis from player timeline (safe null-checking)
-
-**UI Components:**
-- 🎸 **"Lieblings-Genre" Card**: Pink-themed stats card spanning 2 columns
-- 📊 **Genre Distribution Chart**:
-  - Sorted by play count (descending)
-  - Pink-orange gradient for favorite genre
-  - Cyan-blue gradient for other genres
-  - Truncated genre names with tooltip (max 20 chars)
-  - Relative percentage bars to maximum count
-
-**Implementation:**
-- Parallel analysis alongside decade statistics
-- Safe null-checking for songs without genre field
-- Calculation from `player.timeline` during stats collection
-- File: `pwa/src/components/PlayerStatsDialog.tsx` (+59 lines)
-
-**🧪 CI/CD Test Improvements**
-
-Fixed GitHub Actions test failures:
-
-**Problem:**
-- `spotify.config.js` is gitignored (contains credentials)
-- `SpotifyAuthService` imports this file
-- CI tests failed with "Failed to resolve import" error
-
-**Solution:**
-- Created `spotify.config.mock.js` with test credentials
-- Updated `src/test/setup.ts` to mock `spotify.config.js`
-- Mock redirects to `spotify.config.mock.js` during tests
-- All 41/41 integration tests now pass in CI
-
-**Files:**
-- `pwa/spotify.config.mock.js` (new)
-- `pwa/src/test/setup.ts` (updated mock)
-- `pwa/src/components/PlayerStatsDialog.tsx` (genre stats)
-
-### v0.0.29 (2025-11-06) - Sidebar Navigation Overhaul
-
-**🎯 3-State Navigation System**
-Completely restructured sidebar navigation to provide context-aware menus based on app state:
-
-**Navigation States:**
-1. **Landing Page State** - Marketing and exploration:
-   - 📖 Anleitung
-   - 🎮 Spielmodi (scroll to section)
-   - 🎴 Spielvarianten (scroll to section)
-   - 📥 Downloads (scroll to section)
-   - ✨ Features (scroll to section)
-   - 💬 Support (scroll to section)
-
-2. **Setup Phase State** - Configuration mode:
-   - 📖 Anleitung
-   - 🏠 Zurück zum Menü (with warning if players configured)
-
-3. **In-Game State** - Active gameplay:
-   - ❓ Hilfe (contextual help)
-   - 🚪 Spiel beenden (red highlighted, with confirmation)
-
-**Key Improvements:**
-- ✅ **State-Based Logic**: Precise state detection using `location.pathname` + `isGameStarted` combination
-- ✅ **Consolidated Warnings**: Single `showNavigationWarning()` function replaces duplicate logic
-- ✅ **Context-Aware Labels**: Button names change based on state ("Anleitung" → "Hilfe" in game)
-- ✅ **Smart Warnings**: Only warns when data would be lost (active game or configured players)
-- ✅ **Progressive Disclosure**: Only shows relevant options for current context
-- ✅ **Destructive Action Feedback**: Red styling for "Spiel beenden" button emphasizes impact
-
-**Technical Details:**
-- **File Modified**: `pwa/src/components/Sidebar.tsx` (complete rewrite, 372 lines)
-- **State Detection**:
-  ```typescript
-  const isOnLandingPage = location.pathname === '/'
-  const isInSetup = ['/mode-selection', '/player-setup'].includes(location.pathname)
-  const isInGame = location.pathname === '/game' && isGameStarted
-  ```
-- **Warning Consolidation**: Reduced from 2 duplicate functions to 1 parameterized function
-- **Conditional Rendering**: 3 distinct menu structures instead of dynamic visibility toggles
-
-**UX Benefits:**
-- 🎯 Focused menus - no irrelevant options visible
-- ⚡ Faster navigation - fewer decisions to make
-- 🔒 Data protection - clear warnings before losing progress
-- 📱 Cleaner interface - no clutter during active gameplay
-
-**Bug Fixes:**
-- Fixed redundant "Startseite" button during games
-- Fixed scroll buttons appearing during active games
-- Fixed missing warnings when leaving setup phase with configured players
-- Fixed inconsistent state checking across navigation handlers
-
-### v0.0.28 (2025-11-05) - Audio Player Critical Bugfixes
-**Fixed critical bugs preventing music playback in both Spotify and Preview modes:**
-
-**🐛 Root Cause Analysis:**
-- **SpotifyPlayerService** was exported as singleton but instantiated incorrectly
-- Missing methods (`play()`, `stop()`, etc.) that MusicPlayerService expected
-- Missing callback properties (`onStateChange`, `onProgress`, `onEnd`, `onError`)
-- Type incompatibility between singleton instance and class type
-
-**✅ Fixes Applied:**
-1. **SpotifyPlayerService.ts**:
-   - Added missing methods: `play()`, `stop()`, `getCurrentTime()`, `getDuration()`, `getState()`, `isPlaying()`, `setVolume()`, `getVolume()`, `destroy()`
-   - Added public callback properties for MusicPlayerService compatibility
-   - Removed duplicate `onStateChange()` method that conflicted with property
-   - Added state change notifications in pause/resume methods
-
-2. **MusicPlayerService.ts**:
-   - Fixed singleton usage: Changed from `new SpotifyPlayerService()` to `SpotifyPlayerService`
-   - Fixed type declaration: `private spotifyPlayer: typeof SpotifyPlayerService | null`
-   - Made `config` property public so MusicPlayer component can set callbacks
-   - Added null check for `song.spotifyId` before attempting Spotify playback
-
-3. **UI Improvements**:
-   - Restored prominent yellow warning box for Spotify Development Mode on LandingPage
-   - Improved MusicPlayer play button styling (gradient, hover effects, shadow)
-   - Enhanced progress bar (increased height, better gradient, hover border effects)
-
-**📝 Technical Details:**
-- Bug caused by interface mismatch between MusicPlayerService expectations and SpotifyPlayerService implementation
-- Preview mode also affected because initialization errors prevented proper player setup
-- All audio player services now properly implement callback pattern
-
-**Files Modified:**
-- `pwa/src/services/SpotifyPlayerService.ts`
-- `pwa/src/services/MusicPlayerService.ts`
-- `pwa/src/screens/LandingPage.tsx`
-- `pwa/src/components/game/MusicPlayer.tsx`
-
-### v0.0.27 (2025-11-05) - Self-Hosted Audio System
-**Complete self-hosting infrastructure for unlimited users without Spotify limitations:**
-
-**Core Implementation:**
-- ✅ **download-songs.js**: Downloads 209 songs from YouTube (128 kbps MP3, ~933 MB total)
-  - 3 concurrent downloads, 3 retries per song, batch processing
-  - Options: `--limit N` (test mode), `--resume` (skip existing)
-  - Output: `pwa/public/audio/*.mp3` (gitignored)
-- ✅ **upload-to-vps.js**: Uploads to VPS via rsync
-  - Incremental sync, permission setting (644), nginx verification
-  - Options: `--dry-run` (preview changes)
-  - Target: `root@mrx3k1.de:/var/www/html/mxster/audio/`
-- ✅ **update-song-urls.js**: Updates previewUrl in songs.json and songs.ts
-  - Auto-backup (.backup-YYYY-MM-DD), 100% coverage verification
-  - Options: `--dry-run` (preview changes)
-  - URL format: `https://mxster.de/audio/song_XXX.mp3`
-- ✅ **validate-audio.js**: HTTPS accessibility validation
-  - HTTP status 200, content-type audio/mpeg, file size checks (1-15 MB)
-  - Options: `--full` (all 209 songs), default: 10 sample songs
-  - Report: `docs/validation-report.json`
-
-**nginx Configuration:**
-```nginx
-location /audio/ {
-    alias /var/www/html/mxster/audio/;
-    add_header Cache-Control "public, max-age=31536000";
-    add_header Access-Control-Allow-Origin "*";
-    add_header Content-Type "audio/mpeg";
-    add_header Accept-Ranges bytes;
-}
-```
-
-**Bug Fixes:**
-- Fixed random start position for preview mode (now works with self-hosted audio)
-- Fixed Timeline Global win condition (counts total cards across all players, winner = most cards after 10 total)
-- Fixed game end dialog not closing when clicking buttons
-
-**Benefits:**
-- 🌟 Unlimited users (no 25-user Development Mode limit)
-- 🎵 Full songs (3-5 minutes) instead of 30-second previews
-- 🔓 No authentication required
-- 💾 Offline-ready (PWA can cache songs)
-
-**Technical Details:**
-- Average song size: 4.47 MB (128 kbps MP3)
-- Total storage: 933.43 MB on VPS
-- Quality: 128 kbps MP3 (balance of size vs quality)
-- All 64 unit tests passing
-
-### v0.0.25 (2025-11-03) - Achievement System Bugfixes
-**Fixed 3 critical achievement bugs identified through thorough code analysis:**
-
-**1. NAME_DROPPER (Artist Streak)** ❌→✅
-- **Bug**: Used `points >= 10` to detect artist correctness (impossible - can't distinguish Title+Artist from Title+Year)
-- **Fix**: Added `guessDetails` to Song interface with `artistCorrect` boolean
-- **Impact**: Now accurately tracks 5-artist streaks without false positives
-
-**2. PERFECT_STREAK (3 Perfect Guesses)** ⚠️→✅
-- **Bug**: Only checked `points === 15`, may fail if points not persisted correctly
-- **Fix**: Dual verification - checks both `points === 15` OR all `guessDetails` fields correct
-- **Impact**: More reliable perfect streak detection
-
-**3. COMEBACK_PROFI (5 Comeback Wins)** ⚠️→✅
-- **Bug**: Weak logic - only checked final scores, didn't track actual comebacks
-- **Fix**: Checks if winner had fewer cards OR came from behind (opponent had equal/more cards but lower score)
-- **Impact**: Better comeback detection logic
-
-**Implementation Details:**
-- **Song Interface**: Added `guessDetails?: { titleCorrect, artistCorrect, yearPoints }` (v0.0.25)
-- **gameLogic.ts**: Updated `placeCardInTimeline()` to store guess details
-- **GameScreen.tsx**: Calculate and pass guessDetails when placing cards
-- **Achievement Debugging**: Added summary log after each game showing progress for all players
-
-**All 20 Achievements Now Fully Functional** ✅
-
-### v0.0.24++ (2025-11-04) - Genre Analysis & Testing Tools
-**Analysis & Testing Improvements**:
-- ✅ **generate-decade-report.js**: Added genre distribution analysis alongside decade analysis
-  - Interactive HTML report with bar charts for both decades and genres
-  - 208 songs across 7 decades and 9 genres
-  - Genre color coding with vibrant colors per genre
-  - Detailed song listings by decade and genre
-- ✅ **generate-game-history.js**: Updated to generate 1000 realistic test games + ALL 20 ACHIEVEMENTS
-  - 3 players (m, n, o) with different skill levels (80%, 60%, 40%)
-  - Random game modes (hardcore, timeline_personal, timeline_global)
-  - Random variants (physical, virtual)
-  - **CRITICAL FIX**: Now includes all 20 achievements (was missing 10 new ones)
-  - **GRAND_MASTER unlocks correctly** with 5000+ points (Player "m" gets ~35000 points)
-  - For testing achievements, statistics, and history features
-- ✅ **unlock-all-achievements.js**: Updated to include all 20 achievements
-  - Player "m": All 20 unlocked (100%)
-  - Player "n": 10 unlocked, 10 locked with progress (50%)
-  - Includes GRAND_MASTER and GENRE_HOPPER
-
-### v0.0.24+ (2025-11-03) - Genre Field Support
-**Added genre field to song management system** to support GENRE_HOPPER achievement:
-- ✅ **Genre field added** to Song interface (optional, already in v0.0.24)
-- ✅ **add-song.js**: Genre input with suggestions in `--edit` mode
-- ✅ **edit-song.js**: Genre editing with visual before/after comparison
-- ✅ **exchange-song.js**: Preserves genre field when exchanging songs
-- ✅ **GENRE_HOPPER**: Already safely filters `undefined`/`null` values
-- ✅ **songs.json**: All 208 songs now have genre data (100% coverage)
-- ✅ **song_template.json**: Updated with genre field, removed deprecated fields
-- 📝 **Genre suggestions**: Pop, Rock, Hip-Hop, Electronic, R&B, Country, Jazz, Metal, Reggae, Soul
-- 📊 **Genre distribution**: Pop (67), Rock (45), Electronic (44), Soul (18), Hip-Hop (17), R&B (7), Metal (6), Reggae (2), Country (1)
-
-### v0.0.26 (2025-11-05) - Visual Feedback & UX Improvements
-
-**🎨 Animation System Implementation**
-
-**New Animation Files**:
-- `pwa/src/utils/placementAnimations.ts` - Timeline placement feedback (confetti + thunder/rain)
-- `pwa/src/utils/guessAnimations.ts` - Hardcore mode score-based animations (5 levels)
-- `pwa/src/utils/animationHelpers.ts` - Shared randomization utilities
-- `pwa/src/styles/animations.css` - CSS keyframes (lightning, rain, shake, pulse, fade)
-
-**Timeline Placement Animations**:
-- **Correct (✅)**: 3 randomized confetti patterns
-  - Center Burst: 360° explosion from center (80-150 particles)
-  - Side Cannons: Simultaneous left + right cannons (50-100 particles each)
-  - Spiral: Bottom-to-top spiral effect (2-3 seconds duration)
-- **Incorrect (❌)**: Thunder/rain animation
-  - Dark storm overlay (opacity 0.3-0.6, randomized)
-  - 30-60 falling raindrops (randomized positions & speeds)
-  - 2-4 lightning bolts (randomized positions & timing)
-  - Screen shake effect (0.5s)
-
-**Hardcore Mode Guess Animations** (score-based):
-- **15 Points (Perfect)**: Gold confetti + "PERFECT!" text + golden glow (3s)
-- **10-14 Points (Great)**: Silver confetti + "GREAT!" text + cyan glow (2s)
-- **5-9 Points (Good)**: Green particles + "NICE!" text + green glow (1.5s)
-- **1-4 Points (Partial)**: Yellow sparks + "+X" points + weak glow (1s)
-- **0 Points (Wrong)**: Falling ❌ symbols + screen shake + red flash (1s)
-
-**Randomization Features**:
-- 8 theme colors palette (indigo, orange, cyan, pink, purple, green, amber, red)
-- Randomized particle counts, spread angles, velocities, gravity
-- Randomized lightning positions, rain intensity, timing delays
-- Mobile optimization: 50% fewer particles on devices < 768px width
-- Accessibility: `prefers-reduced-motion` support
-
-**UI Improvements**:
-- **Enlarged Placement Buttons**: All timeline placement buttons now `text-2xl md:text-3xl font-bold`
-  - "📍 Erste Karte platzieren"
-  - "📍 Zwischen X und Y"
-  - "⬆️ Vor X"
-  - "⬇️ Nach X"
-- **Keyboard Shortcuts**: All evaluation/result modals now support:
-  - **Enter**: Trigger primary button action
-  - **ESC**: Close modal (if not `required: true`)
-  - Implemented via `variant: 'primary'` on modal buttons
-
-**Technical Details**:
-- Dependencies: Uses existing `canvas-confetti` v1.9.3
-- Build size: +7 KB (animations + CSS)
-- Integration: `GameScreen.tsx` - animations trigger before modals
-- Non-blocking: All animations run asynchronously
-- TypeScript: Fully typed
-
-**Files Modified**:
-- `pwa/src/main.tsx`: Import animations.css
-- `pwa/src/screens/GameScreen.tsx`:
-  - Added animation imports
-  - Trigger animations in `handleManualPlacement()` (line 761-766)
-  - Trigger animations in `showEvaluationModal()` (line 385-396)
-  - Enlarged placement button text (lines 660, 672, 694, 709)
-  - Added `variant: 'primary'` to 3 modal buttons (lines 473, 823, 875)
-
-### v0.0.24 (2025-11-03) - Achievement Fixes & Replacements
-**Fixed 5 broken achievements from v0.0.23** with creative, functional alternatives:
-- **Removed broken achievements**:
-  - SPEED_DEMON (race condition + timing complexity)
-  - YEAR_PERFECTIONIST (impossible: ≥13 points doesn't exist)
-  - DIVERSE_TASTE (impossible: requires all decades in 10 cards)
-  - ARTIST_EXPERT (false positives: counted wrong songs)
-- **New functional achievements**:
-  - ⏰ **ZEITMASCHINE**: 3 different decades (realistic + achievable)
-  - 🌈 **GENRE_HOPPER**: 4 different genres (requires genre field)
-  - 🎤 **NAME_DROPPER**: 5 artist streak (streak-based = more engaging)
-  - 🏆 **PUNKTEJÄGER**: 75+ points (entry-level version of HARDCORE_CHAMPION)
-  - 🔥 **COMEBACK_PROFI**: 5x comeback wins (cross-game achievement)
-- **Bug fixes**:
-  - Property name consistency: `earnedPoints` → `points` in PERFECT_STREAK
-  - Removed entire timing system (songStartTimes, playerSongTimes)
-- **New fields**:
-  - Song interface: Added optional `genre?: string` field (v0.0.24)
-- **Files Modified**:
-  - types/achievements.ts: Renamed 5 IDs + updated definitions
-  - types/index.ts: Added genre field to Song interface
-  - screens/GameScreen.tsx: Replaced 6 achievement checks, removed timing
-  - contexts/AchievementContext.tsx: Added COMEBACK_PROFI check
-
-**TODO for later**: Add Genre-Bender achievement (BPM-based)
-
-### v0.0.23 (2025-11-03) - 10 New Achievements (DEPRECATED - had bugs)
-**Achievement System Expansion**: Doubled achievements from 10 to 20
-- **5 Normal Achievements**:
-  - ⚡🔥 **SPEED_DEMON**: 3 songs in a row guessed in <10s each (with song timing system)
-  - 📅 **YEAR_PERFECTIONIST**: 5 songs with exact year match
-  - 🎵 **DIVERSE_TASTE**: Cover all available decades in one game
-  - 👥 **SOCIAL_BUTTERFLY**: Play with 5 different players (cross-game)
-  - 🎤 **ARTIST_EXPERT**: 10 artists correctly guessed in one game
-- **5 Very Hard Achievements**:
-  - 💎 **FLAWLESS_VICTORY**: Win with perfect 150/150 points
-  - 🌟 **LEGENDARY_STREAK**: Win 10 consecutive games (cross-game)
-  - 💯 **CENTURION**: Play 100 games (cross-game)
-  - ⏱️ **MASTER_OF_TIME**: Complete game in <3 minutes
-  - 👑💎 **GRAND_MASTER**: Earn 5000 total points (cross-game)
-- **New Systems**: Song timing tracking (start time + elapsed time per song)
-- **Files Modified**:
-  - `types/achievements.ts`: +10 IDs, +10 definitions
-  - `screens/GameScreen.tsx`: +6 per-game checks, timing system
-  - `contexts/AchievementContext.tsx`: +4 cross-game checks
-- **UI**: Auto-scales to show "X / 20" progress
-
-### v0.0.20 (2025-02-01) - TypeScript Cleanup
-- Fixed 15+ TS errors: `GameHistory` → `GameHistoryData`, modal button interface (`text` not `label`)
-- Migrated to `useGameHistory` hook, removed unused code
-- New: `generate-decade-report.js` analysis script (207 songs, 7 decades, interactive HTML)
-
-### v0.0.17-19 (2025-01-31) - UI & Stats
-- **Stats**: `PlayerStatsDialog` (win rate, avg score, decade mastery), `GameEndStatsDialog` (confetti + round/global stats)
-- **Safety**: Player deletion confirmation, consistent navigation warnings
-- **Dependency**: `canvas-confetti` for winner animations
-- **Components**: 500+ lines (PlayerStatsDialog, GameEndStatsDialog, ChartIcon)
-
+3. Commit → `git tag vX.Y.Z` → `git push origin vX.Y.Z` → `gh release create`
+4. Deploy: `./scripts/deployment/deploy.sh`

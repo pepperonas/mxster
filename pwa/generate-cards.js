@@ -13,7 +13,7 @@ const DUPLEX_MODE = process.argv.includes('--duplex');
 
 /**
  * Entfernt typische Track-Suffixe wie "12 Extended Remix", "Club Mix", etc.
- * Identisch zur Funktion in card-generator/generateCard.js und pwa/src/utils/textMatcher.js
+ * Identisch zur Funktion in extras/card-generator/generateCard.js und pwa/src/utils/textMatcher.js
  */
 function removeTrackSuffixes(text) {
   if (!text) return '';
@@ -213,7 +213,7 @@ async function generateCardsPDF() {
   });
 
   // Create output stream
-  let outputPath = BLACK_AND_WHITE ? '../card-generator/output/pdfs/mxster-cards-bw.pdf' : '../card-generator/output/pdfs/mxster-cards.pdf';
+  let outputPath = BLACK_AND_WHITE ? '../extras/card-generator/output/pdfs/mxster-cards-bw.pdf' : '../extras/card-generator/output/pdfs/mxster-cards.pdf';
   if (DUPLEX_MODE) {
     outputPath = outputPath.replace('.pdf', '-duplex.pdf');
   }

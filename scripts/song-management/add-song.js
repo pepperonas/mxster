@@ -17,8 +17,8 @@ import path from 'path'
 import { fileURLToPath } from 'url'
 import readline from 'readline'
 import { execSync } from 'child_process'
-import { getTrackMetadata } from '../../card-generator/spotifyApi.js'
-import { generateCard, generateSTL } from '../../card-generator/generateCard.js'
+import { getTrackMetadata } from '../../extras/card-generator/spotifyApi.js'
+import { generateCard, generateSTL } from '../../extras/card-generator/generateCard.js'
 
 // ES Module equivalent of __dirname
 const __filename = fileURLToPath(import.meta.url)

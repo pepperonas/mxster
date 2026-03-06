@@ -64,7 +64,7 @@ Stelle sicher, dass alle Änderungen committed sind und das Spiel funktioniert.
 
 ```bash
 ./scripts/build/generate-all-pdfs.sh
-# Erstellt in card-generator/output/pdfs/:
+# Erstellt in extras/card-generator/output/pdfs/:
 # - mxster-cards.pdf
 # - mxster-cards-bw.pdf
 # - mxster-cards-duplex.pdf
@@ -75,18 +75,18 @@ Stelle sicher, dass alle Änderungen committed sind und das Spiel funktioniert.
 
 ```bash
 # Ensure directories exist
-mkdir -p build/archives
+mkdir -p extras/build/archives
 
 # Versionlose Dateien für "latest"
-rm -f build/archives/mxster-*.zip
-zip -r build/archives/mxster-scad-models.zip card-generator/output/models/*.scad -q
-zip -r build/archives/mxster-stl-models.zip card-generator/output/models/*.stl -q
-git archive --format=zip --prefix=mxster/ -o build/archives/mxster-source.zip HEAD
+rm -f extras/build/archives/mxster-*.zip
+zip -r extras/build/archives/mxster-scad-models.zip extras/card-generator/output/models/*.scad -q
+zip -r extras/build/archives/mxster-stl-models.zip extras/card-generator/output/models/*.stl -q
+git archive --format=zip --prefix=mxster/ -o extras/build/archives/mxster-source.zip HEAD
 
 # Versionierte Kopien für v0.0.X-beta
-cp build/archives/mxster-scad-models.zip build/archives/mxster-scad-models-v0.0.X-beta.zip
-cp build/archives/mxster-stl-models.zip build/archives/mxster-stl-models-v0.0.X-beta.zip
-cp build/archives/mxster-source.zip build/archives/mxster-source-v0.0.X-beta.zip
+cp extras/build/archives/mxster-scad-models.zip extras/build/archives/mxster-scad-models-v0.0.X-beta.zip
+cp extras/build/archives/mxster-stl-models.zip extras/build/archives/mxster-stl-models-v0.0.X-beta.zip
+cp extras/build/archives/mxster-source.zip extras/build/archives/mxster-source-v0.0.X-beta.zip
 ```
 
 ### 5. Git Commit & Push
@@ -128,9 +128,9 @@ gh release create v0.0.X-beta \
 
 ---
 🤖 Generated with [Claude Code](https://claude.com/claude-code)" \
-  build/archives/mxster-scad-models-v0.0.X-beta.zip \
-  build/archives/mxster-stl-models-v0.0.X-beta.zip \
-  build/archives/mxster-source-v0.0.X-beta.zip
+  extras/build/archives/mxster-scad-models-v0.0.X-beta.zip \
+  extras/build/archives/mxster-stl-models-v0.0.X-beta.zip \
+  extras/build/archives/mxster-source-v0.0.X-beta.zip
 ```
 
 ### 7. Update "latest" Release (ALLE Assets)
@@ -138,14 +138,14 @@ gh release create v0.0.X-beta \
 ```bash
 # Upload alle 8 Dateien zu "latest" (überschreibt alte Dateien)
 gh release upload latest \
-  build/archives/mxster-scad-models.zip \
-  build/archives/mxster-stl-models.zip \
-  build/archives/mxster-source.zip \
-  card-generator/output/pdfs/mxster-cards.pdf \
-  card-generator/output/pdfs/mxster-cards-bw.pdf \
-  card-generator/output/pdfs/mxster-cards-duplex.pdf \
-  card-generator/output/pdfs/mxster-cards-bw-duplex.pdf \
-  card-generator/output/models/all-cards.3mf \
+  extras/build/archives/mxster-scad-models.zip \
+  extras/build/archives/mxster-stl-models.zip \
+  extras/build/archives/mxster-source.zip \
+  extras/card-generator/output/pdfs/mxster-cards.pdf \
+  extras/card-generator/output/pdfs/mxster-cards-bw.pdf \
+  extras/card-generator/output/pdfs/mxster-cards-duplex.pdf \
+  extras/card-generator/output/pdfs/mxster-cards-bw-duplex.pdf \
+  extras/card-generator/output/models/all-cards.3mf \
   --clobber
 ```
 
@@ -227,22 +227,22 @@ gh release edit latest --prerelease=false --latest
 
 ### Dateistruktur
 
-**PDFs werden in `card-generator/output/pdfs/` generiert:**
-- ✅ `card-generator/output/pdfs/mxster-cards.pdf` (wird für Release verwendet)
-- ✅ `card-generator/output/pdfs/mxster-cards-bw.pdf` (wird für Release verwendet)
-- ✅ `card-generator/output/pdfs/mxster-cards-duplex.pdf` (wird für Release verwendet)
-- ✅ `card-generator/output/pdfs/mxster-cards-bw-duplex.pdf` (wird für Release verwendet)
+**PDFs werden in `extras/card-generator/output/pdfs/` generiert:**
+- ✅ `extras/card-generator/output/pdfs/mxster-cards.pdf` (wird für Release verwendet)
+- ✅ `extras/card-generator/output/pdfs/mxster-cards-bw.pdf` (wird für Release verwendet)
+- ✅ `extras/card-generator/output/pdfs/mxster-cards-duplex.pdf` (wird für Release verwendet)
+- ✅ `extras/card-generator/output/pdfs/mxster-cards-bw-duplex.pdf` (wird für Release verwendet)
 
-**ZIPs werden in `build/archives/` generiert:**
-- ✅ `build/archives/mxster-scad-models.zip` (für Release)
-- ✅ `build/archives/mxster-stl-models.zip` (für Release)
-- ✅ `build/archives/mxster-source.zip` (für Release)
+**ZIPs werden in `extras/build/archives/` generiert:**
+- ✅ `extras/build/archives/mxster-scad-models.zip` (für Release)
+- ✅ `extras/build/archives/mxster-stl-models.zip` (für Release)
+- ✅ `extras/build/archives/mxster-source.zip` (für Release)
 - ℹ️ Bleiben im Repo für einfache Re-Releases
 
 **3D-Modelle:**
-- `card-generator/output/models/*.scad` (im Git)
-- `card-generator/output/models/*.stl` (im Git)
-- `card-generator/output/models/all-cards.3mf` (im Git, für Release)
+- `extras/card-generator/output/models/*.scad` (im Git)
+- `extras/card-generator/output/models/*.stl` (im Git)
+- `extras/card-generator/output/models/all-cards.3mf` (im Git, für Release)
 
 ## Troubleshooting
 
@@ -256,9 +256,9 @@ gh release create latest \
   --title "Latest Release" \
   --notes "..." \
   --prerelease \
-  build/archives/mxster-scad-models.zip \
-  build/archives/mxster-stl-models.zip \
-  build/archives/mxster-source.zip
+  extras/build/archives/mxster-scad-models.zip \
+  extras/build/archives/mxster-stl-models.zip \
+  extras/build/archives/mxster-source.zip
 ```
 
 **Dateigröße Referenz:**

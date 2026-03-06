@@ -181,7 +181,7 @@ if (failedTests === passedTests) {
  * Test 6: Check 3D model files existence (gitignored, optional check)
  */
 console.log(`\n${colors.cyan}[Test 6] Checking 3D model files (optional - gitignored)...${colors.reset}`);
-const modelsDir = path.join(__dirname, 'card-generator/output/models');
+const modelsDir = path.join(__dirname, 'extras/card-generator/output/models');
 
 if (fs.existsSync(modelsDir)) {
   let missingScad = 0;
@@ -220,7 +220,7 @@ if (fs.existsSync(modelsDir)) {
  * Test 7: Check QR code PNG files (gitignored, optional check)
  */
 console.log(`\n${colors.cyan}[Test 7] Checking QR code PNG files (optional - gitignored)...${colors.reset}`);
-const qrCodesDir = path.join(__dirname, 'card-generator/output/qr-codes');
+const qrCodesDir = path.join(__dirname, 'extras/card-generator/output/qr-codes');
 
 if (fs.existsSync(qrCodesDir)) {
   let missingPngs = 0;
@@ -253,13 +253,13 @@ if (fs.existsSync(qrCodesDir)) {
  * Test 8: Check all-cards.3mf exists (optional - distributed via GitHub Releases)
  */
 console.log(`\n${colors.cyan}[Test 8] Checking combined 3MF file...${colors.reset}`);
-const all3mfPath = path.join(__dirname, 'card-generator/output/models/all-cards.3mf');
+const all3mfPath = path.join(__dirname, 'extras/card-generator/output/models/all-cards.3mf');
 if (fs.existsSync(all3mfPath)) {
   const stats = fs.statSync(all3mfPath);
   logSuccess(`all-cards.3mf exists (${(stats.size / 1024 / 1024).toFixed(2)} MB)`);
 } else {
   logWarning('all-cards.3mf not found (optional - create manually in slicer software for releases)');
-  logInfo('Individual STL files available in card-generator/output/models/');
+  logInfo('Individual STL files available in extras/card-generator/output/models/');
 }
 
 /**
@@ -572,7 +572,7 @@ if (fs.existsSync(modelsDir)) {
  */
 console.log(`\n${colors.cyan}[Test 15] PDF Generation Test (advanced)...${colors.reset}`);
 
-const pdfDir = path.join(__dirname, 'card-generator/output/pdfs');
+const pdfDir = path.join(__dirname, 'extras/card-generator/output/pdfs');
 if (fs.existsSync(pdfDir)) {
   const pdfFiles = [
     'mxster-cards.pdf',

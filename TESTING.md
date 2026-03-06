@@ -27,8 +27,8 @@ node test-integrity.js
 - ✅ Spotify-IDs haben korrektes Format (22 alphanumerische Zeichen)
 
 ### 3. **3D-Modell-Vollständigkeit**
-- ✅ Jeder Song hat SCAD-Datei (card-generator/models/)
-- ✅ Jeder Song hat STL-Datei (card-generator/models/)
+- ✅ Jeder Song hat SCAD-Datei (extras/card-generator/models/)
+- ✅ Jeder Song hat STL-Datei (extras/card-generator/models/)
 - ✅ all-cards.3mf existiert und hat valide Größe
 
 ### 4. **QR-Code-Vollständigkeit**
@@ -105,7 +105,7 @@ git commit -m "..."
 ### Fehler: "Missing SCAD/STL file"
 ```bash
 # Regeneriere fehlende 3D-Modelle
-node card-generator/generateCard.js
+node extras/card-generator/generateCard.js
 ```
 
 ### Fehler: "PWA songs.ts count mismatch"

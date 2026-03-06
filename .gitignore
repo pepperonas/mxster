@@ -17,22 +17,22 @@ __pycache__/
 pwa/dist/
 dist/
 dist-ssr/
-build/
+extras/build/
 *.log
 
 # Generated card files (new structure)
-card-generator/output/qr-codes/*.png
-!card-generator/output/qr-codes/.gitkeep
-!card-generator/output/models/.gitkeep
-!card-generator/output/pdfs/.gitkeep
+extras/card-generator/output/qr-codes/*.png
+!extras/card-generator/output/qr-codes/.gitkeep
+!extras/card-generator/output/models/.gitkeep
+!extras/card-generator/output/pdfs/.gitkeep
 
 # Note: SCAD and STL files are now tracked in Git for both repos
 
 # Generated PWA data
 pwa/src/data/songs.js
 
-# PDF cards (now in card-generator/output/pdfs/)
-card-generator/output/pdfs/*.pdf
+# PDF cards (now in extras/card-generator/output/pdfs/)
+extras/card-generator/output/pdfs/*.pdf
 *.pdf
 
 # ZIP archives (now in build/archives/)
@@ -120,14 +120,14 @@ docs/songs.json.backup-*
 # Test files (nur für Entwicklung)
 test-*.js
 **/test-*.js
-card-generator/test-*.js
+extras/card-generator/test-*.js
 
 # ABER: Test-Skripte in scripts/testing/ SOLLEN in Git sein
 !scripts/testing/*.js
 !scripts/testing/*.md
 
 # 3D printer files (distributed via GitHub Releases)
-card-generator/output/models/*.3mf
+extras/card-generator/output/models/*.3mf
 *.3mf
 
 # Self-hosted audio files (regenerate via download-songs.js)
