@@ -271,14 +271,14 @@ export function MusicPlayer({ song, onStateChange }: MusicPlayerProps) {
   const currentBadge = modeBadge[audioMode]
 
   return (
-    <div className="glass rounded-2xl p-8 border-2 border-accent/30 hover:border-accent transition-colors">
+    <div className="glass rounded-2xl p-4 sm:p-6 lg:p-8 border-2 border-accent/30 hover:border-accent transition-colors">
       {/* Song Info */}
-      <div className="flex items-center gap-6 mb-6">
-        <div className="w-24 h-24 bg-gradient-to-br from-secondary to-accent rounded-xl flex items-center justify-center text-4xl shadow-glow-accent">
-          <MusicIcon size={48} color="white" />
+      <div className="flex items-center gap-4 sm:gap-6 mb-4 sm:mb-6">
+        <div className="w-16 h-16 sm:w-24 sm:h-24 bg-gradient-to-br from-secondary to-accent rounded-xl flex items-center justify-center shadow-glow-accent flex-shrink-0">
+          <MusicIcon size={32} color="white" />
         </div>
-        <div className="flex-1">
-          <h3 className="text-2xl font-bold text-gradient mb-1">
+        <div className="flex-1 min-w-0">
+          <h3 className="text-lg sm:text-2xl font-bold text-gradient mb-1">
             {isLoading ? 'Wird geladen...' : 'Song wird abgespielt'}
           </h3>
           <p className="text-text-secondary">Rate Titel, Interpret und Jahr</p>

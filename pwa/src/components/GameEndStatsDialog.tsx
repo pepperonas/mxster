@@ -133,9 +133,9 @@ export function GameEndStatsDialog({ winner, allPlayers, gameMode, onClose, onNe
     <div className="py-6">
       {/* Winner Celebration */}
       <div className="text-center mb-8">
-        <div className="text-8xl mb-4 animate-bounce">🏆</div>
-        <h2 className="text-4xl font-bold text-gradient mb-2">{winner.name}</h2>
-        <p className="text-xl text-secondary mb-4">ist der Gewinner!</p>
+        <div className="text-6xl sm:text-8xl mb-4 animate-bounce">🏆</div>
+        <h2 className="text-3xl sm:text-4xl font-bold text-gradient mb-2">{winner.name}</h2>
+        <p className="text-lg sm:text-xl text-secondary mb-4">ist der Gewinner!</p>
         {gameMode === 'hardcore' && (
           <div className="inline-block glass px-6 py-3 rounded-full border-2 border-accent">
             <span className="text-3xl font-bold text-accent">{winner.score} Punkte</span>
@@ -209,30 +209,34 @@ export function GameEndStatsDialog({ winner, allPlayers, gameMode, onClose, onNe
               <span>Globale Statistiken</span>
             </h3>
 
-            <div className="glass p-6 rounded-lg border-2 border-accent/30">
+            <div className="glass p-4 sm:p-6 rounded-lg border-2 border-accent/30">
               <div className="space-y-4">
                 {globalStats.slice(0, 5).map((playerGlobal, index) => (
-                  <div key={playerGlobal.name} className="flex items-center gap-4">
-                    {/* Rank */}
-                    <div className="w-12 text-center">
-                      {index === 0 && <span className="text-3xl">🥇</span>}
-                      {index === 1 && <span className="text-3xl">🥈</span>}
-                      {index === 2 && <span className="text-3xl">🥉</span>}
-                      {index > 2 && (
-                        <span className="text-xl font-bold text-text-secondary">#{index + 1}</span>
-                      )}
-                    </div>
-
-                    {/* Player Name */}
-                    <div className="flex-1">
-                      <div className="font-bold text-white">{playerGlobal.name}</div>
-                      <div className="text-xs text-text-secondary">
-                        {playerGlobal.totalGames} Spiele · Ø {playerGlobal.avgScore.toFixed(1)} Punkte
+                  <div key={playerGlobal.name} className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
+                    {/* Rank + Name */}
+                    <div className="flex items-center gap-3">
+                      <div className="w-8 sm:w-12 text-center flex-shrink-0">
+                        {index === 0 && <span className="text-2xl sm:text-3xl">🥇</span>}
+                        {index === 1 && <span className="text-2xl sm:text-3xl">🥈</span>}
+                        {index === 2 && <span className="text-2xl sm:text-3xl">🥉</span>}
+                        {index > 2 && (
+                          <span className="text-lg sm:text-xl font-bold text-text-secondary">#{index + 1}</span>
+                        )}
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <div className="font-bold text-white truncate">{playerGlobal.name}</div>
+                        <div className="text-xs text-text-secondary">
+                          {playerGlobal.totalGames} Spiele · Ø {playerGlobal.avgScore.toFixed(1)} Punkte
+                        </div>
+                      </div>
+                      <div className="sm:hidden text-right flex-shrink-0">
+                        <div className="text-lg font-bold text-accent">{playerGlobal.wins}</div>
+                        <div className="text-xs text-text-secondary">Siege</div>
                       </div>
                     </div>
 
                     {/* Win Rate Bar */}
-                    <div className="flex-1">
+                    <div className="flex-1 pl-11 sm:pl-0">
                       <div className="flex justify-between text-xs text-text-secondary mb-1">
                         <span>Siegesrate</span>
                         <span>{playerGlobal.winRate.toFixed(0)}%</span>
@@ -245,8 +249,8 @@ export function GameEndStatsDialog({ winner, allPlayers, gameMode, onClose, onNe
                       </div>
                     </div>
 
-                    {/* Wins */}
-                    <div className="w-20 text-right">
+                    {/* Wins - desktop only */}
+                    <div className="hidden sm:block w-20 text-right flex-shrink-0">
                       <div className="text-lg font-bold text-accent">{playerGlobal.wins}</div>
                       <div className="text-xs text-text-secondary">Siege</div>
                     </div>
@@ -258,11 +262,11 @@ export function GameEndStatsDialog({ winner, allPlayers, gameMode, onClose, onNe
         )}
 
         {/* Action Buttons */}
-        <div className="mt-8 flex gap-4 justify-center">
-          <button onClick={onClose} className="btn btn-secondary px-6 py-3 text-lg">
+        <div className="mt-8 flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center">
+          <button onClick={onClose} className="btn btn-secondary px-6 py-3 text-base sm:text-lg w-full sm:w-auto">
             🏠 Zur Startseite
           </button>
-          <button onClick={onNewRound} className="btn btn-accent px-6 py-3 text-lg shadow-glow-accent">
+          <button onClick={onNewRound} className="btn btn-accent px-6 py-3 text-base sm:text-lg shadow-glow-accent w-full sm:w-auto">
             🔄 Neue Runde
           </button>
         </div>

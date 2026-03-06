@@ -101,8 +101,8 @@ export function GuessForm({ onSubmit, onSkip }: GuessFormProps) {
   }
 
   return (
-    <div className="glass rounded-2xl p-8 border-2 border-accent/30">
-      <h3 className="text-2xl font-bold mb-6 text-center text-gradient">
+    <div className="glass rounded-2xl p-4 sm:p-6 lg:p-8 border-2 border-accent/30">
+      <h3 className="text-xl sm:text-2xl font-bold mb-4 sm:mb-6 text-center text-gradient">
         {gameMode === 'hardcore'
           ? `${playerName}, was ist deine Vermutung?`
           : `${playerName}, rate optional den Song`}
@@ -122,7 +122,7 @@ export function GuessForm({ onSubmit, onSkip }: GuessFormProps) {
             onChange={(e) => setTitle(e.target.value)}
             placeholder="Song-Titel eingeben..."
             autoComplete="off"
-            className="w-full px-4 py-4 bg-primary border-2 border-accent/30 rounded-lg text-white placeholder-gray-500 focus:border-accent focus:shadow-glow-accent focus:outline-none focus:ring-0 transition-all"
+            className="w-full px-4 py-3 sm:py-4 bg-primary border-2 border-accent/30 rounded-lg text-white placeholder-gray-500 focus:border-accent focus:shadow-glow-accent focus:outline-none focus:ring-0 transition-all"
           />
         </div>
 
@@ -138,7 +138,7 @@ export function GuessForm({ onSubmit, onSkip }: GuessFormProps) {
             onChange={(e) => setArtist(e.target.value)}
             placeholder="Interpret eingeben..."
             autoComplete="off"
-            className="w-full px-4 py-4 bg-primary border-2 border-accent/30 rounded-lg text-white placeholder-gray-500 focus:border-accent focus:shadow-glow-accent focus:outline-none focus:ring-0 transition-all"
+            className="w-full px-4 py-3 sm:py-4 bg-primary border-2 border-accent/30 rounded-lg text-white placeholder-gray-500 focus:border-accent focus:shadow-glow-accent focus:outline-none focus:ring-0 transition-all"
           />
         </div>
 
@@ -156,7 +156,7 @@ export function GuessForm({ onSubmit, onSkip }: GuessFormProps) {
             min="1950"
             max={new Date().getFullYear()}
             autoComplete="off"
-            className="w-full px-4 py-4 bg-primary border-2 border-accent/30 rounded-lg text-white placeholder-gray-500 focus:border-accent focus:shadow-glow-accent focus:outline-none focus:ring-0 transition-all"
+            className="w-full px-4 py-3 sm:py-4 bg-primary border-2 border-accent/30 rounded-lg text-white placeholder-gray-500 focus:border-accent focus:shadow-glow-accent focus:outline-none focus:ring-0 transition-all"
           />
         </div>
 

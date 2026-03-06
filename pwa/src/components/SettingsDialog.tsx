@@ -295,16 +295,16 @@ export function SettingsDialog() {
         <div className="fixed inset-0 z-[10000] flex items-center justify-center bg-black/70 backdrop-blur-sm">
           <div className="relative glass rounded-2xl shadow-glow-accent border-2 border-red-500/50 max-w-md w-full mx-4">
             {/* Header */}
-            <div className="p-6 border-b border-red-500/30">
-              <h3 className="text-xl font-bold text-white flex items-center gap-2">
-                <span className="text-2xl">🗑️</span>
+            <div className="p-4 sm:p-6 border-b border-red-500/30">
+              <h3 className="text-lg sm:text-xl font-bold text-white flex items-center gap-2">
+                <span className="text-xl sm:text-2xl">🗑️</span>
                 <span>Spieler komplett löschen?</span>
               </h3>
             </div>
 
             {/* Content */}
-            <div className="p-6 space-y-4">
-              <p className="text-gray-300">
+            <div className="p-4 sm:p-6 space-y-4">
+              <p className="text-gray-300 text-sm sm:text-base">
                 Möchtest du den Spieler <strong className="text-white">"{playerToDelete}"</strong> wirklich <strong className="text-red-400">komplett löschen</strong>?
               </p>
 
@@ -329,16 +329,16 @@ export function SettingsDialog() {
             </div>
 
             {/* Buttons */}
-            <div className="flex justify-end gap-3 p-6 border-t border-red-500/30">
+            <div className="flex flex-col-reverse sm:flex-row sm:justify-end gap-2 sm:gap-3 p-4 sm:p-6 border-t border-red-500/30">
               <button
                 onClick={() => setPlayerToDelete(null)}
-                className="px-6 py-2.5 rounded-lg font-medium transition-all btn btn-secondary"
+                className="px-4 sm:px-6 py-2.5 rounded-lg font-medium transition-all btn btn-secondary text-sm sm:text-base"
               >
                 Abbrechen
               </button>
               <button
                 onClick={confirmDeletePlayer}
-                className="px-6 py-2.5 rounded-lg font-medium transition-all bg-red-600 hover:bg-red-700 text-white border-2 border-red-500"
+                className="px-4 sm:px-6 py-2.5 rounded-lg font-medium transition-all bg-red-600 hover:bg-red-700 text-white border-2 border-red-500 text-sm sm:text-base"
               >
                 Endgültig löschen
               </button>

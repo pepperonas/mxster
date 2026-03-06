@@ -53,18 +53,18 @@ export function PasswordProtectionDialog({ onSuccess, onCancel }: PasswordProtec
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center pt-20 pb-6 px-4 bg-black/70 backdrop-blur-sm animate-fade-in">
-      <div className="glass rounded-2xl p-8 max-w-md w-full max-h-[calc(100vh-12rem)] sm:max-h-[85vh] overflow-auto border-2 border-accent/30 animate-scale-in">
+      <div className="glass rounded-2xl p-4 sm:p-6 lg:p-8 max-w-md w-full max-h-[calc(100vh-12rem)] sm:max-h-[85vh] overflow-auto border-2 border-accent/30 animate-scale-in">
         {/* Header */}
-        <div className="text-center mb-6">
-          <div className="text-6xl mb-4">🔒</div>
-          <h2 className="text-3xl font-bold text-gradient mb-2">Zugang erforderlich</h2>
+        <div className="text-center mb-4 sm:mb-6">
+          <div className="text-5xl sm:text-6xl mb-3 sm:mb-4">🔒</div>
+          <h2 className="text-2xl sm:text-3xl font-bold text-gradient mb-2">Zugang erforderlich</h2>
           <p className="text-text-secondary">
             Zum Schutz der selbst-gehosteten Audiodateien ist ein Passwort erforderlich.
           </p>
         </div>
 
         {/* Legal Grey Area Explanation */}
-        <div className="mb-6 p-4 bg-orange-500/10 border border-orange-500/30 rounded-lg">
+        <div className="mb-4 sm:mb-6 p-3 sm:p-4 bg-orange-500/10 border border-orange-500/30 rounded-lg">
           <p className="text-sm text-orange-300 mb-2">
             <strong>⚠️ Rechtlicher Hinweis:</strong>
           </p>
@@ -76,7 +76,7 @@ export function PasswordProtectionDialog({ onSuccess, onCancel }: PasswordProtec
         </div>
 
         {/* Password Hint */}
-        <div className="mb-6 p-4 bg-blue-500/10 border border-blue-500/30 rounded-lg">
+        <div className="mb-4 sm:mb-6 p-3 sm:p-4 bg-blue-500/10 border border-blue-500/30 rounded-lg">
           <p className="text-sm text-blue-300 text-center">
             <strong>💡 Passwort</strong>: ydl
           </p>
@@ -128,7 +128,7 @@ export function PasswordProtectionDialog({ onSuccess, onCancel }: PasswordProtec
         </form>
 
         {/* Footer Info */}
-        <div className="mt-6 pt-6 border-t border-accent/20">
+        <div className="mt-4 sm:mt-6 pt-4 sm:pt-6 border-t border-accent/20">
           <p className="text-xs text-text-secondary text-center">
             ℹ️ Diese Abfrage erfolgt nur einmal. Nach erfolgreicher Eingabe hast du dauerhaften Zugang.
           </p>

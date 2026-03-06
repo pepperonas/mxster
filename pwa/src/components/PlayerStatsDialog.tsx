@@ -121,11 +121,11 @@ export function PlayerStatsDialog() {
 
   return (
     <div className="py-4">
-      <div className="space-y-6 max-h-[70vh] overflow-y-auto custom-scrollbar">
+      <div className="space-y-6">
         {playerStats.map((player, index) => (
           <div
             key={player.name}
-            className="glass p-6 rounded-lg border-2 border-accent/30 hover:border-accent/50 transition-colors"
+            className="glass p-4 sm:p-6 rounded-lg border-2 border-accent/30 hover:border-accent/50 transition-colors"
           >
             {/* Player Header */}
             <div className="flex items-center justify-between mb-4">
@@ -146,7 +146,7 @@ export function PlayerStatsDialog() {
             </div>
 
             {/* Stats Grid */}
-            <div className="grid grid-cols-2 gap-4 mb-4">
+            <div className="grid grid-cols-2 gap-2 sm:gap-4 mb-4">
               {/* Wins */}
               <div className="glass p-4 rounded-lg border border-green-500/30 bg-green-900/10">
                 <div className="flex items-center gap-2 mb-2">

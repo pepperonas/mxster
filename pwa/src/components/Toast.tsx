@@ -72,7 +72,7 @@ function ToastItem({ toast, onRemove }: { toast: ToastType; onRemove: () => void
       className={`
         flex items-center gap-3 px-4 py-3 rounded-lg border-2
         ${getColorClasses()}
-        text-white min-w-[300px] max-w-md
+        text-white max-w-md w-full sm:w-auto sm:min-w-[300px]
         animate-slide-up backdrop-blur-sm
       `}
       role="alert"
@@ -100,7 +100,7 @@ export function Toast() {
 
   // Render toasts via React Portal
   return createPortal(
-    <div className="fixed bottom-4 right-4 z-50 flex flex-col gap-2">
+    <div className="fixed bottom-4 left-4 right-4 sm:left-auto z-50 flex flex-col gap-2">
       {toasts.map((toast) => (
         <ToastItem
           key={toast.id}

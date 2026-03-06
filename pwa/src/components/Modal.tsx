@@ -115,7 +115,7 @@ export function Modal() {
         aria-labelledby="modal-title"
       >
         {/* Header */}
-        <div className="flex items-center justify-between p-6 border-b border-accent/30">
+        <div className="flex items-center justify-between p-4 sm:p-6 border-b border-accent/30">
           <h2
             id="modal-title"
             className="text-2xl font-bold flex items-center gap-2"
@@ -165,13 +165,13 @@ export function Modal() {
         </div>
 
         {/* Content */}
-        <div className="p-6 text-gray-300">
+        <div className="p-4 sm:p-6 text-gray-300">
           {modal.content}
         </div>
 
         {/* Buttons */}
         {modal.buttons && modal.buttons.length > 0 && (
-          <div className="flex justify-end gap-3 p-6 border-t border-accent/30">
+          <div className="flex flex-wrap justify-end gap-3 p-4 sm:p-6 border-t border-accent/30">
             {modal.buttons.map((button: ModalButton, index: number) => (
               <button
                 key={index}
@@ -183,7 +183,7 @@ export function Modal() {
                   }
                 }}
                 className={`
-                  px-6 py-2.5 rounded-lg font-medium transition-all
+                  px-4 sm:px-6 py-2.5 rounded-lg font-medium transition-all text-sm sm:text-base
                   ${
                     button.variant === 'primary'
                       ? 'btn btn-accent'

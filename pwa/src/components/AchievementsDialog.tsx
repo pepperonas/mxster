@@ -51,10 +51,10 @@ export function AchievementsDialog({ isOpen, onClose, playerName }: Achievements
 
         {/* Onboarding Card */}
         <div className="relative bg-primary rounded-2xl shadow-2xl max-w-md w-full border-2 border-accent/30 overflow-hidden">
-          <div className="p-8 text-center">
-            <div className="text-6xl mb-6">🎮</div>
-            <h2 className="text-2xl font-bold text-white mb-4">Noch keine Spieler</h2>
-            <p className="text-text-secondary mb-6 leading-relaxed">
+          <div className="p-5 sm:p-8 text-center">
+            <div className="text-5xl sm:text-6xl mb-4 sm:mb-6">🎮</div>
+            <h2 className="text-xl sm:text-2xl font-bold text-white mb-3 sm:mb-4">Noch keine Spieler</h2>
+            <p className="text-text-secondary mb-4 sm:mb-6 leading-relaxed text-sm sm:text-base">
               Starte dein erstes Spiel, um Achievements freizuschalten!
               <br />
               <br />
@@ -92,7 +92,7 @@ export function AchievementsDialog({ isOpen, onClose, playerName }: Achievements
       {/* Dialog */}
       <div className="relative bg-primary rounded-2xl shadow-2xl max-w-4xl w-full max-h-[calc(100vh-12rem)] sm:max-h-[85vh] border-2 border-accent/30 flex flex-col overflow-hidden">
         {/* Header */}
-        <div className="flex-shrink-0 bg-gradient-to-r from-primary to-primary-dark border-b border-accent/20 p-6 z-10">
+        <div className="flex-shrink-0 bg-gradient-to-r from-primary to-primary-dark border-b border-accent/20 p-4 sm:p-6 z-10">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-2xl font-bold text-white flex items-center gap-3">
               🏆 Achievements
@@ -158,12 +158,12 @@ export function AchievementsDialog({ isOpen, onClose, playerName }: Achievements
         </div>
 
         {/* Achievement Grid */}
-        <div className="flex-1 overflow-y-auto p-6 custom-scrollbar">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="flex-1 overflow-y-auto p-4 sm:p-6 custom-scrollbar">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
             {sortedAchievements.map((achievement) => (
               <div
                 key={achievement.id}
-                className={`relative rounded-xl p-5 border-2 transition-all overflow-hidden ${
+                className={`relative rounded-xl p-4 sm:p-5 border-2 transition-all overflow-hidden ${
                   achievement.unlocked
                     ? 'glass border-accent/30 hover:border-accent hover:shadow-glow-accent'
                     : 'bg-gray-900/50 border-gray-800/50'
@@ -254,7 +254,7 @@ export function AchievementsDialog({ isOpen, onClose, playerName }: Achievements
         </div>
 
         {/* Footer */}
-        <div className="flex-shrink-0 bg-primary border-t border-accent/20 p-6">
+        <div className="flex-shrink-0 bg-primary border-t border-accent/20 p-4 sm:p-6">
           <button onClick={onClose} className="btn btn-accent w-full text-lg font-bold">
             Schließen
           </button>
