@@ -47,13 +47,17 @@ export function AchievementsDialog({ isOpen, onClose, playerName }: Achievements
     return (
       <div className="fixed inset-0 z-[9999] flex items-center justify-center pt-20 pb-6 px-4">
         {/* Backdrop */}
-        <div className="absolute inset-0 bg-black/70 backdrop-blur-sm" onClick={onClose} />
+        <div
+          className="absolute inset-0 bg-md-scrim/60 backdrop-blur-sm"
+          style={{ animation: 'm3-scrim-in var(--m3-dur-effects-slow) var(--m3-ease-effects-slow) both' }}
+          onClick={onClose}
+        />
 
         {/* Onboarding Card */}
-        <div className="relative bg-primary rounded-2xl shadow-2xl max-w-md w-full border-2 border-accent/30 overflow-hidden">
+        <div className="relative m3-dialog-panel max-w-md w-full overflow-hidden">
           <div className="p-5 sm:p-8 text-center">
             <div className="text-5xl sm:text-6xl mb-4 sm:mb-6">🎮</div>
-            <h2 className="text-xl sm:text-2xl font-bold text-white mb-3 sm:mb-4">Noch keine Spieler</h2>
+            <h2 className="text-xl sm:text-2xl font-bold text-text-primary mb-3 sm:mb-4">Noch keine Spieler</h2>
             <p className="text-text-secondary mb-4 sm:mb-6 leading-relaxed text-sm sm:text-base">
               Starte dein erstes Spiel, um Achievements freizuschalten!
               <br />
@@ -87,19 +91,23 @@ export function AchievementsDialog({ isOpen, onClose, playerName }: Achievements
   return (
     <div className="fixed inset-0 z-[9999] flex items-center justify-center pt-20 pb-6 px-4">
       {/* Backdrop */}
-      <div className="absolute inset-0 bg-black/70 backdrop-blur-sm" onClick={onClose} />
+      <div
+        className="absolute inset-0 bg-md-scrim/60 backdrop-blur-sm"
+        style={{ animation: 'm3-scrim-in var(--m3-dur-effects-slow) var(--m3-ease-effects-slow) both' }}
+        onClick={onClose}
+      />
 
       {/* Dialog */}
-      <div className="relative bg-primary rounded-2xl shadow-2xl max-w-4xl w-full max-h-[calc(100vh-12rem)] sm:max-h-[85vh] border-2 border-accent/30 flex flex-col overflow-hidden">
+      <div className="relative m3-dialog-panel max-w-4xl w-full max-h-[calc(100vh-12rem)] sm:max-h-[85vh] flex flex-col overflow-hidden">
         {/* Header */}
-        <div className="flex-shrink-0 bg-gradient-to-r from-primary to-primary-dark border-b border-accent/20 p-4 sm:p-6 z-10">
+        <div className="flex-shrink-0 border-b border-accent/20 p-4 sm:p-6 z-10">
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-2xl font-bold text-white flex items-center gap-3">
+            <h2 className="text-2xl font-bold text-text-primary flex items-center gap-3">
               🏆 Achievements
             </h2>
             <button
               onClick={onClose}
-              className="text-text-secondary hover:text-white transition-colors text-2xl leading-none"
+              className="touch-target rounded-m3-full m3-state-layer transition-colors text-text-secondary hover:text-secondary text-2xl leading-none"
               aria-label="Schließen"
             >
               ✕
@@ -115,7 +123,7 @@ export function AchievementsDialog({ isOpen, onClose, playerName }: Achievements
               <select
                 value={selectedPlayer}
                 onChange={(e) => setSelectedPlayer(e.target.value)}
-                className="w-full px-4 py-3 bg-primary border-2 border-accent/30 rounded-lg text-white focus:border-accent focus:outline-none focus:ring-0 transition-colors"
+                className="w-full px-4 py-3 bg-md-surface-container-highest border border-md-outline-variant rounded-m3-md text-text-primary focus:border-accent focus:outline-none focus:ring-0 transition-colors"
               >
                 {allPlayerNames.map((name) => (
                   <option key={name} value={name}>
@@ -129,17 +137,17 @@ export function AchievementsDialog({ isOpen, onClose, playerName }: Achievements
           {/* Single Player Name Display */}
           {allPlayerNames.length === 1 && (
             <div className="mb-4">
-              <p className="text-lg text-white">
+              <p className="text-lg text-text-primary">
                 Spieler: <span className="font-bold text-gradient">{selectedPlayer}</span>
               </p>
             </div>
           )}
 
           {/* Progress Summary */}
-          <div className="glass rounded-lg p-4 border border-accent/20">
+          <div className="glass rounded-m3-md p-4 border border-accent/20">
             <div className="flex items-center justify-between mb-2">
               <span className="text-text-secondary text-sm font-medium">Fortschritt</span>
-              <span className="text-white font-bold text-lg">
+              <span className="text-text-primary font-bold text-lg">
                 {unlockedCount} / {totalCount}
               </span>
             </div>
@@ -159,22 +167,22 @@ export function AchievementsDialog({ isOpen, onClose, playerName }: Achievements
 
         {/* Achievement Grid */}
         <div className="flex-1 overflow-y-auto p-4 sm:p-6 custom-scrollbar">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4 stagger-children">
             {sortedAchievements.map((achievement) => (
               <div
                 key={achievement.id}
-                className={`relative rounded-xl p-4 sm:p-5 border-2 transition-all overflow-hidden ${
+                className={`relative rounded-m3-lg p-4 sm:p-5 border-2 transition-all overflow-hidden ${
                   achievement.unlocked
                     ? 'glass border-accent/30 hover:border-accent hover:shadow-glow-accent'
-                    : 'bg-gray-900/50 border-gray-800/50'
+                    : 'bg-md-surface-container-low border-md-outline-variant/40'
                 }`}
               >
                 {/* LOCKED OVERLAY - Black Mask Effect */}
                 {!achievement.unlocked && (
-                  <div className="absolute inset-0 bg-gradient-to-br from-black/90 via-black/80 to-gray-900/90 z-10 flex items-center justify-center backdrop-blur-sm">
+                  <div className="absolute inset-0 bg-md-scrim/85 z-10 flex items-center justify-center backdrop-blur-sm">
                     <div className="text-center">
                       <div className="text-6xl mb-2 opacity-30">🔒</div>
-                      <p className="text-gray-500 text-sm font-medium">Noch nicht freigeschaltet</p>
+                      <p className="text-text-secondary text-sm font-medium">Noch nicht freigeschaltet</p>
                     </div>
                   </div>
                 )}
@@ -193,14 +201,14 @@ export function AchievementsDialog({ isOpen, onClose, playerName }: Achievements
                     <div className="flex-1">
                       <h3
                         className={`text-xl font-bold mb-1 ${
-                          achievement.unlocked ? 'text-gradient' : 'text-gray-600'
+                          achievement.unlocked ? 'text-gradient' : 'text-text-secondary/70'
                         }`}
                       >
                         {achievement.name}
                       </h3>
                       <p
                         className={`text-sm ${
-                          achievement.unlocked ? 'text-text-secondary' : 'text-gray-700'
+                          achievement.unlocked ? 'text-text-secondary' : 'text-text-secondary/60'
                         }`}
                       >
                         {achievement.description}
@@ -214,7 +222,7 @@ export function AchievementsDialog({ isOpen, onClose, playerName }: Achievements
                       <div className="flex items-center justify-between mb-1 text-xs">
                         <span className="text-text-secondary font-medium">Fortschritt</span>
                         <span
-                          className={`font-bold ${achievement.unlocked ? 'text-accent' : 'text-gray-600'}`}
+                          className={`font-bold ${achievement.unlocked ? 'text-accent' : 'text-text-secondary/70'}`}
                         >
                           {achievement.unlocked ? achievement.target : (achievement.progress || 0)} / {achievement.target}
                         </span>
@@ -224,7 +232,7 @@ export function AchievementsDialog({ isOpen, onClose, playerName }: Achievements
                           className={`h-full transition-all duration-500 ${
                             achievement.unlocked
                               ? 'bg-gradient-to-r from-secondary to-accent'
-                              : 'bg-gray-700'
+                              : 'bg-md-surface-container-highest'
                           }`}
                           style={{
                             width: `${
@@ -254,7 +262,7 @@ export function AchievementsDialog({ isOpen, onClose, playerName }: Achievements
         </div>
 
         {/* Footer */}
-        <div className="flex-shrink-0 bg-primary border-t border-accent/20 p-4 sm:p-6">
+        <div className="flex-shrink-0 border-t border-accent/20 p-4 sm:p-6">
           <button onClick={onClose} className="btn btn-accent w-full text-lg font-bold">
             Schließen
           </button>

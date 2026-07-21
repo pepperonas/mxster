@@ -113,7 +113,7 @@ export function PlayerStatsDialog() {
     return (
       <div className="text-center py-12">
         <div className="text-6xl mb-4">📊</div>
-        <p className="text-xl text-white mb-2">Noch keine Statistiken</p>
+        <p className="text-xl text-text-primary mb-2">Noch keine Statistiken</p>
         <p className="text-sm text-text-secondary">Spiele ein paar Spiele, um deine Statistiken zu sehen!</p>
       </div>
     )
@@ -121,11 +121,11 @@ export function PlayerStatsDialog() {
 
   return (
     <div className="py-4">
-      <div className="space-y-6">
+      <div className="space-y-6 stagger-children">
         {playerStats.map((player, index) => (
           <div
             key={player.name}
-            className="glass p-4 sm:p-6 rounded-lg border-2 border-accent/30 hover:border-accent/50 transition-colors"
+            className="glass p-4 sm:p-6 rounded-m3-md border-2 border-accent/30 hover:border-accent/50 transition-colors"
           >
             {/* Player Header */}
             <div className="flex items-center justify-between mb-4">
@@ -148,30 +148,30 @@ export function PlayerStatsDialog() {
             {/* Stats Grid */}
             <div className="grid grid-cols-2 gap-2 sm:gap-4 mb-4">
               {/* Wins */}
-              <div className="glass p-4 rounded-lg border border-green-500/30 bg-green-900/10">
+              <div className="glass p-4 rounded-m3-md border border-secondary/30 bg-secondary/10">
                 <div className="flex items-center gap-2 mb-2">
                   <span className="text-2xl">✅</span>
                   <span className="text-sm text-text-secondary">Siege</span>
                 </div>
-                <div className="text-2xl font-bold text-green-400">{player.wins}</div>
+                <div className="text-2xl font-bold text-secondary">{player.wins}</div>
               </div>
 
               {/* Losses */}
-              <div className="glass p-4 rounded-lg border border-red-500/30 bg-red-900/10">
+              <div className="glass p-4 rounded-m3-md border border-md-error/30 bg-md-error/10">
                 <div className="flex items-center gap-2 mb-2">
                   <span className="text-2xl">❌</span>
                   <span className="text-sm text-text-secondary">Verloren</span>
                 </div>
-                <div className="text-2xl font-bold text-red-400">{player.losses}</div>
+                <div className="text-2xl font-bold text-md-error">{player.losses}</div>
               </div>
 
               {/* Total Score (Progressive Achievement Progress) */}
-              <div className="glass p-4 rounded-lg border border-yellow-500/30 bg-yellow-900/10">
+              <div className="glass p-4 rounded-m3-md border border-accent/30 bg-accent/10">
                 <div className="flex items-center gap-2 mb-2">
                   <span className="text-2xl">👑</span>
                   <span className="text-sm text-text-secondary">Gesamtpunkte</span>
                 </div>
-                <div className="text-2xl font-bold text-yellow-400">{player.totalScore}</div>
+                <div className="text-2xl font-bold text-accent">{player.totalScore}</div>
 
                 {/* Under 1000: Show progress to Musikexperte */}
                 {player.totalScore < 1000 && (
@@ -179,9 +179,9 @@ export function PlayerStatsDialog() {
                     <div className="text-xs text-text-secondary mb-1">
                       {player.totalScore}/1000 bis Musikexperte (🎓)
                     </div>
-                    <div className="h-2 bg-primary/50 rounded-full overflow-hidden border border-yellow-500/20">
+                    <div className="h-2 bg-primary/50 rounded-full overflow-hidden border border-accent/20">
                       <div
-                        className="h-full bg-gradient-to-r from-yellow-500 to-amber-500 transition-all duration-500"
+                        className="h-full bg-gradient-to-r from-accent to-secondary transition-all duration-500"
                         style={{ width: `${(player.totalScore / 1000) * 100}%` }}
                       />
                     </div>
@@ -191,15 +191,15 @@ export function PlayerStatsDialog() {
                 {/* 1000-4999: Show Musikexperte achieved, progress to Großmeister */}
                 {player.totalScore >= 1000 && player.totalScore < 5000 && (
                   <div className="mt-2">
-                    <div className="text-xs text-green-400 flex items-center gap-1 mb-2">
+                    <div className="text-xs text-secondary flex items-center gap-1 mb-2">
                       <span>🎓</span> Musikexperte erreicht!
                     </div>
                     <div className="text-xs text-text-secondary mb-1">
                       {player.totalScore}/5000 bis Großmeister (👑💎)
                     </div>
-                    <div className="h-2 bg-primary/50 rounded-full overflow-hidden border border-yellow-500/20">
+                    <div className="h-2 bg-primary/50 rounded-full overflow-hidden border border-accent/20">
                       <div
-                        className="h-full bg-gradient-to-r from-yellow-500 to-amber-500 transition-all duration-500"
+                        className="h-full bg-gradient-to-r from-accent to-secondary transition-all duration-500"
                         style={{ width: `${(player.totalScore / 5000) * 100}%` }}
                       />
                     </div>
@@ -209,10 +209,10 @@ export function PlayerStatsDialog() {
                 {/* 5000+: Show Großmeister achieved */}
                 {player.totalScore >= 5000 && (
                   <div className="mt-2 space-y-1">
-                    <div className="text-xs text-green-400 flex items-center gap-1">
+                    <div className="text-xs text-secondary flex items-center gap-1">
                       <span>🎓</span> Musikexperte erreicht!
                     </div>
-                    <div className="text-xs text-green-400 flex items-center gap-1">
+                    <div className="text-xs text-secondary flex items-center gap-1">
                       <span>👑💎</span> Großmeister erreicht!
                     </div>
                   </div>
@@ -220,7 +220,7 @@ export function PlayerStatsDialog() {
               </div>
 
               {/* Average Score */}
-              <div className="glass p-4 rounded-lg border border-accent/30">
+              <div className="glass p-4 rounded-m3-md border border-accent/30">
                 <div className="flex items-center gap-2 mb-2">
                   <span className="text-2xl">⭐</span>
                   <span className="text-sm text-text-secondary">Ø Punkte</span>
@@ -229,21 +229,21 @@ export function PlayerStatsDialog() {
               </div>
 
               {/* Best Decade */}
-              <div className="glass p-4 rounded-lg border border-purple-500/30 bg-purple-900/10">
+              <div className="glass p-4 rounded-m3-md border border-secondary/30 bg-secondary/10">
                 <div className="flex items-center gap-2 mb-2">
                   <span className="text-2xl">🎵</span>
                   <span className="text-sm text-text-secondary">Bestes Jahrzehnt</span>
                 </div>
-                <div className="text-2xl font-bold text-purple-400">{player.bestDecade}</div>
+                <div className="text-2xl font-bold text-secondary">{player.bestDecade}</div>
               </div>
 
               {/* Best Genre */}
-              <div className="glass p-4 rounded-lg border border-pink-500/30 bg-pink-900/10 col-span-2">
+              <div className="glass p-4 rounded-m3-md border border-accent/30 bg-accent/10 col-span-2">
                 <div className="flex items-center gap-2 mb-2">
                   <span className="text-2xl">🎸</span>
                   <span className="text-sm text-text-secondary">Lieblings-Genre</span>
                 </div>
-                <div className="text-2xl font-bold text-pink-400">{player.bestGenre}</div>
+                <div className="text-2xl font-bold text-accent">{player.bestGenre}</div>
               </div>
             </div>
 
@@ -279,7 +279,7 @@ export function PlayerStatsDialog() {
                             <div
                               className={`h-full transition-all duration-500 ${
                                 player.bestDecade === decade
-                                  ? 'bg-gradient-to-r from-purple-500 to-pink-500 shadow-glow-accent'
+                                  ? 'bg-gradient-to-r from-secondary to-accent shadow-glow-accent'
                                   : 'bg-gradient-to-r from-accent/70 to-secondary/70'
                               }`}
                               style={{ width: `${percentage}%` }}
@@ -311,8 +311,8 @@ export function PlayerStatsDialog() {
                             <div
                               className={`h-full transition-all duration-500 ${
                                 player.bestGenre === genre
-                                  ? 'bg-gradient-to-r from-pink-500 to-orange-500 shadow-glow-accent'
-                                  : 'bg-gradient-to-r from-cyan-500/70 to-blue-500/70'
+                                  ? 'bg-gradient-to-r from-accent to-secondary shadow-glow-accent'
+                                  : 'bg-gradient-to-r from-secondary/70 to-accent/70'
                               }`}
                               style={{ width: `${percentage}%` }}
                             />

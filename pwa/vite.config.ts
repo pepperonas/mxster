@@ -17,8 +17,9 @@ export default defineConfig({
         name: 'mxster - Music Timeline Game',
         short_name: 'mxster',
         description: 'Rate Songs und platziere sie in der richtigen zeitlichen Reihenfolge',
-        theme_color: '#BB86FC',
-        background_color: '#1a1a1a',
+        // Mirrored from design-tokens.css: dark surface (neutral-6)
+        theme_color: '#12131a',
+        background_color: '#12131a',
         display: 'standalone',
         start_url: '/',
         scope: '/',

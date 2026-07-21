@@ -4,14 +4,14 @@
  */
 
 import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useAppNavigate } from '@/hooks/useAppNavigate'
 import { useGame, useUI, useSettings } from '@/contexts'
 import { PlusIcon, CloseIcon } from '@/utils/icons'
 import { requiresDJ } from '@/utils/gameModes'
 import { createBotPlayers } from '@/services/botPlayer'
 
 export function PlayerSetup() {
-  const navigate = useNavigate()
+  const navigate = useAppNavigate()
   const { gameMode, gameVariant, players, addPlayer, removePlayer, startGame } = useGame()
   const { addToast } = useUI()
   const { settings, addPlayer: savePlayer } = useSettings()
@@ -125,20 +125,20 @@ export function PlayerSetup() {
       <div className="container mx-auto px-4 max-w-3xl">
         {/* Header */}
         <div className="text-center mb-12 animate-fade-in">
-          <h1 className="text-5xl md:text-6xl font-bold text-gradient mb-4">
+          <h1 className="text-display-sm md:text-display-md text-emphasized text-gradient mb-4">
             Spieler hinzufügen
           </h1>
-          <p className="text-xl text-text-secondary mb-2">
+          <p className="text-title-lg text-text-secondary mb-2">
             Mindestens {minPlayers} Spieler benötigt
           </p>
 
           {/* Virtual Mode Banner (Prominent) */}
           {!needsDJ && (
-            <div className="mt-4 p-4 bg-gradient-to-r from-accent/20 to-secondary/20 border-2 border-accent/50 rounded-xl">
-              <p className="text-lg font-semibold text-white mb-1">
+            <div className="mt-4 p-4 bg-md-secondary-container border border-md-primary/40 rounded-m3-lg">
+              <p className="text-title-md text-md-on-secondary-container mb-1">
                 🎮 Virtueller Modus - Sofort loslegen!
               </p>
-              <p className="text-sm text-text-secondary">
+              <p className="text-body-sm text-text-secondary">
                 Keine Karten nötig · Songs werden automatisch gezogen · Keine DJ-Rolle erforderlich
               </p>
             </div>
@@ -146,14 +146,14 @@ export function PlayerSetup() {
 
           {/* DJ Info (Less Prominent for Physical Mode) */}
           {needsDJ && (
-            <p className="text-xs text-gray-400 mt-2">
+            <p className="text-body-sm text-text-secondary mt-2">
               ℹ️ DJ-Modus: Der erste Spieler scannt QR-Codes und spielt mit
             </p>
           )}
         </div>
 
         {/* Add Player Input */}
-        <div className="glass rounded-2xl p-8 border-2 border-accent/30 mb-8">
+        <div className="card p-6 sm:p-8 mb-8">
           <div className="flex gap-3 mb-6">
             <input
               type="text"
@@ -161,7 +161,7 @@ export function PlayerSetup() {
               onChange={(e) => setNewPlayerName(e.target.value)}
               onKeyDown={handleKeyDown}
               placeholder="Spielername eingeben..."
-              className="flex-1 px-4 py-3 bg-primary border-2 border-accent/30 rounded-lg text-white placeholder-gray-500 focus:border-accent focus:shadow-glow-accent focus:outline-none focus:ring-0 transition-all"
+              className="input flex-1"
               maxLength={20}
               autoFocus
             />
@@ -177,7 +177,7 @@ export function PlayerSetup() {
           {/* Saved Players Quick Add */}
           {settings.savedPlayers.length > 0 && (
             <div>
-              <h3 className="text-sm font-semibold text-text-secondary mb-3">
+              <h3 className="text-label-lg text-text-secondary mb-3">
                 👥 Gespeicherte Spieler
               </h3>
               <div className="flex flex-wrap gap-2">
@@ -191,11 +191,11 @@ export function PlayerSetup() {
                       onClick={() => handleQuickAddPlayer(playerName)}
                       disabled={isAlreadyAdded}
                       className={`
-                        px-4 py-2 rounded-lg font-medium transition-all border-2
+                        px-5 py-2 min-h-[48px] rounded-m3-full text-label-lg border transition-all duration-m3-spatial-fast ease-m3-spatial-fast
                         ${
                           isAlreadyAdded
-                            ? 'bg-gray-700 text-text-secondary border-gray-600 cursor-not-allowed'
-                            : 'bg-primary border-accent/30 text-white hover:border-accent hover:shadow-glow-sm'
+                            ? 'bg-md-surface-container-highest text-text-secondary border-transparent cursor-not-allowed'
+                            : 'bg-md-surface-container-high border-md-outline-variant text-text-primary hover:border-md-primary hover:shadow-glow-sm active:scale-95'
                         }
                       `}
                       title={isAlreadyAdded ? 'Bereits hinzugefügt' : `${playerName} hinzufügen`}
@@ -212,20 +212,20 @@ export function PlayerSetup() {
 
         {/* Bot Configuration Panel (Virtual Mode only) */}
         {gameVariant === 'virtual' && players.length === 1 && players.filter(p => !p.isBot).length === 1 && (
-          <div className="glass rounded-2xl p-8 border-2 border-cyan-500/40 mb-8 bg-gradient-to-br from-cyan-900/20 to-blue-900/20">
+          <div className="card p-6 sm:p-8 mb-8 border-secondary/40">
             <div className="flex items-center gap-3 mb-6">
               <span className="text-3xl">🤖</span>
-              <h2 className="text-2xl font-bold text-white">Bot-Gegner hinzufügen</h2>
+              <h2 className="text-headline-sm text-text-primary">Bot-Gegner hinzufügen</h2>
             </div>
 
-            <p className="text-text-secondary mb-6">
+            <p className="text-body-md text-text-secondary mb-6">
               Spiele gegen KI-Gegner in verschiedenen Schwierigkeitsgraden
             </p>
 
             <div className="space-y-6">
               {/* Bot Count Selector */}
               <div>
-                <label className="block text-sm font-semibold text-text-secondary mb-3">
+                <label className="block text-label-lg text-text-secondary mb-3">
                   Anzahl der Bots
                 </label>
                 <div className="flex gap-3">
@@ -233,12 +233,13 @@ export function PlayerSetup() {
                     <button
                       key={count}
                       onClick={() => setBotCount(count)}
+                      style={{ transition: 'border-radius var(--m3-spatial-fast), transform var(--m3-spatial-fast), background-color var(--m3-effects-default), border-color var(--m3-effects-default), color var(--m3-effects-default)' }}
                       className={`
-                        flex-1 py-3 px-4 rounded-lg font-medium transition-all border-2
+                        flex-1 py-3 px-4 min-h-[48px] text-label-lg border-2 active:scale-95
                         ${
                           botCount === count
-                            ? 'bg-cyan-600 border-cyan-400 text-white shadow-glow-cyan'
-                            : 'bg-primary border-white/10 text-white hover:border-cyan-500/50'
+                            ? 'bg-md-secondary-container text-md-on-secondary-container border-md-primary rounded-m3-xl'
+                            : 'bg-md-surface-container-high border-transparent text-text-primary hover:border-md-primary/50 rounded-m3-lg'
                         }
                       `}
                     >
@@ -250,18 +251,19 @@ export function PlayerSetup() {
 
               {/* Bot Difficulty Selector */}
               <div>
-                <label className="block text-sm font-semibold text-text-secondary mb-3">
+                <label className="block text-label-lg text-text-secondary mb-3">
                   Schwierigkeitsgrad
                 </label>
                 <div className="flex flex-col sm:flex-row gap-3">
                   <button
                     onClick={() => setBotDifficulty('easy')}
+                    style={{ transition: 'border-radius var(--m3-spatial-fast), transform var(--m3-spatial-fast), background-color var(--m3-effects-default), border-color var(--m3-effects-default), color var(--m3-effects-default)' }}
                     className={`
-                      flex-1 py-3 px-4 rounded-lg font-medium transition-all border-2
+                      flex-1 py-3 px-4 min-h-[48px] text-label-lg border-2 active:scale-95
                       ${
                         botDifficulty === 'easy'
-                          ? 'bg-green-600 border-green-400 text-white shadow-glow-green'
-                          : 'bg-primary border-white/10 text-white hover:border-green-500/50'
+                          ? 'bg-md-secondary-container text-md-on-secondary-container border-md-primary rounded-m3-xl'
+                          : 'bg-md-surface-container-high border-transparent text-text-primary hover:border-md-primary/50 rounded-m3-lg'
                       }
                     `}
                   >
@@ -269,12 +271,13 @@ export function PlayerSetup() {
                   </button>
                   <button
                     onClick={() => setBotDifficulty('medium')}
+                    style={{ transition: 'border-radius var(--m3-spatial-fast), transform var(--m3-spatial-fast), background-color var(--m3-effects-default), border-color var(--m3-effects-default), color var(--m3-effects-default)' }}
                     className={`
-                      flex-1 py-3 px-4 rounded-lg font-medium transition-all border-2
+                      flex-1 py-3 px-4 min-h-[48px] text-label-lg border-2 active:scale-95
                       ${
                         botDifficulty === 'medium'
-                          ? 'bg-orange-600 border-orange-400 text-white shadow-glow-orange'
-                          : 'bg-primary border-white/10 text-white hover:border-orange-500/50'
+                          ? 'bg-md-secondary-container text-md-on-secondary-container border-md-primary rounded-m3-xl'
+                          : 'bg-md-surface-container-high border-transparent text-text-primary hover:border-md-primary/50 rounded-m3-lg'
                       }
                     `}
                   >
@@ -282,12 +285,13 @@ export function PlayerSetup() {
                   </button>
                   <button
                     onClick={() => setBotDifficulty('hard')}
+                    style={{ transition: 'border-radius var(--m3-spatial-fast), transform var(--m3-spatial-fast), background-color var(--m3-effects-default), border-color var(--m3-effects-default), color var(--m3-effects-default)' }}
                     className={`
-                      flex-1 py-3 px-4 rounded-lg font-medium transition-all border-2
+                      flex-1 py-3 px-4 min-h-[48px] text-label-lg border-2 active:scale-95
                       ${
                         botDifficulty === 'hard'
-                          ? 'bg-red-600 border-red-400 text-white shadow-glow-red'
-                          : 'bg-primary border-white/10 text-white hover:border-red-500/50'
+                          ? 'bg-md-secondary-container text-md-on-secondary-container border-md-primary rounded-m3-xl'
+                          : 'bg-md-surface-container-high border-transparent text-text-primary hover:border-md-primary/50 rounded-m3-lg'
                       }
                     `}
                   >
@@ -297,8 +301,8 @@ export function PlayerSetup() {
               </div>
 
               {/* Difficulty Description */}
-              <div className="bg-primary/50 rounded-lg p-4 border border-white/10">
-                <p className="text-sm text-text-secondary">
+              <div className="bg-md-surface-container-highest rounded-m3-md p-4 border border-white/5">
+                <p className="text-body-sm text-text-secondary">
                   {botDifficulty === 'easy' && '😊 Leicht: Perfekt für Einsteiger. Der Bot macht häufig Fehler (~30% Trefferquote).'}
                   {botDifficulty === 'medium' && '🎯 Mittel: Eine faire Herausforderung. Der Bot hat eine solide Trefferquote (~60%).'}
                   {botDifficulty === 'hard' && '🔥 Schwer: Nur für Profis! Der Bot spielt fast perfekt (~90% Trefferquote).'}
@@ -318,15 +322,15 @@ export function PlayerSetup() {
 
         {/* Players List */}
         {players.length > 0 && (
-          <div className="glass rounded-2xl p-8 border-2 border-accent/30 mb-8">
-            <h2 className="text-2xl font-bold text-white mb-6">
+          <div className="card p-6 sm:p-8 mb-8">
+            <h2 className="text-headline-sm text-text-primary mb-6">
               Spieler ({players.length})
             </h2>
-            <div className="space-y-3">
+            <div className="space-y-3 stagger-children">
               {players.map((player, index) => (
                 <div
                   key={index}
-                  className="flex items-center justify-between p-4 bg-primary rounded-lg border-2 border-white/10"
+                  className="flex items-center justify-between py-3 px-5 min-h-[48px] bg-md-surface-container-high rounded-m3-full border border-white/5"
                 >
                   <div className="flex items-center gap-3">
                     <span className="text-2xl">
@@ -334,29 +338,29 @@ export function PlayerSetup() {
                     </span>
                     <div>
                       <div className="flex items-center gap-2">
-                        <p className="font-medium text-white">{player.name}</p>
+                        <p className="text-label-lg text-text-primary">{player.name}</p>
                         {player.isBot && player.botDifficulty && (
                           <span className={`
-                            text-xs px-2 py-1 rounded font-semibold
-                            ${player.botDifficulty === 'easy' ? 'bg-green-600/30 text-green-300 border border-green-500/50' : ''}
-                            ${player.botDifficulty === 'medium' ? 'bg-orange-600/30 text-orange-300 border border-orange-500/50' : ''}
-                            ${player.botDifficulty === 'hard' ? 'bg-red-600/30 text-red-300 border border-red-500/50' : ''}
+                            text-label-sm px-2 py-1 rounded-m3-full
+                            ${player.botDifficulty === 'easy' ? 'bg-md-secondary-container text-md-on-secondary-container' : ''}
+                            ${player.botDifficulty === 'medium' ? 'bg-md-tertiary-container text-md-on-tertiary-container' : ''}
+                            ${player.botDifficulty === 'hard' ? 'bg-md-error-container text-md-on-error-container' : ''}
                           `}>
                             {player.botDifficulty === 'easy' ? 'Leicht' : player.botDifficulty === 'medium' ? 'Mittel' : 'Schwer'}
                           </span>
                         )}
                       </div>
                       {player.isBot && (
-                        <p className="text-xs text-cyan-400">KI-Gegner</p>
+                        <p className="text-label-sm text-secondary">KI-Gegner</p>
                       )}
                       {!player.isBot && index === 0 && needsDJ && (
-                        <p className="text-xs text-secondary">DJ (scannt QR-Codes)</p>
+                        <p className="text-label-sm text-secondary">DJ (scannt QR-Codes)</p>
                       )}
                     </div>
                   </div>
                   <button
                     onClick={() => handleRemovePlayer(index)}
-                    className="p-2 hover:bg-red-600/20 rounded-lg transition-colors text-red-400 hover:text-red-300"
+                    className="touch-target p-2 rounded-m3-full text-md-error hover:bg-md-error-container hover:text-md-on-error-container active:scale-95 transition-all duration-m3-spatial-fast ease-m3-spatial-fast"
                     aria-label={`${player.name} entfernen`}
                   >
                     <CloseIcon size={20} />
@@ -379,11 +383,11 @@ export function PlayerSetup() {
             onClick={handleStartGame}
             disabled={players.length < minPlayers}
             className={`
-              px-12 py-4 rounded-lg font-bold text-lg transition-all
+              px-12 py-4 text-lg transition-all
               ${
                 players.length >= minPlayers
-                  ? 'btn btn-accent shadow-glow-accent'
-                  : 'bg-gray-700 text-text-secondary cursor-not-allowed'
+                  ? 'btn btn-accent font-bold shadow-glow-accent'
+                  : 'bg-md-surface-container-highest text-text-secondary cursor-not-allowed rounded-m3-full min-h-[48px] font-medium'
               }
             `}
           >

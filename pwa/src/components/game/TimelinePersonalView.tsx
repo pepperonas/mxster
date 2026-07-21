@@ -21,21 +21,21 @@ export function TimelinePersonalView() {
       <div
         key={playerIndex}
         className={`
-          glass rounded-2xl p-6 border-2 transition-all
+          glass rounded-m3-xl p-6 border-2 transition-all
           ${isCurrentPlayer ? 'border-accent shadow-glow-accent' : 'border-accent/30'}
         `}
       >
         {/* Player Header */}
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-3">
-            <h3 className="text-xl font-bold text-gradient">{player.name}</h3>
+            <h3 className="text-title-lg text-gradient">{player.name}</h3>
             {isCurrentPlayer && (
               <span className="text-xs glass px-3 py-1 rounded-full font-semibold border border-accent/20 text-secondary">
                 ← Aktuell
               </span>
             )}
           </div>
-          <div className="text-sm font-bold text-secondary glass px-4 py-2 rounded-lg border border-accent/20">
+          <div className="text-sm font-bold text-secondary glass px-4 py-2 rounded-m3-md border border-accent/20">
             {Math.max(0, player.cards - 1)}/10
           </div>
         </div>
@@ -54,7 +54,7 @@ export function TimelinePersonalView() {
             <div
               key={slot.slotNumber}
               className={`
-                rounded-xl p-3 border-2 transition-all
+                rounded-m3-lg p-3 border-2 transition-all
                 aspect-[3/4] flex flex-col justify-center items-center relative
                 ${
                   slot.song
@@ -96,7 +96,7 @@ export function TimelinePersonalView() {
                 </>
               ) : (
                 /* Empty Slot */
-                <div className="text-2xl font-bold text-gray-600 opacity-30">
+                <div className="text-2xl font-bold text-text-secondary opacity-30">
                   {slot.slotNumber}
                 </div>
               )}
@@ -110,7 +110,7 @@ export function TimelinePersonalView() {
   return (
     <div className="space-y-6">
       <div className="text-center mb-4">
-        <h2 className="text-2xl font-bold text-white">
+        <h2 className="text-headline-sm text-text-primary">
           {gameMode === 'hardcore' ? 'Spieler-Timelines' : 'Persönliche Timeline'}
         </h2>
         <p className="text-text-secondary text-sm mt-1">

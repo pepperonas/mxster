@@ -4,13 +4,13 @@
  */
 
 import { useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useAppNavigate } from '@/hooks/useAppNavigate'
 import { useGame } from '@/contexts'
 import { GAME_VARIANTS, GAME_VARIANT_INFO } from '@/utils/gameModes'
 import type { GameVariant } from '@/types'
 
 export function VariantSelection() {
-  const navigate = useNavigate()
+  const navigate = useAppNavigate()
   const { gameMode, setGameVariant } = useGame()
 
   // Redirect if no game mode selected
@@ -40,16 +40,16 @@ export function VariantSelection() {
       <div className="container mx-auto px-4 max-w-5xl">
         {/* Header */}
         <div className="text-center mb-12 animate-fade-in">
-          <h1 className="text-5xl md:text-6xl font-bold text-gradient mb-4">
+          <h1 className="text-display-sm md:text-display-md text-emphasized text-gradient mb-4">
             Wähle deine Spielvariante
           </h1>
-          <p className="text-xl text-text-secondary">
+          <p className="text-title-lg text-text-secondary">
             Komplett digital oder mit echten Karten
           </p>
         </div>
 
         {/* Variant Cards */}
-        <div className="grid md:grid-cols-2 gap-8">
+        <div className="grid md:grid-cols-2 gap-8 stagger-children">
           {variants.map((variant) => {
             const info = GAME_VARIANT_INFO[variant]
             const isVirtual = variant === GAME_VARIANTS.VIRTUAL
@@ -57,16 +57,16 @@ export function VariantSelection() {
               <button
                 key={variant}
                 onClick={() => handleVariantSelect(variant)}
-                className={`glass rounded-2xl p-10 border-2 transition-all text-left group relative ${
+                className={`card card-glow p-10 border-2 text-left group relative ${
                   isVirtual
-                    ? 'border-accent hover:border-accent hover:shadow-glow-accent'
-                    : 'border-accent/30 hover:border-accent hover:shadow-glow-accent'
+                    ? 'rounded-m3-xl bg-md-secondary-container hover:bg-md-secondary-container text-md-on-secondary-container border-md-primary'
+                    : 'border-transparent hover:border-md-primary/60 active:rounded-m3-xl'
                 }`}
               >
                 {/* EMPFOHLEN Badge for Virtual Mode */}
                 {isVirtual && (
                   <div className="absolute top-4 right-4">
-                    <span className="px-3 py-1 bg-accent text-white text-xs font-bold rounded-full shadow-glow-accent">
+                    <span className="px-3 py-1 bg-md-tertiary text-md-on-tertiary text-label-sm rounded-m3-full shadow-glow-accent">
                       ⭐ EMPFOHLEN
                     </span>
                   </div>
@@ -78,12 +78,12 @@ export function VariantSelection() {
                 </div>
 
                 {/* Title */}
-                <h2 className="text-3xl font-bold mb-4 text-white group-hover:text-gradient">
+                <h2 className="text-headline-md mb-4 text-text-primary group-hover:text-gradient">
                   {info.name}
                 </h2>
 
                 {/* Description */}
-                <p className="text-text-secondary mb-6 leading-relaxed text-lg">
+                <p className="text-body-lg text-text-secondary mb-6">
                   {info.description}
                 </p>
 
@@ -100,11 +100,11 @@ export function VariantSelection() {
                 {/* Requirements (if any) */}
                 {info.requirements && info.requirements.length > 0 && (
                   <div className="pt-4 border-t border-border">
-                    <p className="text-sm font-semibold text-yellow-400 mb-2">
+                    <p className="text-label-lg text-md-tertiary mb-2">
                       Benötigt:
                     </p>
                     {info.requirements.map((req, idx) => (
-                      <p key={idx} className="text-xs text-text-secondary">
+                      <p key={idx} className="text-body-sm text-text-secondary">
                         • {req}
                       </p>
                     ))}

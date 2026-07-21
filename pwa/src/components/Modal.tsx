@@ -105,11 +105,12 @@ export function Modal() {
   // Render modal via React Portal
   return createPortal(
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm pt-20 pb-6"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-md-scrim/60 backdrop-blur-sm pt-20 pb-6"
+      style={{ animation: 'm3-scrim-in var(--m3-dur-effects-slow) var(--m3-ease-effects-slow) both' }}
       onClick={handleBackdropClick}
     >
       <div
-        className="relative glass rounded-2xl shadow-glow-accent border-2 border-accent/30 max-w-[95vw] sm:max-w-md md:max-w-2xl w-full mx-4 max-h-[calc(100vh-12rem)] sm:max-h-[85vh] overflow-auto"
+        className="relative m3-dialog-panel max-w-[95vw] sm:max-w-md md:max-w-2xl w-full mx-4 max-h-[calc(100vh-12rem)] sm:max-h-[85vh] overflow-auto"
         role="dialog"
         aria-modal="true"
         aria-labelledby="modal-title"
@@ -136,18 +137,18 @@ export function Modal() {
                 return (
                   <>
                     <span className="text-2xl">{emoji}</span>
-                    <span className="text-white">{text}</span>
+                    <span className="text-text-primary">{text}</span>
                   </>
                 )
               }
-              return <span className="text-white">{modal.title}</span>
+              return <span className="text-text-primary">{modal.title}</span>
             })()}
           </h2>
 
           {!modal.options?.hideCloseButton && !modal.options?.required && (
             <button
               onClick={closeModal}
-              className="text-text-secondary hover:text-white transition-colors p-2"
+              className="text-text-secondary hover:text-text-primary transition-colors touch-target rounded-m3-full m3-state-layer"
               aria-label="Close modal"
             >
               <svg
@@ -183,12 +184,12 @@ export function Modal() {
                   }
                 }}
                 className={`
-                  px-4 sm:px-6 py-2.5 rounded-lg font-medium transition-all text-sm sm:text-base
+                  px-4 sm:px-6 py-2.5 font-medium text-sm sm:text-base
                   ${
                     button.variant === 'primary'
                       ? 'btn btn-accent'
                       : button.variant === 'danger'
-                        ? 'bg-red-600 hover:bg-red-700 text-white border-2 border-red-500'
+                        ? 'btn bg-md-error text-md-on-error focus-visible:ring-md-error'
                         : 'btn btn-secondary'
                   }
                   ${button.disabled ? 'opacity-50 cursor-not-allowed' : ''}

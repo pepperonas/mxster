@@ -5,10 +5,13 @@
 
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react'
 
+export type ThemeMode = 'dark' | 'light'
+
 interface Settings {
   randomStartPosition: boolean // Start songs at random position (with 60s+ remaining)
   hideYearsInTimeline: boolean // Blur years in timeline to prevent cheating
   savedPlayers: string[] // List of saved player names
+  theme: ThemeMode // M3 color scheme, dark is default
   // Future settings can be added here
 }
 
@@ -23,7 +26,14 @@ interface SettingsContextType {
 const defaultSettings: Settings = {
   randomStartPosition: false,
   hideYearsInTimeline: false,
-  savedPlayers: []
+  savedPlayers: [],
+  theme: 'dark'
+}
+
+/** Surface hex per theme, mirrored from design-tokens.css (neutral-6 / neutral-98) */
+const THEME_COLOR: Record<ThemeMode, string> = {
+  dark: '#12131a',
+  light: '#fbf8ff'
 }
 
 const SettingsContext = createContext<SettingsContextType | undefined>(undefined)
@@ -47,6 +57,14 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     localStorage.setItem('mxster_settings', JSON.stringify(settings))
   }, [settings])
+
+  // Apply theme to <html> and keep browser chrome color in sync
+  useEffect(() => {
+    document.documentElement.dataset.theme = settings.theme
+    document
+      .querySelectorAll<HTMLMetaElement>('meta[name="theme-color"]')
+      .forEach((meta) => { meta.content = THEME_COLOR[settings.theme] })
+  }, [settings.theme])
 
   const updateSettings = (newSettings: Partial<Settings>) => {
     setSettings((prev) => ({ ...prev, ...newSettings }))

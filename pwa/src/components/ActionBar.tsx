@@ -3,13 +3,17 @@
  * Top navigation bar with logo, actions, and settings
  */
 
-import { useUI, useAuth, useGame, useInteraction } from '@/contexts'
+import { useUI, useAuth, useGame, useInteraction, useSettings } from '@/contexts'
 import { useGameHistory } from '@/hooks'
 import { LogoutIcon, HistoryIcon, SettingsIcon, ChartIcon, AchievementIcon } from '@/utils/icons'
 import { SettingsDialog } from './SettingsDialog'
 import { PlayerStatsDialog } from './PlayerStatsDialog'
 import { AchievementsDialog } from './AchievementsDialog'
-import { useState } from 'react'
+import { toggleThemeWithReveal } from '@/utils/themeReveal'
+import { useState, useRef } from 'react'
+
+const ICON_BTN =
+  'touch-target rounded-m3-full m3-state-layer transition-colors text-text-secondary hover:text-secondary'
 
 export function ActionBar() {
   const { toggleSidebar, showModal } = useUI()
@@ -17,7 +21,15 @@ export function ActionBar() {
   const { players, currentPlayer } = useGame()
   const { history } = useGameHistory()
   const { registerInteraction } = useInteraction()
+  const { settings, updateSettings } = useSettings()
   const [showAchievements, setShowAchievements] = useState(false)
+  const themeButtonRef = useRef<HTMLButtonElement>(null)
+
+  const handleThemeToggle = () => {
+    const next = settings.theme === 'dark' ? 'light' : 'dark'
+    registerInteraction('click', 30)
+    toggleThemeWithReveal(next, () => updateSettings({ theme: next }), themeButtonRef.current)
+  }
 
   // Get current player name if in-game
   const currentPlayerName = players.length > 0 && currentPlayer >= 0
@@ -49,13 +61,16 @@ export function ActionBar() {
 
   return (
     <>
-      <header className="fixed top-0 left-0 right-0 z-40 glass border-b-2 border-accent/30">
-        <div className="flex items-center justify-between px-4 py-4">
+      <header
+        className="fixed top-0 left-0 right-0 z-40 glass border-b border-md-outline-variant/40"
+        style={{ viewTransitionName: 'action-bar' }}
+      >
+        <div className="flex items-center justify-between px-2 sm:px-4 py-2">
           {/* Left: Logo + Menu */}
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-2 sm:gap-4">
             <button
               onClick={toggleSidebar}
-              className="p-2 hover:bg-accent/20 rounded-lg transition-colors border border-transparent hover:border-accent/30"
+              className={ICON_BTN}
               aria-label="Toggle sidebar"
             >
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor">
@@ -63,14 +78,27 @@ export function ActionBar() {
               </svg>
             </button>
 
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2" style={{ viewTransitionName: 'app-brand' }}>
               <span className="text-2xl">🎵</span>
               <h1 className="text-xl font-bold text-gradient hidden sm:block">mxster</h1>
             </div>
           </div>
 
           {/* Right: Actions */}
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-0.5 sm:gap-1">
+            {/* Theme toggle — circular reveal from this button */}
+            <button
+              ref={themeButtonRef}
+              onClick={handleThemeToggle}
+              className={ICON_BTN}
+              title={settings.theme === 'dark' ? 'Helles Design' : 'Dunkles Design'}
+              aria-label="Design wechseln"
+            >
+              <span className="text-xl leading-none" aria-hidden="true">
+                {settings.theme === 'dark' ? '🌙' : '☀️'}
+              </span>
+            </button>
+
             {/* History */}
             <button
               onClick={() => {
@@ -114,7 +142,7 @@ export function ActionBar() {
                   [{ text: 'Schließen', variant: 'secondary', onClick: () => {} }]
                 )
               }}
-              className="p-2 hover:bg-accent/20 rounded-lg transition-colors text-gray-300 hover:text-secondary border border-transparent hover:border-accent/30"
+              className={ICON_BTN}
               title="Spielhistorie"
             >
               <HistoryIcon size={20} />
@@ -129,7 +157,7 @@ export function ActionBar() {
                   [{ text: 'Schließen', variant: 'secondary', onClick: () => {} }]
                 )
               }}
-              className="p-2 hover:bg-accent/20 rounded-lg transition-colors text-gray-300 hover:text-secondary border border-transparent hover:border-accent/30"
+              className={ICON_BTN}
               title="Spielerstatistiken"
             >
               <ChartIcon size={20} />
@@ -138,7 +166,7 @@ export function ActionBar() {
             {/* Achievements */}
             <button
               onClick={() => setShowAchievements(true)}
-              className="p-2 hover:bg-accent/20 rounded-lg transition-colors text-gray-300 hover:text-secondary border border-transparent hover:border-accent/30"
+              className={ICON_BTN}
               title="Achievements"
             >
               <AchievementIcon size={20} />
@@ -153,7 +181,7 @@ export function ActionBar() {
                   [{ text: 'Schließen', variant: 'secondary', onClick: () => {} }]
                 )
               }}
-              className="p-2 hover:bg-accent/20 rounded-lg transition-colors text-gray-300 hover:text-secondary border border-transparent hover:border-accent/30"
+              className={ICON_BTN}
               title="Einstellungen"
             >
               <SettingsIcon size={20} />
@@ -163,7 +191,7 @@ export function ActionBar() {
             {isLoggedIn && (
               <button
                 onClick={handleLogout}
-                className="p-2 hover:bg-red-500/20 rounded-lg transition-colors text-gray-300 hover:text-red-400 border border-transparent hover:border-red-500/30"
+                className="touch-target rounded-m3-full m3-state-layer transition-colors text-text-secondary hover:text-danger"
                 title="Ausloggen"
               >
                 <LogoutIcon size={20} />

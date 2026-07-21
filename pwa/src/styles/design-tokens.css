@@ -1,0 +1,283 @@
+/**
+ * mxster Design Tokens — Material 3 Expressive
+ * SINGLE SOURCE OF TRUTH for color, shape, type and motion.
+ *
+ * Color ramps generated offline via @material/material-color-utilities:
+ *   - primary seed:  #00B2E3 (electric cyan)
+ *   - tertiary seed: #FF6B35 (brand coral, from legacy accent)
+ *   - neutral seeds: hue/chroma of legacy background #1A1C27 (indigo tint preserved)
+ * Regenerate ramps to reskin — nothing outside this file holds raw color.
+ *
+ * All color values are R G B channel triplets so Tailwind alpha modifiers
+ * (`border-accent/30`) keep working via `rgb(var(--x) / <alpha-value>)`.
+ */
+
+/* ════════════════════ M3 REF PALETTES (tonal ramps) ════════════════════ */
+:root {
+  /* primary — electric cyan */
+  --md-ref-primary-0: 0 0 0;
+  --md-ref-primary-10: 0 31 42;
+  --md-ref-primary-20: 0 53 70;
+  --md-ref-primary-30: 0 77 100;
+  --md-ref-primary-40: 0 102 132;
+  --md-ref-primary-50: 0 129 165;
+  --md-ref-primary-60: 0 157 200;
+  --md-ref-primary-70: 28 185 234;
+  --md-ref-primary-80: 104 211 255;
+  --md-ref-primary-90: 189 233 255;
+  --md-ref-primary-95: 224 244 255;
+  --md-ref-primary-100: 255 255 255;
+
+  /* secondary — desaturated cyan-slate */
+  --md-ref-secondary-10: 8 30 39;
+  --md-ref-secondary-20: 31 51 60;
+  --md-ref-secondary-30: 53 74 83;
+  --md-ref-secondary-40: 77 97 108;
+  --md-ref-secondary-80: 180 202 214;
+  --md-ref-secondary-90: 208 230 242;
+  --md-ref-secondary-95: 224 244 255;
+
+  /* tertiary — warm coral */
+  --md-ref-tertiary-10: 57 12 0;
+  --md-ref-tertiary-20: 93 25 0;
+  --md-ref-tertiary-30: 131 38 0;
+  --md-ref-tertiary-40: 171 53 0;
+  --md-ref-tertiary-50: 208 74 20;
+  --md-ref-tertiary-60: 243 99 45;
+  --md-ref-tertiary-70: 255 139 100;
+  --md-ref-tertiary-80: 255 181 157;
+  --md-ref-tertiary-90: 255 219 208;
+  --md-ref-tertiary-95: 255 237 232;
+
+  /* neutral — indigo-tinted (from legacy #1A1C27) */
+  --md-ref-neutral-0: 0 0 0;
+  --md-ref-neutral-4: 12 14 21;
+  --md-ref-neutral-6: 18 19 26;
+  --md-ref-neutral-10: 26 27 35;
+  --md-ref-neutral-12: 30 31 39;
+  --md-ref-neutral-17: 40 41 49;
+  --md-ref-neutral-20: 47 48 56;
+  --md-ref-neutral-22: 51 52 60;
+  --md-ref-neutral-24: 56 57 65;
+  --md-ref-neutral-87: 218 217 228;
+  --md-ref-neutral-90: 226 225 236;
+  --md-ref-neutral-92: 232 231 242;
+  --md-ref-neutral-94: 238 237 248;
+  --md-ref-neutral-95: 241 239 250;
+  --md-ref-neutral-96: 244 242 253;
+  --md-ref-neutral-98: 251 248 255;
+  --md-ref-neutral-100: 255 255 255;
+
+  /* neutral-variant — indigo */
+  --md-ref-neutral-variant-30: 67 70 86;
+  --md-ref-neutral-variant-50: 116 118 136;
+  --md-ref-neutral-variant-60: 141 144 162;
+  --md-ref-neutral-variant-80: 196 197 217;
+  --md-ref-neutral-variant-90: 224 225 246;
+
+  /* error */
+  --md-ref-error-10: 65 0 2;
+  --md-ref-error-20: 105 0 5;
+  --md-ref-error-30: 147 0 10;
+  --md-ref-error-40: 186 26 26;
+  --md-ref-error-80: 255 180 171;
+  --md-ref-error-90: 255 218 214;
+}
+
+/* ════════════════════ SYS COLOR ROLES — DARK (default) ════════════════════ */
+:root,
+[data-theme='dark'] {
+  color-scheme: dark;
+
+  --md-sys-color-primary: var(--md-ref-primary-80);
+  --md-sys-color-on-primary: var(--md-ref-primary-20);
+  --md-sys-color-primary-container: var(--md-ref-primary-30);
+  --md-sys-color-on-primary-container: var(--md-ref-primary-90);
+
+  --md-sys-color-secondary: var(--md-ref-secondary-80);
+  --md-sys-color-on-secondary: var(--md-ref-secondary-20);
+  --md-sys-color-secondary-container: var(--md-ref-secondary-30);
+  --md-sys-color-on-secondary-container: var(--md-ref-secondary-90);
+
+  --md-sys-color-tertiary: var(--md-ref-tertiary-80);
+  --md-sys-color-on-tertiary: var(--md-ref-tertiary-20);
+  --md-sys-color-tertiary-container: var(--md-ref-tertiary-30);
+  --md-sys-color-on-tertiary-container: var(--md-ref-tertiary-90);
+
+  --md-sys-color-error: var(--md-ref-error-80);
+  --md-sys-color-on-error: var(--md-ref-error-20);
+  --md-sys-color-error-container: var(--md-ref-error-30);
+  --md-sys-color-on-error-container: var(--md-ref-error-90);
+
+  --md-sys-color-surface: var(--md-ref-neutral-6);
+  --md-sys-color-surface-dim: var(--md-ref-neutral-6);
+  --md-sys-color-surface-bright: var(--md-ref-neutral-24);
+  --md-sys-color-surface-container-lowest: var(--md-ref-neutral-4);
+  --md-sys-color-surface-container-low: var(--md-ref-neutral-10);
+  --md-sys-color-surface-container: var(--md-ref-neutral-12);
+  --md-sys-color-surface-container-high: var(--md-ref-neutral-17);
+  --md-sys-color-surface-container-highest: var(--md-ref-neutral-22);
+  --md-sys-color-on-surface: var(--md-ref-neutral-90);
+  --md-sys-color-on-surface-variant: var(--md-ref-neutral-variant-80);
+
+  --md-sys-color-outline: var(--md-ref-neutral-variant-60);
+  --md-sys-color-outline-variant: var(--md-ref-neutral-variant-30);
+
+  --md-sys-color-inverse-surface: var(--md-ref-neutral-90);
+  --md-sys-color-inverse-on-surface: var(--md-ref-neutral-20);
+  --md-sys-color-inverse-primary: var(--md-ref-primary-40);
+
+  --md-sys-color-scrim: var(--md-ref-neutral-0);
+  --md-sys-color-shadow: var(--md-ref-neutral-0);
+
+  /* Brand gradient (.text-gradient): light tones read vividly on dark surfaces */
+  --brand-gradient-from: var(--md-ref-primary-80);
+  --brand-gradient-to: var(--md-ref-tertiary-80);
+}
+
+/* ════════════════════ SYS COLOR ROLES — LIGHT ════════════════════ */
+[data-theme='light'] {
+  color-scheme: light;
+
+  --md-sys-color-primary: var(--md-ref-primary-40);
+  --md-sys-color-on-primary: var(--md-ref-primary-100);
+  --md-sys-color-primary-container: var(--md-ref-primary-90);
+  --md-sys-color-on-primary-container: var(--md-ref-primary-10);
+
+  --md-sys-color-secondary: var(--md-ref-secondary-40);
+  --md-sys-color-on-secondary: var(--md-ref-primary-100);
+  --md-sys-color-secondary-container: var(--md-ref-secondary-90);
+  --md-sys-color-on-secondary-container: var(--md-ref-secondary-10);
+
+  --md-sys-color-tertiary: var(--md-ref-tertiary-40);
+  --md-sys-color-on-tertiary: var(--md-ref-primary-100);
+  --md-sys-color-tertiary-container: var(--md-ref-tertiary-90);
+  --md-sys-color-on-tertiary-container: var(--md-ref-tertiary-10);
+
+  --md-sys-color-error: var(--md-ref-error-40);
+  --md-sys-color-on-error: var(--md-ref-primary-100);
+  --md-sys-color-error-container: var(--md-ref-error-90);
+  --md-sys-color-on-error-container: var(--md-ref-error-10);
+
+  --md-sys-color-surface: var(--md-ref-neutral-98);
+  --md-sys-color-surface-dim: var(--md-ref-neutral-87);
+  --md-sys-color-surface-bright: var(--md-ref-neutral-98);
+  --md-sys-color-surface-container-lowest: var(--md-ref-neutral-100);
+  --md-sys-color-surface-container-low: var(--md-ref-neutral-96);
+  --md-sys-color-surface-container: var(--md-ref-neutral-94);
+  --md-sys-color-surface-container-high: var(--md-ref-neutral-92);
+  --md-sys-color-surface-container-highest: var(--md-ref-neutral-90);
+  --md-sys-color-on-surface: var(--md-ref-neutral-10);
+  --md-sys-color-on-surface-variant: var(--md-ref-neutral-variant-30);
+
+  --md-sys-color-outline: var(--md-ref-neutral-variant-50);
+  --md-sys-color-outline-variant: var(--md-ref-neutral-variant-80);
+
+  --md-sys-color-inverse-surface: var(--md-ref-neutral-20);
+  --md-sys-color-inverse-on-surface: var(--md-ref-neutral-95);
+  --md-sys-color-inverse-primary: var(--md-ref-primary-80);
+
+  /* Tone 50 instead of 40: keeps the gradient vivid on light surfaces
+     (both endpoints still ≥4.4:1 on surface) — tone 40 blends to mud. */
+  --brand-gradient-from: var(--md-ref-primary-50);
+  --brand-gradient-to: var(--md-ref-tertiary-50);
+}
+
+/* ════════════════ LEGACY ALIASES (resolved colors, not triplets) ════════════════
+   Consumed by beatAnimations.css and plain-CSS blocks in tailwind.css.
+   These vars were referenced but never defined before this token layer existed. */
+:root {
+  --background: rgb(var(--md-sys-color-surface));
+  --primary: rgb(var(--md-sys-color-surface-container));
+  --secondary: rgb(var(--md-sys-color-primary));
+  --accent: rgb(var(--md-sys-color-tertiary));
+  --border: rgb(var(--md-sys-color-outline-variant));
+  --text-primary: rgb(var(--md-sys-color-on-surface));
+  --text-secondary: rgb(var(--md-sys-color-on-surface-variant));
+}
+
+/* ════════════════════ SHAPE — 10-step corner scale ════════════════════ */
+:root {
+  --m3-shape-none: 0px;
+  --m3-shape-xs: 4px;
+  --m3-shape-sm: 8px;
+  --m3-shape-md: 12px;
+  --m3-shape-lg: 16px;
+  --m3-shape-lg-inc: 20px;
+  --m3-shape-xl: 28px;
+  --m3-shape-xl-inc: 32px;
+  --m3-shape-xxl: 48px;
+  --m3-shape-full: 9999px;
+}
+
+/* ════════════════════ MOTION PHYSICS (M3 Expressive) ════════════════════
+   Spatial = position/size/shape, may overshoot. Effects = color/opacity, never.
+   Speed choice: fast → small components (buttons, switches, press morphs);
+   default → cards, menus, sheets, sidebar; slow → full-screen/route transitions. */
+:root {
+  --m3-dur-spatial-fast: 350ms;
+  --m3-dur-spatial-default: 500ms;
+  --m3-dur-spatial-slow: 650ms;
+  --m3-ease-spatial-fast: cubic-bezier(0.42, 1.67, 0.21, 0.9);
+  --m3-ease-spatial-default: cubic-bezier(0.38, 1.21, 0.22, 1);
+  --m3-ease-spatial-slow: cubic-bezier(0.39, 1.29, 0.35, 0.98);
+
+  --m3-dur-effects-fast: 150ms;
+  --m3-dur-effects-default: 200ms;
+  --m3-dur-effects-slow: 300ms;
+  --m3-ease-effects-fast: cubic-bezier(0.31, 0.94, 0.34, 1);
+  --m3-ease-effects-default: cubic-bezier(0.34, 0.8, 0.34, 1);
+  --m3-ease-effects-slow: cubic-bezier(0.34, 0.88, 0.34, 1);
+
+  /* combined shorthands for plain-CSS transition declarations */
+  --m3-spatial-fast: var(--m3-dur-spatial-fast) var(--m3-ease-spatial-fast);
+  --m3-spatial-default: var(--m3-dur-spatial-default) var(--m3-ease-spatial-default);
+  --m3-spatial-slow: var(--m3-dur-spatial-slow) var(--m3-ease-spatial-slow);
+  --m3-effects-fast: var(--m3-dur-effects-fast) var(--m3-ease-effects-fast);
+  --m3-effects-default: var(--m3-dur-effects-default) var(--m3-ease-effects-default);
+  --m3-effects-slow: var(--m3-dur-effects-slow) var(--m3-ease-effects-slow);
+
+  /* state layer opacities */
+  --m3-state-hover: 0.08;
+  --m3-state-focus: 0.1;
+  --m3-state-press: 0.12;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --m3-dur-spatial-fast: 120ms;
+    --m3-dur-spatial-default: 120ms;
+    --m3-dur-spatial-slow: 120ms;
+    --m3-ease-spatial-fast: ease;
+    --m3-ease-spatial-default: ease;
+    --m3-ease-spatial-slow: ease;
+    --m3-dur-effects-fast: 120ms;
+    --m3-dur-effects-default: 120ms;
+    --m3-dur-effects-slow: 120ms;
+    --m3-ease-effects-fast: ease;
+    --m3-ease-effects-default: ease;
+    --m3-ease-effects-slow: ease;
+  }
+}
+
+/* ════════════════════ TYPOGRAPHY — M3 type scale ════════════════════
+   Variable font: Roboto Flex (wght + wdth axes), Inter as loaded fallback. */
+:root {
+  --md-sys-type-font: 'Roboto Flex', 'Inter', system-ui, -apple-system, sans-serif;
+
+  --md-sys-type-display-lg: 800 3.5rem/1.1 var(--md-sys-type-font);
+  --md-sys-type-display-md: 750 2.8rem/1.15 var(--md-sys-type-font);
+  --md-sys-type-display-sm: 700 2.25rem/1.2 var(--md-sys-type-font);
+  --md-sys-type-headline-lg: 650 2rem/1.25 var(--md-sys-type-font);
+  --md-sys-type-headline-md: 650 1.75rem/1.28 var(--md-sys-type-font);
+  --md-sys-type-headline-sm: 600 1.5rem/1.33 var(--md-sys-type-font);
+  --md-sys-type-title-lg: 600 1.375rem/1.27 var(--md-sys-type-font);
+  --md-sys-type-title-md: 600 1rem/1.5 var(--md-sys-type-font);
+  --md-sys-type-title-sm: 600 0.875rem/1.43 var(--md-sys-type-font);
+  --md-sys-type-body-lg: 400 1rem/1.5 var(--md-sys-type-font);
+  --md-sys-type-body-md: 400 0.875rem/1.43 var(--md-sys-type-font);
+  --md-sys-type-body-sm: 400 0.75rem/1.33 var(--md-sys-type-font);
+  --md-sys-type-label-lg: 550 0.875rem/1.43 var(--md-sys-type-font);
+  --md-sys-type-label-md: 550 0.75rem/1.33 var(--md-sys-type-font);
+  --md-sys-type-label-sm: 550 0.6875rem/1.45 var(--md-sys-type-font);
+}

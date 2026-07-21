@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route, useNavigate, useLocation } from 'react-router-dom'
+import { createBrowserRouter, RouterProvider, Outlet, useLocation } from 'react-router-dom'
 import { AppProviders, useInteraction, useGame, useUI } from '@/contexts'
 import { Modal, Toast, ActionBar, Sidebar, AchievementUnlockAnimation, CookieBanner } from '@/components'
 import { ParticleBackground } from '@/components/game'
@@ -11,19 +11,26 @@ import {
   CallbackScreen
 } from '@/screens'
 import { useTokenRefresh } from '@/hooks/useTokenRefresh'
+import { useAppNavigate } from '@/hooks/useAppNavigate'
+import { initRipple } from '@/utils/ripple'
 import { useEffect, useRef } from 'react'
+import './styles/design-tokens.css'
 import './styles/tailwind.css'
+import './styles/motion.css'
 import './styles/beatAnimations.css'
 
 function AppContent() {
   // Background Token Refresh Service
   useTokenRefresh()
 
+  // M3 ripple (delegated, progressive enhancement)
+  useEffect(() => { initRipple() }, [])
+
   // Get interaction state for background animation
   const { activityLevel, pulseIntensity } = useInteraction()
 
   // Page Refresh Check
-  const navigate = useNavigate()
+  const navigate = useAppNavigate()
   const location = useLocation()
   const { players, isGameStarted, endGame, resetGame, gameMode } = useGame()
   const { showModal } = useUI()
@@ -122,27 +129,37 @@ function AppContent() {
       <AchievementUnlockAnimation />
       <CookieBanner />
 
-      {/* Main Content - Router */}
-      <Routes>
-        <Route path="/" element={<LandingPage />} />
-        <Route path="/mode-selection" element={<ModeSelection />} />
-        <Route path="/variant-selection" element={<VariantSelection />} />
-        <Route path="/player-setup" element={<PlayerSetup />} />
-        <Route path="/game" element={<GameScreen />} />
-        <Route path="/callback" element={<CallbackScreen />} />
-      </Routes>
+      {/* Main Content - active route */}
+      <Outlet />
     </>
   )
 }
 
-function App() {
-  return (
-    <BrowserRouter>
+/**
+ * Data router (createBrowserRouter) is required for the View Transitions
+ * integration: `navigate(to, { viewTransition: true })` is a no-op under the
+ * declarative <BrowserRouter>. AppContent acts as the layout route.
+ */
+const router = createBrowserRouter([
+  {
+    element: (
       <AppProviders>
         <AppContent />
       </AppProviders>
-    </BrowserRouter>
-  )
+    ),
+    children: [
+      { path: '/', element: <LandingPage /> },
+      { path: '/mode-selection', element: <ModeSelection /> },
+      { path: '/variant-selection', element: <VariantSelection /> },
+      { path: '/player-setup', element: <PlayerSetup /> },
+      { path: '/game', element: <GameScreen /> },
+      { path: '/callback', element: <CallbackScreen /> },
+    ],
+  },
+])
+
+function App() {
+  return <RouterProvider router={router} />
 }
 
 export default App

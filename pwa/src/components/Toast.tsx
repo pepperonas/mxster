@@ -53,28 +53,28 @@ function ToastItem({ toast, onRemove }: { toast: ToastType; onRemove: () => void
     }
   }
 
-  // Color based on type
+  // M3 snackbar: inverse surface base; type shows as a tinted icon accent
   const getColorClasses = () => {
     switch (toast.type) {
       case 'success':
-        return 'bg-green-600 border-green-500 shadow-glow-sm'
+        return 'bg-md-inverse-surface text-md-inverse-on-surface [&_svg]:text-green-500'
       case 'error':
-        return 'bg-red-600 border-red-500 shadow-glow-sm'
+        return 'bg-md-error-container text-md-on-error-container'
       case 'warning':
-        return 'bg-yellow-600 border-yellow-500 shadow-glow-sm'
+        return 'bg-md-inverse-surface text-md-inverse-on-surface [&_svg]:text-amber-500'
       default:
-        return 'glass border-accent/30 shadow-glow-sm'
+        return 'bg-md-inverse-surface text-md-inverse-on-surface [&_svg]:text-md-inverse-primary'
     }
   }
 
   return (
     <div
       className={`
-        flex items-center gap-3 px-4 py-3 rounded-lg border-2
+        flex items-center gap-3 px-4 py-3 rounded-m3-md shadow-xl
         ${getColorClasses()}
-        text-white max-w-md w-full sm:w-auto sm:min-w-[300px]
-        animate-slide-up backdrop-blur-sm
+        max-w-md w-full sm:w-auto sm:min-w-[300px]
       `}
+      style={{ animation: 'm3-spring-in-up var(--m3-dur-spatial-default) var(--m3-ease-spatial-default) both' }}
       role="alert"
     >
       <div className="flex-shrink-0">{getIcon()}</div>

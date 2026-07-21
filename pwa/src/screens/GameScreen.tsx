@@ -4,7 +4,7 @@
  */
 
 import { useState, useEffect, useRef } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useAppNavigate } from '@/hooks/useAppNavigate'
 import { useGame, useUI, useAuth, useAchievements } from '@/contexts'
 import { useGameHistory } from '@/hooks'
 import {
@@ -46,7 +46,7 @@ import {
 } from '@/utils/guessAnimations'
 
 export function GameScreen() {
-  const navigate = useNavigate()
+  const navigate = useAppNavigate()
   const { accessToken, isLoggedIn } = useAuth()
 
   // Timeline Mode: Track which song we already showed modal for
@@ -370,15 +370,15 @@ export function GameScreen() {
         '💀 Zu oft übersprungen!',
         <div className="text-center py-6">
           <div className="text-6xl mb-4">⚠️</div>
-          <div className="text-2xl font-bold mb-4 text-red-500">-3 Punkte Strafe!</div>
+          <div className="text-2xl font-bold mb-4 text-md-error">-3 Punkte Strafe!</div>
           <p className="text-lg text-text-secondary mb-6">
             Dieser Song wurde von allen Spielern bereits mehrfach übersprungen.
           </p>
-          <div className="p-6 bg-red-900/30 border-2 border-red-500/50 rounded-xl mb-6">
+          <div className="p-6 bg-red-900/30 border-2 border-red-500/50 rounded-m3-lg mb-6">
             <div className="text-sm text-text-secondary mb-2">Neuer Punktestand</div>
             <div className="text-4xl font-bold">{newScore} Punkte</div>
           </div>
-          <div className="p-4 glass border border-accent/30 rounded-lg text-sm text-text-secondary">
+          <div className="p-4 glass border border-accent/30 rounded-m3-md text-sm text-text-secondary">
             <p>🎲 Ein neuer Song wird automatisch gezogen.</p>
           </div>
         </div>,
@@ -420,9 +420,9 @@ export function GameScreen() {
               Alle Spieler haben diesen Song bereits übersprungen!
             </div>
             <p className="text-lg text-text-secondary mb-6">
-              Der nächste Skip hat eine <span className="text-yellow-400 font-bold">{(nextPenaltyProbability * 100).toFixed(0)}% Chance</span> auf eine <span className="text-red-500 font-bold">-3 Punkte Strafe</span>!
+              Der nächste Skip hat eine <span className="text-yellow-400 font-bold">{(nextPenaltyProbability * 100).toFixed(0)}% Chance</span> auf eine <span className="text-md-error font-bold">-3 Punkte Strafe</span>!
             </p>
-            <div className="p-4 glass border-2 border-yellow-500/50 rounded-lg text-sm">
+            <div className="p-4 glass border-2 border-yellow-500/50 rounded-m3-md text-sm">
               <p className="text-text-secondary">
                 💡 Tipp: Versuche es zu raten, anstatt zu überspringen!
               </p>
@@ -512,7 +512,7 @@ export function GameScreen() {
             <span className="text-2xl">
               {result.yearDifference === 0 ? '✅' : result.yearDifference <= 2 ? '🟡' : '❌'}
             </span>
-            <div className="inline-block px-6 py-2 glass border-2 border-accent/30 rounded-lg text-xl font-bold">
+            <div className="inline-block px-6 py-2 glass border-2 border-accent/30 rounded-m3-md text-xl font-bold">
               {song.year}
             </div>
             {gameMode === 'hardcore' && (
@@ -531,7 +531,7 @@ export function GameScreen() {
 
         {/* Year difference (if wrong) */}
         {result.yearDifference > 0 && result.yearDifference <= 2 && (
-          <div className="mb-4 p-3 glass border border-accent/30 rounded-lg">
+          <div className="mb-4 p-3 glass border border-accent/30 rounded-m3-md">
             <p className="text-sm text-text-secondary">
               {result.yearDifference} {result.yearDifference === 1 ? 'Jahr' : 'Jahre'} daneben
             </p>
@@ -540,7 +540,7 @@ export function GameScreen() {
 
         {/* Points in Hardcore Mode */}
         {gameMode === 'hardcore' && (
-          <div className="p-4 bg-gradient-to-r from-secondary/30 to-accent/30 rounded-lg border-2 border-accent/50">
+          <div className="p-4 bg-gradient-to-r from-secondary/30 to-accent/30 rounded-m3-md border-2 border-accent/50">
             <p className="text-2xl font-bold text-gradient">
               +{earnedPoints} {earnedPoints === 1 ? 'Punkt' : 'Punkte'}
             </p>
@@ -769,7 +769,7 @@ export function GameScreen() {
     showModal(
       modalTitle,
       <div className="py-4">
-        <div className="mb-6 p-4 glass border-2 border-accent/30 rounded-lg">
+        <div className="mb-6 p-4 glass border-2 border-accent/30 rounded-m3-md">
           <div className="text-xl font-bold">{currentSong.title}</div>
           <div className="text-text-secondary">{currentSong.artist}</div>
           <div className="text-sm text-text-secondary/70 mt-2">Jahr ist verdeckt - wähle die Position!</div>
@@ -782,7 +782,7 @@ export function GameScreen() {
                 console.log('🟠 Position button clicked: 0 (erste Karte)')
                 handleManualPlacement(0)
               }}
-              className="w-full py-6 px-6 bg-primary/50 hover:bg-accent/50 border-2 border-accent/30 hover:border-accent rounded-lg transition-colors"
+              className="w-full py-6 px-6 bg-primary/50 hover:bg-accent/50 border-2 border-accent/30 hover:border-accent rounded-m3-md transition-colors"
             >
               <div className="text-base sm:text-lg md:text-xl font-bold">📍 Erste Karte platzieren</div>
             </button>
@@ -794,7 +794,7 @@ export function GameScreen() {
                   console.log('🟠 Position button clicked: 0 (vor erstem)')
                   handleManualPlacement(0)
                 }}
-                className="w-full py-4 px-6 bg-primary/50 hover:bg-accent/50 border-2 border-accent/30 hover:border-accent rounded-lg transition-colors"
+                className="w-full py-4 px-6 bg-primary/50 hover:bg-accent/50 border-2 border-accent/30 hover:border-accent rounded-m3-md transition-colors"
               >
                 <div className="text-base sm:text-lg md:text-xl font-bold">⬆️ Vor {timeline[0].year}</div>
               </button>
@@ -803,7 +803,7 @@ export function GameScreen() {
               {timeline.map((song, index) => (
                 <div key={song.id}>
                   {/* Existing card */}
-                  <div className="py-3 px-4 bg-primary/30 border border-white/10 rounded-lg">
+                  <div className="py-3 px-4 bg-primary/30 border border-white/10 rounded-m3-md">
                     <div className="font-semibold text-sm sm:text-base">{song.title}</div>
                     <div className="text-xs sm:text-sm text-text-secondary">{song.artist} • {song.year}</div>
                   </div>
@@ -815,7 +815,7 @@ export function GameScreen() {
                         console.log('🟠 Position button clicked:', index + 1, '(zwischen)')
                         handleManualPlacement(index + 1)
                       }}
-                      className="w-full py-4 px-6 bg-primary/50 hover:bg-accent/50 border-2 border-accent/30 hover:border-accent rounded-lg transition-colors mt-3"
+                      className="w-full py-4 px-6 bg-primary/50 hover:bg-accent/50 border-2 border-accent/30 hover:border-accent rounded-m3-md transition-colors mt-3"
                     >
                       <div className="text-base sm:text-lg md:text-xl font-bold">
                         📍 Zwischen {timeline[index].year} und {timeline[index + 1].year}
@@ -831,7 +831,7 @@ export function GameScreen() {
                   console.log('🟠 Position button clicked:', timeline.length, '(nach letztem)')
                   handleManualPlacement(timeline.length)
                 }}
-                className="w-full py-4 px-6 bg-primary/50 hover:bg-accent/50 border-2 border-accent/30 hover:border-accent rounded-lg transition-colors"
+                className="w-full py-4 px-6 bg-primary/50 hover:bg-accent/50 border-2 border-accent/30 hover:border-accent rounded-m3-md transition-colors"
               >
                 <div className="text-base sm:text-lg md:text-xl font-bold">⬇️ Nach {timeline[timeline.length - 1].year}</div>
               </button>
@@ -928,7 +928,7 @@ export function GameScreen() {
           <div className="text-2xl font-bold mb-2">{songTitle}</div>
           <div className="text-lg text-text-secondary mb-4">{songArtist}</div>
           <div className="text-3xl font-bold text-secondary mb-2">{songYear}</div>
-          <div className="mt-6 p-4 glass border-2 border-accent/30 rounded-lg">
+          <div className="mt-6 p-4 glass border-2 border-accent/30 rounded-m3-md">
             <div className="text-sm text-text-secondary">Fortschritt</div>
             <div className="text-2xl font-bold">{updatedPlayer.cards}/10 Karten</div>
           </div>
@@ -993,8 +993,8 @@ export function GameScreen() {
           <div className="text-xl font-bold mb-2">Das war leider nicht richtig</div>
           <div className="text-2xl font-bold mb-2">{songTitle}</div>
           <div className="text-lg text-text-secondary mb-4">{songArtist}</div>
-          <div className="text-3xl font-bold text-red-500 mb-2">{songYear}</div>
-          <div className="mt-6 p-4 glass rounded-lg border-2 border-red-500/50">
+          <div className="text-3xl font-bold text-md-error mb-2">{songYear}</div>
+          <div className="mt-6 p-4 glass rounded-m3-md border-2 border-red-500/50">
             <div className="text-sm">Die Karte wird nicht hinzugefügt</div>
           </div>
         </div>,

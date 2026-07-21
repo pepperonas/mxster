@@ -271,10 +271,13 @@ export function MusicPlayer({ song, onStateChange }: MusicPlayerProps) {
   const currentBadge = modeBadge[audioMode]
 
   return (
-    <div className="glass rounded-2xl p-4 sm:p-6 lg:p-8 border-2 border-accent/30 hover:border-accent transition-colors">
+    <div
+      className="bg-md-surface-container rounded-m3-xl p-4 sm:p-6 lg:p-8 border border-md-outline-variant/50 hover:bg-md-surface-container-high transition-colors duration-m3-effects ease-m3-effects"
+      style={{ viewTransitionName: 'music-player' }}
+    >
       {/* Song Info */}
       <div className="flex items-center gap-4 sm:gap-6 mb-4 sm:mb-6">
-        <div className="w-16 h-16 sm:w-24 sm:h-24 bg-gradient-to-br from-secondary to-accent rounded-xl flex items-center justify-center shadow-glow-accent flex-shrink-0">
+        <div className="w-16 h-16 sm:w-24 sm:h-24 bg-gradient-to-br from-secondary to-accent rounded-m3-lg flex items-center justify-center shadow-glow-accent flex-shrink-0">
           <MusicIcon size={32} color="white" />
         </div>
         <div className="flex-1 min-w-0">
@@ -297,7 +300,7 @@ export function MusicPlayer({ song, onStateChange }: MusicPlayerProps) {
         {/* Progress Bar */}
         <div className="space-y-2">
           <div
-            className="h-4 sm:h-3 bg-primary/50 rounded-full overflow-hidden cursor-pointer border border-accent/20 hover:border-accent/50 transition-colors"
+            className="h-4 sm:h-3 bg-md-surface-container-highest rounded-m3-full overflow-hidden cursor-pointer border border-accent/20 hover:border-accent/50 transition-colors"
             onClick={(e) => {
               const rect = e.currentTarget.getBoundingClientRect()
               const x = e.clientX - rect.left
@@ -320,15 +323,23 @@ export function MusicPlayer({ song, onStateChange }: MusicPlayerProps) {
 
         {/* Controls */}
         <div className="flex items-center justify-center gap-4">
+          {/* Play/pause with M3 shape morph: circle when paused → squircle while playing */}
           <button
             onClick={handleTogglePlay}
             disabled={!playerReady || isLoading}
-            className="w-14 h-14 bg-gradient-to-br from-secondary to-accent rounded-full flex items-center justify-center hover:scale-110 transition-all shadow-lg shadow-secondary/50 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
+            className={`w-14 h-14 min-w-[48px] min-h-[48px] bg-md-primary text-md-on-primary m3-state-layer flex items-center justify-center shadow-lg shadow-secondary/40 disabled:opacity-50 disabled:cursor-not-allowed active:scale-95 ${
+              isPlaying ? 'rounded-m3-lg' : 'rounded-m3-full'
+            }`}
+            style={{ transition: 'border-radius var(--m3-spatial-fast), transform var(--m3-spatial-fast), background-color var(--m3-effects-default)' }}
             aria-label={isPlaying ? 'Pause' : 'Play'}
           >
-            <span className="text-white text-xl flex items-center justify-center">
-              {isLoading ? '⏳' : isPlaying ? '⏸️' : '▶️'}
-            </span>
+            {isLoading ? (
+              <span className="m3-loading-arc" style={{ width: 22, height: 22, borderTopColor: 'currentColor', borderRightColor: 'currentColor' }} />
+            ) : (
+              <span className="text-xl flex items-center justify-center">
+                {isPlaying ? '⏸️' : '▶️'}
+              </span>
+            )}
           </button>
         </div>
 

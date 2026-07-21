@@ -61,13 +61,13 @@ export function TimelineDisplay({ playerId }: TimelineDisplayProps) {
   const cardCount = timeline.length
 
   return (
-    <div className="glass rounded-2xl p-6 border-2 border-accent/30">
+    <div className="glass rounded-m3-xl p-6 border-2 border-accent/30">
       {/* Header */}
       <div className="flex items-center justify-between mb-4">
-        <h3 className="text-xl font-bold text-gradient">
+        <h3 className="text-title-lg text-gradient">
           {gameMode === 'timeline_global' ? 'Globale Timeline' : `Timeline: ${playerName}`}
         </h3>
-        <span className="text-sm font-bold text-secondary glass px-4 py-2 rounded-lg border border-accent/20">
+        <span className="text-sm font-bold text-secondary glass px-4 py-2 rounded-m3-md border border-accent/20">
           {Math.max(0, cardCount - 1)}/10
         </span>
       </div>
@@ -82,14 +82,14 @@ export function TimelineDisplay({ playerId }: TimelineDisplayProps) {
 
       {/* Player Standings (Global Timeline only) */}
       {gameMode === 'timeline_global' && (
-        <div className="mb-4 p-4 glass border border-accent/20 rounded-lg">
+        <div className="mb-4 p-4 glass border border-accent/20 rounded-m3-md">
           <h4 className="text-sm font-bold text-text-secondary mb-3">Spieler-Punktestand</h4>
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
             {players.map((player, index) => (
               <div
                 key={index}
                 className={`
-                  p-2 rounded-lg border transition-all
+                  p-2 rounded-m3-md border transition-all
                   ${index === currentPlayer
                     ? 'bg-accent/20 border-accent shadow-glow-sm'
                     : 'bg-primary/30 border-accent/20'
@@ -110,7 +110,7 @@ export function TimelineDisplay({ playerId }: TimelineDisplayProps) {
           <div
             key={slot.slotNumber}
             className={`
-              rounded-xl p-3 border-2 transition-all
+              rounded-m3-lg p-3 border-2 transition-all
               aspect-[3/4] flex flex-col justify-center items-center relative
               ${
                 slot.song
@@ -164,7 +164,7 @@ export function TimelineDisplay({ playerId }: TimelineDisplayProps) {
               </>
             ) : (
               /* Empty Slot */
-              <div className="text-2xl font-bold text-gray-600 opacity-30">
+              <div className="text-2xl font-bold text-text-secondary opacity-30">
                 {slot.slotNumber}
               </div>
             )}

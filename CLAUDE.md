@@ -11,6 +11,8 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ### Key Technologies
 - **Frontend**: React 19 + TypeScript + Vite 5.0 + TailwindCSS 3.4
+- **Design**: Material 3 Expressive (token layer, dark + light, spring motion) — see "Design System" below
+- **Routing**: react-router-dom 7 **data router** (`createBrowserRouter`) — required for View Transitions
 - **Audio**: Self-Hosted Primary (209 songs @ 128 kbps MP3, ~933 MB) + Optional Spotify Premium (max 25 users)
 - **Auth**: Spotify OAuth2 PKCE (optional for Premium mode)
 - **PWA**: vite-plugin-pwa (Workbox service worker)
@@ -199,7 +201,27 @@ mxster/
 Always kept mounted (never conditionally rendered) — unmounting causes re-initialization delays. SpotifyPlayerService uses polling to wait for both `connect()` success AND `isReady === true` before resolving.
 
 ### Sidebar Navigation
-3-state system based on `location.pathname` + `isGameStarted`: Landing Page (marketing links), Setup Phase (config links + back warning), In-Game (help + exit with confirmation).
+3-state system based on `location.pathname` + `isGameStarted`: Landing Page (marketing links), Setup Phase (config links + back warning), In-Game (help + exit with confirmation). The `<aside>` stays **mounted when closed** (slides off-canvas, `inert` + `aria-hidden`) so it can animate out.
+
+## Design System — Material 3 Expressive (2026-07)
+
+**Single source of truth: `pwa/src/styles/design-tokens.css`.** Nothing outside it holds raw color. Motion primitives live in `pwa/src/styles/motion.css`, component classes in `pwa/src/styles/tailwind.css`.
+
+**Color.** Tonal ramps generated offline with `@material/material-color-utilities` — primary seed `#00B2E3` (electric cyan), tertiary seed `#FF6B35` (coral, the legacy accent), neutrals derived from the legacy background `#1A1C27` (keeps the indigo tint). Values are **RGB channel triplets** (`--md-sys-color-primary: 104 211 255`) because Tailwind colors are declared as `rgb(var(--…) / <alpha-value>)` — full-color vars would silently drop alpha modifiers like `border-accent/30`.
+
+**Legacy aliases are the leverage point:** `tailwind.config.js` keeps every historic name and repoints it at an M3 role, so ~500 existing utility usages retheme with zero markup churn — `background`→surface, `primary`→**surface-container** (it was always the card background), `secondary`→**M3 primary** (cyan), `accent`→**M3 tertiary** (coral), `border`→outline-variant, `danger`→error, `text-primary`→on-surface, `text-secondary`→on-surface-variant. New code uses the additive `md-*` namespace (`bg-md-surface-container-high`, `text-md-on-primary`). Elevation is expressed through surface tones, not shadows.
+
+**Theming.** `data-theme="dark|light"` on `<html>`, default dark, persisted inside `mxster_settings` (SettingsContext) and applied pre-paint by an inline script in `index.html` (no FOUC). Toggle sits in the ActionBar (🌙/☀️) and SettingsDialog; switching runs an **M3 circular reveal** through the View Transitions API (`utils/themeReveal.ts`), falling back to an instant swap. `theme-color` meta and the manifest/loader colors all mirror the token hexes. The brand gradient (`.text-gradient`) has theme-aware endpoints (`--brand-gradient-from/to`): light tones on dark, tone-50 on light — tone-40 endpoints blend to mud.
+
+**Motion.** Spring tokens: `--m3-spatial-fast|default|slow` (350/500/650 ms, overshoot beziers) for position/size/shape, `--m3-effects-*` (150/200/300 ms, no overshoot) for color/opacity. Duration and easing also exist separately (`--m3-dur-*`/`--m3-ease-*`) because Tailwind needs them apart; utilities are `duration-m3-spatial`/`ease-m3-spatial` etc. **One `prefers-reduced-motion` block collapses every token to 120 ms ease** — that plus a `prefersReducedMotion()` gate in `ParticleBackground` (skips WebGL entirely) and in `utils/ripple.ts` covers the whole app. Speed guide: fast → buttons/switches/press morphs, default → dialogs/sheets/sidebar/cards, slow → route transitions.
+
+**Shape & feedback.** 10-step corner scale (`rounded-m3-xs … m3-full`). Signature move is **shape morphing on press**: `.btn` is a pill that morphs to `--m3-shape-lg` + `scale(0.96)` while pressed; the play button morphs circle→squircle while playing. State layers (`.m3-state-layer`, `::after` overlay in `currentColor`) replace hover-lift; a delegated ripple (`utils/ripple.ts`) adds tactility as progressive enhancement. `.stagger-children` gives lists/grids a 40 ms-stepped spring reveal.
+
+**Route transitions.** `useAppNavigate()` (`hooks/useAppNavigate.ts`) wraps `navigate()` with `viewTransition: true` unless reduced motion — **use it instead of `useNavigate()`**. This requires the data router; under the old `<BrowserRouter>` the option is a silent no-op. Persistent chrome (ActionBar, MusicPlayer, particle canvas, brand mark) carries `view-transition-name` so it stays put instead of being swept into the root snapshot.
+
+**Typography.** Roboto Flex variable font (loaded via `<link>` in `index.html`, Inter as fallback), M3 type scale as utilities (`.text-display-lg` … `.text-label-sm`) plus `.text-emphasized` (variable `wght`/`wdth` axes) for hero moments.
+
+**Gotcha:** `beatAnimations.css` consumes `var(--background)`, `--primary`, `--secondary`, `--accent`, `--border`, `--text-*`. These were referenced but never defined before the token layer existed (the rules were silently inert); they are now real aliases in `design-tokens.css`, so changes there affect the beat UI.
 
 ## Best Practices
 
@@ -219,6 +241,8 @@ Always kept mounted (never conditionally rendered) — unmounting causes re-init
 - Max height: `max-h-[calc(100vh-12rem)] sm:max-h-[85vh]`
 - `viewport-fit=cover` in meta tag for iOS/Android safe areas
 - All custom dialogs (PasswordProtection, Achievements, etc.) must follow same pattern
+- Panel styling comes from the shared `.m3-dialog-panel` class (surface-container-high, 28px corners, spring entrance); scrim uses `bg-md-scrim/60` + the `m3-scrim-in` animation
+- Touch targets ≥48px (`.touch-target` for icon buttons); `hoverOnlyWhenSupported` is enabled in `tailwind.config.js`, so `hover:` utilities never fire on touch
 
 ### OpenSCAD Performance
 All scripts use `--enable=manifold --enable=fast-csg` flags for faster STL generation (requires OpenSCAD 2021.01+).

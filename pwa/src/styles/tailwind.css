@@ -1,6 +1,5 @@
-/* Import Fonts from Google Fonts */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+/* Fonts are loaded via <link> in index.html (preconnect + Roboto Flex variable).
+   Design tokens (color/shape/motion/type) live in design-tokens.css. */
 
 @tailwind base;
 @tailwind components;
@@ -48,46 +47,98 @@
     @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
   }
 
-  /* Button Base */
+  /* Button Base — M3 Expressive pill with press shape-morph + spring return.
+     State feedback comes from the ::after state layer (see below), not lift. */
   .btn {
-    @apply px-6 py-3 rounded-lg font-medium transition-all duration-300;
-    @apply focus:outline-none focus:ring-2 focus:ring-offset-2;
+    @apply px-6 py-3 font-medium;
+    @apply focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2;
     @apply min-h-[48px] flex items-center justify-center gap-2;
-    @apply hover:-translate-y-0.5 hover:shadow-glow-md;
-    @apply active:scale-[0.98];
+    position: relative;
+    overflow: hidden;
+    border-radius: var(--m3-shape-full);
+    transition:
+      border-radius var(--m3-spatial-fast),
+      transform var(--m3-spatial-fast),
+      background-color var(--m3-effects-default),
+      color var(--m3-effects-default),
+      box-shadow var(--m3-effects-default);
     backface-visibility: hidden;
     -webkit-font-smoothing: antialiased;
-    will-change: background-color, transform;
-  }
-
-  .btn-primary {
-    @apply bg-secondary text-white hover:bg-opacity-90;
-    @apply focus:ring-secondary;
-  }
-
-  .btn-accent {
-    @apply bg-accent text-white hover:bg-opacity-90 hover:shadow-glow-accent;
-    @apply focus:ring-accent;
-  }
-
-  .btn-secondary {
-    @apply bg-primary/80 text-white hover:bg-gray-700 border-2 border-white/10;
-    @apply focus:ring-secondary;
-  }
-
-  .btn-outline {
-    @apply border-2 border-secondary text-secondary hover:bg-secondary hover:text-white;
-    @apply focus:ring-secondary;
-  }
-
-  /* Card */
-  .card {
-    @apply bg-primary rounded-xl p-4 sm:p-6 transition-all duration-300;
-    @apply border border-white/10 shadow-lg;
-    @apply hover:-translate-y-1 hover:shadow-glow-md;
     will-change: transform;
+  }
+
+  .btn:active {
+    border-radius: var(--m3-shape-lg);
+    transform: scale(0.96);
+  }
+
+  /* State layer: hover/focus/press overlay in the button's own text color */
+  .btn::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: currentColor;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity var(--m3-dur-effects-fast) var(--m3-ease-effects-fast);
+  }
+  .btn:hover::after { opacity: var(--m3-state-hover); }
+  .btn:focus-visible::after { opacity: var(--m3-state-focus); }
+  .btn:active::after { opacity: var(--m3-state-press); }
+
+  /* Filled (primary) */
+  .btn-primary {
+    @apply bg-md-primary text-md-on-primary;
+    @apply focus-visible:ring-md-primary;
+  }
+
+  /* Filled (tertiary — the expressive hero button) */
+  .btn-accent {
+    @apply bg-md-tertiary text-md-on-tertiary hover:shadow-glow-accent;
+    @apply focus-visible:ring-md-tertiary;
+  }
+
+  /* Tonal */
+  .btn-secondary {
+    @apply bg-md-secondary-container text-md-on-secondary-container;
+    @apply focus-visible:ring-md-secondary;
+  }
+
+  /* Outlined */
+  .btn-outline {
+    @apply border-2 border-md-outline text-md-primary;
+    @apply focus-visible:ring-md-primary;
+  }
+
+  /* Text button (dialog actions) */
+  .btn-txt {
+    @apply text-md-primary bg-transparent px-4;
+    @apply focus-visible:ring-md-primary;
+  }
+
+  /* Card — elevation via surface tones, not shadows */
+  .card {
+    @apply bg-md-surface-container p-4 sm:p-6;
+    @apply border border-white/5;
+    border-radius: var(--m3-shape-lg);
+    transition:
+      background-color var(--m3-effects-default),
+      border-radius var(--m3-spatial-default),
+      transform var(--m3-spatial-default),
+      box-shadow var(--m3-effects-default);
     backface-visibility: hidden;
     -webkit-font-smoothing: antialiased;
+  }
+
+  .card:hover {
+    @apply bg-md-surface-container-high;
+  }
+
+  /* Opt-in glow for expressive hero cards */
+  .card-glow:hover {
+    @apply shadow-glow-md;
+    transform: translateY(-4px);
   }
 
   /* Link */
@@ -140,14 +191,44 @@
 
 /* Utility Classes */
 @layer utilities {
-  /* Glassmorphism effect */
+  /* Glassmorphism effect — tint from surface-container so it works in light mode */
   .glass {
-    @apply bg-primary/80 backdrop-blur-lg border border-white/20;
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    background: rgb(var(--md-sys-color-surface-container) / 0.8);
+    border: 1px solid rgb(var(--md-sys-color-outline-variant) / 0.5);
   }
 
-  /* Text gradient */
+  /* M3 type scale (tokens in design-tokens.css) */
+  .text-display-lg { font: var(--md-sys-type-display-lg); letter-spacing: -0.015em; }
+  .text-display-md { font: var(--md-sys-type-display-md); letter-spacing: -0.01em; }
+  .text-display-sm { font: var(--md-sys-type-display-sm); }
+  .text-headline-lg { font: var(--md-sys-type-headline-lg); }
+  .text-headline-md { font: var(--md-sys-type-headline-md); }
+  .text-headline-sm { font: var(--md-sys-type-headline-sm); }
+  .text-title-lg { font: var(--md-sys-type-title-lg); }
+  .text-title-md { font: var(--md-sys-type-title-md); }
+  .text-title-sm { font: var(--md-sys-type-title-sm); }
+  .text-body-lg { font: var(--md-sys-type-body-lg); }
+  .text-body-md { font: var(--md-sys-type-body-md); }
+  .text-body-sm { font: var(--md-sys-type-body-sm); }
+  .text-label-lg { font: var(--md-sys-type-label-lg); letter-spacing: 0.006em; }
+  .text-label-md { font: var(--md-sys-type-label-md); letter-spacing: 0.03em; }
+  .text-label-sm { font: var(--md-sys-type-label-sm); letter-spacing: 0.03em; }
+
+  /* Emphasized hero type via variable-font axes (Roboto Flex wght+wdth) */
+  .text-emphasized {
+    font-variation-settings: 'wght' 780, 'wdth' 110;
+  }
+
+  /* Brand text gradient — endpoints are theme-aware (design-tokens.css) */
   .text-gradient {
-    @apply bg-gradient-to-r from-secondary to-accent bg-clip-text text-transparent;
+    @apply bg-clip-text text-transparent;
+    background-image: linear-gradient(
+      to right,
+      rgb(var(--brand-gradient-from)),
+      rgb(var(--brand-gradient-to))
+    );
   }
 
   /* Smooth transitions */
@@ -160,14 +241,19 @@
     transform: scale(0.98);
   }
 
-  /* Mobile-optimized spacing */
+  /* Mobile-optimized spacing (M3 minimum touch target) */
   .touch-target {
-    @apply min-h-[44px] min-w-[44px] flex items-center justify-center;
+    @apply min-h-[48px] min-w-[48px] flex items-center justify-center;
   }
 
   /* Hero Gradient Background */
   .hero-gradient {
-    background: linear-gradient(135deg, #1A1C27 0%, #2C2E3B 50%, #1A1C27 100%);
+    background: linear-gradient(
+      135deg,
+      rgb(var(--md-sys-color-surface)) 0%,
+      rgb(var(--md-sys-color-surface-container-high)) 50%,
+      rgb(var(--md-sys-color-surface)) 100%
+    );
     background-size: 300% 300%;
   }
 }
@@ -192,13 +278,13 @@
   @apply bg-secondary;
 }
 
-/* Selection */
+/* Selection — primary on on-primary keeps AA contrast in both themes */
 ::selection {
-  @apply bg-secondary text-white;
+  @apply bg-secondary text-md-on-primary;
 }
 
 ::-moz-selection {
-  @apply bg-secondary text-white;
+  @apply bg-secondary text-md-on-primary;
 }
 
 /* Loading Animation */
@@ -472,21 +558,52 @@
   @apply border-t border-white/10;
 }
 
-/* Input fields */
+/* Input fields — M3 outlined text field */
 .input {
-  @apply w-full px-4 py-3 bg-primary border border-white/10;
-  @apply rounded-lg text-text-primary font-sans;
-  @apply transition-all duration-300;
-  @apply focus:outline-none focus:border-secondary focus:ring-2 focus:ring-secondary/20;
+  @apply w-full px-4 py-3 bg-md-surface-container-low border border-md-outline-variant;
+  @apply text-text-primary font-sans;
+  @apply focus:outline-none focus:border-md-primary focus:ring-2 focus:ring-md-primary/25;
   @apply placeholder:text-text-secondary placeholder:opacity-60;
+  border-radius: var(--m3-shape-sm);
+  transition:
+    border-color var(--m3-effects-default),
+    box-shadow var(--m3-effects-default),
+    background-color var(--m3-effects-default);
 }
 
-/* Toast notification */
+/* Toast notification — M3 snackbar, springs in from bottom */
 .toast {
-  @apply fixed bottom-6 right-6 bg-primary px-6 py-4;
-  @apply rounded-lg border border-white/10 shadow-2xl;
-  @apply z-[2000] max-w-md;
-  @apply animate-slide-up;
+  @apply fixed bottom-6 right-6 bg-md-inverse-surface text-md-inverse-on-surface px-6 py-4;
+  @apply shadow-2xl z-[2000] max-w-md;
+  border-radius: var(--m3-shape-md);
+  animation: m3-spring-in-up var(--m3-dur-spatial-default) var(--m3-ease-spatial-default) both;
+}
+
+/* Shared dialog panel for custom dialogs (Achievements, Stats, Settings, …) */
+.m3-dialog-panel {
+  @apply bg-md-surface-container-high border border-md-outline-variant/60;
+  border-radius: var(--m3-shape-xl);
+  animation: m3-spring-in var(--m3-dur-spatial-default) var(--m3-ease-spatial-default) both;
+}
+
+/* M3 contained loading indicator (see LoadingIndicator.tsx) */
+.m3-loading {
+  @apply bg-md-primary-container flex items-center justify-center;
+  width: 48px;
+  height: 48px;
+  animation: m3-loading-morph 2.4s var(--m3-ease-spatial-default) infinite;
+}
+.m3-loading-arc {
+  width: 24px;
+  height: 24px;
+  border: 3px solid transparent;
+  border-top-color: rgb(var(--md-sys-color-on-primary-container));
+  border-right-color: rgb(var(--md-sys-color-on-primary-container));
+  border-radius: 50%;
+  animation: m3-rotate 0.9s linear infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .m3-loading { animation: none; border-radius: var(--m3-shape-xl); }
 }
 
 .toast.success {
@@ -508,8 +625,8 @@
   left: 0;
   right: 0;
   height: 56px;
-  background: #2C2E3B;
-  border-bottom: 1px solid #3A3C4B;
+  background: var(--primary);
+  border-bottom: 1px solid var(--border);
   display: flex;
   align-items: center;
   padding: 0 16px;
@@ -520,25 +637,27 @@
 .action-bar-title {
   font-size: 20px;
   font-weight: 600;
-  color: #FFFFFF;
+  color: var(--text-primary);
   margin-left: 16px;
 }
 
 .hamburger-btn {
   background: none;
   border: none;
-  color: #FFFFFF;
+  color: var(--text-primary);
   cursor: pointer;
   padding: 8px;
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 8px;
-  transition: all 0.2s;
+  border-radius: var(--m3-shape-sm);
+  transition: background-color var(--m3-effects-fast);
 }
 
-.hamburger-btn:hover {
-  background: #3A3C4B;
+@media (hover: hover) {
+  .hamburger-btn:hover {
+    background: rgb(var(--md-sys-color-on-surface) / 0.08);
+  }
 }
 
 .hamburger-icon {
@@ -577,10 +696,10 @@
   left: 0;
   bottom: 0;
   width: 280px;
-  background: #1A1C27;
-  border-right: 1px solid #3A3C4B;
+  background: var(--background);
+  border-right: 1px solid var(--border);
   transform: translateX(-100%);
-  transition: transform 0.3s ease-in-out;
+  transition: transform var(--m3-spatial-default);
   z-index: 999;
   overflow-y: auto;
   box-shadow: 2px 0 8px rgba(0, 0, 0, 0.3);
@@ -596,10 +715,10 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0, 0, 0, 0.5);
+  background: rgb(var(--md-sys-color-scrim) / 0.5);
   opacity: 0;
   pointer-events: none;
-  transition: opacity 0.3s;
+  transition: opacity var(--m3-effects-slow);
   z-index: 998;
 }
 
@@ -610,7 +729,7 @@
 
 .sidebar-menu {
   padding: 16px;
-  background: #1A1C27;
+  background: var(--background);
 }
 
 .sidebar-item {
@@ -619,30 +738,37 @@
   gap: 12px;
   padding: 12px 16px;
   margin-bottom: 8px;
-  border-radius: 8px;
-  background: rgba(0, 0, 0, 0.3);
-  border: 1px solid #3A3C4B;
-  color: #FFFFFF;
+  border-radius: var(--m3-shape-sm);
+  background: rgb(var(--md-sys-color-surface-container-lowest) / 0.6);
+  border: 1px solid var(--border);
+  color: var(--text-primary);
   cursor: pointer;
-  transition: all 0.2s;
+  transition:
+    background-color var(--m3-effects-default),
+    border-color var(--m3-effects-default),
+    transform var(--m3-spatial-fast);
   width: 100%;
   text-align: left;
 }
 
-.sidebar-item:hover {
-  background: rgba(0, 0, 0, 0.5);
-  border-color: #FF6B35;
-  transform: translateX(4px);
+@media (hover: hover) {
+  .sidebar-item:hover {
+    background: rgb(var(--md-sys-color-surface-container-high));
+    border-color: var(--accent);
+    transform: translateX(4px);
+  }
 }
 
 .sidebar-item.danger {
-  border-color: #DC2626;
-  color: #DC2626;
+  border-color: rgb(var(--md-sys-color-error));
+  color: rgb(var(--md-sys-color-error));
 }
 
-.sidebar-item.danger:hover {
-  background: #DC2626;
-  color: #FFFFFF;
+@media (hover: hover) {
+  .sidebar-item.danger:hover {
+    background: rgb(var(--md-sys-color-error));
+    color: rgb(var(--md-sys-color-on-error));
+  }
 }
 
 /* Content with action bar offset */
@@ -666,6 +792,13 @@
 
   /* Stronger orange background tint */
   background: linear-gradient(135deg, rgba(255, 107, 53, 0.08) 0%, rgba(255, 69, 0, 0.05) 50%, rgba(147, 51, 234, 0.04) 100%);
+}
+
+/* Particle background in light theme: the WebGL scene is tuned for dark —
+   drop its dark backdrop (body surface shows through) and dim the particles. */
+[data-theme='light'] .particle-bg {
+  background: transparent !important;
+  opacity: 0.35;
 }
 
 /* ========== MOBILE SAFE AREA SUPPORT ========== */

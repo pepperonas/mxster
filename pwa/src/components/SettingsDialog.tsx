@@ -7,6 +7,8 @@ import { useState, useRef } from 'react'
 import { useSettings, useAchievements } from '@/contexts'
 import { useGameHistory } from '@/hooks'
 import { useUI } from '@/contexts'
+import { Switch } from '@/components/ui/Switch'
+import { toggleThemeWithReveal } from '@/utils/themeReveal'
 
 export function SettingsDialog() {
   const { settings, updateSettings, removePlayer } = useSettings()
@@ -138,27 +140,27 @@ export function SettingsDialog() {
     showModal(
       '⚠️ Alle Daten löschen?',
       <div className="space-y-4">
-        <p className="text-gray-300">
-          Möchtest du <strong className="text-red-400">ALLE Daten</strong> unwiderruflich löschen?
+        <p className="text-text-secondary">
+          Möchtest du <strong className="text-md-error">ALLE Daten</strong> unwiderruflich löschen?
         </p>
 
         {/* Statistics about to be deleted */}
-        <div className="glass p-4 border border-blue-500/30 rounded-lg bg-blue-900/10">
-          <p className="text-sm font-bold text-blue-300 mb-3">Was wird gelöscht:</p>
+        <div className="glass p-4 border border-secondary/30 rounded-m3-md bg-secondary/10">
+          <p className="text-sm font-bold text-secondary mb-3">Was wird gelöscht:</p>
           <div className="grid grid-cols-2 gap-3">
-            <div className="text-center p-3 bg-primary/50 rounded-lg border border-accent/20">
+            <div className="text-center p-3 bg-primary/50 rounded-m3-md border border-accent/20">
               <div className="text-2xl font-bold text-accent">{totalPlayers}</div>
               <div className="text-xs text-text-secondary">Spieler</div>
             </div>
-            <div className="text-center p-3 bg-primary/50 rounded-lg border border-accent/20">
+            <div className="text-center p-3 bg-primary/50 rounded-m3-md border border-accent/20">
               <div className="text-2xl font-bold text-accent">{totalGames}</div>
               <div className="text-xs text-text-secondary">Spiele</div>
             </div>
-            <div className="text-center p-3 bg-primary/50 rounded-lg border border-accent/20">
+            <div className="text-center p-3 bg-primary/50 rounded-m3-md border border-accent/20">
               <div className="text-2xl font-bold text-accent">{totalAchievements}</div>
               <div className="text-xs text-text-secondary">Achievements</div>
             </div>
-            <div className="text-center p-3 bg-primary/50 rounded-lg border border-accent/20">
+            <div className="text-center p-3 bg-primary/50 rounded-m3-md border border-accent/20">
               <div className="text-2xl font-bold text-accent">✓</div>
               <div className="text-xs text-text-secondary">Einstellungen</div>
             </div>
@@ -166,17 +168,17 @@ export function SettingsDialog() {
         </div>
 
         {/* Warning */}
-        <div className="glass p-4 border border-red-500/50 rounded-lg bg-red-900/20">
+        <div className="glass p-4 border border-md-error/50 rounded-m3-md bg-md-error/10">
           <p className="text-sm text-text-secondary leading-relaxed">
-            <strong className="text-red-400">⚠️ ACHTUNG:</strong> Diese Aktion kann <strong>nicht rückgängig</strong> gemacht werden!
+            <strong className="text-md-error">⚠️ ACHTUNG:</strong> Diese Aktion kann <strong>nicht rückgängig</strong> gemacht werden!
             Alle Spieler, Spielhistorie, Achievements und Einstellungen werden <strong>permanent gelöscht</strong>.
             Die App wird auf den Auslieferungszustand zurückgesetzt.
           </p>
         </div>
 
         {/* Extra confirmation */}
-        <div className="glass p-3 border border-yellow-500/30 rounded-lg bg-yellow-900/10">
-          <p className="text-sm text-yellow-300">
+        <div className="glass p-3 border border-accent/30 rounded-m3-md bg-accent/10">
+          <p className="text-sm text-accent">
             💡 <strong>Tipp:</strong> Erstelle vorher ein Backup über "Sichern & Wiederherstellen", wenn du deine Daten behalten möchtest!
           </p>
         </div>
@@ -292,11 +294,14 @@ export function SettingsDialog() {
     <div className="py-4">
       {/* Inline Confirmation Dialog */}
       {playerToDelete && (
-        <div className="fixed inset-0 z-[10000] flex items-center justify-center bg-black/70 backdrop-blur-sm">
-          <div className="relative glass rounded-2xl shadow-glow-accent border-2 border-red-500/50 max-w-md w-full mx-4">
+        <div
+          className="fixed inset-0 z-[10000] flex items-center justify-center bg-md-scrim/60 backdrop-blur-sm pt-20 pb-6"
+          style={{ animation: 'm3-scrim-in var(--m3-dur-effects-slow) var(--m3-ease-effects-slow) both' }}
+        >
+          <div className="relative m3-dialog-panel max-w-md w-full mx-4 max-h-[calc(100vh-12rem)] sm:max-h-[85vh] overflow-auto">
             {/* Header */}
-            <div className="p-4 sm:p-6 border-b border-red-500/30">
-              <h3 className="text-lg sm:text-xl font-bold text-white flex items-center gap-2">
+            <div className="p-4 sm:p-6 border-b border-md-error/30">
+              <h3 className="text-lg sm:text-xl font-bold text-text-primary flex items-center gap-2">
                 <span className="text-xl sm:text-2xl">🗑️</span>
                 <span>Spieler komplett löschen?</span>
               </h3>
@@ -304,13 +309,13 @@ export function SettingsDialog() {
 
             {/* Content */}
             <div className="p-4 sm:p-6 space-y-4">
-              <p className="text-gray-300 text-sm sm:text-base">
-                Möchtest du den Spieler <strong className="text-white">"{playerToDelete}"</strong> wirklich <strong className="text-red-400">komplett löschen</strong>?
+              <p className="text-text-secondary text-sm sm:text-base">
+                Möchtest du den Spieler <strong className="text-text-primary">"{playerToDelete}"</strong> wirklich <strong className="text-md-error">komplett löschen</strong>?
               </p>
 
               {/* Statistics about to be deleted */}
-              <div className="glass p-3 border border-blue-500/30 rounded-lg bg-blue-900/10">
-                <p className="text-sm font-bold text-blue-300 mb-2">Was wird gelöscht:</p>
+              <div className="glass p-3 border border-secondary/30 rounded-m3-md bg-secondary/10">
+                <p className="text-sm font-bold text-secondary mb-2">Was wird gelöscht:</p>
                 <ul className="text-sm text-text-secondary space-y-1">
                   <li>✓ Spieler aus gespeicherter Liste</li>
                   <li>✓ {playerGames.length} Spiele aus der Spielhistorie</li>
@@ -320,25 +325,25 @@ export function SettingsDialog() {
               </div>
 
               {/* Warning */}
-              <div className="glass p-3 border border-red-500/30 rounded-lg bg-red-900/10">
+              <div className="glass p-3 border border-md-error/30 rounded-m3-md bg-md-error/10">
                 <p className="text-sm text-text-secondary">
-                  <strong className="text-red-400">⚠️ Achtung:</strong> Diese Aktion kann <strong>nicht rückgängig</strong> gemacht werden!
+                  <strong className="text-md-error">⚠️ Achtung:</strong> Diese Aktion kann <strong>nicht rückgängig</strong> gemacht werden!
                   Alle Daten dieses Spielers werden <strong>permanent gelöscht</strong>.
                 </p>
               </div>
             </div>
 
             {/* Buttons */}
-            <div className="flex flex-col-reverse sm:flex-row sm:justify-end gap-2 sm:gap-3 p-4 sm:p-6 border-t border-red-500/30">
+            <div className="flex flex-col-reverse sm:flex-row sm:justify-end gap-2 sm:gap-3 p-4 sm:p-6 border-t border-md-error/30">
               <button
                 onClick={() => setPlayerToDelete(null)}
-                className="px-4 sm:px-6 py-2.5 rounded-lg font-medium transition-all btn btn-secondary text-sm sm:text-base"
+                className="btn btn-secondary px-4 sm:px-6 py-2.5 font-medium text-sm sm:text-base"
               >
                 Abbrechen
               </button>
               <button
                 onClick={confirmDeletePlayer}
-                className="px-4 sm:px-6 py-2.5 rounded-lg font-medium transition-all bg-red-600 hover:bg-red-700 text-white border-2 border-red-500 text-sm sm:text-base"
+                className="btn bg-md-error text-md-on-error focus-visible:ring-md-error px-4 sm:px-6 py-2.5 font-medium text-sm sm:text-base"
               >
                 Endgültig löschen
               </button>
@@ -348,28 +353,47 @@ export function SettingsDialog() {
       )}
 
       <div className="space-y-6">
+        {/* Theme Setting */}
+        <div className="glass p-4 rounded-lg border-2 border-accent/30 hover:border-accent/50 transition-colors">
+          <div className="flex items-start justify-between gap-4">
+            <div className="flex-1">
+              <h3 className="font-bold mb-2 flex items-center gap-2">
+                <span>{settings.theme === 'light' ? '☀️' : '🌙'}</span>
+                <span className="text-text-primary">Helles Design</span>
+              </h3>
+              <p className="text-sm text-text-secondary leading-relaxed">
+                Wechselt zwischen dunklem und hellem Farbschema.
+              </p>
+            </div>
+            <Switch
+              checked={settings.theme === 'light'}
+              onChange={(checked) => {
+                const next = checked ? 'light' : 'dark'
+                toggleThemeWithReveal(next, () => updateSettings({ theme: next }))
+              }}
+              ariaLabel="Helles Design"
+            />
+          </div>
+        </div>
+
         {/* Random Start Position Setting */}
         <div className="glass p-4 rounded-lg border-2 border-accent/30 hover:border-accent/50 transition-colors">
           <div className="flex items-start justify-between gap-4">
             <div className="flex-1">
               <h3 className="font-bold mb-2 flex items-center gap-2">
                 <span>🎲</span>
-                <span className="text-white">Zufällige Startposition</span>
+                <span className="text-text-primary">Zufällige Startposition</span>
               </h3>
               <p className="text-sm text-text-secondary leading-relaxed">
                 Songs starten an einer zufälligen Position statt am Anfang.
                 Es werden mindestens 60 Sekunden Spielzeit garantiert.
               </p>
             </div>
-            <label className="relative inline-flex items-center cursor-pointer flex-shrink-0">
-              <input
-                type="checkbox"
-                checked={settings.randomStartPosition}
-                onChange={(e) => updateSettings({ randomStartPosition: e.target.checked })}
-                className="sr-only peer"
-              />
-              <div className="w-11 h-6 bg-gray-700 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-accent rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-accent"></div>
-            </label>
+            <Switch
+              checked={settings.randomStartPosition}
+              onChange={(checked) => updateSettings({ randomStartPosition: checked })}
+              ariaLabel="Zufällige Startposition"
+            />
           </div>
         </div>
 
@@ -379,22 +403,18 @@ export function SettingsDialog() {
             <div className="flex-1">
               <h3 className="font-bold mb-2 flex items-center gap-2">
                 <span>🙈</span>
-                <span className="text-white">Jahreszahlen verstecken</span>
+                <span className="text-text-primary">Jahreszahlen verstecken</span>
               </h3>
               <p className="text-sm text-text-secondary leading-relaxed">
                 Jahreszahlen in der Timeline werden unscharf dargestellt.
                 Verhindert Schummeln beim Ablesen der Timeline.
               </p>
             </div>
-            <label className="relative inline-flex items-center cursor-pointer flex-shrink-0">
-              <input
-                type="checkbox"
-                checked={settings.hideYearsInTimeline}
-                onChange={(e) => updateSettings({ hideYearsInTimeline: e.target.checked })}
-                className="sr-only peer"
-              />
-              <div className="w-11 h-6 bg-gray-700 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-accent rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-accent"></div>
-            </label>
+            <Switch
+              checked={settings.hideYearsInTimeline}
+              onChange={(checked) => updateSettings({ hideYearsInTimeline: checked })}
+              ariaLabel="Jahreszahlen verstecken"
+            />
           </div>
         </div>
 
@@ -403,7 +423,7 @@ export function SettingsDialog() {
           <div className="mb-3">
             <h3 className="font-bold flex items-center gap-2">
               <span>👥</span>
-              <span className="text-white">Gespeicherte Spieler</span>
+              <span className="text-text-primary">Gespeicherte Spieler</span>
             </h3>
             <p className="text-sm text-text-secondary mt-1">
               Verwalte deine gespeicherten Spieler. Diese können in der Spielerauswahl schnell hinzugefügt werden.
@@ -417,10 +437,10 @@ export function SettingsDialog() {
                   key={index}
                   className="flex items-center justify-between p-3 bg-primary/50 rounded-lg border border-accent/20 hover:border-accent/40 transition-colors"
                 >
-                  <span className="text-white font-medium">{playerName}</span>
+                  <span className="text-text-primary font-medium">{playerName}</span>
                   <button
                     onClick={() => handleRemovePlayer(playerName)}
-                    className="p-2 hover:bg-red-500/20 rounded-lg transition-colors text-red-400 hover:text-red-300 border border-transparent hover:border-red-500/30"
+                    className="p-2 hover:bg-md-error/20 rounded-m3-full transition-colors text-md-error border border-transparent hover:border-md-error/30"
                     aria-label={`Entfernen: ${playerName}`}
                   >
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor">
@@ -443,7 +463,7 @@ export function SettingsDialog() {
           <div className="mb-4">
             <h3 className="font-bold flex items-center gap-2">
               <span>💾</span>
-              <span className="text-white">Sichern & Wiederherstellen</span>
+              <span className="text-text-primary">Sichern & Wiederherstellen</span>
             </h3>
             <p className="text-sm text-text-secondary mt-1">
               Exportiere alle Daten (Einstellungen, Spieler, Spielhistorie) als JSON-Datei oder importiere eine Sicherung.
@@ -487,7 +507,7 @@ export function SettingsDialog() {
 
             <div className="space-y-2">
               <div className="text-4xl">📂</div>
-              <p className="text-white font-medium">
+              <p className="text-text-primary font-medium">
                 {isDragging ? 'Datei hier ablegen...' : 'Backup wiederherstellen'}
               </p>
               <p className="text-sm text-text-secondary">
@@ -497,8 +517,8 @@ export function SettingsDialog() {
           </div>
 
           {/* Info Box */}
-          <div className="mt-4 p-3 bg-blue-900/20 border border-blue-500/30 rounded-lg text-sm">
-            <p className="text-blue-300 flex items-start gap-2">
+          <div className="mt-4 p-3 bg-secondary/10 border border-secondary/30 rounded-m3-md text-sm">
+            <p className="text-secondary flex items-start gap-2">
               <span className="text-lg flex-shrink-0">ℹ️</span>
               <span>
                 <strong>Hinweis:</strong> Beim Import werden alle aktuellen Einstellungen und Daten überschrieben.
@@ -509,9 +529,9 @@ export function SettingsDialog() {
         </div>
 
         {/* Danger Zone: Delete All Data */}
-        <div className="glass p-4 rounded-lg border-2 border-red-500/50 bg-red-900/10">
+        <div className="glass p-4 rounded-m3-md border-2 border-md-error/40 bg-md-error/10">
           <div className="mb-4">
-            <h3 className="font-bold flex items-center gap-2 text-red-400">
+            <h3 className="font-bold flex items-center gap-2 text-md-error">
               <span>⚠️</span>
               <span>Gefahrenzone</span>
             </h3>
@@ -522,7 +542,7 @@ export function SettingsDialog() {
 
           <button
             onClick={handleDeleteAllData}
-            className="w-full bg-red-600/20 hover:bg-red-600/30 border-2 border-red-500/50 hover:border-red-500 text-red-300 hover:text-red-200 font-bold py-3 px-4 rounded-lg transition-all"
+            className="w-full btn bg-md-error text-md-on-error focus-visible:ring-md-error font-bold py-3 px-4"
           >
             🗑️ Alle Daten löschen
           </button>

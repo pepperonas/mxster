@@ -5,15 +5,19 @@
  */
 
 import { useEffect, useRef } from 'react'
-import { useNavigate, useLocation } from 'react-router-dom'
+import { useLocation } from 'react-router-dom'
+import { useAppNavigate } from '@/hooks/useAppNavigate'
 import { useUI, useGame, useAuth, useInteraction } from '@/contexts'
 import { useGameHistory } from '@/hooks'
 import { GAME_MODE_INFO } from '@/utils/gameModes'
 import { HowToPlayContent } from './HowToPlayContent'
 import { getMusicPlayer } from '@/services/MusicPlayerService'
 
+const NAV_BTN =
+  'w-full text-left px-3 py-2.5 min-h-[48px] rounded-m3-full m3-state-layer text-text-secondary hover:text-secondary transition-colors'
+
 export function Sidebar() {
-  const navigate = useNavigate()
+  const navigate = useAppNavigate()
   const location = useLocation()
   const { isSidebarOpen, toggleSidebar, showModal, closeSidebar } = useUI()
   const { players, currentPlayer, gameMode, gameVariant, isGameStarted, endGame, resetGame, setGameMode, setGameVariant } = useGame()
@@ -37,7 +41,8 @@ export function Sidebar() {
     prevPathnameRef.current = currentPath
   }, [location.pathname, closeSidebar])
 
-  if (!isSidebarOpen) return null
+  // The sidebar stays mounted so it can animate out (M3 spatial spring);
+  // when closed it is inert + aria-hidden and slid off-canvas.
 
   // Determine app state based on route and game state
   const isOnLandingPage = location.pathname === '/'
@@ -183,18 +188,27 @@ export function Sidebar() {
     <>
       {/* Backdrop */}
       <div
-        className="fixed inset-0 bg-black/50 backdrop-blur-sm z-40"
+        className={`fixed inset-0 bg-md-scrim/50 backdrop-blur-sm z-40 transition-opacity duration-m3-effects-slow ease-m3-effects-slow ${
+          isSidebarOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'
+        }`}
+        aria-hidden="true"
         onClick={toggleSidebar}
       />
 
       {/* Sidebar Panel */}
-      <aside className="fixed top-0 left-0 bottom-0 w-[90vw] sm:w-80 glass border-r-2 border-accent/30 z-50 flex flex-col">
+      <aside
+        className={`fixed top-0 left-0 bottom-0 w-[90vw] sm:w-80 glass border-r border-md-outline-variant/50 z-50 flex flex-col transition-transform duration-m3-spatial ease-m3-spatial ${
+          isSidebarOpen ? 'translate-x-0' : '-translate-x-full'
+        }`}
+        inert={!isSidebarOpen}
+        aria-hidden={!isSidebarOpen}
+      >
         {/* Header */}
         <div className="flex items-center justify-between p-4 border-b-2 border-accent/30 flex-shrink-0">
           <h2 className="text-xl font-bold text-gradient">Menu</h2>
           <button
             onClick={toggleSidebar}
-            className="p-2 hover:bg-accent/20 rounded-lg transition-colors text-text-secondary hover:text-secondary border border-transparent hover:border-accent/30"
+            className="touch-target rounded-m3-full m3-state-layer transition-colors text-text-secondary hover:text-secondary"
             aria-label="Close sidebar"
           >
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
@@ -300,7 +314,8 @@ export function Sidebar() {
           {/* Navigation - 3-State System */}
           <nav className="p-4">
             <h3 className="text-sm font-semibold text-text-secondary mb-2">Navigation</h3>
-            <ul className="space-y-1">
+            {/* key re-mounts the list per open so the stagger reveal replays */}
+            <ul className="space-y-1 stagger-children" key={isSidebarOpen ? 'open' : 'closed'}>
 
               {/* STATE 1: LANDING PAGE */}
               {isOnLandingPage && (
@@ -308,7 +323,7 @@ export function Sidebar() {
                   <li>
                     <button
                       onClick={openHowToPlayModal}
-                      className="w-full text-left px-3 py-2 rounded-lg hover:bg-accent/20 text-gray-300 hover:text-secondary transition-colors border border-transparent hover:border-accent/30"
+                      className={NAV_BTN}
                     >
                       📖 Anleitung
                     </button>
@@ -316,7 +331,7 @@ export function Sidebar() {
                   <li>
                     <button
                       onClick={() => scrollToSection('game-modes')}
-                      className="w-full text-left px-3 py-2 rounded-lg hover:bg-accent/20 text-gray-300 hover:text-secondary transition-colors border border-transparent hover:border-accent/30"
+                      className={NAV_BTN}
                     >
                       🎮 Spielmodi
                     </button>
@@ -324,7 +339,7 @@ export function Sidebar() {
                   <li>
                     <button
                       onClick={() => scrollToSection('variants')}
-                      className="w-full text-left px-3 py-2 rounded-lg hover:bg-accent/20 text-gray-300 hover:text-secondary transition-colors border border-transparent hover:border-accent/30"
+                      className={NAV_BTN}
                     >
                       🎴 Spielvarianten
                     </button>
@@ -332,7 +347,7 @@ export function Sidebar() {
                   <li>
                     <button
                       onClick={() => scrollToSection('downloads')}
-                      className="w-full text-left px-3 py-2 rounded-lg hover:bg-accent/20 text-gray-300 hover:text-secondary transition-colors border border-transparent hover:border-accent/30"
+                      className={NAV_BTN}
                     >
                       📥 Downloads
                     </button>
@@ -340,7 +355,7 @@ export function Sidebar() {
                   <li>
                     <button
                       onClick={() => scrollToSection('features')}
-                      className="w-full text-left px-3 py-2 rounded-lg hover:bg-accent/20 text-gray-300 hover:text-secondary transition-colors border border-transparent hover:border-accent/30"
+                      className={NAV_BTN}
                     >
                       ✨ Features
                     </button>
@@ -348,7 +363,7 @@ export function Sidebar() {
                   <li>
                     <button
                       onClick={() => scrollToSection('support')}
-                      className="w-full text-left px-3 py-2 rounded-lg hover:bg-accent/20 text-gray-300 hover:text-secondary transition-colors border border-transparent hover:border-accent/30"
+                      className={NAV_BTN}
                     >
                       💬 Support
                     </button>
@@ -362,7 +377,7 @@ export function Sidebar() {
                   <li>
                     <button
                       onClick={openHowToPlayModal}
-                      className="w-full text-left px-3 py-2 rounded-lg hover:bg-accent/20 text-gray-300 hover:text-secondary transition-colors border border-transparent hover:border-accent/30"
+                      className={NAV_BTN}
                     >
                       📖 Anleitung
                     </button>
@@ -370,7 +385,7 @@ export function Sidebar() {
                   <li>
                     <button
                       onClick={handleBackToMenu}
-                      className="w-full text-left px-3 py-2 rounded-lg hover:bg-accent/20 text-gray-300 hover:text-secondary transition-colors border border-transparent hover:border-accent/30"
+                      className={NAV_BTN}
                     >
                       🏠 Zurück zum Menü
                     </button>
@@ -384,7 +399,7 @@ export function Sidebar() {
                   <li>
                     <button
                       onClick={openHowToPlayModal}
-                      className="w-full text-left px-3 py-2 rounded-lg hover:bg-accent/20 text-gray-300 hover:text-secondary transition-colors border border-transparent hover:border-accent/30"
+                      className={NAV_BTN}
                     >
                       ❓ Hilfe
                     </button>
@@ -392,7 +407,7 @@ export function Sidebar() {
                   <li>
                     <button
                       onClick={handleBackToMenu}
-                      className="w-full text-left px-3 py-2 rounded-lg hover:bg-red-500/20 text-gray-300 hover:text-red-400 transition-colors border border-transparent hover:border-red-500/30"
+                      className="w-full text-left px-3 py-2.5 min-h-[48px] rounded-m3-full m3-state-layer text-text-secondary hover:text-danger transition-colors"
                     >
                       🚪 Spiel beenden
                     </button>
@@ -408,7 +423,7 @@ export function Sidebar() {
         <div className="p-4 border-t-2 border-accent/30 flex-shrink-0">
           <div className="text-center">
             <p className="text-xs text-text-secondary mb-1">mxster</p>
-            <p className="text-sm text-gradient font-medium">Version 0.1.1</p>
+            <p className="text-sm text-gradient font-medium">Version 0.2.0</p>
           </div>
         </div>
       </aside>

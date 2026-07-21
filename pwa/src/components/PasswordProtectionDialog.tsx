@@ -52,8 +52,11 @@ export function PasswordProtectionDialog({ onSuccess, onCancel }: PasswordProtec
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center pt-20 pb-6 px-4 bg-black/70 backdrop-blur-sm animate-fade-in">
-      <div className="glass rounded-2xl p-4 sm:p-6 lg:p-8 max-w-md w-full max-h-[calc(100vh-12rem)] sm:max-h-[85vh] overflow-auto border-2 border-accent/30 animate-scale-in">
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center pt-20 pb-6 px-4 bg-md-scrim/60 backdrop-blur-sm"
+      style={{ animation: 'm3-scrim-in var(--m3-dur-effects-slow) var(--m3-ease-effects-slow) both' }}
+    >
+      <div className="m3-dialog-panel p-4 sm:p-6 lg:p-8 max-w-md w-full max-h-[calc(100vh-12rem)] sm:max-h-[85vh] overflow-auto">
         {/* Header */}
         <div className="text-center mb-4 sm:mb-6">
           <div className="text-5xl sm:text-6xl mb-3 sm:mb-4">🔒</div>
@@ -64,11 +67,11 @@ export function PasswordProtectionDialog({ onSuccess, onCancel }: PasswordProtec
         </div>
 
         {/* Legal Grey Area Explanation */}
-        <div className="mb-4 sm:mb-6 p-3 sm:p-4 bg-orange-500/10 border border-orange-500/30 rounded-lg">
-          <p className="text-sm text-orange-300 mb-2">
+        <div className="mb-4 sm:mb-6 p-3 sm:p-4 bg-accent/10 border border-accent/30 rounded-m3-md">
+          <p className="text-sm text-accent mb-2">
             <strong>⚠️ Rechtlicher Hinweis:</strong>
           </p>
-          <p className="text-xs text-orange-200">
+          <p className="text-xs text-text-secondary">
             Diese Audiodateien stammen aus YouTube-Downloads (ydl) und befinden sich in einer rechtlichen Grauzone.
             Die Passwortabfrage dient dem rechtlichen Schutz des Entwicklers.
             Die Nutzung erfolgt auf eigene Verantwortung - nur für private, nicht-kommerzielle, bildungsbasierte Zwecke.
@@ -76,8 +79,8 @@ export function PasswordProtectionDialog({ onSuccess, onCancel }: PasswordProtec
         </div>
 
         {/* Password Hint */}
-        <div className="mb-4 sm:mb-6 p-3 sm:p-4 bg-blue-500/10 border border-blue-500/30 rounded-lg">
-          <p className="text-sm text-blue-300 text-center">
+        <div className="mb-4 sm:mb-6 p-3 sm:p-4 bg-secondary/10 border border-secondary/30 rounded-m3-md">
+          <p className="text-sm text-secondary text-center">
             <strong>💡 Passwort</strong>: ydl
           </p>
         </div>
@@ -97,14 +100,14 @@ export function PasswordProtectionDialog({ onSuccess, onCancel }: PasswordProtec
                 setPassword(e.target.value)
                 setError(false)
               }}
-              className={`w-full px-4 py-3 glass rounded-lg border-2 ${
-                error ? 'border-red-500/50' : 'border-accent/30'
-              } focus:border-accent focus:outline-none transition-colors text-white`}
+              className={`w-full px-4 py-3 glass rounded-m3-md border-2 ${
+                error ? 'border-md-error/50' : 'border-accent/30'
+              } focus:border-accent focus:outline-none transition-colors text-text-primary`}
               placeholder="Passwort..."
               autoComplete="off"
             />
             {error && (
-              <p className="text-red-400 text-sm mt-2">❌ Falsches Passwort</p>
+              <p className="text-md-error text-sm mt-2">❌ Falsches Passwort</p>
             )}
           </div>
 
@@ -113,14 +116,14 @@ export function PasswordProtectionDialog({ onSuccess, onCancel }: PasswordProtec
             <button
               type="button"
               onClick={onCancel}
-              className="flex-1 px-6 py-3 glass rounded-lg border-2 border-gray-500/30 hover:border-gray-500/50 transition-colors text-gray-300 hover:text-white font-medium"
+              className="flex-1 btn btn-outline px-6 py-3 font-medium"
             >
               Abbrechen
             </button>
             <button
               type="submit"
               disabled={!password}
-              className="flex-1 px-6 py-3 bg-gradient-to-br from-secondary to-accent rounded-lg border-2 border-accent/30 hover:border-accent transition-all shadow-glow-accent disabled:opacity-50 disabled:cursor-not-allowed text-white font-medium"
+              className="flex-1 btn btn-accent px-6 py-3 font-medium disabled:opacity-50 disabled:cursor-not-allowed"
             >
               Bestätigen
             </button>

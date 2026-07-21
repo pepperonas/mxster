@@ -3,13 +3,13 @@
  * Choose game mode: Guess, Persönliche Timeline, Globale Timeline
  */
 
-import { useNavigate } from 'react-router-dom'
+import { useAppNavigate } from '@/hooks/useAppNavigate'
 import { useGame } from '@/contexts'
 import { GAME_MODE_INFO, GAME_MODES } from '@/utils/gameModes'
 import type { GameMode } from '@/types'
 
 export function ModeSelection() {
-  const navigate = useNavigate()
+  const navigate = useAppNavigate()
   const { setGameMode } = useGame()
 
   const handleModeSelect = (mode: GameMode) => {
@@ -28,23 +28,23 @@ export function ModeSelection() {
       <div className="container mx-auto px-4 max-w-6xl">
         {/* Header */}
         <div className="text-center mb-12 animate-fade-in">
-          <h1 className="text-5xl md:text-6xl font-bold text-gradient mb-4">
+          <h1 className="text-display-sm md:text-display-md text-emphasized text-gradient mb-4">
             Wähle deinen Spielmodus
           </h1>
-          <p className="text-xl text-text-secondary">
+          <p className="text-title-lg text-text-secondary">
             Drei verschiedene Wege, dein Musikwissen zu testen
           </p>
         </div>
 
         {/* Mode Cards */}
-        <div className="grid md:grid-cols-3 gap-6">
+        <div className="grid md:grid-cols-3 gap-6 stagger-children">
           {modes.map((mode) => {
             const info = GAME_MODE_INFO[mode]
             return (
               <button
                 key={mode}
                 onClick={() => handleModeSelect(mode)}
-                className="glass rounded-2xl p-8 border-2 border-accent/30 hover:border-accent hover:shadow-glow-accent transition-all text-left group"
+                className="card card-glow p-8 border-2 border-transparent hover:border-md-primary/60 active:rounded-m3-xl text-left group"
               >
                 {/* Icon */}
                 <div className="text-6xl mb-6 group-hover:scale-110 transition-transform">
@@ -52,19 +52,19 @@ export function ModeSelection() {
                 </div>
 
                 {/* Title */}
-                <h2 className="text-2xl font-bold mb-3 text-white group-hover:text-gradient">
+                <h2 className="text-headline-sm mb-3 text-text-primary group-hover:text-gradient">
                   {info.name}
                 </h2>
 
                 {/* Description */}
-                <p className="text-text-secondary mb-6 leading-relaxed">
+                <p className="text-body-md text-text-secondary mb-6">
                   {info.description}
                 </p>
 
                 {/* Features */}
                 <div className="space-y-2 mb-6">
                   {info.features.slice(0, 3).map((feature, idx) => (
-                    <div key={idx} className="flex items-center gap-2 text-sm text-text-secondary">
+                    <div key={idx} className="flex items-center gap-2 text-body-sm text-text-secondary">
                       <span className="text-secondary">✓</span>
                       <span>{feature}</span>
                     </div>
@@ -73,7 +73,7 @@ export function ModeSelection() {
 
                 {/* Scoring */}
                 <div className="pt-4 border-t border-border">
-                  <p className="text-sm font-semibold text-secondary">
+                  <p className="text-label-lg text-secondary">
                     {info.scoring}
                   </p>
                 </div>

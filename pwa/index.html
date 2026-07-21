@@ -22,7 +22,20 @@
   <meta name="author" content="mxster">
   <meta name="robots" content="index, follow">
   <meta name="language" content="German">
-  <meta name="theme-color" content="#4A90E2">
+  <meta name="theme-color" content="#12131a">
+
+  <!-- Pre-paint theme init (prevents FOUC when light theme is stored) -->
+  <script>
+    try {
+      var t = JSON.parse(localStorage.getItem('mxster_settings') || '{}').theme;
+      if (t === 'light' || t === 'dark') document.documentElement.dataset.theme = t;
+    } catch (e) {}
+  </script>
+
+  <!-- Fonts: Roboto Flex variable (wght+wdth) + Inter fallback + Press Start 2P -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto+Flex:opsz,wdth,wght@8..144,75..125,300..900&family=Inter:wght@300;400;500;600;700;800&family=Press+Start+2P&display=swap">
 
   <!-- Canonical URL -->
   <link rel="canonical" href="https://mxster.de/">
@@ -98,13 +111,16 @@
 
   <!-- Initial Loading Screen - Shown immediately while React loads -->
   <style>
+    /* Colors are hex literals mirrored from src/styles/design-tokens.css
+       (loader paints before any bundled CSS loads): surface neutral-6/98,
+       primary cyan p80/p40, primary-container p30/p90. */
     #initial-loader {
       position: fixed;
       top: 0;
       left: 0;
       width: 100%;
       height: 100%;
-      background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+      background: linear-gradient(135deg, #12131a 0%, #1e1f27 100%);
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -112,27 +128,57 @@
       z-index: 9999;
       transition: opacity 0.3s ease-out;
     }
+    :root[data-theme="light"] #initial-loader {
+      background: linear-gradient(135deg, #fbf8ff 0%, #eeedf8 100%);
+    }
     #initial-loader.loaded {
       opacity: 0;
       pointer-events: none;
     }
+    /* Mini M3 contained loading indicator: tonal container with morphing
+       corners + rotating arc */
     .loader-spinner {
-      width: 50px;
-      height: 50px;
-      border: 4px solid rgba(187, 134, 252, 0.2);
-      border-top-color: #BB86FC;
+      width: 56px;
+      height: 56px;
+      background: #004d64;
+      border-radius: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      animation: loader-morph 2.4s cubic-bezier(0.38, 1.21, 0.22, 1) infinite;
+    }
+    .loader-spinner::after {
+      content: '';
+      width: 28px;
+      height: 28px;
+      border: 3.5px solid transparent;
+      border-top-color: #bde9ff;
+      border-right-color: #bde9ff;
       border-radius: 50%;
-      animation: spin 0.8s linear infinite;
+      animation: spin 0.9s linear infinite;
+    }
+    :root[data-theme="light"] .loader-spinner { background: #bde9ff; }
+    :root[data-theme="light"] .loader-spinner::after {
+      border-top-color: #004d64;
+      border-right-color: #004d64;
     }
     @keyframes spin {
       to { transform: rotate(360deg); }
     }
+    @keyframes loader-morph {
+      0%, 100% { border-radius: 28px; }
+      50% { border-radius: 12px; }
+    }
     .loader-text {
       margin-top: 20px;
-      color: #BB86FC;
+      color: #68d3ff;
       font-size: 18px;
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
       animation: pulse 1.5s ease-in-out infinite;
+    }
+    :root[data-theme="light"] .loader-text { color: #006684; }
+    @media (prefers-reduced-motion: reduce) {
+      .loader-spinner { animation: none; }
     }
     @keyframes pulse {
       0%, 100% { opacity: 1; }

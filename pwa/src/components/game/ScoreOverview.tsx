@@ -18,11 +18,11 @@ export function ScoreOverview() {
   const medals = ['🥇', '🥈', '🥉']
 
   return (
-    <div className="glass rounded-2xl p-6 border-2 border-accent/30">
+    <div className="glass rounded-m3-xl p-6 border-2 border-accent/30">
       {/* Header */}
       <div className="flex items-center gap-3 mb-6">
         <TrophyIcon size={24} color="#a855f7" />
-        <h3 className="text-xl font-bold text-gradient">Punkteübersicht</h3>
+        <h3 className="text-title-lg text-gradient">Punkteübersicht</h3>
       </div>
 
       {/* Players List */}
@@ -35,7 +35,7 @@ export function ScoreOverview() {
             <div
               key={player.name}
               className={`
-                flex items-center justify-between p-4 rounded-lg transition-all glass
+                flex items-center justify-between p-4 rounded-m3-md transition-all glass
                 ${
                   isCurrentPlayer
                     ? 'border-2 border-accent shadow-glow-accent'

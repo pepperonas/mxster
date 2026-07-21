@@ -16,17 +16,17 @@ export function VirtualButton({ onClick }: VirtualButtonProps) {
   const availableCount = songs.length - playedSongs.length
 
   return (
-    <div className="glass rounded-2xl p-8 border-2 border-accent/30 hover:border-accent transition-colors text-center">
-      <h3 className="text-2xl font-bold mb-6 text-gradient">Virtueller Modus</h3>
+    <div className="glass rounded-m3-xl p-8 border-2 border-accent/30 hover:border-accent transition-colors text-center">
+      <h3 className="text-headline-sm mb-6 text-gradient">Virtueller Modus</h3>
 
       <button
         onClick={onClick}
         disabled={availableCount === 0}
         className={`
-          w-full px-12 py-6 rounded-2xl font-bold text-xl transition-all
+          w-full px-12 py-6 rounded-m3-xl font-bold text-xl transition-all
           ${
             availableCount === 0
-              ? 'bg-gray-700 text-text-secondary cursor-not-allowed'
+              ? 'bg-md-surface-container-highest text-text-secondary cursor-not-allowed'
               : 'bg-gradient-to-r from-secondary to-accent hover:from-secondary hover:to-accent text-white shadow-glow-accent transform hover:scale-105'
           }
         `}
@@ -34,17 +34,17 @@ export function VirtualButton({ onClick }: VirtualButtonProps) {
         🎲 Zufälligen Song ziehen
       </button>
 
-      <div className="mt-4 px-4 py-2 glass rounded-lg border border-accent/20">
+      <div className="mt-4 px-4 py-2 glass rounded-m3-md border border-accent/20">
         <p className="text-sm font-semibold">
           Verfügbare Songs:{' '}
-          <span className={availableCount === 0 ? 'text-red-400' : 'text-secondary'}>
+          <span className={availableCount === 0 ? 'text-md-error' : 'text-secondary'}>
             {availableCount}/{songs.length}
           </span>
         </p>
       </div>
 
       {availableCount === 0 && (
-        <div className="mt-4 p-3 bg-red-900/30 rounded-lg text-red-300 text-sm">
+        <div className="mt-4 p-3 bg-red-900/30 rounded-m3-md text-red-300 text-sm">
           ⚠️ Alle Songs wurden bereits gespielt!
         </div>
       )}

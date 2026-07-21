@@ -156,22 +156,22 @@ export function GameEndStatsDialog({ winner, allPlayers, gameMode, onClose, onNe
       >
         {/* Round Statistics */}
         <div className="mb-8">
-          <h3 className="text-2xl font-bold text-white mb-4 flex items-center gap-2">
+          <h3 className="text-2xl font-bold text-text-primary mb-4 flex items-center gap-2">
             <span>📊</span>
             <span>Rundenstatistiken</span>
           </h3>
 
-          <div className="space-y-4">
+          <div className="space-y-4 stagger-children">
             {roundStats.map((playerStat) => (
               <div
                 key={playerStat.name}
-                className="glass p-4 rounded-lg border-2 border-accent/30 hover:border-accent/50 transition-colors"
+                className="glass p-4 rounded-m3-md border-2 border-accent/30 hover:border-accent/50 transition-colors"
               >
                 <div className="flex items-center justify-between mb-3">
                   <div className="flex items-center gap-3">
                     {playerStat.name === winner.name && <span className="text-3xl">🏆</span>}
                     <div>
-                      <h4 className="text-lg font-bold text-white">{playerStat.name}</h4>
+                      <h4 className="text-lg font-bold text-text-primary">{playerStat.name}</h4>
                       {gameMode === 'hardcore' && (
                         <p className="text-sm text-text-secondary">{playerStat.score} Punkte</p>
                       )}
@@ -191,7 +191,7 @@ export function GameEndStatsDialog({ winner, allPlayers, gameMode, onClose, onNe
                   </div>
                   <div className="h-4 bg-primary/50 rounded-full overflow-hidden border border-accent/20">
                     <div
-                      className="h-full bg-gradient-to-r from-green-500 to-accent transition-all duration-500"
+                      className="h-full bg-gradient-to-r from-secondary to-accent transition-all duration-500"
                       style={{ width: `${Math.min((playerStat.cards / 10) * 100, 100)}%` }}
                     />
                   </div>
@@ -204,13 +204,13 @@ export function GameEndStatsDialog({ winner, allPlayers, gameMode, onClose, onNe
         {/* Global Player Statistics */}
         {globalStats.length > 0 && (
           <div>
-            <h3 className="text-2xl font-bold text-white mb-4 flex items-center gap-2">
+            <h3 className="text-2xl font-bold text-text-primary mb-4 flex items-center gap-2">
               <span>🌍</span>
               <span>Globale Statistiken</span>
             </h3>
 
-            <div className="glass p-4 sm:p-6 rounded-lg border-2 border-accent/30">
-              <div className="space-y-4">
+            <div className="glass p-4 sm:p-6 rounded-m3-md border-2 border-accent/30">
+              <div className="space-y-4 stagger-children">
                 {globalStats.slice(0, 5).map((playerGlobal, index) => (
                   <div key={playerGlobal.name} className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
                     {/* Rank + Name */}
@@ -224,7 +224,7 @@ export function GameEndStatsDialog({ winner, allPlayers, gameMode, onClose, onNe
                         )}
                       </div>
                       <div className="flex-1 min-w-0">
-                        <div className="font-bold text-white truncate">{playerGlobal.name}</div>
+                        <div className="font-bold text-text-primary truncate">{playerGlobal.name}</div>
                         <div className="text-xs text-text-secondary">
                           {playerGlobal.totalGames} Spiele · Ø {playerGlobal.avgScore.toFixed(1)} Punkte
                         </div>

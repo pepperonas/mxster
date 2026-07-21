@@ -20,18 +20,18 @@ export function PlayerInfo({ isBotExecuting = false }: PlayerInfoProps = {}) {
   const isDJ = needsDJ && currentPlayer === currentDJ
 
   return (
-    <div className={`glass rounded-2xl p-6 border-2 ${player.isBot ? 'border-cyan-500/50 bg-gradient-to-br from-cyan-900/20 to-blue-900/20' : 'border-accent/30'} hover:border-accent transition-colors`}>
-      <div className="flex items-center justify-between">
+    <div className={`glass rounded-m3-xl p-4 sm:p-6 border-2 ${player.isBot ? 'border-cyan-500/50 bg-gradient-to-br from-cyan-900/20 to-blue-900/20' : 'border-accent/30'} hover:border-accent transition-colors`}>
+      <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-3">
         {/* Current Player */}
-        <div className="flex items-center gap-4">
-          <div className="text-5xl">{player.isBot ? '🤖' : (isDJ ? '🎧' : '🎮')}</div>
-          <div>
-            <div className="flex items-center gap-3">
-              <div>
-                <p className="text-sm text-text-secondary uppercase tracking-wider">
+        <div className="flex items-center gap-3 sm:gap-4 min-w-0">
+          <div className="text-4xl sm:text-5xl flex-shrink-0">{player.isBot ? '🤖' : (isDJ ? '🎧' : '🎮')}</div>
+          <div className="min-w-0">
+            <div className="flex items-center gap-3 min-w-0">
+              <div className="min-w-0">
+                <p className="text-xs sm:text-sm text-text-secondary uppercase tracking-wider">
                   {player.isBot ? 'KI-Gegner' : (isDJ ? 'DJ (scannt QR-Codes)' : 'Aktiver Spieler')}
                 </p>
-                <h2 className="text-3xl font-bold text-gradient">{player.name}</h2>
+                <h2 className="text-2xl sm:text-3xl font-bold text-gradient truncate">{player.name}</h2>
               </div>
               {player.isBot && player.botDifficulty && (
                 <span className={`
@@ -48,14 +48,14 @@ export function PlayerInfo({ isBotExecuting = false }: PlayerInfoProps = {}) {
         </div>
 
         {/* Stats */}
-        <div className="flex gap-6">
+        <div className="flex gap-4 sm:gap-6 flex-shrink-0">
           <div className="text-center">
-            <div className="text-3xl font-bold text-gradient">{player.cards}</div>
+            <div className="text-2xl sm:text-3xl font-bold text-gradient">{player.cards}</div>
             <div className="text-xs text-text-secondary uppercase tracking-wider">Karten</div>
           </div>
           {gameMode === 'hardcore' && (
             <div className="text-center">
-              <div className="text-3xl font-bold text-gradient">{player.score}</div>
+              <div className="text-2xl sm:text-3xl font-bold text-gradient">{player.score}</div>
               <div className="text-xs text-text-secondary uppercase tracking-wider">Punkte</div>
             </div>
           )}

@@ -4,14 +4,14 @@
  */
 
 import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useAppNavigate } from '@/hooks/useAppNavigate'
 import { useSpotifyAuth } from '@/hooks'
 import { songs } from '@/data/songs'
 import { PasswordProtectionDialog } from '@/components/PasswordProtectionDialog'
 import spotifySlots from '../../spotify.slots.json'
 
 export function LandingPage() {
-  const navigate = useNavigate()
+  const navigate = useAppNavigate()
   const { login, isLoggedIn } = useSpotifyAuth()
   const [showPasswordDialog, setShowPasswordDialog] = useState(false)
 
@@ -57,10 +57,10 @@ export function LandingPage() {
       <section className="container mx-auto px-4 max-w-6xl mb-12">
         <div className="text-center mb-12 animate-fade-in">
           {/* Logo / Title */}
-          <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold text-gradient mb-4">
+          <h1 className="text-display-sm sm:text-display-md md:text-display-lg text-emphasized text-gradient mb-4">
             mxster
           </h1>
-          <p className="text-xl text-text-secondary mb-6">
+          <p className="text-title-lg text-text-secondary mb-6">
             🎵 Deine Zeitreise durch die Musik - {songCount} Songs verfügbar
           </p>
           <p className="text-text-secondary max-w-2xl mx-auto leading-relaxed mb-8">
@@ -73,7 +73,7 @@ export function LandingPage() {
             {/* Primary: Play without Spotify (Unlimited Users) */}
             <button
               onClick={handlePlayWithoutSpotify}
-              className="btn btn-accent px-10 py-4 text-lg shadow-glow-accent w-full sm:w-auto group"
+              className="btn btn-accent px-10 py-4 text-lg min-h-[48px] shadow-glow-accent w-full sm:w-auto group"
             >
               <span>🎮</span>
               Jetzt spielen (Gratis)
@@ -83,7 +83,7 @@ export function LandingPage() {
             {/* Secondary: Spotify Premium */}
             <button
               onClick={handleLogin}
-              className="btn btn-secondary px-10 py-4 text-lg w-full sm:w-auto group"
+              className="btn btn-outline px-10 py-4 text-lg min-h-[48px] w-full sm:w-auto group"
             >
               <span>🎧</span>
               Mit Spotify Premium
@@ -93,7 +93,7 @@ export function LandingPage() {
             {/* Info Link */}
             <button
               onClick={() => scrollToSection('audio-modes')}
-              className="text-sm text-text-secondary hover:text-secondary underline"
+              className="text-sm text-text-secondary hover:text-secondary underline min-h-[48px] inline-flex items-center justify-center"
             >
               Was ist der Unterschied?
             </button>
@@ -103,18 +103,18 @@ export function LandingPage() {
 
       {/* Audio Modes Comparison */}
       <section className="container mx-auto px-4 max-w-6xl mb-12" id="audio-modes">
-        <div className="glass p-8 rounded-2xl border-2 border-accent/30">
-          <h2 className="text-3xl font-bold text-gradient mb-6 text-center">
+        <div className="card p-8 rounded-m3-xl">
+          <h2 className="text-headline-lg text-emphasized text-gradient mb-6 text-center">
             🎵 Zwei Audio-Modi zur Auswahl
           </h2>
 
-          <div className="grid md:grid-cols-2 gap-6">
+          <div className="grid md:grid-cols-2 gap-6 stagger-children">
             {/* Standard Audio Mode (Free) */}
-            <div className="p-6 rounded-xl border-2 border-accent/20 bg-accent/5">
+            <div className="card card-glow p-6 rounded-m3-lg bg-accent/5">
               <div className="flex items-center gap-3 mb-4">
                 <div className="text-3xl">🎮</div>
                 <div>
-                  <h3 className="text-xl font-bold text-white">Gratis-Modus</h3>
+                  <h3 className="text-title-lg text-emphasized text-text-primary">Gratis-Modus</h3>
                   <p className="text-sm text-secondary">Volle Songs · 128 kbps · Unbegrenzt</p>
                 </div>
               </div>
@@ -142,7 +142,7 @@ export function LandingPage() {
               </div>
 
               {/* YDL Legal Grey Area Disclaimer */}
-              <div className="p-3 bg-orange-500/10 border border-orange-500/30 rounded-lg mb-3">
+              <div className="p-3 bg-orange-500/10 border border-orange-500/30 rounded-m3-md mb-3">
                 <p className="text-xs sm:text-sm text-orange-300">
                   <strong>⚠️ Rechtlicher Hinweis:</strong><br/>
                   Die Audiodateien wurden von YouTube heruntergeladen (ydl).
@@ -157,11 +157,11 @@ export function LandingPage() {
             </div>
 
             {/* Spotify Premium Mode */}
-            <div className="p-6 rounded-xl border-2 border-secondary/30 bg-secondary/10">
+            <div className="card p-6 rounded-m3-lg bg-secondary/10">
               <div className="flex items-center gap-3 mb-4">
                 <div className="text-3xl">🎧</div>
                 <div>
-                  <h3 className="text-xl font-bold text-white">Spotify Premium</h3>
+                  <h3 className="text-title-lg text-emphasized text-text-primary">Spotify Premium</h3>
                   <p className="text-sm text-secondary">Volle Songs · 320 kbps · Max 25 Spieler</p>
                 </div>
               </div>
@@ -190,7 +190,7 @@ export function LandingPage() {
 
               <div className="border-t border-secondary/20 pt-3 space-y-3">
                 {/* Spotify API Limitation Explanation */}
-                <div className="p-3 bg-blue-500/10 border border-blue-500/30 rounded-lg">
+                <div className="p-3 bg-blue-500/10 border border-blue-500/30 rounded-m3-md">
                   <p className="text-sm text-blue-300 mb-2">
                     <strong>🚧 Spotify API Hürde:</strong>
                   </p>
@@ -206,7 +206,7 @@ export function LandingPage() {
                 </div>
 
                 {/* Registration CTA */}
-                <div className="p-3 bg-green-500/10 border border-green-500/30 rounded-lg">
+                <div className="p-3 bg-green-500/10 border border-green-500/30 rounded-m3-md">
                   <p className="text-sm text-green-300 mb-2">
                     <strong>✉️ Möchtest du einen Spotify-Slot?</strong>
                   </p>
@@ -216,7 +216,7 @@ export function LandingPage() {
                   </p>
                   <a
                     href={`mailto:${spotifySlots.contactEmail}?subject=Spotify%20Premium%20Zugang%20für%20mxster&body=Hallo%20Martin,%0D%0A%0D%0Aich%20würde%20gerne%20die%20Spotify%20Premium%20Integration%20von%20mxster%20nutzen.%0D%0A%0D%0AE-Mail-Adresse%20meines%20Spotify-Kontos:%20[HIER%20EINTRAGEN]%0D%0A%0D%0AVielen%20Dank!`}
-                    className="btn btn-secondary w-full text-sm py-2"
+                    className="btn btn-secondary w-full text-sm py-2 min-h-[48px]"
                   >
                     📧 Zugang anfragen
                   </a>
@@ -230,9 +230,9 @@ export function LandingPage() {
           </div>
 
           {/* Quality Comparison */}
-          <div className="mt-6 p-4 bg-primary/30 rounded-lg border border-accent/20">
+          <div className="mt-6 p-4 bg-primary/30 rounded-m3-md border border-accent/20">
             <p className="text-sm text-text-secondary text-center">
-              <strong className="text-white">Audioqualität im Vergleich:</strong><br/>
+              <strong className="text-text-primary">Audioqualität im Vergleich:</strong><br/>
               Gratis-Modus (128 kbps) = gut genug für Quiz-Spiele, die meisten merken keinen Unterschied ·
               Spotify Premium (320 kbps) = Studio-Qualität, nur für echte Audiophile wahrnehmbar besser
             </p>
@@ -243,19 +243,19 @@ export function LandingPage() {
       {/* Game Modes Section */}
       <section className="container mx-auto px-4 max-w-6xl mb-12" id="game-modes">
         <div className="text-center mb-12 animate-fade-in">
-          <h2 className="text-5xl md:text-6xl font-bold text-gradient mb-4">
+          <h2 className="text-display-sm md:text-display-md text-emphasized text-gradient mb-4">
             Drei Spielmodi
           </h2>
-          <p className="text-xl text-text-secondary">
+          <p className="text-title-lg text-text-secondary">
             Wähle den Modus, der zu deiner Gruppe passt
           </p>
         </div>
 
-        <div className="grid md:grid-cols-3 gap-6">
+        <div className="grid md:grid-cols-3 gap-6 stagger-children">
           {/* Hardcore Mode */}
-          <div className="glass p-8 rounded-2xl border-2 border-accent/30">
+          <div className="card card-glow p-8 rounded-m3-xl">
             <div className="text-6xl mb-6">🔥</div>
-            <h3 className="text-2xl font-bold mb-3 text-white">
+            <h3 className="text-headline-sm text-emphasized mb-3 text-text-primary">
               Hardcore
             </h3>
             <p className="text-text-secondary leading-relaxed mb-4">
@@ -283,9 +283,9 @@ export function LandingPage() {
           </div>
 
           {/* Persönliche Timeline */}
-          <div className="glass p-8 rounded-2xl border-2 border-accent/30">
+          <div className="card p-8 rounded-m3-xl">
             <div className="text-6xl mb-6">👤</div>
-            <h3 className="text-2xl font-bold mb-3 text-white">
+            <h3 className="text-headline-sm text-emphasized mb-3 text-text-primary">
               Persönliche Timeline
             </h3>
             <p className="text-text-secondary leading-relaxed mb-4">
@@ -313,9 +313,9 @@ export function LandingPage() {
           </div>
 
           {/* Globale Timeline */}
-          <div className="glass p-8 rounded-2xl border-2 border-accent/30">
+          <div className="card p-8 rounded-m3-xl">
             <div className="text-6xl mb-6">🌍</div>
-            <h3 className="text-2xl font-bold mb-3 text-white">
+            <h3 className="text-headline-sm text-emphasized mb-3 text-text-primary">
               Globale Timeline
             </h3>
             <p className="text-text-secondary leading-relaxed mb-4">
@@ -347,17 +347,17 @@ export function LandingPage() {
       {/* Variants Section */}
       <section className="container mx-auto px-4 max-w-6xl mb-12" id="variants">
         <div className="text-center mb-12 animate-fade-in">
-          <h2 className="text-5xl md:text-6xl font-bold text-gradient mb-4">
+          <h2 className="text-display-sm md:text-display-md text-emphasized text-gradient mb-4">
             Spielvarianten
           </h2>
-          <p className="text-xl text-text-secondary">
+          <p className="text-title-lg text-text-secondary">
             Komplett digital oder mit echten Karten
           </p>
         </div>
 
-        <div className="grid md:grid-cols-2 gap-6">
+        <div className="grid md:grid-cols-2 gap-6 stagger-children">
           {/* Virtual Cards - NOW FIRST */}
-          <div className="glass p-8 rounded-2xl border-2 border-accent/30 hover:border-accent hover:shadow-glow-accent transition-all group relative">
+          <div className="card card-glow p-8 rounded-m3-xl group relative">
             {/* EMPFOHLEN Badge */}
             <div className="absolute top-4 right-4">
               <span className="px-3 py-1 bg-accent text-white text-xs font-bold rounded-full shadow-glow-accent">
@@ -365,7 +365,7 @@ export function LandingPage() {
               </span>
             </div>
             <div className="text-6xl mb-6 group-hover:scale-110 transition-transform">📱</div>
-            <h3 className="text-2xl font-bold mb-4 text-white group-hover:text-gradient">
+            <h3 className="text-headline-sm text-emphasized mb-4 text-text-primary group-hover:text-gradient">
               Virtuelle Karten
             </h3>
             <p className="text-text-secondary leading-relaxed mb-6">
@@ -396,9 +396,9 @@ export function LandingPage() {
           </div>
 
           {/* Physical Cards - NOW SECOND */}
-          <div className="glass p-8 rounded-2xl border-2 border-accent/30 hover:border-accent hover:shadow-glow-accent transition-all group">
+          <div className="card p-8 rounded-m3-xl group">
             <div className="text-6xl mb-6 group-hover:scale-110 transition-transform">🃏</div>
-            <h3 className="text-2xl font-bold mb-4 text-white group-hover:text-gradient">
+            <h3 className="text-headline-sm text-emphasized mb-4 text-text-primary group-hover:text-gradient">
               Physische Karten
             </h3>
             <p className="text-text-secondary leading-relaxed mb-6">
@@ -430,23 +430,23 @@ export function LandingPage() {
       {/* How it works Section */}
       <section className="container mx-auto px-4 max-w-6xl mb-12" id="how-it-works">
         <div className="text-center mb-12 animate-fade-in">
-          <h2 className="text-5xl md:text-6xl font-bold text-gradient mb-4">
+          <h2 className="text-display-sm md:text-display-md text-emphasized text-gradient mb-4">
             So funktioniert's
           </h2>
-          <p className="text-xl text-text-secondary">
+          <p className="text-title-lg text-text-secondary">
             In 4 einfachen Schritten zum Musikexperten
           </p>
         </div>
 
         <div className="space-y-6">
           {/* Step 1 */}
-          <div className="glass p-8 rounded-2xl border-2 border-accent/30 hover:border-accent transition-colors group">
+          <div className="card p-8 rounded-m3-xl group">
             <div className="flex items-start gap-6">
               <div className="flex-shrink-0 w-12 h-12 bg-gradient-to-br from-secondary to-accent rounded-full flex items-center justify-center text-2xl font-bold text-white shadow-glow-sm group-hover:scale-110 transition-transform">
                 1
               </div>
               <div>
-                <h3 className="text-2xl font-bold mb-3 text-white group-hover:text-gradient">
+                <h3 className="text-headline-sm text-emphasized mb-3 text-text-primary group-hover:text-gradient">
                   Wähle Spielmodus & Variante
                 </h3>
                 <p className="text-text-secondary leading-relaxed">
@@ -457,13 +457,13 @@ export function LandingPage() {
           </div>
 
           {/* Step 2 */}
-          <div className="glass p-8 rounded-2xl border-2 border-accent/30 hover:border-accent transition-colors group">
+          <div className="card p-8 rounded-m3-xl group">
             <div className="flex items-start gap-6">
               <div className="flex-shrink-0 w-12 h-12 bg-gradient-to-br from-secondary to-accent rounded-full flex items-center justify-center text-2xl font-bold text-white shadow-glow-sm group-hover:scale-110 transition-transform">
                 2
               </div>
               <div>
-                <h3 className="text-2xl font-bold mb-3 text-white group-hover:text-gradient">
+                <h3 className="text-headline-sm text-emphasized mb-3 text-text-primary group-hover:text-gradient">
                   Spieler hinzufügen
                 </h3>
                 <p className="text-text-secondary leading-relaxed">
@@ -474,43 +474,43 @@ export function LandingPage() {
           </div>
 
           {/* Step 3 */}
-          <div className="glass p-8 rounded-2xl border-2 border-accent/30 hover:border-accent transition-colors group">
+          <div className="card p-8 rounded-m3-xl group">
             <div className="flex items-start gap-6">
               <div className="flex-shrink-0 w-12 h-12 bg-gradient-to-br from-secondary to-accent rounded-full flex items-center justify-center text-2xl font-bold text-white shadow-glow-sm group-hover:scale-110 transition-transform">
                 3
               </div>
               <div>
-                <h3 className="text-2xl font-bold mb-3 text-white group-hover:text-gradient">
+                <h3 className="text-headline-sm text-emphasized mb-3 text-text-primary group-hover:text-gradient">
                   Rate oder Platziere
                 </h3>
                 <p className="text-text-secondary leading-relaxed mb-3">
-                  <strong className="text-white">Hardcore:</strong> Gib Titel, Künstler und Jahr ein. Bis zu 15 Punkte pro Song möglich (5+5+5 oder 5+5+2 oder 5+5+1)!
+                  <strong className="text-text-primary">Hardcore:</strong> Gib Titel, Künstler und Jahr ein. Bis zu 15 Punkte pro Song möglich (5+5+5 oder 5+5+2 oder 5+5+1)!
                 </p>
                 <p className="text-text-secondary leading-relaxed">
-                  <strong className="text-white">Timeline-Modi:</strong> Platziere Songs manuell in chronologischer Reihenfolge. Fuzzy-Matching erkennt auch ungenaue Eingaben!
+                  <strong className="text-text-primary">Timeline-Modi:</strong> Platziere Songs manuell in chronologischer Reihenfolge. Fuzzy-Matching erkennt auch ungenaue Eingaben!
                 </p>
               </div>
             </div>
           </div>
 
           {/* Step 4 */}
-          <div className="glass p-8 rounded-2xl border-2 border-accent/30 hover:border-accent transition-colors group">
+          <div className="card p-8 rounded-m3-xl group">
             <div className="flex items-start gap-6">
               <div className="flex-shrink-0 w-12 h-12 bg-gradient-to-br from-secondary to-accent rounded-full flex items-center justify-center text-2xl font-bold text-white shadow-glow-sm group-hover:scale-110 transition-transform">
                 4
               </div>
               <div>
-                <h3 className="text-2xl font-bold mb-3 text-white group-hover:text-gradient">
+                <h3 className="text-headline-sm text-emphasized mb-3 text-text-primary group-hover:text-gradient">
                   Gewinne & Achievements
                 </h3>
                 <p className="text-text-secondary leading-relaxed mb-3">
-                  <strong className="text-white">Hardcore:</strong> Wer nach 10 Karten die meisten Punkte hat, gewinnt! Maximum: 150 Punkte.
+                  <strong className="text-text-primary">Hardcore:</strong> Wer nach 10 Karten die meisten Punkte hat, gewinnt! Maximum: 150 Punkte.
                 </p>
                 <p className="text-text-secondary leading-relaxed mb-3">
-                  <strong className="text-white">Timeline-Modi:</strong> Wer zuerst 10 Karten richtig platziert, ist der Gewinner!
+                  <strong className="text-text-primary">Timeline-Modi:</strong> Wer zuerst 10 Karten richtig platziert, ist der Gewinner!
                 </p>
                 <p className="text-text-secondary leading-relaxed">
-                  <strong className="text-white">🏆 Achievements:</strong> Schalte Erfolge frei wie Volltreffer-Serie, Marathonläufer (50 Spiele) oder Musikexperte (1000 Punkte)!
+                  <strong className="text-text-primary">🏆 Achievements:</strong> Schalte Erfolge frei wie Volltreffer-Serie, Marathonläufer (50 Spiele) oder Musikexperte (1000 Punkte)!
                 </p>
               </div>
             </div>
@@ -533,19 +533,19 @@ export function LandingPage() {
       {/* Features Section */}
       <section className="container mx-auto px-4 max-w-6xl mb-12" id="features">
         <div className="text-center mb-12 animate-fade-in">
-          <h2 className="text-5xl md:text-6xl font-bold text-gradient mb-4">
+          <h2 className="text-display-sm md:text-display-md text-emphasized text-gradient mb-4">
             Features
           </h2>
-          <p className="text-xl text-text-secondary">
+          <p className="text-title-lg text-text-secondary">
             Was mxster besonders macht
           </p>
         </div>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 stagger-children">
           {/* Feature 1 */}
-          <div className="glass p-8 rounded-2xl border-2 border-accent/30 hover:border-accent hover:shadow-glow-accent transition-all text-center group">
+          <div className="card p-8 rounded-m3-xl text-center group">
             <div className="text-6xl mb-6 group-hover:scale-110 transition-transform">🎯</div>
-            <h3 className="text-xl font-bold mb-3 text-white group-hover:text-gradient">
+            <h3 className="text-title-lg text-emphasized mb-3 text-text-primary group-hover:text-gradient">
               Tolerantes Raten
             </h3>
             <p className="text-sm text-text-secondary leading-relaxed">
@@ -554,9 +554,9 @@ export function LandingPage() {
           </div>
 
           {/* Feature 2 */}
-          <div className="glass p-8 rounded-2xl border-2 border-accent/30 hover:border-accent hover:shadow-glow-accent transition-all text-center group">
+          <div className="card p-8 rounded-m3-xl text-center group">
             <div className="text-6xl mb-6 group-hover:scale-110 transition-transform">🎧</div>
-            <h3 className="text-xl font-bold mb-3 text-white group-hover:text-gradient">
+            <h3 className="text-title-lg text-emphasized mb-3 text-text-primary group-hover:text-gradient">
               Spotify Premium
             </h3>
             <p className="text-sm text-text-secondary leading-relaxed">
@@ -565,9 +565,9 @@ export function LandingPage() {
           </div>
 
           {/* Feature 3 */}
-          <div className="glass p-8 rounded-2xl border-2 border-accent/30 hover:border-accent hover:shadow-glow-accent transition-all text-center group">
+          <div className="card p-8 rounded-m3-xl text-center group">
             <div className="text-6xl mb-6 group-hover:scale-110 transition-transform">📱</div>
-            <h3 className="text-xl font-bold mb-3 text-white group-hover:text-gradient">
+            <h3 className="text-title-lg text-emphasized mb-3 text-text-primary group-hover:text-gradient">
               Progressive Web App
             </h3>
             <p className="text-sm text-text-secondary leading-relaxed">
@@ -576,9 +576,9 @@ export function LandingPage() {
           </div>
 
           {/* Feature 4 - Achievements */}
-          <div className="glass p-8 rounded-2xl border-2 border-accent/30 hover:border-accent hover:shadow-glow-accent transition-all text-center group">
+          <div className="card p-8 rounded-m3-xl text-center group">
             <div className="text-6xl mb-6 group-hover:scale-110 transition-transform">🏆</div>
-            <h3 className="text-xl font-bold mb-3 text-white group-hover:text-gradient">
+            <h3 className="text-title-lg text-emphasized mb-3 text-text-primary group-hover:text-gradient">
               Achievements
             </h3>
             <p className="text-sm text-text-secondary leading-relaxed">
@@ -591,28 +591,28 @@ export function LandingPage() {
       {/* Open Source Section */}
       <section className="container mx-auto px-4 max-w-6xl mb-12" id="open-source">
         <div className="text-center mb-12 animate-fade-in">
-          <h2 className="text-5xl md:text-6xl font-bold text-gradient mb-4">
+          <h2 className="text-display-sm md:text-display-md text-emphasized text-gradient mb-4">
             Open Source
           </h2>
-          <p className="text-xl text-text-secondary">
+          <p className="text-title-lg text-text-secondary">
             mxster ist komplett Open Source und auf GitHub verfügbar
           </p>
         </div>
 
-        <div className="glass p-8 md:p-12 rounded-2xl border-2 border-accent/30 hover:border-accent transition-colors group">
+        <div className="card p-8 md:p-12 rounded-m3-xl group">
           <div className="flex flex-col md:flex-row items-center gap-8">
             <div className="flex-shrink-0 text-7xl group-hover:scale-110 transition-transform">🐙</div>
             <div className="flex-1 text-center md:text-left">
-              <h3 className="text-2xl font-bold mb-4 text-white group-hover:text-gradient">
+              <h3 className="text-headline-sm text-emphasized mb-4 text-text-primary group-hover:text-gradient">
                 Auf GitHub
               </h3>
               <p className="text-text-secondary leading-relaxed mb-6">
                 Der komplette Quellcode ist öffentlich auf GitHub verfügbar. Schau dir den Code an, lerne daraus, oder trage selbst bei!
               </p>
               <div className="flex flex-wrap gap-3 justify-center md:justify-start">
-                <span className="glass px-4 py-2 rounded-lg text-sm font-semibold border border-accent/20 text-text-secondary">⭐ Star das Projekt</span>
-                <span className="glass px-4 py-2 rounded-lg text-sm font-semibold border border-accent/20 text-text-secondary">🔧 Fork & Contribute</span>
-                <span className="glass px-4 py-2 rounded-lg text-sm font-semibold border border-accent/20 text-text-secondary">🐛 Issues melden</span>
+                <span className="glass px-4 py-2 rounded-m3-md text-sm font-semibold border border-accent/20 text-text-secondary">⭐ Star das Projekt</span>
+                <span className="glass px-4 py-2 rounded-m3-md text-sm font-semibold border border-accent/20 text-text-secondary">🔧 Fork & Contribute</span>
+                <span className="glass px-4 py-2 rounded-m3-md text-sm font-semibold border border-accent/20 text-text-secondary">🐛 Issues melden</span>
               </div>
             </div>
           </div>
@@ -631,21 +631,21 @@ export function LandingPage() {
           </div>
 
           {/* Stats */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-12">
-            <div className="glass p-4 rounded-lg text-center border border-accent/20">
-              <div className="text-2xl font-bold text-white mb-1">💬</div>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-12 stagger-children">
+            <div className="glass p-4 rounded-m3-md text-center border border-accent/20">
+              <div className="text-2xl font-bold text-text-primary mb-1">💬</div>
               <div className="text-xs text-text-secondary">Issues & Diskussionen</div>
             </div>
-            <div className="glass p-4 rounded-lg text-center border border-accent/20">
-              <div className="text-2xl font-bold text-white mb-1">100%</div>
+            <div className="glass p-4 rounded-m3-md text-center border border-accent/20">
+              <div className="text-2xl font-bold text-text-primary mb-1">100%</div>
               <div className="text-xs text-text-secondary">Open Source</div>
             </div>
-            <div className="glass p-4 rounded-lg text-center border border-accent/20">
-              <div className="text-2xl font-bold text-white mb-1">MIT</div>
+            <div className="glass p-4 rounded-m3-md text-center border border-accent/20">
+              <div className="text-2xl font-bold text-text-primary mb-1">MIT</div>
               <div className="text-xs text-text-secondary">Lizenz</div>
             </div>
-            <div className="glass p-4 rounded-lg text-center border border-accent/20">
-              <div className="text-2xl font-bold text-white mb-1">3</div>
+            <div className="glass p-4 rounded-m3-md text-center border border-accent/20">
+              <div className="text-2xl font-bold text-text-primary mb-1">3</div>
               <div className="text-xs text-text-secondary">Spielmodi</div>
             </div>
           </div>
@@ -655,28 +655,28 @@ export function LandingPage() {
       {/* Support Section */}
       <section className="container mx-auto px-4 max-w-6xl mb-12" id="support">
         <div className="text-center mb-12 animate-fade-in">
-          <h2 className="text-5xl md:text-6xl font-bold mb-4 flex items-center justify-center gap-2">
+          <h2 className="text-display-sm md:text-display-md text-emphasized mb-4 flex items-center justify-center gap-2">
             <span>☕</span>
             <span className="text-gradient">Unterstütze mxster</span>
           </h2>
-          <p className="text-xl text-text-secondary max-w-2xl mx-auto">
+          <p className="text-title-lg text-text-secondary max-w-2xl mx-auto">
             mxster ist komplett kostenlos und werbefrei. Wenn dir das Projekt gefällt und du die Weiterentwicklung unterstützen möchtest, freue ich mich über eine kleine Spende!
           </p>
         </div>
 
-        <div className="glass p-8 md:p-12 rounded-2xl border-2 border-accent/30 hover:border-accent transition-colors group">
-          <div className="grid md:grid-cols-3 gap-6 mb-8">
+        <div className="card p-8 md:p-12 rounded-m3-xl group">
+          <div className="grid md:grid-cols-3 gap-6 mb-8 stagger-children">
             <div className="text-center">
               <div className="text-4xl mb-3 group-hover:scale-110 transition-transform">🎮</div>
-              <h4 className="font-bold text-white mb-2">Neue Features</h4>
+              <h4 className="text-title-md text-text-primary mb-2">Neue Features</h4>
             </div>
             <div className="text-center">
               <div className="text-4xl mb-3 group-hover:scale-110 transition-transform">🎵</div>
-              <h4 className="font-bold text-white mb-2">Mehr Songs</h4>
+              <h4 className="text-title-md text-text-primary mb-2">Mehr Songs</h4>
             </div>
             <div className="text-center">
               <div className="text-4xl mb-3 group-hover:scale-110 transition-transform">🚀</div>
-              <h4 className="font-bold text-white mb-2">Server-Kosten</h4>
+              <h4 className="text-title-md text-text-primary mb-2">Server-Kosten</h4>
             </div>
           </div>
 
@@ -701,38 +701,38 @@ export function LandingPage() {
       {/* Downloads Section - FOR ENTHUSIASTS */}
       <section className="container mx-auto px-4 max-w-6xl mb-12" id="downloads">
         <div className="text-center mb-8 animate-fade-in">
-          <h2 className="text-3xl md:text-4xl font-bold text-gradient mb-3">
+          <h2 className="text-headline-md md:text-headline-lg text-emphasized text-gradient mb-3">
             🃏 Für Enthusiasten: Physische Karten
           </h2>
-          <p className="text-lg text-text-secondary">
+          <p className="text-title-md text-text-secondary">
             Drucke deine eigenen Karten oder erstelle 3D-Modelle
           </p>
         </div>
 
-        <div className="grid md:grid-cols-2 gap-4">
+        <div className="grid md:grid-cols-2 gap-4 stagger-children">
           {/* PDF Cards - Smaller */}
-          <div className="glass p-6 rounded-xl border-2 border-accent/20 hover:border-accent/40 transition-colors">
+          <div className="card p-6 rounded-m3-lg">
             <div className="text-4xl mb-4">🖨️</div>
-            <h3 className="text-xl font-bold mb-3 text-white">
+            <h3 className="text-title-lg text-emphasized mb-3 text-text-primary">
               PDF Druckkarten
             </h3>
             <p className="text-sm text-text-secondary mb-4">
               Druckfertige PDFs - 4 Karten pro A4-Seite
             </p>
             <div className="space-y-2">
-              <a href="https://github.com/pepperonas/mxster/releases/latest/download/mxster-cards.pdf" download className="btn btn-secondary text-sm w-full justify-between py-2">
+              <a href="https://github.com/pepperonas/mxster/releases/latest/download/mxster-cards.pdf" download className="btn btn-secondary text-sm w-full justify-between py-2 min-h-[48px]">
                 📄 Farbig
                 <span>↓</span>
               </a>
-              <a href="https://github.com/pepperonas/mxster/releases/latest/download/mxster-cards-bw.pdf" download className="btn btn-secondary text-sm w-full justify-between py-2">
+              <a href="https://github.com/pepperonas/mxster/releases/latest/download/mxster-cards-bw.pdf" download className="btn btn-secondary text-sm w-full justify-between py-2 min-h-[48px]">
                 📄 Schwarz-Weiß
                 <span>↓</span>
               </a>
-              <a href="https://github.com/pepperonas/mxster/releases/latest/download/mxster-cards-duplex.pdf" download className="btn btn-secondary text-sm w-full justify-between py-2">
+              <a href="https://github.com/pepperonas/mxster/releases/latest/download/mxster-cards-duplex.pdf" download className="btn btn-secondary text-sm w-full justify-between py-2 min-h-[48px]">
                 📄 Duplex Farbig
                 <span>↓</span>
               </a>
-              <a href="https://github.com/pepperonas/mxster/releases/latest/download/mxster-cards-bw-duplex.pdf" download className="btn btn-secondary text-sm w-full justify-between py-2">
+              <a href="https://github.com/pepperonas/mxster/releases/latest/download/mxster-cards-bw-duplex.pdf" download className="btn btn-secondary text-sm w-full justify-between py-2 min-h-[48px]">
                 📄 Duplex S/W
                 <span>↓</span>
               </a>
@@ -740,28 +740,28 @@ export function LandingPage() {
           </div>
 
           {/* 3D Models - Smaller */}
-          <div className="glass p-6 rounded-xl border-2 border-accent/20 hover:border-accent/40 transition-colors">
+          <div className="card p-6 rounded-m3-lg">
             <div className="text-4xl mb-4">🎲</div>
-            <h3 className="text-xl font-bold mb-3 text-white">
+            <h3 className="text-title-lg text-emphasized mb-3 text-text-primary">
               3D-Druckmodelle
             </h3>
             <p className="text-sm text-text-secondary mb-4">
               STL/SCAD-Dateien für 3D-Druck
             </p>
             <div className="space-y-2">
-              <a href="https://github.com/pepperonas/mxster/releases/latest/download/all-cards.3mf" download className="btn btn-secondary text-sm w-full justify-between py-2">
+              <a href="https://github.com/pepperonas/mxster/releases/latest/download/all-cards.3mf" download className="btn btn-secondary text-sm w-full justify-between py-2 min-h-[48px]">
                 📦 All-Cards (3MF)
                 <span>↓</span>
               </a>
-              <a href="https://github.com/pepperonas/mxster/releases/latest/download/mxster-stl-models.zip" download className="btn btn-secondary text-sm w-full justify-between py-2">
+              <a href="https://github.com/pepperonas/mxster/releases/latest/download/mxster-stl-models.zip" download className="btn btn-secondary text-sm w-full justify-between py-2 min-h-[48px]">
                 📦 STL (ZIP)
                 <span>↓</span>
               </a>
-              <a href="https://github.com/pepperonas/mxster/releases/latest/download/mxster-scad-models.zip" download className="btn btn-secondary text-sm w-full justify-between py-2">
+              <a href="https://github.com/pepperonas/mxster/releases/latest/download/mxster-scad-models.zip" download className="btn btn-secondary text-sm w-full justify-between py-2 min-h-[48px]">
                 📦 SCAD (ZIP)
                 <span>↓</span>
               </a>
-              <a href="https://github.com/pepperonas/mxster/tree/main/extras/card-generator/models" target="_blank" rel="noopener noreferrer" className="btn btn-secondary text-sm w-full justify-between py-2">
+              <a href="https://github.com/pepperonas/mxster/tree/main/extras/card-generator/models" target="_blank" rel="noopener noreferrer" className="btn btn-secondary text-sm w-full justify-between py-2 min-h-[48px]">
                 📂 GitHub
                 <span>→</span>
               </a>
@@ -771,14 +771,14 @@ export function LandingPage() {
       </section>
 
       {/* Footer */}
-      <footer className="border-t-2 border-accent/30 mt-20" style={{ backgroundColor: '#262634' }}>
+      <footer className="border-t border-md-outline-variant/50 mt-20 bg-md-surface-container-low">
         <div className="max-w-7xl mx-auto px-6 py-6">
           <div className="text-center">
             <p className="text-text-secondary mb-3">
               Entwickelt mit ❤️ für Musikliebhaber
             </p>
             <p className="text-sm text-text-secondary mb-4">
-              © 2025 Martin Pfeffer - <a href="https://celox.io" target="_blank" rel="noopener noreferrer" className="text-secondary hover:text-accent transition-colors hover:underline">celox.io</a>
+              © {new Date().getFullYear()} Martin Pfeffer | <a href="https://celox.io" target="_blank" rel="noopener noreferrer" className="text-secondary hover:text-accent transition-colors hover:underline">celox.io</a>
             </p>
             <div className="flex flex-wrap gap-4 justify-center text-sm">
               <a href="https://celox.io/datenschutz" target="_blank" rel="noopener noreferrer" className="text-text-secondary hover:text-secondary transition-colors">

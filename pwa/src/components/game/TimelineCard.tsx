@@ -15,7 +15,7 @@ export function TimelineCard({ song, index, isHighlighted = false }: TimelineCar
   return (
     <div
       className={`
-        relative p-4 rounded-xl border-2 transition-all overflow-visible group
+        relative p-4 rounded-m3-lg border-2 transition-all overflow-visible group
         ${
           isHighlighted
             ? 'glass border-accent shadow-glow-accent'
@@ -30,7 +30,7 @@ export function TimelineCard({ song, index, isHighlighted = false }: TimelineCar
 
       {/* Song Info */}
       <div className="pl-12">
-        <h4 className="font-bold text-white text-lg mb-1 group-hover:text-gradient transition-colors">{song.title}</h4>
+        <h4 className="font-bold text-text-primary text-lg mb-1 group-hover:text-gradient transition-colors">{song.title}</h4>
         <p className="text-text-secondary text-sm mb-2">{song.artist}</p>
         <div className="flex items-center gap-2">
           <span className="glass px-3 py-1 rounded-full text-secondary text-xs font-semibold border border-accent/20">

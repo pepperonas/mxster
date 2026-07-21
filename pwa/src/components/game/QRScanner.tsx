@@ -148,11 +148,11 @@ export function QRScanner() {
   }
 
   return (
-    <div className="glass rounded-2xl p-8 border-2 border-accent/30 hover:border-accent transition-colors text-center">
+    <div className="glass rounded-m3-xl p-8 border-2 border-accent/30 hover:border-accent transition-colors text-center">
       {!isScanning ? (
         <>
           <div className="text-6xl mb-6">📷</div>
-          <h3 className="text-2xl font-bold mb-4 text-gradient">QR-Code Scanner</h3>
+          <h3 className="text-headline-sm mb-4 text-gradient">QR-Code Scanner</h3>
           <p className="text-text-secondary mb-6">
             Scanne die QR-Codes auf den physischen Karten
           </p>
@@ -165,7 +165,7 @@ export function QRScanner() {
           </button>
 
           {hasPermission === false && httpsError && (
-            <div className="mt-6 p-4 bg-red-900/30 rounded-lg text-sm text-red-300">
+            <div className="mt-6 p-4 bg-red-900/30 rounded-m3-md text-sm text-red-300">
               ⚠️ <strong>HTTPS erforderlich!</strong>
               <br />
               <br />
@@ -190,7 +190,7 @@ export function QRScanner() {
           )}
 
           {hasPermission === false && !httpsError && (
-            <div className="mt-6 p-4 bg-red-900/30 rounded-lg text-sm text-red-300">
+            <div className="mt-6 p-4 bg-red-900/30 rounded-m3-md text-sm text-red-300">
               ⚠️ <strong>Kamera-Zugriff verweigert.</strong> Bitte erlaube den Zugriff in deinen
               Browser-Einstellungen.
             </div>
@@ -199,7 +199,7 @@ export function QRScanner() {
       ) : (
         <>
           {/* Camera Video Feed - Square for QR codes */}
-          <div className="aspect-square max-w-md mx-auto bg-primary rounded-lg mb-4 overflow-hidden relative border-2 border-accent/20">
+          <div className="aspect-square max-w-md mx-auto bg-primary rounded-m3-md mb-4 overflow-hidden relative border-2 border-accent/20">
             <video
               ref={videoRef}
               className="w-full h-full object-cover"
@@ -221,7 +221,7 @@ export function QRScanner() {
         </>
       )}
 
-      <div className="mt-6 p-4 glass rounded-lg text-sm text-text-secondary border border-accent/20">
+      <div className="mt-6 p-4 glass rounded-m3-md text-sm text-text-secondary border border-accent/20">
         💡 <strong>Tipp:</strong> Halte die Karte ruhig und gut beleuchtet vor die Kamera.
       </div>
     </div>

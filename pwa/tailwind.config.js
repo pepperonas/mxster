@@ -1,47 +1,121 @@
 /** @type {import('tailwindcss').Config} */
+
+/**
+ * All colors resolve through the M3 token layer in src/styles/design-tokens.css.
+ * Channel-triplet vars + `rgb(var(..) / <alpha-value>)` keep alpha modifiers
+ * (e.g. border-accent/30) working. Legacy semantic names are kept as aliases
+ * (zero churn in existing class strings); new code uses the `md-*` namespace.
+ */
+const role = (name) => `rgb(var(--md-sys-color-${name}) / <alpha-value>)`
+
 export default {
   content: [
     "./index.html",
     "./src/**/*.{js,ts,jsx,tsx}",
   ],
+  future: {
+    hoverOnlyWhenSupported: true,
+  },
   theme: {
     extend: {
       colors: {
-        // Celox Dark Theme (mxster adapted)
-        background: '#1A1C27',        // Main background
-        primary: '#2C2E3B',           // Cards, containers
-        secondary: '#4A90E2',         // Brand blue (links, CTAs)
-        accent: '#FF6B35',            // Highlight orange
-        border: '#3A3C4B',            // Border color
-        danger: '#DC2626',            // Error states
-        'text-primary': '#FFFFFF',
-        'text-secondary': '#B0B3C1',
+        // Legacy aliases → M3 roles (existing markup rethemes automatically)
+        background: role('surface'),
+        primary: role('surface-container'),        // historic: card/container bg
+        secondary: role('primary'),                // historic: brand color → M3 primary (cyan)
+        accent: role('tertiary'),                  // historic: highlight orange → M3 tertiary (coral)
+        border: role('outline-variant'),
+        danger: role('error'),
+        'text-primary': role('on-surface'),
+        'text-secondary': role('on-surface-variant'),
 
-        // mxster Game Colors (additional)
-        'game-bg': '#1a1a2e',
-        'game-card': '#16213e',
-        'game-accent': '#0f3460',
-        'game-highlight': '#e94560',
+        // Legacy game colors → tonal equivalents
+        'game-bg': role('surface-container-lowest'),
+        'game-card': role('surface-container-low'),
+        'game-accent': role('primary-container'),
+        'game-highlight': role('tertiary'),
+
+        // Full M3 role namespace (use for new/reworked code)
+        md: {
+          primary: role('primary'),
+          'on-primary': role('on-primary'),
+          'primary-container': role('primary-container'),
+          'on-primary-container': role('on-primary-container'),
+          secondary: role('secondary'),
+          'on-secondary': role('on-secondary'),
+          'secondary-container': role('secondary-container'),
+          'on-secondary-container': role('on-secondary-container'),
+          tertiary: role('tertiary'),
+          'on-tertiary': role('on-tertiary'),
+          'tertiary-container': role('tertiary-container'),
+          'on-tertiary-container': role('on-tertiary-container'),
+          error: role('error'),
+          'on-error': role('on-error'),
+          'error-container': role('error-container'),
+          'on-error-container': role('on-error-container'),
+          surface: role('surface'),
+          'surface-dim': role('surface-dim'),
+          'surface-bright': role('surface-bright'),
+          'surface-container-lowest': role('surface-container-lowest'),
+          'surface-container-low': role('surface-container-low'),
+          'surface-container': role('surface-container'),
+          'surface-container-high': role('surface-container-high'),
+          'surface-container-highest': role('surface-container-highest'),
+          'on-surface': role('on-surface'),
+          'on-surface-variant': role('on-surface-variant'),
+          outline: role('outline'),
+          'outline-variant': role('outline-variant'),
+          'inverse-surface': role('inverse-surface'),
+          'inverse-on-surface': role('inverse-on-surface'),
+          'inverse-primary': role('inverse-primary'),
+          scrim: role('scrim'),
+        },
       },
       fontFamily: {
-        sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
+        sans: ['Roboto Flex', 'Inter', 'system-ui', '-apple-system', 'sans-serif'],
+      },
+      borderRadius: {
+        'm3-none': 'var(--m3-shape-none)',
+        'm3-xs': 'var(--m3-shape-xs)',
+        'm3-sm': 'var(--m3-shape-sm)',
+        'm3-md': 'var(--m3-shape-md)',
+        'm3-lg': 'var(--m3-shape-lg)',
+        'm3-lg-inc': 'var(--m3-shape-lg-inc)',
+        'm3-xl': 'var(--m3-shape-xl)',
+        'm3-xl-inc': 'var(--m3-shape-xl-inc)',
+        'm3-xxl': 'var(--m3-shape-xxl)',
+        'm3-full': 'var(--m3-shape-full)',
       },
       spacing: {
         '128': '32rem',
         '144': '36rem',
       },
       boxShadow: {
-        'glow-sm': '0 0 10px rgba(74, 144, 226, 0.3)',
-        'glow-md': '0 0 20px rgba(74, 144, 226, 0.4)',
-        'glow-lg': '0 0 30px rgba(74, 144, 226, 0.5)',
-        'glow-accent': '0 0 25px rgba(255, 107, 53, 0.4)',
-        'glow-game': '0 0 20px rgba(233, 69, 96, 0.3)',
+        'glow-sm': '0 0 10px rgb(var(--md-sys-color-primary) / 0.3)',
+        'glow-md': '0 0 20px rgb(var(--md-sys-color-primary) / 0.4)',
+        'glow-lg': '0 0 30px rgb(var(--md-sys-color-primary) / 0.5)',
+        'glow-accent': '0 0 25px rgb(var(--md-sys-color-tertiary) / 0.4)',
+        'glow-game': '0 0 20px rgb(var(--md-sys-color-tertiary) / 0.3)',
       },
       backdropBlur: {
         xs: '2px',
       },
       transitionTimingFunction: {
         'smooth': 'cubic-bezier(0.4, 0, 0.2, 1)',
+        'm3-spatial-fast': 'var(--m3-ease-spatial-fast)',
+        'm3-spatial': 'var(--m3-ease-spatial-default)',
+        'm3-spatial-slow': 'var(--m3-ease-spatial-slow)',
+        'm3-effects-fast': 'var(--m3-ease-effects-fast)',
+        'm3-effects': 'var(--m3-ease-effects-default)',
+        'm3-effects-slow': 'var(--m3-ease-effects-slow)',
+      },
+      transitionDuration: {
+        'm3-spatial-fast': 'var(--m3-dur-spatial-fast)',
+        'm3-spatial': 'var(--m3-dur-spatial-default)',
+        'm3-spatial-slow': 'var(--m3-dur-spatial-slow)',
+        'm3-effects-fast': 'var(--m3-dur-effects-fast)',
+        'm3-effects': 'var(--m3-dur-effects-default)',
+        'm3-effects-slow': 'var(--m3-dur-effects-slow)',
       },
       screens: {
         'xs': '375px',
@@ -63,11 +137,11 @@ export default {
       },
       animation: {
         'fade-in': 'fadeIn 0.5s ease-out',
-        'slide-up': 'slideUp 0.6s ease-out',
+        'slide-up': 'slideUp var(--m3-dur-spatial-default) var(--m3-ease-spatial-default)',
         'float': 'float 3s ease-in-out infinite',
         'glow': 'glow 2s ease-in-out infinite alternate',
-        'achievement-unlock': 'achievementSlideIn 0.3s ease-out, achievementFadeOut 0.3s ease-in 2.7s forwards',
-        'bounce-once': 'bounceOnce 0.6s ease-out',
+        'achievement-unlock': 'achievementSlideIn var(--m3-dur-spatial-default) var(--m3-ease-spatial-default), achievementFadeOut 0.3s ease-in 2.7s forwards',
+        'bounce-once': 'bounceOnce var(--m3-dur-spatial-fast) var(--m3-ease-spatial-fast)',
       },
       keyframes: {
         fadeIn: {
@@ -83,8 +157,8 @@ export default {
           '50%': { transform: 'translateY(-10px)' },
         },
         glow: {
-          '0%': { boxShadow: '0 0 20px rgba(74, 144, 226, 0.4)' },
-          '100%': { boxShadow: '0 0 30px rgba(74, 144, 226, 0.6)' },
+          '0%': { boxShadow: '0 0 20px rgb(var(--md-sys-color-primary) / 0.4)' },
+          '100%': { boxShadow: '0 0 30px rgb(var(--md-sys-color-primary) / 0.6)' },
         },
         achievementSlideIn: {
           '0%': { transform: 'translateY(-100px)', opacity: '0' },

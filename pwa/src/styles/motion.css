@@ -1,0 +1,166 @@
+/**
+ * mxster Motion System — Material 3 Expressive springs
+ *
+ * Speed assignment:
+ *   spatial-fast    → buttons, switches, chips, press shape-morphs
+ *   spatial-default → dialogs, sheets, sidebar, nav indicator, card reveals
+ *   spatial-slow    → route/view transitions, hero entrances
+ *   effects-*       → color/opacity/state-layer changes (never overshoot)
+ *
+ * All duration/easing values come from design-tokens.css; under
+ * prefers-reduced-motion the tokens collapse to 120ms ease globally.
+ */
+
+/* ════════════════════ SPRING KEYFRAMES ════════════════════ */
+
+/* Press feedback with spring return (transitions can't overshoot; keyframes can) */
+@keyframes m3-press-bounce {
+  0% { transform: scale(1); }
+  35% { transform: scale(0.96); }
+  70% { transform: scale(1.02); }
+  100% { transform: scale(1); }
+}
+
+/* Dialogs / sheets: rise with overshoot, settle */
+@keyframes m3-spring-in {
+  0% { opacity: 0; transform: translateY(24px) scale(0.97); }
+  60% { opacity: 1; transform: translateY(-4px) scale(1.005); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* Snackbar/toast from bottom */
+@keyframes m3-spring-in-up {
+  0% { opacity: 0; transform: translateY(32px); }
+  60% { opacity: 1; transform: translateY(-5px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+/* Switch thumb squash & stretch */
+@keyframes m3-thumb-bounce {
+  0% { transform: scale(1); }
+  40% { transform: scale(1.15, 0.85); }
+  70% { transform: scale(0.95, 1.05); }
+  100% { transform: scale(1); }
+}
+
+/* Scrim fade (dialogs) */
+@keyframes m3-scrim-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* Staggered reveal base */
+@keyframes m3-reveal {
+  0% { opacity: 0; transform: translateY(14px) scale(0.98); }
+  70% { opacity: 1; transform: translateY(-2px) scale(1.004); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* Contained loading indicator: corner morph + arc rotation */
+@keyframes m3-loading-morph {
+  0%, 100% { border-radius: var(--m3-shape-xl); }
+  50% { border-radius: var(--m3-shape-md); }
+}
+@keyframes m3-rotate {
+  to { transform: rotate(360deg); }
+}
+
+/* Success flash on score chips etc. (color only → effects) */
+@keyframes m3-tonal-flash {
+  0% { background-color: rgb(var(--md-sys-color-primary-container)); }
+  100% { background-color: transparent; }
+}
+
+/* ════════════════════ STAGGERED REVEAL ════════════════════ */
+
+.stagger-children > * {
+  animation: m3-reveal var(--m3-dur-spatial-default) var(--m3-ease-spatial-default) both;
+}
+.stagger-children > *:nth-child(1) { animation-delay: 0ms; }
+.stagger-children > *:nth-child(2) { animation-delay: 40ms; }
+.stagger-children > *:nth-child(3) { animation-delay: 80ms; }
+.stagger-children > *:nth-child(4) { animation-delay: 120ms; }
+.stagger-children > *:nth-child(5) { animation-delay: 160ms; }
+.stagger-children > *:nth-child(6) { animation-delay: 200ms; }
+.stagger-children > *:nth-child(7) { animation-delay: 240ms; }
+.stagger-children > *:nth-child(8) { animation-delay: 280ms; }
+.stagger-children > *:nth-child(9) { animation-delay: 320ms; }
+.stagger-children > *:nth-child(10) { animation-delay: 360ms; }
+.stagger-children > *:nth-child(11) { animation-delay: 400ms; }
+.stagger-children > *:nth-child(12) { animation-delay: 440ms; }
+.stagger-children > *:nth-child(n + 13) { animation-delay: 480ms; }
+
+/* ════════════════════ STATE LAYERS ════════════════════ */
+
+.m3-state-layer {
+  position: relative;
+  overflow: hidden;
+}
+.m3-state-layer::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: currentColor;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--m3-dur-effects-fast) var(--m3-ease-effects-fast);
+}
+@media (hover: hover) and (pointer: fine) {
+  .m3-state-layer:hover::after { opacity: var(--m3-state-hover); }
+}
+.m3-state-layer:focus-visible::after { opacity: var(--m3-state-focus); }
+.m3-state-layer:active::after { opacity: var(--m3-state-press); }
+
+/* ════════════════════ RIPPLE (injected by src/utils/ripple.ts) ════════════════════ */
+
+.m3-ripple {
+  position: absolute;
+  border-radius: 50%;
+  background: currentColor;
+  opacity: 0.14;
+  pointer-events: none;
+  transform: scale(0);
+  animation: m3-ripple-expand var(--m3-dur-spatial-default) var(--m3-ease-effects-slow) forwards;
+}
+@keyframes m3-ripple-expand {
+  to { transform: scale(2.6); opacity: 0; }
+}
+
+/* ════════════════════ VIEW TRANSITIONS (routes + theme reveal) ════════════════════ */
+
+::view-transition-old(root) {
+  animation: m3-vt-out var(--m3-dur-spatial-slow) var(--m3-ease-effects-slow) both;
+}
+::view-transition-new(root) {
+  animation: m3-vt-in var(--m3-dur-spatial-slow) var(--m3-ease-spatial-slow) both;
+}
+@keyframes m3-vt-out {
+  to { opacity: 0; transform: translateY(-10px); }
+}
+@keyframes m3-vt-in {
+  from { opacity: 0; transform: translateY(18px); }
+}
+
+/* Theme toggle uses a circular reveal driven from JS clip-path animation on
+   ::view-transition-new(root); suppress the default route animation then. */
+html[data-theme-transition] ::view-transition-old(root) {
+  animation: none;
+}
+html[data-theme-transition] ::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+
+/* Persistent chrome keeps its own stable snapshot (no root sweep) */
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation-duration: 120ms !important;
+    animation-timing-function: ease !important;
+  }
+  .stagger-children > * {
+    animation-delay: 0ms !important;
+  }
+}

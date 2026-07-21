@@ -23,6 +23,7 @@ import {
   startInteractionTracking,
   stopInteractionTracking
 } from '@/utils/interactionActivityTracker'
+import { getParticleCount, prefersReducedMotion } from '@/utils/animationHelpers'
 
 interface ParticleBackgroundProps {
   isPlaying?: boolean
@@ -61,6 +62,10 @@ export function ParticleBackground({
 
   useEffect(() => {
     if (!containerRef.current) return
+
+    // Reduced motion: skip the entire WebGL scene — the container renders the
+    // static token-based gradient from currentParams.backgroundColor instead.
+    if (prefersReducedMotion()) return
 
     // ============================================================================
     // Scene Setup
@@ -133,7 +138,7 @@ export function ParticleBackground({
 
     // Layer 1: Main Wave (Purple/Blue)
     const createMainWave = () => {
-      const count = 12000
+      const count = getParticleCount(12000) // halved on mobile
       const geometry = new THREE.BufferGeometry()
       const positions = new Float32Array(count * 3)
       const velocities = new Float32Array(count * 3)
@@ -175,7 +180,7 @@ export function ParticleBackground({
 
     // Layer 2: Accent Wave (Orange/Red)
     const createAccentWave = () => {
-      const count = 8000
+      const count = getParticleCount(8000)
       const geometry = new THREE.BufferGeometry()
       const positions = new Float32Array(count * 3)
 
@@ -210,7 +215,7 @@ export function ParticleBackground({
 
     // Layer 3: Floating Stars (Cyan)
     const createStarLayer = () => {
-      const count = 5000
+      const count = getParticleCount(5000)
       const geometry = new THREE.BufferGeometry()
       const positions = new Float32Array(count * 3)
 
@@ -513,35 +518,38 @@ export function ParticleBackground({
     }
   }, [activityLevel, isHardcoreMode])
 
-  // Smooth parameter interpolation
+  // Smooth parameter interpolation — rAF loop keyed only on the target, so the
+  // effect isn't torn down and recreated on every interpolation frame
   useEffect(() => {
-    if (transitionDurationRef.current > 0) {
-      const intervalId = setInterval(() => {
-        const now = Date.now()
-        const elapsed = now - transitionStartTimeRef.current
-        const progress = Math.min(1, elapsed / transitionDurationRef.current)
+    if (transitionDurationRef.current <= 0) return
 
-        if (progress < 1) {
-          const interpolated = interpolateParameters(currentParams, targetParams, progress)
-          setCurrentParams(interpolated)
-        } else {
-          setCurrentParams(targetParams)
-          transitionDurationRef.current = 0
-        }
-      }, 16) // ~60fps
+    let rafId: number
+    const step = () => {
+      const elapsed = Date.now() - transitionStartTimeRef.current
+      const progress = Math.min(1, elapsed / transitionDurationRef.current)
 
-      return () => clearInterval(intervalId)
+      if (progress < 1) {
+        setCurrentParams((prev) => interpolateParameters(prev, targetParams, progress))
+        rafId = requestAnimationFrame(step)
+      } else {
+        setCurrentParams(targetParams)
+        transitionDurationRef.current = 0
+      }
     }
-  }, [currentParams, targetParams])
+    rafId = requestAnimationFrame(step)
+
+    return () => cancelAnimationFrame(rafId)
+  }, [targetParams])
 
   // Colors are now handled by the smooth interpolation system above - no separate useEffect needed!
 
   return (
     <div
       ref={containerRef}
-      className="fixed inset-0 -z-10 pointer-events-none"
+      className="fixed inset-0 -z-10 pointer-events-none particle-bg"
       style={{
-        background: currentParams.backgroundColor // Smooth background transition
+        background: currentParams.backgroundColor, // Smooth background transition
+        viewTransitionName: 'particle-bg'
       }}
       aria-hidden="true"
     />
