@@ -327,7 +327,7 @@ export function MusicPlayer({ song, onStateChange }: MusicPlayerProps) {
           <button
             onClick={handleTogglePlay}
             disabled={!playerReady || isLoading}
-            className={`w-14 h-14 min-w-[48px] min-h-[48px] bg-md-primary text-md-on-primary m3-state-layer flex items-center justify-center shadow-lg shadow-secondary/40 disabled:opacity-50 disabled:cursor-not-allowed active:scale-95 ${
+            className={`w-14 h-14 min-w-[48px] min-h-[48px] bg-md-primary text-md-on-primary m3-state-layer flex items-center justify-center shadow-glow-md disabled:opacity-50 disabled:cursor-not-allowed active:scale-95 ${
               isPlaying ? 'rounded-m3-lg' : 'rounded-m3-full'
             }`}
             style={{ transition: 'border-radius var(--m3-spatial-fast), transform var(--m3-spatial-fast), background-color var(--m3-effects-default)' }}

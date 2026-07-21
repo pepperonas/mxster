@@ -93,10 +93,14 @@
     @apply focus-visible:ring-md-primary;
   }
 
-  /* Filled (tertiary — the expressive hero button) */
+  /* Filled hero action — deep, saturated coral with white text in BOTH
+     themes (~8:1). M3 dark would use a pale tertiary tone; the deep tone
+     reads premium and confident instead of pastel. */
   .btn-accent {
-    @apply bg-md-tertiary text-md-on-tertiary hover:shadow-glow-accent;
-    @apply focus-visible:ring-md-tertiary;
+    background: rgb(var(--md-ref-tertiary-40));
+    color: #fff;
+    -webkit-text-fill-color: #fff;
+    @apply hover:shadow-glow-accent focus-visible:ring-md-tertiary;
   }
 
   /* Tonal */
@@ -216,19 +220,25 @@
   .text-label-md { font: var(--md-sys-type-label-md); letter-spacing: 0.03em; }
   .text-label-sm { font: var(--md-sys-type-label-sm); letter-spacing: 0.03em; }
 
-  /* Emphasized hero type via variable-font axes (Roboto Flex wght+wdth) */
+  /* Emphasized hero type — elegant, not chunky. Tight tracking + optical
+     weight via the Roboto Flex variable axes; premium editorial feel. */
   .text-emphasized {
-    font-variation-settings: 'wght' 780, 'wdth' 110;
+    font-variation-settings: 'wght' 700, 'wdth' 100, 'opsz' 96;
+    letter-spacing: -0.022em;
   }
 
-  /* Brand text gradient — endpoints are theme-aware (design-tokens.css) */
+  /* Premium type color system: no gradients in text.
+     Default heading/label accent is crisp, high-contrast on-surface. */
   .text-gradient {
-    @apply bg-clip-text text-transparent;
-    background-image: linear-gradient(
-      to right,
-      rgb(var(--brand-gradient-from)),
-      rgb(var(--brand-gradient-to))
-    );
+    color: rgb(var(--md-sys-color-on-surface));
+    -webkit-text-fill-color: rgb(var(--md-sys-color-on-surface));
+  }
+
+  /* Deliberate brand accent (wordmark, hero data). One solid accent, used
+     with restraint — the mark of a premium system. */
+  .text-brand {
+    color: rgb(var(--md-sys-color-primary));
+    -webkit-text-fill-color: rgb(var(--md-sys-color-primary));
   }
 
   /* Smooth transitions */

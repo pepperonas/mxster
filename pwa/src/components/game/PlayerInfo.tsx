@@ -31,7 +31,7 @@ export function PlayerInfo({ isBotExecuting = false }: PlayerInfoProps = {}) {
                 <p className="text-xs sm:text-sm text-text-secondary uppercase tracking-wider">
                   {player.isBot ? 'KI-Gegner' : (isDJ ? 'DJ (scannt QR-Codes)' : 'Aktiver Spieler')}
                 </p>
-                <h2 className="text-2xl sm:text-3xl font-bold text-gradient truncate">{player.name}</h2>
+                <h2 className="text-2xl sm:text-3xl font-bold text-text-primary truncate">{player.name}</h2>
               </div>
               {player.isBot && player.botDifficulty && (
                 <span className={`
@@ -50,12 +50,12 @@ export function PlayerInfo({ isBotExecuting = false }: PlayerInfoProps = {}) {
         {/* Stats */}
         <div className="flex gap-4 sm:gap-6 flex-shrink-0">
           <div className="text-center">
-            <div className="text-2xl sm:text-3xl font-bold text-gradient">{player.cards}</div>
+            <div className="text-2xl sm:text-3xl font-bold text-brand tabular-nums">{player.cards}</div>
             <div className="text-xs text-text-secondary uppercase tracking-wider">Karten</div>
           </div>
           {gameMode === 'hardcore' && (
             <div className="text-center">
-              <div className="text-2xl sm:text-3xl font-bold text-gradient">{player.score}</div>
+              <div className="text-2xl sm:text-3xl font-bold text-brand tabular-nums">{player.score}</div>
               <div className="text-xs text-text-secondary uppercase tracking-wider">Punkte</div>
             </div>
           )}

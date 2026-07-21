@@ -49,14 +49,14 @@ export function ScoreOverview() {
                   {index < 3 ? medals[index] : `#${index + 1}`}
                 </span>
                 <div>
-                  <p className="font-bold text-gradient">{player.name}</p>
+                  <p className="font-bold text-text-primary">{player.name}</p>
                   <p className="text-xs text-text-secondary">{player.cards} Karten</p>
                 </div>
               </div>
 
               {/* Score */}
               <div className="text-right">
-                <div className="text-2xl font-bold text-gradient">{player.score}</div>
+                <div className="text-2xl font-bold text-brand tabular-nums">{player.score}</div>
                 <div className="text-xs text-text-secondary">Punkte</div>
               </div>
             </div>

@@ -80,7 +80,7 @@ export function ActionBar() {
 
             <div className="flex items-center gap-2" style={{ viewTransitionName: 'app-brand' }}>
               <span className="text-2xl">🎵</span>
-              <h1 className="text-xl font-bold text-gradient hidden sm:block">mxster</h1>
+              <h1 className="text-xl font-bold text-brand tracking-tight hidden sm:block">mxster</h1>
             </div>
           </div>
 

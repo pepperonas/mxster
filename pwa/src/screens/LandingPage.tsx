@@ -365,7 +365,7 @@ export function LandingPage() {
               </span>
             </div>
             <div className="text-6xl mb-6 group-hover:scale-110 transition-transform">📱</div>
-            <h3 className="text-headline-sm text-emphasized mb-4 text-text-primary group-hover:text-gradient">
+            <h3 className="text-headline-sm text-emphasized mb-4 text-text-primary group-hover:text-brand">
               Virtuelle Karten
             </h3>
             <p className="text-text-secondary leading-relaxed mb-6">
@@ -398,7 +398,7 @@ export function LandingPage() {
           {/* Physical Cards - NOW SECOND */}
           <div className="card p-8 rounded-m3-xl group">
             <div className="text-6xl mb-6 group-hover:scale-110 transition-transform">🃏</div>
-            <h3 className="text-headline-sm text-emphasized mb-4 text-text-primary group-hover:text-gradient">
+            <h3 className="text-headline-sm text-emphasized mb-4 text-text-primary group-hover:text-brand">
               Physische Karten
             </h3>
             <p className="text-text-secondary leading-relaxed mb-6">
@@ -446,7 +446,7 @@ export function LandingPage() {
                 1
               </div>
               <div>
-                <h3 className="text-headline-sm text-emphasized mb-3 text-text-primary group-hover:text-gradient">
+                <h3 className="text-headline-sm text-emphasized mb-3 text-text-primary group-hover:text-brand">
                   Wähle Spielmodus & Variante
                 </h3>
                 <p className="text-text-secondary leading-relaxed">
@@ -463,7 +463,7 @@ export function LandingPage() {
                 2
               </div>
               <div>
-                <h3 className="text-headline-sm text-emphasized mb-3 text-text-primary group-hover:text-gradient">
+                <h3 className="text-headline-sm text-emphasized mb-3 text-text-primary group-hover:text-brand">
                   Spieler hinzufügen
                 </h3>
                 <p className="text-text-secondary leading-relaxed">
@@ -480,7 +480,7 @@ export function LandingPage() {
                 3
               </div>
               <div>
-                <h3 className="text-headline-sm text-emphasized mb-3 text-text-primary group-hover:text-gradient">
+                <h3 className="text-headline-sm text-emphasized mb-3 text-text-primary group-hover:text-brand">
                   Rate oder Platziere
                 </h3>
                 <p className="text-text-secondary leading-relaxed mb-3">
@@ -500,7 +500,7 @@ export function LandingPage() {
                 4
               </div>
               <div>
-                <h3 className="text-headline-sm text-emphasized mb-3 text-text-primary group-hover:text-gradient">
+                <h3 className="text-headline-sm text-emphasized mb-3 text-text-primary group-hover:text-brand">
                   Gewinne & Achievements
                 </h3>
                 <p className="text-text-secondary leading-relaxed mb-3">
@@ -545,7 +545,7 @@ export function LandingPage() {
           {/* Feature 1 */}
           <div className="card p-8 rounded-m3-xl text-center group">
             <div className="text-6xl mb-6 group-hover:scale-110 transition-transform">🎯</div>
-            <h3 className="text-title-lg text-emphasized mb-3 text-text-primary group-hover:text-gradient">
+            <h3 className="text-title-lg text-emphasized mb-3 text-text-primary group-hover:text-brand">
               Tolerantes Raten
             </h3>
             <p className="text-sm text-text-secondary leading-relaxed">
@@ -556,7 +556,7 @@ export function LandingPage() {
           {/* Feature 2 */}
           <div className="card p-8 rounded-m3-xl text-center group">
             <div className="text-6xl mb-6 group-hover:scale-110 transition-transform">🎧</div>
-            <h3 className="text-title-lg text-emphasized mb-3 text-text-primary group-hover:text-gradient">
+            <h3 className="text-title-lg text-emphasized mb-3 text-text-primary group-hover:text-brand">
               Spotify Premium
             </h3>
             <p className="text-sm text-text-secondary leading-relaxed">
@@ -567,7 +567,7 @@ export function LandingPage() {
           {/* Feature 3 */}
           <div className="card p-8 rounded-m3-xl text-center group">
             <div className="text-6xl mb-6 group-hover:scale-110 transition-transform">📱</div>
-            <h3 className="text-title-lg text-emphasized mb-3 text-text-primary group-hover:text-gradient">
+            <h3 className="text-title-lg text-emphasized mb-3 text-text-primary group-hover:text-brand">
               Progressive Web App
             </h3>
             <p className="text-sm text-text-secondary leading-relaxed">
@@ -578,7 +578,7 @@ export function LandingPage() {
           {/* Feature 4 - Achievements */}
           <div className="card p-8 rounded-m3-xl text-center group">
             <div className="text-6xl mb-6 group-hover:scale-110 transition-transform">🏆</div>
-            <h3 className="text-title-lg text-emphasized mb-3 text-text-primary group-hover:text-gradient">
+            <h3 className="text-title-lg text-emphasized mb-3 text-text-primary group-hover:text-brand">
               Achievements
             </h3>
             <p className="text-sm text-text-secondary leading-relaxed">
@@ -603,7 +603,7 @@ export function LandingPage() {
           <div className="flex flex-col md:flex-row items-center gap-8">
             <div className="flex-shrink-0 text-7xl group-hover:scale-110 transition-transform">🐙</div>
             <div className="flex-1 text-center md:text-left">
-              <h3 className="text-headline-sm text-emphasized mb-4 text-text-primary group-hover:text-gradient">
+              <h3 className="text-headline-sm text-emphasized mb-4 text-text-primary group-hover:text-brand">
                 Auf GitHub
               </h3>
               <p className="text-text-secondary leading-relaxed mb-6">
