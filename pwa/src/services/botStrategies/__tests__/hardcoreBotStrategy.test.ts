@@ -150,14 +150,18 @@ describe('HardcoreBotStrategy', () => {
       const strategy = new HardcoreBotStrategy(config)
       const guesses = []
 
-      for (let i = 0; i < 50; i++) {
+      // 500 draws instead of 50: the measured exact rate is ~88%, so with only
+      // 50 draws a >=80% assertion fails ~3% of runs by pure chance (flaky CI).
+      // The larger sample keeps the same 80% bar but puts it ~10 sigma away.
+      const SAMPLES = 500
+      for (let i = 0; i < SAMPLES; i++) {
         const guess = strategy.generateGuess(testSong)
         guesses.push(guess)
       }
 
       // Most guesses should be exact or very close
       const exactTitles = guesses.filter(g => g.title === testSong.title).length
-      expect(exactTitles).toBeGreaterThanOrEqual(40) // Most should be exact
+      expect(exactTitles).toBeGreaterThanOrEqual(SAMPLES * 0.8) // Most should be exact
     })
   })
 
