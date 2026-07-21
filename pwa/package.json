@@ -1,6 +1,6 @@
 {
   "name": "mxster-pwa",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "mxster - Music Timeline Game PWA",
   "type": "module",
   "scripts": {
