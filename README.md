@@ -3,7 +3,7 @@
 **Das ultimative Musikquiz!** Rate Songs, platziere sie chronologisch und teste dein Musikwissen.
 
 [![App](https://img.shields.io/badge/Play_Now-mxster.de-blue?style=for-the-badge&logo=googlechrome&logoColor=white)](https://mxster.de)
-[![Version](https://img.shields.io/badge/v0.1.1-purple?style=for-the-badge&logo=semver&logoColor=white)](https://github.com/pepperonas/mxster/releases)
+[![Version](https://img.shields.io/badge/v0.2.1-06B6D4?style=for-the-badge&logo=semver&logoColor=white)](https://github.com/pepperonas/mxster/releases)
 [![License](https://img.shields.io/badge/MIT-green?style=for-the-badge&logo=opensourceinitiative&logoColor=white)](LICENSE)
 
 ![React](https://img.shields.io/badge/React_19-61DAFB?style=flat-square&logo=react&logoColor=black)
@@ -23,6 +23,8 @@
 ![Modes](https://img.shields.io/badge/Modes-3-blue?style=flat-square)
 ![Bot_AI](https://img.shields.io/badge/Bot_AI-3_Levels-blueviolet?style=flat-square)
 ![Multiplayer](https://img.shields.io/badge/Multiplayer-Unlimited-brightgreen?style=flat-square)
+![Design](https://img.shields.io/badge/Material_3-Expressive-06B6D4?style=flat-square&logo=materialdesign&logoColor=white)
+![Theme](https://img.shields.io/badge/Theme-Dark_%2B_Light-1A1C27?style=flat-square)
 [![Tests](https://github.com/pepperonas/mxster/actions/workflows/test.yml/badge.svg)](https://github.com/pepperonas/mxster/actions/workflows/test.yml)
 
 ![mxster Banner](https://mxster.de/assets/mxster.jpg)
@@ -49,6 +51,16 @@
 - Fuzzy Matching, 24 Achievements, Bot-Gegner (Easy/Medium/Hard)
 - PWA -- installierbar, offline-faehig, Auto-Save
 - 3D Partikel-Animationen, Konfetti-Effekte, Score-Animationen
+
+## Design
+
+**Material 3 Expressive** von Grund auf: zentrale Design-Token (`pwa/src/styles/design-tokens.css`) als Single Source of Truth fuer Farbe, Form, Typografie und Motion.
+
+- **Dark + Light Theme** (elektrisches Cyan als Marke, warmes Koralle als Akzent), umschaltbar mit MD3-Circular-Reveal ueber die View Transitions API
+- **Physics-based Motion** -- Spring-Kurven fuer Position/Groesse/Form, sanfte Effects-Kurven fuer Farbe/Deckkraft; `prefers-reduced-motion` durchgehend respektiert
+- **Shape-Morphing** als State-Feedback, State-Layer + Ripple, gestaffelte Reveals
+- **Shared-Element-Transitions** zwischen Routen; premium Typografie ohne Schrift-Farbverlaeufe, ruhige Elevation statt Neon-Glow
+- Mobile-first: Touch-Targets >= 48px, Safe-Areas, ab 360px ohne horizontales Scrollen
 
 ## Fuer Entwickler
 
