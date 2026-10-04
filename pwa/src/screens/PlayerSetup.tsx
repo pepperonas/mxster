@@ -4,11 +4,15 @@
  */
 
 import { useState } from 'react'
+import { AnimatePresence, m } from 'motion/react'
+import { spring } from '@/motion/springs'
 import { useAppNavigate } from '@/hooks/useAppNavigate'
 import { useGame, useUI, useSettings, useGoogleAuth } from '@/contexts'
 import { PlusIcon, CloseIcon } from '@/utils/icons'
 import { requiresDJ } from '@/utils/gameModes'
 import { createBotPlayers } from '@/services/botPlayer'
+import { SelectionTrail } from '@/components/ui/SelectionTrail'
+import { SegmentedControl } from '@/components/ui/SegmentedControl'
 
 export function PlayerSetup() {
   const navigate = useAppNavigate()
@@ -129,6 +133,7 @@ export function PlayerSetup() {
       <div className="container mx-auto px-4 max-w-3xl">
         {/* Header */}
         <div className="text-center mb-12 animate-fade-in">
+          <SelectionTrail showVariant />
           <h1 className="text-display-sm md:text-display-md text-emphasized text-gradient mb-4">
             Spieler hinzufügen
           </h1>
@@ -241,85 +246,33 @@ export function PlayerSetup() {
             </p>
 
             <div className="space-y-6">
-              {/* Bot Count Selector */}
               <div>
-                <label className="block text-label-lg text-text-secondary mb-3">
-                  Anzahl der Bots
-                </label>
-                <div className="flex gap-3">
-                  {[1, 2, 3].map((count) => (
-                    <button
-                      key={count}
-                      onClick={() => setBotCount(count)}
-                      style={{ transition: 'border-radius var(--m3-spatial-fast), transform var(--m3-spatial-fast), background-color var(--m3-effects-default), border-color var(--m3-effects-default), color var(--m3-effects-default)' }}
-                      className={`
-                        flex-1 py-3 px-4 min-h-[48px] text-label-lg border-2 active:scale-95
-                        ${
-                          botCount === count
-                            ? 'bg-md-secondary-container text-md-on-secondary-container border-md-primary rounded-m3-xl'
-                            : 'bg-md-surface-container-high border-transparent text-text-primary hover:border-md-primary/50 rounded-m3-lg'
-                        }
-                      `}
-                    >
-                      {count} Bot{count > 1 ? 's' : ''}
-                    </button>
-                  ))}
-                </div>
+                <p className="text-label-lg text-text-secondary mb-3">Anzahl der Bots</p>
+                <SegmentedControl
+                  label="Anzahl der Bots"
+                  value={botCount}
+                  onChange={setBotCount}
+                  segments={[1, 2, 3].map((n) => ({ value: n, label: `${n} Bot${n > 1 ? 's' : ''}` }))}
+                />
               </div>
 
-              {/* Bot Difficulty Selector */}
               <div>
-                <label className="block text-label-lg text-text-secondary mb-3">
-                  Schwierigkeitsgrad
-                </label>
-                <div className="flex flex-col sm:flex-row gap-3">
-                  <button
-                    onClick={() => setBotDifficulty('easy')}
-                    style={{ transition: 'border-radius var(--m3-spatial-fast), transform var(--m3-spatial-fast), background-color var(--m3-effects-default), border-color var(--m3-effects-default), color var(--m3-effects-default)' }}
-                    className={`
-                      flex-1 py-3 px-4 min-h-[48px] text-label-lg border-2 active:scale-95
-                      ${
-                        botDifficulty === 'easy'
-                          ? 'bg-md-secondary-container text-md-on-secondary-container border-md-primary rounded-m3-xl'
-                          : 'bg-md-surface-container-high border-transparent text-text-primary hover:border-md-primary/50 rounded-m3-lg'
-                      }
-                    `}
-                  >
-                    😊 Leicht
-                  </button>
-                  <button
-                    onClick={() => setBotDifficulty('medium')}
-                    style={{ transition: 'border-radius var(--m3-spatial-fast), transform var(--m3-spatial-fast), background-color var(--m3-effects-default), border-color var(--m3-effects-default), color var(--m3-effects-default)' }}
-                    className={`
-                      flex-1 py-3 px-4 min-h-[48px] text-label-lg border-2 active:scale-95
-                      ${
-                        botDifficulty === 'medium'
-                          ? 'bg-md-secondary-container text-md-on-secondary-container border-md-primary rounded-m3-xl'
-                          : 'bg-md-surface-container-high border-transparent text-text-primary hover:border-md-primary/50 rounded-m3-lg'
-                      }
-                    `}
-                  >
-                    🎯 Mittel
-                  </button>
-                  <button
-                    onClick={() => setBotDifficulty('hard')}
-                    style={{ transition: 'border-radius var(--m3-spatial-fast), transform var(--m3-spatial-fast), background-color var(--m3-effects-default), border-color var(--m3-effects-default), color var(--m3-effects-default)' }}
-                    className={`
-                      flex-1 py-3 px-4 min-h-[48px] text-label-lg border-2 active:scale-95
-                      ${
-                        botDifficulty === 'hard'
-                          ? 'bg-md-secondary-container text-md-on-secondary-container border-md-primary rounded-m3-xl'
-                          : 'bg-md-surface-container-high border-transparent text-text-primary hover:border-md-primary/50 rounded-m3-lg'
-                      }
-                    `}
-                  >
-                    🔥 Schwer
-                  </button>
-                </div>
+                <p className="text-label-lg text-text-secondary mb-3">Schwierigkeitsgrad</p>
+                <SegmentedControl
+                  label="Schwierigkeitsgrad"
+                  value={botDifficulty}
+                  onChange={setBotDifficulty}
+                  stackOnMobile
+                  segments={[
+                    { value: 'easy', label: '😊 Leicht' },
+                    { value: 'medium', label: '🎯 Mittel' },
+                    { value: 'hard', label: '🔥 Schwer' }
+                  ]}
+                />
               </div>
 
               {/* Difficulty Description */}
-              <div className="bg-md-surface-container-highest rounded-m3-md p-4 border border-white/5">
+              <div className="bg-md-surface-container-highest rounded-m3-md p-4 border border-md-outline-variant/40">
                 <p className="text-body-sm text-text-secondary">
                   {botDifficulty === 'easy' && '😊 Leicht: Perfekt für Einsteiger. Der Bot macht häufig Fehler (~30% Trefferquote).'}
                   {botDifficulty === 'medium' && '🎯 Mittel: Eine faire Herausforderung. Der Bot hat eine solide Trefferquote (~60%).'}
@@ -344,11 +297,17 @@ export function PlayerSetup() {
             <h2 className="text-headline-sm text-text-primary mb-6">
               Spieler ({players.length})
             </h2>
-            <div className="space-y-3 stagger-children">
+            <ul className="space-y-3">
+              <AnimatePresence initial={false} mode="popLayout">
               {players.map((player, index) => (
-                <div
-                  key={index}
-                  className="flex items-center justify-between py-3 px-5 min-h-[48px] bg-md-surface-container-high rounded-m3-full border border-white/5"
+                <m.li
+                  key={player.name}
+                  layout
+                  initial={{ opacity: 0, scale: 0.85, y: -8 }}
+                  animate={{ opacity: 1, scale: 1, y: 0 }}
+                  exit={{ opacity: 0, scale: 0.85, transition: spring.effectsDefault }}
+                  transition={spring.spatialDefault}
+                  className="flex items-center justify-between py-3 px-5 min-h-[48px] bg-md-surface-container-high rounded-m3-full border border-md-outline-variant/40"
                 >
                   <div className="flex items-center gap-3">
                     <span className="text-2xl">
@@ -378,14 +337,15 @@ export function PlayerSetup() {
                   </div>
                   <button
                     onClick={() => handleRemovePlayer(index)}
-                    className="touch-target p-2 rounded-m3-full text-md-error hover:bg-md-error-container hover:text-md-on-error-container active:scale-95 transition-all duration-m3-spatial-fast ease-m3-spatial-fast"
+                    className="touch-target p-2 rounded-m3-full text-md-error m3-state-layer active:scale-90 transition-transform duration-m3-spatial-fast ease-m3-spatial-fast"
                     aria-label={`${player.name} entfernen`}
                   >
                     <CloseIcon size={20} />
                   </button>
-                </div>
+                </m.li>
               ))}
-            </div>
+              </AnimatePresence>
+            </ul>
           </div>
         )}
 

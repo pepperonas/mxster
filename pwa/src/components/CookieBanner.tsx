@@ -1,64 +1,58 @@
 /**
- * Cookie Consent Banner - 8-Bit Pixel Style
- * GDPR-compliant localStorage notification with accept option
+ * Storage notice — an M3 bottom sheet that springs in after a short delay and
+ * leaves on a critically damped spring once acknowledged.
  */
-
 import { useState, useEffect } from 'react'
+import { AnimatePresence, m } from 'motion/react'
+import { spring } from '@/motion/springs'
+
+const CONSENT_KEY = 'mxster-cookie-consent'
 
 export function CookieBanner() {
-  const [shouldShow, setShouldShow] = useState(false)
+  const [visible, setVisible] = useState(false)
 
   useEffect(() => {
-    // Check if user has already made a choice
-    const cookieConsent = localStorage.getItem('mxster-cookie-consent')
-    if (!cookieConsent) {
-      // Show banner after a short delay
-      const timer = setTimeout(() => {
-        setShouldShow(true)
-      }, 1500)
-      return () => clearTimeout(timer)
-    }
+    if (localStorage.getItem(CONSENT_KEY)) return
+    const timer = window.setTimeout(() => setVisible(true), 1500)
+    return () => window.clearTimeout(timer)
   }, [])
 
-  const handleAccept = () => {
-    localStorage.setItem('mxster-cookie-consent', 'accepted')
-    setShouldShow(false)
+  const accept = () => {
+    localStorage.setItem(CONSENT_KEY, 'accepted')
+    setVisible(false)
   }
 
-  if (!shouldShow) return null
-
   return (
-    <div className="cookie-banner-8bit show">
-      {/* 8-Bit Pixel Border */}
-      <div className="pixel-border-top"></div>
-      <div className="pixel-border-right"></div>
-      <div className="pixel-border-bottom"></div>
-      <div className="pixel-border-left"></div>
-
-      {/* Pixel Corners */}
-      <div className="pixel-corner pixel-corner-tl"></div>
-      <div className="pixel-corner pixel-corner-tr"></div>
-      <div className="pixel-corner pixel-corner-bl"></div>
-      <div className="pixel-corner pixel-corner-br"></div>
-
-      {/* Banner Content */}
-      <div className="cookie-content-8bit">
-        <div className="cookie-icon-8bit">
-          <span className="pixel-emoji">💾</span>
-        </div>
-        <h2 className="cookie-title-8bit">Speicher-Hinweis</h2>
-
-        <p className="cookie-text-8bit">
-          Diese App nutzt <strong>LocalStorage</strong>, um deine Spielstände lokal auf deinem Gerät zu speichern.
-          Es werden keine Daten an externe Server gesendet. Die Speicherung ist technisch notwendig,
-          damit dein Fortschritt nicht verloren geht.
-        </p>
-
-        <button className="cookie-btn-8bit cookie-btn-accept-8bit" onClick={handleAccept}>
-          <span className="btn-icon">✓</span>
-          <span className="btn-text">Verstanden</span>
-        </button>
-      </div>
-    </div>
+    <AnimatePresence>
+      {visible && (
+        <m.aside
+          role="region"
+          aria-label="Speicher-Hinweis"
+          initial={{ y: 48, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          exit={{ y: 32, opacity: 0, transition: spring.effectsDefault }}
+          transition={spring.spatialDefault}
+          className="fixed z-[80] bottom-4 inset-x-4 sm:inset-x-auto sm:right-6 sm:bottom-6 sm:max-w-md mx-auto rounded-m3-xl bg-md-surface-container-high border border-md-outline-variant/60 shadow-m3-3 p-5 pb-[max(1.25rem,env(safe-area-inset-bottom))]"
+        >
+          <div className="flex items-start gap-4">
+            <span className="flex-shrink-0 w-11 h-11 grid place-items-center rounded-m3-lg bg-md-secondary-container text-md-on-secondary-container text-xl" aria-hidden="true">
+              💾
+            </span>
+            <div className="min-w-0">
+              <h2 className="text-title-md text-text-primary">Speicher-Hinweis</h2>
+              <p className="mt-1 text-body-md text-md-on-surface-variant">
+                mxster speichert Spielstände, Statistiken und Einstellungen per <strong className="text-text-primary">LocalStorage</strong> nur
+                auf deinem Gerät – technisch notwendig, damit dein Fortschritt nicht verloren geht.
+              </p>
+            </div>
+          </div>
+          <div className="mt-4 flex justify-end">
+            <button type="button" onClick={accept} className="btn btn-accent">
+              Verstanden
+            </button>
+          </div>
+        </m.aside>
+      )}
+    </AnimatePresence>
   )
 }

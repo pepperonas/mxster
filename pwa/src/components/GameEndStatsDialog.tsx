@@ -4,7 +4,10 @@
  */
 
 import { useEffect, useMemo, useState } from 'react'
-import confetti from 'canvas-confetti'
+import { m } from 'motion/react'
+import { celebrate } from '@/motion/celebrate'
+import { prefersReducedMotion } from '@/motion/policy'
+import { spring } from '@/motion/springs'
 import { useGameHistory } from '@/hooks'
 import type { Player } from '@/types'
 
@@ -20,49 +23,18 @@ export function GameEndStatsDialog({ winner, allPlayers, gameMode, onClose, onNe
   const { history } = useGameHistory()
   const [showStats, setShowStats] = useState(false)
 
-  // Trigger confetti animation on mount
+  // Podium first (trophy + confetti), then the statistics slide in
   useEffect(() => {
-    // Initial burst
-    confetti({
-      particleCount: 100,
-      spread: 70,
-      origin: { y: 0.6 }
-    })
-
-    // Multiple bursts for dramatic effect
-    const duration = 3000
-    const animationEnd = Date.now() + duration
-    const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 10000 }
-
-    function randomInRange(min: number, max: number) {
-      return Math.random() * (max - min) + min
+    if (prefersReducedMotion()) {
+      setShowStats(true)
+      return
     }
-
-    const interval = setInterval(function () {
-      const timeLeft = animationEnd - Date.now()
-
-      if (timeLeft <= 0) {
-        clearInterval(interval)
-        // Show stats after confetti
-        setTimeout(() => setShowStats(true), 500)
-        return
-      }
-
-      const particleCount = 50 * (timeLeft / duration)
-
-      confetti({
-        ...defaults,
-        particleCount,
-        origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 }
-      })
-      confetti({
-        ...defaults,
-        particleCount,
-        origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 }
-      })
-    }, 250)
-
-    return () => clearInterval(interval)
+    const cancel = celebrate('big', { x: 0.5, y: 0.35 })
+    const timer = window.setTimeout(() => setShowStats(true), 900)
+    return () => {
+      cancel()
+      window.clearTimeout(timer)
+    }
   }, [])
 
   // Calculate round statistics
@@ -133,7 +105,15 @@ export function GameEndStatsDialog({ winner, allPlayers, gameMode, onClose, onNe
     <div className="py-6">
       {/* Winner Celebration */}
       <div className="text-center mb-8">
-        <div className="text-6xl sm:text-8xl mb-4 animate-bounce">🏆</div>
+        <m.div
+          className="text-6xl sm:text-8xl mb-4"
+          initial={{ scale: 0.2, rotate: -25, y: 30 }}
+          animate={{ scale: 1, rotate: 0, y: 0 }}
+          transition={{ ...spring.spatialSlow, delay: 0.05 }}
+          aria-hidden="true"
+        >
+          🏆
+        </m.div>
         <h2 className="text-3xl sm:text-4xl font-bold text-gradient mb-2">{winner.name}</h2>
         <p className="text-lg sm:text-xl text-secondary mb-4">ist der Gewinner!</p>
         {gameMode === 'hardcore' && (
@@ -150,7 +130,7 @@ export function GameEndStatsDialog({ winner, allPlayers, gameMode, onClose, onNe
 
       {/* Stats become visible after confetti */}
       <div
-        className={`transition-all duration-500 ${
+        className={`transition-[opacity,transform] duration-m3-spatial-slow ease-m3-spatial-slow ${
           showStats ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
         }`}
       >
@@ -191,8 +171,8 @@ export function GameEndStatsDialog({ winner, allPlayers, gameMode, onClose, onNe
                   </div>
                   <div className="h-4 bg-primary/50 rounded-full overflow-hidden border border-accent/20">
                     <div
-                      className="h-full bg-gradient-to-r from-secondary to-accent transition-all duration-500"
-                      style={{ width: `${Math.min((playerStat.cards / 10) * 100, 100)}%` }}
+                      className="h-full bg-gradient-to-r from-secondary to-accent m3-bar-fill"
+                      style={{ transform: `scaleX(${Math.max(0, Math.min(1, (Math.min((playerStat.cards / 10) * 100, 100)) / 100))})` }}
                     />
                   </div>
                 </div>
@@ -243,8 +223,8 @@ export function GameEndStatsDialog({ winner, allPlayers, gameMode, onClose, onNe
                       </div>
                       <div className="h-2 bg-primary/50 rounded-full overflow-hidden border border-accent/20">
                         <div
-                          className="h-full bg-gradient-to-r from-accent to-secondary transition-all duration-500"
-                          style={{ width: `${playerGlobal.winRate}%` }}
+                          className="h-full bg-gradient-to-r from-accent to-secondary m3-bar-fill"
+                          style={{ transform: `scaleX(${Math.max(0, Math.min(1, (playerGlobal.winRate) / 100))})` }}
                         />
                       </div>
                     </div>

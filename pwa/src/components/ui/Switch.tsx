@@ -1,9 +1,11 @@
 /**
- * M3 Switch — 52×32 track, thumb grows 16→24px when checked,
- * spring thumb-bounce on change. Keeps native checkbox semantics.
+ * M3 Switch — 52×32 track. The thumb travels on the spatial-fast spring (it
+ * used to teleport between justify-start/-end while only its size animated),
+ * grows 16 → 24 px when on and to 28 px while pressed, like M3 specifies.
+ * Keeps native checkbox semantics.
  */
-
-import { useRef } from 'react'
+import { m } from 'motion/react'
+import { spring } from '@/motion/springs'
 
 interface SwitchProps {
   checked: boolean
@@ -12,50 +14,38 @@ interface SwitchProps {
   disabled?: boolean
 }
 
+const TRAVEL = 20 // 52 track − 2·2 border − 2·4 padding − 24 thumb box
+
 export function Switch({ checked, onChange, ariaLabel, disabled }: SwitchProps) {
-  const thumbRef = useRef<HTMLSpanElement>(null)
-
-  const handleChange = (next: boolean) => {
-    onChange(next)
-    const thumb = thumbRef.current
-    if (thumb) {
-      thumb.style.animation = 'none'
-      // restart the bounce keyframe on every toggle
-      void thumb.offsetWidth
-      thumb.style.animation = `m3-thumb-bounce var(--m3-dur-spatial-fast) var(--m3-ease-spatial-fast)`
-    }
-  }
-
   return (
     <label
       className={`relative inline-flex items-center flex-shrink-0 ${disabled ? 'opacity-40 cursor-not-allowed' : 'cursor-pointer'}`}
     >
       <input
         type="checkbox"
+        role="switch"
         checked={checked}
         disabled={disabled}
-        onChange={(e) => handleChange(e.target.checked)}
+        onChange={(e) => onChange(e.target.checked)}
         aria-label={ariaLabel}
         className="sr-only peer"
       />
-      <span
-        className={`
-          w-[52px] h-8 rounded-m3-full flex items-center px-1
-          border-2 transition-colors duration-m3-effects ease-m3-effects
-          peer-focus-visible:ring-2 peer-focus-visible:ring-md-primary peer-focus-visible:ring-offset-2 peer-focus-visible:ring-offset-background
-          ${checked
-            ? 'bg-md-primary border-md-primary justify-end'
-            : 'bg-md-surface-container-highest border-md-outline justify-start'}
-        `}
+      <m.span
+        whileTap={disabled ? undefined : 'pressed'}
+        className={`w-[52px] h-8 rounded-m3-full flex items-center px-1 border-2 transition-colors duration-m3-effects ease-m3-effects peer-focus-visible:ring-2 peer-focus-visible:ring-md-primary peer-focus-visible:ring-offset-2 peer-focus-visible:ring-offset-background ${
+          checked ? 'bg-md-primary border-md-primary' : 'bg-md-surface-container-highest border-md-outline'
+        }`}
       >
-        <span
-          ref={thumbRef}
-          className={`
-            rounded-m3-full transition-all duration-m3-spatial-fast ease-m3-spatial-fast
-            ${checked ? 'w-6 h-6 bg-md-on-primary' : 'w-4 h-4 bg-md-outline'}
-          `}
+        <m.span
+          className={`block w-6 h-6 rounded-m3-full transition-colors duration-m3-effects ease-m3-effects ${
+            checked ? 'bg-md-on-primary' : 'bg-md-outline'
+          }`}
+          initial={false}
+          animate={{ x: checked ? TRAVEL : 0, scale: checked ? 1 : 16 / 24 }}
+          variants={{ pressed: { scale: 28 / 24 } }}
+          transition={spring.spatialFast}
         />
-      </span>
+      </m.span>
     </label>
   )
 }

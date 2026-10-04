@@ -14,6 +14,7 @@ import { useTokenRefresh } from '@/hooks/useTokenRefresh'
 import { useAppNavigate } from '@/hooks/useAppNavigate'
 import { initRipple } from '@/utils/ripple'
 import { MotionProvider } from '@/motion/MotionProvider'
+import { useScrollReveal } from '@/motion/useScrollReveal'
 import { useEffect, useRef } from 'react'
 import './styles/design-tokens.css'
 import './styles/tailwind.css'
@@ -22,6 +23,9 @@ import './styles/motion.css'
 function AppContent() {
   // Background Token Refresh Service
   useTokenRefresh()
+
+  // Below-the-fold entrances play when scrolled into view
+  useScrollReveal()
 
   // M3 ripple (delegated, progressive enhancement)
   useEffect(() => { initRipple() }, [])
@@ -80,12 +84,12 @@ function AppContent() {
         showModal(
           '⚠️ Spiel beendet',
           <div className="space-y-4">
-            <p className="text-gray-300">
+            <p className="text-md-on-surface-variant">
               Die Seite wurde während eines laufenden Spiels neu geladen. Das Spiel wurde beendet.
             </p>
             <div className="glass p-4 border border-accent/30 rounded-lg">
               <p className="text-sm text-text-secondary">
-                <strong className="text-white">Hinweis:</strong> Der Spielstand wurde nicht gespeichert und alle Daten sind verloren gegangen.
+                <strong className="text-text-primary">Hinweis:</strong> Der Spielstand wurde nicht gespeichert und alle Daten sind verloren gegangen.
               </p>
             </div>
           </div>,

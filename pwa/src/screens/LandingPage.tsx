@@ -57,7 +57,7 @@ export function LandingPage() {
       <section className="container mx-auto px-4 max-w-6xl mb-12">
         <div className="text-center mb-12 animate-fade-in">
           {/* Logo / Title */}
-          <h1 className="text-display-sm sm:text-display-md md:text-display-lg text-emphasized text-gradient mb-4">
+          <h1 className="text-display-sm sm:text-display-md md:text-display-lg text-emphasized text-gradient mb-4 hero-wordmark">
             mxster
           </h1>
           <p className="text-title-lg text-text-secondary mb-6">
@@ -120,30 +120,30 @@ export function LandingPage() {
               </div>
               <div className="space-y-2 text-sm text-text-secondary mb-4">
                 <div className="flex items-center gap-2">
-                  <span className="text-green-500">✓</span>
+                  <span className="text-md-success">✓</span>
                   <span>Kein Spotify-Login nötig</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <span className="text-green-500">✓</span>
+                  <span className="text-md-success">✓</span>
                   <span>Unbegrenzte Spieler</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <span className="text-green-500">✓</span>
+                  <span className="text-md-success">✓</span>
                   <span>Sofort spielbereit</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <span className="text-green-500">✓</span>
+                  <span className="text-md-success">✓</span>
                   <span>Volle Songs (128 kbps MP3)</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <span className="text-green-500">✓</span>
+                  <span className="text-md-success">✓</span>
                   <span>Gute Audioqualität für Quiz-Spiele</span>
                 </div>
               </div>
 
               {/* YDL Legal Grey Area Disclaimer */}
-              <div className="p-3 bg-orange-500/10 border border-orange-500/30 rounded-m3-md mb-3">
-                <p className="text-xs sm:text-sm text-orange-300">
+              <div className="p-3 bg-md-tertiary-container/40 border border-md-tertiary/40 rounded-m3-md mb-3">
+                <p className="text-xs sm:text-sm text-md-tertiary">
                   <strong>⚠️ Rechtlicher Hinweis:</strong><br/>
                   Die Audiodateien wurden von YouTube heruntergeladen (ydl).
                   Die Nutzung liegt in einer rechtlichen Grauzone und erfolgt auf eigene Verantwortung.
@@ -167,50 +167,50 @@ export function LandingPage() {
               </div>
               <div className="space-y-2 text-sm text-text-secondary mb-4">
                 <div className="flex items-center gap-2">
-                  <span className="text-green-500">✓</span>
+                  <span className="text-md-success">✓</span>
                   <span>Volle Songs (unbegrenzte Länge)</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <span className="text-green-500">✓</span>
+                  <span className="text-md-success">✓</span>
                   <span>Höchste Audioqualität (320 kbps)</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <span className="text-green-500">✓</span>
+                  <span className="text-md-success">✓</span>
                   <span>100% legal über Spotify API</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <span className="text-orange-500">⚠</span>
+                  <span className="text-md-tertiary">⚠</span>
                   <span>Spotify Premium Account nötig</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <span className="text-orange-500">⚠</span>
+                  <span className="text-md-tertiary">⚠</span>
                   <span>Nur {spotifySlots.availableSlots}/{spotifySlots.totalSlots} Slots verfügbar</span>
                 </div>
               </div>
 
               <div className="border-t border-secondary/20 pt-3 space-y-3">
                 {/* Spotify API Limitation Explanation */}
-                <div className="p-3 bg-blue-500/10 border border-blue-500/30 rounded-m3-md">
-                  <p className="text-sm text-blue-300 mb-2">
+                <div className="p-3 bg-md-primary-container/40 border border-md-primary/40 rounded-m3-md">
+                  <p className="text-sm text-md-primary mb-2">
                     <strong>🚧 Spotify API Hürde:</strong>
                   </p>
-                  <ul className="text-xs text-blue-200 space-y-1 list-disc list-inside">
+                  <ul className="text-xs text-md-primary space-y-1 list-disc list-inside">
                     <li><strong>Development Mode:</strong> Max 25 Nutzer (aktuell aktiv)</li>
                     <li><strong>Extended Quota Mode:</strong> Benötigt registrierte Firma + 250.000+ Nutzer</li>
                     <li><strong>Indie-Sperre:</strong> Seit Mai 2025 keine Anträge von Einzelpersonen möglich</li>
                   </ul>
-                  <p className="text-xs text-blue-200 mt-2 italic">
+                  <p className="text-xs text-md-primary mt-2 italic">
                     Das ist absurd: Von 25 direkt auf 250.000 - kein organisches Wachstum möglich.
                     Spotify blockiert damit kreative Indie-Projekte systematisch.
                   </p>
                 </div>
 
                 {/* Registration CTA */}
-                <div className="p-3 bg-green-500/10 border border-green-500/30 rounded-m3-md">
-                  <p className="text-sm text-green-300 mb-2">
+                <div className="p-3 bg-md-success-container/40 border border-md-success/40 rounded-m3-md">
+                  <p className="text-sm text-md-success mb-2">
                     <strong>✉️ Möchtest du einen Spotify-Slot?</strong>
                   </p>
-                  <p className="text-xs text-green-200 mb-3">
+                  <p className="text-xs text-md-success mb-3">
                     Noch {spotifySlots.availableSlots} von {spotifySlots.totalSlots} Slots frei.
                     Sende einfach die E-Mail-Adresse deines Spotify-Kontos.
                   </p>
@@ -242,7 +242,7 @@ export function LandingPage() {
 
       {/* Game Modes Section */}
       <section className="container mx-auto px-4 max-w-6xl mb-12" id="game-modes">
-        <div className="text-center mb-12 animate-fade-in">
+        <div className="text-center mb-12" data-reveal>
           <h2 className="text-display-sm md:text-display-md text-emphasized text-gradient mb-4">
             Drei Spielmodi
           </h2>
@@ -346,7 +346,7 @@ export function LandingPage() {
 
       {/* Variants Section */}
       <section className="container mx-auto px-4 max-w-6xl mb-12" id="variants">
-        <div className="text-center mb-12 animate-fade-in">
+        <div className="text-center mb-12" data-reveal>
           <h2 className="text-display-sm md:text-display-md text-emphasized text-gradient mb-4">
             Spielvarianten
           </h2>
@@ -360,11 +360,11 @@ export function LandingPage() {
           <div className="card card-glow p-8 rounded-m3-xl group relative">
             {/* EMPFOHLEN Badge */}
             <div className="absolute top-4 right-4">
-              <span className="px-3 py-1 bg-accent text-white text-xs font-bold rounded-full shadow-m3-2">
+              <span className="px-3 py-1 bg-accent text-text-primary text-xs font-bold rounded-full shadow-m3-2">
                 ⭐ EMPFOHLEN
               </span>
             </div>
-            <div className="text-6xl mb-6 group-hover:scale-110 transition-transform">📱</div>
+            <div className="text-6xl mb-6 group-hover:scale-110 transition-transform duration-m3-spatial-fast ease-m3-spatial-fast">📱</div>
             <h3 className="text-headline-sm text-emphasized mb-4 text-text-primary group-hover:text-brand">
               Virtuelle Karten
             </h3>
@@ -397,7 +397,7 @@ export function LandingPage() {
 
           {/* Physical Cards - NOW SECOND */}
           <div className="card p-8 rounded-m3-xl group">
-            <div className="text-6xl mb-6 group-hover:scale-110 transition-transform">🃏</div>
+            <div className="text-6xl mb-6 group-hover:scale-110 transition-transform duration-m3-spatial-fast ease-m3-spatial-fast">🃏</div>
             <h3 className="text-headline-sm text-emphasized mb-4 text-text-primary group-hover:text-brand">
               Physische Karten
             </h3>
@@ -429,7 +429,7 @@ export function LandingPage() {
 
       {/* How it works Section */}
       <section className="container mx-auto px-4 max-w-6xl mb-12" id="how-it-works">
-        <div className="text-center mb-12 animate-fade-in">
+        <div className="text-center mb-12" data-reveal>
           <h2 className="text-display-sm md:text-display-md text-emphasized text-gradient mb-4">
             So funktioniert's
           </h2>
@@ -442,7 +442,7 @@ export function LandingPage() {
           {/* Step 1 */}
           <div className="card p-8 rounded-m3-xl group">
             <div className="flex items-start gap-6">
-              <div className="flex-shrink-0 w-12 h-12 bg-gradient-to-br from-secondary to-accent rounded-full flex items-center justify-center text-2xl font-bold text-white shadow-m3-1 group-hover:scale-110 transition-transform">
+              <div className="flex-shrink-0 w-12 h-12 bg-md-primary-container text-md-on-primary-container rounded-m3-full flex items-center justify-center text-2xl font-bold shadow-m3-1 group-hover:scale-110 transition-transform duration-m3-spatial-fast ease-m3-spatial-fast">
                 1
               </div>
               <div>
@@ -459,7 +459,7 @@ export function LandingPage() {
           {/* Step 2 */}
           <div className="card p-8 rounded-m3-xl group">
             <div className="flex items-start gap-6">
-              <div className="flex-shrink-0 w-12 h-12 bg-gradient-to-br from-secondary to-accent rounded-full flex items-center justify-center text-2xl font-bold text-white shadow-m3-1 group-hover:scale-110 transition-transform">
+              <div className="flex-shrink-0 w-12 h-12 bg-md-primary-container text-md-on-primary-container rounded-m3-full flex items-center justify-center text-2xl font-bold shadow-m3-1 group-hover:scale-110 transition-transform duration-m3-spatial-fast ease-m3-spatial-fast">
                 2
               </div>
               <div>
@@ -476,7 +476,7 @@ export function LandingPage() {
           {/* Step 3 */}
           <div className="card p-8 rounded-m3-xl group">
             <div className="flex items-start gap-6">
-              <div className="flex-shrink-0 w-12 h-12 bg-gradient-to-br from-secondary to-accent rounded-full flex items-center justify-center text-2xl font-bold text-white shadow-m3-1 group-hover:scale-110 transition-transform">
+              <div className="flex-shrink-0 w-12 h-12 bg-md-primary-container text-md-on-primary-container rounded-m3-full flex items-center justify-center text-2xl font-bold shadow-m3-1 group-hover:scale-110 transition-transform duration-m3-spatial-fast ease-m3-spatial-fast">
                 3
               </div>
               <div>
@@ -496,7 +496,7 @@ export function LandingPage() {
           {/* Step 4 */}
           <div className="card p-8 rounded-m3-xl group">
             <div className="flex items-start gap-6">
-              <div className="flex-shrink-0 w-12 h-12 bg-gradient-to-br from-secondary to-accent rounded-full flex items-center justify-center text-2xl font-bold text-white shadow-m3-1 group-hover:scale-110 transition-transform">
+              <div className="flex-shrink-0 w-12 h-12 bg-md-primary-container text-md-on-primary-container rounded-m3-full flex items-center justify-center text-2xl font-bold shadow-m3-1 group-hover:scale-110 transition-transform duration-m3-spatial-fast ease-m3-spatial-fast">
                 4
               </div>
               <div>
@@ -532,7 +532,7 @@ export function LandingPage() {
 
       {/* Features Section */}
       <section className="container mx-auto px-4 max-w-6xl mb-12" id="features">
-        <div className="text-center mb-12 animate-fade-in">
+        <div className="text-center mb-12" data-reveal>
           <h2 className="text-display-sm md:text-display-md text-emphasized text-gradient mb-4">
             Features
           </h2>
@@ -544,7 +544,7 @@ export function LandingPage() {
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 stagger-children">
           {/* Feature 1 */}
           <div className="card p-8 rounded-m3-xl text-center group">
-            <div className="text-6xl mb-6 group-hover:scale-110 transition-transform">🎯</div>
+            <div className="text-6xl mb-6 group-hover:scale-110 transition-transform duration-m3-spatial-fast ease-m3-spatial-fast">🎯</div>
             <h3 className="text-title-lg text-emphasized mb-3 text-text-primary group-hover:text-brand">
               Tolerantes Raten
             </h3>
@@ -555,7 +555,7 @@ export function LandingPage() {
 
           {/* Feature 2 */}
           <div className="card p-8 rounded-m3-xl text-center group">
-            <div className="text-6xl mb-6 group-hover:scale-110 transition-transform">🎧</div>
+            <div className="text-6xl mb-6 group-hover:scale-110 transition-transform duration-m3-spatial-fast ease-m3-spatial-fast">🎧</div>
             <h3 className="text-title-lg text-emphasized mb-3 text-text-primary group-hover:text-brand">
               Spotify Premium
             </h3>
@@ -566,7 +566,7 @@ export function LandingPage() {
 
           {/* Feature 3 */}
           <div className="card p-8 rounded-m3-xl text-center group">
-            <div className="text-6xl mb-6 group-hover:scale-110 transition-transform">📱</div>
+            <div className="text-6xl mb-6 group-hover:scale-110 transition-transform duration-m3-spatial-fast ease-m3-spatial-fast">📱</div>
             <h3 className="text-title-lg text-emphasized mb-3 text-text-primary group-hover:text-brand">
               Progressive Web App
             </h3>
@@ -577,7 +577,7 @@ export function LandingPage() {
 
           {/* Feature 4 - Achievements */}
           <div className="card p-8 rounded-m3-xl text-center group">
-            <div className="text-6xl mb-6 group-hover:scale-110 transition-transform">🏆</div>
+            <div className="text-6xl mb-6 group-hover:scale-110 transition-transform duration-m3-spatial-fast ease-m3-spatial-fast">🏆</div>
             <h3 className="text-title-lg text-emphasized mb-3 text-text-primary group-hover:text-brand">
               Achievements
             </h3>
@@ -590,7 +590,7 @@ export function LandingPage() {
 
       {/* Open Source Section */}
       <section className="container mx-auto px-4 max-w-6xl mb-12" id="open-source">
-        <div className="text-center mb-12 animate-fade-in">
+        <div className="text-center mb-12" data-reveal>
           <h2 className="text-display-sm md:text-display-md text-emphasized text-gradient mb-4">
             Open Source
           </h2>
@@ -601,7 +601,7 @@ export function LandingPage() {
 
         <div className="card p-8 md:p-12 rounded-m3-xl group">
           <div className="flex flex-col md:flex-row items-center gap-8">
-            <div className="flex-shrink-0 text-7xl group-hover:scale-110 transition-transform">🐙</div>
+            <div className="flex-shrink-0 text-7xl group-hover:scale-110 transition-transform duration-m3-spatial-fast ease-m3-spatial-fast">🐙</div>
             <div className="flex-1 text-center md:text-left">
               <h3 className="text-headline-sm text-emphasized mb-4 text-text-primary group-hover:text-brand">
                 Auf GitHub
@@ -654,7 +654,7 @@ export function LandingPage() {
 
       {/* Support Section */}
       <section className="container mx-auto px-4 max-w-6xl mb-12" id="support">
-        <div className="text-center mb-12 animate-fade-in">
+        <div className="text-center mb-12" data-reveal>
           <h2 className="text-display-sm md:text-display-md text-emphasized mb-4 flex items-center justify-center gap-2">
             <span>☕</span>
             <span className="text-gradient">Unterstütze mxster</span>
@@ -667,15 +667,15 @@ export function LandingPage() {
         <div className="card p-8 md:p-12 rounded-m3-xl group">
           <div className="grid md:grid-cols-3 gap-6 mb-8 stagger-children">
             <div className="text-center">
-              <div className="text-4xl mb-3 group-hover:scale-110 transition-transform">🎮</div>
+              <div className="text-4xl mb-3 group-hover:scale-110 transition-transform duration-m3-spatial-fast ease-m3-spatial-fast">🎮</div>
               <h4 className="text-title-md text-text-primary mb-2">Neue Features</h4>
             </div>
             <div className="text-center">
-              <div className="text-4xl mb-3 group-hover:scale-110 transition-transform">🎵</div>
+              <div className="text-4xl mb-3 group-hover:scale-110 transition-transform duration-m3-spatial-fast ease-m3-spatial-fast">🎵</div>
               <h4 className="text-title-md text-text-primary mb-2">Mehr Songs</h4>
             </div>
             <div className="text-center">
-              <div className="text-4xl mb-3 group-hover:scale-110 transition-transform">🚀</div>
+              <div className="text-4xl mb-3 group-hover:scale-110 transition-transform duration-m3-spatial-fast ease-m3-spatial-fast">🚀</div>
               <h4 className="text-title-md text-text-primary mb-2">Server-Kosten</h4>
             </div>
           </div>

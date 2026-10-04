@@ -165,7 +165,7 @@ export function QRScanner() {
           </button>
 
           {hasPermission === false && httpsError && (
-            <div className="mt-6 p-4 bg-red-900/30 rounded-m3-md text-sm text-red-300">
+            <div className="mt-6 p-4 bg-md-error-container/40 rounded-m3-md text-sm text-md-error">
               ⚠️ <strong>HTTPS erforderlich!</strong>
               <br />
               <br />
@@ -190,7 +190,7 @@ export function QRScanner() {
           )}
 
           {hasPermission === false && !httpsError && (
-            <div className="mt-6 p-4 bg-red-900/30 rounded-m3-md text-sm text-red-300">
+            <div className="mt-6 p-4 bg-md-error-container/40 rounded-m3-md text-sm text-md-error">
               ⚠️ <strong>Kamera-Zugriff verweigert.</strong> Bitte erlaube den Zugriff in deinen
               Browser-Einstellungen.
             </div>
@@ -207,7 +207,7 @@ export function QRScanner() {
               muted
             />
             {/* Scanning Indicator */}
-            <div className="absolute top-4 right-4 px-3 py-1 bg-red-600 rounded-full text-sm font-bold animate-pulse shadow-m3-1">
+            <div className="absolute top-4 right-4 px-3 py-1 bg-md-error text-md-on-error rounded-m3-full text-label-md animate-pulse shadow-m3-1">
               🔴 LIVE
             </div>
           </div>

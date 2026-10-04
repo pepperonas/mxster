@@ -7,12 +7,15 @@ import { useAppNavigate } from '@/hooks/useAppNavigate'
 import { useGame } from '@/contexts'
 import { GAME_MODE_INFO, GAME_MODES } from '@/utils/gameModes'
 import type { GameMode } from '@/types'
+import { markSharedElement, TRAIL_MODE } from '@/components/ui/SelectionTrail'
 
 export function ModeSelection() {
   const navigate = useAppNavigate()
   const { setGameMode } = useGame()
 
-  const handleModeSelect = (mode: GameMode) => {
+  const handleModeSelect = (mode: GameMode, card: HTMLElement) => {
+    // The tapped card's icon morphs into the next screen's selection trail
+    markSharedElement(card.querySelector('[data-trail-icon]'), TRAIL_MODE)
     setGameMode(mode)
     navigate('/variant-selection')
   }
@@ -43,12 +46,17 @@ export function ModeSelection() {
             return (
               <button
                 key={mode}
-                onClick={() => handleModeSelect(mode)}
+                onClick={(e) => handleModeSelect(mode, e.currentTarget)}
                 className="card card-glow p-8 border-2 border-transparent hover:border-md-primary/60 active:rounded-m3-xl text-left group"
               >
                 {/* Icon */}
-                <div className="text-6xl mb-6 group-hover:scale-110 transition-transform">
-                  {info.icon}
+                <div className="mb-6">
+                  <span
+                    data-trail-icon
+                    className="inline-block text-6xl group-hover:scale-110 transition-transform duration-m3-spatial-fast ease-m3-spatial-fast"
+                  >
+                    {info.icon}
+                  </span>
                 </div>
 
                 {/* Title */}
@@ -80,7 +88,7 @@ export function ModeSelection() {
 
                 {/* Hover Arrow */}
                 <div className="mt-6 flex justify-end">
-                  <span className="text-secondary group-hover:translate-x-2 transition-transform">
+                  <span className="text-secondary group-hover:translate-x-2 transition-transform duration-m3-spatial-fast ease-m3-spatial-fast">
                     →
                   </span>
                 </div>

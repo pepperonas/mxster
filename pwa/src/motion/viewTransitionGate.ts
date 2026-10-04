@@ -17,7 +17,12 @@ let active = 0
 const listeners = new Set<Listener>()
 let installed = false
 
-const notify = () => listeners.forEach((l) => l())
+const notify = () => {
+  // CSS hook: page-entry keyframes finish instantly while a view transition
+  // already animates the incoming page (see motion.css, html.vt-active).
+  if (typeof document !== 'undefined') document.documentElement.classList.toggle('vt-active', active > 0)
+  listeners.forEach((l) => l())
+}
 
 export function isViewTransitionActive(): boolean {
   return active > 0

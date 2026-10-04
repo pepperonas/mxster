@@ -153,8 +153,8 @@ export function AchievementsDialog({ isOpen, onClose, playerName }: Achievements
             </div>
             <div className="h-3 bg-primary-dark rounded-full overflow-hidden border border-border">
               <div
-                className="h-full bg-gradient-to-r from-secondary via-accent to-secondary transition-all duration-500 animate-gradient-x"
-                style={{ width: `${(unlockedCount / totalCount) * 100}%` }}
+                className="h-full bg-gradient-to-r from-secondary via-accent to-secondary m3-bar-fill"
+                style={{ transform: `scaleX(${Math.max(0, Math.min(1, ((unlockedCount / totalCount) * 100) / 100))})` }}
               />
             </div>
             {unlockedCount === totalCount && (
@@ -193,7 +193,7 @@ export function AchievementsDialog({ isOpen, onClose, playerName }: Achievements
                   <div className="flex items-start gap-4 mb-3">
                     <div
                       className={`text-5xl ${
-                        achievement.unlocked ? 'animate-bounce-slow' : 'grayscale opacity-50'
+                        achievement.unlocked ? '' : 'grayscale opacity-50'
                       }`}
                     >
                       {achievement.icon}
@@ -229,17 +229,15 @@ export function AchievementsDialog({ isOpen, onClose, playerName }: Achievements
                       </div>
                       <div className="h-2 bg-primary-dark rounded-full overflow-hidden border border-border">
                         <div
-                          className={`h-full transition-all duration-500 ${
+                          className={`h-full m3-bar-fill ${
                             achievement.unlocked
                               ? 'bg-gradient-to-r from-secondary to-accent'
                               : 'bg-md-surface-container-highest'
                           }`}
                           style={{
-                            width: `${
-                              achievement.unlocked
-                                ? 100
-                                : Math.min(((achievement.progress || 0) / achievement.target) * 100, 100)
-                            }%`
+                            transform: `scaleX(${
+                              achievement.unlocked ? 1 : Math.min((achievement.progress || 0) / achievement.target, 1)
+                            })`
                           }}
                         />
                       </div>
@@ -270,34 +268,19 @@ export function AchievementsDialog({ isOpen, onClose, playerName }: Achievements
       </div>
 
       <style>{`
-        @keyframes bounce-slow {
-          0%, 100% { transform: translateY(0); }
-          50% { transform: translateY(-8px); }
-        }
-        .animate-bounce-slow {
-          animation: bounce-slow 2s ease-in-out infinite;
-        }
-        @keyframes gradient-x {
-          0%, 100% { background-position: 0% 50%; }
-          50% { background-position: 100% 50%; }
-        }
-        .animate-gradient-x {
-          background-size: 200% 200%;
-          animation: gradient-x 3s ease infinite;
-        }
         .custom-scrollbar::-webkit-scrollbar {
           width: 8px;
         }
         .custom-scrollbar::-webkit-scrollbar-track {
-          background: rgba(0, 0, 0, 0.2);
+          background: rgb(var(--md-sys-color-surface-container-highest));
           border-radius: 4px;
         }
         .custom-scrollbar::-webkit-scrollbar-thumb {
-          background: rgba(251, 191, 36, 0.5);
+          background: rgb(var(--md-sys-color-outline));
           border-radius: 4px;
         }
         .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-          background: rgba(251, 191, 36, 0.7);
+          background: rgb(var(--md-sys-color-primary));
         }
       `}</style>
     </div>

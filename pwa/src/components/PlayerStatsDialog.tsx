@@ -181,8 +181,8 @@ export function PlayerStatsDialog() {
                     </div>
                     <div className="h-2 bg-primary/50 rounded-full overflow-hidden border border-accent/20">
                       <div
-                        className="h-full bg-gradient-to-r from-accent to-secondary transition-all duration-500"
-                        style={{ width: `${(player.totalScore / 1000) * 100}%` }}
+                        className="h-full bg-gradient-to-r from-accent to-secondary m3-bar-fill"
+                        style={{ transform: `scaleX(${Math.max(0, Math.min(1, ((player.totalScore / 1000) * 100) / 100))})` }}
                       />
                     </div>
                   </div>
@@ -199,8 +199,8 @@ export function PlayerStatsDialog() {
                     </div>
                     <div className="h-2 bg-primary/50 rounded-full overflow-hidden border border-accent/20">
                       <div
-                        className="h-full bg-gradient-to-r from-accent to-secondary transition-all duration-500"
-                        style={{ width: `${(player.totalScore / 5000) * 100}%` }}
+                        className="h-full bg-gradient-to-r from-accent to-secondary m3-bar-fill"
+                        style={{ transform: `scaleX(${Math.max(0, Math.min(1, ((player.totalScore / 5000) * 100) / 100))})` }}
                       />
                     </div>
                   </div>
@@ -255,8 +255,8 @@ export function PlayerStatsDialog() {
               </div>
               <div className="h-3 bg-primary/50 rounded-full overflow-hidden border border-accent/20">
                 <div
-                  className="h-full bg-gradient-to-r from-accent to-secondary transition-all duration-500 shadow-m3-2"
-                  style={{ width: `${player.winRate}%` }}
+                  className="h-full bg-gradient-to-r from-accent to-secondary m3-bar-fill shadow-m3-2"
+                  style={{ transform: `scaleX(${Math.max(0, Math.min(1, (player.winRate) / 100))})` }}
                 />
               </div>
             </div>
@@ -277,12 +277,12 @@ export function PlayerStatsDialog() {
                           <span className="text-xs text-text-secondary w-12">{decade}</span>
                           <div className="flex-1 h-2 bg-primary/50 rounded-full overflow-hidden border border-accent/10">
                             <div
-                              className={`h-full transition-all duration-500 ${
+                              className={`h-full m3-bar-fill ${
                                 player.bestDecade === decade
                                   ? 'bg-gradient-to-r from-secondary to-accent shadow-m3-2'
                                   : 'bg-gradient-to-r from-accent/70 to-secondary/70'
                               }`}
-                              style={{ width: `${percentage}%` }}
+                              style={{ transform: `scaleX(${Math.max(0, Math.min(1, (percentage) / 100))})` }}
                             />
                           </div>
                           <span className="text-xs text-text-secondary w-8 text-right">{count}</span>
@@ -309,12 +309,12 @@ export function PlayerStatsDialog() {
                           <span className="text-xs text-text-secondary w-20 truncate" title={genre}>{genre}</span>
                           <div className="flex-1 h-2 bg-primary/50 rounded-full overflow-hidden border border-accent/10">
                             <div
-                              className={`h-full transition-all duration-500 ${
+                              className={`h-full m3-bar-fill ${
                                 player.bestGenre === genre
                                   ? 'bg-gradient-to-r from-accent to-secondary shadow-m3-2'
                                   : 'bg-gradient-to-r from-secondary/70 to-accent/70'
                               }`}
-                              style={{ width: `${percentage}%` }}
+                              style={{ transform: `scaleX(${Math.max(0, Math.min(1, (percentage) / 100))})` }}
                             />
                           </div>
                           <span className="text-xs text-text-secondary w-8 text-right">{count}</span>

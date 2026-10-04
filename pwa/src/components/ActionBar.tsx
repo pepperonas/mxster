@@ -41,7 +41,7 @@ export function ActionBar() {
     showModal(
       '⚠️ Ausloggen',
       <div className="text-center py-4">
-        <p className="text-lg font-semibold text-white mb-2">Wirklich ausloggen?</p>
+        <p className="text-lg font-semibold text-text-primary mb-2">Wirklich ausloggen?</p>
         <p className="text-sm text-text-secondary">Dein Spielstand bleibt erhalten.</p>
       </div>,
       [
@@ -144,6 +144,7 @@ export function ActionBar() {
               }}
               className={ICON_BTN}
               title="Spielhistorie"
+              aria-label="Spielhistorie"
             >
               <HistoryIcon size={20} />
             </button>
@@ -159,6 +160,7 @@ export function ActionBar() {
               }}
               className={ICON_BTN}
               title="Spielerstatistiken"
+              aria-label="Spielerstatistiken"
             >
               <ChartIcon size={20} />
             </button>
@@ -168,6 +170,7 @@ export function ActionBar() {
               onClick={() => setShowAchievements(true)}
               className={ICON_BTN}
               title="Achievements"
+              aria-label="Achievements"
             >
               <AchievementIcon size={20} />
             </button>
@@ -183,6 +186,7 @@ export function ActionBar() {
               }}
               className={ICON_BTN}
               title="Einstellungen"
+              aria-label="Einstellungen"
             >
               <SettingsIcon size={20} />
             </button>
@@ -193,6 +197,7 @@ export function ActionBar() {
                 onClick={handleLogout}
                 className="touch-target rounded-m3-full m3-state-layer transition-colors text-text-secondary hover:text-danger"
                 title="Ausloggen"
+                aria-label="Ausloggen"
               >
                 <LogoutIcon size={20} />
               </button>

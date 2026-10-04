@@ -8,6 +8,7 @@ import { useAppNavigate } from '@/hooks/useAppNavigate'
 import { useGame } from '@/contexts'
 import { GAME_VARIANTS, GAME_VARIANT_INFO } from '@/utils/gameModes'
 import type { GameVariant } from '@/types'
+import { SelectionTrail, markSharedElement, TRAIL_VARIANT } from '@/components/ui/SelectionTrail'
 
 export function VariantSelection() {
   const navigate = useAppNavigate()
@@ -20,7 +21,8 @@ export function VariantSelection() {
     }
   }, [gameMode, navigate])
 
-  const handleVariantSelect = (variant: GameVariant) => {
+  const handleVariantSelect = (variant: GameVariant, card: HTMLElement) => {
+    markSharedElement(card.querySelector('[data-trail-icon]'), TRAIL_VARIANT)
     setGameVariant(variant)
     navigate('/player-setup')
   }
@@ -40,6 +42,7 @@ export function VariantSelection() {
       <div className="container mx-auto px-4 max-w-5xl">
         {/* Header */}
         <div className="text-center mb-12 animate-fade-in">
+          <SelectionTrail />
           <h1 className="text-display-sm md:text-display-md text-emphasized text-gradient mb-4">
             Wähle deine Spielvariante
           </h1>
@@ -56,7 +59,7 @@ export function VariantSelection() {
             return (
               <button
                 key={variant}
-                onClick={() => handleVariantSelect(variant)}
+                onClick={(e) => handleVariantSelect(variant, e.currentTarget)}
                 className={`card card-glow p-10 border-2 text-left group relative ${
                   isVirtual
                     ? 'rounded-m3-xl bg-md-secondary-container hover:bg-md-secondary-container text-md-on-secondary-container border-md-primary'
@@ -73,8 +76,13 @@ export function VariantSelection() {
                 )}
 
                 {/* Icon */}
-                <div className="text-7xl mb-6 group-hover:scale-110 transition-transform">
-                  {info.icon}
+                <div className="mb-6">
+                  <span
+                    data-trail-icon
+                    className="inline-block text-7xl group-hover:scale-110 transition-transform duration-m3-spatial-fast ease-m3-spatial-fast"
+                  >
+                    {info.icon}
+                  </span>
                 </div>
 
                 {/* Title */}

@@ -74,7 +74,7 @@ export function Sidebar() {
     showModal(
       title,
       <div className="text-center py-4">
-        <p className="text-lg font-semibold text-white mb-2">{message}</p>
+        <p className="text-lg font-semibold text-text-primary mb-2">{message}</p>
         <p className="text-sm text-text-secondary">Der Spielstand geht verloren.</p>
       </div>,
       [
@@ -234,11 +234,11 @@ export function Sidebar() {
           <div className="p-4 border-b-2 border-accent/30">
             <div className="flex items-center gap-3">
               <div
-                className={`w-3 h-3 rounded-full ${isLoggedIn ? 'bg-green-500' : 'bg-gray-500'}`}
+                className={`w-3 h-3 rounded-full ${isLoggedIn ? 'bg-md-success' : 'bg-md-outline'}`}
               />
               <div>
                 <p className="text-sm text-text-secondary">Spotify Status</p>
-                <p className="text-white font-medium">
+                <p className="text-text-primary font-medium">
                   {isLoggedIn ? 'Verbunden' : 'Nicht verbunden'}
                 </p>
               </div>

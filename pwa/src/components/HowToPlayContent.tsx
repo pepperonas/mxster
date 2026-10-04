@@ -32,7 +32,7 @@ export function HowToPlayContent() {
       content: (
         <div className="space-y-4">
           <p className="text-text-secondary">
-            <strong className="text-white">Ziel:</strong> Sammle die meisten Punkte durch präzises Raten!
+            <strong className="text-text-primary">Ziel:</strong> Sammle die meisten Punkte durch präzises Raten!
           </p>
 
           <div className="space-y-3">
@@ -66,29 +66,29 @@ export function HowToPlayContent() {
               <h4 className="font-semibold text-secondary mb-2">⭐ Granulares Punktesystem (Neu!):</h4>
               <div className="space-y-2 text-sm text-text-secondary">
                 <div className="flex items-start gap-2">
-                  <span className="text-green-400 mt-0.5">✓</span>
+                  <span className="text-md-success mt-0.5">✓</span>
                   <div>
-                    <strong className="text-white">Titel richtig: +5 Punkte</strong>
+                    <strong className="text-text-primary">Titel richtig: +5 Punkte</strong>
                   </div>
                 </div>
                 <div className="flex items-start gap-2">
-                  <span className="text-green-400 mt-0.5">✓</span>
+                  <span className="text-md-success mt-0.5">✓</span>
                   <div>
-                    <strong className="text-white">Künstler richtig: +5 Punkte</strong>
+                    <strong className="text-text-primary">Künstler richtig: +5 Punkte</strong>
                   </div>
                 </div>
                 <div className="flex items-start gap-2">
-                  <span className="text-green-400 mt-0.5">✓</span>
+                  <span className="text-md-success mt-0.5">✓</span>
                   <div>
-                    <strong className="text-white">Jahr exakt: +5 Punkte</strong>
+                    <strong className="text-text-primary">Jahr exakt: +5 Punkte</strong>
                     <div className="ml-4 mt-1 space-y-1">
                       <div className="flex items-center gap-2">
-                        <span className="text-yellow-400">🟡</span>
-                        <span>±1 Jahr daneben: <strong className="text-white">+2 Punkte</strong></span>
+                        <span className="text-md-warning">🟡</span>
+                        <span>±1 Jahr daneben: <strong className="text-text-primary">+2 Punkte</strong></span>
                       </div>
                       <div className="flex items-center gap-2">
-                        <span className="text-yellow-400">🟡</span>
-                        <span>±2 Jahre daneben: <strong className="text-white">+1 Punkt</strong></span>
+                        <span className="text-md-warning">🟡</span>
+                        <span>±2 Jahre daneben: <strong className="text-text-primary">+1 Punkt</strong></span>
                       </div>
                     </div>
                   </div>
@@ -105,47 +105,47 @@ export function HowToPlayContent() {
               <h4 className="font-semibold text-secondary mb-2">🏆 Gewinner:</h4>
               <div className="space-y-2 text-sm text-text-secondary">
                 <p>
-                  Spieler mit den <strong className="text-white">meisten Punkten</strong> nach 10 Karten gewinnt!
+                  Spieler mit den <strong className="text-text-primary">meisten Punkten</strong> nach 10 Karten gewinnt!
                 </p>
                 <div className="bg-accent/10 p-2 rounded border border-accent/30">
                   <p className="text-xs">
                     <strong className="text-accent">Bei Gleichstand:</strong>
                   </p>
                   <ol className="text-xs space-y-1 mt-1 ml-4">
-                    <li>1. Spieler mit den <strong className="text-white">meisten Karten</strong> gewinnt</li>
-                    <li>2. Bei weiterem Gleichstand: <strong className="text-white">Letzter Finisher</strong> gewinnt</li>
+                    <li>1. Spieler mit den <strong className="text-text-primary">meisten Karten</strong> gewinnt</li>
+                    <li>2. Bei weiterem Gleichstand: <strong className="text-text-primary">Letzter Finisher</strong> gewinnt</li>
                   </ol>
                 </div>
               </div>
             </div>
 
-            <div className="glass p-3 rounded-lg border border-yellow-500/30 bg-yellow-900/10">
-              <h4 className="font-semibold text-yellow-400 mb-2">⚠️ Überspringen & Progressive Strafe:</h4>
+            <div className="glass p-3 rounded-lg border border-md-warning/40 bg-md-warning-container/30">
+              <h4 className="font-semibold text-md-warning mb-2">⚠️ Überspringen & Progressive Strafe:</h4>
               <div className="space-y-2 text-sm text-text-secondary">
                 <p>
-                  Du kannst einen Song überspringen, wenn du ihn nicht kennst. <strong className="text-white">ABER:</strong> Wenn alle Spieler den gleichen Song bereits mindestens 1x übersprungen haben, wird es gefährlich!
+                  Du kannst einen Song überspringen, wenn du ihn nicht kennst. <strong className="text-text-primary">ABER:</strong> Wenn alle Spieler den gleichen Song bereits mindestens 1x übersprungen haben, wird es gefährlich!
                 </p>
                 <ul className="space-y-1 ml-4">
                   <li className="flex items-start gap-2">
-                    <span className="text-green-400 mt-0.5">✓</span>
-                    <span><strong className="text-white">1. Skip pro Spieler:</strong> Keine Strafe</span>
+                    <span className="text-md-success mt-0.5">✓</span>
+                    <span><strong className="text-text-primary">1. Skip pro Spieler:</strong> Keine Strafe</span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <span className="text-yellow-400 mt-0.5">⚠️</span>
-                    <span><strong className="text-white">2. Skip:</strong> 33% Chance auf -3 Punkte</span>
+                    <span className="text-md-warning mt-0.5">⚠️</span>
+                    <span><strong className="text-text-primary">2. Skip:</strong> 33% Chance auf -3 Punkte</span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <span className="text-orange-400 mt-0.5">⚠️</span>
-                    <span><strong className="text-white">3. Skip:</strong> 66% Chance auf -3 Punkte</span>
+                    <span className="text-md-tertiary mt-0.5">⚠️</span>
+                    <span><strong className="text-text-primary">3. Skip:</strong> 66% Chance auf -3 Punkte</span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <span className="text-red-400 mt-0.5">💀</span>
-                    <span><strong className="text-white">4.+ Skip:</strong> 95% Chance auf -3 Punkte</span>
+                    <span className="text-md-error mt-0.5">💀</span>
+                    <span><strong className="text-text-primary">4.+ Skip:</strong> 95% Chance auf -3 Punkte</span>
                   </li>
                 </ul>
-                <div className="bg-red-900/20 p-2 rounded border border-red-500/30 mt-2">
+                <div className="bg-md-error-container/40 p-2 rounded border border-md-error/40 mt-2">
                   <p className="text-xs">
-                    <strong className="text-red-400">Wichtig:</strong> Punkte können ins <strong className="text-white">Negative</strong> gehen! Bei Strafe wird ein neuer Song gezogen.
+                    <strong className="text-md-error">Wichtig:</strong> Punkte können ins <strong className="text-text-primary">Negative</strong> gehen! Bei Strafe wird ein neuer Song gezogen.
                   </p>
                 </div>
               </div>
@@ -168,7 +168,7 @@ export function HowToPlayContent() {
       content: (
         <div className="space-y-4">
           <p className="text-text-secondary">
-            <strong className="text-white">Ziel:</strong> Baue deine eigene Timeline mit 10 Karten auf!
+            <strong className="text-text-primary">Ziel:</strong> Baue deine eigene Timeline mit 10 Karten auf!
           </p>
 
           <div className="space-y-3">
@@ -219,7 +219,7 @@ export function HowToPlayContent() {
             <div className="glass p-3 rounded-lg border border-accent/20">
               <h4 className="font-semibold text-secondary mb-2">🏆 Gewinner:</h4>
               <p className="text-sm text-text-secondary">
-                <strong className="text-white">Erster Spieler</strong>, der 10 Karten in seiner Timeline hat!
+                <strong className="text-text-primary">Erster Spieler</strong>, der 10 Karten in seiner Timeline hat!
               </p>
             </div>
           </div>
@@ -233,7 +233,7 @@ export function HowToPlayContent() {
       content: (
         <div className="space-y-4">
           <p className="text-text-secondary">
-            <strong className="text-white">Ziel:</strong> Gemeinsam eine Timeline aufbauen - Wer erreicht zuerst 10 Karten?
+            <strong className="text-text-primary">Ziel:</strong> Gemeinsam eine Timeline aufbauen - Wer erreicht zuerst 10 Karten?
           </p>
 
           <div className="space-y-3">
@@ -289,15 +289,15 @@ export function HowToPlayContent() {
               <h4 className="font-semibold text-secondary mb-2">🏆 Gewinner:</h4>
               <div className="space-y-2 text-sm text-text-secondary">
                 <p>
-                  Spieler mit den <strong className="text-white">meisten Karten</strong>, nachdem insgesamt 10 Karten in der Timeline platziert wurden!
+                  Spieler mit den <strong className="text-text-primary">meisten Karten</strong>, nachdem insgesamt 10 Karten in der Timeline platziert wurden!
                 </p>
                 <div className="bg-accent/10 p-2 rounded border border-accent/30">
                   <p className="text-xs">
                     <strong className="text-accent">Bei Gleichstand:</strong>
                   </p>
                   <ol className="text-xs space-y-1 mt-1 ml-4">
-                    <li>1. <strong className="text-white">Letzter Finisher</strong> gewinnt (hat gerade 10. Karte gesetzt)</li>
-                    <li>2. Sonst: <strong className="text-white">Erster Spieler in der Liste</strong> gewinnt</li>
+                    <li>1. <strong className="text-text-primary">Letzter Finisher</strong> gewinnt (hat gerade 10. Karte gesetzt)</li>
+                    <li>2. Sonst: <strong className="text-text-primary">Erster Spieler in der Liste</strong> gewinnt</li>
                   </ol>
                 </div>
               </div>
@@ -317,13 +317,13 @@ export function HowToPlayContent() {
               <h4 className="font-semibold text-secondary mb-2">🎮 Spielvarianten:</h4>
               <div className="space-y-3 text-sm text-text-secondary">
                 <div>
-                  <strong className="text-white">🎮 Virtueller Modus (⭐ Empfohlen):</strong>
+                  <strong className="text-text-primary">🎮 Virtueller Modus (⭐ Empfohlen):</strong>
                   <p className="ml-4 mt-1">
                     <strong className="text-accent">Am einfachsten!</strong> Keine Karten nötig - Songs werden automatisch gezogen. Kein DJ, kein Setup. Perfekt für spontane Runden und ideal für die meisten Spieler.
                   </p>
                 </div>
                 <div className="mt-3">
-                  <strong className="text-white">📷 Physischer Modus (Optional):</strong>
+                  <strong className="text-text-primary">📷 Physischer Modus (Optional):</strong>
                   <p className="ml-4 mt-1">
                     Für Enthusiasten: Scanne QR-Codes von gedruckten oder 3D-gedruckten Karten. Ein Spieler übernimmt die DJ-Rolle.
                   </p>
@@ -336,15 +336,15 @@ export function HowToPlayContent() {
               <ul className="space-y-1 text-sm text-text-secondary">
                 <li className="flex items-center gap-2">
                   <span className="text-accent">•</span>
-                  <span><strong className="text-white">Premium erforderlich:</strong> Volle Song-Wiedergabe nur mit Spotify Premium</span>
+                  <span><strong className="text-text-primary">Premium erforderlich:</strong> Volle Song-Wiedergabe nur mit Spotify Premium</span>
                 </li>
                 <li className="flex items-center gap-2">
                   <span className="text-accent">•</span>
-                  <span><strong className="text-white">Web Playback SDK:</strong> Erstellt virtuelles Gerät in deinem Account</span>
+                  <span><strong className="text-text-primary">Web Playback SDK:</strong> Erstellt virtuelles Gerät in deinem Account</span>
                 </li>
                 <li className="flex items-center gap-2">
                   <span className="text-accent">•</span>
-                  <span><strong className="text-white">Fallback:</strong> 30-Sekunden-Previews ohne Premium</span>
+                  <span><strong className="text-text-primary">Fallback:</strong> 30-Sekunden-Previews ohne Premium</span>
                 </li>
               </ul>
             </div>
@@ -425,7 +425,7 @@ export function HowToPlayContent() {
             >
               <div className="flex items-center gap-3">
                 <span className="text-2xl">{section.icon}</span>
-                <h3 className="text-lg font-bold text-white">{section.title}</h3>
+                <h3 className="text-lg font-bold text-text-primary">{section.title}</h3>
               </div>
               <svg
                 className={`w-5 h-5 text-secondary transition-transform ${isOpen ? 'rotate-180' : ''}`}
