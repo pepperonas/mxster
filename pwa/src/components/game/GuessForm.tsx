@@ -101,8 +101,8 @@ export function GuessForm({ onSubmit, onSkip }: GuessFormProps) {
   }
 
   return (
-    <div className="glass rounded-m3-xl p-4 sm:p-6 lg:p-8 border-2 border-accent/30">
-      <h3 className="text-xl sm:text-2xl font-bold mb-4 sm:mb-6 text-center text-gradient">
+    <div className="bg-md-surface-container rounded-m3-xl p-5 sm:p-6 border border-md-outline-variant/50">
+      <h3 className="text-title-lg mb-4 text-text-primary">
         {gameMode === 'hardcore'
           ? `${playerName}, was ist deine Vermutung?`
           : `${playerName}, rate optional den Song`}
@@ -111,7 +111,7 @@ export function GuessForm({ onSubmit, onSkip }: GuessFormProps) {
       <form onSubmit={handleSubmit} className="space-y-4">
         {/* Title Input */}
         <div>
-          <label htmlFor="title" className="block text-sm font-medium text-text-secondary mb-2">
+          <label htmlFor="title" className="block text-label-lg text-md-on-surface-variant mb-1.5">
             Titel {gameMode === 'hardcore' && '(+5 Punkte)'}
           </label>
           <input
@@ -122,13 +122,13 @@ export function GuessForm({ onSubmit, onSkip }: GuessFormProps) {
             onChange={(e) => setTitle(e.target.value)}
             placeholder="Song-Titel eingeben..."
             autoComplete="off"
-            className="w-full min-h-[48px] px-4 py-3 sm:py-4 bg-primary border-2 border-accent/30 rounded-m3-md text-text-primary placeholder-gray-500 focus:border-accent focus:shadow-m3-2 focus:outline-none focus:ring-0 transition-all"
+            className="input min-h-[52px] text-body-lg"
           />
         </div>
 
         {/* Artist Input */}
         <div>
-          <label htmlFor="artist" className="block text-sm font-medium text-text-secondary mb-2">
+          <label htmlFor="artist" className="block text-label-lg text-md-on-surface-variant mb-1.5">
             Interpret {gameMode === 'hardcore' && '(+5 Punkte)'}
           </label>
           <input
@@ -138,13 +138,13 @@ export function GuessForm({ onSubmit, onSkip }: GuessFormProps) {
             onChange={(e) => setArtist(e.target.value)}
             placeholder="Interpret eingeben..."
             autoComplete="off"
-            className="w-full min-h-[48px] px-4 py-3 sm:py-4 bg-primary border-2 border-accent/30 rounded-m3-md text-text-primary placeholder-gray-500 focus:border-accent focus:shadow-m3-2 focus:outline-none focus:ring-0 transition-all"
+            className="input min-h-[52px] text-body-lg"
           />
         </div>
 
         {/* Year Input */}
         <div>
-          <label htmlFor="year" className="block text-sm font-medium text-text-secondary mb-2">
+          <label htmlFor="year" className="block text-label-lg text-md-on-surface-variant mb-1.5">
             Jahr {gameMode === 'hardcore' && '(+5/2/1 Punkte)'}
           </label>
           <input
@@ -156,15 +156,15 @@ export function GuessForm({ onSubmit, onSkip }: GuessFormProps) {
             min="1950"
             max={new Date().getFullYear()}
             autoComplete="off"
-            className="w-full min-h-[48px] px-4 py-3 sm:py-4 bg-primary border-2 border-accent/30 rounded-m3-md text-text-primary placeholder-gray-500 focus:border-accent focus:shadow-m3-2 focus:outline-none focus:ring-0 transition-all"
+            className="input min-h-[52px] text-body-lg"
           />
         </div>
 
         {/* Info */}
         {gameMode === 'hardcore' && (
-          <div className="glass p-4 rounded-m3-md text-sm text-text-secondary border border-accent/20">
-            💡 <strong className="text-text-primary">Fuzzy Matching:</strong> Tippfehler werden toleriert, Groß-/Kleinschreibung spielt keine Rolle!
-          </div>
+          <p className="text-body-sm text-md-on-surface-variant">
+            Tippfehler werden toleriert, Groß-/Kleinschreibung spielt keine Rolle.
+          </p>
         )}
 
         {/* Buttons */}
@@ -178,9 +178,9 @@ export function GuessForm({ onSubmit, onSkip }: GuessFormProps) {
           </button>
           <button
             type="submit"
-            className="btn btn-accent flex-1 min-h-[48px] shadow-m3-2"
+            className="btn btn-accent flex-1 min-h-[48px]"
           >
-            {gameMode === 'hardcore' ? '✓ Antwort prüfen' : 'Weiter'}
+            {gameMode === 'hardcore' ? 'Antwort prüfen' : 'Weiter'}
           </button>
         </div>
       </form>

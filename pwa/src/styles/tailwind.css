@@ -269,6 +269,59 @@
     background-color var(--m3-effects-default);
 }
 
+/* M3 slider on a native range input (accessible for free). The filled part
+   comes from --progress; the handle grows on grab with the spatial spring. */
+.m3-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 44px;
+  background: transparent;
+  cursor: pointer;
+  touch-action: pan-y;
+}
+.m3-slider:disabled { cursor: default; opacity: 0.5; }
+.m3-slider::-webkit-slider-runnable-track {
+  height: 8px;
+  border-radius: var(--m3-shape-full);
+  background: linear-gradient(
+    to right,
+    rgb(var(--md-sys-color-primary)) var(--progress, 0%),
+    rgb(var(--md-sys-color-surface-container-highest)) var(--progress, 0%)
+  );
+}
+.m3-slider::-moz-range-track {
+  height: 8px;
+  border-radius: var(--m3-shape-full);
+  background: rgb(var(--md-sys-color-surface-container-highest));
+}
+.m3-slider::-moz-range-progress {
+  height: 8px;
+  border-radius: var(--m3-shape-full);
+  background: rgb(var(--md-sys-color-primary));
+}
+.m3-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 20px;
+  height: 20px;
+  margin-top: -6px;
+  border-radius: var(--m3-shape-full);
+  background: rgb(var(--md-sys-color-primary));
+  box-shadow: 0 0 0 0 rgb(var(--md-sys-color-primary) / 0.16);
+  transition: transform var(--m3-spatial-fast), box-shadow var(--m3-effects-default);
+}
+.m3-slider::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
+  border: 0;
+  border-radius: var(--m3-shape-full);
+  background: rgb(var(--md-sys-color-primary));
+  transition: transform var(--m3-spatial-fast);
+}
+.m3-slider:active::-webkit-slider-thumb { transform: scale(1.25); box-shadow: 0 0 0 10px rgb(var(--md-sys-color-primary) / 0.16); }
+.m3-slider:active::-moz-range-thumb { transform: scale(1.25); }
+.m3-slider:focus-visible { outline: none; }
+.m3-slider:focus-visible::-webkit-slider-thumb { box-shadow: 0 0 0 4px rgb(var(--md-sys-color-primary) / 0.4); }
+
 /* Toast notification — M3 snackbar, springs in from bottom */
 .toast {
   @apply fixed bottom-6 right-6 bg-md-inverse-surface text-md-inverse-on-surface px-6 py-4;
@@ -321,15 +374,11 @@
   @apply border-l-4 border-l-amber-500;
 }
 
-/* Hardcore Mode Theme - Orange/Purple color scheme */
+/* Hardcore mode: a faint warm wash from the tertiary (coral) role, so the
+   competitive mode reads differently without leaving the token palette. */
 .hardcore-theme {
-  /* CSS Variables for hardcore theme */
-  --hardcore-primary: #FF6B35;    /* Orange */
-  --hardcore-secondary: #9333EA;  /* Deep Purple */
-  --hardcore-accent: #FF3B7F;     /* Pink/Magenta */
-
-  /* Stronger orange background tint */
-  background: linear-gradient(135deg, rgba(255, 107, 53, 0.08) 0%, rgba(255, 69, 0, 0.05) 50%, rgba(147, 51, 234, 0.04) 100%);
+  background: radial-gradient(120% 80% at 0% 0%, rgb(var(--md-sys-color-tertiary) / 0.07), transparent 60%),
+    radial-gradient(90% 70% at 100% 100%, rgb(var(--md-sys-color-primary) / 0.05), transparent 60%);
 }
 
 /* Particle background in light theme: the WebGL scene is tuned for dark —

@@ -1,10 +1,13 @@
 /**
- * Virtual Button Component
- * "Next Song" button for Virtual mode - draws random song from database
+ * Virtual mode song source — "draw a song".
+ * The button squashes on press and springs back (spatial-fast); the remaining
+ * count ticks down with a spring.
  */
-
+import { m } from 'motion/react'
 import { useGame } from '@/contexts'
 import { songs } from '@/data/songs'
+import { spring } from '@/motion/springs'
+import { AnimatedNumber } from '@/components/ui/AnimatedNumber'
 
 interface VirtualButtonProps {
   onClick: () => void
@@ -12,42 +15,37 @@ interface VirtualButtonProps {
 
 export function VirtualButton({ onClick }: VirtualButtonProps) {
   const { playedSongs } = useGame()
-
-  const availableCount = songs.length - playedSongs.length
+  const available = songs.length - playedSongs.length
+  const empty = available <= 0
 
   return (
-    <div className="glass rounded-m3-xl p-8 border-2 border-accent/30 hover:border-accent transition-colors text-center">
-      <h3 className="text-headline-sm mb-6 text-gradient">Virtueller Modus</h3>
-
-      <button
+    <section className="rounded-m3-xl bg-md-surface-container border border-md-outline-variant/50 p-5 sm:p-6 text-center">
+      <m.button
+        type="button"
         onClick={onClick}
-        disabled={availableCount === 0}
-        className={`
-          w-full px-12 py-6 rounded-m3-xl font-bold text-xl transition-all
-          ${
-            availableCount === 0
-              ? 'bg-md-surface-container-highest text-text-secondary cursor-not-allowed'
-              : 'bg-gradient-to-r from-secondary to-accent hover:from-secondary hover:to-accent text-white shadow-m3-2 transform hover:scale-105'
-          }
-        `}
+        disabled={empty}
+        whileTap={empty ? undefined : { scale: 0.94, borderRadius: 'var(--m3-shape-lg)' }}
+        transition={spring.spatialFast}
+        className="btn btn-accent w-full min-h-[72px] text-title-lg rounded-m3-xl"
       >
-        🎲 Zufälligen Song ziehen
-      </button>
-
-      <div className="mt-4 px-4 py-2 glass rounded-m3-md border border-accent/20">
-        <p className="text-sm font-semibold">
-          Verfügbare Songs:{' '}
-          <span className={availableCount === 0 ? 'text-md-error' : 'text-secondary'}>
-            {availableCount}/{songs.length}
-          </span>
-        </p>
-      </div>
-
-      {availableCount === 0 && (
-        <div className="mt-4 p-3 bg-red-900/30 rounded-m3-md text-red-300 text-sm">
-          ⚠️ Alle Songs wurden bereits gespielt!
-        </div>
-      )}
-    </div>
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+          <rect x="4" y="4" width="16" height="16" rx="3" />
+          <circle cx="9" cy="9" r="1.2" fill="currentColor" />
+          <circle cx="15" cy="15" r="1.2" fill="currentColor" />
+          <circle cx="15" cy="9" r="1.2" fill="currentColor" />
+          <circle cx="9" cy="15" r="1.2" fill="currentColor" />
+        </svg>
+        Song ziehen
+      </m.button>
+      <p className="mt-3 text-body-sm text-md-on-surface-variant">
+        {empty ? (
+          <span className="text-md-error">Alle Songs wurden bereits gespielt</span>
+        ) : (
+          <>
+            Noch <AnimatedNumber value={available} className="text-text-primary" /> von {songs.length} Songs
+          </>
+        )}
+      </p>
+    </section>
   )
 }

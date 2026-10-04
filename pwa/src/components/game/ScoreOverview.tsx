@@ -1,73 +1,79 @@
 /**
- * Score Overview Component
- * Shows all players' scores in Guess mode
+ * Score Overview (hardcore) — the ranking that moves.
+ *
+ * Rows are layout-animated: when a guess changes the order, players glide to
+ * their new rank instead of jumping; scores count with springs. The "am Zug"
+ * marker travels between rows as one shared element (layoutId).
  */
-
+import { m } from 'motion/react'
 import { useGame } from '@/contexts'
 import { TrophyIcon } from '@/utils/icons'
+import { spring } from '@/motion/springs'
+import { AnimatedNumber } from '@/components/ui/AnimatedNumber'
+
+const MEDALS = ['🥇', '🥈', '🥉']
 
 export function ScoreOverview() {
   const { players, currentPlayer, gameMode } = useGame()
-
-  // Only show in Guess mode
   if (gameMode !== 'hardcore') return null
 
-  // Sort players by score (descending)
-  const sortedPlayers = [...players].sort((a, b) => b.score - a.score)
-
-  const medals = ['🥇', '🥈', '🥉']
+  // Stable tie order: score desc, then seat order
+  const ranked = players
+    .map((player, seat) => ({ player, seat }))
+    .sort((a, b) => b.player.score - a.player.score || a.seat - b.seat)
 
   return (
-    <div className="glass rounded-m3-xl p-6 border-2 border-accent/30">
-      {/* Header */}
-      <div className="flex items-center gap-3 mb-6">
-        <TrophyIcon size={24} color="#a855f7" />
-        <h3 className="text-title-lg text-gradient">Punkteübersicht</h3>
+    <section className="rounded-m3-xl bg-md-surface-container border border-md-outline-variant/50 p-5 sm:p-6" aria-labelledby="score-title">
+      <div className="flex items-center gap-3 mb-4">
+        <TrophyIcon size={22} className="text-md-tertiary" />
+        <h3 id="score-title" className="text-title-lg text-text-primary">
+          Punkteübersicht
+        </h3>
       </div>
 
-      {/* Players List */}
-      <div className="space-y-3">
-        {sortedPlayers.map((player, index) => {
-          const playerIndex = players.findIndex((p) => p.name === player.name)
-          const isCurrentPlayer = playerIndex === currentPlayer
-
+      <ol className="space-y-2">
+        {ranked.map(({ player, seat }, rank) => {
+          const active = seat === currentPlayer
           return (
-            <div
+            <m.li
               key={player.name}
-              className={`
-                flex items-center justify-between p-4 rounded-m3-md transition-all glass
-                ${
-                  isCurrentPlayer
-                    ? 'border-2 border-accent shadow-m3-2'
-                    : 'border-2 border-accent/30 hover:border-accent/50'
-                }
-              `}
+              layout
+              transition={spring.spatialDefault}
+              className="relative flex items-center justify-between gap-3 p-3 rounded-m3-lg bg-md-surface-container-high"
             >
-              {/* Rank & Name */}
-              <div className="flex items-center gap-3">
-                <span className="text-2xl w-10 text-center">
-                  {index < 3 ? medals[index] : `#${index + 1}`}
+              {active && (
+                <m.span
+                  layoutId="score-active-ring"
+                  transition={spring.spatialDefault}
+                  className="absolute inset-0 rounded-m3-lg border-2 border-md-primary pointer-events-none"
+                  aria-hidden="true"
+                />
+              )}
+              <div className="flex items-center gap-3 min-w-0">
+                <span className="w-9 text-center text-xl" aria-label={`Platz ${rank + 1}`}>
+                  {rank < 3 ? MEDALS[rank] : <span className="text-title-sm text-md-on-surface-variant">#{rank + 1}</span>}
                 </span>
-                <div>
-                  <p className="font-bold text-text-primary">{player.name}</p>
-                  <p className="text-xs text-text-secondary">{player.cards} Karten</p>
+                <div className="min-w-0">
+                  <p className="text-title-sm text-text-primary truncate">
+                    {player.name}
+                    {active && <span className="sr-only"> (am Zug)</span>}
+                  </p>
+                  <p className="text-body-sm text-md-on-surface-variant">
+                    <AnimatedNumber value={player.cards} /> {player.cards === 1 ? 'Karte' : 'Karten'}
+                  </p>
                 </div>
               </div>
-
-              {/* Score */}
-              <div className="text-right">
-                <div className="text-2xl font-bold text-brand tabular-nums">{player.score}</div>
-                <div className="text-xs text-text-secondary">Punkte</div>
-              </div>
-            </div>
+              <p className="text-headline-sm text-brand">
+                <AnimatedNumber value={player.score} />
+              </p>
+            </m.li>
           )
         })}
-      </div>
+      </ol>
 
-      {/* Info */}
-      <div className="mt-6 pt-4 border-t border-accent/20 text-center text-sm text-text-secondary">
-        🏆 Gewinner: Meisten Punkte nach 10 Karten
-      </div>
-    </div>
+      <p className="mt-4 pt-3 border-t border-md-outline-variant/60 text-center text-body-sm text-md-on-surface-variant">
+        Gewinner: die meisten Punkte nach 10 Karten
+      </p>
+    </section>
   )
 }

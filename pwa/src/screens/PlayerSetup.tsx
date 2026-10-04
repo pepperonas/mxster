@@ -172,6 +172,7 @@ export function PlayerSetup() {
             <button
               onClick={handleAddPlayer}
               className="btn btn-accent px-6 py-3 flex items-center gap-2"
+              aria-label="Spieler hinzufügen"
             >
               <PlusIcon size={20} />
               <span className="hidden sm:inline">Hinzufügen</span>

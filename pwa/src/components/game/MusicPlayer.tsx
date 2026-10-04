@@ -7,8 +7,9 @@ import { useState, useEffect, useCallback, useRef } from 'react'
 import type { Song } from '@/types'
 import { getMusicPlayer, type AudioMode } from '@/services/MusicPlayerService'
 import type { PlayerState } from '@/services/PreviewPlayerService'
-import { MusicIcon } from '@/utils/icons'
-import { useUI, useAuth, useSettings, useInteraction } from '@/contexts'
+import { AnimatePresence, m } from 'motion/react'
+import { spring } from '@/motion/springs'
+import { useUI, useAuth, useSettings, useInteraction, useGame } from '@/contexts'
 
 interface MusicPlayerProps {
   song: Song | null
@@ -20,6 +21,7 @@ export function MusicPlayer({ song, onStateChange }: MusicPlayerProps) {
   const { accessToken, isLoggedIn } = useAuth()
   const { settings } = useSettings()
   const { registerInteraction, setActivityLevel } = useInteraction()
+  const { gameMode } = useGame()
 
   const [isPlaying, setIsPlaying] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
@@ -248,129 +250,119 @@ export function MusicPlayer({ song, onStateChange }: MusicPlayerProps) {
     return `${minutes}:${seconds.toString().padStart(2, '0')}`
   }
 
-  if (!song) return null
+  const progress = duration > 0 ? Math.min(100, (currentPosition / duration) * 100) : 0
+  const status = isLoading ? 'Wird geladen …' : isPlaying ? 'Song läuft' : 'Pausiert'
+  const modeLabel =
+    audioMode === 'spotify' ? 'Spotify Premium · 320 kbps' : audioMode === 'preview' ? 'Standard-Audio · 128 kbps' : 'Kein Audio'
 
-  const progress = duration > 0 ? (currentPosition / duration) * 100 : 0
-
-  // Mode badge configuration
-  const modeBadge = {
-    spotify: {
-      label: '🎧 Spotify Premium (320 kbps)',
-      color: 'text-green-400 border-green-500/30 bg-green-500/10'
-    },
-    preview: {
-      label: '🎵 Standard Audio (128 kbps)',
-      color: 'text-orange-400 border-orange-500/30 bg-orange-500/10'
-    },
-    none: {
-      label: '⏸️ Kein Audio',
-      color: 'text-gray-400 border-gray-500/30 bg-gray-500/10'
-    }
-  }
-
-  const currentBadge = modeBadge[audioMode]
-
+  // The component itself stays mounted (player init is expensive); only its
+  // surface enters and leaves.
   return (
-    <div
-      className="bg-md-surface-container rounded-m3-xl p-4 sm:p-6 lg:p-8 border border-md-outline-variant/50 hover:bg-md-surface-container-high transition-colors duration-m3-effects ease-m3-effects"
-      style={{ viewTransitionName: 'music-player' }}
-    >
-      {/* Song Info */}
-      <div className="flex items-center gap-4 sm:gap-6 mb-4 sm:mb-6">
-        <div className="w-16 h-16 sm:w-24 sm:h-24 bg-gradient-to-br from-secondary to-accent rounded-m3-lg flex items-center justify-center shadow-m3-2 flex-shrink-0">
-          <MusicIcon size={32} color="white" />
-        </div>
-        <div className="flex-1 min-w-0">
-          <h3 className="text-lg sm:text-2xl font-bold text-gradient mb-1">
-            {isLoading ? 'Wird geladen...' : 'Song wird abgespielt'}
-          </h3>
-          <p className="text-text-secondary">Rate Titel, Interpret und Jahr</p>
-
-          {/* Audio Mode Badge */}
-          <div className="mt-2">
-            <span className={`inline-block px-3 py-1 rounded-full text-xs font-medium border ${currentBadge.color}`}>
-              {currentBadge.label}
-            </span>
-          </div>
-        </div>
-      </div>
-
-      {/* Playback Controls */}
-      <div className="space-y-4">
-        {/* Progress Bar */}
-        <div className="space-y-2">
-          <div
-            className="h-4 sm:h-3 bg-md-surface-container-highest rounded-m3-full overflow-hidden cursor-pointer border border-accent/20 hover:border-accent/50 transition-colors"
-            onClick={(e) => {
-              const rect = e.currentTarget.getBoundingClientRect()
-              const x = e.clientX - rect.left
-              const percentage = (x / rect.width) * 100
-              handleSeek(percentage)
-            }}
-          >
-            <div
-              className={`h-full bg-gradient-to-r from-secondary via-accent to-secondary transition-all shadow-lg ${
-                isPlaying ? '' : 'animate-pulse'
-              }`}
-              style={{ width: `${progress}%` }}
-            />
-          </div>
-          <div className="flex justify-between text-sm font-medium">
-            <span className="text-secondary">{formatTime(currentPosition)}</span>
-            <span className="text-text-secondary">{formatTime(duration)}</span>
-          </div>
-        </div>
-
-        {/* Controls */}
-        <div className="flex items-center justify-center gap-4">
-          {/* Play/pause with M3 shape morph: circle when paused → squircle while playing */}
-          <button
-            onClick={handleTogglePlay}
-            disabled={!playerReady || isLoading}
-            className={`w-14 h-14 min-w-[48px] min-h-[48px] bg-md-primary text-md-on-primary m3-state-layer flex items-center justify-center shadow-m3-2 disabled:opacity-50 disabled:cursor-not-allowed active:scale-95 ${
-              isPlaying ? 'rounded-m3-lg' : 'rounded-m3-full'
-            }`}
-            style={{ transition: 'border-radius var(--m3-spatial-fast), transform var(--m3-spatial-fast), background-color var(--m3-effects-default)' }}
-            aria-label={isPlaying ? 'Pause' : 'Play'}
-          >
-            {isLoading ? (
-              <span className="m3-loading-arc" style={{ width: 22, height: 22, borderTopColor: 'currentColor', borderRightColor: 'currentColor' }} />
-            ) : (
-              <span className="text-xl flex items-center justify-center">
-                {isPlaying ? '⏸️' : '▶️'}
+    <AnimatePresence initial={false}>
+      {song && (
+        <m.section
+          key="music-player"
+          initial={{ opacity: 0, y: 20, scale: 0.97 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          exit={{ opacity: 0, y: -12, scale: 0.98, transition: spring.effectsDefault }}
+          transition={spring.spatialDefault}
+          className="bg-md-surface-container rounded-m3-xl p-4 sm:p-6 border border-md-outline-variant/50"
+          aria-label="Musik"
+        >
+          <div className="flex items-center gap-4 mb-4">
+            <Equalizer playing={isPlaying && !isLoading} />
+            <div className="flex-1 min-w-0">
+              <p className="text-title-lg text-text-primary">{status}</p>
+              <p className="text-body-md text-md-on-surface-variant">
+                {gameMode === 'hardcore' ? 'Rate Titel, Interpret und Jahr' : 'Wo gehört der Song auf der Zeitleiste hin?'}
+              </p>
+              <span className="inline-block mt-2 px-2.5 py-0.5 rounded-m3-full text-label-md bg-md-secondary-container text-md-on-secondary-container">
+                {modeLabel}
               </span>
-            )}
-          </button>
-        </div>
-
-        {/* Player Status */}
-        {!playerReady && (
-          <div className="text-center text-sm text-yellow-300">
-            ⏳ Player wird initialisiert...
+            </div>
+            <m.button
+              type="button"
+              onClick={handleTogglePlay}
+              disabled={!playerReady || isLoading}
+              animate={{ borderRadius: isPlaying ? 'var(--m3-shape-lg)' : 'var(--m3-shape-full)' }}
+              whileTap={{ scale: 0.9 }}
+              transition={spring.spatialFast}
+              className="m3-state-layer flex-shrink-0 w-14 h-14 grid place-items-center bg-md-primary text-md-on-primary shadow-m3-2 disabled:opacity-40"
+              aria-label={isPlaying ? 'Pause' : 'Abspielen'}
+            >
+              <AnimatePresence mode="wait" initial={false}>
+                {isLoading ? (
+                  <m.span key="load" className="m3-loading-arc" style={{ width: 22, height: 22, borderTopColor: 'currentColor', borderRightColor: 'currentColor' }} />
+                ) : (
+                  <m.svg
+                    key={isPlaying ? 'pause' : 'play'}
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="currentColor"
+                    initial={{ scale: 0.4, opacity: 0, rotate: -30 }}
+                    animate={{ scale: 1, opacity: 1, rotate: 0 }}
+                    exit={{ scale: 0.4, opacity: 0, rotate: 30 }}
+                    transition={spring.spatialFast}
+                    aria-hidden="true"
+                  >
+                    {isPlaying ? <path d="M7 5h3.5v14H7zM13.5 5H17v14h-3.5z" /> : <path d="M8 5.5v13a1 1 0 0 0 1.5.86l10.5-6.5a1 1 0 0 0 0-1.72L9.5 4.64A1 1 0 0 0 8 5.5z" />}
+                  </m.svg>
+                )}
+              </AnimatePresence>
+            </m.button>
           </div>
-        )}
 
-        {/* Preview Mode Info */}
-        {audioMode === 'preview' && playerReady && (
-          <div className="text-center text-xs text-text-secondary border-t border-accent/20 pt-3">
-            {song.previewUrl ? (
-              <span>💡 Standard Audio-Modus: Volle Songs · 128 kbps MP3 · Unbegrenzte Spieler</span>
-            ) : (
-              <span className="text-yellow-400">⚠️ Kein Audio verfügbar für diesen Song</span>
-            )}
+          <input
+            type="range"
+            min={0}
+            max={1000}
+            step={1}
+            value={Math.round(progress * 10)}
+            onChange={(e) => handleSeek(Number(e.target.value) / 10)}
+            disabled={!playerReady || duration === 0}
+            className="m3-slider w-full"
+            style={{ '--progress': `${progress}%` } as React.CSSProperties}
+            aria-label="Position im Song"
+            aria-valuetext={`${formatTime(currentPosition)} von ${formatTime(duration)}`}
+          />
+          <div className="flex justify-between mt-1 text-label-md tabular-nums text-md-on-surface-variant">
+            <span>{formatTime(currentPosition)}</span>
+            <span>{formatTime(duration)}</span>
           </div>
-        )}
 
-        {/* No Audio Mode Info */}
-        {audioMode === 'none' && playerReady && (
-          <div className="text-center text-xs border-t border-red-500/20 pt-3">
-            <p className="text-red-400 mb-2">❌ Kein Audio verfügbar</p>
-            <p className="text-text-secondary text-xs">
-              Dieser Song hat keine Preview-URL. Für Vollzugriff nutze Spotify Premium.
+          {!playerReady && <p className="mt-3 text-center text-body-sm text-md-on-surface-variant">Player wird initialisiert …</p>}
+          {audioMode === 'preview' && playerReady && !song.previewUrl && (
+            <p className="mt-3 text-center text-body-sm text-md-warning">Für diesen Song ist kein Audio verfügbar.</p>
+          )}
+          {audioMode === 'none' && playerReady && (
+            <p className="mt-3 text-center text-body-sm text-md-error">
+              Kein Audio verfügbar. Für Vollzugriff nutze Spotify Premium.
             </p>
-          </div>
-        )}
-      </div>
+          )}
+        </m.section>
+      )}
+    </AnimatePresence>
+  )
+}
+
+/** Cover art: equalizer bars that dance while music plays and rest when paused. */
+function Equalizer({ playing }: { playing: boolean }) {
+  const bars = [0.55, 0.9, 0.7, 1, 0.6]
+  return (
+    <div className="flex-shrink-0 w-16 h-16 sm:w-20 sm:h-20 rounded-m3-lg bg-md-tertiary-container text-md-on-tertiary-container flex items-end justify-center gap-1 p-3" aria-hidden="true">
+      {bars.map((peak, i) => (
+        <m.span
+          key={i}
+          className="w-1.5 sm:w-2 h-full rounded-m3-full bg-current origin-bottom"
+          animate={playing ? { scaleY: [0.25, peak, 0.4, peak * 0.8, 0.25] } : { scaleY: 0.25 }}
+          transition={
+            playing
+              ? { duration: 1.1 + i * 0.12, repeat: Infinity, ease: 'easeInOut', delay: i * 0.08 }
+              : spring.spatialDefault
+          }
+        />
+      ))}
     </div>
   )
 }
