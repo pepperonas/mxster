@@ -17,7 +17,6 @@ import { useEffect, useRef } from 'react'
 import './styles/design-tokens.css'
 import './styles/tailwind.css'
 import './styles/motion.css'
-import './styles/beatAnimations.css'
 
 function AppContent() {
   // Background Token Refresh Service

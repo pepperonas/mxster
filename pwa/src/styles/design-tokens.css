@@ -184,8 +184,7 @@
 }
 
 /* ════════════════ LEGACY ALIASES (resolved colors, not triplets) ════════════════
-   Consumed by beatAnimations.css and plain-CSS blocks in tailwind.css.
-   These vars were referenced but never defined before this token layer existed. */
+   For plain-CSS blocks that predate the token layer; new code uses the md-* roles. */
 :root {
   --background: rgb(var(--md-sys-color-surface));
   --primary: rgb(var(--md-sys-color-surface-container));
