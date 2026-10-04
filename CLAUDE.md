@@ -6,12 +6,13 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 **mxster** is a music timeline game with virtual and physical gameplay. Play digitally (recommended) or with 3D-printed QR cards. Features guess mode (points-based) and timeline modes (chronological placement).
 
-**Current Version**: v0.2.1 (Material 3 Expressive redesign landed in v0.2.0)
+**Current Version**: v0.3.0 (real motion & physics on top of the M3 Expressive design system from v0.2.0)
 **Song Database**: 211 songs with full genre data (source of truth: `docs/songs.json`; root `package.json` version is stale and unused)
 
 ### Key Technologies
 - **Frontend**: React 19 + TypeScript + Vite 5.0 + TailwindCSS 3.4
-- **Design**: Material 3 Expressive (token layer, dark + light, spring motion) — see "Design System" below
+- **Design**: Material 3 Expressive (token layer, dark + light) — see "Design System" below
+- **Motion**: `motion` (motion.dev, `motion/react` via LazyMotion + `m.*`) for physical springs, gestures, layout and exit animations; CSS uses the same springs as generated `linear()` tokens
 - **Routing**: react-router-dom 7 **data router** (`createBrowserRouter`) — required for View Transitions
 - **Audio**: Self-Hosted Primary (211 songs @ 128 kbps MP3, ~0.9 GB) + Optional Spotify Premium (max 25 users)
 - **Auth**: Spotify OAuth2 PKCE (optional for Premium mode) + Google sign-in via Google Identity Services (client-only, player identity)
@@ -100,7 +101,7 @@ YouTube → yt-dlp → MP3 → VPS (mxster.celox.io/audio/) → Howler.js playba
 - **GameHistoryContext** — Game history, statistics persistence
 - **AuthContext** — Spotify OAuth PKCE flow
 - **GoogleAuthContext** — Google sign-in (profile only); see "Google Sign-In" below
-- **UIContext** — Modals, toasts, notifications
+- **UIContext** — Modals (keyed, `closeModal(): Promise` resolves on exit), toasts, sidebar
 - **InteractionContext** — Particle animation activity levels
 - **SettingsContext** — User preferences
 - **AchievementNotificationContext** — Unlock animations
@@ -112,6 +113,11 @@ YouTube → yt-dlp → MP3 → VPS (mxster.celox.io/audio/) → Howler.js playba
 - **SpotifyAuthService** — OAuth PKCE implementation
 - **gameLogic** — Game rules, scoring (5+5+5/2/1), win conditions, tie-breaking
 - **botPlayer** + **botStrategies/** — AI opponents (Easy/Medium/Hard)
+
+### Game Loop (`src/game/`)
+`useTurnFlow` is an explicit phase machine — `idle → placing` (timeline modes) / `guessing` (hardcore) `→ revealed → next turn | over`. GameScreen only renders the phase; rules come from pure modules: `placement.ts` (`evaluatePlacement`, equal years allowed either side, `gapLabel`), `guess.ts` (5/5/5-2-1 breakdown), `skipRules.ts` (33 % per extra skip, 95 % cap), `achievementRules.ts` (returns ordered unlock/progress effects). Credit timing is part of the rules: timeline modes credit a correct card **on placement** and check the win on "Nächster Spieler"; hardcore credits card + points on "Weiter". Dialogs remain only for real decisions (skip penalty/danger zone — `required`, so dismissing can't stall a turn — leaving, game end).
+
+The board (`components/game/TimelineBoard.tsx`) is one vertical list with real insertion gaps (`<button>`s with spoken labels). Placing = drag the dock card (`PlacementDock`) or tap a gap → preview in the gap → one confirm. Drag target = `computeInsertionIndex` (`game/boardGeometry.ts`): gap centres measured on grab, velocity projection capped at one row, 8 px hysteresis; the highlight changes only transform/colour so the measured layout stays valid. The pending card shares `layoutId="pending-card"` between dock and board. **Never render the year of a pending card** (tests check the DOM).
 
 ### Audio System (Dual-Mode)
 1. **Self-Hosted (Primary)**: Full songs via `mxster.celox.io/audio/song_XXX.mp3`, behind a client-side password dialog (`PasswordProtectionDialog`; not real access control — nginx serves the MP3s unauthenticated), unlimited users
@@ -155,6 +161,8 @@ mxster/
 │   │   ├── screens/           # Page components (LandingPage, GameScreen, PlayerSetup, etc.)
 │   │   ├── components/        # Reusable UI (Modal, Sidebar, MusicPlayer, etc.)
 │   │   ├── contexts/          # 9 React contexts + AppProviders
+│   │   ├── game/              # Pure game rules + useTurnFlow phase machine + drag geometry (all tested)
+│   │   ├── motion/            # Springs (single source), reduced-motion policy, view-transition gate, providers
 │   │   ├── services/          # Business logic (audio, game, bot AI)
 │   │   ├── types/             # TypeScript definitions (index.ts, achievements.ts, spotify.ts)
 │   │   ├── utils/             # Animations, auth, persistence
@@ -201,7 +209,7 @@ mxster/
 ### Bot Player System
 - 3 difficulties: Easy (30-50% win), Medium (60-75%), Hard (90-95%)
 - Strategy Pattern: `HardcoreBotStrategy` and `TimelineBotStrategy`
-- Anti-double-execution: `lastBotSongRef` prevents multiple actions per turn
+- Bots play through the same `placeCard`/`submitGuess` entry points as humans (`useTurnFlow`, via `useEffectEvent`); a `botBusy` ref keeps a song change mid-think from starting a second turn
 - Only available in Virtual Mode with exactly 1 human player
 
 ### MusicPlayer Component
@@ -218,17 +226,28 @@ Always kept mounted (never conditionally rendered) — unmounting causes re-init
 
 **Legacy aliases are the leverage point:** `tailwind.config.js` keeps every historic name and repoints it at an M3 role, so ~500 existing utility usages retheme with zero markup churn — `background`→surface, `primary`→**surface-container** (it was always the card background), `secondary`→**M3 primary** (cyan), `accent`→**M3 tertiary** (coral), `border`→outline-variant, `danger`→error, `text-primary`→on-surface, `text-secondary`→on-surface-variant. New code uses the additive `md-*` namespace (`bg-md-surface-container-high`, `text-md-on-primary`). Elevation is expressed through surface tones, not shadows.
 
-**Theming.** `data-theme="dark|light"` on `<html>`, default dark, persisted inside `mxster_settings` (SettingsContext) and applied pre-paint by an inline script in `index.html` (no FOUC). Toggle sits in the ActionBar (🌙/☀️) and SettingsDialog; switching runs an **M3 circular reveal** through the View Transitions API (`utils/themeReveal.ts`), falling back to an instant swap. `theme-color` meta and the manifest/loader colors all mirror the token hexes. **No text gradients (v0.2.1 premium pass):** `.text-gradient` is kept as a class name but now renders solid `on-surface`; the single brand accent is `.text-brand` (solid cyan), reserved for the wordmark and hero data numbers. The `--brand-gradient-from/to` tokens still exist but are no longer used for text. Glow shadow token names (`shadow-glow-*`) are retained but resolve to soft two-layer ambient elevation.
+**Theming.** `data-theme="dark|light"` on `<html>`, default dark, persisted inside `mxster_settings` (SettingsContext) and applied pre-paint by an inline script in `index.html` (no FOUC). Toggle sits in the ActionBar (🌙/☀️) and SettingsDialog; switching runs an **M3 circular reveal** through the View Transitions API (`utils/themeReveal.ts`), falling back to an instant swap. `theme-color` meta and the manifest/loader colors all mirror the token hexes. **No text gradients (v0.2.1 premium pass):** `.text-gradient` is kept as a class name but now renders solid `on-surface`; the single brand accent is `.text-brand` (solid cyan), reserved for the wordmark and hero data numbers. The `--brand-gradient-from/to` tokens still exist but are no longer used for text. Shadows use the M3 elevation scale `shadow-m3-1…5` (the neon-era `glow-*` names are gone).
 
-**Motion.** Spring tokens: `--m3-spatial-fast|default|slow` (350/500/650 ms, overshoot beziers) for position/size/shape, `--m3-effects-*` (150/200/300 ms, no overshoot) for color/opacity. Duration and easing also exist separately (`--m3-dur-*`/`--m3-ease-*`) because Tailwind needs them apart; utilities are `duration-m3-spatial`/`ease-m3-spatial` etc. **One `prefers-reduced-motion` block collapses every token to 120 ms ease** — that plus a `prefersReducedMotion()` gate in `ParticleBackground` (skips WebGL entirely) and in `utils/ripple.ts` covers the whole app. Speed guide: fast → buttons/switches/press morphs, default → dialogs/sheets/sidebar/cards, slow → route transitions.
+**Motion & physics (v0.3.0).** One source: `src/motion/springs.ts` holds the M3 Expressive specs (stiffness + damping ratio: spatial fast/default/slow 800·0.6 / 380·0.8 / 200·0.8, effects 3800/1600/800 at ζ 1). Motion gets them as real springs (`spring.spatialDefault`, damping = 2ζ√k — velocity survives interruption). CSS gets the same springs sampled from the closed-form solution as `linear()` easings in a **generated block** in `design-tokens.css` (bezier values above it are the fallback) — after changing a spec run `UPDATE_SPRING_CSS=1 npx vitest run springs`; the test fails if the block drifts. Spatial = position/size/shape (may overshoot), effects = colour/opacity (never). Speed guide: fast → buttons/switches/chips, default → dialogs/sheets/cards/board, slow → route-level and celebrations.
 
-**Shape & feedback.** 10-step corner scale (`rounded-m3-xs … m3-full`). Signature move is **shape morphing on press**: `.btn` is a pill that morphs to `--m3-shape-lg` + `scale(0.96)` while pressed; the play button morphs circle→squircle while playing. State layers (`.m3-state-layer`, `::after` overlay in `currentColor`) replace hover-lift; a delegated ripple (`utils/ripple.ts`) adds tactility as progressive enhancement. `.stagger-children` gives lists/grids a 40 ms-stepped spring reveal.
+**One reduced-motion policy** (`motion/policy.ts`, live media query): `MotionConfig reducedMotion="user"` makes transforms instant, CSS spatial tokens become 0 ms, effects keep a 120 ms fade, smooth scroll is off, the WebGL background is replaced by a static gradient (live), confetti and the ripple are skipped. Decorative infinite loops (`animate-bounce/ping/pulse`) stop; spinners keep turning.
 
-**Route transitions.** `useAppNavigate()` (`hooks/useAppNavigate.ts`) wraps `navigate()` with `viewTransition: true` unless reduced motion — **use it instead of `useNavigate()`**. This requires the data router; under the old `<BrowserRouter>` the option is a silent no-op. Persistent chrome (ActionBar, MusicPlayer, particle canvas, brand mark) carries `view-transition-name` so it stays put instead of being swept into the root snapshot.
+Motion is loaded with `<LazyMotion strict features={domMax async}>` (`motion/MotionProvider.tsx`) — **only `m.*` components; importing `motion` throws** (and a test greps for it). Building blocks: `AnimatedNumber` (spring count, aria-safe), `SegmentedControl` (sliding pill via layoutId), `Switch` (thumb travels on a spring), `celebrate()` (confetti in token colours), `FeedbackLayer` (reactions + aria-live announcements; no full-screen effects).
+
+**Shape & feedback.** 10-step corner scale (`rounded-m3-xs … m3-full`). Signature move is **shape morphing on press**: `.btn` is a pill that morphs to `--m3-shape-lg` + `scale(0.96)` while pressed; the play button morphs circle→squircle while playing. State layers (`.m3-state-layer`, `::after` overlay in `currentColor`) replace hover-lift; a delegated two-phase ripple (`utils/ripple.ts`: spreads while held, fades on release) adds tactility. `.stagger-children` grids and `[data-reveal]` blocks reveal when scrolled into view (`motion/useScrollReveal.ts`, IntersectionObserver; without it everything shows). Elevation: `shadow-m3-1…5` (`--md-sys-elevation-*`).
+
+**Route transitions.** `useAppNavigate()` (`hooks/useAppNavigate.ts`) wraps `navigate()` with `viewTransition: true` unless reduced motion — **use it instead of `useNavigate()`**. This requires the data router; under the old `<BrowserRouter>` the option is a silent no-op. Persistent chrome (ActionBar, particle canvas, brand mark) carries `view-transition-name` so it stays put. **Routes stay on View Transitions; Motion animates only within a page** — never give one element both a `view-transition-name` and a Motion `layout` prop, and `layoutId` does not cross routes. Shared elements across the setup flow use VT names (`SelectionTrail`: the tapped mode/variant icon travels into the next screen's chips). `motion/viewTransitionGate.ts` wraps `document.startViewTransition` and sets `html.vt-active` while one runs, so page-entry keyframes finish instantly instead of animating twice.
 
 **Typography.** Roboto Flex variable font (loaded via `<link>` in `index.html`, Inter as fallback), M3 type scale as utilities (`.text-display-lg` … `.text-label-sm`) plus `.text-emphasized` (variable `wght`/`wdth` axes) for hero moments.
 
-**Gotcha:** `beatAnimations.css` consumes `var(--background)`, `--primary`, `--secondary`, `--accent`, `--border`, `--text-*`. These were referenced but never defined before the token layer existed (the rules were silently inert); they are now real aliases in `design-tokens.css`, so changes there affect the beat UI.
+**Motion gotchas (all hit during v0.3.0):**
+- `.m3-dialog-panel` is a surface style only — CSS entrance keyframes live in `.m3-dialog-enter` (for dialogs not driven by Motion). Combining CSS keyframes and Motion on one element makes them fight (the dialog froze at 28 % opacity).
+- `<Modal>` dialogs take their content as a **prop snapshot**: an exiting dialog reading live context would show the next dialog's content while leaving. `closeModal()` returns a promise that resolves on exit (700 ms safety net); `AnimatePresence mode="wait"` sequences consecutive dialogs — no `setTimeout` chains.
+- Closing a dialog pops its history entry with `history.back()`, whose popstate arrives **asynchronously**; one global listener swallows self-caused pops (otherwise it closed the next dialog).
+- In tests, wrap `m.*` components in `test/MotionTestProvider` (sync features — without them exits never complete) and don't `await act(() => closeModal())` (deadlocks until the safety net); close in a sync act, then `waitFor`. `MotionGlobalConfig.skipAnimations` is set in `test/setup.ts`; `setReducedMotion()` from `test/motion.ts`.
+- The particle background must never use React state per frame: parameters live in refs and the loop interpolates them (`motion/backgroundControl.quietBackground()` lets a gesture lower its frame rate). three.js is lazy-loaded in `App.tsx`; keep it out of the `components/game` barrel.
+- The `InteractionContext` pulse is an event (`pulseIntensity` + `pulseSeq`), not a decaying state.
+- After changing `tailwind.config.js`, restart the dev server — new utility classes (e.g. colour roles) are otherwise not generated.
 
 ## Google Sign-In
 
@@ -257,7 +276,8 @@ Client-only (no backend): `services/googleIdentity.ts` lazy-loads `accounts.goog
 - Max height: `max-h-[calc(100vh-12rem)] sm:max-h-[85vh]`
 - `viewport-fit=cover` in meta tag for iOS/Android safe areas
 - All custom dialogs (PasswordProtection, Achievements, etc.) must follow same pattern
-- Panel styling comes from the shared `.m3-dialog-panel` class (surface-container-high, 28px corners, spring entrance); scrim uses `bg-md-scrim/60` + the `m3-scrim-in` animation
+- `<Modal>` renders a centred spring dialog on desktop and a **bottom sheet** on phones (`COMPACT_QUERY`); dismissible sheets close with a downward fling from the handle, `required` dialogs never close by gesture/Escape/backdrop. Focus moves in, Tab is trapped, `#app` is `inert`, focus returns to the opener.
+- Custom dialogs (PasswordProtection, Achievements, Settings) use `.m3-dialog-panel` + `.m3-dialog-enter`
 - Touch targets ≥48px (`.touch-target` for icon buttons); `hoverOnlyWhenSupported` is enabled in `tailwind.config.js`, so `hover:` utilities never fire on touch
 
 ### OpenSCAD Performance

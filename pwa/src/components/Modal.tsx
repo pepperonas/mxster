@@ -262,7 +262,7 @@ function DialogSurface({ dialog, compact, dismissible, onDismiss }: DialogSurfac
         dragElastic={{ top: 0.04, bottom: 0.7 }}
         onDragEnd={onDragEnd}
       >
-        {compact && (
+        {compact && dismissible && (
           <div
             className="flex justify-center pt-3 pb-1 touch-none cursor-grab active:cursor-grabbing"
             onPointerDown={(e) => dismissible && dragControls.start(e)}

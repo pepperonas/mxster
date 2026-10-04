@@ -3,7 +3,7 @@
 **Das ultimative Musikquiz!** Rate Songs, platziere sie chronologisch und teste dein Musikwissen.
 
 [![App](https://img.shields.io/badge/Play_Now-mxster.celox.io-blue?style=for-the-badge&logo=googlechrome&logoColor=white)](https://mxster.celox.io)
-[![Version](https://img.shields.io/badge/v0.2.1-06B6D4?style=for-the-badge&logo=semver&logoColor=white)](https://github.com/pepperonas/mxster/releases)
+[![Version](https://img.shields.io/badge/v0.3.0-06B6D4?style=for-the-badge&logo=semver&logoColor=white)](https://github.com/pepperonas/mxster/releases)
 [![License](https://img.shields.io/badge/MIT-green?style=for-the-badge&logo=opensourceinitiative&logoColor=white)](LICENSE)
 
 ![React](https://img.shields.io/badge/React_19-61DAFB?style=flat-square&logo=react&logoColor=black)
@@ -57,9 +57,11 @@
 **Material 3 Expressive** von Grund auf: zentrale Design-Token (`pwa/src/styles/design-tokens.css`) als Single Source of Truth fuer Farbe, Form, Typografie und Motion.
 
 - **Dark + Light Theme** (elektrisches Cyan als Marke, warmes Koralle als Akzent), umschaltbar mit MD3-Circular-Reveal ueber die View Transitions API
-- **Physics-based Motion** -- Spring-Kurven fuer Position/Groesse/Form, sanfte Effects-Kurven fuer Farbe/Deckkraft; `prefers-reduced-motion` durchgehend respektiert
-- **Shape-Morphing** als State-Feedback, State-Layer + Ripple, gestaffelte Reveals
-- **Shared-Element-Transitions** zwischen Routen; premium Typografie ohne Schrift-Farbverlaeufe, ruhige Elevation statt Neon-Glow
+- **Echte Federphysik** (seit v0.3.0) -- die M3-Expressive-Federn (Steifigkeit + Daempfung) sind die eine Quelle fuer JS-Animationen (`motion/react`) und CSS (`linear()`-Kurven aus der exakten Federloesung); Bewegungen behalten beim Unterbrechen ihren Schwung
+- **Karten werfen** -- die Songkarte wird auf die Zeitleiste gezogen (neigt sich mit der Wurfgeschwindigkeit, Luecken federn auf), alternativ Luecke antippen oder per Tastatur waehlen; das Jahr klappt beim Aufdecken um
+- **Ergebnisse entfalten sich** an Ort und Stelle statt in Dialogen; Punkte zaehlen hoch, die Rangliste sortiert sich fliessend um, Dialoge und Hinweise fahren ein und aus (Bottom-Sheets mit Wisch-Geste auf dem Handy)
+- **Shared-Element-Transitions** zwischen Routen, Shape-Morphing, zweiphasige Ripple, Scroll-Reveals
+- `prefers-reduced-motion` durchgehend und live respektiert; Ergebnisse werden fuer Screenreader angesagt
 - Mobile-first: Touch-Targets >= 48px, Safe-Areas, ab 360px ohne horizontales Scrollen
 
 ## Fuer Entwickler

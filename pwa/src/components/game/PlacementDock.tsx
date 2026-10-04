@@ -64,7 +64,7 @@ export function PlacementDock({ state, boardRef, onHoverGap, onPreview, onConfir
               exit={{ opacity: 0, y: 24, transition: spring.effectsDefault }}
               transition={spring.spatialDefault}
               className="pointer-events-auto rounded-m3-xl bg-md-surface-container-high/95 backdrop-blur-md border border-md-outline-variant/60 shadow-m3-3 p-3 sm:p-4"
-              aria-live="polite"
+              aria-label="Karte platzieren"
             >
               {state.kind === 'placing' && state.previewGap === null && (
                 <DragStage song={state.song} boardRef={boardRef} onHoverGap={onHoverGap} onDrop={onPreview} />

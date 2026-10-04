@@ -433,7 +433,7 @@ export function Sidebar() {
         <div className="p-4 border-t-2 border-accent/30 flex-shrink-0">
           <div className="text-center">
             <p className="text-xs text-text-secondary mb-1">mxster</p>
-            <p className="text-sm text-gradient font-medium">Version 0.2.1</p>
+            <p className="text-sm text-gradient font-medium">Version 0.3.0</p>
           </div>
         </div>
       </aside>
