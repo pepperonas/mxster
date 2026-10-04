@@ -30,8 +30,10 @@ import {
 import { BotPlayer } from '@/services/botPlayer'
 import type { BotAction } from '@/services/botStrategies/types'
 import { songs } from '@/data/songs'
-import { AchievementId } from '@/types/achievements'
 import type { Player } from '@/types'
+import { evaluatePlacement, timelineSongsFor } from '@/game/placement'
+import { endOfGameAchievements, realtimeScoreAchievements, type AchievementEffect } from '@/game/achievementRules'
+import { evaluateSkip, SKIP_PENALTY_POINTS } from '@/game/skipRules'
 import {
   triggerCorrectPlacementAnimation,
   triggerIncorrectPlacementAnimation,
@@ -91,6 +93,13 @@ export function GameScreen() {
   const { showModal, closeModal, addToast } = useUI()
   const { unlockAchievement, updateProgress, checkAchievements, getPlayerAchievements } = useAchievements()
   const { saveGame, history } = useGameHistory()
+
+  const applyAchievementEffects = (effects: AchievementEffect[]) => {
+    for (const fx of effects) {
+      if (fx.type === 'unlock') unlockAchievement(fx.player, fx.id)
+      else updateProgress(fx.player, fx.id, fx.value)
+    }
+  }
 
   // ============================================================================
   // Redirect if game not properly initialized or not logged in
@@ -311,54 +320,9 @@ export function GameScreen() {
     // Increment skip count for current player
     incrementSkipCount(currentPlayer)
 
-    // Get updated skip counts (including the just incremented one)
-    const updatedSkipCounts = { ...currentSongSkips, [currentPlayer]: (currentSongSkips[currentPlayer] || 0) + 1 }
-
-    // Check if penalty system should apply (Guess Mode only)
-    let penaltyApplied = false
-    let newScore = player.score
-
-    if (gameMode === 'hardcore') {
-      // Count how many players have skipped this song
-      const playersWhoSkipped = Object.keys(updatedSkipCounts).length
-      const totalSkips = Object.values(updatedSkipCounts).reduce((sum, count) => sum + count, 0)
-
-      console.log('⏭️ Skip Stats:', {
-        player: player.name,
-        playersWhoSkipped,
-        totalPlayers: players.length,
-        totalSkips,
-        skipCounts: updatedSkipCounts
-      })
-
-      // Penalty applies only if ALL players have skipped at least once
-      if (playersWhoSkipped >= players.length) {
-        // Calculate penalty probability (increases with each skip after everyone has skipped once)
-        // Formula: (totalSkips - playerCount) * 0.33 = 33% per additional skip
-        const additionalSkips = totalSkips - players.length
-        const penaltyProbability = Math.min(additionalSkips * 0.33, 0.95) // Max 95% probability
-
-        console.log('💀 Penalty Check:', {
-          additionalSkips,
-          penaltyProbability: `${(penaltyProbability * 100).toFixed(0)}%`
-        })
-
-        // Roll the dice
-        if (Math.random() < penaltyProbability) {
-          // Apply penalty (-3 points, can go negative!)
-          newScore = player.score - 3
-          penaltyApplied = true
-
-          console.log('💀 PENALTY APPLIED!', {
-            oldScore: player.score,
-            newScore,
-            pointsDeducted: 3
-          })
-        } else {
-          console.log('✅ Penalty dodged!')
-        }
-      }
-    }
+    const skip = evaluateSkip(currentSongSkips, currentPlayer, players.length, gameMode === 'hardcore')
+    const penaltyApplied = skip.penaltyApplied
+    const newScore = penaltyApplied ? player.score - SKIP_PENALTY_POINTS : player.score
 
     // If penalty was applied, draw a new song immediately
     if (penaltyApplied) {
@@ -407,10 +371,8 @@ export function GameScreen() {
       console.log('⏭️ Skip confirmed - next player gets the same song')
 
       // Show warning dialog if all players have skipped at least once
-      if (gameMode === 'hardcore' && Object.keys(updatedSkipCounts).length >= players.length) {
-        const totalSkips = Object.values(updatedSkipCounts).reduce((sum, count) => sum + count, 0)
-        const additionalSkips = totalSkips - players.length
-        const nextPenaltyProbability = Math.min((additionalSkips + 1) * 0.33, 0.95)
+      if (skip.dangerZone) {
+        const nextPenaltyProbability = skip.nextPenaltyProbability
 
         showModal(
           '⚠️ Gefährliche Zone!',
@@ -648,17 +610,7 @@ export function GameScreen() {
       const playerName = player.name
       const oldScore = player.score
 
-      // PUNKTEJÄGER: 75+ points (unlock when crossing threshold)
-      if (newScore >= 75 && oldScore < 75) {
-        unlockAchievement(playerName, AchievementId.PUNKTEJAEGER)
-        console.log(`🏆 PUNKTEJÄGER unlocked in-game for ${playerName} at ${newScore} points!`)
-      }
-
-      // HARDCORE_CHAMPION: 125+ points (unlock when crossing threshold)
-      if (newScore >= 125 && oldScore < 125) {
-        unlockAchievement(playerName, AchievementId.HARDCORE_CHAMPION)
-        console.log(`🏆 HARDCORE_CHAMPION unlocked in-game for ${playerName} at ${newScore} points!`)
-      }
+      applyAchievementEffects(realtimeScoreAchievements(playerName, oldScore, newScore))
     }
 
     // ============================================================================
@@ -859,24 +811,11 @@ export function GameScreen() {
     const playerIndex = currentPlayer
     const player = players[playerIndex]
 
-    // Get timeline: GlobalTimelineCard[] for global mode, Song[] for personal mode
-    const rawTimeline = gameMode === 'timeline_global' ? globalTimeline : player.timeline
-    // Extract songs for validation (handle both GlobalTimelineCard[] and Song[])
-    const timeline = gameMode === 'timeline_global'
-      ? rawTimeline.map((card: any) => card.song)
-      : rawTimeline
+    const timeline = timelineSongsFor(gameMode, player, globalTimeline)
 
     console.log('🟡 Current timeline length:', timeline.length)
 
-    // Insert song at chosen position
-    const newTimeline = [...timeline]
-    newTimeline.splice(position, 0, currentSong)
-
-    // Check if placement is chronologically correct
-    const isCorrect = newTimeline.every((song, idx) => {
-      if (idx === 0) return true
-      return song.year >= newTimeline[idx - 1].year
-    })
+    const { isCorrect, newTimeline } = evaluatePlacement(timeline, currentSong, position)
 
     console.log('🟡 Placement is correct:', isCorrect)
 
@@ -1077,163 +1016,14 @@ export function GameScreen() {
       const gameDurationMinutes = gameDurationMs / 1000 / 60
       console.log(`⏱️ Game duration: ${gameDurationMinutes.toFixed(2)} minutes`)
 
-      players.forEach((player) => {
-        console.log(`🏆 Checking achievements for player: ${player.name}`)
-
-        // Fix 4: HARDCORE_CHAMPION + PUNKTEJAEGER removed (now unlocked real-time in placeCardAndContinue)
-
-        // 2. TIME_TRAVELER: Songs from 5 different decades
-        const decades = new Set(player.timeline.map(song => Math.floor(song.year / 10) * 10))
-        if (decades.size >= 5) {
-          unlockAchievement(player.name, AchievementId.TIME_TRAVELER)
-          console.log(`✅ TIME_TRAVELER unlocked for ${player.name} (${decades.size} decades)`)
-        }
-        updateProgress(player.name, AchievementId.TIME_TRAVELER, decades.size)
-
-        // 3. DECADE_MASTER: 10 songs from same decade
-        const decadeCounts: Record<number, number> = {}
-        player.timeline.forEach(song => {
-          const decade = Math.floor(song.year / 10) * 10
-          decadeCounts[decade] = (decadeCounts[decade] || 0) + 1
+      applyAchievementEffects(
+        endOfGameAchievements({
+          players,
+          winner,
+          gameDurationMinutes,
+          rankingsHistory: rankingsHistory.current
         })
-        const maxDecadeCount = Math.max(...Object.values(decadeCounts), 0)
-        if (maxDecadeCount >= 10) {
-          unlockAchievement(player.name, AchievementId.DECADE_MASTER)
-          console.log(`✅ DECADE_MASTER unlocked for ${player.name}`)
-        }
-        updateProgress(player.name, AchievementId.DECADE_MASTER, maxDecadeCount)
-
-        // 4. PERFECTIONIST: All songs placed correctly (10/10 cards)
-        if (player.cards === 10) {
-          unlockAchievement(player.name, AchievementId.PERFECTIONIST)
-          console.log(`✅ PERFECTIONIST unlocked for ${player.name}`)
-        }
-
-        // 5. LIGHTNING_FAST: Game finished in under 5 minutes
-        if (player.name === winner.name && gameDurationMinutes < 5) {
-          unlockAchievement(player.name, AchievementId.LIGHTNING_FAST)
-          console.log(`✅ LIGHTNING_FAST unlocked for ${player.name} (${gameDurationMinutes.toFixed(2)}min)`)
-        }
-
-        // 6. COMEBACK_KING: Winner was in last place at some point during the game
-        if (player.name === winner.name && players.length > 1 && rankingsHistory.current.length > 0) {
-          // Check if winner was ever in last place during the game
-          let wasInLastPlace = false
-
-          // Check rankings in the first half of the game (to ensure real comeback)
-          const firstHalfSnapshots = rankingsHistory.current.filter(
-            snapshot => snapshot.turn <= 5 // First 5 turns
-          )
-
-          firstHalfSnapshots.forEach(snapshot => {
-            const lastIndex = snapshot.rankings.length - 1
-            if (snapshot.rankings[lastIndex] === player.name) {
-              wasInLastPlace = true
-              console.log(`🔍 ${player.name} was in last place at turn ${snapshot.turn}`)
-            }
-          })
-
-          if (wasInLastPlace) {
-            unlockAchievement(player.name, AchievementId.COMEBACK_KING)
-            console.log(`✅ COMEBACK_KING unlocked for ${player.name}`)
-          } else {
-            console.log(`⚠️ ${player.name} won but was never in last place (no comeback)`)
-          }
-        }
-      })
-
-      // 7. PERFECT_STREAK: 3x consecutive perfect guesses (15 points each)
-      // Check using both points and guessDetails for reliability
-      players.forEach(player => {
-        let currentStreak = 0
-        let maxStreak = 0
-
-        player.timeline.forEach(song => {
-          const points = (song as any).points || 0
-          const guessDetails = (song as any).guessDetails
-
-          // Perfect guess = 15 points OR all fields correct in guessDetails
-          const isPerfect = points === 15 ||
-            (guessDetails &&
-             guessDetails.titleCorrect &&
-             guessDetails.artistCorrect &&
-             guessDetails.yearPoints === 5)
-
-          if (isPerfect) {
-            currentStreak++
-            maxStreak = Math.max(maxStreak, currentStreak)
-          } else {
-            currentStreak = 0
-          }
-        })
-
-        updateProgress(player.name, AchievementId.PERFECT_STREAK, maxStreak)
-        if (maxStreak >= 3) {
-          unlockAchievement(player.name, AchievementId.PERFECT_STREAK)
-          console.log(`✅ PERFECT_STREAK unlocked for ${player.name} (streak: ${maxStreak})`)
-        }
-      })
-
-      // ============================================================================
-      // NEW ACHIEVEMENTS (11-20) - v0.0.24 Fixed
-      // ============================================================================
-
-      players.forEach(player => {
-        // 11. ZEITMASCHINE: Songs from 3 different decades
-        const playerDecades = new Set(player.timeline.map(song => Math.floor(song.year / 10) * 10))
-        updateProgress(player.name, AchievementId.ZEITMASCHINE, playerDecades.size)
-        if (playerDecades.size >= 3) {
-          unlockAchievement(player.name, AchievementId.ZEITMASCHINE)
-          console.log(`✅ ZEITMASCHINE unlocked for ${player.name} (${playerDecades.size} decades)`)
-        }
-
-        // 12. GENRE_HOPPER: Songs from 4 different genres
-        const playerGenres = new Set(
-          player.timeline
-            .map(song => song.genre)
-            .filter(genre => genre !== undefined && genre !== null)
-        )
-        updateProgress(player.name, AchievementId.GENRE_HOPPER, playerGenres.size)
-        if (playerGenres.size >= 4) {
-          unlockAchievement(player.name, AchievementId.GENRE_HOPPER)
-          console.log(`✅ GENRE_HOPPER unlocked for ${player.name} (${playerGenres.size} genres)`)
-        }
-
-        // 13. NAME_DROPPER: 5 artists in a row correct (streak)
-        let artistStreak = 0
-        let maxArtistStreak = 0
-        player.timeline.forEach(song => {
-          // Use guessDetails to accurately determine if artist was correct
-          const guessDetails = (song as any).guessDetails
-          if (guessDetails && guessDetails.artistCorrect) {
-            artistStreak++
-            maxArtistStreak = Math.max(maxArtistStreak, artistStreak)
-          } else {
-            artistStreak = 0
-          }
-        })
-        updateProgress(player.name, AchievementId.NAME_DROPPER, maxArtistStreak)
-        if (maxArtistStreak >= 5) {
-          unlockAchievement(player.name, AchievementId.NAME_DROPPER)
-          console.log(`✅ NAME_DROPPER unlocked for ${player.name} (streak: ${maxArtistStreak})`)
-        }
-
-        // Fix 4: PUNKTEJÄGER removed (now unlocked real-time in placeCardAndContinue)
-        // Progress tracking kept for stats
-        updateProgress(player.name, AchievementId.PUNKTEJAEGER, player.score)
-
-        // 15. FLAWLESS_VICTORY: Winner with perfect 150/150 points (VERY HARD)
-        if (player.name === winner.name && player.score === 150) {
-          unlockAchievement(player.name, AchievementId.FLAWLESS_VICTORY)
-          console.log(`✅ FLAWLESS_VICTORY unlocked for ${player.name}! Perfect game!`)
-        }
-
-        // 16. MASTER_OF_TIME: Game finished in under 3 minutes (VERY HARD)
-        if (player.name === winner.name && gameDurationMinutes < 3) {
-          unlockAchievement(player.name, AchievementId.MASTER_OF_TIME)
-          console.log(`✅ MASTER_OF_TIME unlocked for ${player.name} (${gameDurationMinutes.toFixed(2)}min)`)
-        }
-      })
+      )
 
       // 8. UNBEATABLE & 9. MARATHON_RUNNER & 10. MUSIC_EXPERT:
       // 17. LEGENDARY_STREAK & 18. CENTURION & 19. GRAND_MASTER:
