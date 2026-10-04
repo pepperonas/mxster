@@ -202,7 +202,7 @@ node validate-audio.js --full
 - ✅ File existiert auf Server (nicht 404)
 
 #### URL Format
-- ✅ Format: `https://mxster.de/audio/song_XXX.mp3`
+- ✅ Format: `https://mxster.celox.io/audio/song_XXX.mp3`
 - ✅ ID-Matching: song_XXX entspricht songs.json ID
 - ✅ Alle 209 Songs haben gültige previewUrl
 
@@ -244,7 +244,7 @@ Das Script generiert einen JSON-Report:
   "results": [
     {
       "id": "song_001",
-      "url": "https://mxster.de/audio/song_001.mp3",
+      "url": "https://mxster.celox.io/audio/song_001.mp3",
       "status": 200,
       "contentType": "audio/mpeg",
       "size": 4423680,
@@ -271,7 +271,7 @@ node scripts/audio-hosting/validate-audio.js --full
 **Nach nginx-Konfiguration:**
 ```bash
 # After nginx reload
-ssh root@mrx3k1.de "sudo systemctl reload nginx"
+ssh root@69.62.121.168 "sudo systemctl reload nginx"
 
 # Test audio serving
 node scripts/audio-hosting/validate-audio.js
@@ -291,7 +291,7 @@ node scripts/audio-hosting/validate-audio.js --full
 #### Fehler: "HTTP 404 Not Found"
 ```bash
 # Check if file exists on VPS
-ssh root@mrx3k1.de "ls -lh /var/www/html/mxster/audio/song_XXX.mp3"
+ssh root@69.62.121.168 "ls -lh /var/www/html/mxster/audio/song_XXX.mp3"
 
 # Re-upload missing files
 cd scripts/audio-hosting
@@ -301,7 +301,7 @@ node upload-to-vps.js
 #### Fehler: "Wrong Content-Type"
 ```bash
 # Fix nginx MIME type configuration
-ssh root@mrx3k1.de "sudo nano /etc/nginx/sites-available/mxster.de"
+ssh root@69.62.121.168 "sudo nano /etc/nginx/sites-available/mxster.celox.io"
 
 # Ensure:
 # location /audio/ {
@@ -309,7 +309,7 @@ ssh root@mrx3k1.de "sudo nano /etc/nginx/sites-available/mxster.de"
 # }
 
 # Reload nginx
-ssh root@mrx3k1.de "sudo systemctl reload nginx"
+ssh root@69.62.121.168 "sudo systemctl reload nginx"
 ```
 
 #### Fehler: "File Size Too Small"
@@ -328,7 +328,7 @@ node upload-to-vps.js
 
 ```bash
 # Test password dialog (manual)
-1. Open https://mxster.de
+1. Open https://mxster.celox.io
 2. Click "Jetzt spielen (Gratis)"
 3. Verify password prompt appears
 4. Enter "ydl"

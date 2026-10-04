@@ -111,7 +111,7 @@ export class SpotifyAuthService {
       // Always use 127.0.0.1 for Spotify OAuth compatibility
       return `http://127.0.0.1:${port || '5173'}/callback`
     }
-    return 'https://mxster.de/callback'
+    return 'https://mxster.celox.io/callback'
   }
 
   /**

@@ -2,7 +2,7 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <!-- Main Landing Page -->
   <url>
-    <loc>https://mxster.de/</loc>
+    <loc>https://mxster.celox.io/</loc>
     <lastmod>2025-11-25</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
@@ -10,7 +10,7 @@
 
   <!-- Game Mode Selection -->
   <url>
-    <loc>https://mxster.de/mode-selection</loc>
+    <loc>https://mxster.celox.io/mode-selection</loc>
     <lastmod>2025-11-25</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
@@ -18,7 +18,7 @@
 
   <!-- Game Variant Selection -->
   <url>
-    <loc>https://mxster.de/variant-selection</loc>
+    <loc>https://mxster.celox.io/variant-selection</loc>
     <lastmod>2025-11-25</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
@@ -26,7 +26,7 @@
 
   <!-- Player Setup -->
   <url>
-    <loc>https://mxster.de/player-setup</loc>
+    <loc>https://mxster.celox.io/player-setup</loc>
     <lastmod>2025-11-25</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>

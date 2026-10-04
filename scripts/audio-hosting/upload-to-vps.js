@@ -3,7 +3,7 @@
  * Upload Audio Files to VPS
  *
  * Uploads MP3 files from pwa/public/audio/ to VPS via rsync
- * Target: root@mrx3k1.de:/var/www/html/mxster/audio/
+ * Target: root@69.62.121.168:/var/www/html/mxster/audio/
  *
  * Usage:
  *   node scripts/audio-hosting/upload-to-vps.js
@@ -21,9 +21,9 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
 // Configuration
 const LOCAL_AUDIO_DIR = path.join(__dirname, '../../pwa/public/audio/')
-const VPS_HOST = 'root@mrx3k1.de'
+const VPS_HOST = 'root@69.62.121.168'
 const VPS_AUDIO_DIR = '/var/www/html/mxster/audio/'
-const VPS_NGINX_CONF = '/etc/nginx/sites-available/mxster.de'
+const VPS_NGINX_CONF = '/etc/nginx/sites-available/mxster.celox.io'
 
 // Parse CLI arguments
 const args = process.argv.slice(2)
@@ -189,7 +189,7 @@ location /audio/ {
 async function testHTTPSAccess(sampleFile) {
   log('🌐 Testing HTTPS access...', 'cyan')
 
-  const testUrl = `https://mxster.de/audio/${sampleFile}`
+  const testUrl = `https://mxster.celox.io/audio/${sampleFile}`
 
   try {
     await execAsync(`curl -I "${testUrl}" | grep "200 OK"`)
@@ -228,8 +228,8 @@ async function main() {
 
   if (!hasSSH) {
     log('❌ Cannot connect to VPS', 'red')
-    log('   Make sure you can SSH to root@mrx3k1.de', 'yellow')
-    log('   Try: ssh root@mrx3k1.de\n', 'yellow')
+    log('   Make sure you can SSH to root@69.62.121.168', 'yellow')
+    log('   Try: ssh root@69.62.121.168\n', 'yellow')
     process.exit(1)
   }
 
@@ -283,7 +283,7 @@ async function main() {
   log(`Total size:       ${totalSizeMB} MB`, 'green')
   log(`Upload time:      ${durationSeconds} seconds`, 'green')
   log(`VPS location:     ${VPS_AUDIO_DIR}`, 'blue')
-  log(`Public URL base:  https://mxster.de/audio/`, 'blue')
+  log(`Public URL base:  https://mxster.celox.io/audio/`, 'blue')
 
   // Show next steps
   log('\n📋 Next steps:', 'bright')

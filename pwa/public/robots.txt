@@ -1,4 +1,4 @@
-# mxster.de - Robots.txt
+# mxster.celox.io - Robots.txt
 # Music Timeline Game PWA
 
 User-agent: *
@@ -12,7 +12,7 @@ Disallow: /callback
 Disallow: /game
 
 # Sitemap location
-Sitemap: https://mxster.de/sitemap.xml
+Sitemap: https://mxster.celox.io/sitemap.xml
 
 # Crawl delay (be nice to servers)
 Crawl-delay: 10

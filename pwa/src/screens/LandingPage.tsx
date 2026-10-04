@@ -1,6 +1,6 @@
 /**
  * Landing Page
- * Complete marketing page for mxster game - like https://mxster.de/
+ * Complete marketing page for mxster game - like https://mxster.celox.io/
  */
 
 import { useState } from 'react'

@@ -87,19 +87,19 @@ node scripts/audio-hosting/upload-to-vps.js --dry-run
 ```
 
 **Was passiert:**
-- Uploaded `pwa/public/audio/*.mp3` nach `root@mrx3k1.de:/var/www/html/mxster/audio/`
+- Uploaded `pwa/public/audio/*.mp3` nach `root@69.62.121.168:/var/www/html/mxster/audio/`
 - Nutzt rsync (nur neue/geänderte Dateien)
 - Setzt Berechtigungen (644)
 - Prüft nginx-Konfiguration
 - Testet HTTPS-Zugriff
 
 **Voraussetzungen:**
-- SSH-Zugriff zum VPS (`ssh root@mrx3k1.de` muss funktionieren)
+- SSH-Zugriff zum VPS (`ssh root@69.62.121.168` muss funktionieren)
 - rsync installiert (auf macOS/Linux standardmäßig vorhanden)
 
 **nginx Konfiguration:**
 
-Falls noch nicht vorhanden, füge zu `/etc/nginx/sites-available/mxster.de` hinzu:
+Falls noch nicht vorhanden, füge zu `/etc/nginx/sites-available/mxster.celox.io` hinzu:
 
 ```nginx
 location /audio/ {
@@ -112,7 +112,7 @@ location /audio/ {
 
 Dann nginx neu laden:
 ```bash
-ssh root@mrx3k1.de "sudo nginx -t && sudo systemctl reload nginx"
+ssh root@69.62.121.168 "sudo nginx -t && sudo systemctl reload nginx"
 ```
 
 ---
@@ -134,7 +134,7 @@ node scripts/audio-hosting/update-song-urls.js --dry-run
 
 **Was passiert:**
 - Liest `pwa/public/audio/` (verfügbare MP3s)
-- Aktualisiert `docs/songs.json`: `previewUrl: "https://mxster.de/audio/song_XXX.mp3"`
+- Aktualisiert `docs/songs.json`: `previewUrl: "https://mxster.celox.io/audio/song_XXX.mp3"`
 - Aktualisiert `pwa/src/data/songs.ts` mit neuen URLs
 - Erstellt Backups vor Änderungen (`.backup-YYYY-MM-DD`)
 
@@ -157,7 +157,7 @@ node scripts/audio-hosting/update-song-urls.js --dry-run
   "artist": "Rick Astley",
   "year": 1987,
   "spotifyId": "4PTG3Z6ehGkBFwjybzWkR8",
-  "previewUrl": "https://mxster.de/audio/song_000.mp3"
+  "previewUrl": "https://mxster.celox.io/audio/song_000.mp3"
 }
 ```
 
@@ -321,10 +321,10 @@ npm install -g yt-dlp
 **Lösung:**
 ```bash
 # Teste SSH-Verbindung
-ssh root@mrx3k1.de
+ssh root@69.62.121.168
 
 # Falls nicht konfiguriert, füge SSH-Key hinzu
-ssh-copy-id root@mrx3k1.de
+ssh-copy-id root@69.62.121.168
 ```
 
 **Problem:** `Permission denied`
@@ -332,10 +332,10 @@ ssh-copy-id root@mrx3k1.de
 **Lösung:**
 ```bash
 # VPS-Verzeichnis-Berechtigungen prüfen
-ssh root@mrx3k1.de "ls -la /var/www/html/mxster/"
+ssh root@69.62.121.168 "ls -la /var/www/html/mxster/"
 
 # Falls nötig, Besitzer ändern
-ssh root@mrx3k1.de "sudo chown -R www-data:www-data /var/www/html/mxster/audio/"
+ssh root@69.62.121.168 "sudo chown -R www-data:www-data /var/www/html/mxster/audio/"
 ```
 
 ### Validierung schlägt fehl
@@ -351,10 +351,10 @@ ssh root@mrx3k1.de "sudo chown -R www-data:www-data /var/www/html/mxster/audio/"
 **Lösung:**
 ```bash
 # Berechtigungen auf VPS prüfen
-ssh root@mrx3k1.de "ls -la /var/www/html/mxster/audio/"
+ssh root@69.62.121.168 "ls -la /var/www/html/mxster/audio/"
 
 # Berechtigungen korrigieren
-ssh root@mrx3k1.de "chmod 644 /var/www/html/mxster/audio/*.mp3"
+ssh root@69.62.121.168 "chmod 644 /var/www/html/mxster/audio/*.mp3"
 ```
 
 **Problem:** `Invalid content-type`
@@ -411,18 +411,18 @@ ssh root@mrx3k1.de "chmod 644 /var/www/html/mxster/audio/*.mp3"
 
 1. **VPS-Zugriff beschränken:**
    ```bash
-   # Nur root@mrx3k1.de kann hochladen
-   ssh root@mrx3k1.de "chmod 755 /var/www/html/mxster/audio/"
+   # Nur root@69.62.121.168 kann hochladen
+   ssh root@69.62.121.168 "chmod 755 /var/www/html/mxster/audio/"
    ```
 
 2. **CORS richtig konfigurieren:**
    ```nginx
-   add_header Access-Control-Allow-Origin "https://mxster.de";
+   add_header Access-Control-Allow-Origin "https://mxster.celox.io";
    ```
 
 3. **Hotlinking verhindern (optional):**
    ```nginx
-   valid_referers none blocked mxster.de *.mxster.de;
+   valid_referers none blocked mxster.celox.io;
    if ($invalid_referer) {
        return 403;
    }
@@ -444,8 +444,8 @@ ssh root@mrx3k1.de "chmod 644 /var/www/html/mxster/audio/*.mp3"
 
 Bei Problemen:
 1. Prüfe `docs/download-report.json` und `docs/validation-report.json`
-2. Teste nginx config: `ssh root@mrx3k1.de "sudo nginx -t"`
-3. Prüfe nginx logs: `ssh root@mrx3k1.de "tail -100 /var/log/nginx/mxster.de.error.log"`
+2. Teste nginx config: `ssh root@69.62.121.168 "sudo nginx -t"`
+3. Prüfe nginx logs: `ssh root@69.62.121.168 "tail -100 /var/log/nginx/mxster.celox.io.error.log"`
 
 ---
 

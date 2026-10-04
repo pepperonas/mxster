@@ -471,6 +471,6 @@ Teil des mxster-Projekts. Siehe [Haupt-Repository-LIZENZ](../LICENSE).
 ## 🔗 Weitere Ressourcen
 
 - **Haupt-README**: [../README.md](../README.md) - Vollständige Projektdokumentation
-- **Live Demo**: [mxster.de](https://mxster.de)
+- **Live Demo**: [mxster.celox.io](https://mxster.celox.io)
 - **GitHub Releases**: [Fertige PDFs & 3D-Modelle](https://github.com/pepperonas/mxster/releases)
 - **Issues**: [Bug Reports & Feature Requests](https://github.com/pepperonas/mxster/issues)

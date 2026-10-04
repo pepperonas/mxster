@@ -123,7 +123,7 @@ gh release create v0.0.X-beta \
 - **Source Code**: Complete mxster game source code
 
 ### Deployment
-- Live at: https://mxster.de
+- Live at: https://mxster.celox.io
 - PWA installable on mobile devices
 
 ---
@@ -215,7 +215,7 @@ gh release edit latest --prerelease=false --latest
 
 ## Verifizierung
 
-1. ✅ PWA läuft auf https://mxster.de
+1. ✅ PWA läuft auf https://mxster.celox.io
 2. ✅ GitHub Release v0.0.X-beta existiert mit 3 Assets (ZIPs)
 3. ✅ "latest" Release hat 8 Assets (ZIPs, PDFs, 3MF)
 4. ✅ "latest" Release zeigt korrekte Version in Notes

@@ -466,7 +466,7 @@ async function generateCardsPDF() {
     '',
     'Viel Spaß beim Spielen! 🎵',
     '',
-    'mxster.de'
+    'mxster.celox.io'
   ] : [
     '1. DRUCKEN:',
     '   • Einfacher Druck (keine Duplex nötig!)',
@@ -493,7 +493,7 @@ async function generateCardsPDF() {
     '',
     'Viel Spaß beim Spielen! 🎵',
     '',
-    'mxster.de'
+    'mxster.celox.io'
   ];
 
   let y = MARGIN + 80;

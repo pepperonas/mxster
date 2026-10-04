@@ -3,7 +3,7 @@
  * Update Song URLs
  *
  * Updates previewUrl in songs.json and songs.ts to point to self-hosted MP3s
- * Changes from empty "" to "https://mxster.de/audio/song_XXX.mp3"
+ * Changes from empty "" to "https://mxster.celox.io/audio/song_XXX.mp3"
  *
  * Usage:
  *   node scripts/audio-hosting/update-song-urls.js
@@ -20,7 +20,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const SONGS_JSON_PATH = path.join(__dirname, '../../docs/songs.json')
 const SONGS_TS_PATH = path.join(__dirname, '../../pwa/src/data/songs.ts')
 const LOCAL_AUDIO_DIR = path.join(__dirname, '../../pwa/public/audio')
-const BASE_URL = 'https://mxster.de/audio'
+const BASE_URL = 'https://mxster.celox.io/audio'
 
 // Parse CLI arguments
 const args = process.argv.slice(2)

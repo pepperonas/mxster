@@ -15,9 +15,9 @@ const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 
 // Configuration
-const VPS_HOST = 'root@mrx3k1.de'
+const VPS_HOST = 'root@69.62.121.168'
 const VPS_AUDIO_PATH = '/var/www/html/mxster/audio'
-const SELF_HOSTED_BASE_URL = 'https://mxster.de/audio'
+const SELF_HOSTED_BASE_URL = 'https://mxster.celox.io/audio'
 
 // Audio directory relative to project root
 const PROJECT_ROOT = path.resolve(__dirname, '../..')

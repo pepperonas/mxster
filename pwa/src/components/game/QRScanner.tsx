@@ -178,10 +178,10 @@ export function QRScanner() {
                 <li>
                   Öffne die App über{' '}
                   <a
-                    href="https://mxster.de"
+                    href="https://mxster.celox.io"
                     className="text-secondary hover:text-text-secondary underline"
                   >
-                    https://mxster.de
+                    https://mxster.celox.io
                   </a>
                 </li>
                 <li>Lokale Entwicklung: Verwende localhost statt 127.0.0.1</li>

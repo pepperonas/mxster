@@ -1,15 +1,15 @@
 #!/bin/bash
 
-# Deployment Script für mxster.de PWA
+# Deployment Script für mxster.celox.io PWA
 # Usage: ./deploy.sh
 
 set -e  # Exit on error
 
 APP_NAME="mxster"
-VPS_HOST="root@mrx3k1.de"
+VPS_HOST="root@69.62.121.168"
 VPS_ROOT="/var/www/html/$APP_NAME"
 
-echo "🚀 Deploying mxster.de PWA..."
+echo "🚀 Deploying mxster.celox.io PWA..."
 
 # Get project root directory (from scripts/deployment/ to root)
 PROJECT_ROOT="$(cd "$(dirname "$0")/../.." && pwd)"
@@ -62,20 +62,5 @@ ssh $VPS_HOST "
 
 echo "✅ Deployment complete!"
 echo ""
-echo "📝 Next steps:"
-echo "1. Configure Nginx on VPS (if not done yet):"
-echo "   sudo nano /etc/nginx/sites-available/mxster.de"
-echo "   sudo ln -s /etc/nginx/sites-available/mxster.de /etc/nginx/sites-enabled/"
-echo ""
-echo "2. Test Nginx configuration:"
-echo "   sudo nginx -t"
-echo ""
-echo "3. Setup SSL certificate:"
-echo "   sudo certbot --nginx -d mxster.de -d www.mxster.de"
-echo ""
-echo "4. Reload Nginx:"
-echo "   sudo systemctl reload nginx"
-echo ""
-echo "5. Don't forget to add https://mxster.de/callback to Spotify Developer Dashboard!"
-echo ""
-echo "🌐 Your app should be live at: https://mxster.de"
+echo "ℹ️  nginx vHost: /etc/nginx/sites-available/mxster.celox.io (root $VPS_ROOT, audio/ wird nie angefasst)"
+echo "🌐 Live: https://mxster.celox.io"

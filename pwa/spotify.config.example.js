@@ -4,7 +4,7 @@ export default {
   playlistId: 'YOUR_SPOTIFY_PLAYLIST_ID',
   // Note: Redirect URI is determined automatically in spotifyAuth.js
   // Development: http://localhost:5174/callback
-  // Production: https://mxster.de/callback
+  // Production: https://mxster.celox.io/callback
   scopes: [
     'streaming',              // Web Playback SDK
     'user-read-email',        // User info
