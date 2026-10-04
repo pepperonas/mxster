@@ -7,6 +7,7 @@ import { InteractionProvider } from './InteractionContext'
 import { AchievementNotificationProvider } from './AchievementNotificationContext'
 import { AchievementProvider } from './AchievementContext'
 import { GameHistoryProvider } from './GameHistoryContext'
+import { GoogleAuthProvider } from './GoogleAuthContext'
 
 /**
  * Combined Providers Component
@@ -15,6 +16,7 @@ import { GameHistoryProvider } from './GameHistoryContext'
  * Provider Order:
  * 1. SettingsProvider - Application settings (independent)
  * 2. AuthProvider - Authentication state (needed by all other providers)
+ *    GoogleAuthProvider - Google sign-in (player identity, independent of Spotify)
  * 3. UIProvider - UI state (modals, toasts, sidebar)
  * 4. InteractionProvider - User interaction tracking (for background animations)
  * 5. GameHistoryProvider - Game history tracking (shared state for history)
@@ -31,6 +33,7 @@ export function AppProviders({ children }: AppProvidersProps) {
   return (
     <SettingsProvider>
       <AuthProvider>
+        <GoogleAuthProvider>
         <UIProvider>
           <InteractionProvider>
             <GameHistoryProvider>
@@ -44,6 +47,7 @@ export function AppProviders({ children }: AppProvidersProps) {
             </GameHistoryProvider>
           </InteractionProvider>
         </UIProvider>
+        </GoogleAuthProvider>
       </AuthProvider>
     </SettingsProvider>
   )

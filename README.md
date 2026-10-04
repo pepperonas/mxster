@@ -2,7 +2,7 @@
 
 **Das ultimative Musikquiz!** Rate Songs, platziere sie chronologisch und teste dein Musikwissen.
 
-[![App](https://img.shields.io/badge/Play_Now-mxster.de-blue?style=for-the-badge&logo=googlechrome&logoColor=white)](https://mxster.de)
+[![App](https://img.shields.io/badge/Play_Now-mxster.celox.io-blue?style=for-the-badge&logo=googlechrome&logoColor=white)](https://mxster.celox.io)
 [![Version](https://img.shields.io/badge/v0.2.1-06B6D4?style=for-the-badge&logo=semver&logoColor=white)](https://github.com/pepperonas/mxster/releases)
 [![License](https://img.shields.io/badge/MIT-green?style=for-the-badge&logo=opensourceinitiative&logoColor=white)](LICENSE)
 
@@ -27,11 +27,11 @@
 ![Theme](https://img.shields.io/badge/Theme-Dark_%2B_Light-1A1C27?style=flat-square)
 [![Tests](https://github.com/pepperonas/mxster/actions/workflows/test.yml/badge.svg)](https://github.com/pepperonas/mxster/actions/workflows/test.yml)
 
-![mxster Banner](https://mxster.de/assets/mxster.jpg)
+![mxster Banner](https://mxster.celox.io/assets/mxster.jpg)
 
 ## Schnellstart
 
-1. Oeffne **[mxster.de](https://mxster.de)**
+1. Oeffne **[mxster.celox.io](https://mxster.celox.io)**
 2. "Jetzt spielen (Gratis)" -- Passwort: `ydl`
 3. Spielmodus waehlen, Spieler hinzufuegen, los!
 
@@ -74,8 +74,14 @@ cd mxster/pwa && npm install && npm run dev
 npm test                        # Integritaetstests
 cd pwa && npm test              # Vitest
 cd pwa && npx tsc --noEmit      # Type Check
-./scripts/deployment/deploy.sh  # Deploy auf mxster.de
+./scripts/deployment/deploy.sh  # Deploy auf mxster.celox.io
 ```
+
+### Google-Anmeldung
+
+Spieler koennen sich in der Sidebar mit ihrem Google-Konto anmelden (Name/Bild in der Sidebar, Ein-Tipp-Eintrag „Als &lt;Vorname&gt; mitspielen" in der Spielereinrichtung). Umgesetzt mit Google Identity Services rein im Browser — kein Backend, **kein Client-Secret**. Das Google-Skript laedt erst, wenn jemand auf „Mit Google anmelden" tippt; gespeichert wird nur das Profil (`mxster_google_profile` in localStorage), nie das Token.
+
+Einrichtung: `pwa/.env.example` nach `pwa/.env.production` (Deploy) bzw. `pwa/.env.local` (Entwicklung) kopieren und `VITE_GOOGLE_CLIENT_ID` setzen. Ohne Wert bleibt die Anmeldung unsichtbar. In der Google Cloud Console braucht der OAuth-Client (Typ „Webanwendung") als **autorisierte JavaScript-Quellen** `https://mxster.celox.io` sowie fuer lokal `http://localhost:5174` und `http://127.0.0.1:5174`; Weiterleitungs-URIs sind nicht noetig.
 
 ## Physische Karten (Optional)
 
@@ -87,4 +93,4 @@ MIT -- [Martin Pfeffer](mailto:martin.pfeffer@celox.io)
 
 ---
 
-**[mxster.de](https://mxster.de)** | [GitHub](https://github.com/pepperonas/mxster) | [Releases](https://github.com/pepperonas/mxster/releases)
+**[mxster.celox.io](https://mxster.celox.io)** | [GitHub](https://github.com/pepperonas/mxster) | [Releases](https://github.com/pepperonas/mxster/releases)

@@ -7,10 +7,11 @@
 import { useEffect, useRef } from 'react'
 import { useLocation } from 'react-router-dom'
 import { useAppNavigate } from '@/hooks/useAppNavigate'
-import { useUI, useGame, useAuth, useInteraction } from '@/contexts'
+import { useUI, useGame, useAuth, useInteraction, useGoogleAuth } from '@/contexts'
 import { useGameHistory } from '@/hooks'
 import { GAME_MODE_INFO } from '@/utils/gameModes'
 import { HowToPlayContent } from './HowToPlayContent'
+import { GoogleSignIn } from './GoogleSignIn'
 import { getMusicPlayer } from '@/services/MusicPlayerService'
 
 const NAV_BTN =
@@ -22,6 +23,7 @@ export function Sidebar() {
   const { isSidebarOpen, toggleSidebar, showModal, closeSidebar } = useUI()
   const { players, currentPlayer, gameMode, gameVariant, isGameStarted, endGame, resetGame, setGameMode, setGameVariant } = useGame()
   const { isLoggedIn } = useAuth()
+  const { isConfigured: googleConfigured } = useGoogleAuth()
   const { history } = useGameHistory()
   const { registerInteraction } = useInteraction()
 
@@ -219,6 +221,14 @@ export function Sidebar() {
 
         {/* Scrollable Content */}
         <div className="flex-1 overflow-y-auto">
+
+          {/* Google account (hidden when no client ID is configured) */}
+          {googleConfigured && (
+            <div className="p-4 border-b-2 border-accent/30">
+              <h3 className="text-sm font-semibold text-text-secondary mb-2">Konto</h3>
+              <GoogleSignIn />
+            </div>
+          )}
 
           {/* User Info */}
           <div className="p-4 border-b-2 border-accent/30">

@@ -6,18 +6,18 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 **mxster** is a music timeline game with virtual and physical gameplay. Play digitally (recommended) or with 3D-printed QR cards. Features guess mode (points-based) and timeline modes (chronological placement).
 
-**Current Version**: v0.1.1
-**Song Database**: 209 songs with full genre data
+**Current Version**: v0.2.1 (Material 3 Expressive redesign landed in v0.2.0)
+**Song Database**: 211 songs with full genre data (source of truth: `docs/songs.json`; root `package.json` version is stale and unused)
 
 ### Key Technologies
 - **Frontend**: React 19 + TypeScript + Vite 5.0 + TailwindCSS 3.4
 - **Design**: Material 3 Expressive (token layer, dark + light, spring motion) — see "Design System" below
 - **Routing**: react-router-dom 7 **data router** (`createBrowserRouter`) — required for View Transitions
-- **Audio**: Self-Hosted Primary (209 songs @ 128 kbps MP3, ~933 MB) + Optional Spotify Premium (max 25 users)
-- **Auth**: Spotify OAuth2 PKCE (optional for Premium mode)
+- **Audio**: Self-Hosted Primary (211 songs @ 128 kbps MP3, ~0.9 GB) + Optional Spotify Premium (max 25 users)
+- **Auth**: Spotify OAuth2 PKCE (optional for Premium mode) + Google sign-in via Google Identity Services (client-only, player identity)
 - **PWA**: vite-plugin-pwa (Workbox service worker)
 - **3D Graphics**: Three.js particle animations
-- **State**: React Context API (10 contexts)
+- **State**: React Context API (9 contexts, composed in `contexts/AppProviders.tsx`)
 - **Cards**: Node.js + qrcode + OpenSCAD + pdfkit
 - **Testing**: Vitest + @testing-library/react
 
@@ -25,7 +25,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 Semantic Versioning with auto-increment: after 9 patches (e.g., 0.0.9) → increment MINOR (0.1.0). After 9 minors (e.g., 0.9.x) → increment MAJOR (1.0.0).
 
-**Version locations**: `pwa/package.json` + `pwa/src/components/Sidebar.tsx`
+**Version locations**: `pwa/package.json` + hard-coded string `Version X.Y.Z` in `pwa/src/components/Sidebar.tsx` (~line 426) — keep both in sync.
 
 ## Development Commands
 
@@ -45,13 +45,17 @@ cd pwa && npm test
 # PWA tests single run
 cd pwa && npm run test:run
 
+# Single test file / single test name
+cd pwa && npx vitest run src/services/__tests__/gameLogic.test.ts
+cd pwa && npx vitest run -t "test name substring"
+
 # PWA test coverage (target: 80% lines/functions, 75% branches)
 cd pwa && npm run test:coverage
 
 # TypeScript check
 cd pwa && npx tsc --noEmit
 
-# Deploy to production (https://mxster.de)
+# Deploy to production (https://mxster.celox.io)
 ./scripts/deployment/deploy.sh
 ```
 
@@ -70,7 +74,7 @@ node download-songs.js              # Download all from YouTube (~20 min)
 node download-songs.js --limit 5    # Test mode
 node upload-to-vps.js               # Upload to VPS via rsync
 node update-song-urls.js            # Update previewUrl in songs.json/songs.ts
-node validate-audio.js --full       # Test all 209 URLs
+node validate-audio.js --full       # Test all audio URLs
 ```
 
 ### Card Generation
@@ -87,7 +91,7 @@ node test-xs-v2-generator.js    # XS 50% flat multi-color (3MF)
 ### Data Flow
 ```
 Spotify Playlist → docs/songs.json → pwa/src/data/songs.ts + QR codes
-YouTube → yt-dlp → MP3 → VPS (mxster.de/audio/) → Howler.js playback
+YouTube → yt-dlp → MP3 → VPS (mxster.celox.io/audio/) → Howler.js playback
 ```
 
 ### State Management (React Contexts)
@@ -95,6 +99,7 @@ YouTube → yt-dlp → MP3 → VPS (mxster.de/audio/) → Howler.js playback
 - **AchievementContext** — 23 achievements, progress tracking, cross-game stats
 - **GameHistoryContext** — Game history, statistics persistence
 - **AuthContext** — Spotify OAuth PKCE flow
+- **GoogleAuthContext** — Google sign-in (profile only); see "Google Sign-In" below
 - **UIContext** — Modals, toasts, notifications
 - **InteractionContext** — Particle animation activity levels
 - **SettingsContext** — User preferences
@@ -109,7 +114,7 @@ YouTube → yt-dlp → MP3 → VPS (mxster.de/audio/) → Howler.js playback
 - **botPlayer** + **botStrategies/** — AI opponents (Easy/Medium/Hard)
 
 ### Audio System (Dual-Mode)
-1. **Self-Hosted (Primary)**: Full songs via `mxster.de/audio/song_XXX.mp3`, password-protected (`ydl`), unlimited users
+1. **Self-Hosted (Primary)**: Full songs via `mxster.celox.io/audio/song_XXX.mp3`, behind a client-side password dialog (`PasswordProtectionDialog`; not real access control — nginx serves the MP3s unauthenticated), unlimited users
 2. **Spotify Premium (Optional)**: 25 slots max (Development Mode), slot management via `pwa/spotify.slots.json`
 
 ### Game Modes
@@ -149,7 +154,7 @@ mxster/
 │   │   ├── App.tsx            # Router + context providers
 │   │   ├── screens/           # Page components (LandingPage, GameScreen, PlayerSetup, etc.)
 │   │   ├── components/        # Reusable UI (Modal, Sidebar, MusicPlayer, etc.)
-│   │   ├── contexts/          # 10 React contexts for state management
+│   │   ├── contexts/          # 9 React contexts + AppProviders
 │   │   ├── services/          # Business logic (audio, game, bot AI)
 │   │   ├── types/             # TypeScript definitions (index.ts, achievements.ts, spotify.ts)
 │   │   ├── utils/             # Animations, auth, persistence
@@ -174,10 +179,12 @@ mxster/
 
 ## Deployment
 
-- **Domain**: https://mxster.de
-- **VPS**: root@mrx3k1.de → `/var/www/html/mxster/`
+- **Domain**: https://mxster.celox.io (since 2026-10-04; `mxster.de` was given up — its vHost is now a pure 301 to the new domain while its DNS still points here)
+- **VPS**: root@69.62.121.168 → `/var/www/html/mxster/`, nginx vHost `/etc/nginx/sites-available/mxster.celox.io` (symlinked; cert via certbot webroot + `renew_hook`). ⚠️ Before 2026-10-04 `sites-enabled/mxster.de` was a standalone file that had drifted from the stale `sites-available` copy — always edit the file nginx actually loads (`nginx -T`)
+- **Spotify**: redirect URI is `https://mxster.celox.io/callback` (`SpotifyAuthService.getRedirectUri`) and must be registered in the Spotify Developer Dashboard
+- **Build env**: `deploy.sh` builds locally, so `pwa/.env.production` on the deploying machine is what ships
 - **SSL**: Let's Encrypt (auto-renewing)
-- **Deploy**: `./scripts/deployment/deploy.sh` — builds PWA, rsync uploads (excludes audio/), preserves 209 audio files on VPS
+- **Deploy**: `./scripts/deployment/deploy.sh` — builds PWA, rsyncs `dist/` to `/tmp` staging on the VPS (excludes `audio/`), then swaps it in; the MP3s on the VPS are never touched
 - **nginx**: SEO exceptions for `robots.txt`/`sitemap.xml` via exact-match `location =` blocks overriding security rules that block `.txt` files
 
 ## Key Implementation Details
@@ -211,7 +218,7 @@ Always kept mounted (never conditionally rendered) — unmounting causes re-init
 
 **Legacy aliases are the leverage point:** `tailwind.config.js` keeps every historic name and repoints it at an M3 role, so ~500 existing utility usages retheme with zero markup churn — `background`→surface, `primary`→**surface-container** (it was always the card background), `secondary`→**M3 primary** (cyan), `accent`→**M3 tertiary** (coral), `border`→outline-variant, `danger`→error, `text-primary`→on-surface, `text-secondary`→on-surface-variant. New code uses the additive `md-*` namespace (`bg-md-surface-container-high`, `text-md-on-primary`). Elevation is expressed through surface tones, not shadows.
 
-**Theming.** `data-theme="dark|light"` on `<html>`, default dark, persisted inside `mxster_settings` (SettingsContext) and applied pre-paint by an inline script in `index.html` (no FOUC). Toggle sits in the ActionBar (🌙/☀️) and SettingsDialog; switching runs an **M3 circular reveal** through the View Transitions API (`utils/themeReveal.ts`), falling back to an instant swap. `theme-color` meta and the manifest/loader colors all mirror the token hexes. The brand gradient (`.text-gradient`) has theme-aware endpoints (`--brand-gradient-from/to`): light tones on dark, tone-50 on light — tone-40 endpoints blend to mud.
+**Theming.** `data-theme="dark|light"` on `<html>`, default dark, persisted inside `mxster_settings` (SettingsContext) and applied pre-paint by an inline script in `index.html` (no FOUC). Toggle sits in the ActionBar (🌙/☀️) and SettingsDialog; switching runs an **M3 circular reveal** through the View Transitions API (`utils/themeReveal.ts`), falling back to an instant swap. `theme-color` meta and the manifest/loader colors all mirror the token hexes. **No text gradients (v0.2.1 premium pass):** `.text-gradient` is kept as a class name but now renders solid `on-surface`; the single brand accent is `.text-brand` (solid cyan), reserved for the wordmark and hero data numbers. The `--brand-gradient-from/to` tokens still exist but are no longer used for text. Glow shadow token names (`shadow-glow-*`) are retained but resolve to soft two-layer ambient elevation.
 
 **Motion.** Spring tokens: `--m3-spatial-fast|default|slow` (350/500/650 ms, overshoot beziers) for position/size/shape, `--m3-effects-*` (150/200/300 ms, no overshoot) for color/opacity. Duration and easing also exist separately (`--m3-dur-*`/`--m3-ease-*`) because Tailwind needs them apart; utilities are `duration-m3-spatial`/`ease-m3-spatial` etc. **One `prefers-reduced-motion` block collapses every token to 120 ms ease** — that plus a `prefersReducedMotion()` gate in `ParticleBackground` (skips WebGL entirely) and in `utils/ripple.ts` covers the whole app. Speed guide: fast → buttons/switches/press morphs, default → dialogs/sheets/sidebar/cards, slow → route transitions.
 
@@ -222,6 +229,15 @@ Always kept mounted (never conditionally rendered) — unmounting causes re-init
 **Typography.** Roboto Flex variable font (loaded via `<link>` in `index.html`, Inter as fallback), M3 type scale as utilities (`.text-display-lg` … `.text-label-sm`) plus `.text-emphasized` (variable `wght`/`wdth` axes) for hero moments.
 
 **Gotcha:** `beatAnimations.css` consumes `var(--background)`, `--primary`, `--secondary`, `--accent`, `--border`, `--text-*`. These were referenced but never defined before the token layer existed (the rules were silently inert); they are now real aliases in `design-tokens.css`, so changes there affect the beat UI.
+
+## Google Sign-In
+
+Client-only (no backend): `services/googleIdentity.ts` lazy-loads `accounts.google.com/gsi/client`, Google's button returns an ID token, `profileFromCredential` checks `aud`/`iss`/`exp`/`email_verified` and keeps only `{sub,email,name,givenName,picture}` in localStorage `mxster_google_profile` — **the token is never stored**. The signature is not verifiable without a server, so the profile is display-only; anything security-relevant (cloud sync, leaderboards) needs server-side verification first.
+
+- Configured via `VITE_GOOGLE_CLIENT_ID` in `pwa/.env.production` / `.env.local` (gitignored; template `pwa/.env.example`). Empty = all Google UI hidden. No client secret exists in this flow — never add one.
+- **Two-step on purpose:** nothing talks to Google until the user taps our own "Mit Google anmelden"; only then the script loads and Google's official button renders. Keep it that way (privacy).
+- **The button slot is owned by Google:** `renderButton` clears the slot element, so React must never render children into it (a React-owned "Lädt…" inside it crashed with `NotFoundError` — caught by `GoogleSignIn.test.tsx`).
+- Google Cloud Console: OAuth client type "Web application", authorized JavaScript origins `https://mxster.celox.io`, `http://localhost:5174`, `http://127.0.0.1:5174`; no redirect URIs needed.
 
 ## Best Practices
 

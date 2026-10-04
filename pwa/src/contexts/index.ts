@@ -6,6 +6,7 @@
 // Providers
 export { AppProviders } from './AppProviders'
 export { AuthProvider } from './AuthContext'
+export { GoogleAuthProvider } from './GoogleAuthContext'
 export { GameProvider } from './GameContext'
 export { UIProvider } from './UIContext'
 export { SettingsProvider } from './SettingsContext'
@@ -16,6 +17,7 @@ export { GameHistoryProvider } from './GameHistoryContext'
 
 // Hooks
 export { useAuth } from './AuthContext'
+export { useGoogleAuth } from './GoogleAuthContext'
 export { useGame } from './GameContext'
 export { useUI } from './UIContext'
 export { useSettings } from './SettingsContext'

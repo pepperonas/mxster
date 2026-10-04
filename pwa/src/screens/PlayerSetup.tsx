@@ -5,7 +5,7 @@
 
 import { useState } from 'react'
 import { useAppNavigate } from '@/hooks/useAppNavigate'
-import { useGame, useUI, useSettings } from '@/contexts'
+import { useGame, useUI, useSettings, useGoogleAuth } from '@/contexts'
 import { PlusIcon, CloseIcon } from '@/utils/icons'
 import { requiresDJ } from '@/utils/gameModes'
 import { createBotPlayers } from '@/services/botPlayer'
@@ -15,6 +15,10 @@ export function PlayerSetup() {
   const { gameMode, gameVariant, players, addPlayer, removePlayer, startGame } = useGame()
   const { addToast } = useUI()
   const { settings, addPlayer: savePlayer } = useSettings()
+  const { user: googleUser } = useGoogleAuth()
+  // Signed-in player's first name as a one-tap entry (input is capped at 20 chars)
+  const ownName = googleUser?.givenName.slice(0, 20) ?? ''
+  const ownNameAdded = ownName !== '' && players.some((p) => p.name.toLowerCase() === ownName.toLowerCase())
   const [newPlayerName, setNewPlayerName] = useState('')
   const [botCount, setBotCount] = useState(1)
   const [botDifficulty, setBotDifficulty] = useState<'easy' | 'medium' | 'hard'>('medium')
@@ -173,6 +177,19 @@ export function PlayerSetup() {
               <span className="hidden sm:inline">Hinzufügen</span>
             </button>
           </div>
+
+          {/* Signed-in player (Google) */}
+          {ownName && !ownNameAdded && (
+            <button
+              onClick={() => handleQuickAddPlayer(ownName)}
+              className="mb-6 inline-flex items-center gap-2 px-5 py-2 min-h-[48px] rounded-m3-full text-label-lg bg-md-primary-container text-md-on-primary-container m3-state-layer active:scale-95 transition-transform duration-m3-spatial-fast ease-m3-spatial-fast"
+            >
+              {googleUser?.picture && (
+                <img src={googleUser.picture} alt="" referrerPolicy="no-referrer" className="w-6 h-6 rounded-m3-full" />
+              )}
+              Als {ownName} mitspielen
+            </button>
+          )}
 
           {/* Saved Players Quick Add */}
           {settings.savedPlayers.length > 0 && (
