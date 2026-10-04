@@ -73,8 +73,15 @@ export function GoogleSignIn() {
         </button>
       ) : (
         <>
-          {/* Google owns this node's children — React must never render into it */}
-          <div ref={slotRef} className="flex justify-center min-h-[44px]" aria-busy={loading} />
+          {/* Google owns this node's children — React must never render into it.
+              color-scheme: light stops the page's dark scheme from giving Google's
+              iframe an opaque white backdrop around the pill. */}
+          <div
+            ref={slotRef}
+            className="flex justify-center min-h-[44px]"
+            style={{ colorScheme: 'light' }}
+            aria-busy={loading}
+          />
           {loading && <p className="text-body-sm text-text-secondary text-center">Lädt…</p>}
         </>
       )}
