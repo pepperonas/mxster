@@ -298,7 +298,7 @@ export function SettingsDialog() {
           className="fixed inset-0 z-[10000] flex items-center justify-center bg-md-scrim/60 backdrop-blur-sm pt-20 pb-6"
           style={{ animation: 'm3-scrim-in var(--m3-dur-effects-slow) var(--m3-ease-effects-slow) both' }}
         >
-          <div className="relative m3-dialog-panel max-w-md w-full mx-4 max-h-[calc(100vh-12rem)] sm:max-h-[85vh] overflow-auto">
+          <div className="relative m3-dialog-panel m3-dialog-enter max-w-md w-full mx-4 max-h-[calc(100vh-12rem)] sm:max-h-[85vh] overflow-auto">
             {/* Header */}
             <div className="p-4 sm:p-6 border-b border-md-error/30">
               <h3 className="text-lg sm:text-xl font-bold text-text-primary flex items-center gap-2">

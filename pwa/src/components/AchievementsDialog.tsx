@@ -54,7 +54,7 @@ export function AchievementsDialog({ isOpen, onClose, playerName }: Achievements
         />
 
         {/* Onboarding Card */}
-        <div className="relative m3-dialog-panel max-w-md w-full overflow-hidden">
+        <div className="relative m3-dialog-panel m3-dialog-enter max-w-md w-full overflow-hidden">
           <div className="p-5 sm:p-8 text-center">
             <div className="text-5xl sm:text-6xl mb-4 sm:mb-6">🎮</div>
             <h2 className="text-xl sm:text-2xl font-bold text-text-primary mb-3 sm:mb-4">Noch keine Spieler</h2>
@@ -98,7 +98,7 @@ export function AchievementsDialog({ isOpen, onClose, playerName }: Achievements
       />
 
       {/* Dialog */}
-      <div className="relative m3-dialog-panel max-w-4xl w-full max-h-[calc(100vh-12rem)] sm:max-h-[85vh] flex flex-col overflow-hidden">
+      <div className="relative m3-dialog-panel m3-dialog-enter max-w-4xl w-full max-h-[calc(100vh-12rem)] sm:max-h-[85vh] flex flex-col overflow-hidden">
         {/* Header */}
         <div className="flex-shrink-0 border-b border-accent/20 p-4 sm:p-6 z-10">
           <div className="flex items-center justify-between mb-4">

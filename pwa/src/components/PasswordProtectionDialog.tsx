@@ -56,7 +56,7 @@ export function PasswordProtectionDialog({ onSuccess, onCancel }: PasswordProtec
       className="fixed inset-0 z-50 flex items-center justify-center pt-20 pb-6 px-4 bg-md-scrim/60 backdrop-blur-sm"
       style={{ animation: 'm3-scrim-in var(--m3-dur-effects-slow) var(--m3-ease-effects-slow) both' }}
     >
-      <div className="m3-dialog-panel p-4 sm:p-6 lg:p-8 max-w-md w-full max-h-[calc(100vh-12rem)] sm:max-h-[85vh] overflow-auto">
+      <div className="m3-dialog-panel m3-dialog-enter p-4 sm:p-6 lg:p-8 max-w-md w-full max-h-[calc(100vh-12rem)] sm:max-h-[85vh] overflow-auto">
         {/* Header */}
         <div className="text-center mb-4 sm:mb-6">
           <div className="text-5xl sm:text-6xl mb-3 sm:mb-4">🔒</div>

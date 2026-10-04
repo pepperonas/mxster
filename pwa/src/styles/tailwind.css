@@ -281,6 +281,11 @@
 .m3-dialog-panel {
   @apply bg-md-surface-container-high border border-md-outline-variant/60;
   border-radius: var(--m3-shape-xl);
+}
+
+/* CSS entrance for dialogs that are not driven by Motion (<Modal> animates
+   itself — never combine the two, they fight over opacity/transform). */
+.m3-dialog-enter {
   animation: m3-spring-in var(--m3-dur-spatial-default) var(--m3-ease-spatial-default) both;
 }
 

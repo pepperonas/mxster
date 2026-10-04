@@ -1,4 +1,4 @@
-import { createContext, useContext, useReducer, ReactNode, useCallback } from 'react'
+import { createContext, useContext, useReducer, ReactNode, useCallback, useRef, useMemo } from 'react'
 import type { ModalOptions, ModalButton, Toast as ToastType } from '@/types'
 
 // ============================================================================
@@ -7,6 +7,8 @@ import type { ModalOptions, ModalButton, Toast as ToastType } from '@/types'
 
 interface Modal {
   isOpen: boolean
+  /** Changes with every showModal(); AnimatePresence keys on it (old exits, new enters). */
+  key: number
   title: string
   content: ReactNode
   buttons?: ModalButton[]
@@ -33,7 +35,7 @@ interface UIState {
 }
 
 type UIAction =
-  | { type: 'SHOW_MODAL'; payload: Omit<Modal, 'isOpen'> }
+  | { type: 'SHOW_MODAL'; payload: Omit<Modal, 'isOpen' | 'key'> }
   | { type: 'CLOSE_MODAL' }
   | { type: 'ADD_TOAST'; payload: Omit<ToastType, 'id'> }
   | { type: 'REMOVE_TOAST'; payload: number }
@@ -48,7 +50,10 @@ type UIAction =
 
 interface UIContextValue extends UIState {
   showModal: (title: string, content: ReactNode, buttons?: Modal['buttons'], options?: ModalOptions) => void
-  closeModal: () => void
+  /** Closes the dialog; resolves once its exit animation has finished. */
+  closeModal: () => Promise<void>
+  /** Called by <Modal> when the exit animation completed (AnimatePresence). */
+  notifyModalExited: () => void
   addToast: (message: string, type?: ToastType['type'], duration?: number) => void
   removeToast: (id: number) => void
   openSidebar: () => void
@@ -74,6 +79,7 @@ const UIContext = createContext<UIContextValue | undefined>(undefined)
 const initialState: UIState = {
   modal: {
     isOpen: false,
+    key: 0,
     title: '',
     content: null,
     buttons: [],
@@ -92,6 +98,7 @@ const initialState: UIState = {
 // ============================================================================
 
 let toastIdCounter = 0
+let modalKeyCounter = 0
 
 function uiReducer(state: UIState, action: UIAction): UIState {
   switch (action.type) {
@@ -100,14 +107,17 @@ function uiReducer(state: UIState, action: UIAction): UIState {
         ...state,
         modal: {
           ...action.payload,
-          isOpen: true
+          isOpen: true,
+          key: ++modalKeyCounter
         }
       }
 
     case 'CLOSE_MODAL':
+      // Keep title/content so the dialog can animate out with its content intact
+      if (!state.modal.isOpen) return state
       return {
         ...state,
-        modal: initialState.modal
+        modal: { ...state.modal, isOpen: false }
       }
 
     case 'ADD_TOAST': {
@@ -182,8 +192,15 @@ interface UIProviderProps {
 export function UIProvider({ children }: UIProviderProps) {
   const [state, dispatch] = useReducer(uiReducer, initialState)
 
+  // Resolvers waiting for the current dialog's exit animation
+  const exitWaiters = useRef<Array<() => void>>([])
+  const isOpenRef = useRef(false)
+  isOpenRef.current = state.modal.isOpen
+
+
   const showModal = useCallback(
     (title: string, content: ReactNode, buttons?: Modal['buttons'], options?: ModalOptions) => {
+      isOpenRef.current = true
       dispatch({
         type: 'SHOW_MODAL',
         payload: { title, content, buttons, options }
@@ -192,8 +209,27 @@ export function UIProvider({ children }: UIProviderProps) {
     []
   )
 
-  const closeModal = useCallback(() => {
-    dispatch({ type: 'CLOSE_MODAL' })
+  const notifyModalExited = useCallback(() => {
+    const waiters = exitWaiters.current
+    exitWaiters.current = []
+    waiters.forEach((resolve) => resolve())
+  }, [])
+
+  const closeModal = useCallback((): Promise<void> => {
+    if (!isOpenRef.current) return Promise.resolve()
+    isOpenRef.current = false
+    return new Promise<void>((resolve) => {
+      let settled = false
+      const done = () => {
+        if (settled) return
+        settled = true
+        resolve()
+      }
+      exitWaiters.current.push(done)
+      // Safety net: never hang a game flow on an animation that didn't report back
+      setTimeout(done, 700)
+      dispatch({ type: 'CLOSE_MODAL' })
+    })
   }, [])
 
   const addToast = useCallback((message: string, type: ToastType['type'] = 'info', duration: number = 3000) => {
@@ -207,21 +243,30 @@ export function UIProvider({ children }: UIProviderProps) {
     dispatch({ type: 'REMOVE_TOAST', payload: id })
   }, [])
 
+  // Stable action identities (consumers put them in effect deps and timers)
+  const actions = useMemo(
+    () => ({
+      openSidebar: () => dispatch({ type: 'OPEN_SIDEBAR' }),
+      closeSidebar: () => dispatch({ type: 'CLOSE_SIDEBAR' }),
+      toggleSidebar: () => dispatch({ type: 'TOGGLE_SIDEBAR' }),
+      startQRScanner: () => dispatch({ type: 'START_QR_SCANNER' }),
+      stopQRScanner: () => dispatch({ type: 'STOP_QR_SCANNER' }),
+      toggleFlashlight: () => dispatch({ type: 'TOGGLE_FLASHLIGHT' }),
+      setFlashlight: (enabled: boolean) => dispatch({ type: 'SET_FLASHLIGHT', payload: enabled }),
+      setLoading: (isLoading: boolean, message?: string) =>
+        dispatch({ type: 'SET_LOADING', payload: { isLoading, message } })
+    }),
+    []
+  )
+
   const value: UIContextValue = {
     ...state,
     showModal,
     closeModal,
+    notifyModalExited,
     addToast,
     removeToast,
-    openSidebar: () => dispatch({ type: 'OPEN_SIDEBAR' }),
-    closeSidebar: () => dispatch({ type: 'CLOSE_SIDEBAR' }),
-    toggleSidebar: () => dispatch({ type: 'TOGGLE_SIDEBAR' }),
-    startQRScanner: () => dispatch({ type: 'START_QR_SCANNER' }),
-    stopQRScanner: () => dispatch({ type: 'STOP_QR_SCANNER' }),
-    toggleFlashlight: () => dispatch({ type: 'TOGGLE_FLASHLIGHT' }),
-    setFlashlight: (enabled) => dispatch({ type: 'SET_FLASHLIGHT', payload: enabled }),
-    setLoading: (isLoading, message) =>
-      dispatch({ type: 'SET_LOADING', payload: { isLoading, message } })
+    ...actions
   }
 
   return <UIContext.Provider value={value}>{children}</UIContext.Provider>

@@ -82,6 +82,20 @@
   --md-ref-error-40: 186 26 26;
   --md-ref-error-80: 255 180 171;
   --md-ref-error-90: 255 218 214;
+
+  /* success / warning — custom M3 colours (MCU tonal palettes, seeds #2E9E5B / #F2A900) */
+  --md-ref-success-10: 0 33 13;
+  --md-ref-success-20: 0 57 26;
+  --md-ref-success-30: 0 82 41;
+  --md-ref-success-40: 0 109 56;
+  --md-ref-success-80: 113 220 146;
+  --md-ref-success-90: 141 249 172;
+  --md-ref-warning-10: 40 25 0;
+  --md-ref-warning-20: 67 44 0;
+  --md-ref-warning-30: 96 65 0;
+  --md-ref-warning-40: 127 87 0;
+  --md-ref-warning-80: 255 186 59;
+  --md-ref-warning-90: 255 222 173;
 }
 
 /* ════════════════════ SYS COLOR ROLES — DARK (default) ════════════════════ */
@@ -108,6 +122,16 @@
   --md-sys-color-on-error: var(--md-ref-error-20);
   --md-sys-color-error-container: var(--md-ref-error-30);
   --md-sys-color-on-error-container: var(--md-ref-error-90);
+  --md-sys-color-success: var(--md-ref-success-80);
+  --md-sys-color-on-success: var(--md-ref-success-20);
+  --md-sys-color-success-container: var(--md-ref-success-30);
+  --md-sys-color-on-success-container: var(--md-ref-success-90);
+  --md-sys-color-success-inverse: var(--md-ref-success-40);
+  --md-sys-color-warning: var(--md-ref-warning-80);
+  --md-sys-color-on-warning: var(--md-ref-warning-20);
+  --md-sys-color-warning-container: var(--md-ref-warning-30);
+  --md-sys-color-on-warning-container: var(--md-ref-warning-90);
+  --md-sys-color-warning-inverse: var(--md-ref-warning-40);
 
   --md-sys-color-surface: var(--md-ref-neutral-6);
   --md-sys-color-surface-dim: var(--md-ref-neutral-6);
@@ -158,6 +182,16 @@
   --md-sys-color-on-error: var(--md-ref-primary-100);
   --md-sys-color-error-container: var(--md-ref-error-90);
   --md-sys-color-on-error-container: var(--md-ref-error-10);
+  --md-sys-color-success: var(--md-ref-success-40);
+  --md-sys-color-on-success: var(--md-ref-primary-100);
+  --md-sys-color-success-container: var(--md-ref-success-90);
+  --md-sys-color-on-success-container: var(--md-ref-success-10);
+  --md-sys-color-success-inverse: var(--md-ref-success-80);
+  --md-sys-color-warning: var(--md-ref-warning-40);
+  --md-sys-color-on-warning: var(--md-ref-primary-100);
+  --md-sys-color-warning-container: var(--md-ref-warning-90);
+  --md-sys-color-on-warning-container: var(--md-ref-warning-10);
+  --md-sys-color-warning-inverse: var(--md-ref-warning-80);
 
   --md-sys-color-surface: var(--md-ref-neutral-98);
   --md-sys-color-surface-dim: var(--md-ref-neutral-87);
