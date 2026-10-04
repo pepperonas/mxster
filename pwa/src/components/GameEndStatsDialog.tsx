@@ -266,7 +266,7 @@ export function GameEndStatsDialog({ winner, allPlayers, gameMode, onClose, onNe
           <button onClick={onClose} className="btn btn-secondary px-6 py-3 text-base sm:text-lg w-full sm:w-auto">
             🏠 Zur Startseite
           </button>
-          <button onClick={onNewRound} className="btn btn-accent px-6 py-3 text-base sm:text-lg shadow-glow-accent w-full sm:w-auto">
+          <button onClick={onNewRound} className="btn btn-accent px-6 py-3 text-base sm:text-lg shadow-m3-2 w-full sm:w-auto">
             🔄 Neue Runde
           </button>
         </div>

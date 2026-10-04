@@ -73,7 +73,7 @@ export function LandingPage() {
             {/* Primary: Play without Spotify (Unlimited Users) */}
             <button
               onClick={handlePlayWithoutSpotify}
-              className="btn btn-accent px-10 py-4 text-lg min-h-[48px] shadow-glow-accent w-full sm:w-auto group"
+              className="btn btn-accent px-10 py-4 text-lg min-h-[48px] shadow-m3-2 w-full sm:w-auto group"
             >
               <span>🎮</span>
               Jetzt spielen (Gratis)
@@ -360,7 +360,7 @@ export function LandingPage() {
           <div className="card card-glow p-8 rounded-m3-xl group relative">
             {/* EMPFOHLEN Badge */}
             <div className="absolute top-4 right-4">
-              <span className="px-3 py-1 bg-accent text-white text-xs font-bold rounded-full shadow-glow-accent">
+              <span className="px-3 py-1 bg-accent text-white text-xs font-bold rounded-full shadow-m3-2">
                 ⭐ EMPFOHLEN
               </span>
             </div>
@@ -442,7 +442,7 @@ export function LandingPage() {
           {/* Step 1 */}
           <div className="card p-8 rounded-m3-xl group">
             <div className="flex items-start gap-6">
-              <div className="flex-shrink-0 w-12 h-12 bg-gradient-to-br from-secondary to-accent rounded-full flex items-center justify-center text-2xl font-bold text-white shadow-glow-sm group-hover:scale-110 transition-transform">
+              <div className="flex-shrink-0 w-12 h-12 bg-gradient-to-br from-secondary to-accent rounded-full flex items-center justify-center text-2xl font-bold text-white shadow-m3-1 group-hover:scale-110 transition-transform">
                 1
               </div>
               <div>
@@ -459,7 +459,7 @@ export function LandingPage() {
           {/* Step 2 */}
           <div className="card p-8 rounded-m3-xl group">
             <div className="flex items-start gap-6">
-              <div className="flex-shrink-0 w-12 h-12 bg-gradient-to-br from-secondary to-accent rounded-full flex items-center justify-center text-2xl font-bold text-white shadow-glow-sm group-hover:scale-110 transition-transform">
+              <div className="flex-shrink-0 w-12 h-12 bg-gradient-to-br from-secondary to-accent rounded-full flex items-center justify-center text-2xl font-bold text-white shadow-m3-1 group-hover:scale-110 transition-transform">
                 2
               </div>
               <div>
@@ -476,7 +476,7 @@ export function LandingPage() {
           {/* Step 3 */}
           <div className="card p-8 rounded-m3-xl group">
             <div className="flex items-start gap-6">
-              <div className="flex-shrink-0 w-12 h-12 bg-gradient-to-br from-secondary to-accent rounded-full flex items-center justify-center text-2xl font-bold text-white shadow-glow-sm group-hover:scale-110 transition-transform">
+              <div className="flex-shrink-0 w-12 h-12 bg-gradient-to-br from-secondary to-accent rounded-full flex items-center justify-center text-2xl font-bold text-white shadow-m3-1 group-hover:scale-110 transition-transform">
                 3
               </div>
               <div>
@@ -496,7 +496,7 @@ export function LandingPage() {
           {/* Step 4 */}
           <div className="card p-8 rounded-m3-xl group">
             <div className="flex items-start gap-6">
-              <div className="flex-shrink-0 w-12 h-12 bg-gradient-to-br from-secondary to-accent rounded-full flex items-center justify-center text-2xl font-bold text-white shadow-glow-sm group-hover:scale-110 transition-transform">
+              <div className="flex-shrink-0 w-12 h-12 bg-gradient-to-br from-secondary to-accent rounded-full flex items-center justify-center text-2xl font-bold text-white shadow-m3-1 group-hover:scale-110 transition-transform">
                 4
               </div>
               <div>
@@ -521,7 +521,7 @@ export function LandingPage() {
         <div className="flex justify-center mt-12">
           <button
             onClick={handleLogin}
-            className="btn btn-accent px-12 py-5 text-xl shadow-glow-accent group"
+            className="btn btn-accent px-12 py-5 text-xl shadow-m3-2 group"
           >
             <span>🎮</span>
             Jetzt loslegen
@@ -622,7 +622,7 @@ export function LandingPage() {
               href="https://github.com/pepperonas/mxster"
               target="_blank"
               rel="noopener noreferrer"
-              className="btn btn-accent px-10 py-4 text-lg shadow-glow-accent inline-flex items-center gap-2 group"
+              className="btn btn-accent px-10 py-4 text-lg shadow-m3-2 inline-flex items-center gap-2 group"
             >
               <span>🐙</span>
               Zum GitHub Repository
@@ -685,7 +685,7 @@ export function LandingPage() {
               href="https://www.paypal.com/donate?business=martin.pfeffer@celox.io&item_name=Unterst%C3%BCtzung+f%C3%BCr+mxster"
               target="_blank"
               rel="noopener noreferrer"
-              className="btn btn-accent px-12 py-5 text-xl shadow-glow-accent inline-flex items-center gap-2 group"
+              className="btn btn-accent px-12 py-5 text-xl shadow-m3-2 inline-flex items-center gap-2 group"
             >
               <span>💝</span>
               Via PayPal spenden

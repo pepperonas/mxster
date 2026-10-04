@@ -42,12 +42,8 @@ export const randomColor = (palette?: string[]): string => {
   return randomChoice(colors)
 }
 
-/**
- * Check if user prefers reduced motion
- */
-export const prefersReducedMotion = (): boolean => {
-  return window.matchMedia('(prefers-reduced-motion: reduce)').matches
-}
+/** Re-exported from the single motion policy (src/motion/policy.ts). */
+export { prefersReducedMotion } from '@/motion/policy'
 
 /**
  * Sleep/delay utility

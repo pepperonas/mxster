@@ -75,7 +75,7 @@ export function AchievementUnlockAnimation() {
       aria-live="assertive"
     >
       <div
-        className="glass border-4 border-accent rounded-2xl p-8 shadow-glow-accent
+        className="glass border-4 border-accent rounded-2xl p-8 shadow-m3-2
                     animate-achievement-unlock pointer-events-auto max-w-md mx-4"
       >
         <div className="text-center">

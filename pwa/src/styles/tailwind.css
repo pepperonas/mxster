@@ -12,8 +12,13 @@
   }
 
   html {
-    @apply scroll-smooth;
     scroll-padding-top: 5rem; /* 80px offset for sticky header */
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    html {
+      scroll-behavior: smooth;
+    }
   }
 
   body {
@@ -23,9 +28,6 @@
     -moz-osx-font-smoothing: grayscale;
   }
 
-  #root {
-    @apply overflow-x-hidden;
-  }
 
   /* Focus styles for accessibility */
   *:focus-visible {
@@ -42,14 +44,14 @@
 
 /* Component Utilities */
 @layer components {
-  /* Button Base — M3 Expressive pill with press shape-morph + spring return.
-     State feedback comes from the ::after state layer (see below), not lift. */
+  /* Button Base — M3 Expressive pill with a press shape-morph.
+     The radius/scale transitions use the spatial-fast spring token, so the
+     button squashes on press and springs back with a small overshoot.
+     State feedback comes from the shared state layer in motion.css. */
   .btn {
     @apply px-6 py-3 font-medium;
     @apply focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2;
     @apply min-h-[48px] flex items-center justify-center gap-2;
-    position: relative;
-    overflow: hidden;
     border-radius: var(--m3-shape-full);
     transition:
       border-radius var(--m3-spatial-fast),
@@ -57,30 +59,18 @@
       background-color var(--m3-effects-default),
       color var(--m3-effects-default),
       box-shadow var(--m3-effects-default);
-    backface-visibility: hidden;
-    -webkit-font-smoothing: antialiased;
-    will-change: transform;
+    -webkit-tap-highlight-color: transparent;
   }
 
-  .btn:active {
+  .btn:active:not(:disabled) {
     border-radius: var(--m3-shape-lg);
     transform: scale(0.96);
   }
 
-  /* State layer: hover/focus/press overlay in the button's own text color */
-  .btn::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    border-radius: inherit;
-    background: currentColor;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity var(--m3-dur-effects-fast) var(--m3-ease-effects-fast);
+  .btn:disabled {
+    cursor: not-allowed;
+    opacity: 0.38;
   }
-  .btn:hover::after { opacity: var(--m3-state-hover); }
-  .btn:focus-visible::after { opacity: var(--m3-state-focus); }
-  .btn:active::after { opacity: var(--m3-state-press); }
 
   /* Filled (primary) */
   .btn-primary {
@@ -95,7 +85,7 @@
     background: rgb(var(--md-ref-tertiary-40));
     color: #fff;
     -webkit-text-fill-color: #fff;
-    @apply hover:shadow-glow-accent focus-visible:ring-md-tertiary;
+    @apply hover:shadow-m3-2 focus-visible:ring-md-tertiary;
   }
 
   /* Tonal */
@@ -136,7 +126,7 @@
 
   /* Opt-in glow for expressive hero cards */
   .card-glow:hover {
-    @apply shadow-glow-md;
+    @apply shadow-m3-2;
     transform: translateY(-4px);
   }
 

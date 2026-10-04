@@ -66,7 +66,7 @@ export function VariantSelection() {
                 {/* EMPFOHLEN Badge for Virtual Mode */}
                 {isVirtual && (
                   <div className="absolute top-4 right-4">
-                    <span className="px-3 py-1 bg-md-tertiary text-md-on-tertiary text-label-sm rounded-m3-full shadow-glow-accent">
+                    <span className="px-3 py-1 bg-md-tertiary text-md-on-tertiary text-label-sm rounded-m3-full shadow-m3-2">
                       ⭐ EMPFOHLEN
                     </span>
                   </div>

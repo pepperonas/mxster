@@ -255,7 +255,7 @@ export function PlayerStatsDialog() {
               </div>
               <div className="h-3 bg-primary/50 rounded-full overflow-hidden border border-accent/20">
                 <div
-                  className="h-full bg-gradient-to-r from-accent to-secondary transition-all duration-500 shadow-glow-accent"
+                  className="h-full bg-gradient-to-r from-accent to-secondary transition-all duration-500 shadow-m3-2"
                   style={{ width: `${player.winRate}%` }}
                 />
               </div>
@@ -279,7 +279,7 @@ export function PlayerStatsDialog() {
                             <div
                               className={`h-full transition-all duration-500 ${
                                 player.bestDecade === decade
-                                  ? 'bg-gradient-to-r from-secondary to-accent shadow-glow-accent'
+                                  ? 'bg-gradient-to-r from-secondary to-accent shadow-m3-2'
                                   : 'bg-gradient-to-r from-accent/70 to-secondary/70'
                               }`}
                               style={{ width: `${percentage}%` }}
@@ -311,7 +311,7 @@ export function PlayerStatsDialog() {
                             <div
                               className={`h-full transition-all duration-500 ${
                                 player.bestGenre === genre
-                                  ? 'bg-gradient-to-r from-accent to-secondary shadow-glow-accent'
+                                  ? 'bg-gradient-to-r from-accent to-secondary shadow-m3-2'
                                   : 'bg-gradient-to-r from-secondary/70 to-accent/70'
                               }`}
                               style={{ width: `${percentage}%` }}

@@ -27,7 +27,7 @@ export function VirtualButton({ onClick }: VirtualButtonProps) {
           ${
             availableCount === 0
               ? 'bg-md-surface-container-highest text-text-secondary cursor-not-allowed'
-              : 'bg-gradient-to-r from-secondary to-accent hover:from-secondary hover:to-accent text-white shadow-glow-accent transform hover:scale-105'
+              : 'bg-gradient-to-r from-secondary to-accent hover:from-secondary hover:to-accent text-white shadow-m3-2 transform hover:scale-105'
           }
         `}
       >

@@ -122,7 +122,7 @@ export function GuessForm({ onSubmit, onSkip }: GuessFormProps) {
             onChange={(e) => setTitle(e.target.value)}
             placeholder="Song-Titel eingeben..."
             autoComplete="off"
-            className="w-full min-h-[48px] px-4 py-3 sm:py-4 bg-primary border-2 border-accent/30 rounded-m3-md text-text-primary placeholder-gray-500 focus:border-accent focus:shadow-glow-accent focus:outline-none focus:ring-0 transition-all"
+            className="w-full min-h-[48px] px-4 py-3 sm:py-4 bg-primary border-2 border-accent/30 rounded-m3-md text-text-primary placeholder-gray-500 focus:border-accent focus:shadow-m3-2 focus:outline-none focus:ring-0 transition-all"
           />
         </div>
 
@@ -138,7 +138,7 @@ export function GuessForm({ onSubmit, onSkip }: GuessFormProps) {
             onChange={(e) => setArtist(e.target.value)}
             placeholder="Interpret eingeben..."
             autoComplete="off"
-            className="w-full min-h-[48px] px-4 py-3 sm:py-4 bg-primary border-2 border-accent/30 rounded-m3-md text-text-primary placeholder-gray-500 focus:border-accent focus:shadow-glow-accent focus:outline-none focus:ring-0 transition-all"
+            className="w-full min-h-[48px] px-4 py-3 sm:py-4 bg-primary border-2 border-accent/30 rounded-m3-md text-text-primary placeholder-gray-500 focus:border-accent focus:shadow-m3-2 focus:outline-none focus:ring-0 transition-all"
           />
         </div>
 
@@ -156,7 +156,7 @@ export function GuessForm({ onSubmit, onSkip }: GuessFormProps) {
             min="1950"
             max={new Date().getFullYear()}
             autoComplete="off"
-            className="w-full min-h-[48px] px-4 py-3 sm:py-4 bg-primary border-2 border-accent/30 rounded-m3-md text-text-primary placeholder-gray-500 focus:border-accent focus:shadow-glow-accent focus:outline-none focus:ring-0 transition-all"
+            className="w-full min-h-[48px] px-4 py-3 sm:py-4 bg-primary border-2 border-accent/30 rounded-m3-md text-text-primary placeholder-gray-500 focus:border-accent focus:shadow-m3-2 focus:outline-none focus:ring-0 transition-all"
           />
         </div>
 
@@ -178,7 +178,7 @@ export function GuessForm({ onSubmit, onSkip }: GuessFormProps) {
           </button>
           <button
             type="submit"
-            className="btn btn-accent flex-1 min-h-[48px] shadow-glow-accent"
+            className="btn btn-accent flex-1 min-h-[48px] shadow-m3-2"
           >
             {gameMode === 'hardcore' ? '✓ Antwort prüfen' : 'Weiter'}
           </button>

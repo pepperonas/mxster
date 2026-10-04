@@ -8,7 +8,7 @@
 import { useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
 import type { NavigateOptions, To } from 'react-router-dom'
-import { prefersReducedMotion } from '@/utils/animationHelpers'
+import { prefersReducedMotion } from '@/motion/policy'
 
 export function useAppNavigate() {
   const navigate = useNavigate()

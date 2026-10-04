@@ -277,7 +277,7 @@ export function MusicPlayer({ song, onStateChange }: MusicPlayerProps) {
     >
       {/* Song Info */}
       <div className="flex items-center gap-4 sm:gap-6 mb-4 sm:mb-6">
-        <div className="w-16 h-16 sm:w-24 sm:h-24 bg-gradient-to-br from-secondary to-accent rounded-m3-lg flex items-center justify-center shadow-glow-accent flex-shrink-0">
+        <div className="w-16 h-16 sm:w-24 sm:h-24 bg-gradient-to-br from-secondary to-accent rounded-m3-lg flex items-center justify-center shadow-m3-2 flex-shrink-0">
           <MusicIcon size={32} color="white" />
         </div>
         <div className="flex-1 min-w-0">
@@ -327,7 +327,7 @@ export function MusicPlayer({ song, onStateChange }: MusicPlayerProps) {
           <button
             onClick={handleTogglePlay}
             disabled={!playerReady || isLoading}
-            className={`w-14 h-14 min-w-[48px] min-h-[48px] bg-md-primary text-md-on-primary m3-state-layer flex items-center justify-center shadow-glow-md disabled:opacity-50 disabled:cursor-not-allowed active:scale-95 ${
+            className={`w-14 h-14 min-w-[48px] min-h-[48px] bg-md-primary text-md-on-primary m3-state-layer flex items-center justify-center shadow-m3-2 disabled:opacity-50 disabled:cursor-not-allowed active:scale-95 ${
               isPlaying ? 'rounded-m3-lg' : 'rounded-m3-full'
             }`}
             style={{ transition: 'border-radius var(--m3-spatial-fast), transform var(--m3-spatial-fast), background-color var(--m3-effects-default)' }}

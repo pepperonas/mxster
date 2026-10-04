@@ -240,23 +240,59 @@
   --m3-state-hover: 0.08;
   --m3-state-focus: 0.1;
   --m3-state-press: 0.12;
+  --m3-state-drag: 0.16;
 }
 
+/* Real springs: the bezier values above are the fallback; where the browser
+   supports linear(), every token becomes the sampled closed-form spring from
+   src/motion/springs.ts (the same parameters Motion uses in JS). */
+/* BEGIN GENERATED SPRINGS — src/motion/springs.ts */
+@supports (transition-timing-function: linear(0, 1)) {
+  :root {
+    --m3-dur-spatial-fast: 420ms;
+    --m3-ease-spatial-fast: linear(0, 0.086, 0.281, 0.507, 0.715, 0.881, 0.995, 1.062, 1.091, 1.093, 1.08, 1.059, 1.038, 1.02, 1.006, 0.997, 0.993, 0.991, 0.992, 0.993, 0.995, 0.997, 0.999, 1, 1, 1.001, 1);
+    --m3-dur-spatial-default: 476ms;
+    --m3-ease-spatial-default: linear(0, 0.043, 0.145, 0.274, 0.409, 0.536, 0.65, 0.746, 0.823, 0.884, 0.929, 0.962, 0.985, 1, 1.009, 1.013, 1.015, 1.015, 1.014, 1.012, 1.01, 1.008, 1.006, 1.004, 1.003, 1.002, 1.001, 1.001, 1, 1);
+    --m3-dur-spatial-slow: 656ms;
+    --m3-ease-spatial-slow: linear(0, 0.024, 0.084, 0.166, 0.26, 0.358, 0.455, 0.545, 0.628, 0.702, 0.767, 0.821, 0.867, 0.905, 0.935, 0.959, 0.977, 0.991, 1, 1.007, 1.011, 1.014, 1.015, 1.015, 1.014, 1.013, 1.012, 1.011, 1.009, 1.008, 1.006, 1.005, 1.004, 1.003, 1.002, 1.002, 1.001, 1.001, 1.001, 1, 1);
+    --m3-dur-effects-fast: 150ms;
+    --m3-ease-effects-fast: linear(0, 0.237, 0.552, 0.764, 0.884, 0.945, 0.974, 0.988, 0.995, 0.998, 1);
+    --m3-dur-effects-default: 231ms;
+    --m3-ease-effects-default: linear(0, 0.142, 0.38, 0.589, 0.74, 0.841, 0.905, 0.945, 0.968, 0.982, 0.99, 0.994, 0.997, 0.998, 1);
+    --m3-dur-effects-slow: 327ms;
+    --m3-ease-effects-slow: linear(0, 0.079, 0.236, 0.403, 0.551, 0.671, 0.764, 0.833, 0.883, 0.919, 0.945, 0.962, 0.974, 0.983, 0.988, 0.992, 0.995, 0.997, 0.998, 0.998, 1);
+  }
+}
+/* END GENERATED SPRINGS */
+
+/* Reduced motion: movement (spatial) becomes instant, colour/opacity
+   (effects) keep a short linear fade so state changes stay perceivable. */
 @media (prefers-reduced-motion: reduce) {
   :root {
-    --m3-dur-spatial-fast: 120ms;
-    --m3-dur-spatial-default: 120ms;
-    --m3-dur-spatial-slow: 120ms;
-    --m3-ease-spatial-fast: ease;
-    --m3-ease-spatial-default: ease;
-    --m3-ease-spatial-slow: ease;
+    --m3-dur-spatial-fast: 0ms;
+    --m3-dur-spatial-default: 0ms;
+    --m3-dur-spatial-slow: 0ms;
+    --m3-ease-spatial-fast: linear;
+    --m3-ease-spatial-default: linear;
+    --m3-ease-spatial-slow: linear;
     --m3-dur-effects-fast: 120ms;
     --m3-dur-effects-default: 120ms;
     --m3-dur-effects-slow: 120ms;
-    --m3-ease-effects-fast: ease;
-    --m3-ease-effects-default: ease;
-    --m3-ease-effects-slow: ease;
+    --m3-ease-effects-fast: linear;
+    --m3-ease-effects-default: linear;
+    --m3-ease-effects-slow: linear;
   }
+}
+
+/* ════════════════════ ELEVATION — two-layer key + ambient ════════════════════
+   Elevation in M3 is mostly tonal (surface-container steps); these shadows are
+   for the few elements that float above content (dock card, sheets, FAB). */
+:root {
+  --md-sys-elevation-1: 0 1px 2px rgb(0 0 0 / 0.30), 0 1px 3px 1px rgb(0 0 0 / 0.15);
+  --md-sys-elevation-2: 0 1px 2px rgb(0 0 0 / 0.30), 0 2px 6px 2px rgb(0 0 0 / 0.15);
+  --md-sys-elevation-3: 0 4px 8px 3px rgb(0 0 0 / 0.15), 0 1px 3px rgb(0 0 0 / 0.30);
+  --md-sys-elevation-4: 0 6px 10px 4px rgb(0 0 0 / 0.15), 0 2px 3px rgb(0 0 0 / 0.30);
+  --md-sys-elevation-5: 0 8px 12px 6px rgb(0 0 0 / 0.15), 0 4px 4px rgb(0 0 0 / 0.30);
 }
 
 /* ════════════════════ TYPOGRAPHY — M3 type scale ════════════════════

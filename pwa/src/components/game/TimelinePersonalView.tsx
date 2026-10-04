@@ -22,7 +22,7 @@ export function TimelinePersonalView() {
         key={playerIndex}
         className={`
           glass rounded-m3-xl p-6 border-2 transition-all
-          ${isCurrentPlayer ? 'border-accent shadow-glow-accent' : 'border-accent/30'}
+          ${isCurrentPlayer ? 'border-accent shadow-m3-2' : 'border-accent/30'}
         `}
       >
         {/* Player Header */}
@@ -43,7 +43,7 @@ export function TimelinePersonalView() {
         {/* Progress Bar */}
         <div className="w-full h-2 bg-primary rounded-full overflow-hidden mb-4 border border-accent/20">
           <div
-            className="h-full bg-gradient-to-r from-secondary to-accent transition-all duration-500 shadow-glow-sm"
+            className="h-full bg-gradient-to-r from-secondary to-accent transition-all duration-500 shadow-m3-1"
             style={{ width: `${(Math.max(0, player.cards - 1) / 10) * 100}%` }}
           />
         </div>
@@ -58,7 +58,7 @@ export function TimelinePersonalView() {
                 aspect-[3/4] flex flex-col justify-center items-center relative
                 ${
                   slot.song
-                    ? 'glass border-accent/50 hover:border-accent hover:shadow-glow-sm'
+                    ? 'glass border-accent/50 hover:border-accent hover:shadow-m3-1'
                     : 'bg-transparent border-accent/20 border-dashed opacity-40'
                 }
               `}
@@ -66,7 +66,7 @@ export function TimelinePersonalView() {
               {slot.song ? (
                 <>
                   {/* Success Badge - Show points in Guess Mode, checkmark otherwise */}
-                  <div className="absolute top-1 right-1 w-6 h-6 bg-gradient-to-br from-secondary to-accent rounded-full flex items-center justify-center text-xs font-bold shadow-glow-sm">
+                  <div className="absolute top-1 right-1 w-6 h-6 bg-gradient-to-br from-secondary to-accent rounded-full flex items-center justify-center text-xs font-bold shadow-m3-1">
                     {gameMode === 'hardcore' && slot.song.points !== undefined
                       ? slot.song.points
                       : '✓'

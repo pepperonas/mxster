@@ -38,7 +38,7 @@ export function ScoreOverview() {
                 flex items-center justify-between p-4 rounded-m3-md transition-all glass
                 ${
                   isCurrentPlayer
-                    ? 'border-2 border-accent shadow-glow-accent'
+                    ? 'border-2 border-accent shadow-m3-2'
                     : 'border-2 border-accent/30 hover:border-accent/50'
                 }
               `}

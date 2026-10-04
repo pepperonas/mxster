@@ -20,6 +20,7 @@
     "axios": "^1.6.0",
     "canvas-confetti": "^1.9.4",
     "howler": "^2.2.3",
+    "motion": "^14.0.0",
     "pdfkit": "^0.15.0",
     "qr-scanner": "^1.4.2",
     "qrcode": "^1.5.3",

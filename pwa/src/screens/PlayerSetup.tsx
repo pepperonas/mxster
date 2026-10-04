@@ -212,7 +212,7 @@ export function PlayerSetup() {
                         ${
                           isAlreadyAdded
                             ? 'bg-md-surface-container-highest text-text-secondary border-transparent cursor-not-allowed'
-                            : 'bg-md-surface-container-high border-md-outline-variant text-text-primary hover:border-md-primary hover:shadow-glow-sm active:scale-95'
+                            : 'bg-md-surface-container-high border-md-outline-variant text-text-primary hover:border-md-primary hover:shadow-m3-1 active:scale-95'
                         }
                       `}
                       title={isAlreadyAdded ? 'Bereits hinzugefügt' : `${playerName} hinzufügen`}
@@ -329,7 +329,7 @@ export function PlayerSetup() {
               {/* Add Bots Button */}
               <button
                 onClick={handleAddBots}
-                className="w-full btn btn-accent py-4 text-lg font-bold shadow-glow-accent"
+                className="w-full btn btn-accent py-4 text-lg font-bold shadow-m3-2"
               >
                 🤖 {botCount} Bot{botCount > 1 ? 's' : ''} hinzufügen ({botDifficulty === 'easy' ? 'Leicht' : botDifficulty === 'medium' ? 'Mittel' : 'Schwer'})
               </button>
@@ -403,7 +403,7 @@ export function PlayerSetup() {
               px-12 py-4 text-lg transition-all
               ${
                 players.length >= minPlayers
-                  ? 'btn btn-accent font-bold shadow-glow-accent'
+                  ? 'btn btn-accent font-bold shadow-m3-2'
                   : 'bg-md-surface-container-highest text-text-secondary cursor-not-allowed rounded-m3-full min-h-[48px] font-medium'
               }
             `}

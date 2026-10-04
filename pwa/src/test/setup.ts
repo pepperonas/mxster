@@ -6,6 +6,7 @@
 import '@testing-library/jest-dom'
 import { expect, afterEach, vi, beforeAll } from 'vitest'
 import { cleanup } from '@testing-library/react'
+import { MotionGlobalConfig } from 'motion/react'
 
 // Cleanup after each test to prevent memory leaks
 afterEach(() => {
@@ -39,11 +40,17 @@ const localStorageMock = (() => {
 
 global.localStorage = localStorageMock as any
 
+// Motion: finish every animation instantly (exit animations still complete
+// asynchronously — await removal with findBy*/waitForElementToBeRemoved)
+MotionGlobalConfig.skipAnimations = true
+
+// Tests flip prefers-reduced-motion via setReducedMotion() from src/test/motion.ts
+
 // Mock matchMedia (for responsive components)
 Object.defineProperty(window, 'matchMedia', {
   writable: true,
-  value: vi.fn().mockImplementation(query => ({
-    matches: false,
+  value: vi.fn().mockImplementation((query: string) => ({
+    matches: query.includes('prefers-reduced-motion') ? (window as { __mxReducedMotion?: boolean }).__mxReducedMotion === true : false,
     media: query,
     onchange: null,
     addListener: vi.fn(),

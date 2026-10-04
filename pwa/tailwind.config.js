@@ -91,13 +91,12 @@ export default {
         '144': '36rem',
       },
       boxShadow: {
-        // Premium ambient elevation (two-layer key + ambient), not neon glow.
-        // Kept the historic names so existing usages resolve unchanged.
-        'glow-sm': '0 1px 2px rgb(0 0 0 / 0.30), 0 2px 6px rgb(0 0 0 / 0.26)',
-        'glow-md': '0 2px 6px rgb(0 0 0 / 0.32), 0 8px 20px rgb(0 0 0 / 0.34)',
-        'glow-lg': '0 4px 12px rgb(0 0 0 / 0.34), 0 16px 40px rgb(0 0 0 / 0.40)',
-        'glow-accent': '0 2px 8px rgb(0 0 0 / 0.32), 0 10px 28px rgb(0 0 0 / 0.38)',
-        'glow-game': '0 2px 6px rgb(0 0 0 / 0.30), 0 8px 20px rgb(0 0 0 / 0.32)',
+        // M3 elevation levels (design-tokens.css --md-sys-elevation-*)
+        'm3-1': 'var(--md-sys-elevation-1)',
+        'm3-2': 'var(--md-sys-elevation-2)',
+        'm3-3': 'var(--md-sys-elevation-3)',
+        'm3-4': 'var(--md-sys-elevation-4)',
+        'm3-5': 'var(--md-sys-elevation-5)',
       },
       backdropBlur: {
         xs: '2px',

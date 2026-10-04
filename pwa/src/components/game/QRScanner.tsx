@@ -158,7 +158,7 @@ export function QRScanner() {
           </p>
           <button
             onClick={handleToggleScan}
-            className="btn btn-accent shadow-glow-accent flex items-center gap-3 mx-auto"
+            className="btn btn-accent shadow-m3-2 flex items-center gap-3 mx-auto"
           >
             <CameraIcon size={24} />
             Kamera starten
@@ -207,7 +207,7 @@ export function QRScanner() {
               muted
             />
             {/* Scanning Indicator */}
-            <div className="absolute top-4 right-4 px-3 py-1 bg-red-600 rounded-full text-sm font-bold animate-pulse shadow-glow-sm">
+            <div className="absolute top-4 right-4 px-3 py-1 bg-red-600 rounded-full text-sm font-bold animate-pulse shadow-m3-1">
               🔴 LIVE
             </div>
           </div>

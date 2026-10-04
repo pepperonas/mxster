@@ -13,6 +13,7 @@ import {
 import { useTokenRefresh } from '@/hooks/useTokenRefresh'
 import { useAppNavigate } from '@/hooks/useAppNavigate'
 import { initRipple } from '@/utils/ripple'
+import { MotionProvider } from '@/motion/MotionProvider'
 import { useEffect, useRef } from 'react'
 import './styles/design-tokens.css'
 import './styles/tailwind.css'
@@ -142,9 +143,11 @@ function AppContent() {
 const router = createBrowserRouter([
   {
     element: (
-      <AppProviders>
-        <AppContent />
-      </AppProviders>
+      <MotionProvider>
+        <AppProviders>
+          <AppContent />
+        </AppProviders>
+      </MotionProvider>
     ),
     children: [
       { path: '/', element: <LandingPage /> },

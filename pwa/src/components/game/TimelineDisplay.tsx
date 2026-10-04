@@ -75,7 +75,7 @@ export function TimelineDisplay({ playerId }: TimelineDisplayProps) {
       {/* Progress Bar */}
       <div className="w-full h-2 bg-primary rounded-full overflow-hidden mb-4 border border-accent/20">
         <div
-          className="h-full bg-gradient-to-r from-secondary to-accent transition-all duration-500 shadow-glow-sm"
+          className="h-full bg-gradient-to-r from-secondary to-accent transition-all duration-500 shadow-m3-1"
           style={{ width: `${(Math.max(0, cardCount - 1) / 10) * 100}%` }}
         />
       </div>
@@ -91,7 +91,7 @@ export function TimelineDisplay({ playerId }: TimelineDisplayProps) {
                 className={`
                   p-2 rounded-m3-md border transition-all
                   ${index === currentPlayer
-                    ? 'bg-accent/20 border-accent shadow-glow-sm'
+                    ? 'bg-accent/20 border-accent shadow-m3-1'
                     : 'bg-primary/30 border-accent/20'
                   }
                 `}
@@ -114,7 +114,7 @@ export function TimelineDisplay({ playerId }: TimelineDisplayProps) {
               aspect-[3/4] flex flex-col justify-center items-center relative
               ${
                 slot.song
-                  ? 'glass border-accent/50 hover:border-accent hover:shadow-glow-sm'
+                  ? 'glass border-accent/50 hover:border-accent hover:shadow-m3-1'
                   : 'bg-transparent border-accent/20 border-dashed opacity-40'
               }
             `}
@@ -122,7 +122,7 @@ export function TimelineDisplay({ playerId }: TimelineDisplayProps) {
             {slot.song ? (
               <>
                 {/* Success Badge - Show points in Guess Mode, checkmark otherwise */}
-                <div className="absolute top-1 right-1 w-6 h-6 bg-gradient-to-br from-secondary to-accent rounded-full flex items-center justify-center text-xs font-bold shadow-glow-sm">
+                <div className="absolute top-1 right-1 w-6 h-6 bg-gradient-to-br from-secondary to-accent rounded-full flex items-center justify-center text-xs font-bold shadow-m3-1">
                   {gameMode === 'hardcore' && slot.song.points !== undefined
                     ? slot.song.points
                     : '✓'
@@ -132,7 +132,7 @@ export function TimelineDisplay({ playerId }: TimelineDisplayProps) {
                 {/* Player Badge (Global Timeline only) - Responsive */}
                 {gameMode === 'timeline_global' && slot.playerId !== null && (
                   <div
-                    className="absolute top-1 left-1 px-1.5 py-0.5 bg-primary/90 border border-accent/50 rounded text-[8px] sm:text-[10px] font-bold text-secondary shadow-glow-sm"
+                    className="absolute top-1 left-1 px-1.5 py-0.5 bg-primary/90 border border-accent/50 rounded text-[8px] sm:text-[10px] font-bold text-secondary shadow-m3-1"
                     title={`Platziert von: ${players[slot.playerId]?.name}`}
                   >
                     {/* Show single letter on mobile, 3 letters on desktop */}

@@ -4,7 +4,8 @@
  * Fallback (no API / reduced motion): instant switch.
  */
 
-import { prefersReducedMotion } from './animationHelpers'
+import { prefersReducedMotion } from '@/motion/policy'
+import { M3_SPRINGS, springToCss } from '@/motion/springs'
 import type { ThemeMode } from '@/contexts/SettingsContext'
 
 interface ViewTransitionLike {
@@ -18,6 +19,15 @@ type DocWithVT = Document & {
 }
 
 let pendingTransition: ViewTransitionLike | null = null
+
+/** Spatial-slow spring as WAAPI timing; bezier fallback without linear(). */
+function revealTiming(): { duration: number; easing: string } {
+  const { durationMs, easing } = springToCss(M3_SPRINGS.spatialSlow)
+  const linearOk = typeof CSS !== 'undefined' && CSS.supports?.('transition-timing-function', 'linear(0, 1)')
+  return linearOk
+    ? { duration: durationMs, easing }
+    : { duration: 650, easing: 'cubic-bezier(0.39, 1.29, 0.35, 0.98)' }
+}
 
 export function toggleThemeWithReveal(
   next: ThemeMode,
@@ -72,8 +82,7 @@ export function toggleThemeWithReveal(
           ],
         },
         {
-          duration: 650,
-          easing: 'cubic-bezier(0.39, 1.29, 0.35, 0.98)',
+          ...revealTiming(),
           pseudoElement: '::view-transition-new(root)',
         }
       )

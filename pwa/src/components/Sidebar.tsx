@@ -277,7 +277,7 @@ export function Sidebar() {
                       p-3 rounded-lg border-2 transition-colors glass
                       ${
                         index === currentPlayer
-                          ? 'border-accent shadow-glow-accent'
+                          ? 'border-accent shadow-m3-2'
                           : 'border-accent/30 hover:border-accent/50'
                       }
                     `}

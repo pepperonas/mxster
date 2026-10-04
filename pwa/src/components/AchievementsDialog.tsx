@@ -173,7 +173,7 @@ export function AchievementsDialog({ isOpen, onClose, playerName }: Achievements
                 key={achievement.id}
                 className={`relative rounded-m3-lg p-4 sm:p-5 border-2 transition-all overflow-hidden ${
                   achievement.unlocked
-                    ? 'glass border-accent/30 hover:border-accent hover:shadow-glow-accent'
+                    ? 'glass border-accent/30 hover:border-accent hover:shadow-m3-2'
                     : 'bg-md-surface-container-low border-md-outline-variant/40'
                 }`}
               >
