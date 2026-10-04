@@ -13,4 +13,4 @@ export { PlacementDock, type DockState } from './PlacementDock'
 export { FeedbackLayer } from './FeedbackLayer'
 export { ScoreOverview } from './ScoreOverview'
 export { MusicPlayer } from './MusicPlayer'
-export { ParticleBackground } from './ParticleBackground'
+// ParticleBackground is loaded lazily by App.tsx (keeps three.js out of the main bundle)

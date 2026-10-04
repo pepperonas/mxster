@@ -3,7 +3,7 @@
  * Add/remove players before starting the game
  */
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { AnimatePresence, m } from 'motion/react'
 import { spring } from '@/motion/springs'
 import { useAppNavigate } from '@/hooks/useAppNavigate'
@@ -27,10 +27,12 @@ export function PlayerSetup() {
   const [botCount, setBotCount] = useState(1)
   const [botDifficulty, setBotDifficulty] = useState<'easy' | 'medium' | 'hard'>('medium')
 
-  if (!gameMode || !gameVariant) {
-    navigate('/mode-selection')
-    return null
-  }
+  // Redirect in an effect — navigating during render is not allowed
+  useEffect(() => {
+    if (!gameMode || !gameVariant) navigate('/mode-selection')
+  }, [gameMode, gameVariant, navigate])
+
+  if (!gameMode || !gameVariant) return null
 
   const needsDJ = requiresDJ(gameMode, gameVariant)
   const minPlayers = 2 // All modes require minimum 2 players (DJ also plays in physical mode)

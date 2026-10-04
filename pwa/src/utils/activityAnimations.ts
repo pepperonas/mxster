@@ -39,18 +39,21 @@ export interface AnimationParameters {
 
 // Timeline mode colors (Blue/Cyan theme)
 const TIMELINE_COLORS = {
-  mainColor: 0x6366f1, // Indigo
-  accentColor: 0xff6b35, // Orange
-  starColor: 0x4aedc4, // Cyan
-  backgroundColor: 'radial-gradient(circle at center, #0a0a1f 0%, #000000 100%)'
+  // Mirrors the design tokens (Three.js needs numbers; pinned by a test):
+  mainColor: 0x009dc8, // --md-ref-primary-60
+  accentColor: 0xf3632d, // --md-ref-tertiary-60
+  starColor: 0xbde9ff, // --md-ref-primary-90
+  backgroundColor:
+    'radial-gradient(circle at center, rgb(var(--md-ref-neutral-10)) 0%, rgb(var(--md-ref-neutral-4)) 100%)'
 }
 
 // Hardcore mode colors (Orange theme)
 const HARDCORE_COLORS = {
-  mainColor: 0xff8c00, // Dark Orange
-  accentColor: 0xffa500, // Bright Orange
-  starColor: 0xff6b35, // Deep Orange
-  backgroundColor: 'radial-gradient(circle at center, #1f0a00 0%, #0a0500 50%, #000000 100%)'
+  mainColor: 0xf3632d, // --md-ref-tertiary-60
+  accentColor: 0xff8b64, // --md-ref-tertiary-70
+  starColor: 0xffb59d, // --md-ref-tertiary-80
+  backgroundColor:
+    'radial-gradient(circle at center, rgb(var(--md-ref-tertiary-10)) 0%, rgb(var(--md-ref-neutral-4)) 100%)'
 }
 
 // Base parameters (current "calm" state) - Timeline mode by default

@@ -1,7 +1,6 @@
 import { createBrowserRouter, RouterProvider, Outlet, useLocation } from 'react-router-dom'
 import { AppProviders, useInteraction, useGame, useUI } from '@/contexts'
 import { Modal, Toast, ActionBar, Sidebar, AchievementUnlockAnimation, CookieBanner } from '@/components'
-import { ParticleBackground } from '@/components/game'
 import {
   LandingPage,
   ModeSelection,
@@ -15,7 +14,10 @@ import { useAppNavigate } from '@/hooks/useAppNavigate'
 import { initRipple } from '@/utils/ripple'
 import { MotionProvider } from '@/motion/MotionProvider'
 import { useScrollReveal } from '@/motion/useScrollReveal'
-import { useEffect, useRef } from 'react'
+import { lazy, Suspense, useEffect, useRef } from 'react'
+
+// three.js lives only in this chunk — it loads after first paint
+const ParticleBackground = lazy(() => import('@/components/game/ParticleBackground'))
 import './styles/design-tokens.css'
 import './styles/tailwind.css'
 import './styles/motion.css'
@@ -31,7 +33,7 @@ function AppContent() {
   useEffect(() => { initRipple() }, [])
 
   // Get interaction state for background animation
-  const { activityLevel, pulseIntensity } = useInteraction()
+  const { activityLevel, pulseIntensity, pulseSeq } = useInteraction()
 
   // Page Refresh Check
   const navigate = useAppNavigate()
@@ -116,12 +118,15 @@ function AppContent() {
   return (
     <>
       {/* 3D Particle Background - Activity-reactive */}
+      <Suspense fallback={<div className="fixed inset-0 -z-10 particle-bg bg-background" aria-hidden="true" />}>
       <ParticleBackground
         isPlaying={true}
         beatIntensity={pulseIntensity}
+        pulseSeq={pulseSeq}
         activityLevel={activityLevel}
         isHardcoreMode={gameMode === 'hardcore'}
       />
+      </Suspense>
 
       {/* Layout Components */}
       <ActionBar />

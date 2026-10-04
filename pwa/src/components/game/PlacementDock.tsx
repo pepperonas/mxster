@@ -22,6 +22,7 @@ import { gapLabel } from '@/game/placement'
 import { spring } from '@/motion/springs'
 import { AnimatedNumber } from '@/components/ui/AnimatedNumber'
 import { PENDING_CARD_LAYOUT_ID } from './TimelineBoard'
+import { quietBackground } from '@/motion/backgroundControl'
 
 const ACTION_BAR_HEIGHT = 64
 
@@ -107,6 +108,7 @@ function DragStage({ song, boardRef, onHoverGap, onDrop }: DragStageProps) {
     velocityY: number
     hover: number | null
     raf: number
+    release: () => void
   } | null>(null)
 
   const measure = () => {
@@ -147,7 +149,8 @@ function DragStage({ song, boardRef, onHoverGap, onDrop }: DragStageProps) {
     const geometry = measure()
     if (!geometry) return
     const point = pointerOf(event)
-    drag.current = { ...geometry, clientX: point.x, clientY: point.y, velocityY: 0, hover: null, raf: 0 }
+    // The gesture gets the main thread: the WebGL background steps down
+    drag.current = { ...geometry, clientX: point.x, clientY: point.y, velocityY: 0, hover: null, raf: 0, release: quietBackground('drag') }
     const tick = () => {
       const d = drag.current
       if (!d) return
@@ -176,6 +179,7 @@ function DragStage({ song, boardRef, onHoverGap, onDrop }: DragStageProps) {
     const d = drag.current
     if (!d) return
     cancelAnimationFrame(d.raf)
+    d.release()
     const target = resolveHover()
     drag.current = null
     onHoverGap(null)
@@ -184,7 +188,10 @@ function DragStage({ song, boardRef, onHoverGap, onDrop }: DragStageProps) {
 
   useEffect(
     () => () => {
-      if (drag.current) cancelAnimationFrame(drag.current.raf)
+      if (drag.current) {
+        cancelAnimationFrame(drag.current.raf)
+        drag.current.release()
+      }
     },
     []
   )

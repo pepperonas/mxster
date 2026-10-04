@@ -20,7 +20,10 @@ export type InteractionType =
 
 interface InteractionState {
   activityLevel: ActivityLevel
+  /** Strength of the latest impulse (0-100). Not decayed here — the background decays it per frame. */
   pulseIntensity: number
+  /** Increments on every impulse, so equal-strength impulses still register. */
+  pulseSeq: number
   lastInteraction: number
   interactionCount: number
 }
@@ -59,30 +62,15 @@ export function InteractionProvider({ children }: InteractionProviderProps) {
   const [state, setState] = useState<InteractionState>({
     activityLevel: 'calm',
     pulseIntensity: 0,
+    pulseSeq: 0,
     lastInteraction: Date.now(),
     interactionCount: 0
   })
 
   const decayTimerRef = useRef<number | null>(null)
-  const pulseDecayRef = useRef<number | null>(null)
-
-  // Auto-decay pulse intensity
-  useEffect(() => {
-    if (state.pulseIntensity > 0) {
-      pulseDecayRef.current = window.setTimeout(() => {
-        setState(prev => ({
-          ...prev,
-          pulseIntensity: Math.max(0, prev.pulseIntensity - 10)
-        }))
-      }, 50) // Decay pulse quickly (50ms steps)
-    }
-
-    return () => {
-      if (pulseDecayRef.current) {
-        clearTimeout(pulseDecayRef.current)
-      }
-    }
-  }, [state.pulseIntensity])
+  // The pulse is an event, not a decaying value: decaying it here in 50 ms
+  // setState steps re-rendered the whole app ten times per click. The particle
+  // background decays it exponentially inside its render loop instead.
 
   // Auto-decay activity level based on inactivity
   useEffect(() => {
@@ -140,6 +128,7 @@ export function InteractionProvider({ children }: InteractionProviderProps) {
       return {
         activityLevel: newLevel,
         pulseIntensity: Math.min(100, interactionIntensity),
+        pulseSeq: prev.pulseSeq + 1,
         lastInteraction: now,
         interactionCount: newCount
       }
@@ -159,6 +148,7 @@ export function InteractionProvider({ children }: InteractionProviderProps) {
     setState(prev => ({
       ...prev,
       pulseIntensity: Math.min(100, intensity),
+      pulseSeq: prev.pulseSeq + 1,
       lastInteraction: Date.now()
     }))
   }, [])
