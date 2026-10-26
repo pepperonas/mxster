@@ -98,3 +98,9 @@ def test_admin_actions_are_logged(client, google):
     with app_db.SessionLocal() as s:
         rows = s.execute(select(app_db.AdminAction)).scalars().all()
     assert [(r.admin_email, r.target_user_id, r.action) for r in rows] == [("boss@example.com", uid, "approve")]
+
+
+def test_admin_timestamps_carry_a_timezone(client, google):
+    _admin(client, google)
+    row = client.get("/api/admin/users").json()["users"][0]
+    assert row["createdAt"].endswith("+00:00")

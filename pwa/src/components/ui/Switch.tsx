@@ -32,7 +32,7 @@ export function Switch({ checked, onChange, ariaLabel, disabled }: SwitchProps) 
       />
       <m.span
         whileTap={disabled ? undefined : 'pressed'}
-        className={`w-[52px] h-8 rounded-m3-full flex items-center px-1 border-2 transition-colors duration-m3-effects ease-m3-effects peer-focus-visible:ring-2 peer-focus-visible:ring-md-primary peer-focus-visible:ring-offset-2 peer-focus-visible:ring-offset-background ${
+        className={`w-[52px] h-8 rounded-m3-full flex items-center px-1 border-2 transition-colors duration-m3-effects ease-m3-effects peer-focus-visible:ring-2 peer-focus-visible:ring-md-primary peer-focus-visible:ring-offset-2 peer-focus-visible:ring-offset-md-surface ${
           checked ? 'bg-md-primary border-md-primary' : 'bg-md-surface-container-highest border-md-outline'
         }`}
       >

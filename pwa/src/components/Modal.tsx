@@ -18,7 +18,7 @@
 import { useEffect, useCallback, useRef, type ReactNode } from 'react'
 import { createPortal } from 'react-dom'
 import { AnimatePresence, m, useDragControls, type PanInfo } from 'motion/react'
-import { useUI, useInteraction } from '@/contexts'
+import { useUI } from '@/contexts'
 import { useMediaQuery, COMPACT_QUERY } from '@/hooks/useMediaQuery'
 import { spring } from '@/motion/springs'
 import type { ModalButton } from '@/types'
@@ -80,7 +80,6 @@ function DialogTitle({ title }: { title: ReactNode }) {
 
 export function Modal() {
   const { modal, closeModal, notifyModalExited } = useUI()
-  const { registerInteraction } = useInteraction()
   const compact = useMediaQuery(COMPACT_QUERY)
   const returnFocusRef = useRef<HTMLElement | null>(null)
   const wasOpenRef = useRef(false)
@@ -102,9 +101,8 @@ export function Modal() {
     if (!modal.isOpen) return
     const app = document.getElementById('app')
     app?.setAttribute('inert', '')
-    registerInteraction('modal', 60)
     return () => app?.removeAttribute('inert')
-  }, [modal.isOpen, registerInteraction])
+  }, [modal.isOpen])
 
   // Browser back closes the dialog (see modalHistory)
   useEffect(() => {
@@ -276,13 +274,13 @@ function DialogSurface({ dialog, compact, dismissible, onDismiss }: DialogSurfac
           className="flex items-center justify-between gap-3 px-5 sm:px-6 pt-3 sm:pt-5 pb-3"
           onPointerDown={(e) => compact && dismissible && dragControls.start(e)}
         >
-          <h2 id="modal-title" className="text-headline-sm text-text-primary flex items-center gap-2 min-w-0">
+          <h2 id="modal-title" className="text-headline-sm text-md-on-surface flex items-center gap-2 min-w-0">
             <DialogTitle title={title} />
           </h2>
           {showClose && (
             <button
               onClick={onDismiss}
-              className="touch-target rounded-m3-full m3-state-layer text-text-secondary hover:text-text-primary transition-colors"
+              className="touch-target rounded-m3-full m3-state-layer text-md-on-surface-variant hover:text-md-on-surface transition-colors"
               aria-label="Schließen"
             >
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
@@ -304,10 +302,10 @@ function DialogSurface({ dialog, compact, dismissible, onDismiss }: DialogSurfac
                 disabled={button.disabled}
                 className={`btn ${
                   button.variant === 'primary'
-                    ? 'btn-accent'
+                    ? 'btn-brand'
                     : button.variant === 'danger'
                       ? 'bg-md-error text-md-on-error focus-visible:ring-md-error'
-                      : 'btn-secondary'
+                      : 'btn-tonal'
                 } ${button.className ?? ''}`}
               >
                 {button.text}

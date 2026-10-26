@@ -1,18 +1,3 @@
-# mxster.celox.io - Robots.txt
-# Music Timeline Game PWA
-
+# mxster is a private, sign-in-only app.
 User-agent: *
-Allow: /
-Allow: /mode-selection
-Allow: /variant-selection
-Allow: /player-setup
-
-# Exclude OAuth callback and active game routes from indexing
-Disallow: /callback
-Disallow: /game
-
-# Sitemap location
-Sitemap: https://mxster.celox.io/sitemap.xml
-
-# Crawl delay (be nice to servers)
-Crawl-delay: 10
+Disallow: /api/

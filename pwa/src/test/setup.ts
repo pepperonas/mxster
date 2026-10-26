@@ -61,6 +61,13 @@ Object.defineProperty(window, 'matchMedia', {
   })),
 })
 
+// Fake mxster API: an in-memory /api/data store per test file, so providers
+// that sync with the server work without a network. Tests that need other
+// answers stub fetch themselves (vi.stubGlobal).
+import { fakeApiFetch, resetFakeApi } from './fakeApi'
+globalThis.fetch = fakeApiFetch as typeof fetch
+afterEach(() => resetFakeApi())
+
 // Mock IntersectionObserver (for lazy loading components)
 global.IntersectionObserver = vi.fn().mockImplementation(() => ({
   observe: vi.fn(),
@@ -102,44 +109,6 @@ vi.mock('howler', () => ({
   },
 }))
 
-// Mock spotify.config.js (optional config file, gitignored)
-// Points to spotify.config.mock.js for tests
-vi.mock('../../spotify.config.js', async () => {
-  // @ts-ignore - Dynamic import of mock file
-  const mockConfig = await import('../../spotify.config.mock.js')
-  return mockConfig
-})
-
-// Mock QR Scanner (qr-scanner library)
-vi.mock('qr-scanner', () => ({
-  default: vi.fn().mockImplementation(() => ({
-    start: vi.fn(),
-    stop: vi.fn(),
-    destroy: vi.fn(),
-    setCamera: vi.fn(),
-    hasCamera: vi.fn(() => Promise.resolve(true)),
-  })),
-}))
-
-// Mock Three.js (3D particle background)
-vi.mock('three', () => ({
-  Scene: vi.fn().mockImplementation(() => ({
-    add: vi.fn(),
-    remove: vi.fn(),
-  })),
-  PerspectiveCamera: vi.fn(),
-  WebGLRenderer: vi.fn().mockImplementation(() => ({
-    setSize: vi.fn(),
-    render: vi.fn(),
-    domElement: document.createElement('canvas'),
-  })),
-  BufferGeometry: vi.fn(),
-  Points: vi.fn(),
-  PointsMaterial: vi.fn(),
-  BufferAttribute: vi.fn(),
-  Color: vi.fn(),
-}))
-
 // Suppress console warnings in tests (optional, can be removed if needed)
 beforeAll(() => {
   // Store original console methods
@@ -179,16 +148,6 @@ expect.extend({
 
 // Global test utilities
 export const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms))
-
-export const mockSpotifyAuth = () => {
-  return {
-    isLoggedIn: true,
-    login: vi.fn(),
-    logout: vi.fn(),
-    refreshToken: vi.fn(),
-    getToken: vi.fn(() => 'mock-token'),
-  }
-}
 
 export const mockPlayer = (overrides = {}) => {
   return {

@@ -16,7 +16,7 @@ export function LoadingIndicator({ size = 48, label, className = '' }: LoadingIn
       <div className="m3-loading" style={{ width: size, height: size }}>
         <span className="m3-loading-arc" style={{ width: size / 2, height: size / 2 }} />
       </div>
-      {label && <p className="text-label-lg text-text-secondary">{label}</p>}
+      {label && <p className="text-label-lg text-md-on-surface-variant">{label}</p>}
       {!label && <span className="sr-only">Lädt…</span>}
     </div>
   )

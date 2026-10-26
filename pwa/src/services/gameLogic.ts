@@ -350,31 +350,6 @@ export function getNextPlayerIndex(currentPlayer: number, totalPlayers: number):
   return (currentPlayer + 1) % totalPlayers
 }
 
-/**
- * Get next DJ index (only rotates when turn returns to DJ in Physical Guess Mode)
- */
-export function getNextDJIndex(
-  currentPlayer: number,
-  currentDJ: number,
-  totalPlayers: number,
-  gameMode: GameMode,
-  gameVariant: 'physical' | 'virtual'
-): { nextPlayer: number; nextDJ: number } {
-  let nextPlayer = (currentPlayer + 1) % totalPlayers
-
-  // DJ rotation logic (only Physical Guess Mode)
-  if (gameVariant === 'physical' && gameMode === 'hardcore') {
-    // If turn returns to DJ, DJ switches to next player
-    if (nextPlayer === currentDJ) {
-      const nextDJ = (currentDJ + 1) % totalPlayers
-      nextPlayer = (nextPlayer + 1) % totalPlayers
-      return { nextPlayer, nextDJ }
-    }
-  }
-
-  return { nextPlayer, nextDJ: currentDJ }
-}
-
 // ============================================================================
 // Song Management
 // ============================================================================

@@ -23,10 +23,10 @@ export function ScoreOverview() {
     .sort((a, b) => b.player.score - a.player.score || a.seat - b.seat)
 
   return (
-    <section className="rounded-m3-xl bg-md-surface-container border border-md-outline-variant/50 p-5 sm:p-6" aria-labelledby="score-title">
+    <section className="surface p-5 sm:p-6" aria-labelledby="score-title">
       <div className="flex items-center gap-3 mb-4">
         <TrophyIcon size={22} className="text-md-tertiary" />
-        <h3 id="score-title" className="text-title-lg text-text-primary">
+        <h3 id="score-title" className="text-title-lg text-md-on-surface">
           Punkteübersicht
         </h3>
       </div>
@@ -54,7 +54,7 @@ export function ScoreOverview() {
                   {rank < 3 ? MEDALS[rank] : <span className="text-title-sm text-md-on-surface-variant">#{rank + 1}</span>}
                 </span>
                 <div className="min-w-0">
-                  <p className="text-title-sm text-text-primary truncate">
+                  <p className="text-title-sm text-md-on-surface truncate">
                     {player.name}
                     {active && <span className="sr-only"> (am Zug)</span>}
                   </p>

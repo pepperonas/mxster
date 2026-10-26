@@ -1,10 +1,9 @@
 /** @type {import('tailwindcss').Config} */
 
 /**
- * All colors resolve through the M3 token layer in src/styles/design-tokens.css.
- * Channel-triplet vars + `rgb(var(..) / <alpha-value>)` keep alpha modifiers
- * (e.g. border-accent/30) working. Legacy semantic names are kept as aliases
- * (zero churn in existing class strings); new code uses the `md-*` namespace.
+ * All colors resolve through the M3 token layer in src/styles/design-tokens.css
+ * (`md-*` roles). Channel-triplet vars + `rgb(var(..) / <alpha-value>)` keep
+ * alpha modifiers (e.g. bg-md-surface/90) working.
  */
 const role = (name) => `rgb(var(--md-sys-color-${name}) / <alpha-value>)`
 
@@ -19,23 +18,6 @@ export default {
   theme: {
     extend: {
       colors: {
-        // Legacy aliases → M3 roles (existing markup rethemes automatically)
-        background: role('surface'),
-        primary: role('surface-container'),        // historic: card/container bg
-        secondary: role('primary'),                // historic: brand color → M3 primary (cyan)
-        accent: role('tertiary'),                  // historic: highlight orange → M3 tertiary (coral)
-        border: role('outline-variant'),
-        danger: role('error'),
-        'text-primary': role('on-surface'),
-        'text-secondary': role('on-surface-variant'),
-
-        // Legacy game colors → tonal equivalents
-        'game-bg': role('surface-container-lowest'),
-        'game-card': role('surface-container-low'),
-        'game-accent': role('primary-container'),
-        'game-highlight': role('tertiary'),
-
-        // Full M3 role namespace (use for new/reworked code)
         md: {
           primary: role('primary'),
           'on-primary': role('on-primary'),
@@ -82,7 +64,7 @@ export default {
         },
       },
       fontFamily: {
-        sans: ['Roboto Flex', 'Inter', 'system-ui', '-apple-system', 'sans-serif'],
+        sans: ['Roboto Flex', 'system-ui', '-apple-system', 'sans-serif'],
       },
       borderRadius: {
         'm3-none': 'var(--m3-shape-none)',

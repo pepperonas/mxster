@@ -15,7 +15,6 @@ import {
   selectRandomSong,
   getRemainingSongsCount,
   getNextPlayerIndex,
-  getNextDJIndex,
   updatePlayerScore,
   incrementPlayerCards,
   addToPlayedSongs,
@@ -600,38 +599,6 @@ describe('getNextPlayerIndex', () => {
   it('should handle 2 players', () => {
     expect(getNextPlayerIndex(0, 2)).toBe(1)
     expect(getNextPlayerIndex(1, 2)).toBe(0)
-  })
-})
-
-describe('getNextDJIndex', () => {
-  it('should keep same DJ in Virtual mode', () => {
-    const result = getNextDJIndex(0, 0, 3, GameMode.HARDCORE, 'virtual')
-
-    expect(result.nextPlayer).toBe(1)
-    expect(result.nextDJ).toBe(0) // DJ stays same
-  })
-
-  it('should rotate DJ when turn returns to DJ (Physical Hardcore)', () => {
-    // Current: Player 2, DJ 0, 3 total players
-    // Next player would be 0 (DJ) → rotate DJ to 1, skip to player 1
-    const result = getNextDJIndex(2, 0, 3, GameMode.HARDCORE, 'physical')
-
-    expect(result.nextPlayer).toBe(1) // Skip DJ (0), move to 1
-    expect(result.nextDJ).toBe(1) // DJ rotates
-  })
-
-  it('should NOT rotate DJ in middle of round (Physical Hardcore)', () => {
-    const result = getNextDJIndex(0, 0, 3, GameMode.HARDCORE, 'physical')
-
-    expect(result.nextPlayer).toBe(1)
-    expect(result.nextDJ).toBe(0) // DJ stays same
-  })
-
-  it('should keep DJ unchanged in Timeline modes (even Physical)', () => {
-    const result = getNextDJIndex(2, 0, 3, GameMode.TIMELINE_PERSONAL, 'physical')
-
-    expect(result.nextPlayer).toBe(0)
-    expect(result.nextDJ).toBe(0) // DJ doesn't rotate in Timeline modes
   })
 })
 

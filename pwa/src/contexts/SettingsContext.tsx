@@ -1,18 +1,20 @@
 /**
- * Settings Context
- * Global application settings with localStorage persistence
+ * Settings Context — stored per account on the server (see sync/useSyncedDoc).
+ * The theme is additionally mirrored to localStorage so index.html can paint
+ * the right colours before React starts.
  */
 
-import { createContext, useContext, useState, useEffect, ReactNode } from 'react'
+import { createContext, useContext, useEffect, useCallback, type ReactNode } from 'react'
+import { useSyncedDoc } from '@/sync/useSyncedDoc'
+import { mergeSettings } from '@/sync/merge'
 
 export type ThemeMode = 'dark' | 'light'
 
-interface Settings {
-  randomStartPosition: boolean // Start songs at random position (with 60s+ remaining)
-  hideYearsInTimeline: boolean // Blur years in timeline to prevent cheating
-  savedPlayers: string[] // List of saved player names
-  theme: ThemeMode // M3 color scheme, dark is default
-  // Future settings can be added here
+export interface Settings {
+  randomStartPosition: boolean // Start songs at a random position (with 60s+ remaining)
+  hideYearsInTimeline: boolean // Blur years in the timeline so nobody peeks
+  savedPlayers: string[] // Names offered as quick picks in the setup
+  theme: ThemeMode
 }
 
 interface SettingsContextType {
@@ -23,73 +25,79 @@ interface SettingsContextType {
   removePlayer: (playerName: string) => void
 }
 
-const defaultSettings: Settings = {
+export const THEME_STORAGE_KEY = 'mxster_theme'
+
+export const defaultSettings: Settings = {
   randomStartPosition: false,
   hideYearsInTimeline: false,
   savedPlayers: [],
-  theme: 'dark'
+  theme: readStoredTheme()
 }
 
-/** Surface hex per theme, mirrored from design-tokens.css (neutral-6 / neutral-98) */
-const THEME_COLOR: Record<ThemeMode, string> = {
-  dark: '#12131a',
-  light: '#fbf8ff'
+function readStoredTheme(): ThemeMode {
+  try {
+    const t = localStorage.getItem(THEME_STORAGE_KEY)
+    return t === 'light' ? 'light' : 'dark'
+  } catch {
+    return 'dark'
+  }
+}
+
+export function normalizeSettings(raw: unknown): Settings {
+  const r = (raw && typeof raw === 'object' ? raw : {}) as Partial<Settings>
+  return {
+    randomStartPosition: Boolean(r.randomStartPosition),
+    hideYearsInTimeline: Boolean(r.hideYearsInTimeline),
+    savedPlayers: Array.isArray(r.savedPlayers) ? r.savedPlayers.filter((n) => typeof n === 'string') : [],
+    theme: r.theme === 'light' ? 'light' : r.theme === 'dark' ? 'dark' : readStoredTheme()
+  }
+}
+
+/** Surface colour per theme, mirrored from design-tokens.css (neutral-6 / neutral-98). */
+export const THEME_COLOR: Record<ThemeMode, string> = {
+  dark: '#191113',
+  light: '#fff8f7'
 }
 
 const SettingsContext = createContext<SettingsContextType | undefined>(undefined)
 
 export function SettingsProvider({ children }: { children: ReactNode }) {
-  const [settings, setSettings] = useState<Settings>(() => {
-    // Load from localStorage on init
-    const stored = localStorage.getItem('mxster_settings')
-    if (stored) {
-      try {
-        return { ...defaultSettings, ...JSON.parse(stored) }
-      } catch (error) {
-        console.error('Failed to parse settings:', error)
-        return defaultSettings
-      }
-    }
-    return defaultSettings
+  const { value: settings, setValue } = useSyncedDoc<Settings>('settings', {
+    initial: defaultSettings,
+    merge: mergeSettings,
+    legacyKey: 'mxster_settings',
+    fromLegacy: normalizeSettings,
+    normalize: normalizeSettings
   })
 
-  // Save to localStorage whenever settings change
-  useEffect(() => {
-    localStorage.setItem('mxster_settings', JSON.stringify(settings))
-  }, [settings])
-
-  // Apply theme to <html> and keep browser chrome color in sync
   useEffect(() => {
     document.documentElement.dataset.theme = settings.theme
-    document
-      .querySelectorAll<HTMLMetaElement>('meta[name="theme-color"]')
-      .forEach((meta) => { meta.content = THEME_COLOR[settings.theme] })
+    try {
+      localStorage.setItem(THEME_STORAGE_KEY, settings.theme)
+    } catch {
+      /* private mode */
+    }
+    document.querySelectorAll<HTMLMetaElement>('meta[name="theme-color"]').forEach((meta) => {
+      meta.content = THEME_COLOR[settings.theme]
+    })
   }, [settings.theme])
 
-  const updateSettings = (newSettings: Partial<Settings>) => {
-    setSettings((prev) => ({ ...prev, ...newSettings }))
-  }
+  const updateSettings = useCallback((patch: Partial<Settings>) => setValue((prev) => ({ ...prev, ...patch })), [setValue])
+  const resetSettings = useCallback(() => setValue({ ...defaultSettings, theme: settings.theme }), [setValue, settings.theme])
 
-  const resetSettings = () => {
-    setSettings(defaultSettings)
-  }
+  const addPlayer = useCallback(
+    (playerName: string) => {
+      const name = playerName.trim()
+      if (!name) return
+      setValue((prev) => (prev.savedPlayers.includes(name) ? prev : { ...prev, savedPlayers: [...prev.savedPlayers, name] }))
+    },
+    [setValue]
+  )
 
-  const addPlayer = (playerName: string) => {
-    if (!playerName.trim()) return
-    if (settings.savedPlayers.includes(playerName.trim())) return
-
-    setSettings((prev) => ({
-      ...prev,
-      savedPlayers: [...prev.savedPlayers, playerName.trim()]
-    }))
-  }
-
-  const removePlayer = (playerName: string) => {
-    setSettings((prev) => ({
-      ...prev,
-      savedPlayers: prev.savedPlayers.filter((name) => name !== playerName)
-    }))
-  }
+  const removePlayer = useCallback(
+    (playerName: string) => setValue((prev) => ({ ...prev, savedPlayers: prev.savedPlayers.filter((n) => n !== playerName) })),
+    [setValue]
+  )
 
   return (
     <SettingsContext.Provider value={{ settings, updateSettings, resetSettings, addPlayer, removePlayer }}>
@@ -100,8 +108,6 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
 
 export function useSettings() {
   const context = useContext(SettingsContext)
-  if (!context) {
-    throw new Error('useSettings must be used within SettingsProvider')
-  }
+  if (!context) throw new Error('useSettings must be used within SettingsProvider')
   return context
 }

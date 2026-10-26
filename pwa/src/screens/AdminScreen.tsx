@@ -1,0 +1,241 @@
+/**
+ * Zugänge verwalten (admin only — the server answers 404 to everyone else).
+ * Pending requests first. Every decision applies at once and can be undone
+ * from the snackbar for a few seconds.
+ */
+import { useCallback, useEffect, useState } from 'react'
+import { AnimatePresence, m } from 'motion/react'
+import { api, ApiError, type AccountStatus } from '@/api/client'
+import { useMe } from '@/auth/AuthContext'
+import { useUI } from '@/contexts'
+import { useAppNavigate } from '@/hooks/useAppNavigate'
+import { SubPageHeader } from '@/shell/AppShell'
+import { Avatar } from '@/components/ui/Avatar'
+import { Icon } from '@/components/ui/Icon'
+import { spring } from '@/motion/springs'
+import { formatDay, formatTime } from '@/utils/format'
+
+interface Account {
+  id: number
+  email: string
+  name: string
+  picture: string
+  status: AccountStatus
+  isAdmin: boolean
+  createdAt: string | null
+  decidedAt: string | null
+  lastLoginAt: string | null
+}
+
+type Action = 'approve' | 'reject' | 'block' | 'unblock' | 'reset'
+type Tab = 'pending' | 'approved' | 'closed'
+
+const TABS: { id: Tab; label: string }[] = [
+  { id: 'pending', label: 'Wartend' },
+  { id: 'approved', label: 'Freigeschaltet' },
+  { id: 'closed', label: 'Abgelehnt' }
+]
+
+const inTab = (a: Account, tab: Tab) => (tab === 'closed' ? a.status === 'rejected' || a.status === 'blocked' : a.status === tab)
+
+/** The action that restores a previous status (for undo). */
+const RESTORE: Record<AccountStatus, Action> = { pending: 'reset', approved: 'approve', rejected: 'reject', blocked: 'block' }
+
+const DONE: Record<Action, string> = {
+  approve: 'ist freigeschaltet',
+  unblock: 'ist wieder freigeschaltet',
+  reject: 'wurde abgelehnt',
+  block: 'ist gesperrt',
+  reset: 'wartet wieder'
+}
+
+export function AdminScreen() {
+  const me = useMe()
+  const navigate = useAppNavigate()
+  const { addToast } = useUI()
+  const [accounts, setAccounts] = useState<Account[] | null>(null)
+  const [tab, setTab] = useState<Tab>('pending')
+  const [error, setError] = useState<string | null>(null)
+
+  useEffect(() => {
+    if (!me.isAdmin) navigate('/', { replace: true })
+  }, [me.isAdmin, navigate])
+
+  const load = useCallback(async () => {
+    try {
+      const res = await api<{ users: Account[] }>('/api/admin/users')
+      setAccounts(res.users)
+      setError(null)
+    } catch {
+      setError('Die Liste konnte nicht geladen werden.')
+    }
+  }, [])
+
+  useEffect(() => {
+    void load()
+  }, [load])
+
+  const decide = useCallback(
+    async (account: Account, action: Action, undoable = true) => {
+      const before = account.status
+      try {
+        const updated = await api<Account>(`/api/admin/users/${account.id}/${action}`, { method: 'POST' })
+        setAccounts((list) => list?.map((a) => (a.id === updated.id ? updated : a)) ?? null)
+        const who = account.name || account.email
+        addToast(
+          `${who} ${DONE[action]}`,
+          'success',
+          5000,
+          undoable ? { label: 'Rückgängig', onClick: () => void decide(updated, RESTORE[before], false) } : undefined
+        )
+      } catch (e) {
+        addToast(e instanceof ApiError ? e.message : 'Das hat nicht geklappt.', 'error')
+      }
+    },
+    [addToast]
+  )
+
+  const counts = {
+    pending: accounts?.filter((a) => inTab(a, 'pending')).length ?? 0,
+    approved: accounts?.filter((a) => inTab(a, 'approved')).length ?? 0,
+    closed: accounts?.filter((a) => inTab(a, 'closed')).length ?? 0
+  }
+  const shown = accounts?.filter((a) => inTab(a, tab)) ?? []
+
+  return (
+    <div>
+      <SubPageHeader title="Zugänge" back="/profil" />
+
+      <div role="tablist" aria-label="Status" className="flex border-b border-md-outline-variant/60 -mx-4 sm:mx-0 px-2 sm:px-0">
+        {TABS.map((t) => {
+          const active = tab === t.id
+          return (
+            <button
+              key={t.id}
+              type="button"
+              role="tab"
+              aria-selected={active}
+              onClick={() => setTab(t.id)}
+              className={`relative flex-1 min-h-[48px] px-2 text-label-lg m3-state-layer ${active ? 'text-md-primary' : 'text-md-on-surface-variant'}`}
+            >
+              <span className="inline-flex items-center gap-2">
+                {t.label}
+                {t.id === 'pending' && counts.pending > 0 && (
+                  <span
+                    className={`grid place-items-center min-w-6 h-6 px-1.5 rounded-full text-label-md tabular ${
+                      'bg-md-error text-md-on-error'
+                    }`}
+                  >
+                    {counts.pending}
+                  </span>
+                )}
+              </span>
+              {active && (
+                <m.span layoutId="admin-tab" transition={spring.spatialFast} className="absolute left-3 right-3 bottom-0 h-[3px] rounded-t-full bg-md-primary" />
+              )}
+            </button>
+          )
+        })}
+      </div>
+
+      <div className="pt-4" role="tabpanel">
+        {error && (
+          <div className="surface p-6 text-center">
+            <p className="text-body-lg">{error}</p>
+            <button type="button" className="btn btn-tonal m3-state-layer mt-4" onClick={() => void load()}>
+              Erneut laden
+            </button>
+          </div>
+        )}
+        {!accounts && !error && <div className="m3-loading mx-auto mt-10" aria-label="Lädt"><span className="m3-loading-arc" /></div>}
+
+        {accounts && shown.length === 0 && <EmptyTab tab={tab} />}
+
+        <ul className="space-y-3">
+          <AnimatePresence initial={false} mode="popLayout">
+            {shown.map((a) => (
+              <m.li
+                key={a.id}
+                layout
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, x: 60, scale: 0.96, transition: spring.effectsDefault }}
+                transition={spring.spatialDefault}
+                className="surface p-4"
+              >
+                <div className="flex items-center gap-4">
+                  <Avatar name={a.name || a.email} picture={a.picture} size={48} />
+                  <div className="min-w-0 flex-1">
+                    <p className="text-title-md truncate">
+                      {a.name || a.email}
+                      {a.isAdmin && <span className="ml-2 text-label-md text-md-primary">Admin</span>}
+                    </p>
+                    <p className="meta truncate">{a.email}</p>
+                    <p className="text-label-md text-md-on-surface-variant mt-0.5">{describe(a)}</p>
+                  </div>
+                </div>
+
+                {!a.isAdmin && (
+                  <div className="mt-4 flex flex-wrap justify-end gap-2">
+                    {a.status === 'pending' && (
+                      <>
+                        <button type="button" className="btn btn-text m3-state-layer" onClick={() => void decide(a, 'reject')}>
+                          Ablehnen
+                        </button>
+                        <button type="button" className="btn btn-filled m3-state-layer" onClick={() => void decide(a, 'approve')}>
+                          <Icon name="check" size={20} />
+                          Freischalten
+                        </button>
+                      </>
+                    )}
+                    {a.status === 'approved' && (
+                      <button type="button" className="btn btn-text m3-state-layer text-md-error" onClick={() => void decide(a, 'block')}>
+                        <Icon name="block" size={20} />
+                        Sperren
+                      </button>
+                    )}
+                    {(a.status === 'rejected' || a.status === 'blocked') && (
+                      <button type="button" className="btn btn-tonal m3-state-layer" onClick={() => void decide(a, 'approve')}>
+                        <Icon name="check" size={20} />
+                        Doch freischalten
+                      </button>
+                    )}
+                  </div>
+                )}
+              </m.li>
+            ))}
+          </AnimatePresence>
+        </ul>
+      </div>
+    </div>
+  )
+}
+
+function describe(a: Account): string {
+  const at = (iso: string | null) => (iso ? `${formatDay(iso)}, ${formatTime(iso)}` : '')
+  switch (a.status) {
+    case 'pending':
+      return `Angefragt ${at(a.createdAt)}`
+    case 'approved':
+      return a.lastLoginAt ? `Zuletzt angemeldet ${at(a.lastLoginAt)}` : 'Freigeschaltet'
+    case 'rejected':
+      return `Abgelehnt ${at(a.decidedAt)}`
+    case 'blocked':
+      return `Gesperrt ${at(a.decidedAt)}`
+  }
+}
+
+function EmptyTab({ tab }: { tab: Tab }) {
+  const copy = {
+    pending: ['Niemand wartet', 'Neue Anfragen erscheinen hier. Du bekommst zusätzlich eine E-Mail.'],
+    approved: ['Noch niemand freigeschaltet', 'Freigeschaltete Konten können sofort mitspielen.'],
+    closed: ['Keine abgelehnten Konten', 'Abgelehnte und gesperrte Konten landen hier.']
+  }[tab]
+  return (
+    <div className="py-12 text-center">
+      <Icon name={tab === 'pending' ? 'check' : 'person'} size={40} className="mx-auto text-md-on-surface-variant" />
+      <p className="mt-4 text-title-md">{copy[0]}</p>
+      <p className="mt-1 meta max-w-[32ch] mx-auto">{copy[1]}</p>
+    </div>
+  )
+}

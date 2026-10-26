@@ -10,7 +10,6 @@ import { useEffect, useState } from 'react'
 import type { Reveal } from '@/game/useTurnFlow'
 import { guessTier } from '@/game/guess'
 import { celebrate } from '@/motion/celebrate'
-import { useInteraction } from '@/contexts'
 
 export function announcementFor(reveal: Reveal): string {
   if (reveal.kind === 'placement') {
@@ -24,7 +23,6 @@ export function announcementFor(reveal: Reveal): string {
 }
 
 export function FeedbackLayer({ reveal }: { reveal: Reveal | null }) {
-  const { registerInteraction } = useInteraction()
   const [message, setMessage] = useState('')
 
   useEffect(() => {
@@ -34,15 +32,13 @@ export function FeedbackLayer({ reveal }: { reveal: Reveal | null }) {
     let cancel = () => {}
     if (reveal.kind === 'placement') {
       if (reveal.isCorrect && !reveal.isFirstCard) cancel = celebrate('small')
-      registerInteraction('game', reveal.isCorrect ? 90 : 55)
     } else {
       const tier = guessTier(reveal.breakdown.total)
       if (tier === 'perfect') cancel = celebrate('big')
       else if (tier === 'great') cancel = celebrate('small')
-      registerInteraction('game', tier === 'miss' ? 50 : 70 + reveal.breakdown.total)
     }
     return cancel
-  }, [reveal, registerInteraction])
+  }, [reveal])
 
   return (
     <p className="sr-only" aria-live="polite" aria-atomic="true">

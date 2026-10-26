@@ -16,6 +16,19 @@ interface PreviewPlayerConfig {
   onError?: (error: string) => void
 }
 
+/**
+ * Songs list absolute URLs (https://mxster.celox.io/audio/…). Playback always
+ * goes to the same origin: /audio/ is behind the login (nginx auth_request),
+ * so the session cookie must travel with the request.
+ */
+export function audioSrc(previewUrl: string): string {
+  try {
+    return new URL(previewUrl, window.location.origin).pathname
+  } catch {
+    return previewUrl
+  }
+}
+
 export class PreviewPlayerService {
   private sound: Howl | null = null
   private currentSong: Song | null = null
@@ -24,6 +37,10 @@ export class PreviewPlayerService {
   private progressInterval: number | null = null
 
   constructor(config: PreviewPlayerConfig = {}) {
+    this.config = config
+  }
+
+  setConfig(config: PreviewPlayerConfig): void {
     this.config = config
   }
 
@@ -36,7 +53,7 @@ export class PreviewPlayerService {
     // Check if preview URL exists
     if (!song.previewUrl) {
       this.setState('error')
-      this.config.onError?.('No preview URL available for this song')
+      this.config.onError?.('Für diesen Song gibt es keine Audiodatei.')
       throw new Error(`No preview URL for song: ${song.title}`)
     }
 
@@ -48,12 +65,11 @@ export class PreviewPlayerService {
 
     // Create Howler instance
     this.sound = new Howl({
-      src: [song.previewUrl],
+      src: [audioSrc(song.previewUrl)],
       html5: true, // Use HTML5 Audio for streaming
       volume: 0.8,
       preload: true,
       onload: () => {
-        console.log(`✅ Preview loaded: ${song.title} by ${song.artist} (${song.year})`)
         this.setState('playing')
 
         // Seek to start position if specified
@@ -66,19 +82,15 @@ export class PreviewPlayerService {
       },
       onplay: () => {
         this.setState('playing')
-        console.log(`▶️ Playing preview: ${song.title}`)
       },
       onpause: () => {
         this.setState('paused')
-        console.log(`⏸️ Paused preview: ${song.title}`)
       },
       onstop: () => {
         this.setState('stopped')
         this.stopProgressTracking()
-        console.log(`⏹️ Stopped preview: ${song.title}`)
       },
       onend: () => {
-        console.log(`✅ Preview ended: ${song.title}`)
         this.setState('idle')
         this.stopProgressTracking()
         this.config.onEnd?.()
@@ -86,12 +98,12 @@ export class PreviewPlayerService {
       onloaderror: (_id, error) => {
         console.error(`❌ Preview load error: ${song.title}`, error)
         this.setState('error')
-        this.config.onError?.('Failed to load preview audio')
+        this.config.onError?.('Der Song konnte nicht geladen werden.')
       },
       onplayerror: (_id, error) => {
         console.error(`❌ Preview play error: ${song.title}`, error)
         this.setState('error')
-        this.config.onError?.('Failed to play preview audio')
+        this.config.onError?.('Der Song konnte nicht abgespielt werden. Tippe auf Abspielen.')
       }
     })
 
@@ -149,10 +161,9 @@ export class PreviewPlayerService {
    * Get current playback position (in seconds)
    */
   getCurrentTime(): number {
-    if (this.sound && this.state === 'playing') {
-      return this.sound.seek() as number
-    }
-    return 0
+    if (!this.sound) return 0
+    const pos = this.sound.seek()
+    return typeof pos === 'number' ? pos : 0
   }
 
   /**

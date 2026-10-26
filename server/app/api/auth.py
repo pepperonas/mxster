@@ -154,6 +154,14 @@ def me(row: SessionRow = Depends(current_session), user: User = Depends(current_
     return user_payload(user, row.csrf_token)
 
 
+@router.get("/session")
+def session(request: Request, db: Session = Depends(get_db)) -> dict:
+    """Like /me, but 200 with ``me: null`` when signed out (no console noise on the login page)."""
+    row = load_session(request, db)
+    user = db.get(User, row.user_id) if row else None
+    return {"me": user_payload(user, row.csrf_token) if user and row else None}
+
+
 @router.get("/auth/audio-check")
 def audio_check(request: Request, db: Session = Depends(get_db)) -> Response:
     """nginx ``auth_request`` target for /audio/: 204 for approved sessions, else 401."""

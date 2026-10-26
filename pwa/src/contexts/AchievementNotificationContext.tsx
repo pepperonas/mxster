@@ -43,11 +43,6 @@ export function AchievementNotificationProvider({ children }: { children: ReactN
         timestamp: Date.now()
       }
 
-      console.log('🎉 Queuing achievement notification:', {
-        player: playerName,
-        achievement: achievement.name
-      })
-
       setNotifications((prev) => [...prev, notification])
     },
     []
@@ -55,7 +50,6 @@ export function AchievementNotificationProvider({ children }: { children: ReactN
 
   // Remove current notification and trigger next in queue
   const removeCurrentNotification = useCallback(() => {
-    console.log('🗑️ Removing current achievement notification')
     setCurrentNotification(null)
     setIsProcessing(false)
   }, [])
@@ -70,12 +64,6 @@ export function AchievementNotificationProvider({ children }: { children: ReactN
     const [first, ...rest] = notifications
     setNotifications(rest)
     setCurrentNotification(first)
-
-    console.log('▶️ Processing achievement notification:', {
-      player: first.playerName,
-      achievement: first.achievement.name,
-      remaining: rest.length
-    })
 
     // Animation will auto-remove after 3s
     // Then we wait 1s before processing next

@@ -1,54 +1,30 @@
 import { ReactNode } from 'react'
-import { AuthProvider } from './AuthContext'
 import { GameProvider } from './GameContext'
 import { UIProvider } from './UIContext'
 import { SettingsProvider } from './SettingsContext'
-import { InteractionProvider } from './InteractionContext'
 import { AchievementNotificationProvider } from './AchievementNotificationContext'
 import { AchievementProvider } from './AchievementContext'
 import { GameHistoryProvider } from './GameHistoryContext'
-import { GoogleAuthProvider } from './GoogleAuthContext'
 
 /**
- * Combined Providers Component
- * Wraps the entire app with all necessary context providers
+ * Providers for the signed-in, approved app. Settings, history and
+ * achievements load from the account on the server, so this tree only mounts
+ * behind the AuthGate.
  *
- * Provider Order:
- * 1. SettingsProvider - Application settings (independent)
- * 2. AuthProvider - Authentication state (needed by all other providers)
- *    GoogleAuthProvider - Google sign-in (player identity, independent of Spotify)
- * 3. UIProvider - UI state (modals, toasts, sidebar)
- * 4. InteractionProvider - User interaction tracking (for background animations)
- * 5. GameHistoryProvider - Game history tracking (shared state for history)
- * 6. AchievementNotificationProvider - Achievement notification queue (needed by AchievementProvider)
- * 7. AchievementProvider - Achievement tracking (depends on AchievementNotificationProvider + GameHistoryProvider)
- * 8. GameProvider - Game state (depends on Auth for Spotify integration)
+ * Order: Settings → UI → History → Notifications → Achievements (needs both) → Game.
  */
-
-interface AppProvidersProps {
-  children: ReactNode
-}
-
-export function AppProviders({ children }: AppProvidersProps) {
+export function AppProviders({ children }: { children: ReactNode }) {
   return (
     <SettingsProvider>
-      <AuthProvider>
-        <GoogleAuthProvider>
-        <UIProvider>
-          <InteractionProvider>
-            <GameHistoryProvider>
-              <AchievementNotificationProvider>
-                <AchievementProvider>
-                  <GameProvider>
-                    {children}
-                  </GameProvider>
-                </AchievementProvider>
-              </AchievementNotificationProvider>
-            </GameHistoryProvider>
-          </InteractionProvider>
-        </UIProvider>
-        </GoogleAuthProvider>
-      </AuthProvider>
+      <UIProvider>
+        <GameHistoryProvider>
+          <AchievementNotificationProvider>
+            <AchievementProvider>
+              <GameProvider>{children}</GameProvider>
+            </AchievementProvider>
+          </AchievementNotificationProvider>
+        </GameHistoryProvider>
+      </UIProvider>
     </SettingsProvider>
   )
 }

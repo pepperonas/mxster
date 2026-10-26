@@ -3,39 +3,13 @@
  * Defines the three game modes for mxster
  */
 
-import type { GameMode, GameVariant, GameModeInfo, GameVariantInfo, Song } from '@/types'
+import type { GameMode, GameModeInfo, Song } from '@/types'
 
 // Game Mode Constants
 export const GAME_MODES: Record<string, GameMode> = {
   HARDCORE: 'hardcore' as GameMode,
   TIMELINE_PERSONAL: 'timeline_personal' as GameMode,
   TIMELINE_GLOBAL: 'timeline_global' as GameMode
-}
-
-// Game Variant Constants
-export const GAME_VARIANTS: Record<string, GameVariant> = {
-  PHYSICAL: 'physical' as GameVariant,
-  VIRTUAL: 'virtual' as GameVariant
-}
-
-// Game Variant Metadata
-export const GAME_VARIANT_INFO: Record<GameVariant, GameVariantInfo & { requiresCamera: boolean }> = {
-  physical: {
-    name: 'Physische Karten',
-    description: 'Spiele mit 3D-gedruckten oder PDF-Karten und QR-Scanner',
-    icon: '📱',
-    requirements: ['Smartphone mit Kamera', 'Physische Karten (PDF oder 3D-Druck)'],
-    features: ['QR-Code Scanner', 'DJ spielt mit', 'Taschenlampe'],
-    requiresCamera: true
-  },
-  virtual: {
-    name: 'Virtuelle Karten',
-    description: 'Spiele komplett digital ohne physische Karten',
-    icon: '💻',
-    requirements: ['Keine'],
-    features: ['Zufalls-Song Button', 'Alle Spieler raten'],
-    requiresCamera: false
-  }
 }
 
 // Game Mode Metadata
@@ -107,24 +81,10 @@ export function isValidMode(mode: string): mode is GameMode {
 }
 
 /**
- * Validate if a variant is valid
- */
-export function isValidVariant(variant: string): variant is GameVariant {
-  return Object.values(GAME_VARIANTS).includes(variant as GameVariant)
-}
-
-/**
  * Get mode info
  */
 export function getModeInfo(mode: GameMode): typeof GAME_MODE_INFO[GameMode] | null {
   return GAME_MODE_INFO[mode] || null
-}
-
-/**
- * Get variant info
- */
-export function getVariantInfo(variant: GameVariant): typeof GAME_VARIANT_INFO[GameVariant] | null {
-  return GAME_VARIANT_INFO[variant] || null
 }
 
 /**
@@ -203,9 +163,3 @@ export function getWinCondition(_mode: GameMode): number {
   return 10 // All modes currently use 10 cards as win condition
 }
 
-/**
- * Check if game mode requires DJ
- */
-export function requiresDJ(mode: GameMode, variant: GameVariant): boolean {
-  return variant === GAME_VARIANTS.PHYSICAL && mode === GAME_MODES.HARDCORE
-}

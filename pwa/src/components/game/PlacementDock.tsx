@@ -22,7 +22,6 @@ import { gapLabel } from '@/game/placement'
 import { spring } from '@/motion/springs'
 import { AnimatedNumber } from '@/components/ui/AnimatedNumber'
 import { PENDING_CARD_LAYOUT_ID } from './TimelineBoard'
-import { quietBackground } from '@/motion/backgroundControl'
 
 const ACTION_BAR_HEIGHT = 64
 
@@ -108,7 +107,6 @@ function DragStage({ song, boardRef, onHoverGap, onDrop }: DragStageProps) {
     velocityY: number
     hover: number | null
     raf: number
-    release: () => void
   } | null>(null)
 
   const measure = () => {
@@ -150,7 +148,7 @@ function DragStage({ song, boardRef, onHoverGap, onDrop }: DragStageProps) {
     if (!geometry) return
     const point = pointerOf(event)
     // The gesture gets the main thread: the WebGL background steps down
-    drag.current = { ...geometry, clientX: point.x, clientY: point.y, velocityY: 0, hover: null, raf: 0, release: quietBackground('drag') }
+    drag.current = { ...geometry, clientX: point.x, clientY: point.y, velocityY: 0, hover: null, raf: 0 }
     const tick = () => {
       const d = drag.current
       if (!d) return
@@ -179,7 +177,6 @@ function DragStage({ song, boardRef, onHoverGap, onDrop }: DragStageProps) {
     const d = drag.current
     if (!d) return
     cancelAnimationFrame(d.raf)
-    d.release()
     const target = resolveHover()
     drag.current = null
     onHoverGap(null)
@@ -190,7 +187,6 @@ function DragStage({ song, boardRef, onHoverGap, onDrop }: DragStageProps) {
     () => () => {
       if (drag.current) {
         cancelAnimationFrame(drag.current.raf)
-        drag.current.release()
       }
     },
     []
@@ -261,15 +257,15 @@ function ConfirmStage({ label, onBack, onConfirm }: { label: string; onBack: () 
 
   return (
     <div className="flex flex-col sm:flex-row sm:items-center gap-3">
-      <p className="flex-1 text-title-sm text-text-primary">
+      <p className="flex-1 text-title-sm text-md-on-surface">
         <span className="block text-label-md text-md-on-surface-variant">Platzieren</span>
         {label}
       </p>
       <div className="flex gap-2">
-        <button type="button" onClick={onBack} className="btn btn-txt flex-1 sm:flex-none">
+        <button type="button" onClick={onBack} className="btn btn-text flex-1 sm:flex-none">
           Zurück
         </button>
-        <button ref={confirmRef} type="button" onClick={onConfirm} className="btn btn-accent flex-1 sm:flex-none">
+        <button ref={confirmRef} type="button" onClick={onConfirm} className="btn btn-brand flex-1 sm:flex-none">
           Hier platzieren
         </button>
       </div>
@@ -317,7 +313,7 @@ function ResultStage({
           )}
         </m.span>
         <div className="min-w-0">
-          <p className="text-title-md text-text-primary">
+          <p className="text-title-md text-md-on-surface">
             {isFirstCard ? 'Startkarte gelegt' : isCorrect ? 'Richtig platziert!' : 'Leider falsch'}
           </p>
           <p className="text-body-sm text-md-on-surface-variant truncate">
@@ -327,7 +323,7 @@ function ResultStage({
           </p>
         </div>
       </div>
-      <button ref={nextRef} type="button" onClick={onContinue} className="btn btn-accent">
+      <button ref={nextRef} type="button" onClick={onContinue} className="btn btn-brand">
         Nächster Spieler
       </button>
     </div>
@@ -338,7 +334,7 @@ function ResultStage({
 
 function BotStage({ name }: { name: string }) {
   return (
-    <div className="flex items-center justify-center gap-3 py-2 text-title-sm text-text-primary">
+    <div className="flex items-center justify-center gap-3 py-2 text-title-sm text-md-on-surface">
       <span aria-hidden="true">🤖</span>
       <span>{name} überlegt</span>
       <span className="flex gap-1" aria-hidden="true">

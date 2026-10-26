@@ -13,90 +13,202 @@
  */
 
 /* ════════════════════ M3 REF PALETTES (tonal ramps) ════════════════════ */
+/* BEGIN GENERATED PALETTES — scripts/gen-tokens.mjs */
 :root {
-  /* primary — electric cyan */
+  /* primary */
   --md-ref-primary-0: 0 0 0;
-  --md-ref-primary-10: 0 31 42;
-  --md-ref-primary-20: 0 53 70;
-  --md-ref-primary-30: 0 77 100;
-  --md-ref-primary-40: 0 102 132;
-  --md-ref-primary-50: 0 129 165;
-  --md-ref-primary-60: 0 157 200;
-  --md-ref-primary-70: 28 185 234;
-  --md-ref-primary-80: 104 211 255;
-  --md-ref-primary-90: 189 233 255;
-  --md-ref-primary-95: 224 244 255;
+  --md-ref-primary-4: 38 0 12;
+  --md-ref-primary-6: 48 0 16;
+  --md-ref-primary-10: 63 0 24;
+  --md-ref-primary-12: 71 0 27;
+  --md-ref-primary-17: 90 0 37;
+  --md-ref-primary-20: 102 0 43;
+  --md-ref-primary-22: 110 0 47;
+  --md-ref-primary-24: 118 0 51;
+  --md-ref-primary-30: 143 0 63;
+  --md-ref-primary-40: 185 12 85;
+  --md-ref-primary-50: 220 48 109;
+  --md-ref-primary-60: 254 77 134;
+  --md-ref-primary-70: 255 133 164;
+  --md-ref-primary-80: 255 177 194;
+  --md-ref-primary-87: 255 205 214;
+  --md-ref-primary-90: 255 217 223;
+  --md-ref-primary-92: 255 225 229;
+  --md-ref-primary-94: 255 232 235;
+  --md-ref-primary-95: 255 236 238;
+  --md-ref-primary-96: 255 240 241;
+  --md-ref-primary-98: 255 248 247;
   --md-ref-primary-100: 255 255 255;
-
-  /* secondary — desaturated cyan-slate */
-  --md-ref-secondary-10: 8 30 39;
-  --md-ref-secondary-20: 31 51 60;
-  --md-ref-secondary-30: 53 74 83;
-  --md-ref-secondary-40: 77 97 108;
-  --md-ref-secondary-80: 180 202 214;
-  --md-ref-secondary-90: 208 230 242;
-  --md-ref-secondary-95: 224 244 255;
-
-  /* tertiary — warm coral */
-  --md-ref-tertiary-10: 57 12 0;
-  --md-ref-tertiary-20: 93 25 0;
-  --md-ref-tertiary-30: 131 38 0;
-  --md-ref-tertiary-40: 171 53 0;
-  --md-ref-tertiary-50: 208 74 20;
-  --md-ref-tertiary-60: 243 99 45;
-  --md-ref-tertiary-70: 255 139 100;
-  --md-ref-tertiary-80: 255 181 157;
-  --md-ref-tertiary-90: 255 219 208;
-  --md-ref-tertiary-95: 255 237 232;
-
-  /* neutral — indigo-tinted (from legacy #1A1C27) */
+  /* secondary */
+  --md-ref-secondary-0: 0 0 0;
+  --md-ref-secondary-4: 32 5 12;
+  --md-ref-secondary-6: 38 9 18;
+  --md-ref-secondary-10: 48 18 26;
+  --md-ref-secondary-12: 53 22 30;
+  --md-ref-secondary-17: 65 32 40;
+  --md-ref-secondary-20: 73 38 46;
+  --md-ref-secondary-22: 78 42 51;
+  --md-ref-secondary-24: 83 47 55;
+  --md-ref-secondary-30: 98 60 68;
+  --md-ref-secondary-40: 125 83 92;
+  --md-ref-secondary-50: 152 107 116;
+  --md-ref-secondary-60: 180 132 142;
+  --md-ref-secondary-70: 209 158 168;
+  --md-ref-secondary-80: 238 185 195;
+  --md-ref-secondary-87: 255 205 214;
+  --md-ref-secondary-90: 255 217 223;
+  --md-ref-secondary-92: 255 225 229;
+  --md-ref-secondary-94: 255 232 235;
+  --md-ref-secondary-95: 255 236 238;
+  --md-ref-secondary-96: 255 240 241;
+  --md-ref-secondary-98: 255 248 247;
+  --md-ref-secondary-100: 255 255 255;
+  /* tertiary */
+  --md-ref-tertiary-0: 0 0 0;
+  --md-ref-tertiary-4: 30 8 0;
+  --md-ref-tertiary-6: 38 12 0;
+  --md-ref-tertiary-10: 50 18 0;
+  --md-ref-tertiary-12: 57 21 0;
+  --md-ref-tertiary-17: 73 29 0;
+  --md-ref-tertiary-20: 83 34 0;
+  --md-ref-tertiary-22: 90 38 0;
+  --md-ref-tertiary-24: 97 41 0;
+  --md-ref-tertiary-30: 118 51 0;
+  --md-ref-tertiary-40: 154 70 0;
+  --md-ref-tertiary-50: 191 90 9;
+  --md-ref-tertiary-60: 224 114 38;
+  --md-ref-tertiary-70: 255 141 67;
+  --md-ref-tertiary-80: 255 182 141;
+  --md-ref-tertiary-87: 255 208 184;
+  --md-ref-tertiary-90: 255 219 201;
+  --md-ref-tertiary-92: 255 227 212;
+  --md-ref-tertiary-94: 255 234 224;
+  --md-ref-tertiary-95: 255 237 229;
+  --md-ref-tertiary-96: 255 241 235;
+  --md-ref-tertiary-98: 255 248 246;
+  --md-ref-tertiary-100: 255 255 255;
+  /* neutral */
   --md-ref-neutral-0: 0 0 0;
-  --md-ref-neutral-4: 12 14 21;
-  --md-ref-neutral-6: 18 19 26;
-  --md-ref-neutral-10: 26 27 35;
-  --md-ref-neutral-12: 30 31 39;
-  --md-ref-neutral-17: 40 41 49;
-  --md-ref-neutral-20: 47 48 56;
-  --md-ref-neutral-22: 51 52 60;
-  --md-ref-neutral-24: 56 57 65;
-  --md-ref-neutral-87: 218 217 228;
-  --md-ref-neutral-90: 226 225 236;
-  --md-ref-neutral-92: 232 231 242;
-  --md-ref-neutral-94: 238 237 248;
-  --md-ref-neutral-95: 241 239 250;
-  --md-ref-neutral-96: 244 242 253;
-  --md-ref-neutral-98: 251 248 255;
+  --md-ref-neutral-4: 20 12 14;
+  --md-ref-neutral-6: 25 17 19;
+  --md-ref-neutral-10: 34 25 27;
+  --md-ref-neutral-12: 38 29 31;
+  --md-ref-neutral-17: 49 40 41;
+  --md-ref-neutral-20: 56 46 48;
+  --md-ref-neutral-22: 60 50 52;
+  --md-ref-neutral-24: 65 55 56;
+  --md-ref-neutral-30: 79 68 70;
+  --md-ref-neutral-40: 103 91 93;
+  --md-ref-neutral-50: 129 116 118;
+  --md-ref-neutral-60: 155 141 143;
+  --md-ref-neutral-70: 183 168 169;
+  --md-ref-neutral-80: 211 195 196;
+  --md-ref-neutral-87: 231 214 216;
+  --md-ref-neutral-90: 239 222 224;
+  --md-ref-neutral-92: 245 228 230;
+  --md-ref-neutral-94: 251 234 236;
+  --md-ref-neutral-95: 254 237 238;
+  --md-ref-neutral-96: 255 240 241;
+  --md-ref-neutral-98: 255 248 247;
   --md-ref-neutral-100: 255 255 255;
-
-  /* neutral-variant — indigo */
-  --md-ref-neutral-variant-30: 67 70 86;
-  --md-ref-neutral-variant-50: 116 118 136;
-  --md-ref-neutral-variant-60: 141 144 162;
-  --md-ref-neutral-variant-80: 196 197 217;
-  --md-ref-neutral-variant-90: 224 225 246;
-
+  /* neutral-variant */
+  --md-ref-neutral-variant-0: 0 0 0;
+  --md-ref-neutral-variant-4: 25 10 13;
+  --md-ref-neutral-variant-6: 31 15 18;
+  --md-ref-neutral-variant-10: 40 23 26;
+  --md-ref-neutral-variant-12: 44 27 30;
+  --md-ref-neutral-variant-17: 56 37 41;
+  --md-ref-neutral-variant-20: 62 43 47;
+  --md-ref-neutral-variant-22: 67 47 51;
+  --md-ref-neutral-variant-24: 72 52 56;
+  --md-ref-neutral-variant-30: 87 65 69;
+  --md-ref-neutral-variant-40: 112 88 93;
+  --md-ref-neutral-variant-50: 138 113 117;
+  --md-ref-neutral-variant-60: 165 138 143;
+  --md-ref-neutral-variant-70: 192 164 169;
+  --md-ref-neutral-variant-80: 221 191 196;
+  --md-ref-neutral-variant-87: 241 210 215;
+  --md-ref-neutral-variant-90: 250 219 224;
+  --md-ref-neutral-variant-92: 255 225 229;
+  --md-ref-neutral-variant-94: 255 232 235;
+  --md-ref-neutral-variant-95: 255 236 238;
+  --md-ref-neutral-variant-96: 255 240 241;
+  --md-ref-neutral-variant-98: 255 248 247;
+  --md-ref-neutral-variant-100: 255 255 255;
   /* error */
-  --md-ref-error-10: 65 0 2;
-  --md-ref-error-20: 105 0 5;
-  --md-ref-error-30: 147 0 10;
-  --md-ref-error-40: 186 26 26;
-  --md-ref-error-80: 255 180 171;
-  --md-ref-error-90: 255 218 214;
-
-  /* success / warning — custom M3 colours (MCU tonal palettes, seeds #2E9E5B / #F2A900) */
+  --md-ref-error-0: 0 0 0;
+  --md-ref-error-4: 40 0 0;
+  --md-ref-error-6: 49 0 1;
+  --md-ref-error-10: 65 0 1;
+  --md-ref-error-12: 73 0 1;
+  --md-ref-error-17: 92 0 2;
+  --md-ref-error-20: 105 0 3;
+  --md-ref-error-22: 113 0 3;
+  --md-ref-error-24: 121 0 4;
+  --md-ref-error-30: 145 8 9;
+  --md-ref-error-40: 180 39 31;
+  --md-ref-error-50: 215 64 52;
+  --md-ref-error-60: 250 90 74;
+  --md-ref-error-70: 255 138 123;
+  --md-ref-error-80: 255 180 170;
+  --md-ref-error-87: 255 207 200;
+  --md-ref-error-90: 255 218 213;
+  --md-ref-error-92: 255 226 221;
+  --md-ref-error-94: 255 233 230;
+  --md-ref-error-95: 255 237 234;
+  --md-ref-error-96: 255 240 238;
+  --md-ref-error-98: 255 248 247;
+  --md-ref-error-100: 255 255 255;
+  /* success */
+  --md-ref-success-0: 0 0 0;
+  --md-ref-success-4: 0 18 5;
+  --md-ref-success-6: 0 24 8;
   --md-ref-success-10: 0 33 13;
+  --md-ref-success-12: 0 38 15;
+  --md-ref-success-17: 0 50 22;
   --md-ref-success-20: 0 57 26;
+  --md-ref-success-22: 0 62 29;
+  --md-ref-success-24: 0 67 32;
   --md-ref-success-30: 0 82 41;
   --md-ref-success-40: 0 109 56;
+  --md-ref-success-50: 9 137 73;
+  --md-ref-success-60: 53 164 96;
+  --md-ref-success-70: 84 192 121;
   --md-ref-success-80: 113 220 146;
+  --md-ref-success-87: 132 240 164;
   --md-ref-success-90: 141 249 172;
+  --md-ref-success-92: 146 255 177;
+  --md-ref-success-94: 180 255 197;
+  --md-ref-success-95: 195 255 206;
+  --md-ref-success-96: 209 255 216;
+  --md-ref-success-98: 234 255 234;
+  --md-ref-success-100: 255 255 255;
+  /* warning */
+  --md-ref-warning-0: 0 0 0;
+  --md-ref-warning-4: 22 12 0;
+  --md-ref-warning-6: 29 17 0;
   --md-ref-warning-10: 40 25 0;
+  --md-ref-warning-12: 45 28 0;
+  --md-ref-warning-17: 59 38 0;
   --md-ref-warning-20: 67 44 0;
+  --md-ref-warning-22: 73 48 0;
+  --md-ref-warning-24: 78 52 0;
   --md-ref-warning-30: 96 65 0;
   --md-ref-warning-40: 127 87 0;
+  --md-ref-warning-50: 159 110 0;
+  --md-ref-warning-60: 192 133 0;
+  --md-ref-warning-70: 227 158 0;
   --md-ref-warning-80: 255 186 59;
+  --md-ref-warning-87: 255 211 144;
   --md-ref-warning-90: 255 222 173;
+  --md-ref-warning-92: 255 228 191;
+  --md-ref-warning-94: 255 235 209;
+  --md-ref-warning-95: 255 238 218;
+  --md-ref-warning-96: 255 242 226;
+  --md-ref-warning-98: 255 248 243;
+  --md-ref-warning-100: 255 255 255;
 }
+/* END GENERATED PALETTES */
 
 /* ════════════════════ SYS COLOR ROLES — DARK (default) ════════════════════ */
 :root,
@@ -154,9 +266,15 @@
   --md-sys-color-scrim: var(--md-ref-neutral-0);
   --md-sys-color-shadow: var(--md-ref-neutral-0);
 
-  /* Brand gradient (.text-gradient): light tones read vividly on dark surfaces */
-  --brand-gradient-from: var(--md-ref-primary-80);
-  --brand-gradient-to: var(--md-ref-tertiary-80);
+  /* Brand fill for the few hero actions (play, start): a saturated vinyl
+     magenta with white text in both themes, instead of M3's pastel tone 80. */
+  --mx-brand: var(--md-ref-primary-40);
+  --mx-on-brand: var(--md-ref-primary-100);
+  /* Record label + groove colours for the vinyl motif */
+  --mx-vinyl: var(--md-ref-neutral-4);
+  --mx-groove: var(--md-ref-neutral-17);
+  --mx-label: var(--md-ref-primary-60);
+  --mx-label-2: var(--md-ref-tertiary-70);
 }
 
 /* ════════════════════ SYS COLOR ROLES — LIGHT ════════════════════ */
@@ -211,22 +329,12 @@
   --md-sys-color-inverse-on-surface: var(--md-ref-neutral-95);
   --md-sys-color-inverse-primary: var(--md-ref-primary-80);
 
-  /* Tone 50 instead of 40: keeps the gradient vivid on light surfaces
-     (both endpoints still ≥4.4:1 on surface) — tone 40 blends to mud. */
-  --brand-gradient-from: var(--md-ref-primary-50);
-  --brand-gradient-to: var(--md-ref-tertiary-50);
-}
-
-/* ════════════════ LEGACY ALIASES (resolved colors, not triplets) ════════════════
-   For plain-CSS blocks that predate the token layer; new code uses the md-* roles. */
-:root {
-  --background: rgb(var(--md-sys-color-surface));
-  --primary: rgb(var(--md-sys-color-surface-container));
-  --secondary: rgb(var(--md-sys-color-primary));
-  --accent: rgb(var(--md-sys-color-tertiary));
-  --border: rgb(var(--md-sys-color-outline-variant));
-  --text-primary: rgb(var(--md-sys-color-on-surface));
-  --text-secondary: rgb(var(--md-sys-color-on-surface-variant));
+  --mx-brand: var(--md-ref-primary-40);
+  --mx-on-brand: var(--md-ref-primary-100);
+  --mx-vinyl: var(--md-ref-neutral-10);
+  --mx-groove: var(--md-ref-neutral-24);
+  --mx-label: var(--md-ref-primary-50);
+  --mx-label-2: var(--md-ref-tertiary-60);
 }
 
 /* ════════════════════ SHAPE — 10-step corner scale ════════════════════ */
@@ -330,9 +438,9 @@
 }
 
 /* ════════════════════ TYPOGRAPHY — M3 type scale ════════════════════
-   Variable font: Roboto Flex (wght + wdth axes), Inter as loaded fallback. */
+   Variable font: Roboto Flex (wght + wdth + opsz axes), self-hosted. */
 :root {
-  --md-sys-type-font: 'Roboto Flex', 'Inter', system-ui, -apple-system, sans-serif;
+  --md-sys-type-font: 'Roboto Flex', system-ui, -apple-system, sans-serif;
 
   --md-sys-type-display-lg: 800 3.5rem/1.1 var(--md-sys-type-font);
   --md-sys-type-display-md: 750 2.8rem/1.15 var(--md-sys-type-font);

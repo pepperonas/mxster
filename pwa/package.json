@@ -1,7 +1,7 @@
 {
   "name": "mxster-pwa",
-  "version": "0.3.0",
-  "description": "mxster - Music Timeline Game PWA",
+  "version": "0.4.0",
+  "description": "mxster - Musik-Zeitleisten-Spiel (PWA)",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -11,25 +11,19 @@
     "test:ui": "vitest --ui",
     "test:run": "vitest run",
     "test:coverage": "vitest run --coverage",
-    "import-spotify": "node src/utils/spotifyImport.js",
-    "filter-songs": "node filter-valid-songs.js",
-    "update-previews": "node update-preview-urls.js",
-    "generate-cards": "node generate-cards.js"
+    "tokens": "node scripts/gen-tokens.mjs",
+    "tokens:check": "node scripts/gen-tokens.mjs --check"
   },
   "dependencies": {
-    "axios": "^1.6.0",
     "canvas-confetti": "^1.9.4",
     "howler": "^2.2.3",
     "motion": "^14.0.0",
-    "pdfkit": "^0.15.0",
-    "qr-scanner": "^1.4.2",
-    "qrcode": "^1.5.3",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
-    "react-router-dom": "^7.9.5",
-    "three": "^0.180.0"
+    "react-router-dom": "^7.9.5"
   },
   "devDependencies": {
+    "@material/material-color-utilities": "^0.4.0",
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^16.3.0",
     "@testing-library/user-event": "^14.6.1",
@@ -38,7 +32,6 @@
     "@types/node": "^24.10.0",
     "@types/react": "^19.2.2",
     "@types/react-dom": "^19.2.2",
-    "@types/three": "^0.180.0",
     "@vitejs/plugin-react": "^5.1.0",
     "@vitest/coverage-v8": "^4.0.7",
     "@vitest/ui": "^4.0.7",

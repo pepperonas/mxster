@@ -6,7 +6,9 @@ import path from 'path'
 export default defineConfig({
   server: {
     host: '127.0.0.1',
-    port: 5174
+    port: 5174,
+    // The FastAPI backend (server/) runs on 4274 in development
+    proxy: { '/api': { target: 'http://127.0.0.1:4274', xfwd: true } }
   },
   plugins: [
     react(),
@@ -14,12 +16,12 @@ export default defineConfig({
       registerType: 'autoUpdate',
       includeAssets: [],
       manifest: {
-        name: 'mxster - Music Timeline Game',
+        name: 'mxster',
         short_name: 'mxster',
-        description: 'Rate Songs und platziere sie in der richtigen zeitlichen Reihenfolge',
+        description: 'Song hören, Jahr raten, an die richtige Stelle der Zeitleiste legen.',
         // Mirrored from design-tokens.css: dark surface (neutral-6)
-        theme_color: '#12131a',
-        background_color: '#12131a',
+        theme_color: '#191113',
+        background_color: '#191113',
         display: 'standalone',
         start_url: '/',
         scope: '/',
@@ -49,21 +51,24 @@ export default defineConfig({
         ]
       },
       workbox: {
-        globPatterns: ['**/*.{js,css,html,ico,svg,mp3}'],
-        // Exclude PNG files from precache to avoid conflicts
-        globIgnores: ['**/assets/**/*.png'],
+        // Never precache audio: /audio/ needs a signed-in session (nginx auth_request)
+        globPatterns: ['**/*.{js,css,html,ico,svg,woff2}'],
+        globIgnores: ['**/assets/**/*.png', 'audio/**'],
+        cacheId: 'mxster-v4',
+        cleanupOutdatedCaches: true,
         // Navigation fallback - always serve index.html for SPA routes
         navigateFallback: '/index.html',
         navigateFallbackDenylist: [
           // Don't use fallback for these patterns
           /^\/api\//,
-          /\.[a-zA-Z0-9]+$/, // Files with extensions (except HTML)
-          /\/callback\?/ // Spotify OAuth callback with query params
+          /^\/audio\//,
+          /\.[a-zA-Z0-9]+$/ // Files with extensions (except HTML)
         ],
         runtimeCaching: [
           {
             // Always fetch navigation requests from network first
-            urlPattern: ({ request }) => request.mode === 'navigate',
+            // /api/ navigations (OAuth redirects) always go straight to the network
+            urlPattern: ({ request, url }) => request.mode === 'navigate' && !url.pathname.startsWith('/api/'),
             handler: 'NetworkFirst',
             options: {
               cacheName: 'pages-cache',
@@ -71,17 +76,6 @@ export default defineConfig({
               expiration: {
                 maxEntries: 10,
                 maxAgeSeconds: 60 * 60 * 24 // 24 hours
-              }
-            }
-          },
-          {
-            urlPattern: /^https:\/\/.*\.spotify\.com\/.*/i,
-            handler: 'NetworkFirst',
-            options: {
-              cacheName: 'spotify-cache',
-              expiration: {
-                maxEntries: 50,
-                maxAgeSeconds: 60 * 60 * 24 * 7 // 7 days
               }
             }
           },

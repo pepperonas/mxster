@@ -7,6 +7,7 @@ from pathlib import Path
 import pytest
 
 os.environ["MX_ENV"] = "test"
+os.environ["PUBLIC_URL"] = "http://localhost:5174"
 os.environ["SESSION_SECRET"] = "test-secret"
 os.environ["GOOGLE_CLIENT_ID"] = "test-client-id"
 os.environ["GOOGLE_CLIENT_SECRET"] = "test-client-secret"

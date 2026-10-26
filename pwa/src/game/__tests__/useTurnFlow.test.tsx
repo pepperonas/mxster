@@ -28,7 +28,6 @@ function setup(mode: 'hardcore' | 'timeline_personal' | 'timeline_global', playe
   )
   act(() => {
     hook.result.current.game.setGameMode(mode as never)
-    hook.result.current.game.setGameVariant('virtual' as never)
     players.forEach(({ name, ...data }) => hook.result.current.game.addPlayer(name, data as never))
   })
   players.forEach((p, i) => {

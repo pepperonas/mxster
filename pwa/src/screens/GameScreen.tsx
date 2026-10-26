@@ -1,127 +1,96 @@
 /**
- * Game Screen — orchestration only.
+ * Game — orchestration only. Rules and turn order live in useTurnFlow.
  *
- * Rules and turn order live in useTurnFlow (src/game). This screen renders the
- * current phase: song source → music → (hardcore) guess / result, the boards,
- * and (timeline modes) the placement dock at the bottom. Dialogs are kept for
- * real decisions only: skip penalty / danger zone, leaving, game end.
+ * Layout: a slim bar (leave, mode), the players, the turntable, then the
+ * mode's own part — the guess (hardcore) or the timeline with its placement
+ * dock. On wide screens turntable and board sit side by side.
  */
-import { useEffect, useRef, useState, useCallback } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { AnimatePresence, m } from 'motion/react'
 import { useAppNavigate } from '@/hooks/useAppNavigate'
-import { useGame, useUI, useAuth } from '@/contexts'
-import {
-  PlayerInfo,
-  QRScanner,
-  VirtualButton,
-  GuessForm,
-  ScoreOverview,
-  MusicPlayer,
-  GameBoards,
-  GuessResult,
-  PlacementDock,
-  FeedbackLayer,
-  type DockState
-} from '@/components/game'
-import { GameEndStatsDialog } from '@/components'
-import { getMusicPlayer } from '@/services/MusicPlayerService'
+import { useGame, useUI } from '@/contexts'
+import { GuessForm, GameBoards, GuessResult, PlacementDock, FeedbackLayer, ScoreOverview, type DockState } from '@/components/game'
+import { Turntable } from '@/components/game/Turntable'
+import { PlayerStrip } from '@/components/game/PlayerStrip'
+import { GameOver } from '@/components/game/GameOver'
+import { Icon } from '@/components/ui/Icon'
 import { useTurnFlow, type SkipNotice } from '@/game/useTurnFlow'
+import { MODE_COPY } from '@/game/modeCopy'
+import { getPreviewPlayer } from '@/services/PreviewPlayerService'
 import { spring } from '@/motion/springs'
 import type { Player } from '@/types'
 
+/** Set while we leave on purpose, so the "nothing to play" guard stays quiet. */
+let leaving = false
+
 export function GameScreen() {
   const navigate = useAppNavigate()
-  const { accessToken, isLoggedIn } = useAuth()
-  const { showModal, closeModal, addToast } = useUI()
-  const { gameMode, gameVariant, players, currentPlayer, currentSong, resetGame, setGameMode, setGameVariant } = useGame()
+  const { gameMode, players, isGameStarted } = useGame()
+  const [round, setRound] = useState(0)
+
+  // Nothing to play (reload, deep link): back to the setup.
+  useEffect(() => {
+    leaving = false
+  }, [])
+  useEffect(() => {
+    if (leaving) return
+    if (!gameMode || players.length === 0 || !isGameStarted) navigate('/neu', { replace: true })
+  }, [gameMode, players.length, isGameStarted, navigate])
+
+  // A reload would lose the running game — let the browser ask first.
+  useEffect(() => {
+    const warn = (e: BeforeUnloadEvent) => {
+      e.preventDefault()
+      e.returnValue = ''
+    }
+    window.addEventListener('beforeunload', warn)
+    return () => window.removeEventListener('beforeunload', warn)
+  }, [])
+
+  if (!gameMode || players.length === 0 || !isGameStarted) return null
+  return <GameRound key={round} onRematch={() => setRound((r) => r + 1)} />
+}
+
+function GameRound({ onRematch }: { onRematch: () => void }) {
+  const navigate = useAppNavigate()
+  const { showModal, closeModal } = useUI()
+  const { gameMode, players, currentPlayer, currentSong, resetGame, rematch } = useGame()
 
   const [previewGap, setPreviewGap] = useState<number | null>(null)
   const [hoverGap, setHoverGap] = useState<number | null>(null)
+  const [result, setResult] = useState<{ winner: Player; players: Player[] } | null>(null)
   const boardRef = useRef<HTMLOListElement>(null)
-  /** Set when we leave on purpose, so the "not initialised" redirect stays quiet. */
-  const leaving = useRef(false)
 
-  // ── Guards ───────────────────────────────────────────────────────────────
-  useEffect(() => {
-    if (leaving.current) return
-    if (!gameMode || !gameVariant || players.length === 0) {
-      navigate('/mode-selection')
-      return
-    }
-    if (localStorage.getItem('audio_mode_preference') === 'spotify' && (!accessToken || !isLoggedIn)) {
-      addToast('Bitte melde dich bei Spotify an, um im Premium-Modus zu spielen', 'error')
-      navigate('/')
-    }
-  }, [gameMode, gameVariant, players.length, accessToken, isLoggedIn, navigate, addToast])
-
-  // ── Leaving ──────────────────────────────────────────────────────────────
-  const leaveGame = useCallback(
-    async (to: '/' | '/player-setup') => {
-      leaving.current = true
-      try {
-        getMusicPlayer().stop()
-      } catch (error) {
-        console.error('❌ Error stopping music:', error)
-      }
-      await closeModal()
-      if (to === '/') {
-        setGameMode(null)
-        setGameVariant(null)
-      }
-      resetGame()
-      navigate(to, { replace: true })
-    },
-    [closeModal, setGameMode, setGameVariant, resetGame, navigate]
-  )
-
-  // ── Dialogs for real decisions ───────────────────────────────────────────
-  const showGameEnd = useCallback(
-    (winner: Player, finalPlayers: Player[]) => {
-      showModal(
-        '🏆 Spiel beendet!',
-        <GameEndStatsDialog
-          winner={winner}
-          allPlayers={finalPlayers}
-          gameMode={gameMode ?? ''}
-          onClose={() => void leaveGame('/')}
-          onNewRound={() => void leaveGame('/player-setup')}
-        />,
-        [],
-        { required: true }
-      )
-    },
-    [showModal, gameMode, leaveGame]
-  )
+  const leaveGame = useCallback(async () => {
+    leaving = true
+    getPreviewPlayer().stop()
+    await closeModal()
+    resetGame()
+    navigate('/', { replace: true })
+  }, [closeModal, resetGame, navigate])
 
   const showSkipNotice = useCallback(
     (notice: SkipNotice, acknowledge: () => void) => {
       if (notice.kind === 'penalty') {
         showModal(
-          '💀 Zu oft übersprungen!',
-          <div className="text-center py-2 space-y-4">
-            <p className="text-headline-sm text-md-error">−3 Punkte Strafe</p>
-            <p className="text-body-lg">Dieser Song wurde von allen bereits mehrfach übersprungen.</p>
+          'Zu oft übersprungen',
+          <div className="space-y-4">
+            <p className="text-body-lg">Alle haben diesen Song schon mehrfach übersprungen. Das kostet 3 Punkte.</p>
             <div className="p-4 rounded-m3-lg bg-md-error-container text-md-on-error-container">
               <p className="text-label-md">Neuer Punktestand</p>
-              <p className="text-display-sm tabular-nums">{notice.newScore}</p>
+              <p className="text-display-sm tabular">{notice.newScore}</p>
             </div>
-            <p className="text-body-sm">Ein neuer Song wird automatisch gezogen.</p>
           </div>,
           [{ text: 'Neuen Song ziehen', variant: 'primary', onClick: acknowledge }],
           { required: true }
         )
       } else {
         showModal(
-          '⚠️ Gefährliche Zone!',
-          <div className="text-center py-2 space-y-4">
-            <p className="text-title-lg text-md-warning">Alle haben diesen Song schon übersprungen.</p>
-            <p className="text-body-lg">
-              Der nächste Skip kostet mit{' '}
-              <strong className="text-md-warning">{Math.round((notice.nextPenaltyProbability ?? 0) * 100)} %</strong>{' '}
-              Wahrscheinlichkeit <strong className="text-md-error">3 Punkte</strong>.
-            </p>
-            <p className="text-body-sm">Tipp: Lieber raten als überspringen!</p>
-          </div>,
+          'Vorsicht beim Überspringen',
+          <p className="text-body-lg">
+            Alle haben diesen Song schon übersprungen. Der nächste Skip kostet mit{' '}
+            <strong>{Math.round((notice.nextPenaltyProbability ?? 0) * 100)} %</strong> Wahrscheinlichkeit 3 Punkte. Lieber raten!
+          </p>,
           [{ text: 'Verstanden', variant: 'primary', onClick: acknowledge }],
           { required: true }
         )
@@ -130,16 +99,21 @@ export function GameScreen() {
     [showModal]
   )
 
-  const flow = useTurnFlow({ onGameOver: showGameEnd, onSkipNotice: showSkipNotice })
+  const flow = useTurnFlow({
+    onGameOver: (winner, finalPlayers) => {
+      getPreviewPlayer().stop()
+      setResult({ winner, players: finalPlayers })
+    },
+    onSkipNotice: showSkipNotice
+  })
   const { phase, reveal, activePlayer, activeTimeline, isBotThinking } = flow
 
-  // A new song or a new player starts placement from scratch
   useEffect(() => {
     setPreviewGap(null)
     setHoverGap(null)
   }, [currentSong, currentPlayer])
 
-  if (!gameMode || !gameVariant || players.length === 0 || !activePlayer) return null
+  if (!gameMode || !activePlayer) return null
 
   const isTimelineMode = gameMode !== 'hardcore'
   const humanTurn = !activePlayer.isBot
@@ -163,41 +137,51 @@ export function GameScreen() {
           : { kind: 'bot', playerName: activePlayer.name }
         : null
 
-  const confirmPlacement = () => {
-    if (previewGap === null) return
-    flow.placeCard(previewGap)
-    setPreviewGap(null)
-  }
+  const revealYear = reveal ? reveal.song.year : null
+  const revealCorrect = !reveal
+    ? null
+    : reveal.kind === 'placement'
+      ? reveal.isFirstCard ? null : reveal.isCorrect
+      : reveal.breakdown.total >= 10
+        ? true
+        : reveal.breakdown.total === 0
+          ? false
+          : null
 
   const confirmLeave = () =>
-    showModal('Spiel beenden?', <p className="text-body-lg text-center py-2">Der Spielstand geht verloren.</p>, [
-      { text: 'Abbrechen' },
-      { text: 'Spiel beenden', variant: 'danger', closeOnClick: false, onClick: () => void leaveGame('/') }
+    showModal('Spiel beenden?', <p className="text-body-lg">Der Spielstand dieser Runde geht verloren.</p>, [
+      { text: 'Weiterspielen' },
+      { text: 'Beenden', variant: 'danger', closeOnClick: false, onClick: () => void leaveGame() }
     ])
 
+  const drawLabel = activePlayer.isBot ? `Song für ${activePlayer.name} ziehen` : `Song für ${activePlayer.name}`
+
   return (
-    <div className={`min-h-screen pt-24 relative z-10 ${dockState ? 'pb-48' : 'pb-10'} ${gameMode === 'hardcore' ? 'hardcore-theme' : ''}`}>
+    <div className={`min-h-dvh ${dockState ? 'pb-56' : 'pb-12'} ${gameMode === 'hardcore' ? 'hardcore-theme' : ''}`}>
+      <header className="sticky top-0 z-30 bg-md-surface/90 backdrop-blur-md">
+        <div className="mx-auto max-w-6xl h-16 px-2 sm:px-4 flex items-center gap-1">
+          <button type="button" className="icon-btn m3-state-layer" onClick={confirmLeave} aria-label="Spiel beenden">
+            <Icon name="close" />
+          </button>
+          <span className="flex items-center gap-2 text-title-md">
+            <Icon name={MODE_COPY[gameMode].icon} size={20} className="text-md-primary" />
+            {MODE_COPY[gameMode].name}
+          </span>
+        </div>
+      </header>
+
       <main className="mx-auto max-w-6xl px-4 space-y-6">
-        <PlayerInfo isBotExecuting={isBotThinking} />
+        <PlayerStrip thinking={isBotThinking} />
 
-        <div className="grid gap-6 lg:grid-cols-2 lg:items-start">
-          {/* Left: song source, music, guess */}
-          <div className="space-y-6">
-            <AnimatePresence initial={false} mode="popLayout">
-              {phase === 'idle' && (
-                <m.div
-                  key="source"
-                  initial={{ opacity: 0, y: 16 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, scale: 0.96, transition: spring.effectsDefault }}
-                  transition={spring.spatialDefault}
-                >
-                  {gameVariant === 'physical' ? <QRScanner /> : <VirtualButton onClick={() => void flow.drawSong()} />}
-                </m.div>
-              )}
-            </AnimatePresence>
-
-            <MusicPlayer song={currentSong} />
+        <div className="grid gap-8 lg:grid-cols-[minmax(0,5fr)_minmax(0,6fr)] lg:items-start">
+          <div className="space-y-6 lg:sticky lg:top-20">
+            <Turntable
+              song={currentSong}
+              revealYear={revealYear}
+              revealCorrect={revealCorrect}
+              onDraw={phase === 'idle' ? () => void flow.drawSong() : undefined}
+              drawLabel={drawLabel}
+            />
 
             {gameMode === 'hardcore' && (
               <AnimatePresence mode="wait" initial={false}>
@@ -225,7 +209,6 @@ export function GameScreen() {
             )}
           </div>
 
-          {/* Right: score + boards */}
           <div className="space-y-6">
             {gameMode === 'hardcore' && <ScoreOverview />}
             <GameBoards
@@ -243,12 +226,6 @@ export function GameScreen() {
             />
           </div>
         </div>
-
-        <div className="text-center pt-2">
-          <button type="button" onClick={confirmLeave} className="btn btn-txt mx-auto">
-            Spiel beenden
-          </button>
-        </div>
       </main>
 
       {isTimelineMode && (
@@ -257,12 +234,31 @@ export function GameScreen() {
           boardRef={boardRef}
           onHoverGap={setHoverGap}
           onPreview={setPreviewGap}
-          onConfirm={confirmPlacement}
+          onConfirm={() => {
+            if (previewGap === null) return
+            flow.placeCard(previewGap)
+            setPreviewGap(null)
+          }}
           onContinue={flow.continueTurn}
         />
       )}
 
       <FeedbackLayer reveal={reveal} />
+
+      <AnimatePresence>
+        {result && (
+          <GameOver
+            winner={result.winner}
+            players={result.players}
+            mode={gameMode}
+            onRematch={() => {
+              rematch()
+              onRematch()
+            }}
+            onHome={() => void leaveGame()}
+          />
+        )}
+      </AnimatePresence>
     </div>
   )
 }

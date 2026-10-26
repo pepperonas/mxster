@@ -1,7 +1,6 @@
 import { describe, it, expect, beforeEach } from 'vitest'
 import { render, screen, fireEvent, act, waitFor } from '@testing-library/react'
 import { UIProvider, useUI } from '@/contexts/UIContext'
-import { InteractionProvider } from '@/contexts/InteractionContext'
 import { Modal } from '../Modal'
 import { MotionTestProvider } from '@/test/MotionTestProvider'
 
@@ -22,10 +21,8 @@ function renderModal() {
   const utils = render(
     <MotionTestProvider>
       <UIProvider>
-        <InteractionProvider>
-          <Grab />
-          <Modal />
-        </InteractionProvider>
+        <Grab />
+        <Modal />
       </UIProvider>
     </MotionTestProvider>
   )

@@ -180,8 +180,6 @@ export function fuzzyMatch(guess: string, correct: string, maxErrors?: number): 
     const longerLength = Math.max(normalizedGuess.length, normalizedCorrect.length)
     maxErrors = Math.max(2, Math.floor(longerLength * 0.15))
 
-    console.log(`🔍 Dynamic fuzzy matching: "${normalizedGuess}" vs "${normalizedCorrect}"`)
-    console.log(`   Length: ${longerLength} chars → Tolerance: ${maxErrors} errors`)
   }
 
   // Exact match after normalization
@@ -197,7 +195,6 @@ export function fuzzyMatch(guess: string, correct: string, maxErrors?: number): 
       normalizedCorrect.includes(normalizedGuess) ||
       normalizedGuess.includes(normalizedCorrect)
     ) {
-      console.log(`   ✅ Substring match (guess length: ${normalizedGuess.length} >= min: ${minSubstringLength})`)
       return true
     }
   }
@@ -207,7 +204,6 @@ export function fuzzyMatch(guess: string, correct: string, maxErrors?: number): 
   const isMatch = distance <= maxErrors
 
   if (maxErrors !== 3) { // Only log when using dynamic tolerance
-    console.log(`   Distance: ${distance}, Max: ${maxErrors} → ${isMatch ? '✅ Match' : '❌ No match'}`)
   }
 
   return isMatch
@@ -257,14 +253,6 @@ export function debugMatch(
   const longerLength = Math.max(normalized1.length, normalized2.length)
   const dynamicMaxErrors = Math.max(2, Math.floor(longerLength * 0.15))
 
-  console.log('🔍 Text Match Debug:')
-  console.log('  Original Guess:', guess)
-  console.log('  Original Correct:', correct)
-  console.log('  Normalized Guess:', normalized1)
-  console.log('  Normalized Correct:', normalized2)
-  console.log('  Levenshtein Distance:', distance)
-  console.log('  Dynamic Max Errors (15%):', dynamicMaxErrors)
-  console.log('  Match (dynamic):', fuzzyMatch(guess, correct))
 
   return { normalized1, normalized2, distance, dynamicMaxErrors }
 }

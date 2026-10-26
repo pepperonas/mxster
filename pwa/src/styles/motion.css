@@ -68,15 +68,6 @@
 .stagger-children > *:nth-child(12) { animation-delay: 440ms; }
 .stagger-children > *:nth-child(n + 13) { animation-delay: 480ms; }
 
-/* Scroll reveal (src/motion/useScrollReveal.ts): hold the first frame until
-   the block scrolls into view, then play once. */
-[data-reveal] {
-  animation: m3-reveal var(--m3-dur-spatial-default) var(--m3-ease-spatial-default) both;
-}
-.stagger-children:not(.in-view) > *,
-[data-reveal]:not(.in-view) {
-  animation-play-state: paused;
-}
 
 /* Hero wordmark: the variable font settles from light and wide to its
    emphasized weight — a typographic spring instead of a fade. */
@@ -165,13 +156,6 @@ html.vt-active .animate-fade-in {
   animation-delay: 0s !important;
 }
 
-/* Shared elements of the setup flow: the chosen mode/variant icon travels
-   into the next screen's selection trail on the spatial-default spring. */
-::view-transition-group(trail-mode),
-::view-transition-group(trail-variant) {
-  animation-duration: var(--m3-dur-spatial-default);
-  animation-timing-function: var(--m3-ease-spatial-default);
-}
 
 /* Theme toggle uses a circular reveal driven from JS clip-path animation on
    ::view-transition-new(root); suppress the default route animation then. */
@@ -182,6 +166,33 @@ html[data-theme-transition] ::view-transition-new(root) {
   animation: none;
   mix-blend-mode: normal;
 }
+/* Named chrome (nav bar, top bar) must be part of the root snapshot during
+   the theme reveal, or it would switch colour ahead of the circle. */
+html[data-theme-transition] * {
+  view-transition-name: none !important;
+}
+
+/* Persistent chrome stays put while the page underneath transitions. */
+::view-transition-group(nav-bar),
+::view-transition-group(nav-rail),
+::view-transition-group(top-bar) {
+  animation: none;
+}
+
+/* "Neues Spiel": the brand card grows into the setup page (container transform). */
+::view-transition-group(new-game) {
+  animation-duration: var(--m3-dur-spatial-slow);
+  animation-timing-function: var(--m3-ease-spatial-slow);
+}
+::view-transition-old(new-game),
+::view-transition-new(new-game) {
+  height: 100%;
+  object-fit: cover;
+  object-position: top;
+}
+
+.no-scrollbar { scrollbar-width: none; }
+.no-scrollbar::-webkit-scrollbar { display: none; }
 
 /* Persistent chrome keeps its own stable snapshot (no root sweep) */
 @media (prefers-reduced-motion: reduce) {

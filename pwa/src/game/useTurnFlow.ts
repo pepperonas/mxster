@@ -1,7 +1,7 @@
 /**
  * Turn flow — the game loop as an explicit phase machine.
  *
- *   idle ──draw/scan──▶ placing (timeline modes) ──placeCard──▶ revealed ──continueTurn──▶ next player / over
+ *   idle ──draw──────▶ placing (timeline modes) ──placeCard──▶ revealed ──continueTurn──▶ next player / over
  *                    └▶ guessing (hardcore)      ──submitGuess─▶ revealed ──continueTurn──▶ next player / over
  *
  * The UI renders and animates each phase instead of chaining modals with
@@ -13,8 +13,7 @@
  * Bots play through the same placeCard/submitGuess entry points.
  */
 import { useCallback, useEffect, useEffectEvent, useRef, useState } from 'react'
-import { useGame, useUI, useAchievements } from '@/contexts'
-import { useGameHistory } from '@/hooks'
+import { useGame, useUI, useAchievements, useGameHistory } from '@/contexts'
 import {
   validateGuess,
   placeCardInTimeline,
@@ -68,7 +67,6 @@ export function useTurnFlow({ onGameOver, onSkipNotice }: Options) {
   const game = useGame()
   const {
     gameMode,
-    gameVariant,
     players,
     currentPlayer,
     currentSong,
@@ -140,8 +138,7 @@ export function useTurnFlow({ onGameOver, onSkipNotice }: Options) {
         saveGame({
           winner: { name: winner.name, cards: winner.cards, score: winner.score },
           players: finalPlayers,
-          gameMode: gameMode ?? '',
-          gameVariant: gameVariant ?? ''
+          gameMode: gameMode ?? ''
         })
         addToast('Spiel wurde zur Historie hinzugefügt!', 'success')
       } catch (error) {
@@ -163,7 +160,7 @@ export function useTurnFlow({ onGameOver, onSkipNotice }: Options) {
       }
       onGameOver(winner, finalPlayers)
     },
-    [gameOver, saveGame, gameMode, gameVariant, addToast, applyEffects, history, checkAchievements, onGameOver]
+    [gameOver, saveGame, gameMode, addToast, applyEffects, history, checkAchievements, onGameOver]
   )
 
   // ── Timeline modes ───────────────────────────────────────────────────────
@@ -218,7 +215,7 @@ export function useTurnFlow({ onGameOver, onSkipNotice }: Options) {
         // Turn passes first (it clears the song), then the next player gets a
         // fresh song — the dialog promises one is drawn automatically.
         nextTurn()
-        if (gameVariant === 'virtual') drawSong()
+        drawSong()
       })
     } else if (result.dangerZone) {
       onSkipNotice({ kind: 'danger', nextPenaltyProbability: result.nextPenaltyProbability }, () => nextPlayerOnly())
@@ -238,7 +235,6 @@ export function useTurnFlow({ onGameOver, onSkipNotice }: Options) {
     onSkipNotice,
     resetSkipCounts,
     nextTurn,
-    gameVariant,
     drawSong,
     nextPlayerOnly
   ])
@@ -302,7 +298,7 @@ export function useTurnFlow({ onGameOver, onSkipNotice }: Options) {
   })
 
   const songKey = currentSong ? currentSong.spotifyId || currentSong.id : null
-  const botTurn = Boolean(activePlayer?.isBot) && gameVariant === 'virtual' && (phase === 'placing' || phase === 'guessing')
+  const botTurn = Boolean(activePlayer?.isBot) && (phase === 'placing' || phase === 'guessing')
 
   useEffect(() => {
     // botBusy: if the song changes while the bot is still thinking (someone

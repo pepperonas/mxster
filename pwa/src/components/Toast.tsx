@@ -93,6 +93,18 @@ function ToastItem({ toast, onRemove }: { toast: ToastType; onRemove: (id: numbe
         <ToastIcon type={toast.type} />
       </span>
       <span className="flex-1 text-label-lg">{toast.message}</span>
+      {toast.action && (
+        <button
+          type="button"
+          onClick={() => {
+            toast.action?.onClick()
+            remove()
+          }}
+          className="flex-shrink-0 min-h-[40px] px-3 rounded-m3-full text-label-lg text-md-inverse-primary m3-state-layer"
+        >
+          {toast.action.label}
+        </button>
+      )}
       <button
         onClick={remove}
         className="flex-shrink-0 touch-target rounded-m3-full m3-state-layer"
@@ -111,7 +123,7 @@ export function Toast() {
 
   return createPortal(
     <ol
-      className="fixed bottom-4 left-4 right-4 sm:left-auto z-[60] flex flex-col items-stretch sm:items-end gap-2 pb-[env(safe-area-inset-bottom)] pointer-events-none [&>li]:pointer-events-auto"
+      className="fixed bottom-24 md:bottom-4 left-4 right-4 sm:left-auto z-[70] flex flex-col items-stretch sm:items-end gap-2 pb-[env(safe-area-inset-bottom)] pointer-events-none [&>li]:pointer-events-auto"
       aria-live="polite"
     >
       <AnimatePresence initial={false}>

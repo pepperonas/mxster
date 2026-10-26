@@ -3,7 +3,9 @@
  * Manages achievement tracking and unlocking
  */
 
-import { createContext, useContext, useState, useEffect, useCallback, ReactNode } from 'react'
+import { createContext, useContext, useEffect, useCallback, useMemo, ReactNode } from 'react'
+import { useSyncedDoc } from '@/sync/useSyncedDoc'
+import { mergeAchievements, type AchievementDoc } from '@/sync/merge'
 import {
   AchievementId,
   Achievement,
@@ -55,10 +57,6 @@ function initializePlayerAchievements(playerName: string): PlayerAchievements {
 export function AchievementProvider({ children }: { children: ReactNode }) {
   const { settings } = useSettings()
   const { queueNotification } = useAchievementNotifications()
-  const [playerAchievements, setPlayerAchievements] = useState<Map<string, PlayerAchievements>>(
-    new Map()
-  )
-  const [isLoaded, setIsLoaded] = useState(false)
 
   // Migrate existing player achievements to include new achievements (v0.0.23)
   // AND clean up progress from one-time achievements (v0.0.25)
@@ -72,7 +70,6 @@ export function AchievementProvider({ children }: { children: ReactNode }) {
     const cleanedAchievements = playerData.achievements.map(achievement => {
       const def = ACHIEVEMENT_DEFINITIONS[achievement.id as AchievementId]
       if (def && !def.target && achievement.progress !== undefined) {
-        console.log(`🧹 Cleaning progress from one-time achievement: ${achievement.id}`)
         hasChanges = true
         return {
           ...achievement,
@@ -86,7 +83,6 @@ export function AchievementProvider({ children }: { children: ReactNode }) {
     const missingIds = currentAchievementIds.filter(id => !existingAchievementIds.includes(id as AchievementId))
 
     if (missingIds.length > 0) {
-      console.log(`🔄 Migrating ${playerData.playerName}: Adding ${missingIds.length} new achievements`)
       hasChanges = true
 
       // Add missing achievements
@@ -108,29 +104,40 @@ export function AchievementProvider({ children }: { children: ReactNode }) {
     return hasChanges ? { ...playerData, achievements: cleanedAchievements } : playerData
   }, [])
 
-  // Load achievements from localStorage on mount
-  useEffect(() => {
-    try {
-      const stored = localStorage.getItem(STORAGE_KEY)
-      if (stored) {
-        const data = JSON.parse(stored)
-        const entries = Object.entries(data) as [string, PlayerAchievements][]
+  const migrateDoc = useCallback(
+    (raw: unknown): AchievementDoc => {
+      if (!raw || typeof raw !== 'object' || Array.isArray(raw)) return {}
+      return Object.fromEntries(
+        Object.entries(raw as AchievementDoc).map(([name, data]) => [name, migratePlayerAchievements(data)])
+      )
+    },
+    [migratePlayerAchievements]
+  )
 
-        // Migrate each player's achievements to include new ones
-        const migratedEntries = entries.map(([playerName, playerData]) => {
-          return [playerName, migratePlayerAchievements(playerData)] as [string, PlayerAchievements]
-        })
+  // Stored per account on the server; pre-account data is adopted once.
+  const { value: doc, setValue: setDoc } = useSyncedDoc<AchievementDoc>('achievements', {
+    initial: {},
+    merge: mergeAchievements,
+    legacyKey: STORAGE_KEY,
+    fromLegacy: (raw) => {
+      const d = migrateDoc(raw)
+      return Object.keys(d).length ? d : null
+    },
+    normalize: migrateDoc
+  })
 
-        const map = new Map<string, PlayerAchievements>(migratedEntries)
-        setPlayerAchievements(map)
-        console.log(`📥 Loaded and migrated achievements for ${map.size} player(s) from localStorage`)
-      }
-    } catch (error) {
-      console.error('Failed to load achievements:', error)
-    } finally {
-      setIsLoaded(true)
-    }
-  }, [migratePlayerAchievements])
+  const playerAchievements = useMemo(() => new Map(Object.entries(doc)), [doc])
+
+  /** Map-shaped setter over the stored document (keeps the existing call sites). */
+  const setPlayerAchievements = useCallback(
+    (next: Map<string, PlayerAchievements> | ((m: Map<string, PlayerAchievements>) => Map<string, PlayerAchievements>)) =>
+      setDoc((prev) => {
+        const current = new Map(Object.entries(prev))
+        const result = typeof next === 'function' ? next(current) : next
+        return result === current ? prev : Object.fromEntries(result)
+      }),
+    [setDoc]
+  )
 
   // Auto-initialize achievements for all saved players
   useEffect(() => {
@@ -146,30 +153,12 @@ export function AchievementProvider({ children }: { children: ReactNode }) {
         if (!existingPlayer) {
           newMap.set(playerName, initializePlayerAchievements(playerName))
           hasChanges = true
-          console.log(`🎮 Auto-initialized achievements for player: ${playerName}`)
-        } else {
-          // Player exists - check if they have unlocked achievements
-          const unlocked = existingPlayer.achievements.filter(a => a.unlocked).length
-          console.log(`✅ Player ${playerName} already exists with ${unlocked} unlocked achievements`)
         }
       })
 
       return hasChanges ? newMap : prevMap
     })
   }, [settings.savedPlayers])
-
-  // Save achievements to localStorage whenever they change (but only after initial load)
-  useEffect(() => {
-    if (!isLoaded) return // Don't save until we've loaded from localStorage first!
-
-    try {
-      const data = Object.fromEntries(playerAchievements)
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(data))
-      console.log(`💾 Saved achievements for ${playerAchievements.size} player(s) to localStorage`)
-    } catch (error) {
-      console.error('Failed to save achievements:', error)
-    }
-  }, [playerAchievements, isLoaded])
 
   // Get or create player achievements
   const getOrCreatePlayerAchievements = (playerName: string): PlayerAchievements => {
@@ -199,8 +188,6 @@ export function AchievementProvider({ children }: { children: ReactNode }) {
         achievement.unlocked = true
         achievement.unlockedAt = Date.now()
 
-        console.log(`🏆 Achievement unlocked for ${playerName}: ${achievement.name}`)
-
         // Queue notification for animation
         queueNotification(playerName, achievementId, achievement)
 
@@ -211,7 +198,7 @@ export function AchievementProvider({ children }: { children: ReactNode }) {
 
       return currentMap
     })
-  }, [queueNotification])
+  }, [queueNotification, setPlayerAchievements])
 
   // Update player stats
   const updateStats = (playerName: string, statsUpdate: Partial<PlayerAchievements['stats']>) => {
@@ -479,27 +466,11 @@ export function AchievementProvider({ children }: { children: ReactNode }) {
       const parsed = JSON.parse(data)
       const map = new Map<string, PlayerAchievements>(Object.entries(parsed))
       setPlayerAchievements(map)
-      console.log('✅ Achievements imported successfully')
     } catch (error) {
       console.error('❌ Failed to import achievements:', error)
       throw error
     }
   }
-
-  // TEST EVENT LISTENER - For testing achievement animations in browser console
-  useEffect(() => {
-    const handleTestUnlock = (event: CustomEvent) => {
-      const { playerName, achievementId } = event.detail
-      console.log('🧪 TEST EVENT: Unlocking achievement', { playerName, achievementId })
-      unlockAchievement(playerName, achievementId)
-    }
-
-    window.addEventListener('test-achievement-unlock' as any, handleTestUnlock as any)
-
-    return () => {
-      window.removeEventListener('test-achievement-unlock' as any, handleTestUnlock as any)
-    }
-  }, [unlockAchievement])
 
   return (
     <AchievementContext.Provider

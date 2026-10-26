@@ -22,13 +22,6 @@ interface UIState {
   // Toast Notifications
   toasts: ToastType[]
 
-  // Sidebar
-  isSidebarOpen: boolean
-
-  // QR Scanner
-  isQRScannerActive: boolean
-  isFlashlightEnabled: boolean
-
   // Loading States
   isLoading: boolean
   loadingMessage: string
@@ -39,13 +32,6 @@ type UIAction =
   | { type: 'CLOSE_MODAL' }
   | { type: 'ADD_TOAST'; payload: Omit<ToastType, 'id'> }
   | { type: 'REMOVE_TOAST'; payload: number }
-  | { type: 'OPEN_SIDEBAR' }
-  | { type: 'CLOSE_SIDEBAR' }
-  | { type: 'TOGGLE_SIDEBAR' }
-  | { type: 'START_QR_SCANNER' }
-  | { type: 'STOP_QR_SCANNER' }
-  | { type: 'TOGGLE_FLASHLIGHT' }
-  | { type: 'SET_FLASHLIGHT'; payload: boolean }
   | { type: 'SET_LOADING'; payload: { isLoading: boolean; message?: string } }
 
 interface UIContextValue extends UIState {
@@ -54,15 +40,8 @@ interface UIContextValue extends UIState {
   closeModal: () => Promise<void>
   /** Called by <Modal> when the exit animation completed (AnimatePresence). */
   notifyModalExited: () => void
-  addToast: (message: string, type?: ToastType['type'], duration?: number) => void
+  addToast: (message: string, type?: ToastType['type'], duration?: number, action?: ToastType['action']) => void
   removeToast: (id: number) => void
-  openSidebar: () => void
-  closeSidebar: () => void
-  toggleSidebar: () => void
-  startQRScanner: () => void
-  stopQRScanner: () => void
-  toggleFlashlight: () => void
-  setFlashlight: (enabled: boolean) => void
   setLoading: (isLoading: boolean, message?: string) => void
 }
 
@@ -86,9 +65,6 @@ const initialState: UIState = {
     options: {}
   },
   toasts: [],
-  isSidebarOpen: false,
-  isQRScannerActive: false,
-  isFlashlightEnabled: false,
   isLoading: false,
   loadingMessage: ''
 }
@@ -136,37 +112,6 @@ function uiReducer(state: UIState, action: UIAction): UIState {
       return {
         ...state,
         toasts: state.toasts.filter((toast) => toast.id !== action.payload)
-      }
-
-    case 'OPEN_SIDEBAR':
-      return { ...state, isSidebarOpen: true }
-
-    case 'CLOSE_SIDEBAR':
-      return { ...state, isSidebarOpen: false }
-
-    case 'TOGGLE_SIDEBAR':
-      return { ...state, isSidebarOpen: !state.isSidebarOpen }
-
-    case 'START_QR_SCANNER':
-      return { ...state, isQRScannerActive: true }
-
-    case 'STOP_QR_SCANNER':
-      return {
-        ...state,
-        isQRScannerActive: false,
-        isFlashlightEnabled: false
-      }
-
-    case 'TOGGLE_FLASHLIGHT':
-      return {
-        ...state,
-        isFlashlightEnabled: !state.isFlashlightEnabled
-      }
-
-    case 'SET_FLASHLIGHT':
-      return {
-        ...state,
-        isFlashlightEnabled: action.payload
       }
 
     case 'SET_LOADING':
@@ -232,10 +177,11 @@ export function UIProvider({ children }: UIProviderProps) {
     })
   }, [])
 
-  const addToast = useCallback((message: string, type: ToastType['type'] = 'info', duration: number = 3000) => {
+  const addToast = useCallback(
+    (message: string, type: ToastType['type'] = 'info', duration: number = 3000, action?: ToastType['action']) => {
     dispatch({
       type: 'ADD_TOAST',
-      payload: { message, type, duration }
+      payload: { message, type, duration, action }
     })
   }, [])
 
@@ -246,13 +192,6 @@ export function UIProvider({ children }: UIProviderProps) {
   // Stable action identities (consumers put them in effect deps and timers)
   const actions = useMemo(
     () => ({
-      openSidebar: () => dispatch({ type: 'OPEN_SIDEBAR' }),
-      closeSidebar: () => dispatch({ type: 'CLOSE_SIDEBAR' }),
-      toggleSidebar: () => dispatch({ type: 'TOGGLE_SIDEBAR' }),
-      startQRScanner: () => dispatch({ type: 'START_QR_SCANNER' }),
-      stopQRScanner: () => dispatch({ type: 'STOP_QR_SCANNER' }),
-      toggleFlashlight: () => dispatch({ type: 'TOGGLE_FLASHLIGHT' }),
-      setFlashlight: (enabled: boolean) => dispatch({ type: 'SET_FLASHLIGHT', payload: enabled }),
       setLoading: (isLoading: boolean, message?: string) =>
         dispatch({ type: 'SET_LOADING', payload: { isLoading, message } })
     }),

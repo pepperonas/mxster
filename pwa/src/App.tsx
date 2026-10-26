@@ -1,176 +1,78 @@
-import { createBrowserRouter, RouterProvider, Outlet, useLocation } from 'react-router-dom'
-import { AppProviders, useInteraction, useGame, useUI } from '@/contexts'
-import { Modal, Toast, ActionBar, Sidebar, AchievementUnlockAnimation, CookieBanner } from '@/components'
-import {
-  LandingPage,
-  ModeSelection,
-  VariantSelection,
-  PlayerSetup,
-  GameScreen,
-  CallbackScreen
-} from '@/screens'
-import { useTokenRefresh } from '@/hooks/useTokenRefresh'
-import { useAppNavigate } from '@/hooks/useAppNavigate'
+import { useEffect } from 'react'
+import { createBrowserRouter, Navigate, Outlet, RouterProvider } from 'react-router-dom'
+import { AppProviders } from '@/contexts'
+import { Modal, Toast, AchievementUnlockAnimation } from '@/components'
+import { AuthProvider } from '@/auth/AuthContext'
+import { AuthGate } from '@/auth/AuthGate'
+import { AppShell } from '@/shell/AppShell'
+import { HomeScreen } from '@/screens/HomeScreen'
+import { SetupScreen } from '@/screens/SetupScreen'
+import { GameScreen } from '@/screens/GameScreen'
+import { HistoryScreen, HistoryDetailScreen } from '@/screens/HistoryScreen'
+import { AchievementsScreen } from '@/screens/AchievementsScreen'
+import { ProfileScreen } from '@/screens/ProfileScreen'
+import { AdminScreen } from '@/screens/AdminScreen'
 import { initRipple } from '@/utils/ripple'
 import { MotionProvider } from '@/motion/MotionProvider'
-import { useScrollReveal } from '@/motion/useScrollReveal'
-import { lazy, Suspense, useEffect, useRef } from 'react'
-
-// three.js lives only in this chunk — it loads after first paint
-const ParticleBackground = lazy(() => import('@/components/game/ParticleBackground'))
 import './styles/design-tokens.css'
 import './styles/tailwind.css'
 import './styles/motion.css'
 
-function AppContent() {
-  // Background Token Refresh Service
-  useTokenRefresh()
+/**
+ * Root layout: sign-in gate around everything, then the providers that load
+ * the account's data, then the shell. Data router (createBrowserRouter) is
+ * required for `navigate(to, { viewTransition: true })`.
+ */
+function Root() {
+  useEffect(() => initRipple(), [])
 
-  // Below-the-fold entrances play when scrolled into view
-  useScrollReveal()
-
-  // M3 ripple (delegated, progressive enhancement)
-  useEffect(() => { initRipple() }, [])
-
-  // Get interaction state for background animation
-  const { activityLevel, pulseIntensity, pulseSeq } = useInteraction()
-
-  // Page Refresh Check
-  const navigate = useAppNavigate()
-  const location = useLocation()
-  const { players, isGameStarted, endGame, resetGame, gameMode } = useGame()
-  const { showModal } = useUI()
-  const hasShownRefreshWarning = useRef(false)
-
-  // Prevent page refresh/close during active game (beforeunload event)
+  // The OAuth callback lands on "/?login_error=…" — keep the address clean.
   useEffect(() => {
-    const handleBeforeUnload = (e: BeforeUnloadEvent) => {
-      // Only show warning if game is active
-      if (isGameStarted && players.length > 0) {
-        console.log('⚠️ Attempting to leave page during active game')
-
-        // Standard way to trigger browser's confirmation dialog
-        e.preventDefault()
-        e.returnValue = '' // Chrome requires returnValue to be set
-
-        // Some browsers show this message, others show generic message
-        return 'Du bist gerade in einem laufenden Spiel. Wenn du die Seite verlässt, wird das Spiel beendet und alle Daten gehen verloren.'
-      }
+    const url = new URL(window.location.href)
+    if (url.searchParams.has('login_error')) {
+      url.searchParams.delete('login_error')
+      window.history.replaceState(window.history.state, '', url.pathname + url.search)
     }
-
-    // Add event listener
-    window.addEventListener('beforeunload', handleBeforeUnload)
-
-    // Cleanup
-    return () => {
-      window.removeEventListener('beforeunload', handleBeforeUnload)
-    }
-  }, [isGameStarted, players.length])
-
-  // Check for running game on page load (if user confirmed refresh despite warning)
-  useEffect(() => {
-    // Only check once on initial mount (not on subsequent updates)
-    if (hasShownRefreshWarning.current) return
-
-    // Small delay to ensure all contexts are loaded
-    const timer = setTimeout(() => {
-      // Check if game is running and user is not on landing page
-      const isInGame = location.pathname !== '/'
-
-      if (isGameStarted && players.length > 0 && isInGame) {
-        hasShownRefreshWarning.current = true
-
-        console.log('🔄 Page refresh detected during active game')
-
-        // Show the same warning modal as in Sidebar
-        showModal(
-          '⚠️ Spiel beendet',
-          <div className="space-y-4">
-            <p className="text-md-on-surface-variant">
-              Die Seite wurde während eines laufenden Spiels neu geladen. Das Spiel wurde beendet.
-            </p>
-            <div className="glass p-4 border border-accent/30 rounded-lg">
-              <p className="text-sm text-text-secondary">
-                <strong className="text-text-primary">Hinweis:</strong> Der Spielstand wurde nicht gespeichert und alle Daten sind verloren gegangen.
-              </p>
-            </div>
-          </div>,
-          [
-            {
-              text: 'Verstanden',
-              variant: 'primary',
-              onClick: () => {
-                console.log('🏠 User acknowledged game was lost')
-                endGame()
-                resetGame()
-                navigate('/', { replace: true })
-              }
-            }
-          ]
-        )
-      }
-    }, 100)
-
-    return () => clearTimeout(timer)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []) // Empty array intentional: run ONLY on mount, not on updates
+  }, [])
 
   return (
-    <>
-      {/* 3D Particle Background - Activity-reactive */}
-      <Suspense fallback={<div className="fixed inset-0 -z-10 particle-bg bg-background" aria-hidden="true" />}>
-      <ParticleBackground
-        isPlaying={true}
-        beatIntensity={pulseIntensity}
-        pulseSeq={pulseSeq}
-        activityLevel={activityLevel}
-        isHardcoreMode={gameMode === 'hardcore'}
-      />
-      </Suspense>
-
-      {/* Layout Components */}
-      <ActionBar />
-      <Sidebar />
-
-      {/* Modal & Toast (rendered via Portal) */}
-      <Modal />
-      <Toast />
-      <AchievementUnlockAnimation />
-      <CookieBanner />
-
-      {/* Main Content - active route */}
-      <Outlet />
-    </>
+    <MotionProvider>
+      <AuthProvider>
+        <AuthGate>
+          <AppProviders>
+            <Outlet />
+            <Modal />
+            <Toast />
+            <AchievementUnlockAnimation />
+          </AppProviders>
+        </AuthGate>
+      </AuthProvider>
+    </MotionProvider>
   )
 }
 
-/**
- * Data router (createBrowserRouter) is required for the View Transitions
- * integration: `navigate(to, { viewTransition: true })` is a no-op under the
- * declarative <BrowserRouter>. AppContent acts as the layout route.
- */
 const router = createBrowserRouter([
   {
-    element: (
-      <MotionProvider>
-        <AppProviders>
-          <AppContent />
-        </AppProviders>
-      </MotionProvider>
-    ),
+    element: <Root />,
     children: [
-      { path: '/', element: <LandingPage /> },
-      { path: '/mode-selection', element: <ModeSelection /> },
-      { path: '/variant-selection', element: <VariantSelection /> },
-      { path: '/player-setup', element: <PlayerSetup /> },
-      { path: '/game', element: <GameScreen /> },
-      { path: '/callback', element: <CallbackScreen /> },
-    ],
-  },
+      {
+        element: <AppShell />,
+        children: [
+          { path: '/', element: <HomeScreen /> },
+          { path: '/neu', element: <SetupScreen /> },
+          { path: '/spiel', element: <GameScreen /> },
+          { path: '/verlauf', element: <HistoryScreen /> },
+          { path: '/verlauf/:id', element: <HistoryDetailScreen /> },
+          { path: '/erfolge', element: <AchievementsScreen /> },
+          { path: '/profil', element: <ProfileScreen /> },
+          { path: '/admin', element: <AdminScreen /> },
+          { path: '*', element: <Navigate to="/" replace /> }
+        ]
+      }
+    ]
+  }
 ])
 
-function App() {
+export default function App() {
   return <RouterProvider router={router} />
 }
-
-export default App

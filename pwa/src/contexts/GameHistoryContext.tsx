@@ -3,9 +3,11 @@
  * Manages completed game history with shared state across all components
  */
 
-import { createContext, useContext, useState, useEffect, useCallback, ReactNode } from 'react'
+import { createContext, useContext, useCallback, ReactNode } from 'react'
 import type { HistoryEntry, GameHistoryData, Player } from '@/types'
-import { STORAGE_KEYS, GAME_CONFIG } from '@/utils/constants'
+import { GAME_CONFIG } from '@/utils/constants'
+import { useSyncedDoc } from '@/sync/useSyncedDoc'
+import { mergeHistory } from '@/sync/merge'
 
 interface SaveGameData {
   winner: {
@@ -15,7 +17,6 @@ interface SaveGameData {
   }
   players: Player[]
   gameMode: string
-  gameVariant: string
   duration?: number
   totalRounds?: number
 }
@@ -51,57 +52,14 @@ interface GameHistoryContextType {
 const GameHistoryContext = createContext<GameHistoryContextType | undefined>(undefined)
 
 export function GameHistoryProvider({ children }: { children: ReactNode }) {
-  const [history, setHistory] = useState<HistoryEntry[]>([])
-  const [isLoaded, setIsLoaded] = useState(false)
-
-  /**
-   * Load all game history from localStorage on mount
-   */
-  useEffect(() => {
-    try {
-      // Try current key first
-      let stored = localStorage.getItem(STORAGE_KEYS.GAME_HISTORY)
-
-      // Migration: Try old key if current key is empty
-      if (!stored) {
-        const oldStored = localStorage.getItem('mxster_history')
-
-        if (oldStored) {
-          console.log('📦 Migrating game history: mxster_history → mxster_game_history')
-          stored = oldStored
-          // Save to new key
-          localStorage.setItem(STORAGE_KEYS.GAME_HISTORY, oldStored)
-          // Remove old key
-          localStorage.removeItem('mxster_history')
-          console.log('✅ Migration complete')
-        }
-      }
-
-      if (stored) {
-        const data = JSON.parse(stored) as HistoryEntry[]
-        setHistory(data)
-        console.log(`✅ Loaded ${data.length} game(s) from history`)
-      }
-    } catch (error) {
-      console.error('❌ Error loading game history:', error)
-    } finally {
-      setIsLoaded(true)
-    }
-  }, [])
-
-  /**
-   * Auto-save history to localStorage whenever it changes (but only after initial load)
-   */
-  useEffect(() => {
-    if (!isLoaded) return // Don't save until we've loaded from localStorage first!
-
-    try {
-      localStorage.setItem(STORAGE_KEYS.GAME_HISTORY, JSON.stringify(history))
-      console.log(`💾 Saved ${history.length} game(s) to localStorage`)
-    } catch (error) {
-      console.error('❌ Error saving game history:', error)
-    }
-  }, [history, isLoaded])
+  const { value: history, setValue: setHistory } = useSyncedDoc<HistoryEntry[]>('history', {
+    initial: [],
+    merge: (local, server) => mergeHistory(local, server).slice(0, GAME_CONFIG.MAX_HISTORY_GAMES),
+    // Pre-account history lived in the browser (two historic keys)
+    legacyKey: localStorage.getItem('mxster_game_history') ? 'mxster_game_history' : 'mxster_history',
+    fromLegacy: (raw) => (Array.isArray(raw) && raw.length > 0 ? (raw as HistoryEntry[]) : null),
+    normalize: (raw) => (Array.isArray(raw) ? (raw as HistoryEntry[]) : [])
+  })
 
   /**
    * Load all game history (for backward compatibility)
@@ -133,7 +91,6 @@ export function GameHistoryProvider({ children }: { children: ReactNode }) {
           }))
         })),
         gameMode: gameData.gameMode as any,
-        gameVariant: gameData.gameVariant as any,
         duration: gameData.duration || undefined,
         totalRounds: gameData.totalRounds || undefined
       }
@@ -146,13 +103,12 @@ export function GameHistoryProvider({ children }: { children: ReactNode }) {
             ? newHistory.slice(0, GAME_CONFIG.MAX_HISTORY_GAMES)
             : newHistory
 
-        console.log('✅ Game saved to history:', historyEntry.id)
         return limitedHistory
       })
 
       return historyEntry
     },
-    []
+    [setHistory]
   )
 
   /**
@@ -178,19 +134,16 @@ export function GameHistoryProvider({ children }: { children: ReactNode }) {
   const deleteGame = useCallback((gameId: number) => {
     setHistory((prevHistory) => {
       const newHistory = prevHistory.filter((game) => game.id !== gameId)
-      console.log('✅ Game deleted from history:', gameId)
       return newHistory
     })
-  }, [])
+  }, [setHistory])
 
   /**
    * Clear all game history
    */
   const clearAll = useCallback(() => {
     setHistory([])
-    localStorage.removeItem(STORAGE_KEYS.GAME_HISTORY)
-    console.log('✅ Game history cleared')
-  }, [])
+  }, [setHistory])
 
   /**
    * Export all game history as JSON string
@@ -255,7 +208,7 @@ export function GameHistoryProvider({ children }: { children: ReactNode }) {
         }
       }
     },
-    []
+    [setHistory]
   )
 
   /**

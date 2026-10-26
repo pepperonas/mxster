@@ -1,152 +1,186 @@
-/* Fonts are loaded via <link> in index.html (preconnect + Roboto Flex variable).
-   Design tokens (color/shape/motion/type) live in design-tokens.css. */
+/* Design tokens (colour/shape/motion/type) live in design-tokens.css.
+   This file: font faces, base styles, the small component vocabulary
+   (buttons, cards, fields, chips, list rows) and the vinyl motif. */
+
+@font-face {
+  font-family: 'Roboto Flex';
+  font-style: normal;
+  font-weight: 100 1000;
+  font-stretch: 25% 151%;
+  font-display: swap;
+  src: url('/fonts/roboto-flex-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329,
+    U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'Roboto Flex';
+  font-style: normal;
+  font-weight: 100 1000;
+  font-stretch: 25% 151%;
+  font-display: swap;
+  src: url('/fonts/roboto-flex-latin-ext.woff2') format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+1E00-1E9F, U+20A0-20AB,
+    U+20AD-20C4, U+2C60-2C7F, U+A720-A7FF;
+}
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* Base Styles */
 @layer base {
-  * {
-    @apply box-border;
-  }
-
   html {
-    scroll-padding-top: 5rem; /* 80px offset for sticky header */
-  }
-
-  @media (prefers-reduced-motion: no-preference) {
-    html {
-      scroll-behavior: smooth;
-    }
+    -webkit-text-size-adjust: 100%;
+    background: rgb(var(--md-sys-color-surface));
   }
 
   body {
-    @apply bg-background text-text-primary font-sans antialiased;
-    @apply min-h-screen overflow-x-hidden;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
+    @apply bg-md-surface text-md-on-surface font-sans antialiased min-h-screen overflow-x-hidden;
+    font-optical-sizing: auto;
   }
 
-
-  /* Focus styles for accessibility */
-  *:focus-visible {
-    @apply outline-none ring-2 ring-secondary ring-offset-2 ring-offset-background;
+  :focus-visible {
+    outline: 3px solid rgb(var(--md-sys-color-primary));
+    outline-offset: 2px;
   }
 
-  /* Prevent layout shifts */
-  h1, h2, h3, h4, h5, h6, p {
-    backface-visibility: hidden;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
+  button {
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  ::selection {
+    background: rgb(var(--md-sys-color-primary-container));
+    color: rgb(var(--md-sys-color-on-primary-container));
   }
 }
 
-/* Component Utilities */
 @layer components {
-  /* Button Base — M3 Expressive pill with a press shape-morph.
-     The radius/scale transitions use the spatial-fast spring token, so the
-     button squashes on press and springs back with a small overshoot.
-     State feedback comes from the shared state layer in motion.css. */
+  /* ── Buttons ───────────────────────────────────────────────────────────
+     Pill at rest, morphs to a rounded rectangle while pressed (spatial-fast
+     spring). State feedback = shared state layer in motion.css. */
   .btn {
-    @apply px-6 py-3 font-medium;
-    @apply focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2;
-    @apply min-h-[48px] flex items-center justify-center gap-2;
+    @apply inline-flex items-center justify-center gap-2 min-h-[48px] px-6 select-none;
+    font: var(--md-sys-type-label-lg);
+    font-size: 0.9375rem;
     border-radius: var(--m3-shape-full);
     transition:
       border-radius var(--m3-spatial-fast),
       transform var(--m3-spatial-fast),
       background-color var(--m3-effects-default),
-      color var(--m3-effects-default),
-      box-shadow var(--m3-effects-default);
-    -webkit-tap-highlight-color: transparent;
+      color var(--m3-effects-default);
   }
-
   .btn:active:not(:disabled) {
-    border-radius: var(--m3-shape-lg);
-    transform: scale(0.96);
+    border-radius: var(--m3-shape-md);
+    transform: scale(0.97);
   }
-
   .btn:disabled {
     cursor: not-allowed;
     opacity: 0.38;
   }
-
-  /* Filled (primary) */
-  .btn-primary {
-    @apply bg-md-primary text-md-on-primary;
-    @apply focus-visible:ring-md-primary;
+  .btn-lg {
+    @apply min-h-[64px] px-8 gap-3;
+    font-size: 1.125rem;
   }
-
-  /* Filled hero action — deep, saturated coral with white text in BOTH
-     themes (~8:1). M3 dark would use a pale tertiary tone; the deep tone
-     reads premium and confident instead of pastel. */
-  .btn-accent {
-    background: rgb(var(--md-ref-tertiary-40));
-    color: #fff;
-    -webkit-text-fill-color: #fff;
-    @apply hover:shadow-m3-2 focus-visible:ring-md-tertiary;
-  }
-
-  /* Tonal */
-  .btn-secondary {
-    @apply bg-md-secondary-container text-md-on-secondary-container;
-    @apply focus-visible:ring-md-secondary;
-  }
-
-  /* Outlined */
-  .btn-outline {
-    @apply border-2 border-md-outline text-md-primary;
-    @apply focus-visible:ring-md-primary;
-  }
-
-  /* Text button (dialog actions) */
-  .btn-txt {
-    @apply text-md-primary bg-transparent px-4;
-    @apply focus-visible:ring-md-primary;
-  }
-
-  /* Card — elevation via surface tones, not shadows */
-  .card {
-    @apply bg-md-surface-container p-4 sm:p-6;
-    @apply border border-white/5;
+  .btn-lg:active:not(:disabled) {
     border-radius: var(--m3-shape-lg);
-    transition:
-      background-color var(--m3-effects-default),
-      border-radius var(--m3-spatial-default),
-      transform var(--m3-spatial-default),
-      box-shadow var(--m3-effects-default);
-    backface-visibility: hidden;
-    -webkit-font-smoothing: antialiased;
   }
 
-  .card:hover {
+  /* Hero action: saturated brand fill, white text in both themes. */
+  .btn-brand {
+    background: rgb(var(--mx-brand));
+    color: rgb(var(--mx-on-brand));
+  }
+  .btn-filled {
+    @apply bg-md-primary text-md-on-primary;
+  }
+  .btn-tonal {
+    @apply bg-md-secondary-container text-md-on-secondary-container;
+  }
+  .btn-outline {
+    @apply text-md-primary;
+    box-shadow: inset 0 0 0 1px rgb(var(--md-sys-color-outline));
+  }
+  .btn-text {
+    @apply text-md-primary px-4;
+  }
+  .btn-danger {
+    @apply bg-md-error text-md-on-error;
+  }
+
+  /* Round icon button, 48px target */
+  .icon-btn {
+    @apply inline-grid place-items-center w-12 h-12 shrink-0 text-md-on-surface-variant;
+    border-radius: var(--m3-shape-full);
+    transition: border-radius var(--m3-spatial-fast), transform var(--m3-spatial-fast);
+  }
+  .icon-btn:active:not(:disabled) {
+    border-radius: var(--m3-shape-md);
+    transform: scale(0.94);
+  }
+  .icon-btn:disabled {
+    opacity: 0.38;
+  }
+
+  /* ── Surfaces ──────────────────────────────────────────────────────────
+     Elevation is tonal. Radius encodes hierarchy: hero xxl, sections xl,
+     rows lg, chips full. */
+  .surface {
+    @apply bg-md-surface-container-low;
+    border-radius: var(--m3-shape-xl);
+  }
+  .surface-high {
     @apply bg-md-surface-container-high;
+    border-radius: var(--m3-shape-xl);
   }
 
-  /* Opt-in glow for expressive hero cards */
-  .card-glow:hover {
-    @apply shadow-m3-2;
-    transform: translateY(-4px);
+  /* Tappable list row */
+  .row {
+    @apply flex items-center gap-4 w-full min-h-[64px] px-4 py-3 text-left bg-md-surface-container-low;
+    border-radius: var(--m3-shape-lg);
   }
 
+  /* ── Fields ──────────────────────────────────────────────────────────── */
+  .field {
+    @apply w-full min-h-[56px] px-4 bg-md-surface-container-highest text-md-on-surface;
+    font: var(--md-sys-type-body-lg);
+    border-radius: var(--m3-shape-md) var(--m3-shape-md) var(--m3-shape-xs) var(--m3-shape-xs);
+    box-shadow: inset 0 -1px 0 rgb(var(--md-sys-color-on-surface-variant));
+    transition: box-shadow var(--m3-effects-default), background-color var(--m3-effects-default);
+  }
+  .field::placeholder {
+    color: rgb(var(--md-sys-color-on-surface-variant));
+  }
+  .field:focus {
+    outline: none;
+    box-shadow: inset 0 -3px 0 rgb(var(--md-sys-color-primary));
+  }
+
+  /* ── Chips ───────────────────────────────────────────────────────────── */
+  .chip {
+    @apply inline-flex items-center gap-2 min-h-[40px] px-4 text-md-on-surface-variant;
+    font: var(--md-sys-type-label-lg);
+    border-radius: var(--m3-shape-full);
+    box-shadow: inset 0 0 0 1px rgb(var(--md-sys-color-outline-variant));
+    transition: background-color var(--m3-effects-default), color var(--m3-effects-default),
+      border-radius var(--m3-spatial-fast);
+  }
+  .chip[aria-pressed='true'],
+  .chip[data-selected='true'] {
+    @apply bg-md-secondary-container text-md-on-secondary-container;
+    box-shadow: none;
+  }
+
+  /* ── Small type helpers ──────────────────────────────────────────────── */
+  .meta {
+    @apply text-md-on-surface-variant;
+    font: var(--md-sys-type-body-md);
+  }
 }
 
-/* Utility Classes */
 @layer utilities {
-  /* Glassmorphism effect — tint from surface-container so it works in light mode */
-  .glass {
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
-    background: rgb(var(--md-sys-color-surface-container) / 0.8);
-    border: 1px solid rgb(var(--md-sys-color-outline-variant) / 0.5);
-  }
-
-  /* M3 type scale (tokens in design-tokens.css) */
-  .text-display-lg { font: var(--md-sys-type-display-lg); letter-spacing: -0.015em; }
-  .text-display-md { font: var(--md-sys-type-display-md); letter-spacing: -0.01em; }
-  .text-display-sm { font: var(--md-sys-type-display-sm); }
-  .text-headline-lg { font: var(--md-sys-type-headline-lg); }
+  .text-display-lg { font: var(--md-sys-type-display-lg); letter-spacing: -0.02em; }
+  .text-display-md { font: var(--md-sys-type-display-md); letter-spacing: -0.015em; }
+  .text-display-sm { font: var(--md-sys-type-display-sm); letter-spacing: -0.01em; }
+  .text-headline-lg { font: var(--md-sys-type-headline-lg); letter-spacing: -0.01em; }
   .text-headline-md { font: var(--md-sys-type-headline-md); }
   .text-headline-sm { font: var(--md-sys-type-headline-sm); }
   .text-title-lg { font: var(--md-sys-type-title-lg); }
@@ -155,122 +189,62 @@
   .text-body-lg { font: var(--md-sys-type-body-lg); }
   .text-body-md { font: var(--md-sys-type-body-md); }
   .text-body-sm { font: var(--md-sys-type-body-sm); }
-  .text-label-lg { font: var(--md-sys-type-label-lg); letter-spacing: 0.006em; }
-  .text-label-md { font: var(--md-sys-type-label-md); letter-spacing: 0.03em; }
-  .text-label-sm { font: var(--md-sys-type-label-sm); letter-spacing: 0.03em; }
+  .text-label-lg { font: var(--md-sys-type-label-lg); }
+  .text-label-md { font: var(--md-sys-type-label-md); letter-spacing: 0.01em; }
+  .text-label-sm { font: var(--md-sys-type-label-sm); letter-spacing: 0.01em; }
 
-  /* Emphasized hero type — elegant, not chunky. Tight tracking + optical
-     weight via the Roboto Flex variable axes; premium editorial feel. */
-  .text-emphasized {
-    font-variation-settings: 'wght' 700, 'wdth' 100, 'opsz' 96;
-    letter-spacing: -0.022em;
+  /* Poster type: wide and heavy, like the lettering on a record sleeve. */
+  .text-poster {
+    font-variation-settings: 'wdth' 140, 'wght' 860, 'opsz' 144;
+    letter-spacing: -0.035em;
+    line-height: 0.9;
+  }
+  .text-condensed {
+    font-variation-settings: 'wdth' 82, 'wght' 680;
   }
 
-  /* Premium type color system: no gradients in text.
-     Default heading/label accent is crisp, high-contrast on-surface. */
-  .text-gradient {
-    color: rgb(var(--md-sys-color-on-surface));
-    -webkit-text-fill-color: rgb(var(--md-sys-color-on-surface));
+  .tabular {
+    font-variant-numeric: tabular-nums;
   }
 
-  /* Deliberate brand accent (wordmark, hero data). One solid accent, used
-     with restraint — the mark of a premium system. */
-  .text-brand {
-    color: rgb(var(--md-sys-color-primary));
-    -webkit-text-fill-color: rgb(var(--md-sys-color-primary));
-  }
-
-  /* Mobile-optimized spacing (M3 minimum touch target) */
   .touch-target {
     @apply min-h-[48px] min-w-[48px] flex items-center justify-center;
   }
 
-}
-
-/* Custom Scrollbar */
-::-webkit-scrollbar {
-  width: 10px;
-  height: 10px;
-}
-
-::-webkit-scrollbar-track {
-  @apply bg-background;
-}
-
-::-webkit-scrollbar-thumb {
-  @apply bg-primary rounded-full;
-  border: 2px solid transparent;
-  background-clip: padding-box;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  @apply bg-secondary;
-}
-
-/* Selection — primary on on-primary keeps AA contrast in both themes */
-::selection {
-  @apply bg-secondary text-md-on-primary;
-}
-
-::-moz-selection {
-  @apply bg-secondary text-md-on-primary;
-}
-
-/* Fade In Animation */
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translate3d(0, 10px, 0);
+  /* Legacy names still used by game components */
+  .text-gradient { color: rgb(var(--md-sys-color-on-surface)); }
+  .text-brand { color: rgb(var(--md-sys-color-primary)); }
+  .glass {
+    background: rgb(var(--md-sys-color-surface-container) / 0.92);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
   }
-  to {
-    opacity: 1;
-    transform: translate3d(0, 0, 0);
+
+  .safe-bottom {
+    padding-bottom: env(safe-area-inset-bottom);
   }
 }
 
-.animate-fade-in {
-  opacity: 0;
-  animation: fadeIn 0.5s ease-out forwards;
-  backface-visibility: hidden;
-  will-change: transform, opacity;
+/* ── Vinyl motif ─────────────────────────────────────────────────────────
+   The one signature element: a record that spins while music plays. The
+   rotation is a CSS animation whose play state follows data-spinning, so it
+   pauses exactly where it is instead of snapping back. */
+.vinyl {
+  animation: vinyl-spin 1.8s linear infinite;
+  animation-play-state: paused;
+  will-change: transform;
+}
+.vinyl[data-spinning='true'] {
+  animation-play-state: running;
+}
+@keyframes vinyl-spin {
+  to { transform: rotate(360deg); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .vinyl { animation: none; }
 }
 
-/* Gradient Animation */
-@keyframes gradientShift {
-  0% {
-    background-position: 0% 50%;
-  }
-  50% {
-    background-position: 100% 50%;
-  }
-  100% {
-    background-position: 0% 50%;
-  }
-}
-
-.animate-gradient {
-  background-size: 200% 200%;
-  animation: gradientShift 3s ease infinite;
-  will-change: background-position;
-}
-
-/* ========== MXSTER GAME-SPECIFIC STYLES ========== */
-
-/* Input fields — M3 outlined text field */
-.input {
-  @apply w-full px-4 py-3 bg-md-surface-container-low border border-md-outline-variant;
-  @apply text-text-primary font-sans;
-  @apply focus:outline-none focus:border-md-primary focus:ring-2 focus:ring-md-primary/25;
-  @apply placeholder:text-text-secondary placeholder:opacity-60;
-  border-radius: var(--m3-shape-sm);
-  transition:
-    border-color var(--m3-effects-default),
-    box-shadow var(--m3-effects-default),
-    background-color var(--m3-effects-default);
-}
-
-/* M3 slider on a native range input (accessible for free). The filled part
-   comes from --progress; the handle grows on grab with the spatial spring. */
+/* M3 slider on a native range input (keyboard + screen reader for free). */
 .m3-slider {
   -webkit-appearance: none;
   appearance: none;
@@ -281,50 +255,45 @@
 }
 .m3-slider:disabled { cursor: default; opacity: 0.5; }
 .m3-slider::-webkit-slider-runnable-track {
-  height: 8px;
+  height: 12px;
   border-radius: var(--m3-shape-full);
   background: linear-gradient(
     to right,
     rgb(var(--md-sys-color-primary)) var(--progress, 0%),
-    rgb(var(--md-sys-color-surface-container-highest)) var(--progress, 0%)
+    rgb(var(--md-sys-color-secondary-container)) var(--progress, 0%)
   );
 }
 .m3-slider::-moz-range-track {
-  height: 8px;
+  height: 12px;
   border-radius: var(--m3-shape-full);
-  background: rgb(var(--md-sys-color-surface-container-highest));
+  background: rgb(var(--md-sys-color-secondary-container));
 }
 .m3-slider::-moz-range-progress {
-  height: 8px;
+  height: 12px;
   border-radius: var(--m3-shape-full);
   background: rgb(var(--md-sys-color-primary));
 }
 .m3-slider::-webkit-slider-thumb {
   -webkit-appearance: none;
-  width: 20px;
-  height: 20px;
-  margin-top: -6px;
-  border-radius: var(--m3-shape-full);
-  background: rgb(var(--md-sys-color-primary));
-  box-shadow: 0 0 0 0 rgb(var(--md-sys-color-primary) / 0.16);
-  transition: transform var(--m3-spatial-fast), box-shadow var(--m3-effects-default);
-}
-.m3-slider::-moz-range-thumb {
-  width: 20px;
-  height: 20px;
-  border: 0;
+  width: 4px;
+  height: 36px;
+  margin-top: -12px;
   border-radius: var(--m3-shape-full);
   background: rgb(var(--md-sys-color-primary));
   transition: transform var(--m3-spatial-fast);
 }
-.m3-slider:active::-webkit-slider-thumb { transform: scale(1.25); box-shadow: 0 0 0 10px rgb(var(--md-sys-color-primary) / 0.16); }
-.m3-slider:active::-moz-range-thumb { transform: scale(1.25); }
+.m3-slider::-moz-range-thumb {
+  width: 4px;
+  height: 36px;
+  border: 0;
+  border-radius: var(--m3-shape-full);
+  background: rgb(var(--md-sys-color-primary));
+}
+.m3-slider:active::-webkit-slider-thumb { transform: scaleX(0.6); }
 .m3-slider:focus-visible { outline: none; }
-.m3-slider:focus-visible::-webkit-slider-thumb { box-shadow: 0 0 0 4px rgb(var(--md-sys-color-primary) / 0.4); }
+.m3-slider:focus-visible::-webkit-slider-thumb { box-shadow: 0 0 0 4px rgb(var(--md-sys-color-primary) / 0.35); }
 
-/* Progress fills scale (no layout work per frame) on the slow spatial spring,
-   and grow from zero when they first appear. No `to` keyframe: the animation
-   ends at the element's own scaleX. */
+/* Progress fills scale (no layout work per frame) and grow from zero. */
 .m3-bar-fill {
   transform-origin: left center;
   transition: transform var(--m3-spatial-slow);
@@ -334,27 +303,16 @@
   from { transform: scaleX(0); }
 }
 
-/* Toast notification — M3 snackbar, springs in from bottom */
-.toast {
-  @apply fixed bottom-6 right-6 bg-md-inverse-surface text-md-inverse-on-surface px-6 py-4;
-  @apply shadow-2xl z-[2000] max-w-md;
-  border-radius: var(--m3-shape-md);
-  animation: m3-spring-in-up var(--m3-dur-spatial-default) var(--m3-ease-spatial-default) both;
-}
-
-/* Shared dialog panel for custom dialogs (Achievements, Stats, Settings, …) */
+/* Dialog surface + CSS entrance for dialogs not driven by Motion */
 .m3-dialog-panel {
-  @apply bg-md-surface-container-high border border-md-outline-variant/60;
+  @apply bg-md-surface-container-high;
   border-radius: var(--m3-shape-xl);
 }
-
-/* CSS entrance for dialogs that are not driven by Motion (<Modal> animates
-   itself — never combine the two, they fight over opacity/transform). */
 .m3-dialog-enter {
   animation: m3-spring-in var(--m3-dur-spatial-default) var(--m3-ease-spatial-default) both;
 }
 
-/* M3 contained loading indicator (see LoadingIndicator.tsx) */
+/* M3 loading indicator: morphing container + rotating arc */
 .m3-loading {
   @apply bg-md-primary-container flex items-center justify-center;
   width: 48px;
@@ -374,28 +332,18 @@
   .m3-loading { animation: none; border-radius: var(--m3-shape-xl); }
 }
 
-.toast.success {
-  @apply border-l-4 border-l-green-500;
-}
-
-.toast.error {
-  @apply border-l-4 border-l-red-500;
-}
-
-.toast.warning {
-  @apply border-l-4 border-l-amber-500;
-}
-
-/* Hardcore mode: a faint warm wash from the tertiary (coral) role, so the
-   competitive mode reads differently without leaving the token palette. */
+/* Hardcore mode: a faint warm wash from the tertiary role */
 .hardcore-theme {
-  background: radial-gradient(120% 80% at 0% 0%, rgb(var(--md-sys-color-tertiary) / 0.07), transparent 60%),
-    radial-gradient(90% 70% at 100% 100%, rgb(var(--md-sys-color-primary) / 0.05), transparent 60%);
+  background: radial-gradient(120% 70% at 100% 0%, rgb(var(--md-sys-color-tertiary) / 0.08), transparent 60%);
 }
 
-/* Particle background in light theme: the WebGL scene is tuned for dark —
-   drop its dark backdrop (body surface shows through) and dim the particles. */
-[data-theme='light'] .particle-bg {
-  background: transparent !important;
-  opacity: 0.35;
+/* Year fields: no spinner arrows (they invite clicking through decades) */
+input[type='number']::-webkit-inner-spin-button,
+input[type='number']::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+input[type='number'] {
+  -moz-appearance: textfield;
+  appearance: textfield;
 }

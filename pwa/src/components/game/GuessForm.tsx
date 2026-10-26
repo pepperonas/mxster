@@ -51,9 +51,9 @@ export function GuessForm({ onSubmit, onSkip }: GuessFormProps) {
     // In Guess mode, at least title OR artist should be filled
     if (!title && !artist && !year) {
       showModal(
-        '⚠️ Eingabe erforderlich',
-        <p className="text-text-secondary">
-          Bitte fülle mindestens ein Feld aus, um deine Vermutung abzugeben.
+        'Noch keine Antwort',
+        <p className="text-md-on-surface-variant">
+          Füll mindestens ein Feld aus. Wenn du gar keine Idee hast, überspring den Song.
         </p>,
         [
           {
@@ -79,7 +79,7 @@ export function GuessForm({ onSubmit, onSkip }: GuessFormProps) {
   const handleSkipClick = () => {
     showModal(
       'Song überspringen?',
-      <p className="text-text-secondary">
+      <p className="text-md-on-surface-variant">
         Möchtest du diesen Song wirklich überspringen? Du erhältst keine Punkte.
       </p>,
       [
@@ -90,7 +90,6 @@ export function GuessForm({ onSubmit, onSkip }: GuessFormProps) {
           variant: 'danger',
           closeOnClick: false,
           onClick: () => {
-            console.log('🚫 Skip confirmed - closing modal and calling onSkip')
             closeModal()
             onSkip()
             clearForm()
@@ -101,8 +100,8 @@ export function GuessForm({ onSubmit, onSkip }: GuessFormProps) {
   }
 
   return (
-    <div className="bg-md-surface-container rounded-m3-xl p-5 sm:p-6 border border-md-outline-variant/50">
-      <h3 className="text-title-lg mb-4 text-text-primary">
+    <div className="surface p-5 sm:p-6">
+      <h3 className="text-title-lg mb-4 text-md-on-surface">
         {gameMode === 'hardcore'
           ? `${playerName}, was ist deine Vermutung?`
           : `${playerName}, rate optional den Song`}
@@ -120,9 +119,9 @@ export function GuessForm({ onSubmit, onSkip }: GuessFormProps) {
             id="title"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
-            placeholder="Song-Titel eingeben..."
+            placeholder="Wie heißt der Song?"
             autoComplete="off"
-            className="input min-h-[52px] text-body-lg"
+            className="field"
           />
         </div>
 
@@ -136,9 +135,9 @@ export function GuessForm({ onSubmit, onSkip }: GuessFormProps) {
             id="artist"
             value={artist}
             onChange={(e) => setArtist(e.target.value)}
-            placeholder="Interpret eingeben..."
+            placeholder="Wer singt?"
             autoComplete="off"
-            className="input min-h-[52px] text-body-lg"
+            className="field"
           />
         </div>
 
@@ -149,6 +148,7 @@ export function GuessForm({ onSubmit, onSkip }: GuessFormProps) {
           </label>
           <input
             type="number"
+            inputMode="numeric"
             id="year"
             value={year}
             onChange={(e) => setYear(e.target.value)}
@@ -156,14 +156,14 @@ export function GuessForm({ onSubmit, onSkip }: GuessFormProps) {
             min="1950"
             max={new Date().getFullYear()}
             autoComplete="off"
-            className="input min-h-[52px] text-body-lg"
+            className="field"
           />
         </div>
 
         {/* Info */}
         {gameMode === 'hardcore' && (
           <p className="text-body-sm text-md-on-surface-variant">
-            Tippfehler werden toleriert, Groß-/Kleinschreibung spielt keine Rolle.
+            Kleine Tippfehler und Groß- oder Kleinschreibung zählen nicht.
           </p>
         )}
 
@@ -172,15 +172,15 @@ export function GuessForm({ onSubmit, onSkip }: GuessFormProps) {
           <button
             type="button"
             onClick={handleSkipClick}
-            className="btn btn-secondary flex-1 min-h-[48px]"
+            className="btn btn-tonal m3-state-layer flex-1"
           >
             Überspringen
           </button>
           <button
             type="submit"
-            className="btn btn-accent flex-1 min-h-[48px]"
+            className="btn btn-brand m3-state-layer flex-[1.4]"
           >
-            {gameMode === 'hardcore' ? 'Antwort prüfen' : 'Weiter'}
+            {gameMode === 'hardcore' ? 'Prüfen' : 'Weiter'}
           </button>
         </div>
       </form>

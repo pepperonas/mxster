@@ -30,18 +30,13 @@ export interface Player {
 }
 
 // ============================================================================
-// Game Modes & Variants
+// Game Modes
 // ============================================================================
 
 export enum GameMode {
   HARDCORE = 'hardcore',
   TIMELINE_PERSONAL = 'timeline_personal',
   TIMELINE_GLOBAL = 'timeline_global'
-}
-
-export enum GameVariant {
-  PHYSICAL = 'physical',  // QR scanner + DJ role
-  VIRTUAL = 'virtual'     // Random song button
 }
 
 export interface GameModeInfo {
@@ -53,14 +48,6 @@ export interface GameModeInfo {
   features: string[]
 }
 
-export interface GameVariantInfo {
-  name: string
-  description: string
-  icon: string
-  requirements: string[]
-  features: string[]
-}
-
 // ============================================================================
 // Game State
 // ============================================================================
@@ -68,10 +55,8 @@ export interface GameVariantInfo {
 export interface GameState {
   players: Player[]
   currentPlayer: number
-  currentDJ: number
   currentSong: Song | null
   gameMode: GameMode | null
-  gameVariant: GameVariant | null
   globalTimeline: GlobalTimelineCard[]  // For TIMELINE_GLOBAL mode
   playedSongs: string[]   // Song IDs to prevent duplicates
   timestamp: number
@@ -116,7 +101,8 @@ export interface HistoryEntry {
     }>
   }>
   gameMode: GameMode
-  gameVariant: GameVariant
+  /** Legacy field from the physical-card era; ignored. */
+  gameVariant?: string
   duration?: number
   totalRounds?: number
 }
@@ -153,65 +139,12 @@ export interface Toast {
   message: string
   type: 'success' | 'error' | 'warning' | 'info'
   duration: number
+  action?: { label: string; onClick: () => void }
 }
 
 export interface ToastOptions {
   duration?: number
   type?: 'success' | 'error' | 'warning' | 'info'
-}
-
-// ============================================================================
-// Beat Sync & Animations
-// ============================================================================
-
-export enum BackgroundAnimation {
-  WAVE_3D = 'wave_3d',
-  PULSE = 'pulse',
-  FLASH = 'flash',
-  GRADIENT = 'gradient',
-  GLOW = 'glow',
-  NONE = 'none'
-}
-
-export interface BeatSyncConfig {
-  enabled: boolean
-  animationType: BackgroundAnimation
-  intensity: number  // 0-100
-}
-
-export interface BeatData {
-  start: number
-  duration: number
-  confidence: number
-}
-
-export interface SpotifyAudioAnalysis {
-  track: {
-    tempo: number
-    duration: number
-  }
-  beats: BeatData[]
-  bars: Array<{
-    start: number
-    duration: number
-    confidence: number
-  }>
-  sections: Array<{
-    start: number
-    duration: number
-    tempo: number
-    key: number
-    mode: number
-  }>
-}
-
-// ============================================================================
-// QR Scanner
-// ============================================================================
-
-export interface QRScanResult {
-  data: string
-  timestamp: number
 }
 
 // ============================================================================

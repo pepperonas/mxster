@@ -60,11 +60,11 @@ export function GuessResult({ song, check, breakdown, playerName, onContinue }: 
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -12, transition: spring.effectsDefault }}
       transition={spring.spatialDefault}
-      className="bg-md-surface-container rounded-m3-xl p-5 sm:p-6 border border-md-outline-variant/50"
+      className="surface p-5 sm:p-6"
       aria-labelledby="guess-result-title"
     >
       <p className="text-label-md text-md-on-surface-variant">{playerName}</p>
-      <h3 id="guess-result-title" className="text-headline-sm text-text-primary mb-4">
+      <h3 id="guess-result-title" className="text-headline-sm text-md-on-surface mb-4">
         {HEADLINE[tier]}
       </h3>
 
@@ -115,7 +115,7 @@ export function GuessResult({ song, check, breakdown, playerName, onContinue }: 
           +<AnimatedNumber value={breakdown.total} from={0} />
           <span className="ml-2 text-title-md text-md-on-surface-variant">{breakdown.total === 1 ? 'Punkt' : 'Punkte'}</span>
         </m.p>
-        <button ref={continueRef} type="button" onClick={onContinue} className="btn btn-accent">
+        <button ref={continueRef} type="button" onClick={onContinue} className="btn btn-brand">
           Weiter
         </button>
       </div>

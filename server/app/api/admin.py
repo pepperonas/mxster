@@ -4,7 +4,7 @@ from fastapi import APIRouter, Depends
 from sqlalchemy import delete, func, select
 from sqlalchemy.orm import Session
 
-from app.db import STATUSES, AdminAction, SessionRow, User, get_db, utcnow
+from app.db import STATUSES, AdminAction, SessionRow, User, as_utc, get_db, utcnow
 from app.security import err, is_admin_email, require_admin, require_csrf
 
 router = APIRouter(prefix="/api/admin", dependencies=[Depends(require_admin)])
@@ -21,9 +21,9 @@ def _row(u: User) -> dict:
         "picture": u.picture,
         "status": u.status,
         "isAdmin": is_admin_email(u.email),
-        "createdAt": u.created_at.isoformat() if u.created_at else None,
-        "decidedAt": u.decided_at.isoformat() if u.decided_at else None,
-        "lastLoginAt": u.last_login_at.isoformat() if u.last_login_at else None,
+        "createdAt": as_utc(u.created_at).isoformat() if u.created_at else None,
+        "decidedAt": as_utc(u.decided_at).isoformat() if u.decided_at else None,
+        "lastLoginAt": as_utc(u.last_login_at).isoformat() if u.last_login_at else None,
     }
 
 

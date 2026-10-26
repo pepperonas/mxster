@@ -88,3 +88,9 @@ def test_forwarded_ip_is_ignored_from_untrusted_peers():
 
     assert client_ip(req("203.0.113.9", "1.2.3.4")) == "203.0.113.9"
     assert client_ip(req("127.0.0.1", "1.2.3.4")) == "1.2.3.4"
+
+
+def test_session_is_null_when_signed_out_and_mirrors_me_when_signed_in(client, google):
+    assert client.get("/api/session").json() == {"me": None}
+    me = login(client, google, sub="1", email="a@example.com")
+    assert client.get("/api/session").json()["me"] == me
