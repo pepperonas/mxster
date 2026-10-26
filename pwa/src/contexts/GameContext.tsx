@@ -1,5 +1,6 @@
 import { createContext, useContext, useReducer, ReactNode } from 'react'
 import type { Player, Song, GameMode, GlobalTimelineCard } from '@/types'
+import { nextContender, type Tiebreak } from '@/game/tiebreak'
 
 // ============================================================================
 // Types
@@ -27,6 +28,9 @@ interface GameState {
 
   // Game Started
   isGameStarted: boolean
+
+  /** Set while a level lead is played out (only contenders take turns). */
+  tiebreak: Tiebreak | null
 }
 
 type GameAction =
@@ -49,6 +53,7 @@ type GameAction =
   | { type: 'LOAD_GAME_STATE'; payload: Partial<GameState> }
   | { type: 'NEXT_TURN' }
   | { type: 'NEXT_PLAYER_ONLY' } // Switch player, keep currentSong
+  | { type: 'SET_TIEBREAK'; payload: Tiebreak | null }
 
 interface GameContextValue extends GameState {
   setGameMode: (mode: GameMode | null) => void
@@ -71,6 +76,7 @@ interface GameContextValue extends GameState {
   loadGameState: (state: Partial<GameState>) => void
   nextTurn: () => void
   nextPlayerOnly: () => void // Switch player but keep song
+  setTiebreak: (tiebreak: Tiebreak | null) => void
 }
 
 // ============================================================================
@@ -93,7 +99,8 @@ const initialState: GameState = {
   globalTimeline: [],
   playedSongs: [],
   currentSongSkips: {},
-  isGameStarted: false
+  isGameStarted: false,
+  tiebreak: null
 }
 
 // ============================================================================
@@ -200,12 +207,15 @@ function gameReducer(state: GameState, action: GameAction): GameState {
     case 'LOAD_GAME_STATE':
       return { ...state, ...action.payload }
 
+    case 'SET_TIEBREAK':
+      return { ...state, tiebreak: action.payload }
+
     case 'NEXT_TURN': {
       const playerCount = state.players.length
       if (playerCount === 0) return state
       return {
         ...state,
-        currentPlayer: (state.currentPlayer + 1) % playerCount,
+        currentPlayer: nextSeat(state),
         currentSong: null,
         waitingForGuess: false,
         currentSongSkips: {} // a new song starts with a clean skip count
@@ -216,12 +226,18 @@ function gameReducer(state: GameState, action: GameAction): GameState {
       // Switch player, keep the song and its skip counts (penalty tracking)
       const playerCount = state.players.length
       if (playerCount === 0) return state
-      return { ...state, currentPlayer: (state.currentPlayer + 1) % playerCount, waitingForGuess: false }
+      return { ...state, currentPlayer: nextSeat(state), waitingForGuess: false }
     }
 
     default:
       return state
   }
+}
+
+/** Next seat in turn order; during a tiebreak only contenders play. */
+function nextSeat(state: GameState): number {
+  if (state.tiebreak && state.tiebreak.contenders.length > 0) return nextContender(state.tiebreak, state.currentPlayer)
+  return (state.currentPlayer + 1) % state.players.length
 }
 
 // ============================================================================
@@ -255,7 +271,8 @@ export function GameProvider({ children }: GameProviderProps) {
     rematch: () => dispatch({ type: 'REMATCH' }),
     loadGameState: (gameState) => dispatch({ type: 'LOAD_GAME_STATE', payload: gameState }),
     nextTurn: () => dispatch({ type: 'NEXT_TURN' }),
-    nextPlayerOnly: () => dispatch({ type: 'NEXT_PLAYER_ONLY' })
+    nextPlayerOnly: () => dispatch({ type: 'NEXT_PLAYER_ONLY' }),
+    setTiebreak: (tiebreak) => dispatch({ type: 'SET_TIEBREAK', payload: tiebreak })
   }
 
   return <GameContext.Provider value={value}>{children}</GameContext.Provider>

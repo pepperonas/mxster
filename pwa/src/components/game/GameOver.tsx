@@ -9,6 +9,7 @@ import { Icon } from '@/components/ui/Icon'
 import { celebrate } from '@/motion/celebrate'
 import { spring } from '@/motion/springs'
 import type { GameMode, Player } from '@/types'
+import { rankPlayers } from '@/game/tiebreak'
 
 interface GameOverProps {
   winner: Player
@@ -20,7 +21,7 @@ interface GameOverProps {
 
 export function GameOver({ winner, players, mode, onRematch, onHome }: GameOverProps) {
   const hardcore = mode === 'hardcore'
-  const ranked = [...players].sort((a, b) => (hardcore ? b.score - a.score : b.cards - a.cards) || b.cards - a.cards)
+  const ranked = rankPlayers(players, mode, winner.name)
 
   useEffect(() => celebrate('big'), [])
 
@@ -52,7 +53,7 @@ export function GameOver({ winner, players, mode, onRematch, onHome }: GameOverP
         </m.div>
 
         <ol className="mt-8 space-y-2">
-          {ranked.map((p, i) => (
+          {ranked.map(({ player: p, place }, i) => (
             <m.li
               key={p.name}
               initial={{ opacity: 0, x: -16 }}
@@ -62,7 +63,7 @@ export function GameOver({ winner, players, mode, onRematch, onHome }: GameOverP
                 i === 0 ? 'bg-md-primary-container text-md-on-primary-container' : 'bg-md-surface-container-low'
               }`}
             >
-              <span className="w-6 text-title-md tabular">{i + 1}.</span>
+              <span className="w-6 text-title-md tabular">{place}.</span>
               <span className="flex-1 min-w-0 truncate text-body-lg">{p.name}</span>
               <span className="text-title-md tabular">{hardcore ? `${p.score} Pkt.` : `${p.cards} Songs`}</span>
             </m.li>

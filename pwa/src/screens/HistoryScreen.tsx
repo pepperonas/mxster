@@ -12,6 +12,7 @@ import { MODE_COPY } from '@/game/modeCopy'
 import { formatDay, formatTime } from '@/utils/format'
 import { spring } from '@/motion/springs'
 import type { HistoryEntry } from '@/types'
+import { rankPlayers } from '@/game/tiebreak'
 
 export function HistoryScreen() {
   const { history } = useGameHistory()
@@ -89,7 +90,7 @@ export function HistoryDetailScreen() {
   }
 
   const hardcore = game.gameMode === 'hardcore'
-  const ranked = [...game.players].sort((a, b) => (hardcore ? b.score - a.score : b.cards - a.cards))
+  const ranked = rankPlayers(game.players, game.gameMode, game.winner.name)
 
   const askDelete = () =>
     showModal('Runde löschen?', <p className="text-body-lg">Die Runde verschwindet aus dem Verlauf. Erfolge bleiben erhalten.</p>, [
@@ -119,10 +120,10 @@ export function HistoryDetailScreen() {
           </p>
         </section>
 
-        {ranked.map((p, i) => (
+        {ranked.map(({ player: p, place }) => (
           <section key={p.name} className="surface p-5" aria-label={p.name}>
             <div className="flex items-center gap-3 mb-3">
-              <span className="w-6 text-title-md tabular text-md-on-surface-variant">{i + 1}.</span>
+              <span className="w-6 text-title-md tabular text-md-on-surface-variant">{place}.</span>
               <h2 className="flex-1 text-title-md truncate">{p.name}</h2>
               <span className="text-title-sm tabular">{hardcore ? `${p.score} Pkt.` : `${p.cards} Songs`}</span>
             </div>

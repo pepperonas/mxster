@@ -9,20 +9,22 @@ import { AnimatedNumber } from '@/components/ui/AnimatedNumber'
 import { spring } from '@/motion/springs'
 
 export function PlayerStrip({ thinking = false }: { thinking?: boolean }) {
-  const { players, currentPlayer, gameMode } = useGame()
+  const { players, currentPlayer, gameMode, tiebreak } = useGame()
   const hardcore = gameMode === 'hardcore'
 
   return (
     <ul className="flex gap-2 overflow-x-auto no-scrollbar -mx-4 px-4 py-1" aria-label="Spieler">
       {players.map((p, i) => {
         const active = i === currentPlayer
+        const out = Boolean(tiebreak) && !tiebreak!.contenders.includes(i)
         return (
           <m.li
             key={p.name}
             layout
             transition={spring.spatialDefault}
-            className="relative shrink-0 flex items-center gap-2 h-12 pl-1.5 pr-4 rounded-m3-full"
+            className={`relative shrink-0 flex items-center gap-2 h-12 pl-1.5 pr-4 rounded-m3-full ${out ? 'opacity-60' : ''}`}
             aria-current={active ? 'true' : undefined}
+            aria-label={out ? `${p.name}, nicht im Stechen` : undefined}
           >
             {active && (
               <m.span

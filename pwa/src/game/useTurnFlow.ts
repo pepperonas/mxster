@@ -11,6 +11,10 @@
  *    runs when the turn is continued ("Nächster Spieler");
  *  - hardcore credits card + points when the result is continued ("Weiter").
  * Bots play through the same placeCard/submitGuess entry points.
+ *
+ * A round never ends in a draw: if the end condition is met while several
+ * players share the lead, they play it out in a tiebreak (game/tiebreak.ts) —
+ * one song each per round until exactly one leads. No skipping in a tiebreak.
  */
 import { useCallback, useEffect, useEffectEvent, useRef, useState } from 'react'
 import { useGame, useUI, useAchievements, useGameHistory } from '@/contexts'
@@ -28,6 +32,7 @@ import { evaluatePlacement, timelineSongsFor } from './placement'
 import { guessBreakdown, guessDetailsFor, type GuessBreakdown } from './guess'
 import { endOfGameAchievements, realtimeScoreAchievements, type AchievementEffect, type RankingSnapshot } from './achievementRules'
 import { evaluateSkip, SKIP_PENALTY_POINTS } from './skipRules'
+import { afterTiebreakTurn, leaders, startTiebreak } from './tiebreak'
 
 export type TurnPhase = 'idle' | 'placing' | 'guessing' | 'revealed' | 'over'
 
@@ -80,7 +85,9 @@ export function useTurnFlow({ onGameOver, onSkipNotice }: Options) {
     incrementSkipCount,
     resetSkipCounts,
     nextTurn,
-    nextPlayerOnly
+    nextPlayerOnly,
+    tiebreak,
+    setTiebreak
   } = game
   const { addToast } = useUI()
   const { unlockAchievement, updateProgress, checkAchievements } = useAchievements()
@@ -163,6 +170,40 @@ export function useTurnFlow({ onGameOver, onSkipNotice }: Options) {
     [gameOver, saveGame, gameMode, addToast, applyEffects, history, checkAchievements, onGameOver]
   )
 
+  /**
+   * After a turn has been booked: end the game, start or continue a tiebreak,
+   * or hand over to the next player. `finalPlayers` already holds this turn.
+   */
+  const settleTurn = useCallback(
+    (playerIndex: number, finalPlayers: Player[]): 'over' | 'next' => {
+      if (tiebreak) {
+        const step = afterTiebreakTurn(tiebreak, playerIndex, finalPlayers, gameMode)
+        if (step.kind === 'winner') {
+          setTiebreak(null)
+          finishGame(finalPlayers[step.index], finalPlayers)
+          return 'over'
+        }
+        if (step.tiebreak.round > tiebreak.round) {
+          addToast(`Immer noch gleichauf – Stechen, Runde ${step.tiebreak.round}`, 'info')
+        }
+        setTiebreak(step.tiebreak)
+        return 'next'
+      }
+
+      const win = checkWinCondition(finalPlayers, playerIndex, gameMode!)
+      if (!win.gameOver) return 'next'
+      const top = leaders(finalPlayers, gameMode)
+      if (top.length === 1) {
+        finishGame(finalPlayers[top[0]], finalPlayers)
+        return 'over'
+      }
+      setTiebreak(startTiebreak(top))
+      addToast(`Gleichstand! Stechen zwischen ${top.map((i) => finalPlayers[i].name).join(' und ')}`, 'info')
+      return 'next'
+    },
+    [tiebreak, gameMode, setTiebreak, finishGame, addToast]
+  )
+
   // ── Timeline modes ───────────────────────────────────────────────────────
   const placeCard = useCallback(
     (gapIndex: number) => {
@@ -203,7 +244,7 @@ export function useTurnFlow({ onGameOver, onSkipNotice }: Options) {
   )
 
   const skip = useCallback(() => {
-    if (phase !== 'guessing' || !currentSong || !activePlayer) return
+    if (phase !== 'guessing' || !currentSong || !activePlayer || tiebreak) return
     incrementSkipCount(currentPlayer)
     const result = evaluateSkip(currentSongSkips, currentPlayer, players.length, gameMode === 'hardcore')
 
@@ -226,6 +267,7 @@ export function useTurnFlow({ onGameOver, onSkipNotice }: Options) {
     phase,
     currentSong,
     activePlayer,
+    tiebreak,
     incrementSkipCount,
     currentPlayer,
     currentSongSkips,
@@ -245,14 +287,9 @@ export function useTurnFlow({ onGameOver, onSkipNotice }: Options) {
 
     if (reveal.kind === 'placement') {
       setReveal(null)
-      if (reveal.isCorrect) {
-        // The placement already updated the player in state
-        const win = checkWinCondition(players, reveal.playerIndex, gameMode!)
-        if (win.gameOver && win.winner) {
-          finishGame(win.winner, players)
-          return
-        }
-      }
+      // The placement already updated the player in state. A wrong card can
+      // end the game too (it can complete a tiebreak round).
+      if (settleTurn(reveal.playerIndex, players) === 'over') return
       nextTurn()
       return
     }
@@ -277,14 +314,10 @@ export function useTurnFlow({ onGameOver, onSkipNotice }: Options) {
     })
 
     setReveal(null)
-    const win = checkWinCondition(updatedPlayers, reveal.playerIndex, gameMode!)
-    if (win.gameOver && win.winner) {
-      finishGame(win.winner, updatedPlayers)
-      return
-    }
+    if (settleTurn(reveal.playerIndex, updatedPlayers) === 'over') return
     nextTurn()
     addToast('Karte platziert!', 'success')
-  }, [reveal, gameOver, players, gameMode, finishGame, nextTurn, updatePlayer, applyEffects, addToast])
+  }, [reveal, gameOver, players, settleTurn, nextTurn, updatePlayer, applyEffects, addToast])
 
   // ── Bots ─────────────────────────────────────────────────────────────────
   // Effect events always see the latest placeCard/submitGuess (no stale closures).

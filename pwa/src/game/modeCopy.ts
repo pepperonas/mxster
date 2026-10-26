@@ -12,13 +12,13 @@ export const MODE_COPY: Record<GameMode, { name: string; short: string; how: str
   timeline_global: {
     name: 'Gemeinsame Zeitleiste',
     short: 'Alle legen an dieselbe Zeitleiste.',
-    how: 'Alle legen an eine gemeinsame Zeitleiste. Jeder richtige Song zählt für dich, zehn Songs gewinnen.',
+    how: 'Alle legen an eine gemeinsame Zeitleiste. Sobald zehn Songs richtig liegen, gewinnt, wer die meisten davon gelegt hat. Bei Gleichstand entscheidet ein Stechen.',
     icon: 'globe'
   },
   hardcore: {
     name: 'Hardcore',
     short: 'Titel, Interpret und Jahr raten, bis zu 15 Punkte.',
-    how: 'Rate Titel und Interpret (je 5 Punkte) und das Jahr (5 Punkte exakt, 2 bei einem Jahr daneben, 1 bei zwei). Nach zehn Songs gewinnt, wer die meisten Punkte hat.',
+    how: 'Rate Titel und Interpret (je 5 Punkte) und das Jahr (5 Punkte exakt, 2 bei einem Jahr daneben, 1 bei zwei). Nach zehn Songs gewinnt, wer die meisten Punkte hat. Bei Gleichstand entscheidet ein Stechen.',
     icon: 'flame'
   }
 }

@@ -72,7 +72,7 @@ export function ScoreOverview() {
       </ol>
 
       <p className="mt-4 pt-3 border-t border-md-outline-variant/60 text-center text-body-sm text-md-on-surface-variant">
-        Gewinner: die meisten Punkte nach 10 Karten
+        Gewinner: die meisten Punkte nach 10 Karten, bei Gleichstand Stechen
       </p>
     </section>
   )

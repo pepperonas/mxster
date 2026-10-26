@@ -12,7 +12,7 @@ interface GuessFormProps {
 }
 
 export function GuessForm({ onSubmit, onSkip }: GuessFormProps) {
-  const { gameMode, players, currentPlayer } = useGame()
+  const { gameMode, players, currentPlayer, tiebreak } = useGame()
   const { showModal, closeModal } = useUI()
   const [title, setTitle] = useState('')
   const [artist, setArtist] = useState('')
@@ -169,13 +169,15 @@ export function GuessForm({ onSubmit, onSkip }: GuessFormProps) {
 
         {/* Buttons */}
         <div className="flex gap-3 pt-2">
-          <button
-            type="button"
-            onClick={handleSkipClick}
-            className="btn btn-tonal m3-state-layer flex-1"
-          >
-            Überspringen
-          </button>
+          {!tiebreak && (
+            <button
+              type="button"
+              onClick={handleSkipClick}
+              className="btn btn-tonal m3-state-layer flex-1"
+            >
+              Überspringen
+            </button>
+          )}
           <button
             type="submit"
             className="btn btn-brand m3-state-layer flex-[1.4]"

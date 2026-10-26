@@ -215,3 +215,89 @@ describe('bots', () => {
     await waitFor(() => expect(t.get().game.currentPlayer).toBe(1))
   })
 })
+
+describe('no draw: tiebreak ("Stechen")', () => {
+  const seed = (t: ReturnType<typeof setup>) =>
+    act(() =>
+      t.get().game.loadGameState({
+        globalTimeline: [
+          { song: song(1970, 'g1'), playerId: 0 },
+          { song: song(1990, 'g2'), playerId: 1 }
+        ]
+      })
+    )
+  const place = (t: ReturnType<typeof setup>, year: number, gap: number) => {
+    act(() => t.get().game.setCurrentSong(song(year, `t${year}-${gap}-${Math.random()}`)))
+    act(() => t.get().flow.placeCard(gap))
+    act(() => t.get().flow.continueTurn())
+  }
+
+  it('5:5 in the shared timeline does not end the game; the tied players play it out', () => {
+    const t = setup('timeline_global', [{ name: 'Martin', cards: 5 }, { name: 'Bot Alpha', cards: 4 }])
+    seed(t)
+    act(() => t.get().game.setCurrentPlayer(1))
+    place(t, 1980, 1) // Bot Alpha: correct → 5:5, 10 cards in total
+    expect(t.onGameOver).not.toHaveBeenCalled()
+    expect(t.get().game.tiebreak).toMatchObject({ contenders: [0, 1], round: 1 })
+    expect(t.get().game.currentPlayer).toBe(0)
+
+    place(t, 2005, 0) // Martin: wrong — round not complete yet, no decision
+    expect(t.onGameOver).not.toHaveBeenCalled()
+    expect(t.get().game.currentPlayer).toBe(1)
+
+    place(t, 1975, 1) // Bot Alpha: correct → 5:6 after a full round
+    expect(t.onGameOver).toHaveBeenCalledTimes(1)
+    expect(t.onGameOver.mock.calls[0][0]).toMatchObject({ name: 'Bot Alpha', cards: 6 })
+    expect(t.get().game.tiebreak).toBeNull()
+  })
+
+  it('both right again: another round; only contenders take turns', () => {
+    const t = setup('timeline_global', [{ name: 'A', cards: 4 }, { name: 'B', cards: 2 }, { name: 'C', cards: 3 }])
+    seed(t)
+    act(() => t.get().game.setCurrentPlayer(2))
+    place(t, 1980, 1) // C: 4 → A and C level at 4, total 10
+    expect(t.get().game.tiebreak?.contenders).toEqual([0, 2])
+    expect(t.get().game.currentPlayer).toBe(0) // B is skipped
+    place(t, 1985, 2) // A right
+    expect(t.get().game.currentPlayer).toBe(2)
+    place(t, 1972, 1) // C right → 5:5
+    expect(t.onGameOver).not.toHaveBeenCalled()
+    expect(t.get().game.tiebreak).toMatchObject({ contenders: [0, 2], played: [], round: 2 })
+    expect(t.get().game.currentPlayer).toBe(0)
+  })
+
+  it('hardcore: equal points after the last card lead to a tiebreak, not a coin flip; no skipping', () => {
+    const tl = Array.from({ length: 9 }, (_, i) => song(1960 + i))
+    const t = setup('hardcore', [
+      { name: 'A', timeline: [...tl, song(1999, 'x')], cards: 10, score: 40 },
+      { name: 'B', timeline: tl, cards: 9, score: 30 }
+    ])
+    act(() => t.get().game.setCurrentPlayer(1))
+    act(() => t.get().game.setCurrentSong(song(1984, 'b10')))
+    act(() => t.get().flow.submitGuess('Song 1984', 'Artist', '1999')) // +10 → 40:40
+    act(() => t.get().flow.continueTurn())
+    expect(t.onGameOver).not.toHaveBeenCalled()
+    expect(t.get().game.tiebreak?.contenders).toEqual([0, 1])
+
+    act(() => t.get().game.setCurrentSong(song(1977, 'tb1')))
+    act(() => t.get().flow.skip())
+    expect(t.get().game.currentPlayer).toBe(0) // skip ignored in a tiebreak
+    act(() => t.get().flow.submitGuess('Song 1977', '', '1977')) // A +10
+    act(() => t.get().flow.continueTurn())
+    act(() => t.get().game.setCurrentSong(song(1966, 'tb2')))
+    act(() => t.get().flow.submitGuess('', '', '1950')) // B +0
+    act(() => t.get().flow.continueTurn())
+    expect(t.onGameOver).toHaveBeenCalledTimes(1)
+    expect(t.onGameOver.mock.calls[0][0]).toMatchObject({ name: 'A', score: 50 })
+  })
+
+  it('a rematch starts without a tiebreak', () => {
+    const t = setup('timeline_global', [{ name: 'A', cards: 5 }, { name: 'B', cards: 4 }])
+    seed(t)
+    act(() => t.get().game.setCurrentPlayer(1))
+    place(t, 1980, 1)
+    expect(t.get().game.tiebreak).not.toBeNull()
+    act(() => t.get().game.rematch())
+    expect(t.get().game.tiebreak).toBeNull()
+  })
+})

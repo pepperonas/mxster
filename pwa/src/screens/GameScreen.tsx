@@ -54,7 +54,7 @@ export function GameScreen() {
 function GameRound({ onRematch }: { onRematch: () => void }) {
   const navigate = useAppNavigate()
   const { showModal, closeModal } = useUI()
-  const { gameMode, players, currentPlayer, currentSong, resetGame, rematch } = useGame()
+  const { gameMode, players, currentPlayer, currentSong, resetGame, rematch, tiebreak } = useGame()
 
   const [previewGap, setPreviewGap] = useState<number | null>(null)
   const [hoverGap, setHoverGap] = useState<number | null>(null)
@@ -167,6 +167,11 @@ function GameRound({ onRematch }: { onRematch: () => void }) {
             <Icon name={MODE_COPY[gameMode].icon} size={20} className="text-md-primary" />
             {MODE_COPY[gameMode].name}
           </span>
+          {tiebreak && (
+            <span className="chip ml-auto bg-md-tertiary-container text-md-on-tertiary-container" role="status">
+              Stechen{tiebreak.round > 1 ? `, Runde ${tiebreak.round}` : ''}
+            </span>
+          )}
         </div>
       </header>
 
