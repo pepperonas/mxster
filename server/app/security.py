@@ -135,12 +135,25 @@ def require_admin(user: User = Depends(current_user)) -> User:
 
 # --- in-memory per-IP rate limit (single uvicorn worker) -------------------
 _hits: dict[str, list[float]] = defaultdict(list)
+_TRUSTED_PROXIES = {"127.0.0.1", "::1"}
+_MAX_KEYS = 10_000
+
+
+def client_ip(request: Request) -> str:
+    """X-Real-IP only counts when the request came through the local nginx;
+    anyone reaching the port directly could otherwise pick their own key."""
+    peer = request.client.host if request.client else "unknown"
+    if peer in _TRUSTED_PROXIES:
+        return request.headers.get("x-real-ip", peer)
+    return peer
 
 
 def check_ip_limit(request: Request, scope: str, limit: int = 20, window_s: int = 60) -> None:
-    ip = request.headers.get("x-real-ip") or (request.client.host if request.client else "unknown")
-    key = f"{scope}:{ip}"
+    key = f"{scope}:{client_ip(request)}"
     now = time.monotonic()
+    if len(_hits) > _MAX_KEYS:  # bound memory: drop every key without a recent hit
+        for k in [k for k, v in _hits.items() if not v or now - v[-1] >= window_s]:
+            del _hits[k]
     hits = [t for t in _hits[key] if now - t < window_s]
     if len(hits) >= limit:
         raise err(429, "rate_limited", "Zu viele Anfragen. Bitte kurz warten.")

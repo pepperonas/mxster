@@ -76,3 +76,15 @@ def test_dev_login_is_off_unless_enabled(client):
 def test_login_is_rate_limited(client):
     codes = [client.get("/api/auth/login").status_code for _ in range(21)]
     assert codes[-1] == 429
+
+
+def test_forwarded_ip_is_ignored_from_untrusted_peers():
+    from types import SimpleNamespace
+
+    from app.security import client_ip
+
+    def req(peer, header):
+        return SimpleNamespace(client=SimpleNamespace(host=peer), headers={"x-real-ip": header})
+
+    assert client_ip(req("203.0.113.9", "1.2.3.4")) == "203.0.113.9"
+    assert client_ip(req("127.0.0.1", "1.2.3.4")) == "1.2.3.4"
