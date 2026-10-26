@@ -9,36 +9,19 @@
  * 3. Required fields validation
  * 4. ID Uniqueness
  * 5. Year Validation
- * 6-10. File existence checks (gitignore-aware)
+ * 6. Spotify ID format
  *
- * Advanced Tests (Require local files/API access):
- * 11. QR Code Decoding (jsQR library)
- * 12. Spotify API Validation (live track checks)
- * 13. Image Dimensions Check (sharp library)
- * 14. OpenSCAD Syntax Validation (requires OpenSCAD)
- * 15. PDF Generation Test (validates PDF card files)
+ * Advanced Tests (Require API access, skipped without pwa/spotify.config.js):
+ * 7. Spotify API Validation (live track checks)
  */
 
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import { exec } from 'child_process';
-import { promisify } from 'util';
 
 // ES Module equivalent of __dirname
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-const execAsync = promisify(exec);
-
-// Dynamic imports for optional dependencies (loaded on-demand)
-let jsQR, PNG, sharp;
-try {
-  jsQR = (await import('jsqr')).default;
-  PNG = (await import('pngjs')).PNG;
-  sharp = (await import('sharp')).default;
-} catch (error) {
-  // Optional dependencies not available - advanced tests will be skipped
-}
 
 // Colors for terminal output
 const colors = {
@@ -164,8 +147,10 @@ if (duplicateIds.length > 0) {
  */
 console.log(`\n${colors.cyan}[Test 5] Validating years...${colors.reset}`);
 const currentYear = new Date().getFullYear();
+let invalidYears = 0;
 songs.forEach(song => {
   if (song.year < 1900 || song.year > currentYear) {
+    invalidYears++;
     logError(
       `Invalid year for "${song.title}"`,
       `Year: ${song.year} (expected 1900-${currentYear})`
@@ -173,99 +158,14 @@ songs.forEach(song => {
   }
 });
 
-if (failedTests === passedTests) {
+if (invalidYears === 0) {
   logSuccess('All years are valid');
 }
 
 /**
- * Test 6: Check 3D model files existence (gitignored, optional check)
+ * Test 6: Validate Spotify IDs format
  */
-console.log(`\n${colors.cyan}[Test 6] Checking 3D model files (optional - gitignored)...${colors.reset}`);
-const modelsDir = path.join(__dirname, 'extras/card-generator/output/models');
-
-if (fs.existsSync(modelsDir)) {
-  let missingScad = 0;
-  let missingStl = 0;
-
-  songs.forEach(song => {
-    const sanitizeFilename = (str) =>
-      str.replace(/[^a-zA-Z0-9\s]/g, '').replace(/\s+/g, '_').substring(0, 30);
-
-    const artistSafe = sanitizeFilename(song.artist);
-    const titleSafe = sanitizeFilename(song.title);
-    const baseFilename = `${song.id}_${artistSafe}_${titleSafe}_${song.year}`;
-
-    const scadPath = path.join(modelsDir, `${baseFilename}.scad`);
-    const stlPath = path.join(modelsDir, `${baseFilename}.stl`);
-
-    if (!fs.existsSync(scadPath)) {
-      missingScad++;
-    }
-
-    if (!fs.existsSync(stlPath)) {
-      missingStl++;
-    }
-  });
-
-  if (missingScad === 0 && missingStl === 0) {
-    logSuccess(`All 3D model files exist locally (${songs.length * 2} files)`);
-  } else {
-    logWarning(`Some 3D model files missing locally (${missingScad} SCAD, ${missingStl} STL) - will be generated on demand`);
-  }
-} else {
-  logWarning('3D models directory not found - files are gitignored and generated on demand');
-}
-
-/**
- * Test 7: Check QR code PNG files (gitignored, optional check)
- */
-console.log(`\n${colors.cyan}[Test 7] Checking QR code PNG files (optional - gitignored)...${colors.reset}`);
-const qrCodesDir = path.join(__dirname, 'extras/card-generator/output/qr-codes');
-
-if (fs.existsSync(qrCodesDir)) {
-  let missingPngs = 0;
-
-  songs.forEach(song => {
-    const sanitizeFilename = (str) =>
-      str.replace(/[^a-zA-Z0-9\s]/g, '').replace(/\s+/g, '_').substring(0, 30);
-
-    const artistSafe = sanitizeFilename(song.artist);
-    const titleSafe = sanitizeFilename(song.title);
-    const baseFilename = `${song.id}_${artistSafe}_${titleSafe}_${song.year}`;
-
-    const pngPath = path.join(qrCodesDir, `${baseFilename}.png`);
-
-    if (!fs.existsSync(pngPath)) {
-      missingPngs++;
-    }
-  });
-
-  if (missingPngs === 0) {
-    logSuccess(`All QR code PNG files exist locally (${songs.length} files)`);
-  } else {
-    logWarning(`Some QR code PNG files missing locally (${missingPngs} files) - will be generated on demand`);
-  }
-} else {
-  logWarning('QR codes directory not found - files are gitignored and generated on demand');
-}
-
-/**
- * Test 8: Check all-cards.3mf exists (optional - distributed via GitHub Releases)
- */
-console.log(`\n${colors.cyan}[Test 8] Checking combined 3MF file...${colors.reset}`);
-const all3mfPath = path.join(__dirname, 'extras/card-generator/output/models/all-cards.3mf');
-if (fs.existsSync(all3mfPath)) {
-  const stats = fs.statSync(all3mfPath);
-  logSuccess(`all-cards.3mf exists (${(stats.size / 1024 / 1024).toFixed(2)} MB)`);
-} else {
-  logWarning('all-cards.3mf not found (optional - create manually in slicer software for releases)');
-  logInfo('Individual STL files available in extras/card-generator/output/models/');
-}
-
-/**
- * Test 9: Validate Spotify IDs format
- */
-console.log(`\n${colors.cyan}[Test 9] Validating Spotify IDs...${colors.reset}`);
+console.log(`\n${colors.cyan}[Test 6] Validating Spotify IDs...${colors.reset}`);
 const spotifyIdRegex = /^[a-zA-Z0-9]{22}$/;
 let invalidSpotifyIds = 0;
 
@@ -284,103 +184,9 @@ if (invalidSpotifyIds === 0) {
 }
 
 /**
- * Test 10: Check file count consistency (optional - for local development only)
+ * Test 7: Spotify API Validation (Advanced - requires API access)
  */
-console.log(`\n${colors.cyan}[Test 10] Checking file count consistency (optional)...${colors.reset}`);
-
-logInfo(`Songs in JSON: ${songs.length}`);
-
-if (fs.existsSync(modelsDir) && fs.existsSync(qrCodesDir)) {
-  const scadFiles = fs.readdirSync(modelsDir).filter(f => f.endsWith('.scad')).length;
-  const stlFiles = fs.readdirSync(modelsDir).filter(f => f.endsWith('.stl')).length;
-  const pngFiles = fs.readdirSync(qrCodesDir).filter(f => f.startsWith('song_') && f.endsWith('.png')).length;
-
-  logInfo(`SCAD files: ${scadFiles}`);
-  logInfo(`STL files: ${stlFiles}`);
-  logInfo(`PNG files: ${pngFiles}`);
-
-  if (scadFiles === songs.length && stlFiles === songs.length && pngFiles === songs.length) {
-    logSuccess('All generated files match song count (local development mode)');
-  } else {
-    logWarning(`File counts don't match - some files missing locally (will be generated on demand)`);
-  }
-} else {
-  logWarning('Generated files directories not found (CI/CD mode) - files are gitignored');
-  logInfo('Tests focus on data integrity only');
-}
-
-/**
- * Test 11: QR Code Decoding (Advanced - requires local files)
- */
-console.log(`\n${colors.cyan}[Test 11] QR Code Decoding Test (advanced)...${colors.reset}`);
-
-if (!jsQR || !PNG) {
-  logWarning('jsQR or pngjs not available - skipping QR decode test');
-  logInfo('Install with: npm install jsqr pngjs');
-} else if (fs.existsSync(qrCodesDir)) {
-  logInfo('Testing QR code decoding on sample files...');
-
-  // Test first 5 QR codes as sample
-  const sampleSongs = songs.slice(0, 5);
-  let decodedSuccessfully = 0;
-  let decodeFailed = 0;
-
-  for (const song of sampleSongs) {
-    const sanitizeFilename = (str) =>
-      str.replace(/[^a-zA-Z0-9\s]/g, '').replace(/\s+/g, '_').substring(0, 30);
-
-    const artistSafe = sanitizeFilename(song.artist);
-    const titleSafe = sanitizeFilename(song.title);
-    const baseFilename = `${song.id}_${artistSafe}_${titleSafe}_${song.year}`;
-    const pngPath = path.join(qrCodesDir, `${baseFilename}.png`);
-
-    if (fs.existsSync(pngPath)) {
-      try {
-        const pngData = fs.readFileSync(pngPath);
-        const png = PNG.sync.read(pngData);
-
-        const imageData = {
-          data: new Uint8ClampedArray(png.data),
-          width: png.width,
-          height: png.height
-        };
-
-        const code = jsQR(imageData.data, imageData.width, imageData.height);
-
-        if (code && code.data) {
-          // Verify decoded data contains Spotify track URL
-          if (code.data.includes('open.spotify.com/track/') || code.data.includes(song.spotifyId)) {
-            decodedSuccessfully++;
-          } else {
-            logWarning(`QR code decoded but content unexpected for ${song.id}: ${code.data}`);
-            decodeFailed++;
-          }
-        } else {
-          logWarning(`Failed to decode QR code for ${song.id}`);
-          decodeFailed++;
-        }
-      } catch (error) {
-        logWarning(`Error decoding ${song.id}: ${error.message}`);
-        decodeFailed++;
-      }
-    }
-  }
-
-  if (decodedSuccessfully === sampleSongs.length) {
-    logSuccess(`All sample QR codes decoded successfully (${decodedSuccessfully}/${sampleSongs.length})`);
-  } else if (decodedSuccessfully > 0) {
-    logWarning(`Some QR codes decoded (${decodedSuccessfully}/${sampleSongs.length})`);
-  } else {
-    logWarning('No QR codes could be decoded (files may not exist locally)');
-  }
-} else {
-  logWarning('QR codes directory not found - skipping decode test (CI/CD mode)');
-}
-
-/**
- * Test 12: Spotify API Validation (Advanced - requires API access)
- */
-console.log(`\n${colors.cyan}[Test 12] Spotify API Validation (advanced)...${colors.reset}`);
+console.log(`\n${colors.cyan}[Test 7] Spotify API Validation (advanced)...${colors.reset}`);
 
 const spotifyConfigPath = path.join(__dirname, 'pwa/spotify.config.js');
 if (fs.existsSync(spotifyConfigPath)) {
@@ -459,164 +265,6 @@ if (fs.existsSync(spotifyConfigPath)) {
   }
 } else {
   logWarning('spotify.config.js not found - skipping Spotify API validation');
-}
-
-/**
- * Test 13: Image Dimensions Check (Advanced)
- */
-console.log(`\n${colors.cyan}[Test 13] Image Dimensions Check (advanced)...${colors.reset}`);
-
-if (!sharp) {
-  logWarning('sharp not available - skipping dimensions check');
-  logInfo('Install with: npm install sharp');
-} else if (fs.existsSync(qrCodesDir)) {
-  logInfo('Checking QR code image dimensions (sample of 5)...');
-
-  const sampleSongs = songs.slice(0, 5);
-  let correctDimensions = 0;
-  let incorrectDimensions = 0;
-
-  for (const song of sampleSongs) {
-    const sanitizeFilename = (str) =>
-      str.replace(/[^a-zA-Z0-9\s]/g, '').replace(/\s+/g, '_').substring(0, 30);
-
-    const artistSafe = sanitizeFilename(song.artist);
-    const titleSafe = sanitizeFilename(song.title);
-    const baseFilename = `${song.id}_${artistSafe}_${titleSafe}_${song.year}`;
-    const pngPath = path.join(qrCodesDir, `${baseFilename}.png`);
-
-    if (fs.existsSync(pngPath)) {
-      try {
-        const metadata = await sharp(pngPath).metadata();
-
-        // QR codes should be square and reasonably sized (e.g., 200x200 or similar)
-        if (metadata.width === metadata.height && metadata.width >= 200) {
-          correctDimensions++;
-        } else {
-          logWarning(`Unexpected dimensions for ${song.id}: ${metadata.width}x${metadata.height}`);
-          incorrectDimensions++;
-        }
-      } catch (error) {
-        logWarning(`Error reading image metadata for ${song.id}: ${error.message}`);
-        incorrectDimensions++;
-      }
-    }
-  }
-
-  if (correctDimensions === sampleSongs.length) {
-    logSuccess(`All sample QR code images have correct dimensions (${correctDimensions}/${sampleSongs.length})`);
-  } else if (correctDimensions > 0) {
-    logWarning(`Some images have correct dimensions (${correctDimensions}/${sampleSongs.length})`);
-  } else {
-    logWarning('Could not verify image dimensions (files may not exist locally)');
-  }
-} else {
-  logWarning('QR codes directory not found - skipping dimensions check (CI/CD mode)');
-}
-
-/**
- * Test 14: OpenSCAD Syntax Validation (Advanced - requires OpenSCAD)
- */
-console.log(`\n${colors.cyan}[Test 14] OpenSCAD Syntax Validation (advanced)...${colors.reset}`);
-
-if (fs.existsSync(modelsDir)) {
-  // Check if OpenSCAD is installed
-  try {
-    await execAsync('openscad --version');
-    logInfo('OpenSCAD found, validating SCAD file syntax (sample of 3)...');
-
-    const sampleSongs = songs.slice(0, 3);
-    let validSyntax = 0;
-    let invalidSyntax = 0;
-
-    for (const song of sampleSongs) {
-      const sanitizeFilename = (str) =>
-        str.replace(/[^a-zA-Z0-9\s]/g, '').replace(/\s+/g, '_').substring(0, 30);
-
-      const artistSafe = sanitizeFilename(song.artist);
-      const titleSafe = sanitizeFilename(song.title);
-      const baseFilename = `${song.id}_${artistSafe}_${titleSafe}_${song.year}`;
-      const scadPath = path.join(modelsDir, `${baseFilename}.scad`);
-
-      if (fs.existsSync(scadPath)) {
-        try {
-          // Try to parse the SCAD file (doesn't render, just checks syntax)
-          await execAsync(`openscad -o /dev/null --check-parameters true --enable=manifold --enable=fast-csg "${scadPath}" 2>&1`, { timeout: 5000 });
-          validSyntax++;
-        } catch (error) {
-          if (!error.message.includes('No such file')) {
-            logWarning(`OpenSCAD syntax error in ${song.id}: ${error.message.split('\n')[0]}`);
-            invalidSyntax++;
-          }
-        }
-      }
-    }
-
-    if (validSyntax === sampleSongs.length) {
-      logSuccess(`All sample SCAD files have valid syntax (${validSyntax}/${sampleSongs.length})`);
-    } else if (validSyntax > 0) {
-      logWarning(`Some SCAD files valid (${validSyntax}/${sampleSongs.length}), ${invalidSyntax} have syntax errors`);
-    } else {
-      logWarning('Could not validate SCAD syntax (files may not exist locally)');
-    }
-  } catch (error) {
-    logWarning('OpenSCAD not installed - skipping syntax validation');
-    logInfo('Install OpenSCAD to enable this test: brew install openscad (macOS) or apt-get install openscad (Linux)');
-  }
-} else {
-  logWarning('Models directory not found - skipping OpenSCAD validation (CI/CD mode)');
-}
-
-/**
- * Test 15: PDF Generation Test (Advanced)
- */
-console.log(`\n${colors.cyan}[Test 15] PDF Generation Test (advanced)...${colors.reset}`);
-
-const pdfDir = path.join(__dirname, 'extras/card-generator/output/pdfs');
-if (fs.existsSync(pdfDir)) {
-  const pdfFiles = [
-    'mxster-cards.pdf',
-    'mxster-cards-bw.pdf',
-    'mxster-cards-duplex.pdf',
-    'mxster-cards-bw-duplex.pdf'
-  ];
-
-  let foundPdfs = 0;
-  let validPdfs = 0;
-
-  for (const pdfFile of pdfFiles) {
-    const pdfPath = path.join(pdfDir, pdfFile);
-    if (fs.existsSync(pdfPath)) {
-      foundPdfs++;
-
-      try {
-        const stats = fs.statSync(pdfPath);
-        const pdfData = fs.readFileSync(pdfPath);
-
-        // Check if file starts with PDF magic bytes
-        if (pdfData.toString('utf8', 0, 4) === '%PDF') {
-          validPdfs++;
-          logInfo(`${pdfFile}: ${(stats.size / 1024 / 1024).toFixed(2)} MB - Valid PDF format`);
-        } else {
-          logWarning(`${pdfFile} exists but is not a valid PDF file`);
-        }
-      } catch (error) {
-        logWarning(`Error reading ${pdfFile}: ${error.message}`);
-      }
-    }
-  }
-
-  if (validPdfs === pdfFiles.length) {
-    logSuccess(`All PDF card files exist and are valid (${validPdfs}/${pdfFiles.length})`);
-  } else if (validPdfs > 0) {
-    logWarning(`Some PDF files found (${validPdfs}/${pdfFiles.length})`);
-  } else if (foundPdfs === 0) {
-    logWarning('No PDF files found - run ./scripts/build/generate-all-pdfs.sh to generate them');
-  } else {
-    logWarning('PDF files found but some may be invalid');
-  }
-} else {
-  logWarning('PDF directory not found - skipping PDF validation (CI/CD mode)');
 }
 
 /**

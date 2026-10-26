@@ -3,7 +3,7 @@
 /**
  * mxster - Add Song CLI Tool
  *
- * Adds a new song to the game and generates 3D printable card
+ * Adds a new song to the game (docs/songs.json + pwa/src/data/songs.ts)
  *
  * Usage:
  *   node add-song.js <spotify-url>
@@ -17,8 +17,7 @@ import path from 'path'
 import { fileURLToPath } from 'url'
 import readline from 'readline'
 import { execSync } from 'child_process'
-import { getTrackMetadata } from '../../extras/card-generator/spotifyApi.js'
-import { generateCard, generateSTL } from '../../extras/card-generator/generateCard.js'
+import { getTrackMetadata } from './lib/spotifyApi.js'
 
 // ES Module equivalent of __dirname
 const __filename = fileURLToPath(import.meta.url)
@@ -86,23 +85,8 @@ async function main() {
       console.log(`   Artist: ${duplicate.artist}`);
       console.log(`   Year: ${duplicate.year}`);
 
-      const rl = readline.createInterface({
-        input: process.stdin,
-        output: process.stdout
-      });
-
-      const answer = await new Promise(resolve => {
-        rl.question('\n❓ Generate card anyway? (y/N): ', resolve);
-      });
-      rl.close();
-
-      if (answer.toLowerCase() !== 'y') {
-        console.log('❌ Operation cancelled');
-        process.exit(0);
-      }
-
-      // Use existing song ID
-      trackData.id = duplicate.id;
+      console.log('\nℹ️  Nothing to do — songs.json and songs.ts are unchanged.');
+      process.exit(0);
     } else {
       // 4. Generate new song ID
       const maxId = songs.reduce((max, song) => {
@@ -219,20 +203,7 @@ async function main() {
       }
     }
 
-    // 9. Generate 3D card files
-    console.log('🎴 Generating 3D card files...');
-    const songForCard = duplicate || {
-      id: trackData.id,
-      title: trackData.title,
-      artist: trackData.artist,
-      year: trackData.year,
-      spotifyId: trackData.spotifyId
-    };
-
-    const result = await generateCard(songForCard);
-    console.log(`\n`);
-
-    // 10. Update song count in README.md
+    // 9. Update song count in README.md
     console.log('📊 Updating song count in README.md...');
     try {
       execSync('node update-song-count.js', { cwd: __dirname, stdio: 'inherit' });
@@ -240,26 +211,8 @@ async function main() {
       console.log(`   ⚠️  Could not update README.md: ${error.message}\n`);
     }
 
-    // 11. Try to generate STL files (optional)
-    try {
-      const stlFiles = await generateSTL(result.scadPath);
-      if (stlFiles) {
-        console.log(`\n`);
-      }
-    } catch (error) {
-      // STL generation is optional, continue even if it fails
-    }
-
-    // 12. Summary
-    console.log('✨ Success! Card files generated:\n');
-    console.log(`   QR Code:  ${result.qrCodePath}`);
-    console.log(`   OpenSCAD: ${result.scadPath}`);
-    console.log(`\n📝 Next steps:`);
-    console.log(`   1. Open ${result.scadPath} in OpenSCAD`);
-    console.log(`   2. Preview with F5, Render with F6`);
-    console.log(`   3. Export to STL: File → Export → Export as STL`);
-    console.log(`   4. Load STL in slicer and print (QR-Code nach unten!)\n`);
-
+    // 10. Summary
+    console.log('✨ Success!\n');
     console.log(`📊 Song Details:`);
     console.log(`   Title:      ${trackData.title}`);
     console.log(`   Artist:     ${trackData.artist}`);

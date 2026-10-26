@@ -7,22 +7,12 @@ if ! command -v node &> /dev/null; then
     exit 1
 fi
 
-# Python prüfen
-if ! command -v python3 &> /dev/null; then
-    echo "❌ Python3 nicht gefunden. Bitte installieren."
-    exit 1
-fi
-
-# OpenSCAD prüfen
-if ! command -v openscad &> /dev/null; then
-    echo "⚠️  OpenSCAD nicht gefunden. Für 3D-Modelle installieren: brew install openscad"
-fi
-
-# PWA Dependencies (from scripts/setup/ to root/pwa)
-cd "$(dirname "$0")/../../pwa"
+# Root Dependencies (Song-Management-Skripte, Integrity-Tests)
+cd "$(dirname "$0")/../.."
 npm install
 
-# Python Dependencies
-pip3 install qrcode pillow
+# PWA Dependencies
+cd pwa
+npm install
 
 echo "✅ Alle Dependencies installiert!"

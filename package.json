@@ -1,7 +1,7 @@
 {
   "name": "mxster",
   "version": "0.0.4-beta",
-  "description": "Music Timeline Game with 3D-Printable Cards",
+  "description": "Music timeline game (PWA)",
   "type": "module",
   "scripts": {
     "test": "node test-integrity.js",
@@ -9,9 +9,7 @@
   },
   "keywords": [
     "music",
-    "game",
-    "3d-printing",
-    "qr-codes"
+    "game"
   ],
   "author": "pepperonas",
   "license": "MIT",
@@ -20,8 +18,7 @@
     "url": "https://github.com/pepperonas/mxster.git"
   },
   "devDependencies": {
-    "jsqr": "^1.4.0",
-    "pngjs": "^7.0.0",
-    "sharp": "^0.34.4"
+    "axios": "^1.7.9",
+    "dotenv": "^16.4.7"
   }
 }

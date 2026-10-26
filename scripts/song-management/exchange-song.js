@@ -4,7 +4,8 @@
  * Interactive Song Exchange Wizard
  *
  * Ersetzt einen bestehenden Song komplett durch einen neuen Song von Spotify.
- * Behält die Song-ID bei, lädt neue Metadaten und regeneriert alle Dateien.
+ * Behält die Song-ID bei, lädt neue Metadaten und aktualisiert docs/songs.json
+ * sowie pwa/src/data/songs.ts.
  */
 
 import dotenv from 'dotenv'
@@ -14,8 +15,7 @@ import path from 'path'
 import { fileURLToPath } from 'url'
 import readline from 'readline'
 import { execSync } from 'child_process'
-import { getTrackMetadata } from '../../extras/card-generator/spotifyApi.js'
-import { generateCard, generateSTL } from '../../extras/card-generator/generateCard.js'
+import { getTrackMetadata } from './lib/spotifyApi.js'
 
 // ES Module equivalent of __dirname
 const __filename = fileURLToPath(import.meta.url)
@@ -78,106 +78,6 @@ async function updateSongsJs(songs) {
   const content = `import type { Song } from '@/types'\n\nexport const songs: Song[] = ${JSON.stringify(songs, null, 2)}\n`;
   await fs.writeFile(songsJsPath, content);
   log('✅ pwa/src/data/songs.ts aktualisiert', 'green');
-}
-
-// Alte Dateien löschen
-async function deleteOldFiles(songId) {
-  const oldFiles = [];
-
-  // Finde alle Dateien mit dieser Song-ID
-  const docsDir = path.join(__dirname, '../../docs');
-  const qrCodesDir = path.join(__dirname, '../../extras/card-generator', 'output', 'qr-codes');
-  const modelsDir = path.join(__dirname, '../../extras/card-generator', 'output', 'models');
-
-  // Suche in docs/
-  try {
-    const docsFiles = await fs.readdir(docsDir);
-    for (const file of docsFiles) {
-      if (file.startsWith(songId + '_') && file.endsWith('.png')) {
-        const filePath = path.join(docsDir, file);
-        await fs.unlink(filePath);
-        oldFiles.push(filePath);
-      }
-    }
-  } catch (error) {
-    // Verzeichnis existiert nicht
-  }
-
-  // Suche in qr-codes/
-  try {
-    const qrFiles = await fs.readdir(qrCodesDir);
-    for (const file of qrFiles) {
-      if (file.startsWith(songId + '_') && file.endsWith('.png')) {
-        const filePath = path.join(qrCodesDir, file);
-        await fs.unlink(filePath);
-        oldFiles.push(filePath);
-      }
-    }
-  } catch (error) {
-    // Verzeichnis existiert nicht
-  }
-
-  // Suche in models/
-  try {
-    const modelFiles = await fs.readdir(modelsDir);
-    for (const file of modelFiles) {
-      if (file.startsWith(songId + '_') && (file.endsWith('.scad') || file.endsWith('.stl'))) {
-        const filePath = path.join(modelsDir, file);
-        await fs.unlink(filePath);
-        oldFiles.push(filePath);
-      }
-    }
-  } catch (error) {
-    // Verzeichnis existiert nicht
-  }
-
-  if (oldFiles.length > 0) {
-    log(`🗑️  ${oldFiles.length} alte Dateien gelöscht`, 'yellow');
-  }
-}
-
-// QR-Code und Karten generieren (inkl. 3D-Modelle)
-async function generateCardFiles(song) {
-  log('🔄 Generiere Karten-Dateien (QR-Code + 3D-Modelle)...', 'cyan');
-
-  try {
-    // Generiere Card (QR-Code + SCAD)
-    const result = await generateCard(song);
-    log(`✅ QR-Code generiert: ${result.qrCodePath}`, 'green');
-
-    // Generiere STL (IMMER)
-    try {
-      const stlResult = await generateSTL(result.scadPath);
-      if (stlResult) {
-        log(`✅ 3D-Modelle generiert (SCAD + STL)`, 'green');
-      }
-    } catch (error) {
-      log(`⚠️  STL-Generierung fehlgeschlagen: ${error.message}`, 'yellow');
-      log(`   💡 Tipp: Installiere OpenSCAD von https://openscad.org/`, 'yellow');
-    }
-
-    return result;
-  } catch (error) {
-    log(`❌ Fehler beim Generieren der Karten: ${error.message}`, 'red');
-    throw error;
-  }
-}
-
-// PDF-Karten generieren (alle Songs)
-async function generatePDFCards() {
-  log('🔄 Generiere PDF-Karten (alle Songs)...', 'cyan');
-
-  try {
-    const pdfScript = path.join(__dirname, '../../scripts/build/generate-all-pdfs.sh');
-    execSync(`"${pdfScript}"`, {
-      cwd: path.join(__dirname, '../..'),
-      stdio: 'inherit'
-    });
-
-    log('✅ PDF-Karten generiert', 'green');
-  } catch (error) {
-    log(`❌ Fehler beim Generieren der PDF-Karten: ${error.message}`, 'red');
-  }
 }
 
 // Extrahiere Spotify Track ID aus URL
@@ -291,10 +191,7 @@ async function main() {
     log('\nSchritt 5/5: Dateien aktualisieren', 'bright');
     log('─────────────────────────────────────────', 'bright');
 
-    // 1. Alte Dateien löschen
-    await deleteOldFiles(songId);
-
-    // 2. Song-Objekt erstellen (behält die alte ID!)
+    // 1. Song-Objekt erstellen (behält die alte ID!)
     const newSong = {
       id: songId,  // WICHTIG: Behält die alte ID!
       title: trackData.title,
@@ -309,7 +206,7 @@ async function main() {
       newSong.genre = trackData.genre;
     }
 
-    // 2.5. Download from YouTube and upload to VPS
+    // 1.5. Download from YouTube and upload to VPS
     log('\n🎵 Downloading and uploading audio...', 'cyan');
     try {
       const { downloadAndUploadSong } = await import('../audio-hosting/download-single-song.js');
@@ -326,21 +223,12 @@ async function main() {
       log(`⚠️  Using Spotify preview URL as fallback: ${trackData.previewUrl || 'none'}`, 'yellow');
     }
 
-    // 3. In Array ersetzen
+    // 2. In Array ersetzen
     songs[songIndex] = newSong;
 
-    // 4. Datenbanken speichern
+    // 3. Datenbanken speichern
     await saveSongs(songs);
     await updateSongsJs(songs);
-
-    // 5. Karten neu generieren (QR-Code + SCAD + STL)
-    await generateCardFiles(newSong);
-
-    // 6. PDF-Karten generieren (optional)
-    const generatePDF = await question('\nPDF-Karten neu generieren (alle Songs)? (j/n): ');
-    if (generatePDF.toLowerCase() === 'j' || generatePDF.toLowerCase() === 'ja') {
-      await generatePDFCards();
-    }
 
     // Update song count in README.md
     log('\n📊 Updating song count in README.md...', 'cyan');
@@ -357,13 +245,6 @@ async function main() {
     log('Aktualisierte Dateien:', 'cyan');
     log('  • docs/songs.json', 'cyan');
     log('  • pwa/src/data/songs.ts', 'cyan');
-    log(`  • docs/${songId}_*.png`, 'cyan');
-    log(`  • extras/card-generator/output/qr-codes/${songId}_*.png`, 'cyan');
-    log(`  • extras/card-generator/output/models/${songId}_*.scad`, 'cyan');
-    log(`  • extras/card-generator/output/models/${songId}_*.stl`, 'cyan');
-    if (generatePDF.toLowerCase() === 'j' || generatePDF.toLowerCase() === 'ja') {
-      log(`  • extras/card-generator/output/pdfs/mxster-cards-*.pdf`, 'cyan');
-    }
 
     log('\n📊 Song-Details:', 'cyan');
     log(`   Alt: ${oldSong.artist} - ${oldSong.title} (${oldSong.year})`, 'red');
