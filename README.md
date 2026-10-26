@@ -1,98 +1,85 @@
-# mxster - Music Timeline Game
+# mxster
 
-**Das ultimative Musikquiz!** Rate Songs, platziere sie chronologisch und teste dein Musikwissen.
+Song hören, Jahr raten, an die richtige Stelle der Zeitleiste legen. Ein Musikspiel für eure Runde, gespielt auf einem Gerät.
 
-[![App](https://img.shields.io/badge/Play_Now-mxster.celox.io-blue?style=for-the-badge&logo=googlechrome&logoColor=white)](https://mxster.celox.io)
-[![Version](https://img.shields.io/badge/v0.3.0-06B6D4?style=for-the-badge&logo=semver&logoColor=white)](https://github.com/pepperonas/mxster/releases)
-[![License](https://img.shields.io/badge/MIT-green?style=for-the-badge&logo=opensourceinitiative&logoColor=white)](LICENSE)
+[![App](https://img.shields.io/badge/mxster.celox.io-B90C55?style=for-the-badge&logo=googlechrome&logoColor=white)](https://mxster.celox.io)
+[![Version](https://img.shields.io/badge/v0.4.0-B90C55?style=for-the-badge&logo=semver&logoColor=white)](https://github.com/pepperonas/mxster/releases)
+[![Tests](https://github.com/pepperonas/mxster/actions/workflows/test.yml/badge.svg)](https://github.com/pepperonas/mxster/actions/workflows/test.yml)
 
 ![React](https://img.shields.io/badge/React_19-61DAFB?style=flat-square&logo=react&logoColor=black)
 ![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=flat-square&logo=typescript&logoColor=white)
 ![Vite](https://img.shields.io/badge/Vite_5-646CFF?style=flat-square&logo=vite&logoColor=white)
-![TailwindCSS](https://img.shields.io/badge/Tailwind_3.4-06B6D4?style=flat-square&logo=tailwindcss&logoColor=white)
-![Three.js](https://img.shields.io/badge/Three.js-000000?style=flat-square&logo=threedotjs&logoColor=white)
-![PWA](https://img.shields.io/badge/PWA-5A0FC8?style=flat-square&logo=pwa&logoColor=white)
-![Vitest](https://img.shields.io/badge/Vitest-6E9F18?style=flat-square&logo=vitest&logoColor=white)
-![Spotify](https://img.shields.io/badge/Spotify_SDK-1DB954?style=flat-square&logo=spotify&logoColor=white)
-![Node.js](https://img.shields.io/badge/Node_18-339933?style=flat-square&logo=nodedotjs&logoColor=white)
-![Howler.js](https://img.shields.io/badge/Howler.js-FF6600?style=flat-square&logo=audiomack&logoColor=white)
+![FastAPI](https://img.shields.io/badge/FastAPI-009688?style=flat-square&logo=fastapi&logoColor=white)
+![SQLite](https://img.shields.io/badge/SQLite-003B57?style=flat-square&logo=sqlite&logoColor=white)
+![Material 3 Expressive](https://img.shields.io/badge/Material_3-Expressive-B90C55?style=flat-square&logo=materialdesign&logoColor=white)
 
-![Songs](https://img.shields.io/badge/Songs-211-orange?style=flat-square)
-![Achievements](https://img.shields.io/badge/Achievements-24-gold?style=flat-square)
-![Audio](https://img.shields.io/badge/Audio-Self--Hosted-red?style=flat-square)
-![Modes](https://img.shields.io/badge/Modes-3-blue?style=flat-square)
-![Bot_AI](https://img.shields.io/badge/Bot_AI-3_Levels-blueviolet?style=flat-square)
-![Multiplayer](https://img.shields.io/badge/Multiplayer-Unlimited-brightgreen?style=flat-square)
-![Design](https://img.shields.io/badge/Material_3-Expressive-06B6D4?style=flat-square&logo=materialdesign&logoColor=white)
-![Theme](https://img.shields.io/badge/Theme-Dark_%2B_Light-1A1C27?style=flat-square)
-[![Tests](https://github.com/pepperonas/mxster/actions/workflows/test.yml/badge.svg)](https://github.com/pepperonas/mxster/actions/workflows/test.yml)
+## Zugang
 
-![mxster Banner](https://mxster.celox.io/assets/mxster.jpg)
-
-## Schnellstart
-
-1. Oeffne **[mxster.celox.io](https://mxster.celox.io)**
-2. "Jetzt spielen (Gratis)" -- Passwort: `ydl`
-3. Spielmodus waehlen, Spieler hinzufuegen, los!
+mxster ist eine private App. Man meldet sich mit einem Google-Konto an; neue Konten landen auf einer Warteliste und werden einzeln freigeschaltet. Erst danach sind Spiel und Musik erreichbar — auch die MP3-Dateien liefert der Server nur an freigeschaltete Sitzungen aus.
 
 ## Spielmodi
 
-| Modus | Ziel | Punkte |
-|-------|------|--------|
-| **Hardcore** | Rate Titel, Kuenstler & Jahr | Bis zu 15/Song (max 150) |
-| **Timeline Persoenlich** | Eigene Timeline aufbauen | Erster mit 10 Karten gewinnt |
-| **Timeline Global** | Gemeinsame Timeline | Meiste Karten nach 10 gewinnt |
+| Modus | Ziel |
+|-------|------|
+| **Eigene Zeitleiste** | Jede:r baut eine eigene Zeitleiste. Wer zuerst zehn Songs richtig liegen hat, gewinnt. |
+| **Gemeinsame Zeitleiste** | Alle legen an dieselbe Zeitleiste, jeder richtige Song zählt für dich. |
+| **Hardcore** | Titel (+5), Interpret (+5) und Jahr (+5 exakt, +2 bei einem Jahr daneben, +1 bei zwei) raten. Nach zehn Songs gewinnt die höchste Punktzahl. |
 
-**Hardcore-Scoring:** Titel +5, Kuenstler +5, Jahr exakt +5 / +/-1 +2 / +/-2 +1
+Allein? Dann spielen bis zu drei Bots gegen dich (leicht, mittel, schwer).
 
-## Features
+## Was drin ist
 
-- 211 Songs (Self-Hosted MP3) + optional Spotify Premium
-- Fuzzy Matching, 24 Achievements, Bot-Gegner (Easy/Medium/Hard)
-- PWA -- installierbar, offline-faehig, Auto-Save
-- 3D Partikel-Animationen, Konfetti-Effekte, Score-Animationen
+- 211 Songs als selbst gehostete MP3s, zufällige Startstelle auf Wunsch
+- Fehlertolerante Antworten (Tippfehler, Groß- und Kleinschreibung)
+- 23 Erfolge, Verlauf jeder Runde mit Rangliste und allen Songs
+- Verlauf, Erfolge und Einstellungen hängen am Konto und sind auf jedem Gerät gleich
+- PWA, installierbar, helles und dunkles Design
 
 ## Design
 
-**Material 3 Expressive** von Grund auf: zentrale Design-Token (`pwa/src/styles/design-tokens.css`) als Single Source of Truth fuer Farbe, Form, Typografie und Motion.
+Material 3 Expressive mit einer eigenen Identität: Vinyl-Magenta als Primärfarbe, warmes Orange als Akzent. Das Herzstück ist die Schallplatte — sie dreht sich, solange der Song läuft, und zeigt nach dem Aufdecken das Jahr auf ihrem Label.
 
-- **Dark + Light Theme** (elektrisches Cyan als Marke, warmes Koralle als Akzent), umschaltbar mit MD3-Circular-Reveal ueber die View Transitions API
-- **Echte Federphysik** (seit v0.3.0) -- die M3-Expressive-Federn (Steifigkeit + Daempfung) sind die eine Quelle fuer JS-Animationen (`motion/react`) und CSS (`linear()`-Kurven aus der exakten Federloesung); Bewegungen behalten beim Unterbrechen ihren Schwung
-- **Karten werfen** -- die Songkarte wird auf die Zeitleiste gezogen (neigt sich mit der Wurfgeschwindigkeit, Luecken federn auf), alternativ Luecke antippen oder per Tastatur waehlen; das Jahr klappt beim Aufdecken um
-- **Ergebnisse entfalten sich** an Ort und Stelle statt in Dialogen; Punkte zaehlen hoch, die Rangliste sortiert sich fliessend um, Dialoge und Hinweise fahren ein und aus (Bottom-Sheets mit Wisch-Geste auf dem Handy)
-- **Shared-Element-Transitions** zwischen Routen, Shape-Morphing, zweiphasige Ripple, Scroll-Reveals
-- `prefers-reduced-motion` durchgehend und live respektiert; Ergebnisse werden fuer Screenreader angesagt
-- Mobile-first: Touch-Targets >= 48px, Safe-Areas, ab 360px ohne horizontales Scrollen
+- Farben aus Seeds generiert (`pwa/scripts/gen-tokens.mjs` → `pwa/src/styles/design-tokens.css`), nirgends sonst Rohfarben
+- Echte Federn (Steifigkeit + Dämpfung) als eine Quelle für JS (`motion/react`) und CSS (`linear()`-Kurven)
+- Seitenwechsel über die View Transitions API, Theme-Wechsel als Kreis-Reveal
+- `prefers-reduced-motion` wird überall respektiert, Touch-Ziele mindestens 48 px
+- Roboto Flex selbst gehostet, keine Tracker von Drittanbietern
 
-## Fuer Entwickler
+## Aufbau
 
-```bash
-git clone https://github.com/pepperonas/mxster.git
-cd mxster/pwa && npm install && npm run dev
-# http://localhost:5174
+```
+pwa/      React-19-PWA (Vite, Tailwind, motion)
+server/   FastAPI + SQLite: Google-Login, Warteliste, Admin, Spieldaten, Audio-Freigabe
+docs/     songs.json — die Songdatenbank (Quelle der Wahrheit)
+scripts/  Songs verwalten, MP3s hosten, Deployment
 ```
 
+## Entwicklung
+
 ```bash
-npm test                        # Integritaetstests
-cd pwa && npm test              # Vitest
-cd pwa && npx tsc --noEmit      # Type Check
-./scripts/deployment/deploy.sh  # Deploy auf mxster.celox.io
+# Backend (Port 4274)
+cd server && python3 -m venv .venv && .venv/bin/pip install -r requirements-dev.txt
+cp .env.example .env            # MX_DEV_LOGIN=true für lokale Tests ohne Google
+.venv/bin/uvicorn app.main:app --port 4274 --reload
+
+# Frontend (Port 5174, leitet /api an das Backend weiter)
+cd pwa && npm install && npm run dev
+# lokal anmelden: http://127.0.0.1:5174/api/auth/dev-login?email=…&name=…
+
+# Tests
+cd server && .venv/bin/python -m pytest -q
+cd pwa && npx tsc --noEmit && npx vitest run
+npm test                         # Songdaten-Integrität (Repo-Wurzel)
 ```
 
-### Google-Anmeldung
+## Deployment
 
-Spieler koennen sich in der Sidebar mit ihrem Google-Konto anmelden (Name/Bild in der Sidebar, Ein-Tipp-Eintrag „Als &lt;Vorname&gt; mitspielen" in der Spielereinrichtung). Umgesetzt mit Google Identity Services rein im Browser — kein Backend, **kein Client-Secret**. Das Google-Skript laedt erst, wenn jemand auf „Mit Google anmelden" tippt; gespeichert wird nur das Profil (`mxster_google_profile` in localStorage), nie das Token.
-
-Einrichtung: `pwa/.env.example` nach `pwa/.env.production` (Deploy) bzw. `pwa/.env.local` (Entwicklung) kopieren und `VITE_GOOGLE_CLIENT_ID` setzen. Ohne Wert bleibt die Anmeldung unsichtbar. In der Google Cloud Console braucht der OAuth-Client (Typ „Webanwendung") als **autorisierte JavaScript-Quellen** `https://mxster.celox.io` sowie fuer lokal `http://localhost:5174` und `http://127.0.0.1:5174`; Weiterleitungs-URIs sind nicht noetig.
-
-## Physische Karten (Optional)
-
-PDF- und 3D-Druckkarten verfuegbar unter [`extras/card-generator/`](extras/card-generator/README.md) und [GitHub Releases](https://github.com/pepperonas/mxster/releases/latest).
+```bash
+./scripts/deployment/deploy.sh        # API und Web-App
+./scripts/deployment/deploy.sh api    # nur Backend
+./scripts/deployment/deploy.sh web    # nur PWA
+```
 
 ## Lizenz
 
-MIT -- [Martin Pfeffer](mailto:martin.pfeffer@celox.io)
-
----
-
-**[mxster.celox.io](https://mxster.celox.io)** | [GitHub](https://github.com/pepperonas/mxster) | [Releases](https://github.com/pepperonas/mxster/releases)
+MIT

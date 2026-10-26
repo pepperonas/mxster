@@ -14,6 +14,7 @@ os.environ["GOOGLE_CLIENT_SECRET"] = "test-client-secret"
 os.environ["MXSTER_ADMIN_EMAILS"] = "boss@example.com"
 os.environ["MX_DEV_LOGIN"] = "false"
 os.environ["SENDMAIL_PATH"] = ""
+os.environ["SMTP_HOST"] = ""
 os.environ["MX_DB_PATH"] = str(Path(tempfile.mkdtemp(prefix="mxster-test-")) / "test.db")
 
 from fastapi.testclient import TestClient  # noqa: E402
@@ -58,6 +59,7 @@ def mails(monkeypatch):
     sent: list[tuple[str, str]] = []
     from app import mail
 
+    monkeypatch.setattr(mail, "BACKGROUND", False)
     monkeypatch.setattr(mail, "send", lambda to, subject, text: sent.append((to, subject)) or True)
     return sent
 

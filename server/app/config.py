@@ -26,8 +26,12 @@ class Settings(BaseSettings):
     # Dev-only fake login (hard-refused in prod) so the UI can be driven locally.
     mx_dev_login: bool = False
 
-    # Mail via the local sendmail binary (msmtp on the VPS). Empty = disabled.
+    # Mail: SMTP (implicit TLS) or a sendmail binary; both empty = disabled.
     sendmail_path: str = ""
+    smtp_host: str = ""
+    smtp_port: int = 465
+    smtp_user: str = ""
+    smtp_pass: str = ""
     mail_from: str = "mxster <support@celox.io>"
     notify_email: str = "martinpaush@gmail.com"
 

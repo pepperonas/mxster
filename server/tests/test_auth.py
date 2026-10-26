@@ -94,3 +94,9 @@ def test_session_is_null_when_signed_out_and_mirrors_me_when_signed_in(client, g
     assert client.get("/api/session").json() == {"me": None}
     me = login(client, google, sub="1", email="a@example.com")
     assert client.get("/api/session").json()["me"] == me
+
+
+def test_mail_is_a_noop_without_transport():
+    from app import mail
+
+    assert mail.send("x@example.com", "s", "t") is False
