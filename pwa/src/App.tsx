@@ -21,6 +21,7 @@ import { englishPath, LEGACY_SEGMENTS } from '@/legacyPaths'
 import { MotionProvider } from '@/motion/MotionProvider'
 import { LegalScreen } from '@/legal/LegalScreen'
 import { LanguageProvider } from '@/i18n'
+import { Backdrop } from '@/components/ui/Backdrop'
 import './styles/design-tokens.css'
 import './styles/tailwind.css'
 import './styles/motion.css'
@@ -44,6 +45,7 @@ function Root() {
 
   return (
     <LanguageProvider>
+    <Backdrop />
     <MotionProvider>
       <AuthProvider>
         <AuthGate>

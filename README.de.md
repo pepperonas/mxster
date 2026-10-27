@@ -15,10 +15,10 @@
 <h3>👉 <a href="https://mxtape.celox.io">mxtape.celox.io</a> — mit Google anmelden oder als Gast nur per Link in den Raum von Freunden</h3>
 
 <!-- BADGES:BIG — version, tests, lines of code and songs; readme.test.ts keeps them true, scripts/readme-badges.mjs rewrites them. -->
-[![version](https://img.shields.io/badge/version-0.9.0-C2185B?style=for-the-badge&logo=semver&logoColor=white)](https://github.com/pepperonas/mxtape/releases/latest)
-[![tests](https://img.shields.io/badge/tests-500-2E9E5B?style=for-the-badge&logo=vitest&logoColor=white)](#tests-und-ci)
-[![lines of code](https://img.shields.io/badge/lines%20of%20code-19.9k-4B6BDF?style=for-the-badge&logo=typescript&logoColor=white)](pwa/src)
-[![test code](https://img.shields.io/badge/test%20code-5.9k-2E9E5B?style=for-the-badge&logo=typescript&logoColor=white)](#tests-und-ci)
+[![version](https://img.shields.io/badge/version-0.9.1-C2185B?style=for-the-badge&logo=semver&logoColor=white)](https://github.com/pepperonas/mxtape/releases/latest)
+[![tests](https://img.shields.io/badge/tests-508-2E9E5B?style=for-the-badge&logo=vitest&logoColor=white)](#tests-und-ci)
+[![lines of code](https://img.shields.io/badge/lines%20of%20code-20.0k-4B6BDF?style=for-the-badge&logo=typescript&logoColor=white)](pwa/src)
+[![test code](https://img.shields.io/badge/test%20code-6.0k-2E9E5B?style=for-the-badge&logo=typescript&logoColor=white)](#tests-und-ci)
 [![songs](https://img.shields.io/badge/songs-300-FF8A3D?style=for-the-badge&logo=applemusic&logoColor=white)](#die-songsammlung)
 
 [![Donate with PayPal](https://img.shields.io/badge/PayPal-support%20this%20project-00457C?style=for-the-badge&logo=paypal&logoColor=white)](https://www.paypal.com/donate/?business=martin.pfeffer@celox.io&currency_code=EUR&item_name=mxtape)
@@ -194,7 +194,7 @@ Audio ist AAC-LC mit 96 kbit/s, nach vier Minuten mit kurzer Ausblendung abgesch
 
 ## Design
 
-Material 3 Expressive mit eigener Identität: **Vinyl-Magenta** als Primärfarbe, warmes Bernstein als Akzent. Die Platte ist das einzige Erkennungszeichen – sie dreht sich, solange der Song läuft, und zeigt nach dem Aufdecken das Jahr auf ihrem Label; alles drumherum bleibt ruhig.
+Material 3 Expressive mit eigener Identität: **Vinyl-Magenta** als Primärfarbe, warmes Bernstein als Akzent. Die Platte ist das einzige Erkennungszeichen – sie dreht sich, solange der Song läuft, und zeigt nach dem Aufdecken das Jahr auf ihrem Label; alles drumherum bleibt ruhig. Im Hintergrund liegt dieselbe Platte riesig und angeschnitten, nur als Rillen; ein weicher Lichtreflex streicht darüber und dreht schneller, solange ein Song läuft.
 
 - Paletten werden aus Seeds **erzeugt** (`pwa/scripts/gen-tokens.mjs` → `pwa/src/styles/design-tokens.css`), nirgends sonst Rohfarben
 - Echte Federn (Steifigkeit und Dämpfung) als eine Quelle für JS (`motion`) und CSS (`linear()`-Kurven)

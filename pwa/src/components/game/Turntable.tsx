@@ -21,6 +21,7 @@ import { spring } from '@/motion/springs'
 import type { Song } from '@/types'
 import type { AudioCue } from '@/online/protocol'
 import { cuePosition } from '@/online/clock'
+import { useBackdropPlaying } from '@/hooks/useBackdropPlaying'
 import { useMessages } from '@/i18n'
 import { gameText } from '@/i18n/messages/game'
 
@@ -181,6 +182,7 @@ export function Turntable({
 
   const playing = audioRole === 'silent' ? silentPlaying : state === 'playing'
   const loading = audioRole !== 'silent' && state === 'loading'
+  useBackdropPlaying(playing)
   const toggle = useCallback(() => {
     if (audioRole === 'silent') return
     if (playing) player.current.pause()

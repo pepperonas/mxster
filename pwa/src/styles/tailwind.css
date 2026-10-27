@@ -34,7 +34,9 @@
   }
 
   body {
-    @apply bg-md-surface text-md-on-surface font-sans antialiased min-h-screen overflow-x-hidden;
+    /* No own background: <html> carries the surface, so the backdrop layer
+       (z-index -1) stays visible behind the page. */
+    @apply text-md-on-surface font-sans antialiased min-h-screen overflow-x-hidden;
     font-optical-sizing: auto;
   }
 
@@ -366,4 +368,90 @@ input[type='number']::-webkit-outer-spin-button {
 input[type='number'] {
   -moz-appearance: textfield;
   appearance: textfield;
+}
+
+/* ── Backdrop ─────────────────────────────────────────────────────────────
+   A huge record cut off at the bottom right, drawn only as its grooves
+   (Backdrop.tsx). Only transform and opacity move. The sheen layers are
+   masked by the same grooves, so the light catches the rings, not the
+   surface. While music plays (html[data-playing]) the fast sheen fades in and
+   a warm glow breathes at the centre. */
+.mx-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  overflow: hidden;
+  contain: strict;
+  /* Quiet towards the top left, where most text starts */
+  -webkit-mask-image: radial-gradient(circle at 100% 100%, #000 0, #000 30%, transparent 92%);
+  mask-image: radial-gradient(circle at 100% 100%, #000 0, #000 30%, transparent 92%);
+}
+.mx-backdrop-disc {
+  --mx-grooves: repeating-radial-gradient(circle at 50% 50%, #000 0 2px, transparent 2px 14px);
+  position: absolute;
+  width: 170vmax;
+  height: 170vmax;
+  right: -85vmax;
+  bottom: -85vmax;
+  border-radius: 50%;
+  overflow: hidden;
+}
+.mx-backdrop-disc > * {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+}
+.mx-backdrop-grooves {
+  background: repeating-radial-gradient(
+    circle at 50% 50%,
+    rgb(var(--md-sys-color-on-surface) / var(--mx-backdrop-groove-alpha)) 0 2px,
+    transparent 2px 14px
+  );
+}
+.mx-backdrop-sheen {
+  background: conic-gradient(
+    from 0deg,
+    transparent 0deg 18deg,
+    rgb(var(--md-sys-color-on-surface) / var(--mx-backdrop-sheen-alpha)) 34deg,
+    transparent 52deg 198deg,
+    rgb(var(--md-sys-color-on-surface) / calc(var(--mx-backdrop-sheen-alpha) * 0.6)) 214deg,
+    transparent 232deg 360deg
+  );
+  -webkit-mask-image: var(--mx-grooves);
+  mask-image: var(--mx-grooves);
+  will-change: transform;
+  animation: mx-backdrop-turn 90s linear infinite;
+  transition: opacity 1.2s var(--m3-ease-effects-slow);
+}
+.mx-backdrop-sheen[data-speed='play'] {
+  opacity: 0;
+  animation-duration: 12s;
+}
+.mx-backdrop-glow {
+  background: radial-gradient(circle at 50% 50%, rgb(var(--mx-label-2) / var(--mx-backdrop-glow-alpha)) 0, transparent 22%);
+  opacity: 0;
+  will-change: opacity;
+  transition: opacity 1.2s var(--m3-ease-effects-slow);
+}
+html[data-playing] .mx-backdrop-sheen[data-speed='idle'] { opacity: 0; }
+html[data-playing] .mx-backdrop-sheen[data-speed='play'] { opacity: 1; }
+html[data-playing] .mx-backdrop-glow {
+  opacity: 1;
+  animation: mx-backdrop-breathe 4s ease-in-out infinite;
+}
+@keyframes mx-backdrop-turn {
+  to { transform: rotate(360deg); }
+}
+@keyframes mx-backdrop-breathe {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 1; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .mx-backdrop-sheen,
+  .mx-backdrop-glow,
+  html[data-playing] .mx-backdrop-glow { animation: none; }
+  .mx-backdrop-sheen[data-speed='play'],
+  html[data-playing] .mx-backdrop-sheen[data-speed='play'] { opacity: 0; }
+  html[data-playing] .mx-backdrop-sheen[data-speed='idle'] { opacity: 1; }
 }
