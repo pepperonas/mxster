@@ -8,6 +8,7 @@ import { createContext, useContext, useEffect, useCallback, type ReactNode } fro
 import { useSyncedDoc } from '@/sync/useSyncedDoc'
 import { mergeSettings } from '@/sync/merge'
 import { RECENT_LIMIT, rememberSong } from '@/game/songPool'
+import { setHapticsEnabled } from '@/utils/haptics'
 
 export type ThemeMode = 'dark' | 'light'
 
@@ -20,6 +21,8 @@ export interface Settings {
   recentSongs: string[]
   /** People removed in the player management: left out of lists and statistics. */
   hiddenPlayers: string[]
+  /** Subtle vibration on phones (placing, verdicts, a win). */
+  haptics: boolean
 }
 
 interface SettingsContextType {
@@ -44,7 +47,8 @@ export const defaultSettings: Settings = {
   savedPlayers: [],
   theme: readStoredTheme(),
   recentSongs: [],
-  hiddenPlayers: []
+  hiddenPlayers: [],
+  haptics: true
 }
 
 function readStoredTheme(): ThemeMode {
@@ -64,7 +68,8 @@ export function normalizeSettings(raw: unknown): Settings {
     savedPlayers: Array.isArray(r.savedPlayers) ? r.savedPlayers.filter((n) => typeof n === 'string') : [],
     theme: r.theme === 'light' ? 'light' : r.theme === 'dark' ? 'dark' : readStoredTheme(),
     recentSongs: Array.isArray(r.recentSongs) ? r.recentSongs.filter((k) => typeof k === 'string').slice(-RECENT_LIMIT) : [],
-    hiddenPlayers: Array.isArray(r.hiddenPlayers) ? r.hiddenPlayers.filter((n) => typeof n === 'string') : []
+    hiddenPlayers: Array.isArray(r.hiddenPlayers) ? r.hiddenPlayers.filter((n) => typeof n === 'string') : [],
+    haptics: r.haptics !== false
   }
 }
 
@@ -96,6 +101,8 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
       meta.content = THEME_COLOR[settings.theme]
     })
   }, [settings.theme])
+
+  useEffect(() => setHapticsEnabled(settings.haptics !== false), [settings.haptics])
 
   const updateSettings = useCallback((patch: Partial<Settings>) => setValue((prev) => ({ ...prev, ...patch })), [setValue])
   const resetSettings = useCallback(() => setValue({ ...defaultSettings, theme: settings.theme }), [setValue, settings.theme])

@@ -49,7 +49,8 @@ export const gameText = defineMessages({
     dragCard: (title: string, artist: string) =>
       `${title} von ${artist} — ziehe die Karte auf die Zeitleiste oder tippe eine Lücke`,
     dragHint: 'Karte in eine Lücke ziehen oder Lücke antippen',
-    confirmTitle: 'Platzieren – oder andere Lücke antippen',
+    confirmTitle: 'Platzieren – oder Karte in eine andere Lücke ziehen',
+    moveCard: (title: string) => `${title} — zum Verschieben in eine andere Lücke ziehen oder Lücke antippen`,
     placeHere: 'Hier platzieren',
     back: 'Zurück',
     hasPlaced: (name: string) => `${name} hat gelegt`,
@@ -214,7 +215,8 @@ export const gameText = defineMessages({
     dragCard: (title: string, artist: string) =>
       `${title} by ${artist} — drag the card onto the timeline or tap a gap`,
     dragHint: 'Drag the card into a gap or tap a gap',
-    confirmTitle: 'Place it – or tap another gap',
+    confirmTitle: 'Place it – or drag the card to another gap',
+    moveCard: (title: string) => `${title} — drag it to another gap or tap one to move it`,
     placeHere: 'Place here',
     back: 'Back',
     hasPlaced: (name: string) => `${name} has placed`,

@@ -4,12 +4,14 @@
  * Replaces the old imperative DOM effects (rain, lightning, full-screen shake,
  * neon text overlays). Successes earn confetti in the theme colours (never
  * under reduced motion); a miss is felt locally — the card itself shakes on
- * the board. Every verdict is also announced to screen readers.
+ * the board. Phones feel the verdict as a short vibration (utils/haptics).
+ * Every verdict is also announced to screen readers.
  */
 import { useEffect, useState } from 'react'
 import type { Reveal } from '@/game/useTurnFlow'
 import { guessTier } from '@/game/guess'
 import { celebrate } from '@/motion/celebrate'
+import { haptic, type HapticKind } from '@/utils/haptics'
 import { msg } from '@/i18n'
 import { gameText } from '@/i18n/messages/game'
 
@@ -24,12 +26,26 @@ export function announcementFor(reveal: Reveal): string {
   return t.announceGuess(reveal.breakdown.total, title, artist, year)
 }
 
+/** What the phone feels on a verdict (a first card is no verdict). */
+export function hapticFor(reveal: Reveal): HapticKind | null {
+  if (reveal.kind === 'placement') {
+    if (reveal.isFirstCard) return null
+    return reveal.isCorrect || reveal.challenge?.won ? 'success' : 'miss'
+  }
+  const tier = guessTier(reveal.breakdown.total)
+  if (tier === 'perfect') return 'win'
+  if (tier === 'great' || tier === 'good') return 'success'
+  return tier === 'miss' ? 'miss' : null
+}
+
 export function FeedbackLayer({ reveal }: { reveal: Reveal | null }) {
   const [message, setMessage] = useState('')
 
   useEffect(() => {
     if (!reveal) return
     setMessage(announcementFor(reveal))
+    const feel = hapticFor(reveal)
+    if (feel) haptic(feel)
 
     let cancel = () => {}
     if (reveal.kind === 'placement') {

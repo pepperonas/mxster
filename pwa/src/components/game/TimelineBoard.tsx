@@ -18,14 +18,19 @@
  *   when someone needed the years to object;
  * - the year flips in like a split-flap display on reveal; a wrong card
  *   shakes (damped) and stays as a ghost until the turn continues.
+ * - the waiting card can be dragged to another gap (PreviewRow) and settles
+ *   with a short squash wherever it lands; a right card lifts once.
  * Gap highlight during a drag uses transform/colour only — the layout must
  * not change while the drag measures it.
  */
-import type { Ref } from 'react'
-import { AnimatePresence, m } from 'motion/react'
+import { useCallback, useEffect, useRef, type Ref, type RefObject } from 'react'
+import { AnimatePresence, animate, m, useMotionValue } from 'motion/react'
 import type { Song } from '@/types'
 import { gapLabel } from '@/game/placement'
-import { spring } from '@/motion/springs'
+import { dragReturn, spring } from '@/motion/springs'
+import { prefersReducedMotion } from '@/motion/policy'
+import { useCardDrag } from '@/game/useCardDrag'
+import { GripIcon } from '@/components/ui/GripIcon'
 import { initialOf } from '@/game/teams'
 import { useMessages } from '@/i18n'
 import { gameText } from '@/i18n/messages/game'
@@ -66,6 +71,10 @@ interface TimelineBoardProps {
   placedBy?: string
   /** The preview card is an objection (own look, own shared-element id). */
   previewIsChallenge?: boolean
+  /** The waiting preview card was dragged to another gap. */
+  onPreviewMove?: (gap: number) => void
+  /** Gap under the dragged preview card (highlight). */
+  onHoverGap?: (gap: number | null) => void
 }
 
 export function TimelineBoard({
@@ -81,9 +90,21 @@ export function TimelineBoard({
   boardRef,
   placedGap = null,
   placedBy,
-  previewIsChallenge = false
+  previewIsChallenge = false,
+  onPreviewMove,
+  onHoverGap
 }: TimelineBoardProps) {
   const t = useMessages(gameText)
+  // Own handle on the list for the drag geometry, still handed to the parent
+  const listRef = useRef<HTMLOListElement | null>(null)
+  const setList = useCallback(
+    (el: HTMLOListElement | null) => {
+      listRef.current = el
+      if (typeof boardRef === 'function') boardRef(el)
+      else if (boardRef) (boardRef as { current: HTMLOListElement | null }).current = el
+    },
+    [boardRef]
+  )
   const songs = cards.map((c) => c.song)
   const items: React.ReactNode[] = []
 
@@ -112,13 +133,16 @@ export function TimelineBoard({
     }
     if (interactive && pendingSong && previewGap === gap) {
       items.push(
-        <BoardRow
-          key={`preview-${gap}`}
-          layoutId={previewIsChallenge ? challengeCardLayoutId(pendingSong.id) : pendingCardLayoutId(pendingSong.id)}
-          tone={previewIsChallenge ? 'challenge' : 'preview'}
-        >
-          <CardContent song={pendingSong} yearHidden />
-        </BoardRow>
+        <PreviewRow
+          // Per song, not per gap: moving the card keeps it one element that glides to the new gap
+          key={`preview-${previewIsChallenge ? 'c' : 'p'}-${pendingSong.id}`}
+          song={pendingSong}
+          gap={gap}
+          challenge={previewIsChallenge}
+          boardRef={listRef}
+          onMove={onPreviewMove}
+          onHoverGap={onHoverGap}
+        />
       )
       return
     }
@@ -152,6 +176,7 @@ export function TimelineBoard({
         key={card.song.id}
         layoutId={isRevealed ? pendingCardLayoutId(card.song.id) : undefined}
         tone={isRevealed ? 'correct' : 'default'}
+        pop={isRevealed}
       >
         <CardContent
           song={card.song}
@@ -166,7 +191,7 @@ export function TimelineBoard({
   renderGap(cards.length)
 
   return (
-    <ol ref={boardRef} aria-label={label} className="flex flex-col gap-1.5">
+    <ol ref={setList} aria-label={label} className="flex flex-col gap-1.5">
       <AnimatePresence initial={false} mode="popLayout">
         {items}
       </AnimatePresence>
@@ -197,25 +222,106 @@ interface BoardRowProps {
   layoutId?: string
   tone: Tone
   shake?: boolean
+  /** Revealed right: lifts once (the counterpart of the wrong card's shake). */
+  pop?: boolean
 }
 
-function BoardRow({ ref, children, layoutId, tone, shake }: BoardRowProps) {
+function BoardRow({ ref, children, layoutId, tone, shake, pop }: BoardRowProps) {
   return (
     <m.li
       ref={ref}
       layout="position"
       layoutId={layoutId}
       initial={{ opacity: 0, scale: 0.9 }}
-      animate={shake ? { opacity: 1, scale: 1, x: [0, -14, 11, -7, 4, 0] } : { opacity: 1, scale: 1, x: 0 }}
+      animate={
+        shake
+          ? { opacity: 1, scale: 1, x: [0, -14, 11, -7, 4, 0] }
+          : pop
+            ? { opacity: 1, scale: [1, 1.035, 1], x: 0 }
+            : { opacity: 1, scale: 1, x: 0 }
+      }
       exit={{ opacity: 0, scale: 0.92, transition: spring.effectsDefault }}
       transition={
         shake
           ? { default: spring.spatialDefault, x: { duration: 0.55, ease: [0.36, 0.07, 0.19, 0.97] } }
-          : spring.spatialDefault
+          : pop
+            ? { default: spring.spatialDefault, scale: { duration: 0.5, delay: 0.15, ease: [0.2, 0, 0, 1], times: [0, 0.35, 1] } }
+            : spring.spatialDefault
       }
-      className={`relative flex items-center gap-3 min-h-[52px] px-3 py-1.5 rounded-m3-lg border-2 transition-colors duration-m3-effects-slow ease-m3-effects-slow ${TONE_CLASS[tone]}`}
+      data-pop={pop || undefined}
+      className={`relative flex items-center gap-3 min-h-[52px] px-3 py-1.5 rounded-m3-lg border-2 transition-colors duration-m3-effects-slow ease-m3-effects-slow ${TONE_CLASS[tone]} ${pop ? 'mx-success-ring' : ''}`}
     >
       {children}
+    </m.li>
+  )
+}
+
+/**
+ * The card waiting in its gap for confirmation. It can be dragged to another
+ * gap with the same physics as the dock card (useCardDrag); released on its
+ * own gap or away from the board it springs back. It counts as a gap itself
+ * (`data-gap-index`), so the geometry knows where "home" is. Each time it
+ * lands it settles with a short squash — it has weight.
+ */
+function PreviewRow({
+  ref,
+  song,
+  gap,
+  challenge,
+  boardRef,
+  onMove,
+  onHoverGap
+}: {
+  ref?: Ref<HTMLLIElement>
+  song: Song
+  gap: number
+  challenge: boolean
+  boardRef: RefObject<HTMLOListElement | null>
+  onMove?: (gap: number) => void
+  onHoverGap?: (gap: number | null) => void
+}) {
+  const t = useMessages(gameText)
+  const movable = Boolean(onMove)
+  const { x, tilt, onDragStart, onDrag, onDragEnd } = useCardDrag({
+    boardRef,
+    home: gap,
+    onHoverGap: (g) => onHoverGap?.(g),
+    onDrop: (g) => onMove?.(g)
+  })
+  const squash = useMotionValue(1)
+  useEffect(() => {
+    if (prefersReducedMotion()) return
+    const controls = animate(squash, [0.92, 1], { ...spring.spatialFast, delay: 0.12 })
+    return () => controls.stop()
+  }, [gap, squash])
+
+  return (
+    <m.li
+      ref={ref}
+      layout="position"
+      layoutId={challenge ? challengeCardLayoutId(song.id) : pendingCardLayoutId(song.id)}
+      data-gap-index={gap}
+      data-preview-card=""
+      initial={{ opacity: 0, scale: 0.9 }}
+      animate={{ opacity: 1, scale: 1 }}
+      exit={{ opacity: 0, scale: 0.92, transition: spring.effectsDefault }}
+      transition={spring.spatialDefault}
+      drag={movable}
+      dragSnapToOrigin
+      dragElastic={0.18}
+      dragTransition={dragReturn}
+      onDragStart={onDragStart}
+      onDrag={onDrag}
+      onDragEnd={onDragEnd}
+      whileDrag={{ scale: 1.04, boxShadow: 'var(--md-sys-elevation-4)', zIndex: 50 }}
+      style={{ x, rotate: tilt, scaleY: squash }}
+      aria-label={movable ? t.moveCard(song.title) : undefined}
+      className={`relative flex items-center gap-3 min-h-[52px] px-3 py-1.5 rounded-m3-lg border-2 transition-colors duration-m3-effects-slow ease-m3-effects-slow ${
+        TONE_CLASS[challenge ? 'challenge' : 'preview']
+      } ${movable ? 'touch-none select-none cursor-grab active:cursor-grabbing' : ''}`}
+    >
+      <CardContent song={song} yearHidden />
+      {movable && <GripIcon />}
     </m.li>
   )
 }
@@ -309,7 +415,8 @@ function GapButton({ ref, gap, label, highlighted, large, onSelect }: GapButtonP
         type="button"
         data-gap-index={gap}
         onClick={() => onSelect?.(gap)}
-        animate={{ scale: highlighted ? 1.03 : 1 }}
+        animate={{ scale: highlighted ? 1.05 : 1 }}
+        whileTap={{ scale: 0.97 }}
         transition={spring.spatialFast}
         aria-label={t.insertHere(label)}
         className={`m3-state-layer relative w-full flex items-center justify-center gap-2 rounded-m3-md border-2 border-dashed transition-colors duration-m3-effects ease-m3-effects ${

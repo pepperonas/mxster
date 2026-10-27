@@ -394,6 +394,24 @@ input[type='number'] {
   appearance: textfield;
 }
 
+/* ─── Right card: one ring of success colour spreads out from the edge ─── */
+.mx-success-ring::after {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  border-radius: inherit;
+  pointer-events: none;
+  animation: mx-success-ring 700ms var(--m3-ease-effects-slow, ease-out) 150ms both;
+}
+@keyframes mx-success-ring {
+  from { box-shadow: 0 0 0 0 rgb(var(--md-sys-color-success) / 0.55); }
+  to { box-shadow: 0 0 0 10px rgb(var(--md-sys-color-success) / 0); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .mx-success-ring::after { animation: none; }
+}
+
+
 /* ── Backdrop ─────────────────────────────────────────────────────────────
    Fine sound waves along the lower part of the screen (Backdrop.tsx). Each
    wave is an SVG twice the screen width that slides left by half its width,

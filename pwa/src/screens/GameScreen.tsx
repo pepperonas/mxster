@@ -366,6 +366,7 @@ export function GameRound({ onRematch }: { onRematch: () => void }) {
               reveal={boardReveal}
               revealPlayerIndex={placementReveal?.playerIndex ?? null}
               onGapSelect={(gap) => (humanPlacing || challengeChoosing) && setPreviewGap(gap)}
+              onHoverGap={setHoverGap}
               boardRef={boardRef}
               placedGap={phase === 'challenge' ? (pending?.gapIndex ?? null) : null}
               placedBy={pending ? turnName(players[pending.playerIndex] ?? activePlayer) : undefined}

@@ -51,6 +51,9 @@ export const spring = Object.fromEntries(
   Object.entries(M3_SPRINGS).map(([name, spec]) => [name, toMotionSpring(spec)])
 ) as Record<SpringName, MotionSpring>
 
+/** How a dragged card springs back when released away from a gap (dock and board alike). */
+export const dragReturn = { bounceStiffness: 380, bounceDamping: 26 } as const
+
 /**
  * Normalised position 0 → 1 of a spring released from rest at 0 towards 1.
  * Underdamped: 1 − e^(−ζωt)(cos ω_d t + (ζω/ω_d) sin ω_d t)

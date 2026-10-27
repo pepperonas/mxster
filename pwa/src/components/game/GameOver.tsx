@@ -7,6 +7,7 @@ import { m } from 'motion/react'
 import { Vinyl } from '@/components/ui/Vinyl'
 import { Icon } from '@/components/ui/Icon'
 import { celebrate } from '@/motion/celebrate'
+import { haptic } from '@/utils/haptics'
 import { spring } from '@/motion/springs'
 import type { GameMode, Player } from '@/types'
 import { rankPlayers } from '@/game/tiebreak'
@@ -30,7 +31,10 @@ export function GameOver({ winner, players, mode, onRematch, onHome, rematchBy, 
   const hardcore = mode === 'hardcore'
   const ranked = rankPlayers(players, mode, winner.name)
 
-  useEffect(() => celebrate('big'), [])
+  useEffect(() => {
+    haptic('win')
+    return celebrate('big')
+  }, [])
 
   return (
     <m.div

@@ -9,13 +9,14 @@ import { Avatar } from '@/components/ui/Avatar'
 import { Icon, type IconName } from '@/components/ui/Icon'
 import { Switch } from '@/components/ui/Switch'
 import { toggleThemeWithReveal } from '@/utils/themeReveal'
+import { canVibrate } from '@/utils/haptics'
 import { api } from '@/api/client'
 import { LegalLinks } from '@/legal/LegalScreen'
 import { LanguageSwitch } from '@/components/ui/LanguageSwitch'
 import { useMessages } from '@/i18n'
 import { profileText } from '@/i18n/messages/profile'
 
-const VERSION = '0.9.3'
+const VERSION = '0.9.4'
 
 export function ProfileScreen() {
   const me = useMe()
@@ -129,6 +130,11 @@ export function ProfileScreen() {
         <Item icon="eye" title={t.hideYears} text={t.hideYearsText}>
           <Switch checked={settings.hideYearsInTimeline} onChange={(v) => updateSettings({ hideYearsInTimeline: v })} ariaLabel={t.hideYears} />
         </Item>
+        {canVibrate() && (
+          <Item icon="vibration" title={t.vibration} text={t.vibrationText}>
+            <Switch checked={settings.haptics} onChange={(v) => updateSettings({ haptics: v })} ariaLabel={t.vibration} />
+          </Item>
+        )}
       </Group>
 
       <Group title={t.players}>

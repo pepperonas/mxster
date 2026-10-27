@@ -24,6 +24,8 @@ interface GameBoardsProps {
   reveal: BoardReveal | null
   revealPlayerIndex: number | null
   onGapSelect: (gap: number) => void
+  /** Gap under the waiting card while it is dragged again. */
+  onHoverGap?: (gap: number | null) => void
   boardRef: Ref<HTMLOListElement>
   /** Einspruch: the face-down card and who put it there. */
   placedGap?: number | null
@@ -38,6 +40,7 @@ export function GameBoards({
   reveal,
   revealPlayerIndex,
   onGapSelect,
+  onHoverGap,
   boardRef,
   placedGap = null,
   placedBy,
@@ -45,7 +48,7 @@ export function GameBoards({
 }: GameBoardsProps) {
   const t = useMessages(gameText)
   const { players, currentPlayer, gameMode, globalTimeline, currentSong, goal } = useGame()
-  const challengeProps = { placedGap, placedBy, previewIsChallenge }
+  const challengeProps = { placedGap, placedBy, previewIsChallenge, onPreviewMove: onGapSelect, onHoverGap }
   const { settings } = useSettings()
   const hideYears = Boolean(settings.hideYearsInTimeline)
 

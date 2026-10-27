@@ -69,9 +69,16 @@ export function PlayerStrip({ thinking = false }: { thinking?: boolean }) {
               </span>
             </span>
             {active && (
-              <span className="relative ml-1 text-title-sm tabular text-md-on-primary-container">
+              <m.span
+                // A new card or points: the count pops once
+                key={hardcore ? p.score : p.cards}
+                initial={{ scale: 1.35 }}
+                animate={{ scale: 1 }}
+                transition={spring.spatialFast}
+                className="relative ml-1 text-title-sm tabular text-md-on-primary-container"
+              >
                 <AnimatedNumber value={hardcore ? p.score : p.cards} />
-              </span>
+              </m.span>
             )}
           </m.li>
         )
