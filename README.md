@@ -40,7 +40,7 @@ Allein? Dann spielen bis zu drei Bots gegen dich (leicht, mittel, schwer).
 
 ## Was drin ist
 
-- 211 Songs als selbst gehostete MP3s, zufällige Startstelle auf Wunsch
+- 301 Songs von den 50ern bis heute als selbst gehostete MP3s, zufällige Startstelle auf Wunsch
 - Nach dem Aufdecken: Album-Cover auf dem Plattenlabel, Albumname und ein kurzes „Wusstest du?“
 - Eine laufende Runde übersteht Neuladen und geschlossene Tabs: Sie wird auf dem Gerät gesichert und auf der Startseite zum Weiterspielen angeboten
 - Fehlertolerante Antworten (Tippfehler, Groß- und Kleinschreibung)

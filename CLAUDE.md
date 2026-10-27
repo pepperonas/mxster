@@ -7,7 +7,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 **mxster** is a private music timeline game, played on one device by a group: hear a song, guess its year, place it on a timeline. Since v0.4.0 it is **sign-in only** (Google), new accounts wait for approval, and play is **virtual only** — physical QR cards, the card generator and Spotify were removed for good.
 
 **Current version**: v0.5.0 (2026-10) — resume after reload, Einspruch, decades + recent-song avoidance, round length, teams, song info (cover/album/fact). v0.4.0: login + approval queue, server-side account data, frontend redesign (Material 3 Expressive, "vinyl magenta").
-**Song database**: source of truth `docs/songs.json` (with `album`), facts in `docs/song-facts.json`; both are merged into `pwa/src/data/songs.ts` by `node scripts/song-management/sync-songs-ts.js` (never edit songs.ts by hand). Covers live next to the MP3s as `audio/covers/<id>.jpg` (gitignored locally, gated by nginx like the MP3s). Song data comes from MusicBrainz / Cover Art Archive — **no Spotify anywhere**; the old `spotifyId` values are only kept as stable keys, new songs have none.
+**Song database** (301 songs, 1950s–2020s): source of truth `docs/songs.json` (with `album`), facts in `docs/song-facts.json`; both are merged into `pwa/src/data/songs.ts` by `node scripts/song-management/sync-songs-ts.js` (never edit songs.ts by hand). Covers live next to the MP3s as `audio/covers/<id>.jpg` (gitignored locally, gated by nginx like the MP3s). Song data comes from MusicBrainz / Cover Art Archive — **no Spotify anywhere**; the old `spotifyId` values are only kept as stable keys, new songs have none.
 **Live**: https://mxster.celox.io (VPS 69.62.121.168)
 
 ### Key Technologies
@@ -47,7 +47,8 @@ npm test
 
 ### Song Management / Audio Hosting
 ```bash
-node scripts/song-management/add-song.js "spotify-url"      # needs root .env with Spotify client credentials
+node scripts/song-management/sync-songs-ts.js              # songs.json + song-facts.json → pwa/src/data/songs.ts
+node scripts/song-management/add-song.js "spotify-url"      # LEGACY: still calls the Spotify API — do not use, see below
 node scripts/song-management/edit-song.js
 node scripts/song-management/exchange-song.js
 cd scripts/audio-hosting && node download-songs.js && node upload-to-vps.js && node validate-audio.js --full
@@ -138,7 +139,7 @@ Mobile placing (below `lg`, 1024 px):
 
 ## Best Practices
 - Song type: `export const songs: Song[] = [...]` (the integrity test parses it with `/export const songs(?:: Song\[\])? = (\[[\s\S]*\])/`).
-- Song management scripts need the root `.env` with Spotify client credentials.
+- Song data is maintained without Spotify (MusicBrainz for album/year cross-checks, Cover Art Archive or the iTunes Search API for covers, yt-dlp for audio; years are the original first release of that recording). `add-song.js`/`exchange-song.js` and `scripts/song-management/lib/spotifyApi.js` still use the Spotify API and are legacy — add songs by editing `docs/songs.json`, then run `sync-songs-ts.js`. Songs without a fact are fine (only confident facts, never the year).
 - Touch targets ≥ 48 px; `hoverOnlyWhenSupported` is on, so `hover:` never fires on touch.
 - UI copy is German, sentence case, active verbs; **no emoji anywhere** — every symbol is an inline SVG from `components/ui/Icon.tsx` (achievements map to icons via `achievementIcon(id)`; stored achievements may still carry old emoji strings, so never render `achievement.icon` from stored data directly).
 

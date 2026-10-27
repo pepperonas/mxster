@@ -9,10 +9,7 @@
  * 3. Required fields validation
  * 4. ID Uniqueness
  * 5. Year Validation
- * 6. Spotify ID format
- *
- * Advanced Tests (Require API access, skipped without pwa/spotify.config.js):
- * 7. Spotify API Validation (live track checks)
+ * 6. Spotify ID format (optional legacy key; newer songs have none)
  */
 
 import fs from 'fs';
@@ -115,7 +112,7 @@ try {
  * Test 3: Validate song data structure
  */
 console.log(`\n${colors.cyan}[Test 3] Validating song data structure...${colors.reset}`);
-const requiredFields = ['id', 'title', 'artist', 'year', 'spotifyId'];
+const requiredFields = ['id', 'title', 'artist', 'year', 'previewUrl'];
 songs.forEach((song, index) => {
   const missing = requiredFields.filter(field => !song[field]);
   if (missing.length > 0) {
@@ -165,7 +162,7 @@ if (invalidYears === 0) {
 /**
  * Test 6: Validate Spotify IDs format
  */
-console.log(`\n${colors.cyan}[Test 6] Validating Spotify IDs...${colors.reset}`);
+console.log(`\n${colors.cyan}[Test 6] Validating Spotify IDs (where present)...${colors.reset}`);
 const spotifyIdRegex = /^[a-zA-Z0-9]{22}$/;
 let invalidSpotifyIds = 0;
 
@@ -181,90 +178,6 @@ songs.forEach(song => {
 
 if (invalidSpotifyIds === 0) {
   logSuccess('All Spotify IDs have valid format');
-}
-
-/**
- * Test 7: Spotify API Validation (Advanced - requires API access)
- */
-console.log(`\n${colors.cyan}[Test 7] Spotify API Validation (advanced)...${colors.reset}`);
-
-const spotifyConfigPath = path.join(__dirname, 'pwa/spotify.config.js');
-if (fs.existsSync(spotifyConfigPath)) {
-  logInfo('Testing Spotify track IDs (sample of 5 tracks)...');
-
-  try {
-    // Dynamic import for ES module
-    const spotifyConfig = await import(spotifyConfigPath);
-    const config = spotifyConfig.default;
-
-    if (config.clientId && config.clientSecret) {
-      logInfo('Spotify credentials found, testing API access...');
-
-      // Test sample tracks (first 5)
-      const sampleSongs = songs.slice(0, 5);
-      let validTracks = 0;
-      let invalidTracks = 0;
-
-      // Get Spotify access token
-      try {
-        const tokenResponse = await fetch('https://accounts.spotify.com/api/token', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-            'Authorization': 'Basic ' + Buffer.from(config.clientId + ':' + config.clientSecret).toString('base64')
-          },
-          body: 'grant_type=client_credentials'
-        });
-
-        if (tokenResponse.ok) {
-          const tokenData = await tokenResponse.json();
-          const accessToken = tokenData.access_token;
-
-          // Test each sample track
-          for (const song of sampleSongs) {
-            try {
-              const trackResponse = await fetch(`https://api.spotify.com/v1/tracks/${song.spotifyId}`, {
-                headers: {
-                  'Authorization': `Bearer ${accessToken}`
-                }
-              });
-
-              if (trackResponse.ok) {
-                validTracks++;
-              } else if (trackResponse.status === 404) {
-                logWarning(`Track not found on Spotify: ${song.id} (${song.spotifyId})`);
-                invalidTracks++;
-              } else {
-                logWarning(`Error checking ${song.id}: HTTP ${trackResponse.status}`);
-                invalidTracks++;
-              }
-            } catch (error) {
-              logWarning(`Network error checking ${song.id}: ${error.message}`);
-              invalidTracks++;
-            }
-          }
-
-          if (validTracks === sampleSongs.length) {
-            logSuccess(`All sample Spotify tracks validated (${validTracks}/${sampleSongs.length})`);
-          } else if (validTracks > 0) {
-            logWarning(`Some tracks validated (${validTracks}/${sampleSongs.length}), ${invalidTracks} failed`);
-          } else {
-            logWarning('No tracks could be validated on Spotify');
-          }
-        } else {
-          logWarning('Failed to get Spotify access token - check credentials');
-        }
-      } catch (error) {
-        logWarning(`Spotify API error: ${error.message}`);
-      }
-    } else {
-      logWarning('Spotify credentials not configured - skipping API validation');
-    }
-  } catch (error) {
-    logWarning('spotify.config.js not found or invalid - skipping API validation');
-  }
-} else {
-  logWarning('spotify.config.js not found - skipping Spotify API validation');
 }
 
 /**
