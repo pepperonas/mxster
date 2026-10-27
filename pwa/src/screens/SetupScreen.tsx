@@ -1,8 +1,10 @@
 /**
- * Neues Spiel — mode, players and (alone) bot opponents on one screen.
- * Replaces the old three-page flow (mode → variant → players).
+ * Neues Spiel — one screen, top to bottom in the order people decide:
+ * mode, who plays (with bots when alone, or teams from four people), then the
+ * round itself (length, decades, Einspruch). Options are remembered for the
+ * next round on this device.
  */
-import { useEffect, useRef, useState, type FormEvent } from 'react'
+import { useEffect, useMemo, useRef, useState, type FormEvent } from 'react'
 import { AnimatePresence, m } from 'motion/react'
 import { useMe } from '@/auth/AuthContext'
 import { useGame, useSettings } from '@/contexts'
@@ -15,16 +17,60 @@ import { MODE_COPY, MODE_ORDER, DIFFICULTY_LABEL } from '@/game/modeCopy'
 import { ownPlayerName } from '@/game/owner'
 import { createBotPlayers } from '@/services/botPlayer'
 import { spring } from '@/motion/springs'
-import type { GameMode } from '@/types'
+import { songs } from '@/data/songs'
+import { DECADES, countByDecade, decadeLabel, songPool } from '@/game/songPool'
+import { GOAL_LABEL, GOAL_OPTIONS, goalWord } from '@/game/roundEnd'
+import { STARTING_CHALLENGES } from '@/game/challenge'
+import { MIN_TEAM_PEOPLE, TEAMS, maxTeams, splitIntoTeams } from '@/game/teams'
+import type { RoundOptions } from '@/contexts/GameContext'
+import type { GameMode, Player } from '@/types'
 
 type Difficulty = keyof typeof DIFFICULTY_LABEL
 const MIN_PLAYERS = 2
 const LAST_MODE_KEY = 'mxster_last_mode'
+const LAST_OPTIONS_KEY = 'mxster_last_options'
+const SONGS_BY_DECADE = countByDecade(songs)
+const DECADES_WITH_SONGS = DECADES.filter((d) => (SONGS_BY_DECADE[d] ?? 0) > 0)
+
+function readLastOptions(): Partial<RoundOptions> | null {
+  try {
+    const raw = JSON.parse(localStorage.getItem(LAST_OPTIONS_KEY) ?? 'null')
+    if (!raw || typeof raw !== 'object') return null
+    return {
+      goal: (GOAL_OPTIONS as readonly number[]).includes(raw.goal) ? raw.goal : undefined,
+      decades: Array.isArray(raw.decades) ? raw.decades.filter((d: unknown) => DECADES_WITH_SONGS.includes(d as never)) : undefined,
+      challengesEnabled: typeof raw.challengesEnabled === 'boolean' ? raw.challengesEnabled : undefined
+    }
+  } catch {
+    return null
+  }
+}
+
+const TEAM_DOT: Record<string, string> = {
+  primary: 'bg-md-primary',
+  tertiary: 'bg-md-tertiary',
+  secondary: 'bg-md-secondary',
+  success: 'bg-md-success'
+}
 
 export function SetupScreen() {
   const me = useMe()
   const navigate = useAppNavigate()
-  const { gameMode, setGameMode, players, addPlayer, removePlayer, startGame, resetGame, isGameStarted } = useGame()
+  const {
+    gameMode,
+    setGameMode,
+    players,
+    addPlayer,
+    removePlayer,
+    setPlayers,
+    startGame,
+    resetGame,
+    isGameStarted,
+    goal,
+    decades,
+    challengesEnabled,
+    setOptions
+  } = useGame()
   const { settings, addPlayer: rememberPlayer } = useSettings()
   const [name, setName] = useState('')
   const [nameError, setNameError] = useState<string | null>(null)
@@ -45,7 +91,12 @@ export function SetupScreen() {
     prepared.current = true
     if (isGameStarted) resetGame()
     if (!gameMode) setGameMode((localStorage.getItem(LAST_MODE_KEY) as GameMode | null) ?? MODE_ORDER[0])
-    if (isGameStarted || players.length === 0) addPlayer(ownPlayerName(me.name))
+    const last = readLastOptions()
+    if (last) setOptions(Object.fromEntries(Object.entries(last).filter(([, v]) => v !== undefined)))
+    if (isGameStarted || players.length === 0 || players.some((p) => p.members)) {
+      if (players.some((p) => p.members)) setPlayers([])
+      addPlayer(ownPlayerName(me.name))
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
@@ -89,11 +140,66 @@ export function SetupScreen() {
   }
 
   const suggestions = settings.savedPlayers.filter((n) => !nameTaken(n)).slice(0, 8)
-  const ready = !!gameMode && players.length >= MIN_PLAYERS
+
+  // ── Teams ────────────────────────────────────────────────────────────────
+  const humanNames = humans.map((p) => p.name)
+  const canUseTeams = humanNames.length >= MIN_TEAM_PEOPLE && !botsOn
+  const [teamsOn, setTeamsOn] = useState(false)
+  const [teamCount, setTeamCount] = useState(2)
+  const [teams, setTeams] = useState<string[][]>([])
+  const teamsActive = teamsOn && canUseTeams
+  const humanKey = humanNames.join('|')
+
+  // Keep the split in step with the line-up: new people join the smallest
+  // team, people who left drop out; a different team count reshuffles.
+  useEffect(() => {
+    if (!teamsActive) return
+    setTeams((prev) => {
+      const count = Math.min(teamCount, maxTeams(humanNames.length))
+      if (prev.length !== count) return splitIntoTeams(humanNames, count)
+      const kept = prev.map((t) => t.filter((n) => humanNames.includes(n)))
+      for (const name of humanNames) {
+        if (kept.some((t) => t.includes(name))) continue
+        kept.reduce((a, b) => (b.length < a.length ? b : a)).push(name)
+      }
+      return kept
+    })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [teamsActive, teamCount, humanKey])
+
+  const moveToNextTeam = (name: string) =>
+    setTeams((prev) => {
+      const from = prev.findIndex((t) => t.includes(name))
+      const to = (from + 1) % prev.length
+      return prev.map((t, i) => (i === from ? t.filter((n) => n !== name) : i === to ? [...t, name] : t))
+    })
+
+  const emptyTeam = teamsActive && teams.some((t) => t.length === 0)
+
+  // ── Round ────────────────────────────────────────────────────────────────
+  const poolSize = useMemo(() => songPool(songs, decades).length, [decades])
+  const timelineMode = gameMode !== 'hardcore'
+  const seats = teamsActive ? teams.length : players.length
+  // Rough songs a round needs: every seat plays until the goal, plus misses
+  const songsNeeded = goal * Math.max(2, seats) * (timelineMode ? 2 : 1)
+
+  const toggleDecade = (decade: number) => {
+    const next = decades.includes(decade) ? decades.filter((d) => d !== decade) : [...decades, decade].sort()
+    // Every decade picked is the same as "all"
+    setOptions({ decades: next.length === DECADES_WITH_SONGS.length ? [] : next })
+  }
+
+  const ready = !!gameMode && players.length >= MIN_PLAYERS && !emptyTeam
 
   const start = () => {
     if (!ready || !gameMode) return
     localStorage.setItem(LAST_MODE_KEY, gameMode)
+    localStorage.setItem(LAST_OPTIONS_KEY, JSON.stringify({ goal, decades, challengesEnabled }))
+    if (teamsActive) {
+      setPlayers(
+        teams.map<Player>((members, i) => ({ name: TEAMS[i].name, members, memberTurn: 0, timeline: [], cards: 0, score: 0 }))
+      )
+    }
     startGame()
     navigate('/spiel', { replace: true })
   }
@@ -142,7 +248,7 @@ export function SetupScreen() {
                   <span className="relative min-w-0 flex-1">
                     <span className={`block text-title-md ${selected ? 'text-md-on-secondary-container' : ''}`}>{copy.name}</span>
                     <span className={`block text-body-md ${selected ? 'text-md-on-secondary-container' : 'text-md-on-surface-variant'}`}>
-                      {selected ? copy.how : copy.short}
+                      {selected ? copy.how(goal) : copy.short}
                     </span>
                   </span>
                   <AnimatePresence initial={false}>
@@ -298,6 +404,169 @@ export function SetupScreen() {
             </m.section>
           )}
         </AnimatePresence>
+
+        {/* Teams */}
+        <AnimatePresence initial={false}>
+          {canUseTeams && (
+            <m.section
+              aria-labelledby="teams-h"
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: 'auto' }}
+              exit={{ opacity: 0, height: 0, transition: spring.effectsDefault }}
+              transition={spring.spatialDefault}
+              className="overflow-hidden"
+            >
+              <div className="surface p-4 space-y-4">
+                <div className="flex items-center gap-4">
+                  <span className="grid place-items-center w-10 h-10 rounded-full bg-md-surface-container-highest text-md-on-surface-variant">
+                    <Icon name="groups" />
+                  </span>
+                  <div className="flex-1 min-w-0">
+                    <h2 id="teams-h" className="text-title-md">
+                      In Teams spielen
+                    </h2>
+                    <p className="meta">Ein Team teilt sich Zeitleiste und Punkte, ihr wechselt euch am Zug ab.</p>
+                  </div>
+                  <Switch checked={teamsOn} onChange={setTeamsOn} ariaLabel="In Teams spielen" />
+                </div>
+                {teamsActive && (
+                  <div className="space-y-3">
+                    {maxTeams(humanNames.length) > 2 && (
+                      <SegmentedControl
+                        label="Anzahl Teams"
+                        value={Math.min(teamCount, maxTeams(humanNames.length))}
+                        onChange={setTeamCount}
+                        segments={Array.from({ length: maxTeams(humanNames.length) - 1 }, (_, i) => i + 2).map((n) => ({
+                          value: n,
+                          label: `${n} Teams`
+                        }))}
+                      />
+                    )}
+                    <ul className="grid gap-2 sm:grid-cols-2">
+                      {teams.map((members, i) => (
+                        <li key={TEAMS[i].name} className="rounded-m3-lg bg-md-surface-container-high p-3">
+                          <p className="flex items-center gap-2 text-title-sm mb-2">
+                            <span className={`w-3 h-3 rounded-full ${TEAM_DOT[TEAMS[i].tone]}`} aria-hidden="true" />
+                            {TEAMS[i].name}
+                            <span className="meta ml-auto tabular">{members.length}</span>
+                          </p>
+                          <div className="flex flex-wrap gap-2 min-h-[40px]">
+                            {members.length === 0 && <span className="meta self-center">Noch niemand</span>}
+                            {members.map((name) => (
+                              <m.button
+                                key={name}
+                                layout
+                                layoutId={`team-member-${name}`}
+                                transition={spring.spatialDefault}
+                                type="button"
+                                className="chip m3-state-layer"
+                                onClick={() => moveToNextTeam(name)}
+                                aria-label={`${name} ins nächste Team setzen`}
+                              >
+                                {name}
+                              </m.button>
+                            ))}
+                          </div>
+                        </li>
+                      ))}
+                    </ul>
+                    <div className="flex items-center justify-between gap-3">
+                      <p className="meta">Tippe einen Namen an, um ihn ins nächste Team zu setzen.</p>
+                      <button
+                        type="button"
+                        className="btn btn-text m3-state-layer shrink-0"
+                        onClick={() => setTeams(splitIntoTeams(humanNames, teams.length || teamCount))}
+                      >
+                        <Icon name="shuffle" size={20} />
+                        Mischen
+                      </button>
+                    </div>
+                    {emptyTeam && <p className="text-body-sm text-md-error">Jedes Team braucht mindestens eine Person.</p>}
+                  </div>
+                )}
+              </div>
+            </m.section>
+          )}
+        </AnimatePresence>
+
+        {/* The round */}
+        <section aria-labelledby="round-h" className="space-y-5">
+          <h2 id="round-h" className="text-title-md">
+            Die Runde
+          </h2>
+
+          <div className="space-y-2">
+            <SegmentedControl
+              label="Länge"
+              value={goal}
+              onChange={(g) => setOptions({ goal: g })}
+              segments={GOAL_OPTIONS.map((g) => ({ value: g, label: GOAL_LABEL[g] }))}
+            />
+            <p className="meta">
+              {gameMode === 'timeline_global'
+                ? `Gespielt wird, bis ${goalWord(goal)} Songs auf der gemeinsamen Zeitleiste liegen.`
+                : timelineMode
+                  ? `Wer zuerst ${goalWord(goal)} Songs richtig liegen hat, gewinnt.`
+                  : `${teamsActive ? 'Jedes Team' : 'Jede:r'} rät ${goalWord(goal)} Songs.`}
+            </p>
+          </div>
+
+          <div className="space-y-2">
+            <div className="flex items-baseline justify-between gap-3">
+              <h3 id="decades-h" className="text-title-sm">
+                Jahrzehnte
+              </h3>
+              <span className="meta tabular">{poolSize} Songs</span>
+            </div>
+            <div className="flex flex-wrap gap-2" role="group" aria-labelledby="decades-h">
+              <button
+                type="button"
+                className={`chip m3-state-layer`}
+                aria-pressed={decades.length === 0}
+                onClick={() => setOptions({ decades: [] })}
+              >
+                {decades.length === 0 && <Icon name="check" size={18} />}
+                Alle
+              </button>
+              {DECADES_WITH_SONGS.map((d) => {
+                const on = decades.includes(d)
+                return (
+                  <button
+                    key={d}
+                    type="button"
+                    className={`chip m3-state-layer`}
+                    aria-pressed={on}
+                    onClick={() => toggleDecade(d)}
+                    aria-label={`${decadeLabel(d)}, ${SONGS_BY_DECADE[d]} Songs`}
+                  >
+                    {on && <Icon name="check" size={18} />}
+                    {decadeLabel(d)}
+                  </button>
+                )
+              })}
+            </div>
+            {poolSize < songsNeeded && (
+              <p className="meta">Knapp für eine ganze Runde. Gehen die Songs aus, kommen die übrigen Jahrzehnte dazu.</p>
+            )}
+            <p className="meta">Songs aus euren letzten Runden kommen erst wieder, wenn nichts Neues mehr übrig ist.</p>
+          </div>
+
+          {timelineMode && (
+            <div className="surface p-4 flex items-start gap-4">
+              <span className="grid place-items-center w-10 h-10 shrink-0 rounded-full bg-md-surface-container-highest text-md-on-surface-variant">
+                <Icon name="hand" size={20} />
+              </span>
+              <div className="flex-1 min-w-0">
+                <h3 className="text-title-md">Einspruch</h3>
+                <p className="meta">
+                  {teamsActive ? 'Jedes Team hat' : 'Jede:r hat'} {STARTING_CHALLENGES === 3 ? 'drei' : STARTING_CHALLENGES} Einsprüche.
+                  Liegt eine Karte deiner Meinung nach falsch, leg sie woandershin. Hast du recht, gehört sie dir.
+                </p>
+              </div>
+              <Switch checked={challengesEnabled} onChange={(on) => setOptions({ challengesEnabled: on })} ariaLabel="Einspruch" />
+            </div>
+          )}
+        </section>
       </div>
 
       {/* Start */}
@@ -305,7 +574,13 @@ export function SetupScreen() {
         <div className="mx-auto max-w-3xl px-4 sm:px-6 pb-4">
           <button type="button" className="btn btn-lg btn-brand m3-state-layer w-full" disabled={!ready} onClick={start}>
             <Icon name="play" />
-            {ready ? 'Los geht’s' : MIN_PLAYERS - players.length === 1 ? 'Noch eine Person dazu' : 'Noch zwei Personen dazu'}
+            {ready
+              ? 'Los geht’s'
+              : emptyTeam
+                ? 'Jedes Team braucht jemanden'
+                : MIN_PLAYERS - players.length === 1
+                  ? 'Noch eine Person dazu'
+                  : 'Noch zwei Personen dazu'}
           </button>
         </div>
       </div>

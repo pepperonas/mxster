@@ -22,8 +22,10 @@ import { AnimatePresence, m } from 'motion/react'
 import type { Song } from '@/types'
 import { gapLabel } from '@/game/placement'
 import { spring } from '@/motion/springs'
+import { initialOf } from '@/game/teams'
 
 export const PENDING_CARD_LAYOUT_ID = 'pending-card'
+export const CHALLENGE_CARD_LAYOUT_ID = 'challenge-card'
 
 export interface BoardCard {
   song: Song
@@ -51,6 +53,11 @@ interface TimelineBoardProps {
   hideYears?: boolean
   label: string
   boardRef?: Ref<HTMLOListElement>
+  /** Einspruch: the placed card waits face down in this gap (not selectable). */
+  placedGap?: number | null
+  placedBy?: string
+  /** The preview card is an objection (own look, own shared-element id). */
+  previewIsChallenge?: boolean
 }
 
 export function TimelineBoard({
@@ -63,15 +70,30 @@ export function TimelineBoard({
   onGapSelect,
   hideYears = false,
   label,
-  boardRef
+  boardRef,
+  placedGap = null,
+  placedBy,
+  previewIsChallenge = false
 }: TimelineBoardProps) {
   const songs = cards.map((c) => c.song)
   const items: React.ReactNode[] = []
 
   const renderGap = (gap: number) => {
+    if (pendingSong && placedGap === gap) {
+      items.push(
+        <BoardRow key={`placed-${gap}`} layoutId={PENDING_CARD_LAYOUT_ID} tone="placed">
+          <CardContent song={pendingSong} yearHidden owner={placedBy} />
+        </BoardRow>
+      )
+      return
+    }
     if (interactive && pendingSong && previewGap === gap) {
       items.push(
-        <BoardRow key={`preview-${gap}`} layoutId={PENDING_CARD_LAYOUT_ID} tone="preview">
+        <BoardRow
+          key={`preview-${gap}`}
+          layoutId={previewIsChallenge ? CHALLENGE_CARD_LAYOUT_ID : PENDING_CARD_LAYOUT_ID}
+          tone={previewIsChallenge ? 'challenge' : 'preview'}
+        >
           <CardContent song={pendingSong} yearHidden />
         </BoardRow>
       )
@@ -128,11 +150,13 @@ export function TimelineBoard({
 
 // ─── rows ──────────────────────────────────────────────────────────────────
 
-type Tone = 'default' | 'preview' | 'correct' | 'wrong'
+type Tone = 'default' | 'preview' | 'placed' | 'challenge' | 'correct' | 'wrong'
 
 const TONE_CLASS: Record<Tone, string> = {
   default: 'bg-md-surface-container-high border-transparent',
   preview: 'bg-md-primary-container text-md-on-primary-container border-md-primary shadow-m3-2',
+  placed: 'bg-md-primary-container text-md-on-primary-container border-md-primary border-dashed',
+  challenge: 'bg-md-tertiary-container text-md-on-tertiary-container border-md-tertiary shadow-m3-2',
   correct: 'bg-md-surface-container-high border-md-success',
   wrong: 'bg-md-error-container text-md-on-error-container border-md-error'
 }
@@ -211,7 +235,7 @@ function CardContent({ song, owner, yearHidden, revealYear, blurYear }: CardCont
           className="flex-shrink-0 w-8 h-8 grid place-items-center rounded-m3-full bg-md-secondary-container text-md-on-secondary-container text-label-md"
           title={`Platziert von ${owner}`}
         >
-          {owner.charAt(0).toUpperCase()}
+          {initialOf(owner)}
         </span>
       )}
     </>

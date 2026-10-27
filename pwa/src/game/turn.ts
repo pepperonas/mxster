@@ -1,0 +1,49 @@
+/**
+ * Turn state shared by the game context (persisted) and the turn flow.
+ * Kept in its own module so the context does not import the flow hook.
+ */
+import type { Song } from '@/types'
+import type { validateGuess } from '@/services/gameLogic'
+import type { GuessBreakdown } from './guess'
+import type { ChallengeClaim } from './challenge'
+
+export type TurnPhase = 'idle' | 'placing' | 'challenge' | 'guessing' | 'revealed' | 'over'
+
+export interface ChallengeResult {
+  playerIndex: number
+  gapIndex: number
+  isCorrect: boolean
+  /** The challenger took the card. */
+  won: boolean
+}
+
+export type Reveal =
+  | {
+      kind: 'placement'
+      song: Song
+      gapIndex: number
+      isCorrect: boolean
+      isFirstCard: boolean
+      playerIndex: number
+      /** Cards of the placing player after this placement. */
+      cardsAfter: number
+      challenge: ChallengeResult | null
+    }
+  | {
+      kind: 'guess'
+      song: Song
+      check: ReturnType<typeof validateGuess>
+      breakdown: GuessBreakdown
+      playerIndex: number
+    }
+
+/** A placed card waiting to be revealed while others may object. */
+export interface PendingPlacement {
+  playerIndex: number
+  gapIndex: number
+  /** Seats allowed to object. */
+  challengers: number[]
+  /** Seat currently choosing a gap for an objection. */
+  choosing: number | null
+  claim: ChallengeClaim | null
+}

@@ -82,6 +82,7 @@ export function GameHistoryProvider({ children }: { children: ReactNode }) {
           name: p.name,
           cards: p.cards,
           score: p.score,
+          ...(p.members ? { members: p.members } : {}),
           timeline: p.timeline.map((song) => ({
             id: song.id,
             title: song.title,

@@ -51,6 +51,12 @@ export function mergeAchievements(local: AchievementDoc, server: AchievementDoc)
 }
 
 /** Settings: the local edit wins field by field, saved players are united. */
-export function mergeSettings<T extends { savedPlayers: string[] }>(local: T, server: T): T {
-  return { ...server, ...local, savedPlayers: [...new Set([...server.savedPlayers, ...local.savedPlayers])] }
+export function mergeSettings<T extends { savedPlayers: string[]; recentSongs?: string[] }>(local: T, server: T): T {
+  const merged = { ...server, ...local, savedPlayers: [...new Set([...server.savedPlayers, ...local.savedPlayers])] }
+  // Recently played songs from both devices: server first, local (newer) last, no doubles
+  if (local.recentSongs || server.recentSongs) {
+    const keys = [...(server.recentSongs ?? []), ...(local.recentSongs ?? [])]
+    merged.recentSongs = keys.filter((k, i) => keys.lastIndexOf(k) === i).slice(-150)
+  }
+  return merged
 }

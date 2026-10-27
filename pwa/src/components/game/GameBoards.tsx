@@ -13,8 +13,7 @@ import type { Player } from '@/types'
 import { spring } from '@/motion/springs'
 import { AnimatedNumber } from '@/components/ui/AnimatedNumber'
 import { TimelineBoard, type BoardReveal } from './TimelineBoard'
-
-export const CARDS_TO_WIN = 10
+import { initialOf } from '@/game/teams'
 
 interface GameBoardsProps {
   interactive: boolean
@@ -24,17 +23,33 @@ interface GameBoardsProps {
   revealPlayerIndex: number | null
   onGapSelect: (gap: number) => void
   boardRef: Ref<HTMLOListElement>
+  /** Einspruch: the face-down card and who put it there. */
+  placedGap?: number | null
+  placedBy?: string
+  previewIsChallenge?: boolean
 }
 
-export function GameBoards({ interactive, previewGap, hoverGap, reveal, revealPlayerIndex, onGapSelect, boardRef }: GameBoardsProps) {
-  const { players, currentPlayer, gameMode, globalTimeline, currentSong } = useGame()
+export function GameBoards({
+  interactive,
+  previewGap,
+  hoverGap,
+  reveal,
+  revealPlayerIndex,
+  onGapSelect,
+  boardRef,
+  placedGap = null,
+  placedBy,
+  previewIsChallenge = false
+}: GameBoardsProps) {
+  const { players, currentPlayer, gameMode, globalTimeline, currentSong, goal } = useGame()
+  const challengeProps = { placedGap, placedBy, previewIsChallenge }
   const { settings } = useSettings()
   const hideYears = Boolean(settings.hideYearsInTimeline)
 
   if (gameMode === 'timeline_global') {
     const total = players.reduce((sum, p) => sum + p.cards, 0)
     return (
-      <BoardCard title="Globale Zeitleiste" cards={total}>
+      <BoardCard title="Globale Zeitleiste" cards={total} goal={goal}>
         <ul className="flex flex-wrap gap-2 mb-4" aria-label="Karten je Spieler">
           {players.map((p, i) => (
             <li
@@ -44,7 +59,7 @@ export function GameBoards({ interactive, previewGap, hoverGap, reveal, revealPl
               }`}
             >
               <span className="w-6 h-6 grid place-items-center rounded-m3-full bg-md-secondary-container text-md-on-secondary-container">
-                {p.name.charAt(0).toUpperCase()}
+                {initialOf(p.name)}
               </span>
               {p.name} · <AnimatedNumber value={p.cards} />
             </li>
@@ -61,6 +76,7 @@ export function GameBoards({ interactive, previewGap, hoverGap, reveal, revealPl
           reveal={reveal}
           onGapSelect={onGapSelect}
           hideYears={hideYears}
+          {...challengeProps}
         />
       </BoardCard>
     )
@@ -74,7 +90,7 @@ export function GameBoards({ interactive, previewGap, hoverGap, reveal, revealPl
 
   return (
     <div className="space-y-4">
-      <BoardCard title={`Zeitleiste von ${focus.name}`} cards={focus.cards}>
+      <BoardCard title={`Zeitleiste von ${focus.name}`} cards={focus.cards} goal={goal}>
         <TimelineBoard
           label={`Zeitleiste von ${focus.name}`}
           boardRef={boardRef}
@@ -86,12 +102,13 @@ export function GameBoards({ interactive, previewGap, hoverGap, reveal, revealPl
           reveal={reveal}
           onGapSelect={onGapSelect}
           hideYears={hideYears}
+          {...challengeProps}
         />
       </BoardCard>
       {others.length > 0 && (
         <ul className="grid gap-3 sm:grid-cols-2" aria-label="Weitere Spieler">
           {others.map(({ p }) => (
-            <PlayerSummary key={p.name} player={p} hideYears={hideYears} />
+            <PlayerSummary key={p.name} player={p} hideYears={hideYears} goal={goal} />
           ))}
         </ul>
       )}
@@ -99,16 +116,16 @@ export function GameBoards({ interactive, previewGap, hoverGap, reveal, revealPl
   )
 }
 
-function BoardCard({ title, cards, children }: { title: string; cards: number; children: React.ReactNode }) {
+function BoardCard({ title, cards, goal, children }: { title: string; cards: number; goal: number; children: React.ReactNode }) {
   return (
     <section className="surface p-4 sm:p-5">
       <div className="flex items-center justify-between gap-3 mb-3">
-        <h3 className="text-title-lg text-md-on-surface truncate">{title}</h3>
+        <h3 className="min-w-0 text-title-lg text-md-on-surface truncate">{title}</h3>
         <span className="flex-shrink-0 text-label-lg px-3 py-1 rounded-m3-full bg-md-secondary-container text-md-on-secondary-container tabular-nums">
-          <AnimatedNumber value={cards} />/{CARDS_TO_WIN}
+          <AnimatedNumber value={cards} />/{goal}
         </span>
       </div>
-      <ProgressBar value={cards / CARDS_TO_WIN} />
+      <ProgressBar value={cards / goal} />
       <div className="mt-4">{children}</div>
     </section>
   )
@@ -127,16 +144,17 @@ function ProgressBar({ value }: { value: number }) {
   )
 }
 
-function PlayerSummary({ player, hideYears }: { player: Player; hideYears: boolean }) {
+function PlayerSummary({ player, hideYears, goal }: { player: Player; hideYears: boolean; goal: number }) {
   return (
     <m.li layout transition={spring.spatialDefault} className="rounded-m3-lg bg-md-surface-container-low p-3">
       <div className="flex items-center justify-between gap-2 mb-2">
         <p className="text-title-sm text-md-on-surface truncate">{player.name}</p>
         <span className="text-label-md text-md-on-surface-variant tabular-nums">
-          <AnimatedNumber value={player.cards} />/{CARDS_TO_WIN}
+          <AnimatedNumber value={player.cards} />/{goal}
         </span>
       </div>
-      <ProgressBar value={player.cards / CARDS_TO_WIN} />
+      {player.members && <p className="text-body-sm text-md-on-surface-variant truncate -mt-1 mb-2">{player.members.join(', ')}</p>}
+      <ProgressBar value={player.cards / goal} />
       {player.timeline.length > 0 && (
         <ol className="flex flex-wrap gap-1 mt-2" aria-label={`Jahre von ${player.name}`}>
           {player.timeline.map((song) => (

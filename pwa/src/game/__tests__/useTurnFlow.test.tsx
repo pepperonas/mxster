@@ -301,3 +301,147 @@ describe('no draw: tiebreak ("Stechen")', () => {
     expect(t.get().game.tiebreak).toBeNull()
   })
 })
+
+describe('Einspruch', () => {
+  const base = [song(1970), song(1990)]
+
+  it('waits face down while someone may object; no objection reveals as usual', () => {
+    const t = setup('timeline_personal', [
+      { name: 'A', timeline: base, cards: 2, challenges: 3 },
+      { name: 'B', challenges: 3 }
+    ])
+    act(() => t.get().game.setCurrentSong(song(1980)))
+    act(() => t.get().flow.placeCard(1))
+    expect(t.get().flow.phase).toBe('challenge')
+    expect(t.get().game.players[0].cards).toBe(2) // nothing credited yet
+    expect(t.get().flow.pending).toMatchObject({ playerIndex: 0, gapIndex: 1, challengers: [1] })
+
+    act(() => t.get().flow.revealPlacement())
+    expect(t.get().flow.reveal).toMatchObject({ isCorrect: true, challenge: null, cardsAfter: 3 })
+    expect(t.get().game.players[0].cards).toBe(3)
+    expect(t.get().game.players[1].challenges).toBe(3)
+  })
+
+  it('a right objection against a wrong card takes the card and costs one objection', () => {
+    const t = setup('timeline_personal', [
+      { name: 'A', timeline: base, cards: 2 },
+      { name: 'B', challenges: 3 }
+    ])
+    act(() => t.get().game.setCurrentSong(song(1980)))
+    act(() => t.get().flow.placeCard(0)) // wrong: before 1970
+    act(() => t.get().flow.startChallenge(1))
+    act(() => t.get().flow.claimGap(0)) // the placer's own gap is not allowed
+    expect(t.get().flow.phase).toBe('challenge')
+    act(() => t.get().flow.claimGap(1))
+
+    expect(t.get().flow.reveal).toMatchObject({ isCorrect: false, challenge: { playerIndex: 1, isCorrect: true, won: true } })
+    expect(t.get().game.players[0].cards).toBe(2)
+    expect(t.get().game.players[1]).toMatchObject({ cards: 1, challenges: 2 })
+    expect(t.get().game.players[1].timeline.map((s) => s.year)).toEqual([1980])
+  })
+
+  it('a wrong objection against a right card only costs the objection', () => {
+    const t = setup('timeline_global', [
+      { name: 'A', cards: 0 },
+      { name: 'B', challenges: 1 }
+    ])
+    act(() => t.get().game.addToGlobalTimeline(song(1970), 0))
+    act(() => t.get().game.setCurrentSong(song(1980)))
+    act(() => t.get().flow.placeCard(1))
+    act(() => t.get().flow.startChallenge(1))
+    act(() => t.get().flow.claimGap(0))
+    expect(t.get().flow.reveal).toMatchObject({ isCorrect: true, challenge: { won: false, isCorrect: false } })
+    expect(t.get().game.players[0].cards).toBe(1)
+    expect(t.get().game.players[1]).toMatchObject({ cards: 0, challenges: 0 })
+    expect(t.get().game.globalTimeline.map((c) => c.playerId)).toEqual([0, 0])
+  })
+
+  it('on the shared timeline a won objection credits the card to the challenger', () => {
+    const t = setup('timeline_global', [{ name: 'A' }, { name: 'B', challenges: 2 }])
+    act(() => t.get().game.addToGlobalTimeline(song(1970), 0))
+    act(() => t.get().game.setCurrentSong(song(1980)))
+    act(() => t.get().flow.placeCard(0))
+    act(() => t.get().flow.startChallenge(1))
+    act(() => t.get().flow.claimGap(1))
+    expect(t.get().game.globalTimeline.map((c) => [c.song.year, c.playerId])).toEqual([
+      [1970, 0],
+      [1980, 1]
+    ])
+    expect(t.get().game.players[1].cards).toBe(1)
+  })
+
+  it('without objections left, a card is revealed straight away', () => {
+    const t = setup('timeline_personal', [{ name: 'A', timeline: base, cards: 2 }, { name: 'B', challenges: 0 }])
+    act(() => t.get().game.setCurrentSong(song(1980)))
+    act(() => t.get().flow.placeCard(1))
+    expect(t.get().flow.phase).toBe('revealed')
+  })
+})
+
+describe('round options', () => {
+  it('a shorter round ends at its goal', () => {
+    const t = setup('timeline_personal', [{ name: 'A', timeline: [song(1970)], cards: 4 }, { name: 'B' }])
+    act(() => t.get().game.setOptions({ goal: 5 }))
+    act(() => t.get().game.setCurrentSong(song(1980)))
+    act(() => t.get().flow.placeCard(1))
+    act(() => t.get().flow.continueTurn())
+    expect(t.onGameOver).toHaveBeenCalledTimes(1)
+    expect(t.get().flow.phase).toBe('over')
+  })
+
+  it('draws only from the chosen decades', () => {
+    const t = setup('timeline_personal', [{ name: 'A' }, { name: 'B' }])
+    act(() => t.get().game.setOptions({ decades: [1980] }))
+    for (let i = 0; i < 5; i++) {
+      let drawn: Song | null = null
+      act(() => {
+        drawn = t.get().flow.drawSong()
+      })
+      expect(Math.floor(drawn!.year / 10) * 10).toBe(1980)
+      act(() => t.get().game.setCurrentSong(null))
+    }
+  })
+
+  it('a team hands the controls to the next member after its turn', () => {
+    const t = setup('timeline_personal', [
+      { name: 'Team Magenta', members: ['Anna', 'Ben'], memberTurn: 0 },
+      { name: 'Team Orange', members: ['Cem', 'Dana'], memberTurn: 0 }
+    ])
+    act(() => t.get().game.setCurrentSong(song(1980)))
+    act(() => t.get().flow.placeCard(0))
+    act(() => t.get().flow.continueTurn())
+    expect(t.get().game.players[0].memberTurn).toBe(1)
+    expect(t.get().game.players[1].memberTurn).toBe(0)
+    expect(t.get().game.currentPlayer).toBe(1)
+  })
+})
+
+describe('resume after reload', () => {
+  it('a running round is restored from this device, mid-turn', () => {
+    const t = setup('timeline_personal', [{ name: 'A' }, { name: 'B' }])
+    act(() => t.get().game.startGame())
+    act(() => t.get().game.setCurrentSong(song(1980)))
+    act(() => t.get().flow.placeCard(0))
+    expect(t.get().flow.phase).toBe('revealed')
+    t.unmount()
+
+    const again = renderHook(
+      () => ({ game: useGame(), flow: useTurnFlow({ onGameOver: vi.fn(), onSkipNotice: vi.fn() }) }),
+      { wrapper }
+    )
+    expect(again.result.current.game.isGameStarted).toBe(true)
+    expect(again.result.current.flow.phase).toBe('revealed')
+    expect(again.result.current.game.players[0].cards).toBe(1) // credited once, not twice
+    act(() => again.result.current.flow.continueTurn())
+    expect(again.result.current.game.currentPlayer).toBe(1)
+  })
+
+  it('a reset round is not restored', () => {
+    const t = setup('timeline_personal', [{ name: 'A' }, { name: 'B' }])
+    act(() => t.get().game.startGame())
+    act(() => t.get().game.resetGame())
+    t.unmount()
+    const again = renderHook(() => useGame(), { wrapper })
+    expect(again.result.current.isGameStarted).toBe(false)
+  })
+})

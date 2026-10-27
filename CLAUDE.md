@@ -6,8 +6,8 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 **mxster** is a private music timeline game, played on one device by a group: hear a song, guess its year, place it on a timeline. Since v0.4.0 it is **sign-in only** (Google), new accounts wait for approval, and play is **virtual only** — physical QR cards, the card generator and Spotify were removed for good.
 
-**Current version**: v0.4.0 (2026-10) — login + approval queue, server-side account data, complete frontend redesign (Material 3 Expressive, "vinyl magenta").
-**Song database**: 211 songs, source of truth `docs/songs.json` (mirrored to `pwa/src/data/songs.ts`).
+**Current version**: v0.5.0 (2026-10) — resume after reload, Einspruch, decades + recent-song avoidance, round length, teams, song info (cover/album/fact). v0.4.0: login + approval queue, server-side account data, frontend redesign (Material 3 Expressive, "vinyl magenta").
+**Song database**: source of truth `docs/songs.json` (with `album`), facts in `docs/song-facts.json`; both are merged into `pwa/src/data/songs.ts` by `node scripts/song-management/sync-songs-ts.js` (never edit songs.ts by hand). Covers live next to the MP3s as `audio/covers/<id>.jpg` (gitignored locally, gated by nginx like the MP3s). Song data comes from MusicBrainz / Cover Art Archive — **no Spotify anywhere**; the old `spotifyId` values are only kept as stable keys, new songs have none.
 **Live**: https://mxster.celox.io (VPS 69.62.121.168)
 
 ### Key Technologies
@@ -52,7 +52,7 @@ node scripts/song-management/edit-song.js
 node scripts/song-management/exchange-song.js
 cd scripts/audio-hosting && node download-songs.js && node upload-to-vps.js && node validate-audio.js --full
 ```
-MP3s live on the VPS in `/var/www/html/mxster/audio/` (never touched by the web deploy) and locally in the gitignored `pwa/public/audio/` (served by Vite in dev, unauthenticated).
+MP3s and covers live on the VPS in `/var/www/html/mxster/audio/` (+ `audio/covers/`, never touched by the web deploy) and locally in the gitignored `pwa/public/audio/` (served by Vite in dev, unauthenticated). Upload new files with rsync (`rsync -a pwa/public/audio/ root@69.62.121.168:/var/www/html/mxster/audio/`, then `chown -R www-data:www-data`).
 
 ## Architecture
 
@@ -73,7 +73,8 @@ MP3s live on the VPS in `/var/www/html/mxster/audio/` (never touched by the web 
 - `shell/AppShell.tsx`: bottom navigation bar (compact) / rail (≥ md) for the four destinations; sub-pages use `SubPageHeader`.
 
 ### State
-- `GameContext` — mode, players, turn, current song, global timeline, played songs, skips; `rematch()` keeps players + mode. No persistence (a reload ends the game; `beforeunload` warns).
+- `GameContext` — mode, players, turn, current song, global timeline, played songs, skips, round options (`goal`, `decades`, `challengesEnabled`) and the turn state (`reveal`, `pending`, `finished`, `startedAt`, `rankingsHistory`). `rematch()` keeps players + options. **Persistence:** every change of a started, unfinished round is written to `localStorage.mxster_running_game` (`game/savedGame.ts`, max 3 days) and restored on start, so a reload resumes mid-turn without double credits; Home offers "Weiterspielen"/"Verwerfen". Reveal and pending placement must stay in the context for exactly that reason.
+- `SettingsContext` also holds `recentSongs` (last 150 song keys, merged across devices) — `game/songPool.ts` draws fresh songs first.
 - `GameHistoryContext`, `AchievementContext`, `SettingsContext` — stored on the server through `sync/useSyncedDoc.ts`: load once, debounced versioned writes, conflict → `sync/merge.ts` (history = union by id; achievements = unlocked wins, earliest unlock, max progress/stats; settings = local wins, saved players united). On an account's first load the old localStorage keys (`mxster_game_history`/`mxster_history`, `mxster_achievements`, `mxster_settings`) are adopted once, uploaded and removed. Saves wait until the document has loaded.
 - Theme is additionally mirrored to `localStorage.mxster_theme` for the pre-paint script in `index.html`.
 - `UIContext` — modals (keyed, `closeModal(): Promise`), toasts (optional `action`, e.g. undo).
@@ -81,6 +82,12 @@ MP3s live on the VPS in `/var/www/html/mxster/audio/` (never touched by the web 
 
 ### Game loop (`src/game/`)
 `useTurnFlow` is an explicit phase machine — `idle → placing` (timeline modes) / `guessing` (hardcore) `→ revealed → next turn | over`. Rules are pure modules: `placement.ts`, `guess.ts` (5/5/5-2-1), `skipRules.ts`, `achievementRules.ts`. Timeline modes credit a correct card on placement and check the win on continue; hardcore credits card + points on continue. **No draws:** if the end condition is met with a shared lead, `game/tiebreak.ts` runs a tiebreak ("Stechen") — only the tied players play, one song each per round in seat order, until exactly one leads after a full round; no skipping during it. State: `GameContext.tiebreak` (turn order honours it). Rankings share places for equal standings below the winner (`rankPlayers`, used by GameOver and history). Known gap: if all 211 songs are used up mid-tiebreak, `drawSong` returns null and the game cannot continue. Songs are drawn by a human tap (also for bots); bots then play through `placeCard`/`submitGuess`.
+
+Round options and their rule modules (all pure, tested in `game/__tests__/roundOptions.test.ts`):
+- `roundEnd.ts` — `isRoundOver(players, mode, goal)`; goal 5/10/15. Personal: anyone reaches the goal (a challenge can put a card on someone not on turn).
+- `songPool.ts` — decade filter (empty = all), no repeats within a round, recent songs avoided; widens to all decades instead of stalling.
+- `challenge.ts` — Einspruch: 3 per player/team per round, timeline modes only, never by bots, not on a first card, not in a tiebreak. Flow phase `challenge` (`pending` in context): `startChallenge(seat)` → `claimGap(gap)` or `revealPlacement()`. Placer right → placer gets the card; placer wrong + challenger right → challenger gets it (own timeline / credited on the shared one); the objection is spent either way.
+- `teams.ts` — a team is a `Player` with `members` + `memberTurn`; `NEXT_TURN` advances the member. Achievements are never credited to teams. Teams from 4 people, no bots.
 
 Board: `components/game/TimelineBoard.tsx` + `PlacementDock.tsx` (drag or tap a gap → preview → confirm; `game/boardGeometry.ts`). **Never render the year of a pending card.**
 
@@ -121,13 +128,13 @@ Board: `components/game/TimelineBoard.tsx` + `PlacementDock.tsx` (drag or tap a 
 - Backup: `/opt/mxster-api/data/mxster.db` is picked up by the dynamic SQLite search in `vps-data-backup.sh` (`.backup`, not copied).
 - Live check after a deploy (verified 2026-10-26): `/` 200, `/api/session` 200 `{"me":null}`, `/api/me` + `/api/admin/users` 401 without session, `/audio/song_001.mp3` 401 without session, 206 with an approved session, 401 pending; data 403 pending; admin 404 for non-admins. A probe user for such checks must be deleted afterwards (users + sessions).
 - Mail on the VPS goes via SMTP (`SMTP_*` in `.env`): the service user `mxster` cannot read `/etc/msmtprc`, so `SENDMAIL_PATH` does not work there. `MAIL_FROM` must be quoted in the `.env`.
-- PWA: Workbox cache id `mxster-v5`; `/api/` and `/audio/` are never precached, `/api/` navigations bypass the SW. Bump `cacheId` on shell changes.
+- PWA: Workbox cache id `mxster-v6`; `/api/` and `/audio/` are never precached, `/api/` navigations bypass the SW. Bump `cacheId` on shell changes.
 
 ## Best Practices
 - Song type: `export const songs: Song[] = [...]` (the integrity test parses it with `/export const songs(?:: Song\[\])? = (\[[\s\S]*\])/`).
 - Song management scripts need the root `.env` with Spotify client credentials.
 - Touch targets ≥ 48 px; `hoverOnlyWhenSupported` is on, so `hover:` never fires on touch.
-- UI copy is German, sentence case, active verbs; no emoji in chrome (achievement icons excepted).
+- UI copy is German, sentence case, active verbs; **no emoji anywhere** — every symbol is an inline SVG from `components/ui/Icon.tsx` (achievements map to icons via `achievementIcon(id)`; stored achievements may still carry old emoji strings, so never render `achievement.icon` from stored data directly).
 
 ## Release Checklist
 1. Version in `pwa/package.json` + `ProfileScreen.tsx`

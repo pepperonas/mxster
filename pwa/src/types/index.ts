@@ -8,6 +8,8 @@ export interface Song {
   artist: string
   year: number
   album?: string
+  /** Short German "Wusstest du?" fact, shown after the reveal. */
+  fact?: string
   spotifyId?: string
   previewUrl?: string
   youtubeUrl?: string
@@ -27,6 +29,12 @@ export interface Player {
   score: number  // Points (Guess Mode only)
   isBot?: boolean  // Bot player flag (v0.0.32)
   botDifficulty?: 'easy' | 'medium' | 'hard'  // Bot difficulty level (v0.0.32)
+  /** Objections left (Einspruch, timeline modes). */
+  challenges?: number
+  /** Set for a team: the people in it, in turn order. */
+  members?: string[]
+  /** Team only: how many turns the team has had (picks the member at the controls). */
+  memberTurn?: number
 }
 
 // ============================================================================
@@ -92,6 +100,8 @@ export interface HistoryEntry {
     name: string
     cards: number
     score: number
+    /** Team rounds: the people in the team. */
+    members?: string[]
     timeline: Array<{
       id: string
       title: string

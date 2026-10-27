@@ -5,7 +5,11 @@
  *  - placing: the song card lives here. Drag it onto the board, or tap a gap
  *    on the board. Dropping/tapping puts the card into the gap as a preview;
  *    one confirm places it (a wrong drop costs a card, so no fling-to-commit).
- *  - revealed: the verdict with the year and the progress; "Nächster Spieler".
+ *  - challenge-offer: the card lies face down; others may object (Einspruch)
+ *    or it is turned over.
+ *  - challenge-choose: the objecting player taps another gap and confirms.
+ *  - revealed: the verdict with cover, year, progress and the song's fact;
+ *    "Nächster Spieler".
  *  - bot: the bot is thinking.
  *
  * Drag physics: the card tilts with its horizontal velocity (spring-smoothed),
@@ -22,12 +26,30 @@ import { gapLabel } from '@/game/placement'
 import { spring } from '@/motion/springs'
 import { AnimatedNumber } from '@/components/ui/AnimatedNumber'
 import { PENDING_CARD_LAYOUT_ID } from './TimelineBoard'
+import { Icon } from '@/components/ui/Icon'
+import { SongCover, SongInfo } from './SongInfo'
 
 const ACTION_BAR_HEIGHT = 64
 
+export interface DockChallenger {
+  seat: number
+  name: string
+  left: number
+}
+
 export type DockState =
   | { kind: 'placing'; song: Song; previewGap: number | null; timeline: Song[] }
-  | { kind: 'revealed'; song: Song; isCorrect: boolean; isFirstCard: boolean; cards: number; playerName: string }
+  | { kind: 'challenge-offer'; placerName: string; challengers: DockChallenger[] }
+  | { kind: 'challenge-choose'; challengerName: string; previewGap: number | null; timeline: Song[] }
+  | {
+      kind: 'revealed'
+      song: Song
+      isCorrect: boolean
+      isFirstCard: boolean
+      cards: number
+      playerName: string
+      challenge: { name: string; won: boolean } | null
+    }
   | { kind: 'bot'; playerName: string }
 
 interface PlacementDockProps {
@@ -37,17 +59,29 @@ interface PlacementDockProps {
   onPreview: (gap: number | null) => void
   onConfirm: () => void
   onContinue: () => void
+  onChallenge?: (seat: number) => void
+  onCancelChallenge?: () => void
+  onReveal?: () => void
   /** Total cards needed to win (display only). */
   goal?: number
 }
 
-export function PlacementDock({ state, boardRef, onHoverGap, onPreview, onConfirm, onContinue, goal = 10 }: PlacementDockProps) {
+export function PlacementDock({
+  state,
+  boardRef,
+  onHoverGap,
+  onPreview,
+  onConfirm,
+  onContinue,
+  onChallenge,
+  onCancelChallenge,
+  onReveal,
+  goal = 10
+}: PlacementDockProps) {
   const stateKey = !state
     ? 'none'
-    : state.kind === 'placing'
-      ? state.previewGap === null
-        ? 'drag'
-        : 'confirm'
+    : state.kind === 'placing' || state.kind === 'challenge-choose'
+      ? `${state.kind}-${state.previewGap === null ? 'pick' : 'confirm'}`
       : state.kind
 
   return (
@@ -71,6 +105,29 @@ export function PlacementDock({ state, boardRef, onHoverGap, onPreview, onConfir
               {state.kind === 'placing' && state.previewGap !== null && (
                 <ConfirmStage
                   label={gapLabel(state.timeline, state.previewGap)}
+                  onBack={() => onPreview(null)}
+                  onConfirm={onConfirm}
+                />
+              )}
+              {state.kind === 'challenge-offer' && (
+                <ChallengeOfferStage state={state} onChallenge={(seat) => onChallenge?.(seat)} onReveal={() => onReveal?.()} />
+              )}
+              {state.kind === 'challenge-choose' && state.previewGap === null && (
+                <div className="flex flex-col sm:flex-row sm:items-center gap-3">
+                  <p className="flex-1 text-title-sm text-md-on-surface">
+                    <span className="block text-label-md text-md-on-surface-variant">Einspruch von {state.challengerName}</span>
+                    Wohin gehört der Song? Tippe eine Lücke an.
+                  </p>
+                  <button type="button" onClick={() => onCancelChallenge?.()} className="btn btn-text">
+                    Doch kein Einspruch
+                  </button>
+                </div>
+              )}
+              {state.kind === 'challenge-choose' && state.previewGap !== null && (
+                <ConfirmStage
+                  title={`Einspruch von ${state.challengerName}`}
+                  label={gapLabel(state.timeline, state.previewGap)}
+                  confirmText="Einspruch einlegen"
                   onBack={() => onPreview(null)}
                   onConfirm={onConfirm}
                 />
@@ -249,7 +306,19 @@ function GripIcon() {
 
 // ─── confirm ───────────────────────────────────────────────────────────────
 
-function ConfirmStage({ label, onBack, onConfirm }: { label: string; onBack: () => void; onConfirm: () => void }) {
+function ConfirmStage({
+  label,
+  onBack,
+  onConfirm,
+  title = 'Platzieren',
+  confirmText = 'Hier platzieren'
+}: {
+  label: string
+  onBack: () => void
+  onConfirm: () => void
+  title?: string
+  confirmText?: string
+}) {
   const confirmRef = useRef<HTMLButtonElement>(null)
   useEffect(() => {
     confirmRef.current?.focus({ preventScroll: true })
@@ -258,7 +327,7 @@ function ConfirmStage({ label, onBack, onConfirm }: { label: string; onBack: () 
   return (
     <div className="flex flex-col sm:flex-row sm:items-center gap-3">
       <p className="flex-1 text-title-sm text-md-on-surface">
-        <span className="block text-label-md text-md-on-surface-variant">Platzieren</span>
+        <span className="block text-label-md text-md-on-surface-variant">{title}</span>
         {label}
       </p>
       <div className="flex gap-2">
@@ -266,14 +335,77 @@ function ConfirmStage({ label, onBack, onConfirm }: { label: string; onBack: () 
           Zurück
         </button>
         <button ref={confirmRef} type="button" onClick={onConfirm} className="btn btn-brand flex-1 sm:flex-none">
-          Hier platzieren
+          {confirmText}
         </button>
       </div>
     </div>
   )
 }
 
+// ─── challenge ─────────────────────────────────────────────────────────────
+
+function ChallengeOfferStage({
+  state,
+  onChallenge,
+  onReveal
+}: {
+  state: Extract<DockState, { kind: 'challenge-offer' }>
+  onChallenge: (seat: number) => void
+  onReveal: () => void
+}) {
+  const revealRef = useRef<HTMLButtonElement>(null)
+  useEffect(() => {
+    revealRef.current?.focus({ preventScroll: true })
+  }, [])
+  return (
+    <div className="flex flex-col gap-3">
+      <div>
+        <p className="text-title-md text-md-on-surface">{state.placerName} hat gelegt</p>
+        <p className="text-body-sm text-md-on-surface-variant">Liegt die Karte falsch? Wer widerspricht, legt sie woandershin.</p>
+      </div>
+      <div className="flex flex-wrap gap-2" role="group" aria-label="Einspruch einlegen">
+        {state.challengers.map((c) => (
+          <button
+            key={c.seat}
+            type="button"
+            className="chip m3-state-layer"
+            onClick={() => onChallenge(c.seat)}
+            aria-label={`${c.name} legt Einspruch ein, noch ${c.left} übrig`}
+          >
+            <Icon name="hand" size={18} />
+            {c.name}
+            <ChallengeDots left={c.left} />
+          </button>
+        ))}
+      </div>
+      <button ref={revealRef} type="button" onClick={onReveal} className="btn btn-brand">
+        Kein Einspruch – aufdecken
+      </button>
+    </div>
+  )
+}
+
+/** Remaining objections as small filled dots (max three). */
+export function ChallengeDots({ left, max = 3 }: { left: number; max?: number }) {
+  return (
+    <span className="inline-flex gap-0.5" aria-hidden="true">
+      {Array.from({ length: max }, (_, i) => (
+        <span key={i} className={`w-1.5 h-1.5 rounded-full ${i < left ? 'bg-current' : 'bg-current opacity-25'}`} />
+      ))}
+    </span>
+  )
+}
+
 // ─── result ────────────────────────────────────────────────────────────────
+
+function verdictText(state: Extract<DockState, { kind: 'revealed' }>): { title: string; detail?: string; good: boolean } {
+  const { isFirstCard, isCorrect, challenge } = state
+  if (isFirstCard) return { title: 'Startkarte gelegt', good: true }
+  if (!challenge) return isCorrect ? { title: 'Richtig platziert!', good: true } : { title: 'Leider falsch', good: false }
+  if (isCorrect) return { title: 'Richtig platziert!', detail: `Der Einspruch von ${challenge.name} war daneben.`, good: true }
+  if (challenge.won) return { title: 'Einspruch erfolgreich!', detail: `${challenge.name} bekommt die Karte.`, good: true }
+  return { title: 'Beide daneben', detail: 'Die Karte bekommt niemand.', good: false }
+}
 
 function ResultStage({
   state,
@@ -288,44 +420,55 @@ function ResultStage({
   useEffect(() => {
     nextRef.current?.focus({ preventScroll: true })
   }, [])
-  const { isCorrect, isFirstCard, song, cards, playerName } = state
+  const { isCorrect, song, cards, playerName } = state
+  const verdict = verdictText(state)
 
   return (
-    <div className="flex flex-col sm:flex-row sm:items-center gap-3">
-      <div className="flex items-center gap-3 flex-1 min-w-0">
-        <m.span
-          initial={{ scale: 0.4, rotate: -30 }}
-          animate={{ scale: 1, rotate: 0 }}
-          transition={spring.spatialFast}
-          className={`flex-shrink-0 w-11 h-11 grid place-items-center rounded-m3-full ${
-            isCorrect ? 'bg-md-success-container text-md-on-success-container' : 'bg-md-error-container text-md-on-error-container'
-          }`}
-          aria-hidden="true"
-        >
-          {isCorrect ? (
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M5 12.5l4.5 4.5L19 7.5" />
-            </svg>
-          ) : (
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.6" strokeLinecap="round">
-              <path d="M7 7l10 10M17 7L7 17" />
-            </svg>
-          )}
-        </m.span>
-        <div className="min-w-0">
-          <p className="text-title-md text-md-on-surface">
-            {isFirstCard ? 'Startkarte gelegt' : isCorrect ? 'Richtig platziert!' : 'Leider falsch'}
-          </p>
-          <p className="text-body-sm text-md-on-surface-variant truncate">
-            {song.title} · <span className="tabular-nums">{song.year}</span>
-            {' · '}
-            {playerName}: <AnimatedNumber value={cards} from={isCorrect ? cards - 1 : cards} />/{goal} Karten
-          </p>
+    <div className="flex flex-col gap-3">
+      <div className="flex flex-col sm:flex-row sm:items-center gap-3">
+        <div className="flex items-center gap-3 flex-1 min-w-0">
+          <span className="relative flex-shrink-0">
+            <SongCover song={song} size={52} />
+            <m.span
+              initial={{ scale: 0.4, rotate: -30 }}
+              animate={{ scale: 1, rotate: 0 }}
+              transition={spring.spatialFast}
+              className={`absolute -right-1.5 -bottom-1.5 w-6 h-6 grid place-items-center rounded-m3-full ring-2 ring-md-surface-container-high ${
+                verdict.good ? 'bg-md-success-container text-md-on-success-container' : 'bg-md-error-container text-md-on-error-container'
+              }`}
+              aria-hidden="true"
+            >
+              {verdict.good ? (
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M5 12.5l4.5 4.5L19 7.5" />
+                </svg>
+              ) : (
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round">
+                  <path d="M7 7l10 10M17 7L7 17" />
+                </svg>
+              )}
+            </m.span>
+          </span>
+          <div className="min-w-0">
+            <p className="text-title-md text-md-on-surface">{verdict.title}</p>
+            <p className="text-body-sm text-md-on-surface-variant truncate">
+              {song.title} – {song.artist} · <span className="tabular-nums">{song.year}</span>
+            </p>
+            <p className="text-body-sm text-md-on-surface-variant truncate">
+              {verdict.detail ? `${verdict.detail} ` : ''}
+              {!state.challenge?.won && (
+                <>
+                  {playerName}: <AnimatedNumber value={cards} from={isCorrect ? cards - 1 : cards} />/{goal}
+                </>
+              )}
+            </p>
+          </div>
         </div>
+        <button ref={nextRef} type="button" onClick={onContinue} className="btn btn-brand">
+          Weiter
+        </button>
       </div>
-      <button ref={nextRef} type="button" onClick={onContinue} className="btn btn-brand">
-        Nächster Spieler
-      </button>
+      <SongInfo song={song} head="none" delay={0.2} />
     </div>
   )
 }
@@ -335,7 +478,7 @@ function ResultStage({
 function BotStage({ name }: { name: string }) {
   return (
     <div className="flex items-center justify-center gap-3 py-2 text-title-sm text-md-on-surface">
-      <span aria-hidden="true">🤖</span>
+      <Icon name="bot" size={20} />
       <span>{name} überlegt</span>
       <span className="flex gap-1" aria-hidden="true">
         {[0, 1, 2].map((i) => (

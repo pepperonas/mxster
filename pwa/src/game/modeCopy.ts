@@ -1,24 +1,27 @@
 import type { GameMode } from '@/types'
 import type { IconName } from '@/components/ui/Icon'
+import { goalWord } from './roundEnd'
 
 /** How each mode is named and explained in the UI. */
-export const MODE_COPY: Record<GameMode, { name: string; short: string; how: string; icon: IconName }> = {
+export const MODE_COPY: Record<GameMode, { name: string; short: string; how: (goal: number) => string; icon: IconName }> = {
   timeline_personal: {
     name: 'Eigene Zeitleiste',
     short: 'Jede:r baut eine eigene Zeitleiste.',
-    how: 'Leg jeden Song an die richtige Stelle deiner Zeitleiste. Wer zuerst zehn Songs richtig liegen hat, gewinnt.',
+    how: (goal) => `Leg jeden Song an die richtige Stelle deiner Zeitleiste. Wer zuerst ${goalWord(goal)} Songs richtig liegen hat, gewinnt.`,
     icon: 'timeline'
   },
   timeline_global: {
     name: 'Gemeinsame Zeitleiste',
     short: 'Alle legen an dieselbe Zeitleiste.',
-    how: 'Alle legen an eine gemeinsame Zeitleiste. Sobald zehn Songs richtig liegen, gewinnt, wer die meisten davon gelegt hat. Bei Gleichstand entscheidet ein Stechen.',
+    how: (goal) =>
+      `Alle legen an eine gemeinsame Zeitleiste. Sobald ${goalWord(goal)} Songs richtig liegen, gewinnt, wer die meisten davon gelegt hat. Bei Gleichstand entscheidet ein Stechen.`,
     icon: 'globe'
   },
   hardcore: {
     name: 'Hardcore',
     short: 'Titel, Interpret und Jahr raten, bis zu 15 Punkte.',
-    how: 'Rate Titel und Interpret (je 5 Punkte) und das Jahr (5 Punkte exakt, 2 bei einem Jahr daneben, 1 bei zwei). Nach zehn Songs gewinnt, wer die meisten Punkte hat. Bei Gleichstand entscheidet ein Stechen.',
+    how: (goal) =>
+      `Rate Titel und Interpret (je 5 Punkte) und das Jahr (5 Punkte exakt, 2 bei einem Jahr daneben, 1 bei zwei). Nach ${goalWord(goal)} Songs gewinnt, wer die meisten Punkte hat. Bei Gleichstand entscheidet ein Stechen.`,
     icon: 'flame'
   }
 }

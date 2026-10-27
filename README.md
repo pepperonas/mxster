@@ -3,7 +3,7 @@
 Song hören, Jahr raten, an die richtige Stelle der Zeitleiste legen. Ein Musikspiel für eure Runde, gespielt auf einem Gerät.
 
 [![App](https://img.shields.io/badge/mxster.celox.io-B90C55?style=for-the-badge&logo=googlechrome&logoColor=white)](https://mxster.celox.io)
-[![Version](https://img.shields.io/badge/v0.4.0-B90C55?style=for-the-badge&logo=semver&logoColor=white)](https://github.com/pepperonas/mxster/releases)
+[![Version](https://img.shields.io/badge/v0.5.0-B90C55?style=for-the-badge&logo=semver&logoColor=white)](https://github.com/pepperonas/mxster/releases)
 [![Tests](https://github.com/pepperonas/mxster/actions/workflows/ci.yml/badge.svg)](https://github.com/pepperonas/mxster/actions/workflows/ci.yml)
 
 ![React](https://img.shields.io/badge/React_19-61DAFB?style=flat-square&logo=react&logoColor=black)
@@ -21,9 +21,18 @@ mxster ist eine private App. Man meldet sich mit einem Google-Konto an; neue Kon
 
 | Modus | Ziel |
 |-------|------|
-| **Eigene Zeitleiste** | Jede:r baut eine eigene Zeitleiste. Wer zuerst zehn Songs richtig liegen hat, gewinnt. |
-| **Gemeinsame Zeitleiste** | Alle legen an dieselbe Zeitleiste. Sobald zehn Songs richtig liegen, gewinnt, wer die meisten davon gelegt hat. |
-| **Hardcore** | Titel (+5), Interpret (+5) und Jahr (+5 exakt, +2 bei einem Jahr daneben, +1 bei zwei) raten. Nach zehn Songs gewinnt die höchste Punktzahl. |
+| **Eigene Zeitleiste** | Jede:r baut eine eigene Zeitleiste. Wer zuerst die Zielzahl an Songs richtig liegen hat, gewinnt. |
+| **Gemeinsame Zeitleiste** | Alle legen an dieselbe Zeitleiste. Sobald die Zielzahl an Songs richtig liegt, gewinnt, wer die meisten davon gelegt hat. |
+| **Hardcore** | Titel (+5), Interpret (+5) und Jahr (+5 exakt, +2 bei einem Jahr daneben, +1 bei zwei) raten. Wenn alle die Zielzahl an Songs gespielt haben, gewinnt die höchste Punktzahl. |
+
+Vor jeder Runde legt ihr fest:
+
+- **Länge:** kurz (5 Songs), normal (10) oder lang (15).
+- **Jahrzehnte:** alle oder nur bestimmte, etwa nur 80er und 90er. Gehen die Songs der gewählten Jahrzehnte aus, kommen die übrigen dazu, damit die Runde nie stehen bleibt.
+- **Einspruch** (Zeitleisten-Modi): Jede:r hat drei Einsprüche. Nach dem Legen bleibt die Karte verdeckt, und wer anderer Meinung ist, legt sie in eine andere Lücke. Liegt die Person am Zug falsch und der Einspruch richtig, bekommt die Einspruch-Person die Karte. Ein Einspruch kostet immer einen der drei. Bots erheben keinen Einspruch, können aber angefochten werden.
+- **Teams** (ab vier Personen): Ein Team teilt sich Zeitleiste, Punkte und Einsprüche, die Mitglieder wechseln sich am Zug ab. Die App verteilt zufällig, ein Tipp auf einen Namen setzt ihn ins nächste Team.
+
+Songs aus euren letzten Runden kommen erst wieder, wenn nichts Neues mehr übrig ist; das merkt sich die App pro Konto.
 
 Unentschieden gibt es nicht. Liegen am Ende mehrere vorne, folgt ein **Stechen**: nur sie spielen weiter, je ein Song pro Runde, bis nach einer vollen Runde genau eine:r führt. Wer zurückfällt, scheidet aus; Überspringen ist im Stechen gesperrt. In der Rangliste steht der Gewinner allein auf Platz 1, darunter teilen sich Gleichstehende einen Platz.
 
@@ -32,8 +41,10 @@ Allein? Dann spielen bis zu drei Bots gegen dich (leicht, mittel, schwer).
 ## Was drin ist
 
 - 211 Songs als selbst gehostete MP3s, zufällige Startstelle auf Wunsch
+- Nach dem Aufdecken: Album-Cover auf dem Plattenlabel, Albumname und ein kurzes „Wusstest du?“
+- Eine laufende Runde übersteht Neuladen und geschlossene Tabs: Sie wird auf dem Gerät gesichert und auf der Startseite zum Weiterspielen angeboten
 - Fehlertolerante Antworten (Tippfehler, Groß- und Kleinschreibung)
-- 23 Erfolge, Verlauf jeder Runde mit Rangliste und allen Songs
+- 24 Erfolge, Verlauf jeder Runde mit Rangliste und allen Songs
 - Verlauf, Erfolge und Einstellungen hängen am Konto und sind auf jedem Gerät gleich
 - PWA, installierbar, helles und dunkles Design
 

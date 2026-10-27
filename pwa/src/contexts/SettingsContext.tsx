@@ -7,6 +7,7 @@
 import { createContext, useContext, useEffect, useCallback, type ReactNode } from 'react'
 import { useSyncedDoc } from '@/sync/useSyncedDoc'
 import { mergeSettings } from '@/sync/merge'
+import { RECENT_LIMIT, rememberSong } from '@/game/songPool'
 
 export type ThemeMode = 'dark' | 'light'
 
@@ -15,6 +16,8 @@ export interface Settings {
   hideYearsInTimeline: boolean // Blur years in the timeline so nobody peeks
   savedPlayers: string[] // Names offered as quick picks in the setup
   theme: ThemeMode
+  /** Songs played in recent rounds (oldest first) — drawn again only when nothing fresh is left. */
+  recentSongs: string[]
 }
 
 interface SettingsContextType {
@@ -23,6 +26,8 @@ interface SettingsContextType {
   resetSettings: () => void
   addPlayer: (playerName: string) => void
   removePlayer: (playerName: string) => void
+  /** Note a drawn song so later rounds prefer other songs. */
+  rememberSong: (key: string) => void
 }
 
 export const THEME_STORAGE_KEY = 'mxster_theme'
@@ -31,7 +36,8 @@ export const defaultSettings: Settings = {
   randomStartPosition: false,
   hideYearsInTimeline: false,
   savedPlayers: [],
-  theme: readStoredTheme()
+  theme: readStoredTheme(),
+  recentSongs: []
 }
 
 function readStoredTheme(): ThemeMode {
@@ -49,7 +55,8 @@ export function normalizeSettings(raw: unknown): Settings {
     randomStartPosition: Boolean(r.randomStartPosition),
     hideYearsInTimeline: Boolean(r.hideYearsInTimeline),
     savedPlayers: Array.isArray(r.savedPlayers) ? r.savedPlayers.filter((n) => typeof n === 'string') : [],
-    theme: r.theme === 'light' ? 'light' : r.theme === 'dark' ? 'dark' : readStoredTheme()
+    theme: r.theme === 'light' ? 'light' : r.theme === 'dark' ? 'dark' : readStoredTheme(),
+    recentSongs: Array.isArray(r.recentSongs) ? r.recentSongs.filter((k) => typeof k === 'string').slice(-RECENT_LIMIT) : []
   }
 }
 
@@ -99,8 +106,13 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
     [setValue]
   )
 
+  const remember = useCallback(
+    (key: string) => setValue((prev) => ({ ...prev, recentSongs: rememberSong(prev.recentSongs, key) })),
+    [setValue]
+  )
+
   return (
-    <SettingsContext.Provider value={{ settings, updateSettings, resetSettings, addPlayer, removePlayer }}>
+    <SettingsContext.Provider value={{ settings, updateSettings, resetSettings, addPlayer, removePlayer, rememberSong: remember }}>
       {children}
     </SettingsContext.Provider>
   )

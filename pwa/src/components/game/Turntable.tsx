@@ -20,6 +20,8 @@ interface TurntableProps {
   /** Year shown on the label after a reveal. */
   revealYear?: number | null
   revealCorrect?: boolean | null
+  /** Album cover printed on the label after the reveal. */
+  revealCover?: string | null
   /** Shown when no song is on the platter. */
   drawLabel?: string
   onDraw?: () => void
@@ -28,7 +30,7 @@ interface TurntableProps {
 
 const RANDOM_START_MAX_S = 150 // ~3.5 min average song, keep ≥ 60 s left
 
-export function Turntable({ song, revealYear, revealCorrect, drawLabel = 'Song ziehen', onDraw, drawDisabled }: TurntableProps) {
+export function Turntable({ song, revealYear, revealCorrect, revealCover, drawLabel = 'Song ziehen', onDraw, drawDisabled }: TurntableProps) {
   const { settings } = useSettings()
   const { addToast } = useUI()
   const player = useRef(getPreviewPlayer())
@@ -92,7 +94,13 @@ export function Turntable({ song, revealYear, revealCorrect, drawLabel = 'Song z
           animate={{ scale: song ? 1 : 0.94, opacity: song ? 1 : 0.85 }}
           transition={spring.spatialDefault}
         >
-          <Vinyl size="100%" spinning={playing && !revealed} labelColor={revealed ? labelColorFor(revealCorrect) : undefined} />
+          <Vinyl
+            size="100%"
+            spinning={playing && !revealed}
+            labelColor={revealed ? labelColorFor(revealCorrect) : undefined}
+            labelImage={revealed ? revealCover : null}
+            labelRing={revealed ? ringColorFor(revealCorrect) : undefined}
+          />
         </m.div>
 
         {/* Centre control */}
@@ -106,7 +114,7 @@ export function Turntable({ song, revealYear, revealCorrect, drawLabel = 'Song z
                 exit={{ scale: 0.6, opacity: 0, transition: spring.effectsFast }}
                 transition={spring.spatialFast}
                 className="text-poster tabular"
-                style={{ fontSize: 'clamp(1.6rem, 8vw, 2.2rem)', color: 'rgb(var(--mx-on-brand))' }}
+                style={{ fontSize: 'clamp(1.6rem, 8vw, 2.2rem)', color: '#fff', textShadow: '0 1px 6px rgb(0 0 0 / 0.55)' }}
                 aria-live="polite"
               >
                 {revealYear}
@@ -186,6 +194,12 @@ function labelColorFor(correct: boolean | null | undefined) {
   if (correct === true) return 'rgb(var(--md-ref-success-40))'
   if (correct === false) return 'rgb(var(--md-ref-error-40))'
   return undefined
+}
+
+function ringColorFor(correct: boolean | null | undefined) {
+  if (correct === true) return 'rgb(var(--md-ref-success-60))'
+  if (correct === false) return 'rgb(var(--md-ref-error-60))'
+  return 'rgb(var(--mx-label))'
 }
 
 function formatTime(s: number) {

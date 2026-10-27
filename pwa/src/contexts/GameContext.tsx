@@ -1,6 +1,11 @@
-import { createContext, useContext, useReducer, ReactNode } from 'react'
+import { createContext, useContext, useEffect, useReducer, ReactNode } from 'react'
 import type { Player, Song, GameMode, GlobalTimelineCard } from '@/types'
 import { nextContender, type Tiebreak } from '@/game/tiebreak'
+import { DEFAULT_GOAL } from '@/game/roundEnd'
+import { STARTING_CHALLENGES } from '@/game/challenge'
+import type { PendingPlacement, Reveal } from '@/game/turn'
+import type { RankingSnapshot } from '@/game/achievementRules'
+import { clearSavedGame, loadSavedGame, saveGame } from '@/game/savedGame'
 
 // ============================================================================
 // Types
@@ -31,7 +36,25 @@ interface GameState {
 
   /** Set while a level lead is played out (only contenders take turns). */
   tiebreak: Tiebreak | null
+
+  // Round options
+  /** Correct cards (timeline) / songs per player (hardcore) a round runs to. */
+  goal: number
+  /** Decades songs are drawn from; empty = all. */
+  decades: number[]
+  /** Einspruch is on (timeline modes only). */
+  challengesEnabled: boolean
+
+  // Turn (kept here so a reload resumes exactly where the round stood)
+  reveal: Reveal | null
+  pending: PendingPlacement | null
+  /** The round has a winner (result screen is showing). */
+  finished: boolean
+  startedAt: number
+  rankingsHistory: RankingSnapshot[]
 }
+
+export type RoundOptions = Pick<GameState, 'goal' | 'decades' | 'challengesEnabled'>
 
 type GameAction =
   | { type: 'SET_GAME_MODE'; payload: GameMode | null }
@@ -54,6 +77,12 @@ type GameAction =
   | { type: 'NEXT_TURN' }
   | { type: 'NEXT_PLAYER_ONLY' } // Switch player, keep currentSong
   | { type: 'SET_TIEBREAK'; payload: Tiebreak | null }
+  | { type: 'SET_OPTIONS'; payload: Partial<RoundOptions> }
+  | { type: 'SET_PLAYERS'; payload: Player[] }
+  | { type: 'SET_REVEAL'; payload: Reveal | null }
+  | { type: 'SET_PENDING'; payload: PendingPlacement | null }
+  | { type: 'FINISH' }
+  | { type: 'PUSH_RANKING'; payload: RankingSnapshot }
 
 interface GameContextValue extends GameState {
   setGameMode: (mode: GameMode | null) => void
@@ -77,6 +106,13 @@ interface GameContextValue extends GameState {
   nextTurn: () => void
   nextPlayerOnly: () => void // Switch player but keep song
   setTiebreak: (tiebreak: Tiebreak | null) => void
+  setOptions: (options: Partial<RoundOptions>) => void
+  /** Replace the whole line-up (teams). */
+  setPlayers: (players: Player[]) => void
+  setReveal: (reveal: Reveal | null) => void
+  setPending: (pending: PendingPlacement | null) => void
+  finish: () => void
+  pushRanking: (snapshot: RankingSnapshot) => void
 }
 
 // ============================================================================
@@ -100,8 +136,41 @@ const initialState: GameState = {
   playedSongs: [],
   currentSongSkips: {},
   isGameStarted: false,
-  tiebreak: null
+  tiebreak: null,
+  goal: DEFAULT_GOAL,
+  decades: [],
+  challengesEnabled: true,
+  reveal: null,
+  pending: null,
+  finished: false,
+  startedAt: 0,
+  rankingsHistory: []
 }
+
+/** Fresh scores, timelines and challenges for a new round with the same line-up. */
+function freshPlayers(players: Player[], challenges: boolean): Player[] {
+  return players.map((p) => ({
+    ...p,
+    timeline: [],
+    cards: 0,
+    score: 0,
+    challenges: challenges ? STARTING_CHALLENGES : 0,
+    memberTurn: p.members ? 0 : undefined
+  }))
+}
+
+/** Round options survive a reset — the setup remembers the last choice. */
+function keepOptions(state: GameState) {
+  return {
+    gameMode: state.gameMode,
+    randomStartPosition: state.randomStartPosition,
+    goal: state.goal,
+    decades: state.decades,
+    challengesEnabled: state.challengesEnabled
+  }
+}
+
+const challengesInMode = (state: GameState) => state.challengesEnabled && state.gameMode !== 'hardcore'
 
 // ============================================================================
 // Reducer
@@ -183,26 +252,55 @@ function gameReducer(state: GameState, action: GameAction): GameState {
       return { ...state, currentSongSkips: {} }
 
     case 'START_GAME':
-      return { ...state, isGameStarted: true }
+      return {
+        ...state,
+        players: freshPlayers(state.players, challengesInMode(state)),
+        isGameStarted: true,
+        finished: false,
+        reveal: null,
+        pending: null,
+        tiebreak: null,
+        currentPlayer: 0,
+        currentSong: null,
+        globalTimeline: [],
+        playedSongs: [],
+        currentSongSkips: {},
+        rankingsHistory: [],
+        startedAt: Date.now()
+      }
 
     case 'END_GAME':
       return { ...state, isGameStarted: false }
 
     case 'RESET_GAME':
-      return {
-        ...initialState,
-        gameMode: state.gameMode,
-        randomStartPosition: state.randomStartPosition
-      }
+      return { ...initialState, ...keepOptions(state) }
 
     case 'REMATCH':
       return {
         ...initialState,
-        gameMode: state.gameMode,
-        randomStartPosition: state.randomStartPosition,
-        players: state.players.map((p) => ({ ...p, timeline: [], cards: 0, score: 0 })),
-        isGameStarted: true
+        ...keepOptions(state),
+        players: freshPlayers(state.players, challengesInMode(state)),
+        isGameStarted: true,
+        startedAt: Date.now()
       }
+
+    case 'SET_OPTIONS':
+      return { ...state, ...action.payload }
+
+    case 'SET_PLAYERS':
+      return { ...state, players: action.payload, currentPlayer: 0 }
+
+    case 'SET_REVEAL':
+      return { ...state, reveal: action.payload }
+
+    case 'SET_PENDING':
+      return { ...state, pending: action.payload }
+
+    case 'FINISH':
+      return { ...state, finished: true, reveal: null, pending: null }
+
+    case 'PUSH_RANKING':
+      return { ...state, rankingsHistory: [...state.rankingsHistory, action.payload] }
 
     case 'LOAD_GAME_STATE':
       return { ...state, ...action.payload }
@@ -215,6 +313,7 @@ function gameReducer(state: GameState, action: GameAction): GameState {
       if (playerCount === 0) return state
       return {
         ...state,
+        players: advanceMember(state.players, state.currentPlayer),
         currentPlayer: nextSeat(state),
         currentSong: null,
         waitingForGuess: false,
@@ -226,12 +325,24 @@ function gameReducer(state: GameState, action: GameAction): GameState {
       // Switch player, keep the song and its skip counts (penalty tracking)
       const playerCount = state.players.length
       if (playerCount === 0) return state
-      return { ...state, currentPlayer: nextSeat(state), waitingForGuess: false }
+      return {
+        ...state,
+        players: advanceMember(state.players, state.currentPlayer),
+        currentPlayer: nextSeat(state),
+        waitingForGuess: false
+      }
     }
 
     default:
       return state
   }
+}
+
+/** A team's next turn goes to its next member. */
+function advanceMember(players: Player[], seat: number): Player[] {
+  const team = players[seat]
+  if (!team?.members?.length) return players
+  return players.map((p, i) => (i === seat ? { ...p, memberTurn: (p.memberTurn ?? 0) + 1 } : p))
 }
 
 /** Next seat in turn order; during a tiebreak only contenders play. */
@@ -249,7 +360,17 @@ interface GameProviderProps {
 }
 
 export function GameProvider({ children }: GameProviderProps) {
-  const [state, dispatch] = useReducer(gameReducer, initialState)
+  const [state, dispatch] = useReducer(gameReducer, undefined, () => {
+    const saved = loadSavedGame<GameState>()
+    return saved ? { ...initialState, ...saved } : initialState
+  })
+
+  // A running round is mirrored to this device, so a reload (or a closed tab)
+  // picks it up exactly where it stood. A finished or ended round is dropped.
+  useEffect(() => {
+    if (state.isGameStarted && !state.finished) saveGame(state)
+    else clearSavedGame()
+  }, [state])
 
   const value: GameContextValue = {
     ...state,
@@ -272,7 +393,13 @@ export function GameProvider({ children }: GameProviderProps) {
     loadGameState: (gameState) => dispatch({ type: 'LOAD_GAME_STATE', payload: gameState }),
     nextTurn: () => dispatch({ type: 'NEXT_TURN' }),
     nextPlayerOnly: () => dispatch({ type: 'NEXT_PLAYER_ONLY' }),
-    setTiebreak: (tiebreak) => dispatch({ type: 'SET_TIEBREAK', payload: tiebreak })
+    setTiebreak: (tiebreak) => dispatch({ type: 'SET_TIEBREAK', payload: tiebreak }),
+    setOptions: (options) => dispatch({ type: 'SET_OPTIONS', payload: options }),
+    setPlayers: (players) => dispatch({ type: 'SET_PLAYERS', payload: players }),
+    setReveal: (reveal) => dispatch({ type: 'SET_REVEAL', payload: reveal }),
+    setPending: (pending) => dispatch({ type: 'SET_PENDING', payload: pending }),
+    finish: () => dispatch({ type: 'FINISH' }),
+    pushRanking: (snapshot) => dispatch({ type: 'PUSH_RANKING', payload: snapshot })
   }
 
   return <GameContext.Provider value={value}>{children}</GameContext.Provider>

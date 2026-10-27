@@ -14,6 +14,7 @@ import { celebrate } from '@/motion/celebrate'
 export function announcementFor(reveal: Reveal): string {
   if (reveal.kind === 'placement') {
     if (reveal.isFirstCard) return `Startkarte gelegt: ${reveal.song.title}, ${reveal.song.year}.`
+    if (reveal.challenge?.won) return `Einspruch erfolgreich! ${reveal.song.title} ist von ${reveal.song.year}.`
     return reveal.isCorrect
       ? `Richtig platziert! ${reveal.song.title} ist von ${reveal.song.year}.`
       : `Leider falsch. ${reveal.song.title} ist von ${reveal.song.year}.`
@@ -31,7 +32,7 @@ export function FeedbackLayer({ reveal }: { reveal: Reveal | null }) {
 
     let cancel = () => {}
     if (reveal.kind === 'placement') {
-      if (reveal.isCorrect && !reveal.isFirstCard) cancel = celebrate('small')
+      if ((reveal.isCorrect || reveal.challenge?.won) && !reveal.isFirstCard) cancel = celebrate('small')
     } else {
       const tier = guessTier(reveal.breakdown.total)
       if (tier === 'perfect') cancel = celebrate('big')

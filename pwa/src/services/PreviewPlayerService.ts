@@ -96,12 +96,12 @@ export class PreviewPlayerService {
         this.config.onEnd?.()
       },
       onloaderror: (_id, error) => {
-        console.error(`❌ Preview load error: ${song.title}`, error)
+        console.error(`Preview load error: ${song.title}`, error)
         this.setState('error')
         this.config.onError?.('Der Song konnte nicht geladen werden.')
       },
       onplayerror: (_id, error) => {
-        console.error(`❌ Preview play error: ${song.title}`, error)
+        console.error(`Preview play error: ${song.title}`, error)
         this.setState('error')
         this.config.onError?.('Der Song konnte nicht abgespielt werden. Tippe auf Abspielen.')
       }

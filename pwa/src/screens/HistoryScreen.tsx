@@ -124,7 +124,10 @@ export function HistoryDetailScreen() {
           <section key={p.name} className="surface p-5" aria-label={p.name}>
             <div className="flex items-center gap-3 mb-3">
               <span className="w-6 text-title-md tabular text-md-on-surface-variant">{place}.</span>
-              <h2 className="flex-1 text-title-md truncate">{p.name}</h2>
+              <div className="flex-1 min-w-0">
+                <h2 className="text-title-md truncate">{p.name}</h2>
+                {p.members && <p className="meta truncate">{p.members.join(', ')}</p>}
+              </div>
               <span className="text-title-sm tabular">{hardcore ? `${p.score} Pkt.` : `${p.cards} Songs`}</span>
             </div>
             {p.timeline.length > 0 ? (

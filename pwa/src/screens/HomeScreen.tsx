@@ -1,11 +1,12 @@
 /**
- * Spielen — the landing destination after sign-in. One big way into a new
- * round (the record half out of its sleeve), then the last round and the
+ * Spielen — the landing destination after sign-in. A round still running on
+ * this device comes first (continue or discard), then the one big way into a
+ * new round (the record half out of its sleeve), the last round and the
  * nearest achievement. Nothing else competes for attention.
  */
 import { m } from 'motion/react'
 import { useMe } from '@/auth/AuthContext'
-import { useAchievements, useGameHistory } from '@/contexts'
+import { useAchievements, useGame, useGameHistory, useUI } from '@/contexts'
 import { useAppNavigate } from '@/hooks/useAppNavigate'
 import { Vinyl } from '@/components/ui/Vinyl'
 import { Icon } from '@/components/ui/Icon'
@@ -14,13 +15,17 @@ import { MODE_COPY } from '@/game/modeCopy'
 import { spring } from '@/motion/springs'
 import { ownPlayerName } from '@/game/owner'
 import { formatDay } from '@/utils/format'
-import { ACHIEVEMENT_DEFINITIONS, type Achievement } from '@/types/achievements'
+import { turnName } from '@/game/teams'
+import { ACHIEVEMENT_DEFINITIONS, achievementIcon, type Achievement } from '@/types/achievements'
 
 export function HomeScreen() {
   const me = useMe()
   const navigate = useAppNavigate()
   const { history } = useGameHistory()
   const { getPlayerAchievements } = useAchievements()
+  const game = useGame()
+  const { showModal } = useUI()
+  const running = game.isGameStarted && !game.finished && game.players.length > 0 && game.gameMode
   const firstName = ownPlayerName(me.name)
   const last = history[0]
   const stored = getPlayerAchievements(firstName)
@@ -28,16 +33,38 @@ export function HomeScreen() {
     stored.length ? stored : Object.values(ACHIEVEMENT_DEFINITIONS).map((d) => ({ ...d, unlocked: false, progress: d.target ? 0 : undefined }))
   )
 
+  function discard() {
+    showModal(
+      'Runde verwerfen?',
+      <p className="text-body-lg">Der Spielstand der laufenden Runde ist danach weg.</p>,
+      [{ text: 'Behalten' }, { text: 'Verwerfen', variant: 'danger', onClick: () => game.resetGame() }]
+    )
+  }
+
+  function newGame() {
+    if (!running) return navigate('/neu')
+    showModal(
+      'Neue Runde starten?',
+      <p className="text-body-lg">Eure laufende Runde wird dabei verworfen.</p>,
+      [
+        { text: 'Weiterspielen', onClick: () => navigate('/spiel') },
+        { text: 'Neue Runde', variant: 'primary', onClick: () => navigate('/neu') }
+      ]
+    )
+  }
+
   return (
     <div className="pt-4 md:pt-10 space-y-6">
       <h1 className="text-headline-md text-md-on-surface">
-        {last ? `Noch eine Runde, ${firstName}?` : `Willkommen, ${firstName}.`}
+        {running ? `Weiter geht’s, ${firstName}.` : last ? `Noch eine Runde, ${firstName}?` : `Willkommen, ${firstName}.`}
       </h1>
+
+      {running && <RunningRound onContinue={() => navigate('/spiel')} onDiscard={discard} />}
 
       {/* The sleeve: a brand-coloured card with the record sliding out of it */}
       <button
         type="button"
-        onClick={() => navigate('/neu')}
+        onClick={newGame}
         className="group relative block w-full text-left overflow-hidden rounded-m3-xxl m3-state-layer"
         style={{ background: 'rgb(var(--mx-brand))', color: 'rgb(var(--mx-on-brand))', viewTransitionName: 'new-game' }}
       >
@@ -100,7 +127,7 @@ export function HomeScreen() {
               className="w-full text-left flex items-center gap-4 -m-2 p-2 rounded-m3-lg m3-state-layer"
             >
               <ProgressRing value={next.progress ?? 0} max={next.target ?? 1} size={48}>
-                <span className="text-title-md">{next.icon}</span>
+                <Icon name={achievementIcon(next.id)} size={22} className="text-md-tertiary" />
               </ProgressRing>
               <span className="min-w-0 flex-1">
                 <span className="block text-title-md truncate">{next.name}</span>
@@ -115,6 +142,56 @@ export function HomeScreen() {
         </section>
       </div>
     </div>
+  )
+}
+
+/** The round saved on this device: who is on turn, the standings, continue or discard. */
+function RunningRound({ onContinue, onDiscard }: { onContinue: () => void; onDiscard: () => void }) {
+  const { gameMode, players, currentPlayer, startedAt, goal } = useGame()
+  if (!gameMode) return null
+  const hardcore = gameMode === 'hardcore'
+  const onTurn = players[currentPlayer]
+  const standings = [...players]
+    .sort((a, b) => (hardcore ? b.score - a.score : b.cards - a.cards))
+    .map((p) => `${p.name} ${hardcore ? p.score : p.cards}`)
+    .join(' · ')
+  const minutes = Math.max(1, Math.round((Date.now() - startedAt) / 60000))
+
+  return (
+    <m.section
+      aria-labelledby="running-h"
+      initial={{ opacity: 0, y: 12 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={spring.spatialDefault}
+      className="rounded-m3-xl bg-md-surface-container-high text-md-on-surface p-5 flex flex-col sm:flex-row sm:items-center gap-4"
+    >
+      <div className="flex items-center gap-4 flex-1 min-w-0">
+        <Vinyl size={64} spinning />
+        <div className="min-w-0">
+          <h2 id="running-h" className="text-title-lg">
+            Eure Runde läuft noch
+          </h2>
+          <p className="text-body-md text-md-on-surface-variant">
+            {MODE_COPY[gameMode].name}
+            {onTurn ? `, ${turnName(onTurn)} ist dran` : ''}
+            {minutes < 600 ? `, seit ${minutes < 60 ? `${minutes} Min.` : `${Math.round(minutes / 60)} Std.`}` : ''}
+          </p>
+          <p className="text-body-sm text-md-on-surface-variant tabular">
+            {standings}
+            {hardcore ? ' Punkte' : ` von ${goal}`}
+          </p>
+        </div>
+      </div>
+      <div className="flex gap-2 sm:flex-col">
+        <button type="button" className="btn btn-brand m3-state-layer flex-1" onClick={onContinue}>
+          <Icon name="play" />
+          Weiterspielen
+        </button>
+        <button type="button" className="btn btn-text m3-state-layer flex-1" onClick={onDiscard}>
+          Verwerfen
+        </button>
+      </div>
+    </m.section>
   )
 }
 

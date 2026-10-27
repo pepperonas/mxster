@@ -50,6 +50,7 @@ export function GameOver({ winner, players, mode, onRematch, onHome }: GameOverP
           <h1 id="game-over-title" className="text-poster text-center break-words" style={{ fontSize: 'clamp(2.8rem, 14vw, 4.5rem)' }}>
             {winner.name}
           </h1>
+          {winner.members && <p className="mt-2 text-title-md text-md-on-surface-variant text-center">{winner.members.join(', ')}</p>}
         </m.div>
 
         <ol className="mt-8 space-y-2">
@@ -64,7 +65,10 @@ export function GameOver({ winner, players, mode, onRematch, onHome }: GameOverP
               }`}
             >
               <span className="w-6 text-title-md tabular">{place}.</span>
-              <span className="flex-1 min-w-0 truncate text-body-lg">{p.name}</span>
+              <span className="flex-1 min-w-0">
+                <span className="block truncate text-body-lg">{p.name}</span>
+                {p.members && <span className="block truncate text-body-sm opacity-80">{p.members.join(', ')}</span>}
+              </span>
               <span className="text-title-md tabular">{hardcore ? `${p.score} Pkt.` : `${p.cards} Songs`}</span>
             </m.li>
           ))}

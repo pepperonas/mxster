@@ -6,6 +6,8 @@
  * plays as soon as the dialog has gone. Confetti uses the theme colours and
  * respects reduced motion.
  */
+import { Icon } from '@/components/ui/Icon'
+import { achievementIcon } from '@/types/achievements'
 import { useEffect } from 'react'
 import { createPortal } from 'react-dom'
 import { AnimatePresence, m } from 'motion/react'
@@ -50,13 +52,13 @@ export function AchievementUnlockAnimation() {
             onClick={removeCurrentNotification}
           >
             <m.div
-              className="text-7xl mb-3"
+              className="mb-3 inline-grid place-items-center w-24 h-24 rounded-m3-full bg-md-tertiary-container text-md-on-tertiary-container"
               initial={{ scale: 0.3, rotate: -20 }}
               animate={{ scale: 1, rotate: 0 }}
               transition={{ ...spring.spatialFast, delay: 0.12 }}
               aria-hidden="true"
             >
-              {currentNotification.achievement.icon}
+              <Icon name={achievementIcon(currentNotification.achievement.id)} size={52} />
             </m.div>
             <p className="text-label-lg uppercase tracking-wider opacity-80">{currentNotification.playerName}</p>
             <p className="text-label-lg mt-1">Achievement freigeschaltet</p>

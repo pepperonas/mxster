@@ -22,7 +22,7 @@ export const GAME_MODE_INFO: Record<GameMode, GameModeInfo & {
   hardcore: {
     name: 'Hardcore',
     description: 'Rate Jahr, Titel und Interpret - Maximale Punkte für perfekte Antworten',
-    icon: '🔥',
+    icon: 'flame',
     rules: [
       'Höre den Song',
       'Rate Jahr, Titel und Interpret',
@@ -40,7 +40,7 @@ export const GAME_MODE_INFO: Record<GameMode, GameModeInfo & {
   timeline_personal: {
     name: 'Persönliche Timeline',
     description: 'Jeder Spieler hat seine eigene Timeline - sortiere die Karten chronologisch',
-    icon: '👤',
+    icon: 'person',
     rules: [
       'Höre den Song',
       'Rate optional Jahr, Titel und Interpret (keine Punkte)',
@@ -57,7 +57,7 @@ export const GAME_MODE_INFO: Record<GameMode, GameModeInfo & {
   timeline_global: {
     name: 'Globale Timeline',
     description: 'Alle Spieler teilen eine Timeline - falsche Karten werden entfernt',
-    icon: '🌍',
+    icon: 'globe',
     rules: [
       'Höre den Song',
       'Rate optional Jahr, Titel und Interpret (keine Punkte)',

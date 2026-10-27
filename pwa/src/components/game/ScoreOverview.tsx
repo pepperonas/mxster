@@ -5,13 +5,19 @@
  * their new rank instead of jumping; scores count with springs. The "am Zug"
  * marker travels between rows as one shared element (layoutId).
  */
+import { Icon } from '@/components/ui/Icon'
 import { m } from 'motion/react'
 import { useGame } from '@/contexts'
 import { TrophyIcon } from '@/utils/icons'
 import { spring } from '@/motion/springs'
 import { AnimatedNumber } from '@/components/ui/AnimatedNumber'
 
-const MEDALS = ['🥇', '🥈', '🥉']
+/** Podium colours for the top three: brand, accent, neutral. */
+const PODIUM = [
+  'bg-md-primary text-md-on-primary',
+  'bg-md-tertiary-container text-md-on-tertiary-container',
+  'bg-md-secondary-container text-md-on-secondary-container'
+]
 
 export function ScoreOverview() {
   const { players, currentPlayer, gameMode } = useGame()
@@ -51,7 +57,13 @@ export function ScoreOverview() {
               )}
               <div className="flex items-center gap-3 min-w-0">
                 <span className="w-9 text-center text-xl" aria-label={`Platz ${rank + 1}`}>
-                  {rank < 3 ? MEDALS[rank] : <span className="text-title-sm text-md-on-surface-variant">#{rank + 1}</span>}
+                  {rank < 3 ? (
+                    <span className={`w-8 h-8 grid place-items-center rounded-m3-full text-label-lg tabular ${PODIUM[rank]}`} aria-label={`Platz ${rank + 1}`}>
+                      {rank === 0 ? <Icon name="crown" size={18} /> : rank + 1}
+                    </span>
+                  ) : (
+                    <span className="text-title-sm text-md-on-surface-variant">#{rank + 1}</span>
+                  )}
                 </span>
                 <div className="min-w-0">
                   <p className="text-title-sm text-md-on-surface truncate">

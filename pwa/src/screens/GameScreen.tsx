@@ -16,6 +16,8 @@ import { GameOver } from '@/components/game/GameOver'
 import { Icon } from '@/components/ui/Icon'
 import { useTurnFlow, type SkipNotice } from '@/game/useTurnFlow'
 import { MODE_COPY } from '@/game/modeCopy'
+import { turnName } from '@/game/teams'
+import { coverSrc } from '@/utils/cover'
 import { getPreviewPlayer } from '@/services/PreviewPlayerService'
 import { spring } from '@/motion/springs'
 import type { Player } from '@/types'
@@ -37,15 +39,8 @@ export function GameScreen() {
     if (!gameMode || players.length === 0 || !isGameStarted) navigate('/neu', { replace: true })
   }, [gameMode, players.length, isGameStarted, navigate])
 
-  // A reload would lose the running game — let the browser ask first.
-  useEffect(() => {
-    const warn = (e: BeforeUnloadEvent) => {
-      e.preventDefault()
-      e.returnValue = ''
-    }
-    window.addEventListener('beforeunload', warn)
-    return () => window.removeEventListener('beforeunload', warn)
-  }, [])
+  // No reload warning any more: the round is saved on this device and
+  // resumes where it stood (contexts/GameContext + game/savedGame).
 
   if (!gameMode || players.length === 0 || !isGameStarted) return null
   return <GameRound key={round} onRematch={() => setRound((r) => r + 1)} />
@@ -54,7 +49,7 @@ export function GameScreen() {
 function GameRound({ onRematch }: { onRematch: () => void }) {
   const navigate = useAppNavigate()
   const { showModal, closeModal } = useUI()
-  const { gameMode, players, currentPlayer, currentSong, resetGame, rematch, tiebreak } = useGame()
+  const { gameMode, players, currentPlayer, currentSong, resetGame, rematch, tiebreak, goal } = useGame()
 
   const [previewGap, setPreviewGap] = useState<number | null>(null)
   const [hoverGap, setHoverGap] = useState<number | null>(null)
@@ -106,20 +101,23 @@ function GameRound({ onRematch }: { onRematch: () => void }) {
     },
     onSkipNotice: showSkipNotice
   })
-  const { phase, reveal, activePlayer, activeTimeline, isBotThinking } = flow
+  const { phase, reveal, pending, activePlayer, activeTimeline, isBotThinking } = flow
+  const choosing = phase === 'challenge' && pending?.choosing != null ? pending.choosing : null
 
   useEffect(() => {
     setPreviewGap(null)
     setHoverGap(null)
-  }, [currentSong, currentPlayer])
+  }, [currentSong, currentPlayer, choosing])
 
   if (!gameMode || !activePlayer) return null
 
   const isTimelineMode = gameMode !== 'hardcore'
   const humanTurn = !activePlayer.isBot
   const humanPlacing = isTimelineMode && phase === 'placing' && humanTurn
+  const challengeChoosing = choosing !== null
 
   const placementReveal = reveal?.kind === 'placement' ? reveal : null
+  const challenge = placementReveal?.challenge ?? null
   const dockState: DockState | null = !isTimelineMode
     ? null
     : placementReveal
@@ -129,19 +127,41 @@ function GameRound({ onRematch }: { onRematch: () => void }) {
           isCorrect: placementReveal.isCorrect,
           isFirstCard: placementReveal.isFirstCard,
           cards: placementReveal.cardsAfter,
-          playerName: players[placementReveal.playerIndex]?.name ?? ''
+          playerName: players[placementReveal.playerIndex]?.name ?? '',
+          challenge: challenge ? { name: players[challenge.playerIndex]?.name ?? '', won: challenge.won } : null
         }
-      : phase === 'placing' && currentSong
-        ? humanTurn
-          ? { kind: 'placing', song: currentSong, previewGap, timeline: activeTimeline }
-          : { kind: 'bot', playerName: activePlayer.name }
-        : null
+      : phase === 'challenge' && pending
+        ? challengeChoosing
+          ? { kind: 'challenge-choose', challengerName: players[choosing!]?.name ?? '', previewGap, timeline: activeTimeline }
+          : {
+              kind: 'challenge-offer',
+              placerName: turnName(players[pending.playerIndex] ?? activePlayer),
+              challengers: pending.challengers.map((seat) => ({
+                seat,
+                name: players[seat]?.name ?? '',
+                left: players[seat]?.challenges ?? 0
+              }))
+            }
+        : phase === 'placing' && currentSong
+          ? humanTurn
+            ? { kind: 'placing', song: currentSong, previewGap, timeline: activeTimeline }
+            : { kind: 'bot', playerName: activePlayer.name }
+          : null
+
+  // Shared timeline: a won objection puts the card on the board — show it there
+  const boardReveal = placementReveal
+    ? challenge?.won && gameMode === 'timeline_global'
+      ? { song: placementReveal.song, gapIndex: challenge.gapIndex, isCorrect: true }
+      : { song: placementReveal.song, gapIndex: placementReveal.gapIndex, isCorrect: placementReveal.isCorrect }
+    : null
 
   const revealYear = reveal ? reveal.song.year : null
   const revealCorrect = !reveal
     ? null
     : reveal.kind === 'placement'
-      ? reveal.isFirstCard ? null : reveal.isCorrect
+      ? reveal.isFirstCard
+        ? null
+        : reveal.isCorrect || Boolean(reveal.challenge?.won)
       : reveal.breakdown.total >= 10
         ? true
         : reveal.breakdown.total === 0
@@ -154,7 +174,12 @@ function GameRound({ onRematch }: { onRematch: () => void }) {
       { text: 'Beenden', variant: 'danger', closeOnClick: false, onClick: () => void leaveGame() }
     ])
 
-  const drawLabel = activePlayer.isBot ? `Song für ${activePlayer.name} ziehen` : `Song für ${activePlayer.name}`
+  const who = turnName(activePlayer)
+  const drawLabel = activePlayer.isBot
+    ? `Song für ${who} ziehen`
+    : activePlayer.members
+      ? `Song für ${who} (${activePlayer.name})`
+      : `Song für ${who}`
 
   return (
     <div className={`min-h-dvh ${dockState ? 'pb-56' : 'pb-12'} ${gameMode === 'hardcore' ? 'hardcore-theme' : ''}`}>
@@ -179,11 +204,12 @@ function GameRound({ onRematch }: { onRematch: () => void }) {
         <PlayerStrip thinking={isBotThinking} />
 
         <div className="grid gap-8 lg:grid-cols-[minmax(0,5fr)_minmax(0,6fr)] lg:items-start">
-          <div className="space-y-6 lg:sticky lg:top-20">
+          <div className="min-w-0 space-y-6 lg:sticky lg:top-20">
             <Turntable
               song={currentSong}
               revealYear={revealYear}
               revealCorrect={revealCorrect}
+              revealCover={reveal ? coverSrc(reveal.song) : null}
               onDraw={phase === 'idle' ? () => void flow.drawSong() : undefined}
               drawLabel={drawLabel}
             />
@@ -214,20 +240,19 @@ function GameRound({ onRematch }: { onRematch: () => void }) {
             )}
           </div>
 
-          <div className="space-y-6">
+          <div className="min-w-0 space-y-6">
             {gameMode === 'hardcore' && <ScoreOverview />}
             <GameBoards
-              interactive={humanPlacing}
+              interactive={humanPlacing || challengeChoosing}
               previewGap={previewGap}
               hoverGap={hoverGap}
-              reveal={
-                placementReveal
-                  ? { song: placementReveal.song, gapIndex: placementReveal.gapIndex, isCorrect: placementReveal.isCorrect }
-                  : null
-              }
+              reveal={boardReveal}
               revealPlayerIndex={placementReveal?.playerIndex ?? null}
-              onGapSelect={(gap) => humanPlacing && setPreviewGap(gap)}
+              onGapSelect={(gap) => (humanPlacing || challengeChoosing) && setPreviewGap(gap)}
               boardRef={boardRef}
+              placedGap={phase === 'challenge' ? (pending?.gapIndex ?? null) : null}
+              placedBy={pending ? turnName(players[pending.playerIndex] ?? activePlayer) : undefined}
+              previewIsChallenge={challengeChoosing}
             />
           </div>
         </div>
@@ -241,10 +266,15 @@ function GameRound({ onRematch }: { onRematch: () => void }) {
           onPreview={setPreviewGap}
           onConfirm={() => {
             if (previewGap === null) return
-            flow.placeCard(previewGap)
+            if (challengeChoosing) flow.claimGap(previewGap)
+            else flow.placeCard(previewGap)
             setPreviewGap(null)
           }}
           onContinue={flow.continueTurn}
+          onChallenge={flow.startChallenge}
+          onCancelChallenge={flow.cancelChallenge}
+          onReveal={flow.revealPlacement}
+          goal={goal}
         />
       )}
 

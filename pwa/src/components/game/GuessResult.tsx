@@ -12,6 +12,7 @@ import type { GuessBreakdown } from '@/game/guess'
 import { guessTier } from '@/game/guess'
 import { spring } from '@/motion/springs'
 import { AnimatedNumber } from '@/components/ui/AnimatedNumber'
+import { SongInfo } from './SongInfo'
 
 interface GuessResultProps {
   song: Song
@@ -104,6 +105,10 @@ export function GuessResult({ song, check, breakdown, playerName, onContinue }: 
           </m.li>
         ))}
       </ul>
+
+      <div className="mb-5">
+        <SongInfo song={song} head="album" delay={0.1 + rows.length * STAGGER} />
+      </div>
 
       <div className="flex items-center justify-between gap-4">
         <m.p

@@ -467,7 +467,7 @@ export function AchievementProvider({ children }: { children: ReactNode }) {
       const map = new Map<string, PlayerAchievements>(Object.entries(parsed))
       setPlayerAchievements(map)
     } catch (error) {
-      console.error('❌ Failed to import achievements:', error)
+      console.error('Failed to import achievements:', error)
       throw error
     }
   }

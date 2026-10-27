@@ -2,6 +2,8 @@
  * Erfolge — per player name (achievements belong to whoever played). The
  * account holder is shown first; other names from past rounds can be picked.
  */
+import { Icon } from '@/components/ui/Icon'
+import { achievementIcon } from '@/types/achievements'
 import { useMemo, useState } from 'react'
 import { m } from 'motion/react'
 import { useMe } from '@/auth/AuthContext'
@@ -64,8 +66,8 @@ export function AchievementsScreen() {
               className={`flex items-center gap-4 p-4 rounded-m3-lg ${a.unlocked ? 'bg-md-tertiary-container text-md-on-tertiary-container' : 'bg-md-surface-container-low'}`}
             >
               <ProgressRing value={a.progress ?? 0} max={a.target ?? 1} done={a.unlocked} size={52}>
-                <span className={`text-2xl ${a.unlocked ? '' : 'grayscale opacity-60'}`} aria-hidden="true">
-                  {a.icon}
+                <span className={a.unlocked ? '' : 'opacity-50'} aria-hidden="true">
+                  <Icon name={achievementIcon(a.id)} size={26} />
                 </span>
               </ProgressRing>
               <div className="min-w-0 flex-1">

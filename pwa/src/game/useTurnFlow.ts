@@ -1,8 +1,13 @@
 /**
  * Turn flow — the game loop as an explicit phase machine.
  *
- *   idle ──draw──────▶ placing (timeline modes) ──placeCard──▶ revealed ──continueTurn──▶ next player / over
- *                    └▶ guessing (hardcore)      ──submitGuess─▶ revealed ──continueTurn──▶ next player / over
+ *   idle ──draw──────▶ placing (timeline modes) ──placeCard──▶ [challenge] ──▶ revealed ──continueTurn──▶ next player / over
+ *                    └▶ guessing (hardcore)      ──submitGuess─────────────────▶ revealed ──continueTurn──▶ next player / over
+ *
+ * challenge: when someone still has objections left (game/challenge.ts), the
+ * placed card waits face down; one player may object and pick another gap,
+ * or the card is simply revealed. Reveal and pending placement live in the
+ * game context, so a reload resumes mid-turn without crediting a card twice.
  *
  * The UI renders and animates each phase instead of chaining modals with
  * timeouts. Rules come from src/game/* and services/gameLogic and are applied
@@ -17,43 +22,24 @@
  * one song each per round until exactly one leads. No skipping in a tiebreak.
  */
 import { useCallback, useEffect, useEffectEvent, useRef, useState } from 'react'
-import { useGame, useUI, useAchievements, useGameHistory } from '@/contexts'
-import {
-  validateGuess,
-  placeCardInTimeline,
-  checkWinCondition,
-  selectRandomSong
-} from '@/services'
+import { useGame, useUI, useAchievements, useGameHistory, useSettings } from '@/contexts'
+import { validateGuess, placeCardInTimeline } from '@/services'
 import { BotPlayer } from '@/services/botPlayer'
 import type { BotAction } from '@/services/botStrategies/types'
 import { songs } from '@/data/songs'
 import type { Player, Song } from '@/types'
 import { evaluatePlacement, timelineSongsFor } from './placement'
-import { guessBreakdown, guessDetailsFor, type GuessBreakdown } from './guess'
-import { endOfGameAchievements, realtimeScoreAchievements, type AchievementEffect, type RankingSnapshot } from './achievementRules'
+import { guessBreakdown, guessDetailsFor } from './guess'
+import { endOfGameAchievements, realtimeScoreAchievements, type AchievementEffect } from './achievementRules'
 import { evaluateSkip, SKIP_PENALTY_POINTS } from './skipRules'
 import { afterTiebreakTurn, leaders, startTiebreak } from './tiebreak'
+import { isRoundOver } from './roundEnd'
+import { pickSong, songKey } from './songPool'
+import { eligibleChallengers, resolveChallenge, type ChallengeClaim } from './challenge'
+import { isTeam } from './teams'
+import type { TurnPhase } from './turn'
 
-export type TurnPhase = 'idle' | 'placing' | 'guessing' | 'revealed' | 'over'
-
-export type Reveal =
-  | {
-      kind: 'placement'
-      song: Song
-      gapIndex: number
-      isCorrect: boolean
-      isFirstCard: boolean
-      playerIndex: number
-      /** Cards of the placing player after this placement. */
-      cardsAfter: number
-    }
-  | {
-      kind: 'guess'
-      song: Song
-      check: ReturnType<typeof validateGuess>
-      breakdown: GuessBreakdown
-      playerIndex: number
-    }
+export type { Reveal, TurnPhase } from './turn'
 
 export interface SkipNotice {
   kind: 'penalty' | 'danger'
@@ -87,60 +73,80 @@ export function useTurnFlow({ onGameOver, onSkipNotice }: Options) {
     nextTurn,
     nextPlayerOnly,
     tiebreak,
-    setTiebreak
+    setTiebreak,
+    goal,
+    decades,
+    challengesEnabled,
+    reveal,
+    setReveal,
+    pending,
+    setPending,
+    finished: gameOver,
+    finish,
+    startedAt,
+    rankingsHistory,
+    pushRanking
   } = game
   const { addToast } = useUI()
+  const { settings, rememberSong } = useSettings()
   const { unlockAchievement, updateProgress, checkAchievements } = useAchievements()
   const { saveGame, history } = useGameHistory()
 
-  const [reveal, setReveal] = useState<Reveal | null>(null)
-  const [gameOver, setGameOver] = useState(false)
   const [isBotThinking, setIsBotThinking] = useState(false)
-
-  const gameStartTime = useRef<number>(Date.now())
-  const rankingsHistory = useRef<RankingSnapshot[]>([])
   const botBusy = useRef(false)
+  const widenedNoticeShown = useRef(false)
 
   const phase: TurnPhase = gameOver
     ? 'over'
     : reveal
       ? 'revealed'
-      : !currentSong
-        ? 'idle'
-        : gameMode === 'hardcore'
-          ? 'guessing'
-          : 'placing'
+      : pending
+        ? 'challenge'
+        : !currentSong
+          ? 'idle'
+          : gameMode === 'hardcore'
+            ? 'guessing'
+            : 'placing'
 
   const activePlayer: Player | undefined = players[currentPlayer]
   const activeTimeline = timelineSongsFor(gameMode, activePlayer, globalTimeline)
 
+  // Achievements belong to people: a team's results are not credited to anyone
+  const teamNames = players.filter(isTeam).map((p) => p.name)
   const applyEffects = useCallback(
     (effects: AchievementEffect[]) => {
       for (const fx of effects) {
+        if (teamNames.includes(fx.player)) continue
         if (fx.type === 'unlock') unlockAchievement(fx.player, fx.id)
         else updateProgress(fx.player, fx.id, fx.value)
       }
     },
-    [unlockAchievement, updateProgress]
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [unlockAchievement, updateProgress, teamNames.join('|')]
   )
 
   // ── Song source ──────────────────────────────────────────────────────────
   const drawSong = useCallback((): Song | null => {
-    const song = selectRandomSong(songs, playedSongs)
+    const { song, widened } = pickSong(songs, decades, playedSongs, settings.recentSongs)
     if (!song) {
       addToast('Alle Songs wurden bereits gespielt!', 'warning')
       return null
     }
-    addToPlayedSongs(song.spotifyId || song.id)
+    if (widened && !widenedNoticeShown.current) {
+      widenedNoticeShown.current = true
+      addToast('Die gewählten Jahrzehnte sind durch – ab jetzt kommen Songs aus allen Jahrzehnten.', 'info')
+    }
+    addToPlayedSongs(songKey(song))
+    rememberSong(songKey(song))
     setCurrentSong(song)
     return song
-  }, [playedSongs, addToPlayedSongs, setCurrentSong, addToast])
+  }, [decades, playedSongs, settings.recentSongs, addToPlayedSongs, rememberSong, setCurrentSong, addToast])
 
   // ── Game end ─────────────────────────────────────────────────────────────
   const finishGame = useCallback(
     (winner: Player, finalPlayers: Player[]) => {
       if (gameOver) return
-      setGameOver(true)
+      finish()
       try {
         saveGame({
           winner: { name: winner.name, cards: winner.cards, score: winner.score },
@@ -149,25 +155,25 @@ export function useTurnFlow({ onGameOver, onSkipNotice }: Options) {
         })
         addToast('Spiel wurde zur Historie hinzugefügt!', 'success')
       } catch (error) {
-        console.error('❌ Failed to save game:', error)
+        console.error('Failed to save game:', error)
       }
       if (gameMode === 'hardcore') {
         applyEffects(
           endOfGameAchievements({
             players: finalPlayers,
             winner,
-            gameDurationMinutes: (Date.now() - gameStartTime.current) / 60000,
-            rankingsHistory: rankingsHistory.current
+            gameDurationMinutes: (Date.now() - startedAt) / 60000,
+            rankingsHistory
           })
         )
         if (history && history.length > 0) {
           const historyData = { version: '1.0', games: history }
-          finalPlayers.forEach((p) => checkAchievements(p.name, historyData))
+          finalPlayers.filter((p) => !isTeam(p)).forEach((p) => checkAchievements(p.name, historyData))
         }
       }
       onGameOver(winner, finalPlayers)
     },
-    [gameOver, saveGame, gameMode, addToast, applyEffects, history, checkAchievements, onGameOver]
+    [gameOver, finish, saveGame, gameMode, addToast, applyEffects, startedAt, rankingsHistory, history, checkAchievements, onGameOver]
   )
 
   /**
@@ -190,8 +196,7 @@ export function useTurnFlow({ onGameOver, onSkipNotice }: Options) {
         return 'next'
       }
 
-      const win = checkWinCondition(finalPlayers, playerIndex, gameMode!)
-      if (!win.gameOver) return 'next'
+      if (!isRoundOver(finalPlayers, gameMode, goal)) return 'next'
       const top = leaders(finalPlayers, gameMode)
       if (top.length === 1) {
         finishGame(finalPlayers[top[0]], finalPlayers)
@@ -201,37 +206,114 @@ export function useTurnFlow({ onGameOver, onSkipNotice }: Options) {
       addToast(`Gleichstand! Stechen zwischen ${top.map((i) => finalPlayers[i].name).join(' und ')}`, 'info')
       return 'next'
     },
-    [tiebreak, gameMode, setTiebreak, finishGame, addToast]
+    [tiebreak, gameMode, goal, setTiebreak, finishGame, addToast]
   )
 
   // ── Timeline modes ───────────────────────────────────────────────────────
-  const placeCard = useCallback(
-    (gapIndex: number) => {
-      if (phase !== 'placing' || !currentSong || !activePlayer) return
-      const playerIndex = currentPlayer
-      const { isCorrect, newTimeline, isFirstCard } = evaluatePlacement(activeTimeline, currentSong, gapIndex)
+  /** Credit the card (placer or challenger) and show the result. */
+  const resolvePlacement = useCallback(
+    (playerIndex: number, gapIndex: number, claim: ChallengeClaim | null) => {
+      if (!currentSong) return
+      const placer = players[playerIndex]
+      if (!placer) return
+      const timeline = timelineSongsFor(gameMode, placer, globalTimeline)
+      const { isFirstCard, newTimeline } = evaluatePlacement(timeline, currentSong, gapIndex)
+      const result = resolveChallenge(timeline, currentSong, gapIndex, claim)
 
-      if (isCorrect) {
+      if (result.outcome === 'placer') {
         if (gameMode === 'timeline_global') {
           addToGlobalTimeline(currentSong, playerIndex)
-          updatePlayer(playerIndex, { cards: activePlayer.cards + 1 })
+          updatePlayer(playerIndex, { cards: placer.cards + 1 })
         } else {
-          updatePlayer(playerIndex, { timeline: newTimeline, cards: activePlayer.cards + 1 })
+          updatePlayer(playerIndex, { timeline: newTimeline, cards: placer.cards + 1 })
         }
       }
 
+      if (claim) {
+        const challenger = players[claim.playerIndex]
+        const spent = { challenges: Math.max(0, (challenger.challenges ?? 0) - 1) }
+        if (result.outcome === 'challenger') {
+          if (gameMode === 'timeline_global') {
+            addToGlobalTimeline(currentSong, claim.playerIndex)
+            updatePlayer(claim.playerIndex, { ...spent, cards: challenger.cards + 1 })
+          } else {
+            updatePlayer(claim.playerIndex, {
+              ...spent,
+              timeline: placeCardInTimeline(challenger.timeline, currentSong),
+              cards: challenger.cards + 1
+            })
+          }
+        } else {
+          updatePlayer(claim.playerIndex, spent)
+        }
+      }
+
+      setPending(null)
       setReveal({
         kind: 'placement',
         song: currentSong,
         gapIndex,
-        isCorrect,
+        isCorrect: result.placerCorrect,
         isFirstCard,
         playerIndex,
-        cardsAfter: activePlayer.cards + (isCorrect ? 1 : 0)
+        cardsAfter: placer.cards + (result.outcome === 'placer' ? 1 : 0),
+        challenge: claim
+          ? {
+              playerIndex: claim.playerIndex,
+              gapIndex: claim.gapIndex,
+              isCorrect: Boolean(result.challengerCorrect),
+              won: result.outcome === 'challenger'
+            }
+          : null
       })
     },
-    [phase, currentSong, activePlayer, currentPlayer, activeTimeline, gameMode, addToGlobalTimeline, updatePlayer]
+    [currentSong, players, gameMode, globalTimeline, addToGlobalTimeline, updatePlayer, setPending, setReveal]
   )
+
+  const placeCard = useCallback(
+    (gapIndex: number) => {
+      if (phase !== 'placing' || !currentSong || !activePlayer) return
+      const challengers = eligibleChallengers(players, currentPlayer, activeTimeline, {
+        enabled: challengesEnabled && gameMode !== 'hardcore',
+        tiebreak: Boolean(tiebreak)
+      })
+      if (challengers.length > 0) {
+        setPending({ playerIndex: currentPlayer, gapIndex, challengers, choosing: null, claim: null })
+        return
+      }
+      resolvePlacement(currentPlayer, gapIndex, null)
+    },
+    [phase, currentSong, activePlayer, players, currentPlayer, activeTimeline, challengesEnabled, gameMode, tiebreak, setPending, resolvePlacement]
+  )
+
+  /** A player raises an objection and is now choosing a gap. */
+  const startChallenge = useCallback(
+    (seat: number) => {
+      if (phase !== 'challenge' || !pending || !pending.challengers.includes(seat)) return
+      setPending({ ...pending, choosing: seat })
+    },
+    [phase, pending, setPending]
+  )
+
+  const cancelChallenge = useCallback(() => {
+    if (phase !== 'challenge' || !pending) return
+    setPending({ ...pending, choosing: null })
+  }, [phase, pending, setPending])
+
+  /** The objecting player puts the card into another gap — then it is revealed. */
+  const claimGap = useCallback(
+    (gapIndex: number) => {
+      if (phase !== 'challenge' || !pending || pending.choosing === null || gapIndex === pending.gapIndex) return
+      resolvePlacement(pending.playerIndex, pending.gapIndex, { playerIndex: pending.choosing, gapIndex })
+    },
+    [phase, pending, resolvePlacement]
+  )
+
+  /** Nobody objects: turn the card over. */
+  const revealPlacement = useCallback(() => {
+    if (phase !== 'challenge' || !pending) return
+    resolvePlacement(pending.playerIndex, pending.gapIndex, null)
+  }, [phase, pending, resolvePlacement])
 
   // ── Hardcore ─────────────────────────────────────────────────────────────
   const submitGuess = useCallback(
@@ -240,7 +322,7 @@ export function useTurnFlow({ onGameOver, onSkipNotice }: Options) {
       const check = validateGuess(title, artist, year, currentSong)
       setReveal({ kind: 'guess', song: currentSong, check, breakdown: guessBreakdown(check), playerIndex: currentPlayer })
     },
-    [phase, currentSong, currentPlayer]
+    [phase, currentSong, currentPlayer, setReveal]
   )
 
   const skip = useCallback(() => {
@@ -308,7 +390,7 @@ export function useTurnFlow({ onGameOver, onSkipNotice }: Options) {
     applyEffects(realtimeScoreAchievements(player.name, player.score, newScore))
 
     const updatedPlayers = players.map((p, i) => (i === reveal.playerIndex ? updated : p))
-    rankingsHistory.current.push({
+    pushRanking({
       turn: updated.cards,
       rankings: [...updatedPlayers].sort((a, b) => b.score - a.score).map((p) => p.name)
     })
@@ -317,7 +399,7 @@ export function useTurnFlow({ onGameOver, onSkipNotice }: Options) {
     if (settleTurn(reveal.playerIndex, updatedPlayers) === 'over') return
     nextTurn()
     addToast('Karte platziert!', 'success')
-  }, [reveal, gameOver, players, settleTurn, nextTurn, updatePlayer, applyEffects, addToast])
+  }, [reveal, gameOver, players, settleTurn, nextTurn, updatePlayer, applyEffects, pushRanking, setReveal, addToast])
 
   // ── Bots ─────────────────────────────────────────────────────────────────
   // Effect events always see the latest placeCard/submitGuess (no stale closures).
@@ -330,7 +412,7 @@ export function useTurnFlow({ onGameOver, onSkipNotice }: Options) {
     nextTurn()
   })
 
-  const songKey = currentSong ? currentSong.spotifyId || currentSong.id : null
+  const currentKey = currentSong ? songKey(currentSong) : null
   const botTurn = Boolean(activePlayer?.isBot) && (phase === 'placing' || phase === 'guessing')
 
   useEffect(() => {
@@ -349,7 +431,7 @@ export function useTurnFlow({ onGameOver, onSkipNotice }: Options) {
       })
     // activeTimeline/currentSong are read at the moment the bot starts thinking
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [botTurn, songKey, currentPlayer])
+  }, [botTurn, currentKey, currentPlayer])
 
   return {
     phase,
@@ -358,8 +440,13 @@ export function useTurnFlow({ onGameOver, onSkipNotice }: Options) {
     isBotThinking,
     activePlayer,
     activeTimeline,
+    pending,
     drawSong,
     placeCard,
+    startChallenge,
+    cancelChallenge,
+    claimGap,
+    revealPlacement,
     submitGuess,
     skip,
     continueTurn

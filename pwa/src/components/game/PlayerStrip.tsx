@@ -7,10 +7,13 @@ import { useGame } from '@/contexts'
 import { Icon } from '@/components/ui/Icon'
 import { AnimatedNumber } from '@/components/ui/AnimatedNumber'
 import { spring } from '@/motion/springs'
+import { activeMember, initialOf } from '@/game/teams'
+import { ChallengeDots } from './PlacementDock'
 
 export function PlayerStrip({ thinking = false }: { thinking?: boolean }) {
-  const { players, currentPlayer, gameMode, tiebreak } = useGame()
+  const { players, currentPlayer, gameMode, tiebreak, challengesEnabled } = useGame()
   const hardcore = gameMode === 'hardcore'
+  const showChallenges = challengesEnabled && !hardcore
 
   return (
     <ul className="flex gap-2 overflow-x-auto no-scrollbar -mx-4 px-4 py-1" aria-label="Spieler">
@@ -41,15 +44,23 @@ export function PlayerStrip({ thinking = false }: { thinking?: boolean }) {
               }`}
               aria-hidden="true"
             >
-              {p.isBot ? <Icon name="bot" size={18} /> : p.name[0]?.toUpperCase()}
+              {p.isBot ? <Icon name="bot" size={18} /> : p.members ? <Icon name="groups" size={18} /> : initialOf(p.name)}
             </span>
             <span className={`relative flex flex-col leading-tight ${active ? 'text-md-on-primary-container' : 'text-md-on-surface'}`}>
-              <span className="text-label-lg max-w-[9rem] truncate">{p.name}</span>
+              <span className="flex items-center gap-1.5 text-label-lg">
+                <span className="max-w-[9rem] truncate">{p.name}</span>
+                {showChallenges && !p.isBot && (
+                  <span className="opacity-80" title={`${p.challenges ?? 0} Einsprüche übrig`}>
+                    <ChallengeDots left={p.challenges ?? 0} />
+                    <span className="sr-only">, {p.challenges ?? 0} Einsprüche übrig</span>
+                  </span>
+                )}
+              </span>
               <span className={`text-label-sm tabular ${active ? '' : 'text-md-on-surface-variant'}`}>
-                {active ? (p.isBot && thinking ? 'überlegt …' : 'ist dran') : null}
+                {active ? (p.isBot && thinking ? 'überlegt …' : p.members ? `${activeMember(p)} ist dran` : 'ist dran') : null}
                 {!active && (
                   <>
-                    <AnimatedNumber value={hardcore ? p.score : p.cards} /> {hardcore ? 'Pkt.' : 'Songs'}
+                    <AnimatedNumber value={hardcore ? p.score : p.cards} /> {hardcore ? 'Pkt.' : p.cards === 1 ? 'Song' : 'Songs'}
                   </>
                 )}
               </span>
