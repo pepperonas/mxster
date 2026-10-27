@@ -172,6 +172,9 @@ Mobile placing (below `lg`, 1024 px):
 - Backups of the switch: DB `/root/mxster-db-bak-20261027-184801-vor-mxtape.db`, old vHost `/root/nginx-backups/mxster.celox.io.bak-20261027-184801-rename`, script `/root/mxtape-migrate.sh`.
 - ⚠️ Two traps hit during the move: a Python venv carries absolute paths and breaks when its folder is moved (`pip: cannot execute`) — delete it and let the deploy recreate it; and `deploy.sh` ran `chown -R root:… $API_ROOT`, which also took the database away from the service (readonly database, probably also the real cause of the 0.7.0 outage) — it now hands `data/` back recursively.
 
+## README
+Built like the brutus and flipper-the-ripper READMEs: banner `docs/banner.png` (interim, drawn in the app's style — replace with an illustrated one), big badges kept true by a test, grouped badge rows, screenshot strip `docs/screenshots/mockups.jpg` (phone frames composed from 390 px dark-mode captures at 2×), English `README.md` + German `README.de.md` with the same badge block. Badge anchors point to each file's own headings.
+
 ## Best Practices
 - Song type: `export const songs: Song[] = [...]` (the integrity test parses it with `/export const songs(?:: Song\[\])? = (\[[\s\S]*\])/`).
 - Song data is maintained without Spotify: `lib/musicData.js` (MusicBrainz year + original album — only recordings credited to exactly that artist, no compilations/live/DJ mixes; Cover Art Archive, iTunes as fallback), `lib/songStore.js` (the only writer of songs.json/song-facts.json; regenerates songs.ts through sync — writing songs.ts directly drops every fact), `lib/songWizard.js` (shared add/exchange flow; refuses a year-spoiling fact; duplicate check ignores case/accents). The lookup is a suggestion — MusicBrainz misses originals sometimes (Bohemian Rhapsody comes back as 1976), so the wizard shows all candidates and asks for the year. yt-dlp runs with an argument list (titles with quotes are safe) and warns on lengths outside 1:30–10:00. Songs without a fact are fine (only confident facts, never the year).
@@ -181,5 +184,6 @@ Mobile placing (below `lg`, 1024 px):
 ## Release Checklist
 1. Version in `pwa/package.json` + `ProfileScreen.tsx`
 2. `node scripts/song-management/update-song-count.js` if songs changed
-3. Tests (server, pwa, root) → commit → tag `vX.Y.Z` → push → `gh release create`
-4. `./scripts/deployment/deploy.sh`
+3. `node scripts/readme-badges.mjs` — recounts version, tests, lines of code and songs in README.md + README.de.md (`pwa/src/__tests__/readme.test.ts` fails when they drift)
+4. Tests (server, pwa, root) → commit → tag `vX.Y.Z` → push → `gh release create`
+5. `./scripts/deployment/deploy.sh`
