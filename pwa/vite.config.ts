@@ -26,35 +26,17 @@ export default defineConfig({
         start_url: '/',
         scope: '/',
         icons: [
-          {
-            src: '/assets/favicon-192x192.png',
-            sizes: '192x192',
-            type: 'image/png'
-          },
-          {
-            src: '/assets/android-chrome-192x192.png',
-            sizes: '192x192',
-            type: 'image/png',
-            purpose: 'maskable'
-          },
-          {
-            src: '/assets/favicon-512x512.png',
-            sizes: '512x512',
-            type: 'image/png'
-          },
-          {
-            src: '/assets/android-chrome-512x512.png',
-            sizes: '512x512',
-            type: 'image/png',
-            purpose: 'maskable'
-          }
+          { src: '/assets/icon-192.png', sizes: '192x192', type: 'image/png' },
+          { src: '/assets/icon-512.png', sizes: '512x512', type: 'image/png' },
+          { src: '/assets/icon-maskable-192.png', sizes: '192x192', type: 'image/png', purpose: 'maskable' },
+          { src: '/assets/icon-maskable-512.png', sizes: '512x512', type: 'image/png', purpose: 'maskable' }
         ]
       },
       workbox: {
         // Never precache audio: /audio/ needs a signed-in session (nginx auth_request)
         globPatterns: ['**/*.{js,css,html,ico,svg,woff2}'],
         globIgnores: ['**/assets/**/*.png', 'audio/**'],
-        cacheId: 'mxster-v4',
+        cacheId: 'mxster-v5',
         cleanupOutdatedCaches: true,
         // Navigation fallback - always serve index.html for SPA routes
         navigateFallback: '/index.html',

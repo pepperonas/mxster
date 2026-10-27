@@ -12,6 +12,7 @@
     "test:run": "vitest run",
     "test:coverage": "vitest run --coverage",
     "tokens": "node scripts/gen-tokens.mjs",
+    "icons": "node scripts/gen-icons.mjs",
     "tokens:check": "node scripts/gen-tokens.mjs --check"
   },
   "dependencies": {
