@@ -7,15 +7,30 @@
  *  - Hardcore: once everyone has played `goal` songs.
  */
 import type { GameMode, Player } from '@/types'
+import { msg } from '@/i18n'
+import { modesText } from '@/i18n/messages/modes'
 
 export const GOAL_OPTIONS = [5, 10, 15] as const
 export const DEFAULT_GOAL = 10
 
-export const GOAL_LABEL: Record<number, string> = { 5: 'Kurz', 10: 'Normal', 15: 'Lang' }
-const GOAL_WORD: Record<number, string> = { 5: 'fünf', 10: 'zehn', 15: 'fünfzehn' }
+/** Round length labels (getters: current language on every read). */
+export const GOAL_LABEL: Record<number, string> = {
+  get 5() {
+    return msg(modesText).goalShort
+  },
+  get 10() {
+    return msg(modesText).goalNormal
+  },
+  get 15() {
+    return msg(modesText).goalLong
+  }
+}
 
+/** The goal as a word ("zehn" / "ten"), digits for anything else. */
 export function goalWord(goal: number): string {
-  return GOAL_WORD[goal] ?? String(goal)
+  const t = msg(modesText)
+  const words: Record<number, string> = { 5: t.goal5, 10: t.goal10, 15: t.goal15 }
+  return words[goal] ?? String(goal)
 }
 
 export function isRoundOver(players: Player[], mode: GameMode | string | null, goal: number): boolean {

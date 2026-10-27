@@ -4,6 +4,8 @@
  */
 
 import type { GameMode, GameModeInfo, Song } from '@/types'
+import { msg } from '@/i18n'
+import { modesText } from '@/i18n/messages/modes'
 
 // Game Mode Constants
 export const GAME_MODES: Record<string, GameMode> = {
@@ -13,63 +15,74 @@ export const GAME_MODES: Record<string, GameMode> = {
 }
 
 // Game Mode Metadata
-export const GAME_MODE_INFO: Record<GameMode, GameModeInfo & {
+type ModeInfo = GameModeInfo & {
   maxPointsPerRound: number
   requiresInput: boolean
   requiresTimeline: boolean
   sharedTimeline?: boolean
-}> = {
-  hardcore: {
-    name: 'Hardcore',
-    description: 'Rate Jahr, Titel und Interpret - Maximale Punkte für perfekte Antworten',
-    icon: 'flame',
-    rules: [
-      'Höre den Song',
-      'Rate Jahr, Titel und Interpret',
-      'Titel richtig: 5 Punkte',
-      'Interpret richtig: 5 Punkte',
-      'Jahr exakt: 5 Punkte | ±1 Jahr: 2 Punkte | ±2 Jahre: 1 Punkt',
-      'Karten werden automatisch chronologisch sortiert'
-    ],
-    scoring: 'Titel: 5P | Interpret: 5P | Jahr: 5P/2P/1P (max. 15 Punkte)',
-    features: ['Fuzzy Matching', 'Automatische Timeline', 'Punkte-System'],
-    maxPointsPerRound: 15,
-    requiresInput: true,
-    requiresTimeline: false
+}
+
+/** Built on each read so the texts follow the app language. */
+function modeInfo(mode: GameMode): ModeInfo {
+  const t = msg(modesText)
+  switch (mode) {
+    case 'hardcore':
+      return {
+        name: t.infoHardcoreName,
+        description: t.infoHardcoreDescription,
+        icon: 'flame',
+        rules: [
+          t.infoHardcoreRule1,
+          t.infoHardcoreRule2,
+          t.infoHardcoreRule3,
+          t.infoHardcoreRule4,
+          t.infoHardcoreRule5,
+          t.infoHardcoreRule6
+        ],
+        scoring: t.infoHardcoreScoring,
+        features: [t.infoHardcoreFeature1, t.infoHardcoreFeature2, t.infoHardcoreFeature3],
+        maxPointsPerRound: 15,
+        requiresInput: true,
+        requiresTimeline: false
+      }
+    case 'timeline_personal':
+      return {
+        name: t.infoPersonalName,
+        description: t.infoPersonalDescription,
+        icon: 'person',
+        rules: [t.infoListen, t.infoOptionalGuess, t.infoPersonalPlace, t.infoPersonalKeep],
+        scoring: t.infoTimelineScoring,
+        features: [t.infoPersonalFeature1, t.infoPersonalFeature2, t.infoPersonalFeature3],
+        maxPointsPerRound: 1,
+        requiresInput: false,
+        requiresTimeline: true,
+        sharedTimeline: false
+      }
+    default:
+      return {
+        name: t.infoGlobalName,
+        description: t.infoGlobalDescription,
+        icon: 'globe',
+        rules: [t.infoListen, t.infoOptionalGuess, t.infoGlobalPlace, t.infoGlobalRemoved],
+        scoring: t.infoTimelineScoring,
+        features: [t.infoGlobalFeature1, t.infoGlobalFeature2, t.infoGlobalFeature3],
+        maxPointsPerRound: 1,
+        requiresInput: false,
+        requiresTimeline: true,
+        sharedTimeline: true
+      }
+  }
+}
+
+export const GAME_MODE_INFO: Record<GameMode, ModeInfo> = {
+  get hardcore() {
+    return modeInfo('hardcore' as GameMode)
   },
-  timeline_personal: {
-    name: 'Persönliche Timeline',
-    description: 'Jeder Spieler hat seine eigene Timeline - sortiere die Karten chronologisch',
-    icon: 'person',
-    rules: [
-      'Höre den Song',
-      'Rate optional Jahr, Titel und Interpret (keine Punkte)',
-      'Platziere die Karte in deiner persönlichen Timeline',
-      'Karte bleibt nur, wenn chronologisch korrekt'
-    ],
-    scoring: 'Erste Person mit 10 korrekt platzierten Karten gewinnt',
-    features: ['Persönliche Timeline', 'Manuelle Platzierung', 'Chronologische Validierung'],
-    maxPointsPerRound: 1,
-    requiresInput: false,
-    requiresTimeline: true,
-    sharedTimeline: false
+  get timeline_personal() {
+    return modeInfo('timeline_personal' as GameMode)
   },
-  timeline_global: {
-    name: 'Globale Timeline',
-    description: 'Alle Spieler teilen eine Timeline - falsche Karten werden entfernt',
-    icon: 'globe',
-    rules: [
-      'Höre den Song',
-      'Rate optional Jahr, Titel und Interpret (keine Punkte)',
-      'Platziere die Karte in der globalen Timeline',
-      'Falsche Platzierungen werden entfernt'
-    ],
-    scoring: 'Erste Person mit 10 korrekt platzierten Karten gewinnt',
-    features: ['Gemeinsame Timeline', 'Kollaboratives Spiel', 'Höherer Schwierigkeitsgrad'],
-    maxPointsPerRound: 1,
-    requiresInput: false,
-    requiresTimeline: true,
-    sharedTimeline: true
+  get timeline_global() {
+    return modeInfo('timeline_global' as GameMode)
   }
 }
 

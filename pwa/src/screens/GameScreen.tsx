@@ -30,6 +30,8 @@ import { useHostBridge } from '@/online/useHostBridge'
 import { mayAct } from '@/online/rules'
 import { roomApi } from '@/online/roomApi'
 import type { Intent } from '@/online/protocol'
+import { useMessages } from '@/i18n'
+import { gameText } from '@/i18n/messages/game'
 
 /** Set while we leave on purpose, so the "nothing to play" guard stays quiet. */
 let leaving = false
@@ -65,6 +67,7 @@ const noop = () => {}
  */
 export function GameRound({ onRematch }: { onRematch: () => void }) {
   const navigate = useAppNavigate()
+  const t = useMessages(gameText)
   const { showModal, closeModal, addToast } = useUI()
   const { gameMode, players, currentPlayer, currentSong, resetGame, rematch, tiebreak, goal } = useGame()
   const room = useRoom()
@@ -91,30 +94,31 @@ export function GameRound({ onRematch }: { onRematch: () => void }) {
     (notice: SkipNotice, acknowledge: () => void) => {
       if (notice.kind === 'penalty') {
         showModal(
-          'Zu oft übersprungen',
+          t.skippedTooOften,
           <div className="space-y-4">
-            <p className="text-body-lg">Alle haben diesen Song schon mehrfach übersprungen. Das kostet 3 Punkte.</p>
+            <p className="text-body-lg">{t.skipPenaltyBody}</p>
             <div className="p-4 rounded-m3-lg bg-md-error-container text-md-on-error-container">
-              <p className="text-label-md">Neuer Punktestand</p>
+              <p className="text-label-md">{t.newScore}</p>
               <p className="text-display-sm tabular">{notice.newScore}</p>
             </div>
           </div>,
-          [{ text: 'Neuen Song ziehen', variant: 'primary', onClick: acknowledge }],
+          [{ text: t.drawNewSong, variant: 'primary', onClick: acknowledge }],
           { required: true }
         )
       } else {
         showModal(
-          'Vorsicht beim Überspringen',
+          t.skipCarefully,
           <p className="text-body-lg">
-            Alle haben diesen Song schon übersprungen. Der nächste Skip kostet mit{' '}
-            <strong>{Math.round((notice.nextPenaltyProbability ?? 0) * 100)} %</strong> Wahrscheinlichkeit 3 Punkte. Lieber raten!
+            {t.skipWarnBefore}
+            <strong>{t.skipWarnPercent(Math.round((notice.nextPenaltyProbability ?? 0) * 100))}</strong>
+            {t.skipWarnAfter}
           </p>,
-          [{ text: 'Verstanden', variant: 'primary', onClick: acknowledge }],
+          [{ text: t.understood, variant: 'primary', onClick: acknowledge }],
           { required: true }
         )
       }
     },
-    [showModal]
+    [showModal, t]
   )
 
   const localFlow = useTurnFlow({
@@ -125,7 +129,7 @@ export function GameRound({ onRematch }: { onRematch: () => void }) {
     // Online the skip is someone else's: no dialog on the host's device
     onSkipNotice: online
       ? (notice, acknowledge) => {
-          if (notice.kind === 'penalty') addToast(`Zu oft übersprungen: 3 Punkte Abzug (jetzt ${notice.newScore})`, 'warning')
+          if (notice.kind === 'penalty') addToast(t.skipPenaltyToast(notice.newScore), 'warning')
           acknowledge()
         }
       : showSkipNotice
@@ -210,7 +214,7 @@ export function GameRound({ onRematch }: { onRematch: () => void }) {
         ? choosing !== null
           ? challengeChoosing
             ? { kind: 'challenge-choose', challengerName: nameAt(choosing), previewGap, timeline: activeTimeline }
-            : { kind: 'waiting', text: `${nameAt(choosing)} legt Einspruch ein und wählt eine Lücke` }
+            : { kind: 'waiting', text: t.objectingWaiting(nameAt(choosing)) }
           : {
               kind: 'challenge-offer',
               placerName: turnName(players[pending.playerIndex] ?? activePlayer),
@@ -231,7 +235,7 @@ export function GameRound({ onRematch }: { onRematch: () => void }) {
             ? { kind: 'bot', playerName: activePlayer.name }
             : humanPlacing
               ? { kind: 'placing', song: currentSong, previewGap, timeline: activeTimeline }
-              : { kind: 'waiting', text: `${who} ist dran und legt auf dem eigenen Gerät` }
+              : { kind: 'waiting', text: t.placingOwnDevice(who) }
           : null
 
   // Shared timeline: a won objection puts the card on the board — show it there
@@ -256,30 +260,30 @@ export function GameRound({ onRematch }: { onRematch: () => void }) {
 
   const confirmLeave = () =>
     onlinePlayer
-      ? showModal('Raum verlassen?', <p className="text-body-lg">Die anderen spielen ohne dich weiter. Über den Link kommst du zurück.</p>, [
-          { text: 'Bleiben' },
-          { text: 'Verlassen', variant: 'danger', closeOnClick: false, onClick: () => void leaveGame() }
+      ? showModal(t.leaveRoom, <p className="text-body-lg">{t.leaveRoomBody}</p>, [
+          { text: t.stay },
+          { text: t.leave, variant: 'danger', closeOnClick: false, onClick: () => void leaveGame() }
         ])
       : showModal(
-          onlineHost ? 'Runde für alle beenden?' : 'Spiel beenden?',
-          <p className="text-body-lg">{onlineHost ? 'Der Raum wird geschlossen, alle anderen fliegen raus.' : 'Der Spielstand dieser Runde geht verloren.'}</p>,
+          onlineHost ? t.endForAll : t.endGame,
+          <p className="text-body-lg">{onlineHost ? t.endForAllBody : t.endGameBody}</p>,
           [
-            { text: 'Weiterspielen' },
-            { text: 'Beenden', variant: 'danger', closeOnClick: false, onClick: () => void leaveGame() }
+            { text: t.keepPlaying },
+            { text: t.end, variant: 'danger', closeOnClick: false, onClick: () => void leaveGame() }
           ]
         )
 
   const drawLabel = activePlayer.isBot
-    ? `Song für ${who} ziehen`
+    ? t.drawFor(who)
     : activePlayer.members
-      ? `Song für ${who} (${activePlayer.name})`
-      : `Song für ${who}`
+      ? t.drawForMember(who, activePlayer.name)
+      : t.songFor(who)
 
   return (
     <div className={`min-h-dvh ${dockState ? 'pb-56' : 'pb-12'} ${gameMode === 'hardcore' ? 'hardcore-theme' : ''}`}>
       <header className="sticky top-0 z-30 bg-md-surface/90 backdrop-blur-md">
         <div className="mx-auto max-w-6xl h-16 px-2 sm:px-4 flex items-center gap-1">
-          <button type="button" className="icon-btn m3-state-layer" onClick={confirmLeave} aria-label="Spiel beenden">
+          <button type="button" className="icon-btn m3-state-layer" onClick={confirmLeave} aria-label={t.endGameLabel}>
             <Icon name="close" />
           </button>
           <span className="flex items-center gap-2 text-title-md">
@@ -288,7 +292,7 @@ export function GameRound({ onRematch }: { onRematch: () => void }) {
           </span>
           {tiebreak && (
             <span className="chip ml-auto bg-md-tertiary-container text-md-on-tertiary-container" role="status">
-              Stechen{tiebreak.round > 1 ? `, Runde ${tiebreak.round}` : ''}
+              {tiebreak.round > 1 ? t.tiebreakRound(tiebreak.round) : t.tiebreak}
             </span>
           )}
         </div>
@@ -303,7 +307,7 @@ export function GameRound({ onRematch }: { onRematch: () => void }) {
             <div ref={playerBarRef} data-player-bar className={compactPlayer ? 'sticky top-16 z-20' : ''}>
             <Turntable
               compact={compactPlayer}
-              caption={activePlayer.isBot || (online && !isMine(currentPlayer)) ? `${who} ist dran` : `${who}, du bist dran`}
+              caption={activePlayer.isBot || (online && !isMine(currentPlayer)) ? t.theirTurn(who) : t.yourTurn(who)}
               song={currentSong}
               revealYear={revealYear}
               revealCorrect={revealCorrect}
@@ -317,7 +321,7 @@ export function GameRound({ onRematch }: { onRematch: () => void }) {
             />
             {online && phase === 'idle' && !can('draw') && (
               <p className="text-center text-body-md text-md-on-surface-variant" role="status">
-                {who} zieht den nächsten Song
+                {t.drawsNext(who)}
               </p>
             )}
             </div>
@@ -336,7 +340,7 @@ export function GameRound({ onRematch }: { onRematch: () => void }) {
                   />
                 ) : phase === 'guessing' && online && !can('guess') ? (
                   <p key="waiting" className="surface p-5 text-center text-body-lg text-md-on-surface-variant" role="status">
-                    {who} rät auf dem eigenen Gerät
+                    {t.guessesOwnDevice(who)}
                   </p>
                 ) : phase === 'guessing' && humanTurn ? (
                   <m.div
@@ -407,9 +411,9 @@ export function GameRound({ onRematch }: { onRematch: () => void }) {
                     onRematch()
                   }
             }
-            rematchBy={onlinePlayer ? (room?.members.find((m) => m.host)?.name ?? 'der Gastgeber') : undefined}
+            rematchBy={onlinePlayer ? (room?.members.find((m) => m.host)?.name ?? t.theHost) : undefined}
             onHome={() => void leaveGame()}
-            homeLabel={onlineHost ? 'Raum schließen' : onlinePlayer ? 'Raum verlassen' : undefined}
+            homeLabel={onlineHost ? t.closeRoom : onlinePlayer ? t.leaveRoomButton : undefined}
           />
         )}
       </AnimatePresence>

@@ -19,6 +19,7 @@ import { AdminScreen } from '@/screens/AdminScreen'
 import { initRipple } from '@/utils/ripple'
 import { englishPath, LEGACY_SEGMENTS } from '@/legacyPaths'
 import { MotionProvider } from '@/motion/MotionProvider'
+import { LegalScreen } from '@/legal/LegalScreen'
 import { LanguageProvider } from '@/i18n'
 import './styles/design-tokens.css'
 import './styles/tailwind.css'
@@ -80,6 +81,10 @@ const router = createBrowserRouter([
         element: <JoinScreen />
       },
       { path: '/room/:code', element: <RoomScreen /> },
+      // Legal pages: full screen, readable without an account
+      { path: '/imprint', element: <LegalScreen kind="imprint" /> },
+      { path: '/privacy', element: <LegalScreen kind="privacy" /> },
+      { path: '/terms', element: <LegalScreen kind="terms" /> },
       ...legacyRoutes(false),
       {
         element: <AppShell />,

@@ -15,10 +15,10 @@
 <h3>👉 <a href="https://mxtape.celox.io">mxtape.celox.io</a> — mit Google anmelden oder als Gast nur per Link in den Raum von Freunden</h3>
 
 <!-- BADGES:BIG — version, tests, lines of code and songs; readme.test.ts keeps them true, scripts/readme-badges.mjs rewrites them. -->
-[![version](https://img.shields.io/badge/version-0.8.1-C2185B?style=for-the-badge&logo=semver&logoColor=white)](https://github.com/pepperonas/mxtape/releases/latest)
-[![tests](https://img.shields.io/badge/tests-460-2E9E5B?style=for-the-badge&logo=vitest&logoColor=white)](#tests-und-ci)
-[![lines of code](https://img.shields.io/badge/lines%20of%20code-17.2k-4B6BDF?style=for-the-badge&logo=typescript&logoColor=white)](pwa/src)
-[![test code](https://img.shields.io/badge/test%20code-5.4k-2E9E5B?style=for-the-badge&logo=typescript&logoColor=white)](#tests-und-ci)
+[![version](https://img.shields.io/badge/version-0.9.0-C2185B?style=for-the-badge&logo=semver&logoColor=white)](https://github.com/pepperonas/mxtape/releases/latest)
+[![tests](https://img.shields.io/badge/tests-500-2E9E5B?style=for-the-badge&logo=vitest&logoColor=white)](#tests-und-ci)
+[![lines of code](https://img.shields.io/badge/lines%20of%20code-19.9k-4B6BDF?style=for-the-badge&logo=typescript&logoColor=white)](pwa/src)
+[![test code](https://img.shields.io/badge/test%20code-5.9k-2E9E5B?style=for-the-badge&logo=typescript&logoColor=white)](#tests-und-ci)
 [![songs](https://img.shields.io/badge/songs-300-FF8A3D?style=for-the-badge&logo=applemusic&logoColor=white)](#die-songsammlung)
 
 [![Donate with PayPal](https://img.shields.io/badge/PayPal-support%20this%20project-00457C?style=for-the-badge&logo=paypal&logoColor=white)](https://www.paypal.com/donate/?business=martin.pfeffer@celox.io&currency_code=EUR&item_name=mxtape)
@@ -50,6 +50,7 @@
 [![Howler](https://img.shields.io/badge/Howler.js-HTML5%20audio-FF8A3D)](https://howlerjs.com)
 [![PWA](https://img.shields.io/badge/PWA-installable-5A0FC8?logo=pwa&logoColor=white)](#installieren)
 [![Material 3 Expressive](https://img.shields.io/badge/Material%203-Expressive-C2185B?logo=materialdesign&logoColor=white)](#design)
+[![Languages](https://img.shields.io/badge/Languages-Deutsch%20%C2%B7%20English-4285F4?logo=googletranslate&logoColor=white)](#funktionen)
 [![Roboto Flex](https://img.shields.io/badge/Type-Roboto%20Flex%20self--hosted-4285F4?logo=googlefonts&logoColor=white)](#design)
 
 <!-- Backend & realtime -->
@@ -177,6 +178,8 @@ Statt ein Handy herumzureichen, spielt jede Person auf dem eigenen Gerät – im
 - **Spieler:** alle Personen mit Runden, Siegen und Trefferquote; umbenennen, zusammenführen, entfernen; eine Seite je Person
 - Verlauf, Erfolge und Einstellungen hängen am Konto und sind auf jedem Gerät gleich
 - Installierbare PWA, helles und dunkles Design
+- **Deutsch und Englisch**, automatisch aus dem Browser erkannt und auf der Anmeldeseite und im Profil umschaltbar; Anekdoten in beiden Sprachen
+- **Impressum, Datenschutzerklärung und Nutzungsbedingungen** direkt in der App, auch ohne Konto lesbar; Konto mit einem Tipp im Profil löschen
 
 ## Die Songsammlung
 

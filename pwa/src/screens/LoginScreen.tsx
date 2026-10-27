@@ -6,19 +6,26 @@ import { useMemo, useState } from 'react'
 import { m } from 'motion/react'
 import { Vinyl } from '@/components/ui/Vinyl'
 import { GoogleMark } from '@/components/ui/Icon'
-import { LOGIN_ERRORS, LOGIN_URL } from '@/api/client'
+import { LOGIN_URL } from '@/api/client'
+import { useMessages } from '@/i18n'
+import { authText } from '@/i18n/messages/auth'
+import { loginErrorText } from '@/i18n/messages/errors'
+import { LanguageSwitch } from '@/components/ui/LanguageSwitch'
 import { spring } from '@/motion/springs'
-import { LegalLinks } from './LegalLinks'
+import { LegalLinks } from '@/legal/LegalScreen'
 
 export function LoginScreen() {
   const [leaving, setLeaving] = useState(false)
-  const error = useMemo(() => {
-    const code = new URLSearchParams(window.location.search).get('login_error')
-    return code ? (LOGIN_ERRORS[code] ?? 'Die Anmeldung hat nicht geklappt. Bitte versuch es noch einmal.') : null
-  }, [])
+  const t = useMessages(authText)
+  const code = useMemo(() => new URLSearchParams(window.location.search).get('login_error'), [])
+  // Recomputed per render so a language switch translates the message too
+  const error = code ? loginErrorText(code) : null
 
   return (
     <main className="relative min-h-dvh overflow-hidden flex flex-col">
+      <div className="absolute right-3 z-10" style={{ top: 'calc(env(safe-area-inset-top, 0px) + 12px)' }}>
+        <LanguageSwitch />
+      </div>
       <div className="flex-1 flex flex-col justify-center px-6 pt-10 pb-6 mx-auto w-full max-w-md">
         <m.div
           className="relative self-end -mr-[38%] sm:-mr-[30%] mb-[-26%]"
@@ -40,7 +47,7 @@ export function LoginScreen() {
           className="mt-6 space-y-8"
         >
           <p className="text-body-lg text-md-on-surface-variant max-w-[34ch]">
-            Hört einen Song, ratet das Jahr und legt ihn an die richtige Stelle eurer Zeitleiste.
+            {t.pitch}
           </p>
 
           {error && (
@@ -59,11 +66,10 @@ export function LoginScreen() {
               <span className="grid place-items-center w-8 h-8 rounded-full bg-white">
                 <GoogleMark size={20} />
               </span>
-              {leaving ? 'Weiter zu Google …' : 'Mit Google anmelden'}
+              {leaving ? t.leaving : t.signIn}
             </a>
             <p className="text-body-sm text-md-on-surface-variant">
-              Neue Konten werden einzeln freigeschaltet. Gespeichert werden nur dein Name, deine E-Mail-Adresse und
-              eure Spielstände.
+              {t.privacyNote}
             </p>
           </div>
         </m.div>

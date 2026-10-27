@@ -14,7 +14,7 @@ from datetime import timedelta
 
 from fastapi import APIRouter, Depends, Request, Response, WebSocket, WebSocketDisconnect
 from pydantic import BaseModel, Field
-from sqlalchemy import select
+from sqlalchemy import delete, select
 from sqlalchemy.orm import Session
 
 from app.config import get_settings
@@ -84,6 +84,14 @@ def get_room(db: Session, code: str) -> Room:
         room.status = "closed"
         db.commit()
     return room
+
+
+def purge_expired(db: Session) -> int:
+    """Delete rooms 12 h after their last activity, with their seats (guest
+    names) and invitations. Results already live in the players' histories."""
+    n = db.execute(delete(Room).where(Room.expires_at < utcnow())).rowcount or 0
+    db.commit()
+    return n
 
 
 def touch(room: Room) -> None:
@@ -183,6 +191,7 @@ class CreateIn(BaseModel):
 @router.post("/rooms", dependencies=[Depends(require_csrf)])
 def create_room(body: CreateIn, request: Request, user: User = Depends(require_approved), db: Session = Depends(get_db)) -> dict:
     check_ip_limit(request, "rooms-create", limit=20, window_s=600)
+    purge_expired(db)
     if body.music not in MUSIC_MODES:
         raise err(400, "bad_music", "Unbekannter Musikmodus.")
     options = json.dumps(body.options)

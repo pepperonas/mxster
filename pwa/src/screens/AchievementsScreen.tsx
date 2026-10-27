@@ -3,7 +3,9 @@
  * account holder is shown first; other names from past rounds can be picked.
  */
 import { Icon } from '@/components/ui/Icon'
-import { achievementIcon } from '@/types/achievements'
+import { achievementDescription, achievementIcon, achievementName } from '@/types/achievements'
+import { useMessages } from '@/i18n'
+import { achievementText } from '@/i18n/messages/achievements'
 import { useMemo, useState } from 'react'
 import { m } from 'motion/react'
 import { useMe } from '@/auth/AuthContext'
@@ -18,6 +20,7 @@ import { ACHIEVEMENT_DEFINITIONS, type Achievement } from '@/types/achievements'
 export function AchievementsScreen() {
   const me = useMe()
   const own = ownPlayerName(me.name)
+  const t = useMessages(achievementText)
   const { getPlayerAchievements, getAllPlayerNames } = useAchievements()
   const { settings } = useSettings()
   const [params] = useSearchParams()
@@ -45,14 +48,14 @@ export function AchievementsScreen() {
   return (
     <div className="pt-4 md:pt-10">
       <div className="flex items-end justify-between gap-4 mb-4">
-        <h1 className="text-headline-md">Erfolge</h1>
+        <h1 className="text-headline-md">{t.title}</h1>
         <p className="meta tabular">
-          {unlocked} von {list.length}
+          {t.countOf(unlocked, list.length)}
         </p>
       </div>
 
       {names.length > 1 && (
-        <div className="flex gap-2 overflow-x-auto no-scrollbar -mx-4 px-4 mb-5" role="radiogroup" aria-label="Spieler">
+        <div className="flex gap-2 overflow-x-auto no-scrollbar -mx-4 px-4 mb-5" role="radiogroup" aria-label={t.players}>
           {names.map((n) => (
             <button key={n} type="button" role="radio" aria-checked={who === n} data-selected={who === n} className="chip m3-state-layer shrink-0" onClick={() => setWho(n)}>
               {n}
@@ -76,16 +79,16 @@ export function AchievementsScreen() {
                 </span>
               </ProgressRing>
               <div className="min-w-0 flex-1">
-                <p className="text-title-md">{a.name}</p>
-                <p className={`text-body-sm ${a.unlocked ? 'opacity-90' : 'text-md-on-surface-variant'}`}>{a.description}</p>
+                <p className="text-title-md">{achievementName(a.id)}</p>
+                <p className={`text-body-sm ${a.unlocked ? 'opacity-90' : 'text-md-on-surface-variant'}`}>{achievementDescription(a.id)}</p>
                 <p className={`mt-1 text-label-md tabular ${a.unlocked ? 'opacity-90' : 'text-md-on-surface-variant'}`}>
                   {a.unlocked
                     ? a.unlockedAt
-                      ? `Erreicht ${formatDay(a.unlockedAt)}`
-                      : 'Erreicht'
+                      ? t.reachedOn(formatDay(a.unlockedAt))
+                      : t.reached
                     : a.target
-                      ? `${a.progress ?? 0} von ${a.target}`
-                      : 'Noch offen'}
+                      ? t.progress(a.progress ?? 0, a.target)
+                      : t.open}
                 </p>
               </div>
             </m.li>

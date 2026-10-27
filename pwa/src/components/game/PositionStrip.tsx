@@ -12,6 +12,8 @@ import { useSettings } from '@/contexts'
 import { gapLabel } from '@/game/placement'
 import { spring } from '@/motion/springs'
 import { prefersReducedMotion } from '@/motion/policy'
+import { useMessages } from '@/i18n'
+import { gameText } from '@/i18n/messages/game'
 
 type Tone = 'primary' | 'tertiary'
 
@@ -25,6 +27,7 @@ const LINE: Record<Tone, string> = {
 }
 
 export function PositionStrip({ timeline, gap, tone = 'primary' }: { timeline: Song[]; gap: number; tone?: Tone }) {
+  const t = useMessages(gameText)
   const { settings } = useSettings()
   const blur = settings.hideYearsInTimeline
   const label = gapLabel(timeline, gap)
@@ -35,7 +38,7 @@ export function PositionStrip({ timeline, gap, tone = 'primary' }: { timeline: S
   if (timeline.length === 0) {
     return (
       <p className="text-poster text-md-on-surface" style={{ fontSize: 'clamp(1.5rem, 6vw, 2rem)' }}>
-        Erste Karte
+        {t.firstCard}
       </p>
     )
   }
@@ -57,7 +60,7 @@ export function PositionStrip({ timeline, gap, tone = 'primary' }: { timeline: S
 
   return (
     <div className="flex items-center gap-2 min-w-0" role="img" aria-label={label}>
-      <span className="shrink-0 min-w-[3.5rem] text-right">{end(before, 'früher')}</span>
+      <span className="shrink-0 min-w-[3.5rem] text-right">{end(before, t.earlier)}</span>
       <span className={`h-[3px] flex-1 min-w-[1rem] max-w-[3rem] rounded-full ${LINE[tone]}`} aria-hidden />
       <m.span
         key={gap}
@@ -71,7 +74,7 @@ export function PositionStrip({ timeline, gap, tone = 'primary' }: { timeline: S
         ?
       </m.span>
       <span className={`h-[3px] flex-1 min-w-[1rem] max-w-[3rem] rounded-full ${LINE[tone]}`} aria-hidden />
-      <span className="shrink-0 min-w-[3.5rem]">{end(after, 'später')}</span>
+      <span className="shrink-0 min-w-[3.5rem]">{end(after, t.later)}</span>
     </div>
   )
 }

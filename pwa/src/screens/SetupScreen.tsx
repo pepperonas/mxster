@@ -26,6 +26,8 @@ import { STARTING_CHALLENGES } from '@/game/challenge'
 import { MIN_TEAM_PEOPLE, TEAMS, maxTeams, splitIntoTeams } from '@/game/teams'
 import type { RoundOptions } from '@/contexts/GameContext'
 import type { GameMode, Player } from '@/types'
+import { useMessages } from '@/i18n'
+import { setupText } from '@/i18n/messages/setup'
 
 type Difficulty = keyof typeof DIFFICULTY_LABEL
 const MIN_PLAYERS = 2
@@ -93,6 +95,7 @@ export function SetupScreen() {
     exotics,
     setOptions
   } = useGame()
+  const t = useMessages(setupText)
   const { settings, addPlayer: rememberPlayer } = useSettings()
   const [name, setName] = useState('')
   const [nameError, setNameError] = useState<string | null>(null)
@@ -145,7 +148,7 @@ export function SetupScreen() {
     const n = raw.trim().slice(0, 20)
     if (!n) return
     if (nameTaken(n)) {
-      setNameError(`${n} spielt schon mit.`)
+      setNameError(t.nameTaken(n))
       return
     }
     if (botsOn) removeBots()
@@ -237,7 +240,7 @@ export function SetupScreen() {
       const room = await roomApi.create(music, { mode: gameMode, goal, decades, challengesEnabled, exotics })
       navigate(`/room/${room.code}`, { replace: true })
     } catch {
-      addToast('Der Raum konnte nicht geöffnet werden. Bitte nochmal versuchen.', 'error')
+      addToast(t.roomFailed, 'error')
       setOpening(false)
     }
   }
@@ -258,43 +261,43 @@ export function SetupScreen() {
 
   return (
     <div style={{ viewTransitionName: 'new-game' }}>
-      <SubPageHeader title="Neues Spiel" />
+      <SubPageHeader title={t.title} />
 
       <div className="space-y-8 pt-2 pb-40">
         {/* Devices */}
         <section aria-labelledby="devices-h" className="space-y-3">
           <h2 id="devices-h" className="text-title-md">
-            Wie sitzt ihr zusammen?
+            {t.devicesHeading}
           </h2>
           <SegmentedControl
-            label="Geräte"
+            label={t.devicesLabel}
             value={devices}
             onChange={setDevices}
             segments={[
-              { value: 'one', label: 'Ein Gerät' },
-              { value: 'own', label: 'Jeder sein Gerät' }
+              { value: 'one', label: t.oneDevice },
+              { value: 'own', label: t.ownDevices }
             ]}
           />
           <p className="meta">
             {devices === 'one'
-              ? 'Ihr reicht ein Handy oder Tablet herum.'
-              : 'Jede Person spielt auf dem eigenen Handy, im selben Raum oder von zu Hause. Du bekommst einen Link und einen QR-Code; ein Google-Konto braucht niemand.'}
+              ? t.oneDeviceHint
+              : t.ownDevicesHint}
           </p>
           {devices === 'own' && (
             <div className="space-y-2">
               <SegmentedControl
-                label="Musik"
+                label={t.musicLabel}
                 value={music}
                 onChange={setMusic}
                 segments={[
-                  { value: 'room', label: 'Gemeinsam im Raum' },
-                  { value: 'everyone', label: 'Jeder bei sich' }
+                  { value: 'room', label: t.musicRoom },
+                  { value: 'everyone', label: t.musicEveryone }
                 ]}
               />
               <p className="meta">
                 {music === 'room'
-                  ? 'Die Musik läuft nur auf deinem Gerät, alle hören mit. Kein Echo.'
-                  : 'Die Musik läuft auf jedem Gerät, gleichzeitig. Für Runden über Entfernung.'}
+                  ? t.musicRoomHint
+                  : t.musicEveryoneHint}
               </p>
             </div>
           )}
@@ -303,7 +306,7 @@ export function SetupScreen() {
         {/* Mode */}
         <section aria-labelledby="mode-h">
           <h2 id="mode-h" className="text-title-md mb-3">
-            Wie wollt ihr spielen?
+            {t.modeHeading}
           </h2>
           <div role="radiogroup" aria-labelledby="mode-h" className="grid gap-3">
             {MODE_ORDER.map((mode) => {
@@ -367,9 +370,9 @@ export function SetupScreen() {
         <section aria-labelledby="players-h">
           <div className="flex items-baseline justify-between mb-3">
             <h2 id="players-h" className="text-title-md">
-              Wer spielt mit?
+              {t.playersHeading}
             </h2>
-            <span className="meta tabular">{players.length} dabei</span>
+            <span className="meta tabular">{t.playersCount(players.length)}</span>
           </div>
 
           <ul className="space-y-2" aria-live="polite">
@@ -397,7 +400,7 @@ export function SetupScreen() {
                     {p.isBot && p.botDifficulty && <span className="meta"> ({DIFFICULTY_LABEL[p.botDifficulty]})</span>}
                   </span>
                   {!p.isBot && (
-                    <button type="button" className="icon-btn m3-state-layer" onClick={() => removePlayer(i)} aria-label={`${p.name} entfernen`}>
+                    <button type="button" className="icon-btn m3-state-layer" onClick={() => removePlayer(i)} aria-label={t.removePlayer(p.name)}>
                       <Icon name="close" size={20} />
                     </button>
                   )}
@@ -408,7 +411,7 @@ export function SetupScreen() {
 
           <form onSubmit={onSubmit} className="mt-3 flex gap-2">
             <label className="sr-only" htmlFor="player-name">
-              Name hinzufügen
+              {t.addName}
             </label>
             <input
               id="player-name"
@@ -420,12 +423,12 @@ export function SetupScreen() {
               }}
               maxLength={20}
               autoComplete="off"
-              placeholder="Name hinzufügen"
+              placeholder={t.addName}
               className="field flex-1"
               aria-invalid={!!nameError}
               aria-describedby={nameError ? 'name-error' : undefined}
             />
-            <button type="submit" className="btn btn-tonal m3-state-layer !px-4 min-h-[56px]" disabled={!name.trim()} aria-label="Hinzufügen">
+            <button type="submit" className="btn btn-tonal m3-state-layer !px-4 min-h-[56px]" disabled={!name.trim()} aria-label={t.add}>
               <Icon name="add" />
             </button>
           </form>
@@ -436,7 +439,7 @@ export function SetupScreen() {
           )}
 
           {suggestions.length > 0 && (
-            <div className="mt-3 flex flex-wrap gap-2" aria-label="Frühere Mitspieler">
+            <div className="mt-3 flex flex-wrap gap-2" aria-label={t.earlierPlayers}>
               {suggestions.map((n) => (
                 <button key={n} type="button" className="chip m3-state-layer" onClick={() => add(n)}>
                   <Icon name="add" size={18} />
@@ -465,16 +468,16 @@ export function SetupScreen() {
                   </span>
                   <div className="flex-1 min-w-0">
                     <h2 id="bots-h" className="text-title-md">
-                      Gegen den Computer
+                      {t.botsHeading}
                     </h2>
-                    <p className="meta">Allein? Dann spielen Bots gegen dich.</p>
+                    <p className="meta">{t.botsHint}</p>
                   </div>
-                  <Switch checked={botsOn} onChange={(on) => setBots(on)} ariaLabel="Gegen den Computer spielen" />
+                  <Switch checked={botsOn} onChange={(on) => setBots(on)} ariaLabel={t.botsSwitch} />
                 </div>
                 {botsOn && (
                   <div className="space-y-3">
                     <SegmentedControl
-                      label="Stärke"
+                      label={t.strength}
                       value={difficulty}
                       onChange={(d) => {
                         setDifficulty(d)
@@ -483,13 +486,13 @@ export function SetupScreen() {
                       segments={(Object.keys(DIFFICULTY_LABEL) as Difficulty[]).map((d) => ({ value: d, label: DIFFICULTY_LABEL[d] }))}
                     />
                     <SegmentedControl
-                      label="Anzahl"
+                      label={t.count}
                       value={botCount}
                       onChange={(c) => {
                         setBotCount(c)
                         setBots(true, c, difficulty)
                       }}
-                      segments={[1, 2, 3].map((c) => ({ value: c, label: c === 1 ? '1 Bot' : `${c} Bots` }))}
+                      segments={[1, 2, 3].map((c) => ({ value: c, label: t.bots(c) }))}
                     />
                   </div>
                 )}
@@ -516,22 +519,22 @@ export function SetupScreen() {
                   </span>
                   <div className="flex-1 min-w-0">
                     <h2 id="teams-h" className="text-title-md">
-                      In Teams spielen
+                      {t.teamsHeading}
                     </h2>
-                    <p className="meta">Ein Team teilt sich Zeitleiste und Punkte, ihr wechselt euch am Zug ab.</p>
+                    <p className="meta">{t.teamsHint}</p>
                   </div>
-                  <Switch checked={teamsOn} onChange={setTeamsOn} ariaLabel="In Teams spielen" />
+                  <Switch checked={teamsOn} onChange={setTeamsOn} ariaLabel={t.teamsHeading} />
                 </div>
                 {teamsActive && (
                   <div className="space-y-3">
                     {maxTeams(humanNames.length) > 2 && (
                       <SegmentedControl
-                        label="Anzahl Teams"
+                        label={t.teamCount}
                         value={Math.min(teamCount, maxTeams(humanNames.length))}
                         onChange={setTeamCount}
                         segments={Array.from({ length: maxTeams(humanNames.length) - 1 }, (_, i) => i + 2).map((n) => ({
                           value: n,
-                          label: `${n} Teams`
+                          label: t.teams(n)
                         }))}
                       />
                     )}
@@ -544,7 +547,7 @@ export function SetupScreen() {
                             <span className="meta ml-auto tabular">{members.length}</span>
                           </p>
                           <div className="flex flex-wrap gap-2 min-h-[40px]">
-                            {members.length === 0 && <span className="meta self-center">Noch niemand</span>}
+                            {members.length === 0 && <span className="meta self-center">{t.nobodyYet}</span>}
                             {members.map((name) => (
                               <m.button
                                 key={name}
@@ -554,7 +557,7 @@ export function SetupScreen() {
                                 type="button"
                                 className="chip m3-state-layer"
                                 onClick={() => moveToNextTeam(name)}
-                                aria-label={`${name} ins nächste Team setzen`}
+                                aria-label={t.moveToNextTeam(name)}
                               >
                                 {name}
                               </m.button>
@@ -564,17 +567,17 @@ export function SetupScreen() {
                       ))}
                     </ul>
                     <div className="flex items-center justify-between gap-3">
-                      <p className="meta">Tippe einen Namen an, um ihn ins nächste Team zu setzen.</p>
+                      <p className="meta">{t.moveHint}</p>
                       <button
                         type="button"
                         className="btn btn-text m3-state-layer shrink-0"
                         onClick={() => setTeams(splitIntoTeams(humanNames, teams.length || teamCount))}
                       >
                         <Icon name="shuffle" size={20} />
-                        Mischen
+                        {t.shuffle}
                       </button>
                     </div>
-                    {emptyTeam && <p className="text-body-sm text-md-error">Jedes Team braucht mindestens eine Person.</p>}
+                    {emptyTeam && <p className="text-body-sm text-md-error">{t.emptyTeam}</p>}
                   </div>
                 )}
               </div>
@@ -588,31 +591,31 @@ export function SetupScreen() {
         {/* The round */}
         <section aria-labelledby="round-h" className="space-y-5">
           <h2 id="round-h" className="text-title-md">
-            Die Runde
+            {t.roundHeading}
           </h2>
 
           <div className="space-y-2">
             <SegmentedControl
-              label="Länge"
+              label={t.length}
               value={goal}
               onChange={(g) => setOptions({ goal: g })}
               segments={GOAL_OPTIONS.map((g) => ({ value: g, label: GOAL_LABEL[g] }))}
             />
             <p className="meta">
               {gameMode === 'timeline_global'
-                ? `Gespielt wird, bis ${goalWord(goal)} Songs auf der gemeinsamen Zeitleiste liegen.`
+                ? t.goalGlobal(goalWord(goal))
                 : timelineMode
-                  ? `Wer zuerst ${goalWord(goal)} Songs richtig liegen hat, gewinnt.`
-                  : `${teamsActive ? 'Jedes Team' : 'Jede:r'} rät ${goalWord(goal)} Songs.`}
+                  ? t.goalPersonal(goalWord(goal))
+                  : t.goalHardcore(goalWord(goal), teamsActive)}
             </p>
           </div>
 
           <div className="space-y-2">
             <div className="flex items-baseline justify-between gap-3">
               <h3 id="decades-h" className="text-title-sm">
-                Jahrzehnte
+                {t.decades}
               </h3>
-              <span className="meta tabular">{poolSize} Songs</span>
+              <span className="meta tabular">{t.songs(poolSize)}</span>
             </div>
             <div className="flex flex-wrap gap-2" role="group" aria-labelledby="decades-h">
               <button
@@ -622,7 +625,7 @@ export function SetupScreen() {
                 onClick={() => setOptions({ decades: [] })}
               >
                 {decades.length === 0 && <Icon name="check" size={18} />}
-                Alle
+                {t.all}
               </button>
               {DECADES_WITH_SONGS.map((d) => {
                 const on = decades.includes(d)
@@ -633,7 +636,7 @@ export function SetupScreen() {
                     className={`chip m3-state-layer`}
                     aria-pressed={on}
                     onClick={() => toggleDecade(d)}
-                    aria-label={`${decadeLabel(d)}, ${byDecade[d] ?? 0} Songs`}
+                    aria-label={t.decadeChip(decadeLabel(d), byDecade[d] ?? 0)}
                   >
                     {on && <Icon name="check" size={18} />}
                     {decadeLabel(d)}
@@ -642,9 +645,9 @@ export function SetupScreen() {
               })}
             </div>
             {poolSize < songsNeeded && (
-              <p className="meta">Knapp für eine ganze Runde. Gehen die Songs aus, kommen die übrigen Jahrzehnte dazu.</p>
+              <p className="meta">{t.poolTight}</p>
             )}
-            <p className="meta">Songs aus euren letzten Runden kommen erst wieder, wenn nichts Neues mehr übrig ist.</p>
+            <p className="meta">{t.recentHint}</p>
           </div>
 
           {timelineMode && (
@@ -653,13 +656,10 @@ export function SetupScreen() {
                 <Icon name="hand" size={20} />
               </span>
               <div className="flex-1 min-w-0">
-                <h3 className="text-title-md">Einspruch</h3>
-                <p className="meta">
-                  {teamsActive ? 'Jedes Team hat' : 'Jede:r hat'} {STARTING_CHALLENGES === 3 ? 'drei' : STARTING_CHALLENGES} Einsprüche.
-                  Liegt eine Karte deiner Meinung nach falsch, leg sie woandershin. Hast du recht, gehört sie dir.
-                </p>
+                <h3 className="text-title-md">{t.challenge}</h3>
+                <p className="meta">{t.challengeHint(teamsActive, STARTING_CHALLENGES)}</p>
               </div>
-              <Switch checked={challengesEnabled} onChange={(on) => setOptions({ challengesEnabled: on })} ariaLabel="Einspruch" />
+              <Switch checked={challengesEnabled} onChange={(on) => setOptions({ challengesEnabled: on })} ariaLabel={t.challenge} />
             </div>
           )}
 
@@ -668,12 +668,10 @@ export function SetupScreen() {
               <Icon name="diamond" size={20} />
             </span>
             <div className="flex-1 min-w-0">
-              <h3 className="text-title-md">Exoten</h3>
-              <p className="meta">
-                {EXOTIC_COUNT} Songs, die kaum jemand kennt: Club-Tracks, Remixe und Raritäten. Für Runden mit echten Musik-Nerds.
-              </p>
+              <h3 className="text-title-md">{t.exotics}</h3>
+              <p className="meta">{t.exoticsHint(EXOTIC_COUNT)}</p>
             </div>
-            <Switch checked={exotics} onChange={(on) => setOptions({ exotics: on })} ariaLabel="Exoten mitspielen" />
+            <Switch checked={exotics} onChange={(on) => setOptions({ exotics: on })} ariaLabel={t.exoticsSwitch} />
           </div>
         </section>
       </div>
@@ -685,15 +683,15 @@ export function SetupScreen() {
             <Icon name="play" />
             {devices === 'own'
               ? opening
-                ? 'Raum wird geöffnet …'
-                : 'Raum öffnen'
+                ? t.opening
+                : t.openRoom
               : ready
-              ? 'Los geht’s'
+              ? t.go
               : emptyTeam
-                ? 'Jedes Team braucht jemanden'
+                ? t.teamNeedsSomeone
                 : MIN_PLAYERS - players.length === 1
-                  ? 'Noch eine Person dazu'
-                  : 'Noch zwei Personen dazu'}
+                  ? t.oneMore
+                  : t.twoMore}
           </button>
         </div>
       </div>

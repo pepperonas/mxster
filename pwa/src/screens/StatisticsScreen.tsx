@@ -15,20 +15,24 @@ import { MODE_COPY } from '@/game/modeCopy'
 import { songs } from '@/data/songs'
 import { GAME_CONFIG } from '@/utils/constants'
 import type { GameMode } from '@/types'
+import { localeOf, msg, useMessages } from '@/i18n'
+import { statsText } from '@/i18n/messages/stats'
 
 const MAX_COMPARED = 3
 const SONG_BY_ID = new Map(songs.map((s) => [s.id, s]))
-const pct = (v: number | null) => (v === null ? '–' : `${Math.round(v * 100)} %`)
+const pct = (v: number | null) => (v === null ? '–' : msg(statsText).percent(Math.round(v * 100)))
 
 function formatPlayTime(ms: number): string {
+  const t = msg(statsText)
   const min = Math.round(ms / 60000)
-  if (min < 60) return `${min} Min.`
+  if (min < 60) return t.minutes(min)
   const h = Math.floor(min / 60)
-  return `${h}:${String(min % 60).padStart(2, '0')} Std.`
+  return t.hours(`${h}:${String(min % 60).padStart(2, '0')}`)
 }
 
 export function StatisticsScreen() {
   const navigate = useAppNavigate()
+  const t = useMessages(statsText)
   const { history, summaries, myName } = usePlayers()
   const group = useMemo(() => groupStats(history), [history])
   const weeks = useMemo(() => weeklyRounds(history), [history])
@@ -52,13 +56,13 @@ export function StatisticsScreen() {
   if (history.length === 0) {
     return (
       <div className="pt-4 md:pt-10">
-        <h1 className="text-headline-md mb-6">Statistik</h1>
+        <h1 className="text-headline-md mb-6">{t.title}</h1>
         <div className="surface p-8 text-center">
           <Icon name="insights" size={40} className="mx-auto text-md-on-surface-variant" />
-          <p className="mt-4 text-title-md">Noch keine Zahlen</p>
-          <p className="mt-1 meta">Nach der ersten Runde siehst du hier Trefferquoten, Siege und euer Jahrzehnt-Profil.</p>
+          <p className="mt-4 text-title-md">{t.emptyTitle}</p>
+          <p className="mt-1 meta">{t.emptyText}</p>
           <button type="button" className="btn btn-brand m3-state-layer mt-6" onClick={() => navigate('/new')}>
-            Erste Runde starten
+            {t.firstRound}
           </button>
         </div>
       </div>
@@ -72,41 +76,41 @@ export function StatisticsScreen() {
   return (
     <div className="pt-4 md:pt-10 space-y-6">
       <header>
-        <h1 className="text-headline-md">Statistik</h1>
+        <h1 className="text-headline-md">{t.title}</h1>
         <p className="meta mt-1">
           {history.length >= GAME_CONFIG.MAX_HISTORY_GAMES
-            ? `Aus euren letzten ${history.length} Runden.`
-            : `Aus ${history.length} ${history.length === 1 ? 'Runde' : 'Runden'}.`}
+            ? t.fromLast(history.length)
+            : t.fromRounds(history.length)}
         </p>
       </header>
 
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-        <StatTile label="Runden" value={history.length} note={`${people.length} Spieler`} />
-        <StatTile label="Songs gespielt" value={group.songs} />
+        <StatTile label={t.roundsLabel} value={history.length} note={t.playersNote(people.length)} />
+        <StatTile label={t.songsPlayed} value={group.songs} />
         <StatTile
-          label="Trefferquote"
+          label={t.hitRate}
           value={pct(group.accuracy)}
-          note={group.accuracy === null ? 'ab der nächsten Runde' : `${group.tries} Versuche`}
+          note={group.accuracy === null ? t.fromNextRound : t.tries(group.tries)}
         />
         {group.timedRounds > 0 ? (
           <StatTile
-            label="Spielzeit"
+            label={t.playTime}
             value={formatPlayTime(group.playMs)}
-            note={`Ø ${formatPlayTime(group.playMs / group.timedRounds)} je Runde`}
+            note={t.perRound(formatPlayTime(group.playMs / group.timedRounds))}
           />
         ) : (
-          <StatTile label="Spielzeit" value="–" note="ab der nächsten Runde" />
+          <StatTile label={t.playTime} value="–" note={t.fromNextRound} />
         )}
       </div>
 
       <section className="surface p-5 space-y-4" aria-labelledby="profile-h">
         <div>
           <h2 id="profile-h" className="text-title-lg">
-            Jahrzehnt-Profil
+            {t.profile}
           </h2>
-          <p className="meta">Wählt bis zu drei Personen zum Vergleich.</p>
+          <p className="meta">{t.profileHint}</p>
         </div>
-        <div className="flex flex-wrap gap-2" role="group" aria-label="Personen im Vergleich">
+        <div className="flex flex-wrap gap-2" role="group" aria-label={t.compared}>
           {people.map((p) => {
             const at = compared.indexOf(p.name)
             return (
@@ -124,17 +128,17 @@ export function StatisticsScreen() {
 
       <section className="surface p-5" aria-labelledby="wins-h">
         <h2 id="wins-h" className="text-title-lg mb-4">
-          Siege
+          {t.wins}
         </h2>
         <BarList
-          label="Siege je Person"
+          label={t.winsPerPerson}
           max={Math.max(1, ...ranked.map((s) => s.wins))}
           rows={ranked.map((s) => ({
             key: s.name,
             label: s.name,
             value: s.wins,
             text: `${s.wins}`,
-            sub: `${s.games} ${s.games === 1 ? 'Runde' : 'Runden'} · ${Math.round((s.wins / Math.max(1, s.games)) * 100)} %`,
+            sub: t.winsSub(s.games, Math.round((s.wins / Math.max(1, s.games)) * 100)),
             strong: s.name === myName
           }))}
         />
@@ -142,17 +146,17 @@ export function StatisticsScreen() {
 
       <section className="surface p-5" aria-labelledby="week-h">
         <h2 id="week-h" className="text-title-lg mb-3">
-          Runden pro Woche
+          {t.perWeek}
         </h2>
-        <WeekColumns weeks={weeks} label="Runden pro Woche, letzte zwölf Wochen" />
+        <WeekColumns weeks={weeks} label={t.perWeekLabel} />
       </section>
 
       <section className="surface p-5" aria-labelledby="modes-h">
         <h2 id="modes-h" className="text-title-lg mb-4">
-          Spielmodi
+          {t.modes}
         </h2>
         <ShareBar
-          label="Runden je Spielmodus"
+          label={t.perMode}
           parts={(['timeline_personal', 'timeline_global', 'hardcore'] as GameMode[]).map((m) => ({
             label: MODE_COPY[m].name,
             value: group.modes[m]
@@ -163,11 +167,11 @@ export function StatisticsScreen() {
       {hardcore.length > 0 && (
         <section className="surface p-5" aria-labelledby="hc-h">
           <h2 id="hc-h" className="text-title-lg">
-            Jahre raten
+            {t.years}
           </h2>
-          <p className="meta mb-4">Im Hardcore-Modus: wie weit die Jahreszahl im Schnitt danebenlag.</p>
+          <p className="meta mb-4">{t.yearsHint}</p>
           <BarList
-            label="Durchschnittliche Abweichung in Jahren"
+            label={t.yearsOff}
             max={Math.max(1, ...hardcore.map((s) => s.yearOff ?? 0))}
             rows={[...hardcore]
               .sort((a, b) => (a.yearOff ?? 99) - (b.yearOff ?? 99))
@@ -175,8 +179,8 @@ export function StatisticsScreen() {
                 key: s.name,
                 label: s.name,
                 value: s.yearOff ?? 0,
-                text: `± ${(s.yearOff ?? 0).toLocaleString('de-DE', { maximumFractionDigits: 1 })}`,
-                sub: `${s.exactYears} ${s.exactYears === 1 ? 'Jahr' : 'Jahre'} exakt`,
+                text: `± ${(s.yearOff ?? 0).toLocaleString(localeOf(), { maximumFractionDigits: 1 })}`,
+                sub: t.exactYears(s.exactYears),
                 strong: s.name === myName
               }))}
           />
@@ -185,8 +189,8 @@ export function StatisticsScreen() {
 
       {(group.hardest.length > 0 || group.safest.length > 0) && (
         <div className="grid gap-6 md:grid-cols-2">
-          <SongList title="Die kniffligsten Songs" items={group.hardest} text={(s) => `${s.wrong} von ${s.tries} falsch`} />
-          <SongList title="Sichere Bank" items={group.safest} text={(s) => `${s.tries}-mal richtig`} />
+          <SongList title={t.hardest} items={group.hardest} text={(s) => t.wrongOf(s.wrong, s.tries)} />
+          <SongList title={t.safest} items={group.safest} text={(s) => t.timesRight(s.tries)} />
         </div>
       )}
     </div>

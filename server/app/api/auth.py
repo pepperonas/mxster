@@ -150,6 +150,17 @@ def logout(response: Response, row: SessionRow = Depends(current_session), db: S
     return {"ok": True}
 
 
+@router.delete("/me", dependencies=[Depends(require_csrf)])
+def delete_me(response: Response, user: User = Depends(current_user), db: Session = Depends(get_db)) -> dict:
+    """Delete the account and everything attached to it: sessions, saved data,
+    friendships, invitations and the rooms this account hosts."""
+    log.info("account deleted: user %s", user.id)
+    db.delete(user)
+    db.commit()
+    clear_session_cookie(response)
+    return {"ok": True}
+
+
 @router.get("/me")
 def me(row: SessionRow = Depends(current_session), user: User = Depends(current_user)) -> dict:
     return user_payload(user, row.csrf_token)

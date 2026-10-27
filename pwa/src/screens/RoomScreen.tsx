@@ -25,6 +25,8 @@ import { GOAL_LABEL } from '@/game/roundEnd'
 import { getPreviewPlayer } from '@/services/PreviewPlayerService'
 import { spring } from '@/motion/springs'
 import type { GameMode } from '@/types'
+import { msg, useMessages } from '@/i18n'
+import { roomsText } from '@/i18n/messages/rooms'
 
 export function RoomScreen() {
   const { code = '' } = useParams()
@@ -42,6 +44,7 @@ function Room() {
   const game = useGame()
   const navigate = useAppNavigate()
   const { state } = useAuth()
+  const t = useMessages(roomsText)
   const account = state.kind === 'signed-in' && state.me.status === 'approved'
 
   // Not (or no longer) in this room
@@ -67,7 +70,7 @@ function Room() {
     return (
       <div className="min-h-dvh grid place-items-center">
         <p className="meta" role="status">
-          Verbinde mit dem Raum …
+          {t.connecting}
         </p>
       </div>
     )
@@ -105,20 +108,14 @@ function useSaveOnlineResult(account: boolean) {
 
 function RoomProblem({ kind }: { kind: string }) {
   const navigate = useAppNavigate()
-  const text =
-    kind === 'kicked'
-      ? 'Du wurdest aus dem Raum entfernt.'
-      : kind === 'closed'
-        ? 'Der Gastgeber hat den Raum geschlossen.'
-        : kind === 'not_found'
-          ? 'Diesen Raum gibt es nicht.'
-          : 'Der Raum ist gerade nicht erreichbar.'
+  const t = useMessages(roomsText)
+  const text = kind === 'kicked' ? t.kicked : kind === 'closed' ? t.closedByHost : kind === 'not_found' ? t.notFound : t.unreachable
   return (
     <div className="min-h-dvh grid place-items-center px-6 text-center">
       <div className="space-y-5">
         <p className="text-title-lg">{text}</p>
         <button type="button" className="btn btn-tonal m3-state-layer" onClick={() => navigate('/', { replace: true })}>
-          Zur Startseite
+          {t.toHome}
         </button>
       </div>
     </div>
@@ -130,6 +127,7 @@ function Lobby({ account }: { account: boolean }) {
   const game = useGame()
   const { addToast, showModal } = useUI()
   const navigate = useAppNavigate()
+  const t = useMessages(roomsText)
   const info = room.info!
   const isHost = room.role === 'host'
   const link = roomLink(room.code)
@@ -140,14 +138,14 @@ function Lobby({ account }: { account: boolean }) {
   const copy = async () => {
     try {
       await navigator.clipboard.writeText(link)
-      addToast('Link kopiert', 'success')
+      addToast(msg(roomsText).linkCopied, 'success')
     } catch {
-      addToast('Kopieren ging nicht – bitte den Link markieren.', 'warning')
+      addToast(msg(roomsText).copyFailed, 'warning')
     }
   }
   const share = async () => {
     try {
-      await navigator.share({ title: 'mxtape', text: `${host?.name ?? 'Jemand'} lädt dich zu einer Runde mxtape ein`, url: link })
+      await navigator.share({ title: 'mxtape', text: msg(roomsText).shareText(host?.name ?? msg(roomsText).someone), url: link })
     } catch {
       /* cancelled */
     }
@@ -171,17 +169,17 @@ function Lobby({ account }: { account: boolean }) {
       game.startGame()
       await roomApi.setStatus(room.code, 'running')
     } catch {
-      addToast('Die Runde konnte nicht starten. Bitte nochmal versuchen.', 'error')
+      addToast(msg(roomsText).startFailed, 'error')
     } finally {
       setStarting(false)
     }
   }
 
   const leave = () =>
-    showModal(isHost ? 'Raum schließen?' : 'Raum verlassen?', <p className="text-body-lg">{isHost ? 'Alle anderen fliegen raus.' : 'Über den Link kommst du zurück, solange die Runde nicht läuft.'}</p>, [
-      { text: 'Bleiben' },
+    showModal(isHost ? t.closeTitle : t.leaveTitle, <p className="text-body-lg">{isHost ? t.closeBody : t.leaveBody}</p>, [
+      { text: t.stay },
       {
-        text: isHost ? 'Schließen' : 'Verlassen',
+        text: isHost ? t.close : t.leave,
         variant: 'danger',
         onClick: () => {
           if (isHost) void roomApi.setStatus(room.code, 'closed').catch(() => {})
@@ -196,54 +194,54 @@ function Lobby({ account }: { account: boolean }) {
     <div className="min-h-dvh pb-40">
       <header className="sticky top-0 z-30 bg-md-surface/90 backdrop-blur-md">
         <div className="mx-auto max-w-3xl h-16 px-2 sm:px-4 flex items-center gap-1">
-          <button type="button" className="icon-btn m3-state-layer" onClick={leave} aria-label={isHost ? 'Raum schließen' : 'Raum verlassen'}>
+          <button type="button" className="icon-btn m3-state-layer" onClick={leave} aria-label={isHost ? t.closeRoom : t.leaveRoom}>
             <Icon name="close" />
           </button>
-          <h1 className="text-title-md">Raum</h1>
+          <h1 className="text-title-md">{t.room}</h1>
           {room.connection !== 'open' && (
             <span className="ml-auto chip" role="status">
-              Verbinde …
+              {t.reconnecting}
             </span>
           )}
         </div>
       </header>
 
       <main className="mx-auto max-w-3xl px-4 space-y-6">
-        <section className="surface p-5 sm:p-6 grid gap-6 sm:grid-cols-[auto_1fr] sm:items-center" aria-label="Einladen">
+        <section className="surface p-5 sm:p-6 grid gap-6 sm:grid-cols-[auto_1fr] sm:items-center" aria-label={t.inviteLabel}>
           <div className="justify-self-center">
-            <QrCode value={link} size={176} label={`QR-Code für den Raum ${formatCode(room.code)}`} />
+            <QrCode value={link} size={176} label={t.qrLabel(formatCode(room.code))} />
           </div>
           <div className="space-y-3 min-w-0">
-            <p className="text-label-lg text-md-on-surface-variant">Raumcode</p>
+            <p className="text-label-lg text-md-on-surface-variant">{t.roomCode}</p>
             <p className="text-poster text-md-on-surface tabular" style={{ fontSize: 'clamp(2rem, 9vw, 2.8rem)' }}>
               {formatCode(room.code)}
             </p>
             <p className="text-body-sm text-md-on-surface-variant break-all">{link}</p>
             <div className="flex flex-wrap gap-2">
               <button type="button" className="btn btn-tonal m3-state-layer" onClick={() => void copy()}>
-                Link kopieren
+                {t.copyLink}
               </button>
               {'share' in navigator && (
                 <button type="button" className="btn btn-outline m3-state-layer" onClick={() => void share()}>
-                  Teilen
+                  {t.share}
                 </button>
               )}
             </div>
           </div>
         </section>
 
-        <section className="surface p-5 space-y-2" aria-label="Die Runde">
-          <p className="text-title-md">{options.mode ? MODE_COPY[options.mode].name : 'Runde'}</p>
+        <section className="surface p-5 space-y-2" aria-label={t.roundLabel}>
+          <p className="text-title-md">{options.mode ? MODE_COPY[options.mode].name : t.roundFallback}</p>
           <p className="meta">
             {options.goal ? `${GOAL_LABEL[options.goal as keyof typeof GOAL_LABEL] ?? ''} · ` : ''}
-            {info.music === 'room' ? `Musik auf dem Gerät von ${host?.name ?? 'Gastgeber'}` : 'Musik auf jedem Gerät'}
+            {info.music === 'room' ? t.musicOnDeviceOf(host?.name ?? t.host) : t.musicOnEveryDevice}
           </p>
         </section>
 
         <section aria-labelledby="people-h">
           <div className="flex items-baseline justify-between mb-3">
             <h2 id="people-h" className="text-title-lg">
-              Wer spielt mit
+              {t.whoPlays}
             </h2>
             <span className="meta tabular">
               {room.members.length} / {info.maxSeats}
@@ -266,11 +264,11 @@ function Lobby({ account }: { account: boolean }) {
           {isHost ? (
             <button type="button" className="btn btn-lg btn-brand m3-state-layer w-full" disabled={!enough || starting} onClick={() => void start()}>
               <Icon name="play" />
-              {enough ? 'Runde starten' : 'Warte auf Mitspieler'}
+              {enough ? t.startRound : t.waitingForPlayers}
             </button>
           ) : (
             <p className="text-center text-title-md text-md-on-surface py-3" role="status">
-              {room.status === 'running' ? 'Die Runde startet …' : `Warte, bis ${host?.name ?? 'der Gastgeber'} startet`}
+              {room.status === 'running' ? t.starting : t.waitForHost(host?.name ?? t.theHost)}
             </p>
           )}
         </div>
@@ -282,10 +280,11 @@ function Lobby({ account }: { account: boolean }) {
 function MemberRow({ member, me, canKick }: { member: Member; me: boolean; canKick: boolean }) {
   const room = useRoom()!
   const { showModal } = useUI()
+  const t = useMessages(roomsText)
   const kick = () =>
-    showModal(`${member.name} entfernen?`, <p className="text-body-lg">Mit dem Link kann {member.name} wieder beitreten, solange die Runde nicht läuft.</p>, [
-      { text: 'Behalten' },
-      { text: 'Entfernen', variant: 'danger', onClick: () => void roomApi.kick(room.code, member.seat).catch(() => {}) }
+    showModal(t.removeTitle(member.name), <p className="text-body-lg">{t.removeBody(member.name)}</p>, [
+      { text: t.keep },
+      { text: t.remove, variant: 'danger', onClick: () => void roomApi.kick(room.code, member.seat).catch(() => {}) }
     ])
   return (
     <m.li
@@ -300,18 +299,18 @@ function MemberRow({ member, me, canKick }: { member: Member; me: boolean; canKi
         <Avatar name={member.name} picture={member.picture || undefined} size={44} />
         <span
           className={`absolute -right-0.5 -bottom-0.5 w-3.5 h-3.5 rounded-full border-2 border-md-surface-container-low ${member.online ? 'bg-md-success' : 'bg-md-outline'}`}
-          aria-label={member.online ? 'online' : 'offline'}
+          aria-label={member.online ? t.online : t.offline}
         />
       </span>
       <span className="flex-1 min-w-0">
         <span className="flex items-center gap-2">
           <span className="text-title-md truncate">{member.name}</span>
-          {me && <span className="shrink-0 rounded-m3-full bg-md-secondary-container text-md-on-secondary-container px-2 text-label-md">Du</span>}
+          {me && <span className="shrink-0 rounded-m3-full bg-md-secondary-container text-md-on-secondary-container px-2 text-label-md">{t.you}</span>}
         </span>
-        <span className="block meta">{member.host ? 'Gastgeber' : member.guest ? 'Gast' : 'Mit Konto'}</span>
+        <span className="block meta">{member.host ? t.host : member.guest ? t.guest : t.withAccount}</span>
       </span>
       {canKick && (
-        <button type="button" className="icon-btn m3-state-layer text-md-on-surface-variant" onClick={kick} aria-label={`${member.name} entfernen`}>
+        <button type="button" className="icon-btn m3-state-layer text-md-on-surface-variant" onClick={kick} aria-label={t.removeLabel(member.name)}>
           <Icon name="close" />
         </button>
       )}
@@ -322,6 +321,7 @@ function MemberRow({ member, me, canKick }: { member: Member; me: boolean; canKi
 function InviteFriends() {
   const room = useRoom()!
   const { addToast } = useUI()
+  const t = useMessages(roomsText)
   const [friends, setFriends] = useState<Person[] | null>(null)
   const [invited, setInvited] = useState<number[]>([])
   useEffect(() => {
@@ -338,19 +338,19 @@ function InviteFriends() {
       await roomApi.invite(room.code, f.id)
       setInvited((v) => [...v, f.id])
     } catch {
-      addToast('Einladen ging nicht.', 'error')
+      addToast(msg(roomsText).inviteFailed, 'error')
     }
   }
 
   return (
     <section aria-labelledby="friends-h" className="space-y-3">
       <h2 id="friends-h" className="text-title-lg">
-        Freunde einladen
+        {t.inviteFriends}
       </h2>
       {friends === null ? (
-        <p className="meta">Lade Freunde …</p>
+        <p className="meta">{t.loadingFriends}</p>
       ) : open.length === 0 ? (
-        <p className="meta">{friends.length === 0 ? 'Noch keine Freunde. Unter „Spieler“ findest du Leute mit Konto.' : 'Alle deine Freunde sind schon da.'}</p>
+        <p className="meta">{friends.length === 0 ? t.noFriends : t.allFriendsHere}</p>
       ) : (
         <ul className="space-y-2">
           {open.map((f) => (
@@ -363,7 +363,7 @@ function InviteFriends() {
                 disabled={invited.includes(f.id)}
                 onClick={() => void invite(f)}
               >
-                {invited.includes(f.id) ? 'Eingeladen' : 'Einladen'}
+                {invited.includes(f.id) ? t.invited : t.invite}
               </button>
             </li>
           ))}

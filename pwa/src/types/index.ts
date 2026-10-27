@@ -10,6 +10,8 @@ export interface Song {
   album?: string
   /** Short German "Wusstest du?" fact, shown after the reveal. */
   fact?: string
+  /** English version of `fact`, shown when the app runs in English. */
+  factEn?: string
   /** Little-known track (deep cut, club track): only drawn when the round allows exotics. */
   exotic?: boolean
   spotifyId?: string

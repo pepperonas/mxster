@@ -6,7 +6,7 @@
  *   4. caller writes songs.json / song-facts.json via songStore.saveAll()
  *
  * Flags shared by both scripts:
- *   --year 1984  --album "…"  --genre Pop  --fact "…"   preset a field
+ *   --year 1984  --album "…"  --genre Pop  --fact "…"  --fact-en "…"   preset a field
  *   --exotic     mark as little-known (only drawn when a round allows exotics)
  *   --yes        accept the suggestion without questions
  *   --no-upload  keep MP3 and cover local (upload later with rsync)
@@ -19,7 +19,7 @@ import { downloadAndUploadSong, uploadFile } from '../../audio-hosting/download-
 
 export const GENRES = ['Pop', 'Rock', 'Hip-Hop', 'Electronic', 'Dance', 'House', 'Disco', 'R&B', 'Soul', 'Funk', 'Metal', 'Schlager', 'Reggae', 'Country']
 
-/** argv → { positional: [...], flags: { year, album, genre, fact, yes, upload } } */
+/** argv → { positional: [...], flags: { year, album, genre, fact, factEn, yes, upload } } */
 export function parseArgs(argv) {
   const positional = []
   const flags = { yes: false, upload: true, exotic: undefined }
@@ -28,6 +28,7 @@ export function parseArgs(argv) {
     if (a === '--yes' || a === '-y') flags.yes = true
     else if (a === '--no-upload') flags.upload = false
     else if (a === '--exotic') flags.exotic = true
+    else if (a === '--fact-en') flags.factEn = argv[++i]
     else if (['--year', '--album', '--genre', '--fact'].includes(a)) flags[a.slice(2)] = argv[++i]
     else positional.push(a)
   }
@@ -43,7 +44,7 @@ export function createPrompt() {
 
 /**
  * Suggest metadata for artist/title and let the user confirm or edit it.
- * Returns { meta: {title, artist, year, album, genre, fact}, cover: {releaseGroupId, itunesArtwork} }.
+ * Returns { meta: {title, artist, year, album, genre, fact, factEn}, cover: {releaseGroupId, itunesArtwork} }.
  */
 export async function proposeSong({ artist, title, flags, prompt, current }) {
   console.log(`\n🔎 Suche „${artist} – ${title}“ bei MusicBrainz …`)
@@ -71,6 +72,7 @@ export async function proposeSong({ artist, title, flags, prompt, current }) {
     album: flags.album ?? mb.album ?? it?.album ?? null,
     genre: flags.genre ?? current?.genre ?? '',
     fact: flags.fact ?? '',
+    factEn: flags.factEn ?? '',
     exotic: flags.exotic ?? false
   }
 
@@ -86,6 +88,10 @@ export async function proposeSong({ artist, title, flags, prompt, current }) {
     meta.genre = (await prompt.ask(`Genre [${meta.genre}]: `)) || meta.genre
     console.log('   „Wusstest du?“: ein Satz, nur wenn sicher wahr, ohne Jahreszahl. Leer = keiner.')
     meta.fact = (await prompt.ask('Fakt: ')) || meta.fact
+    if (meta.fact) {
+      console.log('   Derselbe Fakt auf Englisch (für die englische App). Leer = keiner.')
+      meta.factEn = (await prompt.ask('Fakt (EN): ')) || meta.factEn
+    }
     console.log('   Exot = kaum bekannt (Club-Track, Remix, Rarität); kommt nur, wenn die Runde Exoten erlaubt.')
     const ex = (await prompt.ask(`Exot? (j/n) [${meta.exotic ? 'j' : 'n'}]: `)).toLowerCase()
     if (ex) meta.exotic = ex.startsWith('j') || ex.startsWith('y')
@@ -94,9 +100,12 @@ export async function proposeSong({ artist, title, flags, prompt, current }) {
   if (!Number.isInteger(meta.year) || meta.year < 1900 || meta.year > new Date().getFullYear()) {
     throw new Error(`Kein gültiges Jahr (${meta.year}). Mit --year angeben.`)
   }
-  if (meta.fact && /\b(19|20)\d\d\b/.test(meta.fact)) {
-    throw new Error('Der Fakt enthält eine Jahreszahl — die würde die Lösung verraten.')
+  for (const [label, text] of [['Der Fakt', meta.fact], ['Der englische Fakt', meta.factEn]]) {
+    if (text && /\b(19|20)\d\d\b/.test(text)) {
+      throw new Error(`${label} enthält eine Jahreszahl — die würde die Lösung verraten.`)
+    }
   }
+  if (meta.factEn && !meta.fact) throw new Error('Ein englischer Fakt braucht den deutschen Fakt (--fact).')
   return { meta, cover: { releaseGroupId: mb.releaseGroupId, itunesArtwork: it?.artwork ?? null } }
 }
 

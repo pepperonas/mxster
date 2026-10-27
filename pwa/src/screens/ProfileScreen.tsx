@@ -10,9 +10,12 @@ import { Icon, type IconName } from '@/components/ui/Icon'
 import { Switch } from '@/components/ui/Switch'
 import { toggleThemeWithReveal } from '@/utils/themeReveal'
 import { api } from '@/api/client'
-import { LegalLinks } from './LegalLinks'
+import { LegalLinks } from '@/legal/LegalScreen'
+import { LanguageSwitch } from '@/components/ui/LanguageSwitch'
+import { useMessages } from '@/i18n'
+import { profileText } from '@/i18n/messages/profile'
 
-const VERSION = '0.8.1'
+const VERSION = '0.9.0'
 
 export function ProfileScreen() {
   const me = useMe()
@@ -24,6 +27,7 @@ export function ProfileScreen() {
   const { showModal, addToast } = useUI()
   const themeBtn = useRef<HTMLSpanElement>(null)
   const pending = usePendingCount(me.isAdmin)
+  const t = useMessages(profileText)
 
   const dark = settings.theme === 'dark'
   const toggleTheme = () => {
@@ -45,31 +49,48 @@ export function ProfileScreen() {
 
   const askWipe = () =>
     showModal(
-      'Alle Spieldaten löschen?',
-      <p className="text-body-lg">Verlauf, Erfolge und Einstellungen dieses Kontos werden endgültig gelöscht. Dein Zugang bleibt bestehen.</p>,
+      t.wipeTitle,
+      <p className="text-body-lg">{t.wipeBody}</p>,
       [
-        { text: 'Abbrechen' },
+        { text: t.cancel },
         {
-          text: 'Endgültig löschen',
+          text: t.wipeConfirm,
           variant: 'danger',
           onClick: async () => {
             try {
               await api('/api/data', { method: 'DELETE' })
               window.location.reload()
             } catch {
-              addToast('Löschen hat nicht geklappt. Bitte versuch es noch einmal.', 'error')
+              addToast(t.wipeFailed, 'error')
             }
           }
         }
       ]
     )
 
+  const askDeleteAccount = () =>
+    showModal(t.deleteAccountTitle, <p className="text-body-lg">{t.deleteAccountBody}</p>, [
+      { text: t.cancel },
+      {
+        text: t.deleteAccountConfirm,
+        variant: 'danger',
+        onClick: async () => {
+          try {
+            await api('/api/me', { method: 'DELETE' })
+            window.location.replace('/')
+          } catch {
+            addToast(t.deleteAccountFailed, 'error')
+          }
+        }
+      }
+    ])
+
   return (
     <div className="pt-4 md:pt-10 space-y-6">
       <section className="flex items-center gap-4">
         <Avatar name={me.name} picture={me.picture} size={64} />
         <div className="min-w-0">
-          <h1 className="text-headline-sm truncate">{me.name || 'Dein Konto'}</h1>
+          <h1 className="text-headline-sm truncate">{me.name || t.yourAccount}</h1>
           <p className="meta truncate">{me.email}</p>
         </div>
       </section>
@@ -78,9 +99,9 @@ export function ProfileScreen() {
         <button type="button" className="row m3-state-layer !bg-md-primary-container !text-md-on-primary-container" onClick={() => navigate('/admin')}>
           <Icon name="shield" />
           <span className="flex-1">
-            <span className="block text-title-md">Zugänge verwalten</span>
+            <span className="block text-title-md">{t.manageAccess}</span>
             <span className="block text-body-sm opacity-90">
-              {pending === null ? 'Wird geladen …' : pending === 0 ? 'Niemand wartet' : pending === 1 ? '1 Person wartet auf Freischaltung' : `${pending} Personen warten auf Freischaltung`}
+              {pending === null ? t.loading : t.pending(pending)}
             </span>
           </span>
           {!!pending && (
@@ -90,35 +111,39 @@ export function ProfileScreen() {
         </button>
       )}
 
-      <Group title="Darstellung">
-        <Item icon={dark ? 'moon' : 'sun'} title="Dunkles Design" text={dark ? 'An' : 'Aus'}>
+      <Group title={t.appearance}>
+        <Item icon={dark ? 'moon' : 'sun'} title={t.darkTheme} text={dark ? t.on : t.off}>
           <span ref={themeBtn}>
-            <Switch checked={dark} onChange={toggleTheme} ariaLabel="Dunkles Design" />
+            <Switch checked={dark} onChange={toggleTheme} ariaLabel={t.darkTheme} />
           </span>
         </Item>
-      </Group>
-
-      <Group title="Spiel">
-        <Item icon="dice" title="Zufällige Startstelle" text="Songs starten irgendwo mittendrin statt am Anfang.">
-          <Switch checked={settings.randomStartPosition} onChange={(v) => updateSettings({ randomStartPosition: v })} ariaLabel="Zufällige Startstelle" />
-        </Item>
-        <Item icon="eye" title="Jahre verdecken" text="Die Jahre auf den Zeitleisten werden unscharf angezeigt.">
-          <Switch checked={settings.hideYearsInTimeline} onChange={(v) => updateSettings({ hideYearsInTimeline: v })} ariaLabel="Jahre verdecken" />
+        <Item icon="globe" title={t.language} text={t.languageText}>
+          <LanguageSwitch />
         </Item>
       </Group>
 
-      <Group title="Mitspieler">
-        <ActionRow icon="groups" title="Spieler verwalten" text="Schnellauswahl, Umbenennen, Zusammenführen und Zahlen je Person." onClick={() => navigate('/players')} />
+      <Group title={t.game}>
+        <Item icon="dice" title={t.randomStart} text={t.randomStartText}>
+          <Switch checked={settings.randomStartPosition} onChange={(v) => updateSettings({ randomStartPosition: v })} ariaLabel={t.randomStart} />
+        </Item>
+        <Item icon="eye" title={t.hideYears} text={t.hideYearsText}>
+          <Switch checked={settings.hideYearsInTimeline} onChange={(v) => updateSettings({ hideYearsInTimeline: v })} ariaLabel={t.hideYears} />
+        </Item>
       </Group>
 
-      <Group title="Daten">
-        <ActionRow icon="download" title="Daten herunterladen" text="Verlauf, Erfolge und Einstellungen als Datei." onClick={download} />
-        <ActionRow icon="delete" title="Alle Spieldaten löschen" text="Setzt Verlauf, Erfolge und Einstellungen zurück." onClick={askWipe} danger />
+      <Group title={t.players}>
+        <ActionRow icon="groups" title={t.managePlayers} text={t.managePlayersText} onClick={() => navigate('/players')} />
+      </Group>
+
+      <Group title={t.data}>
+        <ActionRow icon="download" title={t.download} text={t.downloadText} onClick={download} />
+        <ActionRow icon="delete" title={t.wipe} text={t.wipeText} onClick={askWipe} danger />
+        <ActionRow icon="logout" title={t.deleteAccount} text={t.deleteAccountText} onClick={askDeleteAccount} danger />
       </Group>
 
       <button type="button" className="btn btn-tonal m3-state-layer w-full" onClick={() => void logout()}>
         <Icon name="logout" size={20} />
-        Abmelden
+        {t.signOut}
       </button>
 
       <div className="text-center space-y-1 pt-2">

@@ -13,6 +13,8 @@
  *   Exotics are the very last resort, after every well-known song is used up.
  */
 import type { Song } from '@/types'
+import { msg } from '@/i18n'
+import { modesText } from '@/i18n/messages/modes'
 
 export const DECADES = [1950, 1960, 1970, 1980, 1990, 2000, 2010, 2020] as const
 
@@ -28,7 +30,7 @@ export function decadeOf(year: number): number {
 }
 
 export function decadeLabel(decade: number): string {
-  return `${String(decade).slice(2)}er`
+  return msg(modesText).decade(String(decade).slice(2))
 }
 
 /** The songs a round draws from: exotics only when allowed. */

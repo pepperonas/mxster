@@ -8,6 +8,8 @@ import { m } from 'motion/react'
 import { spring } from '@/motion/springs'
 import { prefersReducedMotion } from '@/motion/policy'
 import { SERIES_COLORS } from './RadarChart'
+import { localeOf, useLang, useMessages, type Lang } from '@/i18n'
+import { statsText } from '@/i18n/messages/stats'
 
 // ── Stat tile ────────────────────────────────────────────────────────────────
 
@@ -76,13 +78,20 @@ export function BarList({ rows, max, label }: { rows: BarRow[]; max: number; lab
 
 // ── Weekly columns ───────────────────────────────────────────────────────────
 
-const weekFmt = new Intl.DateTimeFormat('de-DE', {
-  day: 'numeric',
-  month: 'short'
-})
+const weekFormats = new Map<Lang, Intl.DateTimeFormat>()
+function weekFmt(lang: Lang): Intl.DateTimeFormat {
+  let f = weekFormats.get(lang)
+  if (!f) {
+    f = new Intl.DateTimeFormat(localeOf(lang), { day: 'numeric', month: 'short' })
+    weekFormats.set(lang, f)
+  }
+  return f
+}
 
 export function WeekColumns({ weeks, label }: { weeks: Array<{ start: number; rounds: number }>; label: string }) {
   const [hover, setHover] = useState<number | null>(null)
+  const t = useMessages(statsText)
+  const day = weekFmt(useLang().lang)
   const max = Math.max(1, ...weeks.map((w) => w.rounds))
   const top = max <= 4 ? max : Math.ceil(max / 2) * 2
   const still = prefersReducedMotion()
@@ -93,10 +102,10 @@ export function WeekColumns({ weeks, label }: { weeks: Array<{ start: number; ro
     <figure aria-label={label}>
       <div className="flex items-baseline justify-between gap-3 mb-3 min-h-[2.5rem]">
         <p className="text-body-md text-md-on-surface-variant">
-          {hover === null ? 'Diese Woche' : `Woche ab ${weekFmt.format(weeks[shown].start)}`}
+          {hover === null ? t.thisWeek : t.weekFrom(day.format(weeks[shown].start))}
         </p>
         <p className="text-title-md tabular text-md-on-surface">
-          {weeks[shown].rounds} {weeks[shown].rounds === 1 ? 'Runde' : 'Runden'}
+          {t.roundCount(weeks[shown].rounds)}
         </p>
       </div>
       <div className="relative" style={{ height: H }}>
@@ -122,7 +131,7 @@ export function WeekColumns({ weeks, label }: { weeks: Array<{ start: number; ro
                 tabIndex={0}
                 onFocus={() => setHover(i)}
                 onBlur={() => setHover(null)}
-                aria-label={`Woche ab ${weekFmt.format(w.start)}: ${w.rounds} ${w.rounds === 1 ? 'Runde' : 'Runden'}`}
+                aria-label={t.weekAria(day.format(w.start), w.rounds)}
               >
                 <m.span
                   className="block w-full max-w-[24px] rounded-t-[4px]"
@@ -145,8 +154,8 @@ export function WeekColumns({ weeks, label }: { weeks: Array<{ start: number; ro
         </ul>
       </div>
       <div className="flex justify-between pr-6 mt-1.5 text-label-sm text-md-on-surface-variant tabular" aria-hidden>
-        <span>{weekFmt.format(weeks[0].start)}</span>
-        <span>heute</span>
+        <span>{day.format(weeks[0].start)}</span>
+        <span>{t.today}</span>
       </div>
     </figure>
   )
@@ -155,6 +164,7 @@ export function WeekColumns({ weeks, label }: { weeks: Array<{ start: number; ro
 // ── Share bar (parts of a whole) ────────────────────────────────────────────
 
 export function ShareBar({ parts, label }: { parts: Array<{ label: string; value: number }>; label: string }) {
+  const t = useMessages(statsText)
   const total = parts.reduce((n, p) => n + p.value, 0)
   if (total === 0) return null
   const still = prefersReducedMotion()
@@ -189,7 +199,7 @@ export function ShareBar({ parts, label }: { parts: Array<{ label: string; value
             <span className="inline-block w-3 h-3 rounded-full shrink-0" style={{ background: `rgb(${SERIES_COLORS[i]})` }} aria-hidden />
             <span className="flex-1 text-md-on-surface">{p.label}</span>
             <span className="tabular text-md-on-surface-variant">
-              {p.value} · {Math.round((p.value / total) * 100)} %
+              {p.value} · {t.percent(Math.round((p.value / total) * 100))}
             </span>
           </li>
         ))}

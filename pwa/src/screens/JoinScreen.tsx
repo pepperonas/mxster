@@ -14,27 +14,28 @@ import { Icon } from '@/components/ui/Icon'
 import { roomApi } from '@/online/roomApi'
 import type { RoomInfo } from '@/online/protocol'
 import { spring } from '@/motion/springs'
+import { useMessages } from '@/i18n'
+import { roomsText, isRoomProblem } from '@/i18n/messages/rooms'
+import { apiErrorText, errorsText } from '@/i18n/messages/errors'
+import { LanguageSwitch } from '@/components/ui/LanguageSwitch'
+import { LegalLinks } from '@/legal/LegalScreen'
 
 /** Remembered across the Google sign-in, so the link still leads into the room. */
 export const PENDING_ROOM_KEY = 'mx_pending_room'
-
-const PROBLEM: Record<string, string> = {
-  room_not_found: 'Diesen Raum gibt es nicht. Prüf den Link oder frag nach einem neuen.',
-  room_started: 'Die Runde läuft schon. Neue Leute können erst bei der nächsten Runde dazukommen.',
-  room_closed: 'Diese Runde ist vorbei.',
-  room_full: 'Der Raum ist voll.'
-}
 
 export function JoinScreen() {
   const { code = '' } = useParams()
   const navigate = useAppNavigate()
   const { state } = useAuth()
+  const t = useMessages(roomsText)
+  const te = useMessages(errorsText)
   const approved = state.kind === 'signed-in' && state.me.status === 'approved'
   const [room, setRoom] = useState<RoomInfo | null>(null)
   const [problem, setProblem] = useState<string | null>(null)
   const [name, setName] = useState('')
   const [busy, setBusy] = useState(false)
-  const [error, setError] = useState<string | null>(null)
+  // Kept as the error itself, so the text follows a language switch
+  const [error, setError] = useState<{ err: unknown } | null>(null)
 
   useEffect(() => {
     roomApi
@@ -57,8 +58,8 @@ export function JoinScreen() {
       navigate(`/room/${r.code}`, { replace: true })
     } catch (err) {
       const c = err instanceof ApiError ? err.code : 'unreachable'
-      if (PROBLEM[c]) setProblem(c)
-      else setError(err instanceof ApiError ? err.message : 'Keine Verbindung. Bitte nochmal versuchen.')
+      if (isRoomProblem(c)) setProblem(c)
+      else setError({ err })
     } finally {
       setBusy(false)
     }
@@ -74,7 +75,10 @@ export function JoinScreen() {
   }
 
   return (
-    <div className="min-h-dvh grid place-items-center px-5 py-10">
+    <div className="relative min-h-dvh grid place-items-center px-5 py-10">
+      <div className="absolute right-3 z-10" style={{ top: 'calc(env(safe-area-inset-top, 0px) + 12px)' }}>
+        <LanguageSwitch />
+      </div>
       <m.div
         initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
@@ -90,32 +94,32 @@ export function JoinScreen() {
 
         {problem ? (
           <div className="mt-6 space-y-5">
-            <p className="text-body-lg text-md-on-surface">{PROBLEM[problem] ?? 'Der Raum ist gerade nicht erreichbar.'}</p>
+            <p className="text-body-lg text-md-on-surface">{isRoomProblem(problem) ? t[`problem_${problem}`] : t.unreachable}</p>
             <button type="button" className="btn btn-tonal m3-state-layer" onClick={() => navigate('/', { replace: true })}>
-              Zur Startseite
+              {t.toHome}
             </button>
           </div>
         ) : !room ? (
           <p className="mt-6 meta" role="status">
-            Raum wird geladen …
+            {t.loadingRoom}
           </p>
         ) : (
           <div className="mt-4 space-y-6">
-            <p className="text-title-lg text-md-on-surface">{room.host.name} lädt dich zu einer Runde ein</p>
+            <p className="text-title-lg text-md-on-surface">{t.invitesYou(room.host.name)}</p>
             <p className="meta">
-              {room.members.length} {room.members.length === 1 ? 'Person ist' : 'Personen sind'} schon da ·{' '}
-              {room.music === 'room' ? 'Musik läuft beim Gastgeber' : 'Musik läuft auf jedem Gerät'}
+              {t.alreadyHere(room.members.length)} ·{' '}
+              {room.music === 'room' ? t.musicAtHost : t.musicEverywhere}
             </p>
 
             {approved ? (
               <button type="button" className="btn btn-lg btn-brand m3-state-layer w-full" disabled={busy} onClick={() => void join()}>
                 <Icon name="play" />
-                Beitreten
+                {t.join}
               </button>
             ) : (
               <form onSubmit={join} className="space-y-3 text-left">
                 <label htmlFor="guest-name" className="block text-label-lg text-md-on-surface-variant">
-                  Wie sollen dich die anderen sehen?
+                  {t.guestNameLabel}
                 </label>
                 <input
                   id="guest-name"
@@ -124,29 +128,30 @@ export function JoinScreen() {
                   maxLength={20}
                   autoComplete="nickname"
                   autoFocus
-                  placeholder="Dein Name"
+                  placeholder={t.guestNamePlaceholder}
                   onChange={(e) => setName(e.target.value)}
                   aria-invalid={Boolean(error)}
                   aria-describedby="guest-hint"
                 />
                 <p id="guest-hint" className="text-body-sm text-md-on-surface-variant">
-                  Ohne Konto: Für dich wird nichts gespeichert.
+                  {t.guestHint}
                 </p>
                 <button type="submit" className="btn btn-lg btn-brand m3-state-layer w-full" disabled={busy || name.trim().length < 2}>
-                  Als Gast beitreten
+                  {t.joinAsGuest}
                 </button>
                 <button type="button" className="btn btn-text m3-state-layer w-full" onClick={signIn}>
-                  Lieber mit Google anmelden
+                  {t.signInInstead}
                 </button>
               </form>
             )}
             {error && (
               <p className="text-body-sm text-md-error" role="alert">
-                {error}
+                {error.err instanceof ApiError ? apiErrorText(error.err, te.tryAgain) : te.noConnection}
               </p>
             )}
           </div>
         )}
+        <LegalLinks className="mt-10" />
       </m.div>
     </div>
   )

@@ -1,3 +1,6 @@
+import { msg } from '@/i18n'
+import { errorsText } from '@/i18n/messages/errors'
+
 /**
  * Thin client for the mxtape API (same origin, session cookie).
  * State-changing requests carry the CSRF token from /api/me.
@@ -51,7 +54,7 @@ export async function api<T>(path: string, init: RequestInit & { json?: unknown 
     body = text ? (JSON.parse(text) as Record<string, unknown>) : {}
   } catch {
     // Not JSON (e.g. a proxy error page) — fall through with an empty body
-    if (res.ok) throw new ApiError(res.status, 'bad_response', 'Unerwartete Antwort vom Server.')
+    if (res.ok) throw new ApiError(res.status, 'bad_response', msg(errorsText).badResponse)
   }
   if (!res.ok) {
     // Session ended or access withdrawn while the app is open: let the gate re-check.
@@ -66,10 +69,4 @@ export async function api<T>(path: string, init: RequestInit & { json?: unknown 
 export const LOGIN_URL = '/api/auth/login'
 export const SESSION_LOST = 'mx:session-lost'
 
-/** Login errors the callback reports back as ?login_error=… */
-export const LOGIN_ERRORS: Record<string, string> = {
-  cancelled: 'Die Anmeldung wurde abgebrochen.',
-  state_mismatch: 'Die Anmeldung ist abgelaufen. Bitte versuch es noch einmal.',
-  exchange_failed: 'Google hat die Anmeldung nicht bestätigt. Bitte versuch es noch einmal.',
-  invalid_token: 'Dieses Google-Konto konnte nicht geprüft werden.'
-}
+// Login error texts (?login_error=…) live in i18n/messages/errors.ts (loginErrorText)

@@ -13,6 +13,8 @@ import { AnimatePresence, m, type PanInfo } from 'motion/react'
 import { useUI } from '@/contexts'
 import { spring } from '@/motion/springs'
 import type { Toast as ToastType } from '@/types'
+import { useMessages } from '@/i18n'
+import { shellText } from '@/i18n/messages/shell'
 
 const SWIPE_DISTANCE = 96
 const SWIPE_VELOCITY = 500
@@ -40,6 +42,7 @@ const TONE: Record<ToastType['type'], string> = {
 }
 
 function ToastItem({ toast, onRemove }: { toast: ToastType; onRemove: (id: number) => void }) {
+  const t = useMessages(shellText)
   const [paused, setPaused] = useState(false)
   const [exitX, setExitX] = useState(0)
   const remaining = useRef(toast.duration)
@@ -108,7 +111,7 @@ function ToastItem({ toast, onRemove }: { toast: ToastType; onRemove: (id: numbe
       <button
         onClick={remove}
         className="flex-shrink-0 touch-target rounded-m3-full m3-state-layer"
-        aria-label="Hinweis schließen"
+        aria-label={t.closeToast}
       >
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true">
           <path d="M18 6L6 18M6 6l12 12" />

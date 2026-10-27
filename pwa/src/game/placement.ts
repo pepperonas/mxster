@@ -8,6 +8,8 @@
  * - The very first card of a timeline is always "correct".
  */
 import type { GameMode, GlobalTimelineCard, Player, Song } from '@/types'
+import { msg } from '@/i18n'
+import { modesText } from '@/i18n/messages/modes'
 
 /** The songs a placement is judged against, in timeline order. */
 export function timelineSongsFor(
@@ -35,12 +37,13 @@ export function evaluatePlacement(timeline: Song[], song: Song, gapIndex: number
   return { isCorrect, newTimeline, isFirstCard: timeline.length === 0 }
 }
 
-/** Human-readable gap description (German UI), also used as the gap's accessible name. */
+/** Human-readable gap description (app language), also used as the gap's accessible name. */
 export function gapLabel(timeline: Song[], gapIndex: number): string {
-  if (timeline.length === 0) return 'Erste Karte platzieren'
-  if (gapIndex <= 0) return `Vor ${timeline[0].year}`
-  if (gapIndex >= timeline.length) return `Nach ${timeline[timeline.length - 1].year}`
-  return `Zwischen ${timeline[gapIndex - 1].year} und ${timeline[gapIndex].year}`
+  const t = msg(modesText)
+  if (timeline.length === 0) return t.firstCard
+  if (gapIndex <= 0) return t.before(timeline[0].year)
+  if (gapIndex >= timeline.length) return t.after(timeline[timeline.length - 1].year)
+  return t.between(timeline[gapIndex - 1].year, timeline[gapIndex].year)
 }
 
 /** All gap indices at which the song would be placed correctly. */

@@ -5,6 +5,8 @@
 
 import { useState, useEffect, useRef } from 'react'
 import { useGame, useUI } from '@/contexts'
+import { useMessages } from '@/i18n'
+import { gameText } from '@/i18n/messages/game'
 
 interface GuessFormProps {
   onSubmit: (title: string, artist: string, year: string) => void
@@ -12,6 +14,7 @@ interface GuessFormProps {
 }
 
 export function GuessForm({ onSubmit, onSkip }: GuessFormProps) {
+  const t = useMessages(gameText)
   const { gameMode, players, currentPlayer, tiebreak } = useGame()
   const { showModal, closeModal } = useUI()
   const [title, setTitle] = useState('')
@@ -20,7 +23,7 @@ export function GuessForm({ onSubmit, onSkip }: GuessFormProps) {
   const titleInputRef = useRef<HTMLInputElement>(null)
 
   // Get current player name
-  const playerName = players[currentPlayer]?.name || 'Spieler'
+  const playerName = players[currentPlayer]?.name || t.playerFallback
 
   // Auto-focus on title input when component mounts (Desktop/Laptop only)
   useEffect(() => {
@@ -51,13 +54,11 @@ export function GuessForm({ onSubmit, onSkip }: GuessFormProps) {
     // In Guess mode, at least title OR artist should be filled
     if (!title && !artist && !year) {
       showModal(
-        'Noch keine Antwort',
-        <p className="text-md-on-surface-variant">
-          Füll mindestens ein Feld aus. Wenn du gar keine Idee hast, überspring den Song.
-        </p>,
+        t.noAnswer,
+        <p className="text-md-on-surface-variant">{t.noAnswerBody}</p>,
         [
           {
-            text: 'Verstanden',
+            text: t.understood,
             variant: 'primary',
             onClick: () => {}
           }
@@ -78,15 +79,13 @@ export function GuessForm({ onSubmit, onSkip }: GuessFormProps) {
 
   const handleSkipClick = () => {
     showModal(
-      'Song überspringen?',
-      <p className="text-md-on-surface-variant">
-        Möchtest du diesen Song wirklich überspringen? Du erhältst keine Punkte.
-      </p>,
+      t.skipQuestion,
+      <p className="text-md-on-surface-variant">{t.skipBody}</p>,
       [
         // In Hardcore mode: Make "Abbrechen" primary so Enter closes modal instead of skipping
-        { text: 'Abbrechen', variant: gameMode === 'hardcore' ? 'primary' : 'secondary' },
+        { text: t.cancel, variant: gameMode === 'hardcore' ? 'primary' : 'secondary' },
         {
-          text: 'Überspringen',
+          text: t.skip,
           variant: 'danger',
           closeOnClick: false,
           onClick: () => {
@@ -103,15 +102,15 @@ export function GuessForm({ onSubmit, onSkip }: GuessFormProps) {
     <div className="surface p-5 sm:p-6">
       <h3 className="text-title-lg mb-4 text-md-on-surface">
         {gameMode === 'hardcore'
-          ? `${playerName}, was ist deine Vermutung?`
-          : `${playerName}, rate optional den Song`}
+          ? t.guessHardcore(playerName)
+          : t.guessOptional(playerName)}
       </h3>
 
       <form onSubmit={handleSubmit} className="space-y-4">
         {/* Title Input */}
         <div>
           <label htmlFor="title" className="block text-label-lg text-md-on-surface-variant mb-1.5">
-            Titel {gameMode === 'hardcore' && '(+5 Punkte)'}
+            {t.title} {gameMode === 'hardcore' && t.plus5}
           </label>
           <input
             ref={titleInputRef}
@@ -119,7 +118,7 @@ export function GuessForm({ onSubmit, onSkip }: GuessFormProps) {
             id="title"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
-            placeholder="Wie heißt der Song?"
+            placeholder={t.titlePlaceholder}
             autoComplete="off"
             className="field"
           />
@@ -128,14 +127,14 @@ export function GuessForm({ onSubmit, onSkip }: GuessFormProps) {
         {/* Artist Input */}
         <div>
           <label htmlFor="artist" className="block text-label-lg text-md-on-surface-variant mb-1.5">
-            Interpret {gameMode === 'hardcore' && '(+5 Punkte)'}
+            {t.artist} {gameMode === 'hardcore' && t.plus5}
           </label>
           <input
             type="text"
             id="artist"
             value={artist}
             onChange={(e) => setArtist(e.target.value)}
-            placeholder="Wer singt?"
+            placeholder={t.artistPlaceholder}
             autoComplete="off"
             className="field"
           />
@@ -144,7 +143,7 @@ export function GuessForm({ onSubmit, onSkip }: GuessFormProps) {
         {/* Year Input */}
         <div>
           <label htmlFor="year" className="block text-label-lg text-md-on-surface-variant mb-1.5">
-            Jahr {gameMode === 'hardcore' && '(+5/2/1 Punkte)'}
+            {t.year} {gameMode === 'hardcore' && t.plusYear}
           </label>
           <input
             type="number"
@@ -163,7 +162,7 @@ export function GuessForm({ onSubmit, onSkip }: GuessFormProps) {
         {/* Info */}
         {gameMode === 'hardcore' && (
           <p className="text-body-sm text-md-on-surface-variant">
-            Kleine Tippfehler und Groß- oder Kleinschreibung zählen nicht.
+            {t.typosHint}
           </p>
         )}
 
@@ -175,14 +174,14 @@ export function GuessForm({ onSubmit, onSkip }: GuessFormProps) {
               onClick={handleSkipClick}
               className="btn btn-tonal m3-state-layer flex-1"
             >
-              Überspringen
+              {t.skip}
             </button>
           )}
           <button
             type="submit"
             className="btn btn-brand m3-state-layer flex-[1.4]"
           >
-            {gameMode === 'hardcore' ? 'Prüfen' : 'Weiter'}
+            {gameMode === 'hardcore' ? t.check : t.next}
           </button>
         </div>
       </form>

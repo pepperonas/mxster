@@ -1,4 +1,6 @@
 import type { IconName } from '@/components/ui/Icon'
+import { msg } from '@/i18n/define'
+import { achievementText } from '@/i18n/messages/achievements'
 /**
  * Achievement System Types
  * Defines all available achievements and tracking structures
@@ -59,170 +61,158 @@ export interface PlayerAchievements {
 }
 
 // Achievement Definitions
-export const ACHIEVEMENT_DEFINITIONS: Record<AchievementId, Omit<Achievement, 'unlocked' | 'unlockedAt' | 'progress'>> = {
+type AchievementDefinition = Omit<Achievement, 'unlocked' | 'unlockedAt' | 'progress'>
+
+/** Name of an achievement in the current language (never from stored data). */
+export function achievementName(id: AchievementId): string {
+  const t = msg(achievementText) as unknown as Record<string, string>
+  return t[`${id}_name`] ?? id
+}
+
+/** Description of an achievement in the current language (never from stored data). */
+export function achievementDescription(id: AchievementId): string {
+  const t = msg(achievementText) as unknown as Record<string, string>
+  return t[`${id}_desc`] ?? ''
+}
+
+/** Name and description are read at access time, so they follow the language. */
+function localized(def: Omit<AchievementDefinition, 'name' | 'description'>): AchievementDefinition {
+  return {
+    ...def,
+    get name() {
+      return achievementName(def.id)
+    },
+    get description() {
+      return achievementDescription(def.id)
+    }
+  }
+}
+
+const DEFINITIONS: Record<AchievementId, Omit<AchievementDefinition, 'name' | 'description'>> = {
   [AchievementId.PERFECT_STREAK]: {
     id: AchievementId.PERFECT_STREAK,
-    name: 'Volltreffer-Serie',
-    description: '3x hintereinander alle Felder richtig erraten',
     icon: 'target',
     target: 3
   },
   [AchievementId.PERFECTIONIST]: {
     id: AchievementId.PERFECTIONIST,
-    name: 'Perfektionist',
-    description: 'Alle Songs in einem Spiel richtig einsortiert',
     icon: 'star'
   },
   [AchievementId.TIME_TRAVELER]: {
     id: AchievementId.TIME_TRAVELER,
-    name: 'Zeitreisender',
-    description: 'Songs aus 5 verschiedenen Dekaden korrekt platziert',
     icon: 'history',
     target: 5
   },
   [AchievementId.HARDCORE_CHAMPION]: {
     id: AchievementId.HARDCORE_CHAMPION,
-    name: 'Hardcore-Champion',
-    description: '100+ Punkte in einem Hardcore-Spiel erreicht',
     icon: 'trophy'
     // No target - one-time achievement (just unlock once)
   },
   [AchievementId.MARATHON_RUNNER]: {
     id: AchievementId.MARATHON_RUNNER,
-    name: 'Marathonläufer',
-    description: '50 Spiele gespielt',
     icon: 'run',
     target: 50
   },
   [AchievementId.UNBEATABLE]: {
     id: AchievementId.UNBEATABLE,
-    name: 'Unbesiegbar',
-    description: '5 Spiele in Folge gewonnen',
     icon: 'crown',
     target: 5
   },
   [AchievementId.DECADE_MASTER]: {
     id: AchievementId.DECADE_MASTER,
-    name: 'Dekaden-Kenner',
-    description: '10 Songs einer Dekade perfekt erraten',
     icon: 'library',
     target: 10
   },
   [AchievementId.LIGHTNING_FAST]: {
     id: AchievementId.LIGHTNING_FAST,
-    name: 'Blitzschnell',
-    description: 'Ein Spiel in unter 5 Minuten abgeschlossen',
     icon: 'bolt'
   },
   [AchievementId.COMEBACK_KING]: {
     id: AchievementId.COMEBACK_KING,
-    name: 'Comeback-King',
-    description: 'Vom letzten Platz zum Gewinner aufgestiegen',
     icon: 'flame'
   },
   [AchievementId.MUSIC_EXPERT]: {
     id: AchievementId.MUSIC_EXPERT,
-    name: 'Musikexperte',
-    description: '1000 Gesamtpunkte über alle Spiele erreicht',
     icon: 'school',
     target: 1000
   },
   [AchievementId.ZEITMASCHINE]: {
     id: AchievementId.ZEITMASCHINE,
-    name: 'Zeitmaschine',
-    description: 'Songs aus 3 verschiedenen Dekaden erraten',
     icon: 'alarm',
     target: 3
   },
   [AchievementId.GENRE_HOPPER]: {
     id: AchievementId.GENRE_HOPPER,
-    name: 'Genre-Hopper',
-    description: 'Songs aus 4 verschiedenen Musikrichtungen erraten',
     icon: 'palette',
     target: 4
   },
   [AchievementId.NAME_DROPPER]: {
     id: AchievementId.NAME_DROPPER,
-    name: 'Name-Dropper',
-    description: '5 Künstler hintereinander richtig erraten',
     icon: 'mic',
     target: 5
   },
   [AchievementId.SOCIAL_BUTTERFLY]: {
     id: AchievementId.SOCIAL_BUTTERFLY,
-    name: 'Gesellschaftsmensch',
-    description: 'Mit 5 verschiedenen Spielern gespielt',
     icon: 'groups',
     target: 5
   },
   [AchievementId.PUNKTEJAEGER]: {
     id: AchievementId.PUNKTEJAEGER,
-    name: 'Punktejäger',
-    description: '75+ Punkte in einem Hardcore-Spiel erreicht',
     icon: 'medal'
     // No target - one-time achievement (just unlock once)
   },
   [AchievementId.FLAWLESS_VICTORY]: {
     id: AchievementId.FLAWLESS_VICTORY,
-    name: 'Makellos',
-    description: 'Ein Spiel mit 150/150 Punkten gewinnen',
     icon: 'diamond'
   },
   [AchievementId.LEGENDARY_STREAK]: {
     id: AchievementId.LEGENDARY_STREAK,
-    name: 'Legendäre Serie',
-    description: '10 Spiele in Folge gewonnen',
     icon: 'sparkle',
     target: 10
   },
   [AchievementId.CENTURION]: {
     id: AchievementId.CENTURION,
-    name: 'Zenturio',
-    description: '100 Spiele gespielt',
     icon: 'verified',
     target: 100
   },
   [AchievementId.MASTER_OF_TIME]: {
     id: AchievementId.MASTER_OF_TIME,
-    name: 'Meister der Zeit',
-    description: 'Ein Spiel in unter 3 Minuten abgeschlossen',
     icon: 'timer'
   },
   [AchievementId.COMEBACK_PROFI]: {
     id: AchievementId.COMEBACK_PROFI,
-    name: 'Comeback-Profi',
-    description: '5x vom Rückstand zum Sieg gekommen',
     icon: 'trending',
     target: 5
   },
   [AchievementId.GRAND_MASTER]: {
     id: AchievementId.GRAND_MASTER,
-    name: 'Großmeister',
-    description: '5000 Gesamtpunkte über alle Spiele erreicht',
     icon: 'premium',
     target: 5000
   },
   [AchievementId.BOT_SLAYER_EASY]: {
     id: AchievementId.BOT_SLAYER_EASY,
-    name: 'Bot-Jäger',
-    description: '3x einen einfachen Bot besiegt',
     icon: 'bot',
     target: 3
   },
   [AchievementId.BOT_SLAYER_MEDIUM]: {
     id: AchievementId.BOT_SLAYER_MEDIUM,
-    name: 'Bot-Bezwinger',
-    description: '3x einen mittleren Bot besiegt',
     icon: 'shield',
     target: 3
   },
   [AchievementId.BOT_SLAYER_HARD]: {
     id: AchievementId.BOT_SLAYER_HARD,
-    name: 'Bot-Meister',
-    description: '3x einen schweren Bot besiegt',
     icon: 'rocket',
     target: 3
   }
+}
+
+export const ACHIEVEMENT_DEFINITIONS = Object.fromEntries(
+  Object.entries(DEFINITIONS).map(([id, def]) => [id, localized(def)])
+) as Record<AchievementId, AchievementDefinition>
+
+/** The achievement with name and description in the current language. */
+export function localizeAchievement<T extends Achievement>(a: T): T {
+  return { ...a, name: achievementName(a.id), description: achievementDescription(a.id) }
 }
 
 /** Icon of an achievement by id — stored achievements may still carry old emoji. */

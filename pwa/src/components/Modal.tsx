@@ -22,6 +22,8 @@ import { useUI } from '@/contexts'
 import { useMediaQuery, COMPACT_QUERY } from '@/hooks/useMediaQuery'
 import { spring } from '@/motion/springs'
 import type { ModalButton } from '@/types'
+import { useMessages } from '@/i18n'
+import { shellText } from '@/i18n/messages/shell'
 
 const FOCUSABLE =
   'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'
@@ -148,6 +150,7 @@ interface DialogSurfaceProps {
 }
 
 function DialogSurface({ dialog, compact, dismissible, onDismiss }: DialogSurfaceProps) {
+  const t = useMessages(shellText)
   const { closeModal } = useUI()
   const panelRef = useRef<HTMLDivElement>(null)
   const primaryRef = useRef<HTMLButtonElement>(null)
@@ -281,7 +284,7 @@ function DialogSurface({ dialog, compact, dismissible, onDismiss }: DialogSurfac
             <button
               onClick={onDismiss}
               className="touch-target rounded-m3-full m3-state-layer text-md-on-surface-variant hover:text-md-on-surface transition-colors"
-              aria-label="Schließen"
+              aria-label={t.closeDialog}
             >
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
                 <path d="M18 6L6 18M6 6l12 12" />

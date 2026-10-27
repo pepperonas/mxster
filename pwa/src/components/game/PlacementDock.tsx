@@ -28,6 +28,8 @@ import { pendingCardLayoutId } from './TimelineBoard'
 import { PositionStrip } from './PositionStrip'
 import { Icon } from '@/components/ui/Icon'
 import { SongCover, SongInfo } from './SongInfo'
+import { useMessages } from '@/i18n'
+import { gameText } from '@/i18n/messages/game'
 
 const EDGE_ZONE = 56
 const EDGE_DWELL_MS = 350
@@ -100,6 +102,7 @@ export function PlacementDock({
   onReveal,
   goal = 10
 }: PlacementDockProps) {
+  const t = useMessages(gameText)
   const stateKey = !state
     ? 'none'
     : state.kind === 'placing' || state.kind === 'challenge-choose'
@@ -119,7 +122,7 @@ export function PlacementDock({
               exit={{ opacity: 0, y: 24, transition: spring.effectsDefault }}
               transition={spring.spatialDefault}
               className="pointer-events-auto rounded-m3-xl bg-md-surface-container-high/95 backdrop-blur-md border border-md-outline-variant/60 shadow-m3-3 p-3 sm:p-4"
-              aria-label="Karte platzieren"
+              aria-label={t.placeCard}
             >
               {state.kind === 'placing' && state.previewGap === null && (
                 <DragStage song={state.song} boardRef={boardRef} onHoverGap={onHoverGap} onDrop={onPreview} />
@@ -138,21 +141,21 @@ export function PlacementDock({
               {state.kind === 'challenge-choose' && state.previewGap === null && (
                 <div className="flex flex-col sm:flex-row sm:items-center gap-3">
                   <p className="flex-1 text-title-sm text-md-on-surface">
-                    <span className="block text-label-md text-md-on-surface-variant">Einspruch von {state.challengerName}</span>
-                    Wohin gehört der Song? Tippe eine Lücke an.
+                    <span className="block text-label-md text-md-on-surface-variant">{t.objectionBy(state.challengerName)}</span>
+                    {t.whereDoesItGo}
                   </p>
                   <button type="button" onClick={() => onCancelChallenge?.()} className="btn btn-text">
-                    Doch kein Einspruch
+                    {t.noObjection}
                   </button>
                 </div>
               )}
               {state.kind === 'challenge-choose' && state.previewGap !== null && (
                 <ConfirmStage
-                  title={`Einspruch von ${state.challengerName}`}
+                  title={t.objectionBy(state.challengerName)}
                   tone="tertiary"
                   timeline={state.timeline}
                   gap={state.previewGap}
-                  confirmText="Einspruch einlegen"
+                  confirmText={t.lodgeObjection}
                   onBack={() => onPreview(null)}
                   onConfirm={onConfirm}
                 />
@@ -178,6 +181,7 @@ interface DragStageProps {
 }
 
 function DragStage({ song, boardRef, onHoverGap, onDrop }: DragStageProps) {
+  const t = useMessages(gameText)
   const stageRef = useRef<HTMLDivElement>(null)
   const x = useMotionValue(0)
   const xVelocity = useVelocity(x)
@@ -305,7 +309,7 @@ function DragStage({ song, boardRef, onHoverGap, onDrop }: DragStageProps) {
         style={{ x, rotate: tilt }}
         transition={spring.spatialDefault}
         className="relative flex items-center gap-3 min-h-[56px] px-3 py-1.5 rounded-m3-lg border-2 border-md-primary bg-md-primary-container text-md-on-primary-container touch-none select-none cursor-grab active:cursor-grabbing"
-        aria-label={`${song.title} von ${song.artist} — ziehe die Karte auf die Zeitleiste oder tippe eine Lücke`}
+        aria-label={t.dragCard(song.title, song.artist)}
         role="group"
       >
         <span className="flex-shrink-0 w-[4.25rem] h-10 grid place-items-center rounded-m3-md bg-md-surface-container-highest text-title-md text-md-on-surface-variant tabular-nums">
@@ -317,7 +321,7 @@ function DragStage({ song, boardRef, onHoverGap, onDrop }: DragStageProps) {
         </span>
         <GripIcon />
       </m.div>
-      <p className="text-center text-body-sm text-md-on-surface-variant">Karte in eine Lücke ziehen oder Lücke antippen</p>
+      <p className="text-center text-body-sm text-md-on-surface-variant">{t.dragHint}</p>
     </div>
   )
 }
@@ -350,8 +354,8 @@ function ConfirmStage({
   gap,
   onBack,
   onConfirm,
-  title = 'Platzieren – oder andere Lücke antippen',
-  confirmText = 'Hier platzieren',
+  title,
+  confirmText,
   tone = 'primary'
 }: {
   timeline: Song[]
@@ -362,6 +366,7 @@ function ConfirmStage({
   confirmText?: string
   tone?: 'primary' | 'tertiary'
 }) {
+  const t = useMessages(gameText)
   const confirmRef = useRef<HTMLButtonElement>(null)
   useEffect(() => {
     confirmRef.current?.focus({ preventScroll: true })
@@ -370,15 +375,15 @@ function ConfirmStage({
   return (
     <div className="flex flex-col sm:flex-row sm:items-center gap-3">
       <div className="flex-1 min-w-0 space-y-2">
-        <p className="text-label-md text-md-on-surface-variant">{title}</p>
+        <p className="text-label-md text-md-on-surface-variant">{title ?? t.confirmTitle}</p>
         <PositionStrip timeline={timeline} gap={gap} tone={tone} />
       </div>
       <div className="flex gap-2">
         <button type="button" onClick={onBack} className="btn btn-text flex-1 sm:flex-none">
-          Zurück
+          {t.back}
         </button>
         <button ref={confirmRef} type="button" onClick={onConfirm} className="btn btn-brand flex-1 sm:flex-none">
-          {confirmText}
+          {confirmText ?? t.placeHere}
         </button>
       </div>
     </div>
@@ -396,6 +401,7 @@ function ChallengeOfferStage({
   onChallenge: (seat: number) => void
   onReveal: () => void
 }) {
+  const t = useMessages(gameText)
   const revealRef = useRef<HTMLButtonElement>(null)
   useEffect(() => {
     revealRef.current?.focus({ preventScroll: true })
@@ -403,18 +409,18 @@ function ChallengeOfferStage({
   return (
     <div className="flex flex-col gap-3">
       <div className="space-y-2">
-        <p className="text-title-md text-md-on-surface">{state.placerName} hat gelegt</p>
+        <p className="text-title-md text-md-on-surface">{t.hasPlaced(state.placerName)}</p>
         <PositionStrip timeline={state.timeline} gap={state.gap} />
-        <p className="text-body-sm text-md-on-surface-variant">Liegt die Karte falsch? Wer widerspricht, legt sie woandershin.</p>
+        <p className="text-body-sm text-md-on-surface-variant">{t.objectionHint}</p>
       </div>
-      <div className="flex flex-wrap gap-2" role="group" aria-label="Einspruch einlegen">
+      <div className="flex flex-wrap gap-2" role="group" aria-label={t.lodgeObjection}>
         {state.challengers.map((c) => (
           <button
             key={c.seat}
             type="button"
             className="chip m3-state-layer"
             onClick={() => onChallenge(c.seat)}
-            aria-label={`${c.name} legt Einspruch ein, noch ${c.left} übrig`}
+            aria-label={t.objectsLeft(c.name, c.left)}
           >
             <Icon name="hand" size={18} />
             {c.name}
@@ -423,10 +429,10 @@ function ChallengeOfferStage({
         ))}
       </div>
       {state.revealBy ? (
-        <p className="text-body-sm text-md-on-surface-variant text-center py-2">{state.revealBy} deckt auf, sobald niemand mehr widerspricht.</p>
+        <p className="text-body-sm text-md-on-surface-variant text-center py-2">{t.revealsWhenNoOne(state.revealBy)}</p>
       ) : (
         <button ref={revealRef} type="button" onClick={onReveal} className="btn btn-brand">
-          Kein Einspruch – aufdecken
+          {t.noObjectionReveal}
         </button>
       )}
     </div>
@@ -446,16 +452,19 @@ export function ChallengeDots({ left, max = 3 }: { left: number; max?: number })
 
 // ─── result ────────────────────────────────────────────────────────────────
 
-function verdictText(state: Extract<DockState, { kind: 'revealed' }>): { title: string; detail?: string; good: boolean } {
+function verdictText(
+  state: Extract<DockState, { kind: 'revealed' }>,
+  t: (typeof gameText)['de']
+): { title: string; detail?: string; good: boolean } {
   const { isFirstCard, isCorrect, challenge } = state
-  if (isFirstCard) return { title: 'Startkarte gelegt', good: true }
+  if (isFirstCard) return { title: t.startCardPlaced, good: true }
   if (!challenge)
     return isCorrect
-      ? { title: 'Richtig platziert!', good: true }
-      : { title: 'Leider falsch', detail: state.rightPlace ? `Richtig wäre: ${state.rightPlace}.` : undefined, good: false }
-  if (isCorrect) return { title: 'Richtig platziert!', detail: `Der Einspruch von ${challenge.name} war daneben.`, good: true }
-  if (challenge.won) return { title: 'Einspruch erfolgreich!', detail: `${challenge.name} bekommt die Karte.`, good: true }
-  return { title: 'Beide daneben', detail: 'Die Karte bekommt niemand.', good: false }
+      ? { title: t.placedRight, good: true }
+      : { title: t.wrong, detail: state.rightPlace ? t.rightWouldBe(state.rightPlace) : undefined, good: false }
+  if (isCorrect) return { title: t.placedRight, detail: t.objectionMissed(challenge.name), good: true }
+  if (challenge.won) return { title: t.objectionWon, detail: t.getsCard(challenge.name), good: true }
+  return { title: t.bothWrong, detail: t.nobodyGetsCard, good: false }
 }
 
 function ResultStage({
@@ -467,12 +476,13 @@ function ResultStage({
   goal: number
   onContinue: () => void
 }) {
+  const t = useMessages(gameText)
   const nextRef = useRef<HTMLButtonElement>(null)
   useEffect(() => {
     nextRef.current?.focus({ preventScroll: true })
   }, [])
   const { isCorrect, song, cards, playerName } = state
-  const verdict = verdictText(state)
+  const verdict = verdictText(state, t)
 
   return (
     <div className="flex flex-col gap-3">
@@ -514,10 +524,10 @@ function ResultStage({
           </div>
         </div>
         {state.continueBy ? (
-          <p className="text-body-sm text-md-on-surface-variant max-w-[9rem] text-right">Weiter geht es bei {state.continueBy}</p>
+          <p className="text-body-sm text-md-on-surface-variant max-w-[9rem] text-right">{t.continuesAt(state.continueBy)}</p>
         ) : (
           <button ref={nextRef} type="button" onClick={onContinue} className="btn btn-brand">
-            Weiter
+            {t.next}
           </button>
         )}
       </div>
@@ -538,10 +548,11 @@ function WaitingStage({ text }: { text: string }) {
 }
 
 function BotStage({ name }: { name: string }) {
+  const t = useMessages(gameText)
   return (
     <div className="flex items-center justify-center gap-3 py-2 text-title-sm text-md-on-surface">
       <Icon name="bot" size={20} />
-      <span>{name} überlegt</span>
+      <span>{t.thinking(name)}</span>
       <span className="flex gap-1" aria-hidden="true">
         {[0, 1, 2].map((i) => (
           <m.span

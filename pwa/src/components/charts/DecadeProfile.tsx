@@ -11,10 +11,13 @@ import { SegmentedControl } from '@/components/ui/SegmentedControl'
 import { decadeLabel, DECADES } from '@/game/songPool'
 import { decadeRates, decadeShares, type PlayerSummary } from '@/game/stats'
 import { RadarChart } from './RadarChart'
+import { useMessages } from '@/i18n'
+import { statsText } from '@/i18n/messages/stats'
 
 type Metric = 'rate' | 'cards'
 
 export function DecadeProfile({ people }: { people: PlayerSummary[] }) {
+  const t = useMessages(statsText)
   const hasRates = people.some((p) => p.tries > 0)
   const [picked, setMetric] = useState<Metric | null>(null)
   const metric: Metric = picked ?? (hasRates ? 'rate' : 'cards')
@@ -27,7 +30,7 @@ export function DecadeProfile({ people }: { people: PlayerSummary[] }) {
           return {
             name: p.name,
             values: r.map((d) => d.rate),
-            detail: r.map((d) => `${p.byDecade[d.decade].correct} von ${d.tries}`)
+            detail: r.map((d) => t.rightOf(p.byDecade[d.decade].correct, d.tries))
           }
         })
       : people.map((p) => {
@@ -35,7 +38,7 @@ export function DecadeProfile({ people }: { people: PlayerSummary[] }) {
           return {
             name: p.name,
             values: s.map((d) => (d.cards > 0 ? d.share : null)),
-            detail: s.map((d) => `${d.cards} Karten`)
+            detail: s.map((d) => t.cardCount(d.cards))
           }
         })
 
@@ -46,23 +49,23 @@ export function DecadeProfile({ people }: { people: PlayerSummary[] }) {
   return (
     <div className="space-y-3">
       <SegmentedControl<Metric>
-        label="Kennzahl"
+        label={t.metric}
         value={metric}
         onChange={setMetric}
         segments={[
-          { value: 'rate', label: 'Trefferquote' },
-          { value: 'cards', label: 'Karten' }
+          { value: 'rate', label: t.hitRate },
+          { value: 'cards', label: t.cards }
         ]}
       />
       <p className="text-body-sm text-md-on-surface-variant">
         {metric === 'rate'
-          ? 'Wie oft ein Song aus dem Jahrzehnt richtig lag. Erste Karten zählen nicht, die liegen immer richtig.'
-          : 'Aus welchen Jahrzehnten die richtig gelegten Songs stammen, als Anteil.'}
+          ? t.rateHint
+          : t.cardsHint}
       </p>
 
       {metric === 'rate' && !hasRates ? (
         <p className="rounded-m3-lg bg-md-surface-container p-4 text-body-md text-md-on-surface-variant">
-          Trefferquoten gibt es ab der nächsten Runde: Erst seit dieser Version merkt sich mxtape auch die falschen Karten.
+          {t.noRatesYet}
         </p>
       ) : (
         <>
@@ -70,18 +73,18 @@ export function DecadeProfile({ people }: { people: PlayerSummary[] }) {
             axes={axes}
             series={series}
             max={max}
-            label={`${metric === 'rate' ? 'Trefferquote' : 'Anteil der Karten'} je Jahrzehnt für ${people.map((p) => p.name).join(', ')}`}
+            label={t.profileAria(metric === 'rate' ? t.hitRate : t.shareOfCards, people.map((p) => p.name).join(', '))}
           />
           <details className="group">
             <summary className="cursor-pointer text-label-lg text-md-primary py-2 list-none">
-              <span className="group-open:hidden">Werte als Tabelle</span>
-              <span className="hidden group-open:inline">Tabelle schließen</span>
+              <span className="group-open:hidden">{t.showTable}</span>
+              <span className="hidden group-open:inline">{t.hideTable}</span>
             </summary>
             <div className="overflow-x-auto">
               <table className="w-full text-body-sm tabular">
                 <thead>
                   <tr className="text-md-on-surface-variant text-left">
-                    <th className="py-1 pr-3 font-medium">Jahrzehnt</th>
+                    <th className="py-1 pr-3 font-medium">{t.decade}</th>
                     {series.map((s) => (
                       <th key={s.name} className="py-1 pr-3 font-medium truncate max-w-[8rem]">
                         {s.name}
@@ -95,7 +98,7 @@ export function DecadeProfile({ people }: { people: PlayerSummary[] }) {
                       <td className="py-1 pr-3">{a}</td>
                       {series.map((s) => (
                         <td key={s.name} className="py-1 pr-3">
-                          {s.values[i] === null ? '–' : `${Math.round((s.values[i] as number) * 100)} %`}
+                          {s.values[i] === null ? '–' : t.percent(Math.round((s.values[i] as number) * 100))}
                           <span className="text-md-on-surface-variant"> ({s.detail[i]})</span>
                         </td>
                       ))}

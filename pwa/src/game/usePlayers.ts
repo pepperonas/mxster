@@ -7,6 +7,7 @@ import { useCallback, useMemo } from 'react'
 import { useAchievements, useGameHistory, useSettings } from '@/contexts'
 import { useMe } from '@/auth/AuthContext'
 import { ownPlayerName } from './owner'
+import { localeOf } from '@/i18n'
 import { knownPlayers, summarize, type PlayerSummary } from './stats'
 
 export interface KnownPlayer {
@@ -40,7 +41,7 @@ export function usePlayers() {
         achievements: playerAchievements.get(name)?.achievements.filter((a) => a.unlocked).length ?? 0
       }))
       .sort(
-        (a, b) => Number(b.isMe) - Number(a.isMe) || (b.summary?.games ?? 0) - (a.summary?.games ?? 0) || a.name.localeCompare(b.name, 'de')
+        (a, b) => Number(b.isMe) - Number(a.isMe) || (b.summary?.games ?? 0) - (a.summary?.games ?? 0) || a.name.localeCompare(b.name, localeOf())
       )
   }, [history, myName, settings.savedPlayers, settings.hiddenPlayers, summaries, playerAchievements])
 

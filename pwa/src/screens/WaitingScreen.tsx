@@ -9,26 +9,22 @@ import { useAuth } from '@/auth/AuthContext'
 import { Vinyl } from '@/components/ui/Vinyl'
 import { Icon } from '@/components/ui/Icon'
 import { spring } from '@/motion/springs'
-import { LegalLinks } from './LegalLinks'
+import { LegalLinks } from '@/legal/LegalScreen'
+import { useMessages } from '@/i18n'
+import { authText } from '@/i18n/messages/auth'
 
 type Variant = 'pending' | 'rejected' | 'blocked' | 'offline'
 
-const COPY: Record<Variant, { title: (name: string) => string; body: string }> = {
-  pending: {
-    title: (name) => (name ? `Fast geschafft, ${name}.` : 'Fast geschafft.'),
-    body: 'Dein Konto wartet auf Freischaltung. Sobald es freigegeben ist, geht es hier von selbst weiter — du musst nichts neu laden.'
-  },
-  rejected: {
-    title: () => 'Kein Zugang.',
-    body: 'Dieses Konto wurde nicht freigeschaltet. Wenn du glaubst, dass das ein Versehen ist, sprich Martin direkt an.'
-  },
-  blocked: {
-    title: () => 'Zugang gesperrt.',
-    body: 'Dieses Konto ist gesperrt. Wenn du glaubst, dass das ein Versehen ist, sprich Martin direkt an.'
-  },
-  offline: {
-    title: () => 'Keine Verbindung.',
-    body: 'Der Server antwortet gerade nicht. Prüf deine Internetverbindung und versuch es noch einmal.'
+function copyFor(t: (typeof authText)['de'], variant: Variant, name: string) {
+  switch (variant) {
+    case 'pending':
+      return { title: t.pendingTitle(name), body: t.pendingBody }
+    case 'rejected':
+      return { title: t.rejectedTitle, body: t.rejectedBody }
+    case 'blocked':
+      return { title: t.blockedTitle, body: t.blockedBody }
+    case 'offline':
+      return { title: t.offlineTitle, body: t.offlineBody }
   }
 }
 
@@ -37,7 +33,8 @@ export function WaitingScreen({ variant }: { variant: Variant }) {
   const [checking, setChecking] = useState(false)
   const me = state.kind === 'signed-in' ? state.me : null
   const firstName = me?.name.split(' ')[0] ?? ''
-  const copy = COPY[variant]
+  const t = useMessages(authText)
+  const copy = copyFor(t, variant, firstName)
 
   const check = async () => {
     setChecking(true)
@@ -60,7 +57,7 @@ export function WaitingScreen({ variant }: { variant: Variant }) {
           />
         </m.div>
 
-        <h1 className="text-headline-lg text-md-on-surface">{copy.title(firstName)}</h1>
+        <h1 className="text-headline-lg text-md-on-surface">{copy.title}</h1>
         <p className="mt-3 text-body-lg text-md-on-surface-variant max-w-[38ch]">{copy.body}</p>
 
         {me && (
@@ -80,13 +77,13 @@ export function WaitingScreen({ variant }: { variant: Variant }) {
           {(variant === 'pending' || variant === 'offline') && (
             <button type="button" className="btn btn-tonal m3-state-layer" onClick={() => void check()} disabled={checking}>
               <Icon name="replay" size={20} />
-              {checking ? 'Prüfe …' : 'Jetzt prüfen'}
+              {checking ? t.checking : t.checkNow}
             </button>
           )}
           {me && (
             <button type="button" className="btn btn-text m3-state-layer" onClick={() => void logout()}>
               <Icon name="logout" size={20} />
-              Abmelden
+              {t.signOut}
             </button>
           )}
         </div>

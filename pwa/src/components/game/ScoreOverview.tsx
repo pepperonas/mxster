@@ -11,6 +11,8 @@ import { useGame } from '@/contexts'
 import { TrophyIcon } from '@/utils/icons'
 import { spring } from '@/motion/springs'
 import { AnimatedNumber } from '@/components/ui/AnimatedNumber'
+import { useMessages } from '@/i18n'
+import { gameText } from '@/i18n/messages/game'
 
 /** Podium colours for the top three: brand, accent, neutral. */
 const PODIUM = [
@@ -20,7 +22,8 @@ const PODIUM = [
 ]
 
 export function ScoreOverview() {
-  const { players, currentPlayer, gameMode } = useGame()
+  const t = useMessages(gameText)
+  const { players, currentPlayer, gameMode, goal } = useGame()
   if (gameMode !== 'hardcore') return null
 
   // Stable tie order: score desc, then seat order
@@ -33,7 +36,7 @@ export function ScoreOverview() {
       <div className="flex items-center gap-3 mb-4">
         <TrophyIcon size={22} className="text-md-tertiary" />
         <h3 id="score-title" className="text-title-lg text-md-on-surface">
-          Punkteübersicht
+          {t.scoreTitle}
         </h3>
       </div>
 
@@ -56,9 +59,9 @@ export function ScoreOverview() {
                 />
               )}
               <div className="flex items-center gap-3 min-w-0">
-                <span className="w-9 text-center text-xl" aria-label={`Platz ${rank + 1}`}>
+                <span className="w-9 text-center text-xl" aria-label={t.place(rank + 1)}>
                   {rank < 3 ? (
-                    <span className={`w-8 h-8 grid place-items-center rounded-m3-full text-label-lg tabular ${PODIUM[rank]}`} aria-label={`Platz ${rank + 1}`}>
+                    <span className={`w-8 h-8 grid place-items-center rounded-m3-full text-label-lg tabular ${PODIUM[rank]}`} aria-label={t.place(rank + 1)}>
                       {rank === 0 ? <Icon name="crown" size={18} /> : rank + 1}
                     </span>
                   ) : (
@@ -68,10 +71,10 @@ export function ScoreOverview() {
                 <div className="min-w-0">
                   <p className="text-title-sm text-md-on-surface truncate">
                     {player.name}
-                    {active && <span className="sr-only"> (am Zug)</span>}
+                    {active && <span className="sr-only">{t.onTurn}</span>}
                   </p>
                   <p className="text-body-sm text-md-on-surface-variant">
-                    <AnimatedNumber value={player.cards} /> {player.cards === 1 ? 'Karte' : 'Karten'}
+                    <AnimatedNumber value={player.cards} /> {t.cardWord(player.cards)}
                   </p>
                 </div>
               </div>
@@ -84,7 +87,7 @@ export function ScoreOverview() {
       </ol>
 
       <p className="mt-4 pt-3 border-t border-md-outline-variant/60 text-center text-body-sm text-md-on-surface-variant">
-        Gewinner: die meisten Punkte nach 10 Karten, bei Gleichstand Stechen
+        {t.scoreWinner(goal)}
       </p>
     </section>
   )

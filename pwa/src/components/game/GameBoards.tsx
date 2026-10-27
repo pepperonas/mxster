@@ -14,6 +14,8 @@ import { spring } from '@/motion/springs'
 import { AnimatedNumber } from '@/components/ui/AnimatedNumber'
 import { TimelineBoard, type BoardReveal } from './TimelineBoard'
 import { initialOf } from '@/game/teams'
+import { useMessages } from '@/i18n'
+import { gameText } from '@/i18n/messages/game'
 
 interface GameBoardsProps {
   interactive: boolean
@@ -41,6 +43,7 @@ export function GameBoards({
   placedBy,
   previewIsChallenge = false
 }: GameBoardsProps) {
+  const t = useMessages(gameText)
   const { players, currentPlayer, gameMode, globalTimeline, currentSong, goal } = useGame()
   const challengeProps = { placedGap, placedBy, previewIsChallenge }
   const { settings } = useSettings()
@@ -49,8 +52,8 @@ export function GameBoards({
   if (gameMode === 'timeline_global') {
     const total = players.reduce((sum, p) => sum + p.cards, 0)
     return (
-      <BoardCard title="Globale Zeitleiste" cards={total} goal={goal}>
-        <ul className="flex flex-wrap gap-2 mb-4" aria-label="Karten je Spieler">
+      <BoardCard title={t.sharedTimeline} cards={total} goal={goal}>
+        <ul className="flex flex-wrap gap-2 mb-4" aria-label={t.cardsPerPlayer}>
           {players.map((p, i) => (
             <li
               key={p.name}
@@ -66,7 +69,7 @@ export function GameBoards({
           ))}
         </ul>
         <TimelineBoard
-          label="Globale Zeitleiste"
+          label={t.sharedTimeline}
           boardRef={boardRef}
           cards={globalTimeline.map((c) => ({ song: c.song, owner: players[c.playerId]?.name }))}
           interactive={interactive}
@@ -90,9 +93,9 @@ export function GameBoards({
 
   return (
     <div className="space-y-4">
-      <BoardCard title={`Zeitleiste von ${focus.name}`} cards={focus.cards} goal={goal}>
+      <BoardCard title={t.timelineOf(focus.name)} cards={focus.cards} goal={goal}>
         <TimelineBoard
-          label={`Zeitleiste von ${focus.name}`}
+          label={t.timelineOf(focus.name)}
           boardRef={boardRef}
           cards={focus.timeline.map((song) => ({ song }))}
           interactive={gameMode !== 'hardcore' && interactive}
@@ -106,7 +109,7 @@ export function GameBoards({
         />
       </BoardCard>
       {others.length > 0 && (
-        <ul className="grid gap-3 sm:grid-cols-2" aria-label="Weitere Spieler">
+        <ul className="grid gap-3 sm:grid-cols-2" aria-label={t.otherPlayers}>
           {others.map(({ p }) => (
             <PlayerSummary key={p.name} player={p} hideYears={hideYears} goal={goal} />
           ))}
@@ -145,6 +148,7 @@ function ProgressBar({ value }: { value: number }) {
 }
 
 function PlayerSummary({ player, hideYears, goal }: { player: Player; hideYears: boolean; goal: number }) {
+  const t = useMessages(gameText)
   return (
     <m.li layout transition={spring.spatialDefault} className="rounded-m3-lg bg-md-surface-container-low p-3">
       <div className="flex items-center justify-between gap-2 mb-2">
@@ -156,7 +160,7 @@ function PlayerSummary({ player, hideYears, goal }: { player: Player; hideYears:
       {player.members && <p className="text-body-sm text-md-on-surface-variant truncate -mt-1 mb-2">{player.members.join(', ')}</p>}
       <ProgressBar value={player.cards / goal} />
       {player.timeline.length > 0 && (
-        <ol className="flex flex-wrap gap-1 mt-2" aria-label={`Jahre von ${player.name}`}>
+        <ol className="flex flex-wrap gap-1 mt-2" aria-label={t.yearsOf(player.name)}>
           {player.timeline.map((song) => (
             <m.li
               key={song.id}

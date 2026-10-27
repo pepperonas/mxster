@@ -39,6 +39,8 @@ import { eligibleChallengers, resolveChallenge, type ChallengeClaim } from './ch
 import { isTeam } from './teams'
 import { deriveTurn } from './deriveTurn'
 import { guessRecord, placementRecord } from './turnRecord'
+import { msg } from '@/i18n'
+import { modesText } from '@/i18n/messages/modes'
 
 export type { Reveal, TurnPhase } from './turn'
 
@@ -139,15 +141,15 @@ export function useTurnFlow({ onGameOver, onSkipNotice }: Options) {
   const drawSong = useCallback((): Song | null => {
     const { song, widened } = pickSong(songs, decades, playedSongs, settings.recentSongs, Math.random, exotics)
     if (!song) {
-      addToast('Alle Songs wurden bereits gespielt!', 'warning')
+      addToast(msg(modesText).allPlayed, 'warning')
       return null
     }
     if (widened && !widenedNoticeShown.current) {
       widenedNoticeShown.current = true
       addToast(
         song.exotic && !exotics
-          ? 'Die bekannten Songs sind durch – ab jetzt kommen auch Exoten.'
-          : 'Die gewählten Jahrzehnte sind durch – ab jetzt kommen Songs aus allen Jahrzehnten.',
+          ? msg(modesText).widenedExotics
+          : msg(modesText).widenedDecades,
         'info'
       )
     }
@@ -170,7 +172,7 @@ export function useTurnFlow({ onGameOver, onSkipNotice }: Options) {
           turns: logRef.current,
           durationMs: startedAt ? Date.now() - startedAt : undefined
         })
-        addToast('Spiel wurde zur Historie hinzugefügt!', 'success')
+        addToast(msg(modesText).savedToHistory, 'success')
       } catch (error) {
         console.error('Failed to save game:', error)
       }
@@ -207,7 +209,7 @@ export function useTurnFlow({ onGameOver, onSkipNotice }: Options) {
           return 'over'
         }
         if (step.tiebreak.round > tiebreak.round) {
-          addToast(`Immer noch gleichauf – Stechen, Runde ${step.tiebreak.round}`, 'info')
+          addToast(msg(modesText).stillTied(step.tiebreak.round), 'info')
         }
         setTiebreak(step.tiebreak)
         return 'next'
@@ -220,7 +222,7 @@ export function useTurnFlow({ onGameOver, onSkipNotice }: Options) {
         return 'over'
       }
       setTiebreak(startTiebreak(top))
-      addToast(`Gleichstand! Stechen zwischen ${top.map((i) => finalPlayers[i].name).join(' und ')}`, 'info')
+      addToast(msg(modesText).tie(top.map((i) => finalPlayers[i].name)), 'info')
       return 'next'
     },
     [tiebreak, gameMode, goal, setTiebreak, finishGame, addToast]
@@ -425,7 +427,7 @@ export function useTurnFlow({ onGameOver, onSkipNotice }: Options) {
     setReveal(null)
     if (settleTurn(reveal.playerIndex, updatedPlayers) === 'over') return
     nextTurn()
-    addToast('Karte platziert!', 'success')
+    addToast(msg(modesText).cardPlaced, 'success')
   }, [reveal, gameOver, players, settleTurn, nextTurn, updatePlayer, applyEffects, pushRanking, setReveal, addToast, book])
 
   // ── Bots ─────────────────────────────────────────────────────────────────
@@ -435,7 +437,7 @@ export function useTurnFlow({ onGameOver, onSkipNotice }: Options) {
     else placeCard(action.data.position)
   })
   const onBotError = useEffectEvent(() => {
-    addToast('Bot-Fehler aufgetreten', 'error')
+    addToast(msg(modesText).botError, 'error')
     nextTurn()
   })
 

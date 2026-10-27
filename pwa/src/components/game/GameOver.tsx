@@ -10,6 +10,8 @@ import { celebrate } from '@/motion/celebrate'
 import { spring } from '@/motion/springs'
 import type { GameMode, Player } from '@/types'
 import { rankPlayers } from '@/game/tiebreak'
+import { useMessages } from '@/i18n'
+import { gameText } from '@/i18n/messages/game'
 
 interface GameOverProps {
   winner: Player
@@ -23,7 +25,8 @@ interface GameOverProps {
   homeLabel?: string
 }
 
-export function GameOver({ winner, players, mode, onRematch, onHome, rematchBy, homeLabel = 'Zur Startseite' }: GameOverProps) {
+export function GameOver({ winner, players, mode, onRematch, onHome, rematchBy, homeLabel }: GameOverProps) {
+  const t = useMessages(gameText)
   const hardcore = mode === 'hardcore'
   const ranked = rankPlayers(players, mode, winner.name)
 
@@ -50,7 +53,7 @@ export function GameOver({ winner, players, mode, onRematch, onHome, rematchBy, 
         </m.div>
 
         <m.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ ...spring.spatialDefault, delay: 0.25 }}>
-          <p className="mt-8 text-title-md text-md-on-surface-variant text-center">Gewonnen hat</p>
+          <p className="mt-8 text-title-md text-md-on-surface-variant text-center">{t.winnerIs}</p>
           <h1 id="game-over-title" className="text-poster text-center break-words" style={{ fontSize: 'clamp(2.8rem, 14vw, 4.5rem)' }}>
             {winner.name}
           </h1>
@@ -73,7 +76,7 @@ export function GameOver({ winner, players, mode, onRematch, onHome, rematchBy, 
                 <span className="block truncate text-body-lg">{p.name}</span>
                 {p.members && <span className="block truncate text-body-sm opacity-80">{p.members.join(', ')}</span>}
               </span>
-              <span className="text-title-md tabular">{hardcore ? `${p.score} Pkt.` : `${p.cards} Songs`}</span>
+              <span className="text-title-md tabular">{hardcore ? t.pointsValue(p.score) : t.songsValue(p.cards)}</span>
             </m.li>
           ))}
         </ol>
@@ -82,13 +85,13 @@ export function GameOver({ winner, players, mode, onRematch, onHome, rematchBy, 
           {onRematch ? (
             <button type="button" className="btn btn-lg btn-brand m3-state-layer w-full" onClick={onRematch}>
               <Icon name="replay" />
-              Nochmal mit denselben Leuten
+              {t.rematch}
             </button>
           ) : rematchBy ? (
-            <p className="text-center text-body-md text-md-on-surface-variant">Eine neue Runde startet {rematchBy}.</p>
+            <p className="text-center text-body-md text-md-on-surface-variant">{t.rematchBy(rematchBy)}</p>
           ) : null}
           <button type="button" className="btn btn-text m3-state-layer w-full" onClick={onHome}>
-            {homeLabel}
+            {homeLabel ?? t.toHome}
           </button>
         </div>
       </div>

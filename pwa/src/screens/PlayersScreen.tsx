@@ -21,16 +21,20 @@ import { decadeLabel, DECADES } from '@/game/songPool'
 import { decadeRates } from '@/game/stats'
 import { formatDay } from '@/utils/format'
 import { spring } from '@/motion/springs'
+import { localeOf, msg, useMessages } from '@/i18n'
+import { playersText } from '@/i18n/messages/players'
+import { statsText } from '@/i18n/messages/stats'
 
 const MAX_NAME = 20
-const pct = (v: number | null) => (v === null ? '–' : `${Math.round(v * 100)} %`)
+const pct = (v: number | null) => (v === null ? '–' : msg(statsText).percent(Math.round(v * 100)))
 
 /** One line about a person: rounds, wins, hit rate. */
 function line(p: KnownPlayer): string {
+  const t = msg(playersText)
   const s = p.summary
-  if (!s || s.games === 0) return 'Noch keine Runde gespielt'
-  const parts = [`${s.games} ${s.games === 1 ? 'Runde' : 'Runden'}`, `${s.wins} ${s.wins === 1 ? 'Sieg' : 'Siege'}`]
-  if (s.accuracy !== null) parts.push(`${pct(s.accuracy)} richtig`)
+  if (!s || s.games === 0) return t.neverPlayed
+  const parts = [t.rounds(s.games), t.wins(s.wins)]
+  if (s.accuracy !== null) parts.push(t.right(pct(s.accuracy)))
   return parts.join(' · ')
 }
 
@@ -40,6 +44,7 @@ export function PlayersScreen() {
   const me = useMe()
   const navigate = useAppNavigate()
   const { players, add, setQuickPick } = usePlayers()
+  const t = useMessages(playersText)
   const [name, setName] = useState('')
   const [error, setError] = useState<string | null>(null)
 
@@ -48,7 +53,7 @@ export function PlayersScreen() {
     const n = name.trim()
     if (!n) return
     if (players.some((p) => p.name.toLowerCase() === n.toLowerCase())) {
-      setError(`${n} gibt es schon.`)
+      setError(t.exists(n))
       return
     }
     add(n)
@@ -58,19 +63,19 @@ export function PlayersScreen() {
 
   return (
     <div className="pt-4 md:pt-10">
-      <h1 className="text-headline-md">Spieler</h1>
-      <p className="meta mt-1 mb-5">Mit Stern markierte Personen stehen im Spielaufbau zur Schnellauswahl bereit.</p>
+      <h1 className="text-headline-md">{t.title}</h1>
+      <p className="meta mt-1 mb-5">{t.intro}</p>
 
       <form onSubmit={submit} className="flex gap-2 mb-1">
         <label htmlFor="new-player" className="sr-only">
-          Name
+          {t.name}
         </label>
         <input
           id="new-player"
           className="field flex-1"
           value={name}
           maxLength={MAX_NAME}
-          placeholder="Neue Person"
+          placeholder={t.newPerson}
           autoComplete="off"
           onChange={(e) => {
             setName(e.target.value)
@@ -81,7 +86,7 @@ export function PlayersScreen() {
         />
         <button type="submit" className="btn btn-tonal m3-state-layer" disabled={!name.trim()}>
           <Icon name="add" size={20} />
-          Hinzufügen
+          {t.add}
         </button>
       </form>
       <p id="new-player-error" className="min-h-[1.5rem] text-body-sm text-md-error" role="alert">
@@ -111,7 +116,7 @@ export function PlayersScreen() {
                   <span className="text-title-md truncate">{p.name}</span>
                   {p.isMe && (
                     <span className="shrink-0 rounded-m3-full bg-md-secondary-container text-md-on-secondary-container px-2 text-label-md">
-                      Du
+                      {t.you}
                     </span>
                   )}
                 </span>
@@ -124,7 +129,7 @@ export function PlayersScreen() {
                 type="button"
                 className={`icon-btn m3-state-layer shrink-0 mr-1 ${p.quickPick ? 'text-md-tertiary' : 'text-md-on-surface-variant'}`}
                 aria-pressed={p.quickPick}
-                aria-label={`${p.name} in der Schnellauswahl`}
+                aria-label={t.inQuickPick(p.name)}
                 onClick={() => setQuickPick(p.name, !p.quickPick)}
               >
                 <Icon name={p.quickPick ? 'star' : 'star-outline'} />
@@ -151,12 +156,13 @@ export function PlayerDetailScreen() {
   const player = players.find((p) => p.name === name)
   const [editing, setEditing] = useState(false)
   const [draft, setDraft] = useState(name)
+  const t = useMessages(playersText)
 
   if (!player) {
     return (
       <div>
-        <SubPageHeader title="Spieler" back="/players" />
-        <p className="meta pt-6">Diese Person gibt es nicht mehr.</p>
+        <SubPageHeader title={t.title} back="/players" />
+        <p className="meta pt-6">{t.gone}</p>
       </div>
     )
   }
@@ -185,14 +191,12 @@ export function PlayerDetailScreen() {
     const other = players.find((p) => p.name === to)
     if (other) {
       showModal(
-        `Mit ${to} zusammenführen?`,
-        <p className="text-body-lg">
-          {to} gibt es schon. Runden, Siege und Erfolge von {player.name} kommen zu {to}. {player.name} verschwindet aus der Liste.
-        </p>,
+        t.mergeTitle(to),
+        <p className="text-body-lg">{t.mergeBody(player.name, to)}</p>,
         [
-          { text: 'Abbrechen' },
+          { text: t.cancel },
           {
-            text: 'Zusammenführen',
+            text: t.merge,
             variant: 'primary',
             onClick: () => doRename(to)
           }
@@ -205,15 +209,12 @@ export function PlayerDetailScreen() {
 
   const askRemove = () =>
     showModal(
-      `${player.name} entfernen?`,
-      <p className="text-body-lg">
-        {player.name} verschwindet aus Spielerliste, Schnellauswahl und Statistik, die Erfolge werden gelöscht. Die Runden im Verlauf
-        bleiben, wie sie gespielt wurden.
-      </p>,
+      t.removeTitle(player.name),
+      <p className="text-body-lg">{t.removeBody(player.name)}</p>,
       [
-        { text: 'Behalten' },
+        { text: t.keep },
         {
-          text: 'Entfernen',
+          text: t.remove,
           variant: 'danger',
           onClick: () => {
             remove(player.name)
@@ -225,7 +226,7 @@ export function PlayerDetailScreen() {
 
   return (
     <div>
-      <SubPageHeader title={player.isMe ? `${player.name} (du)` : player.name} back="/players" />
+      <SubPageHeader title={player.isMe ? t.meTitle(player.name) : player.name} back="/players" />
 
       <div className="pt-2 space-y-6">
         <section className="flex items-center gap-4">
@@ -233,7 +234,7 @@ export function PlayerDetailScreen() {
           {editing ? (
             <form onSubmit={saveName} className="flex-1 flex flex-wrap gap-2">
               <label htmlFor="rename" className="sr-only">
-                Neuer Name
+                {t.newName}
               </label>
               <input
                 id="rename"
@@ -244,55 +245,55 @@ export function PlayerDetailScreen() {
                 onChange={(e) => setDraft(e.target.value)}
               />
               <button type="submit" className="btn btn-filled m3-state-layer">
-                Speichern
+                {t.save}
               </button>
               <button type="button" className="btn btn-text m3-state-layer" onClick={() => setEditing(false)}>
-                Abbrechen
+                {t.cancel}
               </button>
             </form>
           ) : (
             <div className="flex-1 min-w-0">
               <p className="text-headline-sm truncate">{player.name}</p>
-              <p className="meta">{s?.lastPlayed ? `Zuletzt gespielt ${formatDay(s.lastPlayed)}` : 'Noch keine Runde gespielt'}</p>
+              <p className="meta">{s?.lastPlayed ? t.lastPlayed(formatDay(s.lastPlayed)) : t.neverPlayed}</p>
             </div>
           )}
         </section>
 
         <div className="grid grid-cols-2 gap-3">
           <StatTile
-            label="Runden"
+            label={t.roundsLabel}
             value={s?.games ?? 0}
-            note={s && s.games > 0 ? `${s.wins} ${s.wins === 1 ? 'Sieg' : 'Siege'}, ${pct(s.wins / s.games)}` : undefined}
+            note={s && s.games > 0 ? t.winsNote(t.wins(s.wins), pct(s.wins / s.games)) : undefined}
           />
           <StatTile
-            label="Trefferquote"
+            label={t.hitRate}
             value={pct(s?.accuracy ?? null)}
-            note={s && s.tries > 0 ? `${s.correct} von ${s.tries}` : 'ab der nächsten Runde'}
+            note={s && s.tries > 0 ? t.rightOf(s.correct, s.tries) : t.fromNextRound}
           />
           <StatTile
-            label="Stärkstes Jahrzehnt"
+            label={t.bestDecade}
             value={
               best ? decadeLabel(best.decade) : topCards !== undefined && s && s.byDecade[topCards].cards > 0 ? decadeLabel(topCards) : '–'
             }
             note={
               best
-                ? `${pct(best.rate)} richtig`
+                ? t.right(pct(best.rate))
                 : topCards !== undefined && s && s.byDecade[topCards].cards > 0
-                  ? `${s.byDecade[topCards].cards} Karten`
+                  ? t.cards(s.byDecade[topCards].cards)
                   : undefined
             }
           />
           {s && s.guesses > 0 ? (
             <StatTile
-              label="Jahre raten"
-              value={`± ${(s.yearOff ?? 0).toLocaleString('de-DE', { maximumFractionDigits: 1 })}`}
-              note={`${s.exactYears} exakt`}
+              label={t.years}
+              value={`± ${(s.yearOff ?? 0).toLocaleString(localeOf(), { maximumFractionDigits: 1 })}`}
+              note={t.exact(s.exactYears)}
             />
           ) : (
             <StatTile
-              label="Einsprüche"
+              label={t.objections}
               value={s?.challenges ?? 0}
-              note={s && s.challenges > 0 ? `${s.challengesWon} gewonnen` : undefined}
+              note={s && s.challenges > 0 ? t.objectionsWon(s.challengesWon) : undefined}
             />
           )}
         </div>
@@ -300,13 +301,13 @@ export function PlayerDetailScreen() {
         {s && s.games > 0 && (
           <section className="surface p-5 space-y-3" aria-labelledby="pd-profile">
             <h2 id="pd-profile" className="text-title-lg">
-              Jahrzehnt-Profil
+              {t.profile}
             </h2>
             <DecadeProfile people={[s]} />
           </section>
         )}
 
-        <section className="surface overflow-hidden" aria-label="Verwalten">
+        <section className="surface overflow-hidden" aria-label={t.manage}>
           <button
             type="button"
             className="row m3-state-layer !rounded-none"
@@ -314,8 +315,8 @@ export function PlayerDetailScreen() {
           >
             <Icon name="trophy" className="text-md-on-surface-variant" />
             <span className="flex-1 text-left">
-              <span className="block text-title-md">Erfolge</span>
-              <span className="block meta">{player.achievements} erreicht</span>
+              <span className="block text-title-md">{t.achievements}</span>
+              <span className="block meta">{t.achievementsReached(player.achievements)}</span>
             </span>
             <Icon name="chevron" size={20} className="text-md-on-surface-variant" />
           </button>
@@ -324,10 +325,10 @@ export function PlayerDetailScreen() {
               <div className="row !rounded-none">
                 <Icon name="star" className="text-md-on-surface-variant" />
                 <span className="flex-1">
-                  <span className="block text-title-md">Schnellauswahl</span>
-                  <span className="block meta">Im Spielaufbau mit einem Tipp dabei.</span>
+                  <span className="block text-title-md">{t.quickPick}</span>
+                  <span className="block meta">{t.quickPickHint}</span>
                 </span>
-                <Switch checked={player.quickPick} onChange={(on) => setQuickPick(player.name, on)} ariaLabel="Schnellauswahl" />
+                <Switch checked={player.quickPick} onChange={(on) => setQuickPick(player.name, on)} ariaLabel={t.quickPick} />
               </div>
               <button
                 type="button"
@@ -339,21 +340,21 @@ export function PlayerDetailScreen() {
               >
                 <Icon name="edit" className="text-md-on-surface-variant" />
                 <span className="flex-1 text-left">
-                  <span className="block text-title-md">Umbenennen</span>
-                  <span className="block meta">Gibt es den Namen schon, werden beide zusammengeführt.</span>
+                  <span className="block text-title-md">{t.rename}</span>
+                  <span className="block meta">{t.renameHint}</span>
                 </span>
               </button>
               <button type="button" className="row m3-state-layer !rounded-none text-md-error" onClick={askRemove}>
                 <Icon name="delete" />
                 <span className="flex-1 text-left">
-                  <span className="block text-title-md">Entfernen</span>
-                  <span className="block meta">Aus Liste und Statistik, Erfolge werden gelöscht.</span>
+                  <span className="block text-title-md">{t.remove}</span>
+                  <span className="block meta">{t.removeHint}</span>
                 </span>
               </button>
             </>
           )}
         </section>
-        {player.isMe && <p className="meta">Dein Name kommt aus deinem Google-Konto.</p>}
+        {player.isMe && <p className="meta">{t.nameFromGoogle}</p>}
       </div>
     </div>
   )

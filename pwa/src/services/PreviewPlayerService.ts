@@ -6,6 +6,8 @@
 
 import { Howl } from 'howler'
 import type { Song } from '@/types'
+import { msg } from '@/i18n'
+import { modesText } from '@/i18n/messages/modes'
 
 export type PlayerState = 'idle' | 'loading' | 'playing' | 'paused' | 'stopped' | 'error'
 
@@ -60,7 +62,7 @@ export class PreviewPlayerService {
     // Check if preview URL exists
     if (!song.previewUrl) {
       this.setState('error')
-      this.config.onError?.('Für diesen Song gibt es keine Audiodatei.')
+      this.config.onError?.(msg(modesText).noAudioFile)
       throw new Error(`No preview URL for song: ${song.title}`)
     }
 
@@ -104,7 +106,7 @@ export class PreviewPlayerService {
       onloaderror: (_id, error) => {
         console.error(`Preview load error: ${song.title}`, error)
         this.setState('error')
-        this.config.onError?.('Der Song konnte nicht geladen werden.')
+        this.config.onError?.(msg(modesText).loadFailed)
       },
       onplayerror: () => {
         // Autoplay blocked (typical after a reload on phones): wait paused and

@@ -7,7 +7,8 @@ from fastapi.responses import JSONResponse
 
 from app.api import admin, auth, data, friends, rooms
 from app.config import get_settings
-from app.db import init_db
+from app.api.rooms import purge_expired
+from app.db import SessionLocal, init_db
 
 logging.basicConfig(level=logging.INFO, format="%(levelname)s %(name)s: %(message)s")
 
@@ -19,6 +20,8 @@ def create_app() -> FastAPI:
     if s.is_prod and s.mx_dev_login:
         raise RuntimeError("MX_DEV_LOGIN must never be enabled in production")
     init_db()
+    with SessionLocal() as db:
+        purge_expired(db)
     app = FastAPI(title="mxtape", docs_url=None, redoc_url=None, openapi_url=None)
 
     @app.exception_handler(HTTPException)

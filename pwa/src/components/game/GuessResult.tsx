@@ -13,6 +13,8 @@ import { guessTier } from '@/game/guess'
 import { spring } from '@/motion/springs'
 import { AnimatedNumber } from '@/components/ui/AnimatedNumber'
 import { SongInfo } from './SongInfo'
+import { useMessages } from '@/i18n'
+import { gameText } from '@/i18n/messages/game'
 
 interface GuessResultProps {
   song: Song
@@ -24,17 +26,10 @@ interface GuessResultProps {
   continueBy?: string
 }
 
-const HEADLINE = {
-  perfect: 'Perfekt! Maximale Punktzahl',
-  great: 'Stark!',
-  good: 'Teilweise richtig',
-  partial: 'Knapp daneben',
-  miss: 'Leider alles falsch'
-} as const
-
 const STAGGER = 0.11
 
 export function GuessResult({ song, check, breakdown, playerName, onContinue, continueBy }: GuessResultProps) {
+  const t = useMessages(gameText)
   const tier = guessTier(breakdown.total)
   const continueRef = useRef<HTMLButtonElement>(null)
   useEffect(() => {
@@ -43,16 +38,17 @@ export function GuessResult({ song, check, breakdown, playerName, onContinue, co
 
   const yearState = check.yearDifference === 0 ? 'hit' : breakdown.year > 0 ? 'near' : 'miss'
   const rows = [
-    { label: 'Titel', value: song.title, state: check.titleMatch ? 'hit' : 'miss', points: breakdown.title },
-    { label: 'Interpret', value: song.artist, state: check.artistMatch ? 'hit' : 'miss', points: breakdown.artist },
+    { key: 'title', label: t.title, value: song.title, state: check.titleMatch ? 'hit' : 'miss', points: breakdown.title },
+    { key: 'artist', label: t.artist, value: song.artist, state: check.artistMatch ? 'hit' : 'miss', points: breakdown.artist },
     {
-      label: 'Jahr',
+      key: 'year',
+      label: t.year,
       value: String(song.year),
       state: yearState,
       points: breakdown.year,
       note:
         yearState === 'near'
-          ? `${check.yearDifference} ${check.yearDifference === 1 ? 'Jahr' : 'Jahre'} daneben`
+          ? t.yearsOff(check.yearDifference)
           : undefined
     }
   ] as const
@@ -68,13 +64,13 @@ export function GuessResult({ song, check, breakdown, playerName, onContinue, co
     >
       <p className="text-label-md text-md-on-surface-variant">{playerName}</p>
       <h3 id="guess-result-title" className="text-headline-sm text-md-on-surface mb-4">
-        {HEADLINE[tier]}
+        {t[tier]}
       </h3>
 
       <ul className="space-y-2 mb-5">
         {rows.map((row, i) => (
           <m.li
-            key={row.label}
+            key={row.key}
             initial={{ opacity: 0, x: -16 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ ...spring.spatialDefault, delay: 0.08 + i * STAGGER }}
@@ -83,7 +79,7 @@ export function GuessResult({ song, check, breakdown, playerName, onContinue, co
             <Verdict state={row.state} delay={0.16 + i * STAGGER} />
             <div className="min-w-0 flex-1">
               <p className="text-label-md text-md-on-surface-variant">{row.label}</p>
-              {row.label === 'Jahr' ? (
+              {row.key === 'year' ? (
                 <p className="text-title-md tabular-nums" style={{ perspective: 400 }}>
                   <m.span
                     className="inline-block"
@@ -120,13 +116,13 @@ export function GuessResult({ song, check, breakdown, playerName, onContinue, co
           className="text-display-sm text-brand"
         >
           +<AnimatedNumber value={breakdown.total} from={0} />
-          <span className="ml-2 text-title-md text-md-on-surface-variant">{breakdown.total === 1 ? 'Punkt' : 'Punkte'}</span>
+          <span className="ml-2 text-title-md text-md-on-surface-variant">{t.pointWord(breakdown.total)}</span>
         </m.p>
         {continueBy ? (
-          <p className="text-body-sm text-md-on-surface-variant">Weiter geht es bei {continueBy}</p>
+          <p className="text-body-sm text-md-on-surface-variant">{t.continuesAt(continueBy)}</p>
         ) : (
           <button ref={continueRef} type="button" onClick={onContinue} className="btn btn-brand">
-            Weiter
+            {t.next}
           </button>
         )}
       </div>
@@ -135,6 +131,7 @@ export function GuessResult({ song, check, breakdown, playerName, onContinue, co
 }
 
 function Verdict({ state, delay }: { state: 'hit' | 'near' | 'miss'; delay: number }) {
+  const t = useMessages(gameText)
   const tone =
     state === 'hit'
       ? 'bg-md-success-container text-md-on-success-container'
@@ -148,7 +145,7 @@ function Verdict({ state, delay }: { state: 'hit' | 'near' | 'miss'; delay: numb
       transition={{ ...spring.spatialFast, delay }}
       className={`flex-shrink-0 w-9 h-9 grid place-items-center rounded-m3-full ${tone}`}
       role="img"
-      aria-label={state === 'hit' ? 'richtig' : state === 'near' ? 'knapp' : 'falsch'}
+      aria-label={state === 'hit' ? t.verdictHit : state === 'near' ? t.verdictNear : t.verdictMiss}
     >
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
         {state === 'hit' ? <path d="M5 12.5l4.5 4.5L19 7.5" /> : state === 'near' ? <path d="M6 12h12" /> : <path d="M7 7l10 10M17 7L7 17" />}

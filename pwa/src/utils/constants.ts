@@ -1,6 +1,8 @@
 /**
  * Application Constants
  */
+import { msg } from '@/i18n'
+import { modesText } from '@/i18n/messages/modes'
 
 // Version
 export const APP_VERSION = '0.0.22'
@@ -79,20 +81,40 @@ export const THREE_CONFIG = {
   PARTICLE_SIZE: 0.8
 } as const
 
-// Error Messages
+// Error Messages (getters: current language on every read)
 export const ERROR_MESSAGES = {
-  SPOTIFY_PREMIUM_REQUIRED: 'Spotify Premium Account erforderlich',
-  CAMERA_PERMISSION_DENIED: 'Kamera-Zugriff verweigert',
-  NO_AUDIO_AVAILABLE: 'Keine Audio-Quelle verfügbar',
-  NETWORK_ERROR: 'Netzwerkfehler',
-  SONG_ALREADY_PLAYED: 'Dieser Song wurde bereits gespielt',
-  INVALID_QR_CODE: 'Ungültiger QR-Code'
+  get SPOTIFY_PREMIUM_REQUIRED() {
+    return msg(modesText).errPremium
+  },
+  get CAMERA_PERMISSION_DENIED() {
+    return msg(modesText).errCamera
+  },
+  get NO_AUDIO_AVAILABLE() {
+    return msg(modesText).errNoAudio
+  },
+  get NETWORK_ERROR() {
+    return msg(modesText).errNetwork
+  },
+  get SONG_ALREADY_PLAYED() {
+    return msg(modesText).errAlreadyPlayed
+  },
+  get INVALID_QR_CODE() {
+    return msg(modesText).errQr
+  }
 } as const
 
 // Success Messages
 export const SUCCESS_MESSAGES = {
-  GAME_SAVED: 'Spielstand gespeichert',
-  GAME_LOADED: 'Spielstand geladen',
-  SONG_ADDED: 'Song hinzugefügt',
-  PLAYER_ADDED: 'Spieler hinzugefügt'
+  get GAME_SAVED() {
+    return msg(modesText).okSaved
+  },
+  get GAME_LOADED() {
+    return msg(modesText).okLoaded
+  },
+  get SONG_ADDED() {
+    return msg(modesText).okSongAdded
+  },
+  get PLAYER_ADDED() {
+    return msg(modesText).okPlayerAdded
+  }
 } as const

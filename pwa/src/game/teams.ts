@@ -3,15 +3,40 @@
  * set of challenges — and its members take turns at the controls in order.
  */
 import type { Player } from '@/types'
+import { msg } from '@/i18n'
+import { modesText } from '@/i18n/messages/modes'
 
 export const MIN_TEAM_PEOPLE = 4
 
-/** Team names and their accent, in the order teams are created. */
+/**
+ * Team names and their accent, in the order teams are created. The name is a
+ * getter (current language); a team keeps the name it was created with.
+ */
 export const TEAMS = [
-  { name: 'Team Magenta', tone: 'primary' },
-  { name: 'Team Orange', tone: 'tertiary' },
-  { name: 'Team Violett', tone: 'secondary' },
-  { name: 'Team Grün', tone: 'success' }
+  {
+    get name() {
+      return msg(modesText).teamMagenta
+    },
+    tone: 'primary'
+  },
+  {
+    get name() {
+      return msg(modesText).teamOrange
+    },
+    tone: 'tertiary'
+  },
+  {
+    get name() {
+      return msg(modesText).teamViolet
+    },
+    tone: 'secondary'
+  },
+  {
+    get name() {
+      return msg(modesText).teamGreen
+    },
+    tone: 'success'
+  }
 ] as const
 
 export type TeamTone = (typeof TEAMS)[number]['tone']

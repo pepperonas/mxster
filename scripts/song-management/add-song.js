@@ -8,12 +8,12 @@
  * Looks up year and album (MusicBrainz, iTunes), lets you check every field,
  * downloads the audio (yt-dlp) and the cover, uploads both to the VPS and
  * writes docs/songs.json (+ docs/song-facts.json), then regenerates songs.ts.
- * Flags: --year --album --genre --fact --exotic --yes --no-upload (see lib/songWizard.js).
+ * Flags: --year --album --genre --fact --fact-en --exotic --yes --no-upload (see lib/songWizard.js).
  * Deploy the web app afterwards so the new song is in the bundle.
  */
 import { execFileSync } from 'child_process'
 import path from 'path'
-import { ROOT, findDuplicate, loadFacts, loadSongs, nextId, previewUrlFor, saveAll } from './lib/songStore.js'
+import { ROOT, findDuplicate, loadFacts, loadFactsEn, loadSongs, nextId, previewUrlFor, saveAll } from './lib/songStore.js'
 import { createPrompt, fetchMedia, parseArgs, proposeSong } from './lib/songWizard.js'
 
 async function main() {
@@ -52,12 +52,14 @@ async function main() {
     if (!media.audio) throw new Error('Audio-Download fehlgeschlagen — Song nicht gespeichert.')
 
     const facts = loadFacts()
+    const factsEn = loadFactsEn()
     if (meta.fact) facts[id] = meta.fact
-    saveAll([...songs, song], facts)
+    if (meta.factEn) factsEn[id] = meta.factEn
+    saveAll([...songs, song], facts, factsEn)
     execFileSync(process.execPath, [path.join(ROOT, 'scripts/song-management/update-song-count.js')], { stdio: 'ignore' })
 
     console.log(`\n✨ ${id}: ${song.artist} – ${song.title} (${song.year})${song.album ? `, ${song.album}` : ''}`)
-    console.log(`   Audio ${flags.upload ? 'hochgeladen' : 'lokal'}, Cover: ${media.cover ?? 'keins'}, Fakt: ${meta.fact ? 'ja' : 'nein'}`)
+    console.log(`   Audio ${flags.upload ? 'hochgeladen' : 'lokal'}, Cover: ${media.cover ?? 'keins'}, Fakt: ${meta.fact ? 'ja' : 'nein'}, EN: ${meta.factEn ? 'ja' : 'nein'}`)
     console.log('   Nächster Schritt: ./scripts/deployment/deploy.sh web')
   } finally {
     prompt.close()

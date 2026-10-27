@@ -10,7 +10,8 @@ import {
   AchievementId,
   Achievement,
   PlayerAchievements,
-  ACHIEVEMENT_DEFINITIONS
+  ACHIEVEMENT_DEFINITIONS,
+  localizeAchievement
 } from '@/types/achievements'
 import type { GameHistoryData, HistoryEntry, Player } from '@/types'
 import { useSettings } from './SettingsContext'
@@ -442,14 +443,16 @@ export function AchievementProvider({ children }: { children: ReactNode }) {
       setPlayerAchievements(prev => new Map(prev).set(playerName, migrated))
     }
 
-    // ALWAYS clean achievements before returning (removes progress from one-time achievements)
+    // ALWAYS clean achievements before returning (removes progress from one-time achievements).
+    // Name and description come from the definitions in the current language: the
+    // stored document may still hold old (German) strings.
     return migrated.achievements.map(achievement => {
       const def = ACHIEVEMENT_DEFINITIONS[achievement.id as AchievementId]
       // If definition has no target but achievement has progress, clean it
       if (def && !def.target && achievement.progress !== undefined) {
-        return { ...achievement, progress: undefined }
+        return localizeAchievement({ ...achievement, progress: undefined })
       }
-      return achievement
+      return localizeAchievement(achievement)
     })
   }
 

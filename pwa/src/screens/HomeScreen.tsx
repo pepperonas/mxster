@@ -20,6 +20,8 @@ import { spring } from '@/motion/springs'
 import { ownPlayerName } from '@/game/owner'
 import { formatDay } from '@/utils/format'
 import { turnName } from '@/game/teams'
+import { useMessages } from '@/i18n'
+import { homeText } from '@/i18n/messages/home'
 import { ACHIEVEMENT_DEFINITIONS, achievementIcon, type Achievement } from '@/types/achievements'
 
 export function HomeScreen() {
@@ -29,6 +31,7 @@ export function HomeScreen() {
   const { getPlayerAchievements } = useAchievements()
   const game = useGame()
   const { showModal } = useUI()
+  const t = useMessages(homeText)
   // Online rounds live in their room, not on this device
   const running = !game.onlineRoom && game.isGameStarted && !game.finished && game.players.length > 0 && game.gameMode
 
@@ -52,20 +55,20 @@ export function HomeScreen() {
 
   function discard() {
     showModal(
-      'Runde verwerfen?',
-      <p className="text-body-lg">Der Spielstand der laufenden Runde ist danach weg.</p>,
-      [{ text: 'Behalten' }, { text: 'Verwerfen', variant: 'danger', onClick: () => game.resetGame() }]
+      t.discardTitle,
+      <p className="text-body-lg">{t.discardBody}</p>,
+      [{ text: t.keep }, { text: t.discard, variant: 'danger', onClick: () => game.resetGame() }]
     )
   }
 
   function newGame() {
     if (!running) return navigate('/new')
     showModal(
-      'Neue Runde starten?',
-      <p className="text-body-lg">Eure laufende Runde wird dabei verworfen.</p>,
+      t.newRoundTitle,
+      <p className="text-body-lg">{t.newRoundBody}</p>,
       [
-        { text: 'Weiterspielen', onClick: () => navigate('/game') },
-        { text: 'Neue Runde', variant: 'primary', onClick: () => navigate('/new') }
+        { text: t.continue, onClick: () => navigate('/game') },
+        { text: t.newRound, variant: 'primary', onClick: () => navigate('/new') }
       ]
     )
   }
@@ -73,7 +76,7 @@ export function HomeScreen() {
   return (
     <div className="pt-4 md:pt-10 space-y-6">
       <h1 className="text-headline-md text-md-on-surface">
-        {running ? `Weiter geht’s, ${firstName}.` : last ? `Noch eine Runde, ${firstName}?` : `Willkommen, ${firstName}.`}
+        {running ? t.greetRunning(firstName) : last ? t.greetAgain(firstName) : t.greetFirst(firstName)}
       </h1>
 
       <Invites />
@@ -89,12 +92,12 @@ export function HomeScreen() {
       >
         <div className="relative z-10 p-7 pr-[42%] min-h-[220px] flex flex-col justify-between">
           <span className="text-poster" style={{ fontSize: 'clamp(2.4rem, 9vw, 3.4rem)' }}>
-            Neues
+            {t.sleeveTop}
             <br />
-            Spiel
+            {t.sleeveBottom}
           </span>
           <span className="mt-6 inline-flex items-center gap-2 text-label-lg opacity-90">
-            Modus und Mitspieler wählen
+            {t.sleeveHint}
             <Icon name="chevron" size={20} />
           </span>
         </div>
@@ -111,7 +114,7 @@ export function HomeScreen() {
       <div className="grid gap-4 sm:grid-cols-2">
         <section aria-labelledby="last-round" className="surface p-5">
           <h2 id="last-round" className="text-title-md mb-3">
-            Letzte Runde
+            {t.lastRound}
           </h2>
           {last ? (
             <button
@@ -123,21 +126,21 @@ export function HomeScreen() {
                 <Icon name={MODE_COPY[last.gameMode]?.icon ?? 'note'} />
               </span>
               <span className="min-w-0 flex-1">
-                <span className="block text-title-md truncate">{last.winner.name} hat gewonnen</span>
+                <span className="block text-title-md truncate">{t.wonBy(last.winner.name)}</span>
                 <span className="block meta truncate">
-                  {MODE_COPY[last.gameMode]?.name ?? 'Runde'}, {formatDay(last.date)}
+                  {MODE_COPY[last.gameMode]?.name ?? t.roundFallback}, {formatDay(last.date)}
                 </span>
               </span>
               <Icon name="chevron" className="text-md-on-surface-variant" />
             </button>
           ) : (
-            <p className="meta">Hier steht nach eurer ersten Runde, wer gewonnen hat.</p>
+            <p className="meta">{t.lastRoundEmpty}</p>
           )}
         </section>
 
         <section aria-labelledby="next-goal" className="surface p-5">
           <h2 id="next-goal" className="text-title-md mb-3">
-            Nächster Erfolg
+            {t.nextGoal}
           </h2>
           {next ? (
             <button
@@ -151,12 +154,12 @@ export function HomeScreen() {
               <span className="min-w-0 flex-1">
                 <span className="block text-title-md truncate">{next.name}</span>
                 <span className="block meta">
-                  {next.target ? `${next.progress ?? 0} von ${next.target}` : next.description}
+                  {next.target ? t.progressOf(next.progress ?? 0, next.target) : next.description}
                 </span>
               </span>
             </button>
           ) : (
-            <p className="meta">Spiel eine Runde, um deinen ersten Erfolg freizuschalten.</p>
+            <p className="meta">{t.nextGoalEmpty}</p>
           )}
         </section>
       </div>
@@ -167,6 +170,7 @@ export function HomeScreen() {
 /** The round saved on this device: who is on turn, the standings, continue or discard. */
 function RunningRound({ onContinue, onDiscard }: { onContinue: () => void; onDiscard: () => void }) {
   const { gameMode, players, currentPlayer, startedAt, goal } = useGame()
+  const t = useMessages(homeText)
   if (!gameMode) return null
   const hardcore = gameMode === 'hardcore'
   const onTurn = players[currentPlayer]
@@ -188,26 +192,26 @@ function RunningRound({ onContinue, onDiscard }: { onContinue: () => void; onDis
         <Vinyl size={64} spinning />
         <div className="min-w-0">
           <h2 id="running-h" className="text-title-lg">
-            Eure Runde läuft noch
+            {t.runningTitle}
           </h2>
           <p className="text-body-md text-md-on-surface-variant">
             {MODE_COPY[gameMode].name}
-            {onTurn ? `, ${turnName(onTurn)} ist dran` : ''}
-            {minutes < 600 ? `, seit ${minutes < 60 ? `${minutes} Min.` : `${Math.round(minutes / 60)} Std.`}` : ''}
+            {onTurn ? t.onTurn(turnName(onTurn)) : ''}
+            {minutes < 600 ? t.since(minutes) : ''}
           </p>
           <p className="text-body-sm text-md-on-surface-variant tabular">
             {standings}
-            {hardcore ? ' Punkte' : ` von ${goal}`}
+            {hardcore ? t.points : t.ofGoal(goal)}
           </p>
         </div>
       </div>
       <div className="flex gap-2 sm:flex-col">
         <button type="button" className="btn btn-brand m3-state-layer flex-1" onClick={onContinue}>
           <Icon name="play" />
-          Weiterspielen
+          {t.continue}
         </button>
         <button type="button" className="btn btn-text m3-state-layer flex-1" onClick={onDiscard}>
-          Verwerfen
+          {t.discard}
         </button>
       </div>
     </m.section>
@@ -227,6 +231,7 @@ function nearestAchievement(list: Achievement[]): Achievement | null {
 /** Invitations from friends into an open room: checked every 30 s and when the tab returns. */
 function Invites() {
   const navigate = useAppNavigate()
+  const t = useMessages(homeText)
   const [invites, setInvites] = useState<Invite[]>([])
   const load = useCallback(() => {
     friendsApi
@@ -261,19 +266,19 @@ function Invites() {
           exit={{ opacity: 0, height: 0, transition: spring.effectsDefault }}
           transition={spring.spatialDefault}
           className="surface p-4 flex flex-wrap items-center gap-x-4 gap-y-3"
-          aria-label="Einladung"
+          aria-label={t.inviteLabel}
         >
           <Avatar name={inv.from?.name ?? '?'} picture={inv.from?.picture || undefined} size={48} />
           <div className="flex-1 min-w-[12rem]">
-            <p className="text-title-md">{inv.from?.firstName ?? 'Jemand'} lädt dich zu einer Runde ein</p>
-            <p className="meta">Der Raum ist offen, die Runde hat noch nicht begonnen.</p>
+            <p className="text-title-md">{t.invitesYou(inv.from?.firstName ?? t.someone)}</p>
+            <p className="meta">{t.inviteBody}</p>
           </div>
           <div className="flex gap-2 w-full sm:w-auto justify-end">
             <button type="button" className="btn btn-brand m3-state-layer" onClick={() => navigate(`/r/${inv.code}`)}>
-              Beitreten
+              {t.join}
             </button>
             <button type="button" className="btn btn-text m3-state-layer" onClick={() => dismiss(inv)}>
-              Später
+              {t.later}
             </button>
           </div>
         </m.section>

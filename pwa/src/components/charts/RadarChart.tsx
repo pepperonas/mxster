@@ -15,6 +15,8 @@ import { useId, useState } from 'react'
 import { m } from 'motion/react'
 import { spring } from '@/motion/springs'
 import { prefersReducedMotion } from '@/motion/policy'
+import { msg, useMessages } from '@/i18n'
+import { statsText } from '@/i18n/messages/stats'
 
 export interface RadarSeries {
   name: string
@@ -40,7 +42,7 @@ const R = 124
 const RINGS = [0.25, 0.5, 0.75, 1]
 export const SERIES_COLORS = ['var(--mx-chart-1)', 'var(--mx-chart-2)', 'var(--mx-chart-3)']
 
-const pct = (v: number) => `${Math.round(v * 100)} %`
+const pct = (v: number) => msg(statsText).percent(Math.round(v * 100))
 
 function point(i: number, n: number, v: number): [number, number] {
   const a = -Math.PI / 2 + (i / n) * Math.PI * 2
@@ -51,6 +53,7 @@ const poly = (pts: Array<[number, number]>) => pts.map(([x, y]) => `${x.toFixed(
 
 export function RadarChart({ axes, series, label, format = pct, max = 1 }: RadarChartProps) {
   const [active, setActive] = useState<number | null>(null)
+  const t = useMessages(statsText)
   const id = useId()
   const n = axes.length
   const still = prefersReducedMotion()
@@ -61,7 +64,7 @@ export function RadarChart({ axes, series, label, format = pct, max = 1 }: Radar
         {label}
       </figcaption>
       {series.length > 1 && (
-        <ul className="flex flex-wrap gap-x-4 gap-y-1 mb-2" aria-label="Legende">
+        <ul className="flex flex-wrap gap-x-4 gap-y-1 mb-2" aria-label={t.legend}>
           {series.map((s, i) => (
             <li key={s.name} className="flex items-center gap-2 text-label-lg text-md-on-surface">
               <span className="inline-block w-3 h-3 rounded-full" style={{ background: `rgb(${SERIES_COLORS[i]})` }} aria-hidden />
@@ -143,7 +146,7 @@ export function RadarChart({ axes, series, label, format = pct, max = 1 }: Radar
           const [lx, ly] = point(i, n, 1.14)
           const prev = point(i - 0.5, n, 1.3)
           const next = point(i + 0.5, n, 1.3)
-          const summary = series.map((s) => `${s.name}: ${s.values[i] === null ? 'keine Daten' : format(s.values[i] as number)}`).join(', ')
+          const summary = series.map((s) => `${s.name}: ${s.values[i] === null ? t.noData : format(s.values[i] as number)}`).join(', ')
           return (
             <g
               key={a}
@@ -179,7 +182,7 @@ export function RadarChart({ axes, series, label, format = pct, max = 1 }: Radar
         style={{ minHeight: `${2.75 + series.length * 1.5}rem` }}
       >
         {active === null ? (
-          <p className="text-body-sm text-md-on-surface-variant">Tippe auf ein Jahrzehnt, um die Werte zu sehen.</p>
+          <p className="text-body-sm text-md-on-surface-variant">{t.pickDecade}</p>
         ) : (
           <>
             <p className="text-label-lg text-md-on-surface">{axes[active]}</p>
@@ -193,7 +196,7 @@ export function RadarChart({ axes, series, label, format = pct, max = 1 }: Radar
                   />
                   <span className="flex-1 truncate">{s.name}</span>
                   <span className="tabular text-md-on-surface-variant">
-                    {s.values[active] === null ? 'keine Daten' : format(s.values[active] as number)}
+                    {s.values[active] === null ? t.noData : format(s.values[active] as number)}
                     {s.detail?.[active] ? ` · ${s.detail[active]}` : ''}
                   </span>
                 </li>

@@ -27,6 +27,8 @@ import type { Song } from '@/types'
 import { gapLabel } from '@/game/placement'
 import { spring } from '@/motion/springs'
 import { initialOf } from '@/game/teams'
+import { useMessages } from '@/i18n'
+import { gameText } from '@/i18n/messages/game'
 
 /** Shared element id of a card on its way from the dock to its slot — one per song. */
 export const pendingCardLayoutId = (songId: string) => `pending-card-${songId}`
@@ -81,6 +83,7 @@ export function TimelineBoard({
   placedBy,
   previewIsChallenge = false
 }: TimelineBoardProps) {
+  const t = useMessages(gameText)
   const songs = cards.map((c) => c.song)
   const items: React.ReactNode[] = []
 
@@ -168,7 +171,7 @@ export function TimelineBoard({
         {items}
       </AnimatePresence>
       {items.length === 0 && (
-        <li className="py-8 text-center text-body-md text-md-on-surface-variant">Noch keine Karten</li>
+        <li className="py-8 text-center text-body-md text-md-on-surface-variant">{t.noCardsYet}</li>
       )}
     </ol>
   )
@@ -236,6 +239,7 @@ interface CardContentProps {
 }
 
 function CardContent({ song, owner, yearHidden, revealYear, blurYear, mark }: CardContentProps) {
+  const t = useMessages(gameText)
   return (
     <>
       <span
@@ -245,7 +249,7 @@ function CardContent({ song, owner, yearHidden, revealYear, blurYear, mark }: Ca
         style={{ perspective: 400 }}
       >
         {yearHidden ? (
-          <span aria-label="Jahr verdeckt" className="text-poster" style={{ fontSize: '1.6rem' }}>
+          <span aria-label={t.yearHidden} className="text-poster" style={{ fontSize: '1.6rem' }}>
             ?
           </span>
         ) : revealYear ? (
@@ -271,7 +275,7 @@ function CardContent({ song, owner, yearHidden, revealYear, blurYear, mark }: Ca
       {owner && (
         <span
           className="flex-shrink-0 w-8 h-8 grid place-items-center rounded-m3-full bg-md-secondary-container text-md-on-secondary-container text-label-md"
-          title={`Platziert von ${owner}`}
+          title={t.placedBy(owner)}
         >
           {initialOf(owner)}
         </span>
@@ -290,6 +294,7 @@ interface GapButtonProps {
 }
 
 function GapButton({ ref, gap, label, highlighted, large, onSelect }: GapButtonProps) {
+  const t = useMessages(gameText)
   return (
     <m.li
       ref={ref}
@@ -306,7 +311,7 @@ function GapButton({ ref, gap, label, highlighted, large, onSelect }: GapButtonP
         onClick={() => onSelect?.(gap)}
         animate={{ scale: highlighted ? 1.03 : 1 }}
         transition={spring.spatialFast}
-        aria-label={`Hier einfügen: ${label}`}
+        aria-label={t.insertHere(label)}
         className={`m3-state-layer relative w-full flex items-center justify-center gap-2 rounded-m3-md border-2 border-dashed transition-colors duration-m3-effects ease-m3-effects ${
           large ? 'min-h-[88px] text-label-lg' : 'min-h-[36px] text-label-md'
         } before:absolute before:inset-x-0 before:-inset-y-1.5 before:content-[''] ${

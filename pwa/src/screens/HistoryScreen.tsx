@@ -13,10 +13,13 @@ import { formatDay, formatTime } from '@/utils/format'
 import { spring } from '@/motion/springs'
 import type { HistoryEntry } from '@/types'
 import { rankPlayers } from '@/game/tiebreak'
+import { useMessages } from '@/i18n'
+import { historyText } from '@/i18n/messages/history'
 
 export function HistoryScreen() {
   const { history } = useGameHistory()
   const navigate = useAppNavigate()
+  const t = useMessages(historyText)
 
   const groups = new Map<string, HistoryEntry[]>()
   for (const g of history) {
@@ -26,15 +29,15 @@ export function HistoryScreen() {
 
   return (
     <div className="pt-4 md:pt-10">
-      <h1 className="text-headline-md mb-6">Verlauf</h1>
+      <h1 className="text-headline-md mb-6">{t.title}</h1>
 
       {history.length === 0 ? (
         <div className="surface p-8 text-center">
           <Icon name="history" size={40} className="mx-auto text-md-on-surface-variant" />
-          <p className="mt-4 text-title-md">Noch keine Runde gespielt</p>
-          <p className="mt-1 meta">Jede beendete Runde landet hier, mit Rangliste und allen Songs.</p>
+          <p className="mt-4 text-title-md">{t.emptyTitle}</p>
+          <p className="mt-1 meta">{t.emptyText}</p>
           <button type="button" className="btn btn-brand m3-state-layer mt-6" onClick={() => navigate('/new')}>
-            Erste Runde starten
+            {t.firstRound}
           </button>
         </div>
       ) : (
@@ -55,9 +58,9 @@ export function HistoryScreen() {
                         <Icon name={MODE_COPY[g.gameMode]?.icon ?? 'note'} size={22} />
                       </span>
                       <span className="flex-1 min-w-0">
-                        <span className="block text-title-md truncate">{g.winner.name} gewinnt</span>
+                        <span className="block text-title-md truncate">{t.wins(g.winner.name)}</span>
                         <span className="block meta truncate">
-                          {g.players.length} Spieler, {MODE_COPY[g.gameMode]?.name ?? 'Runde'}
+                          {t.rowMeta(g.players.length, MODE_COPY[g.gameMode]?.name ?? t.round)}
                         </span>
                       </span>
                       <span className="meta tabular">{formatTime(g.date)}</span>
@@ -79,12 +82,13 @@ export function HistoryDetailScreen() {
   const { showModal } = useUI()
   const navigate = useAppNavigate()
   const game = getById(Number(id))
+  const t = useMessages(historyText)
 
   if (!game) {
     return (
       <div>
-        <SubPageHeader title="Runde" back="/history" />
-        <p className="meta pt-6">Diese Runde gibt es nicht mehr.</p>
+        <SubPageHeader title={t.round} back="/history" />
+        <p className="meta pt-6">{t.gone}</p>
       </div>
     )
   }
@@ -93,10 +97,10 @@ export function HistoryDetailScreen() {
   const ranked = rankPlayers(game.players, game.gameMode, game.winner.name)
 
   const askDelete = () =>
-    showModal('Runde löschen?', <p className="text-body-lg">Die Runde verschwindet aus dem Verlauf. Erfolge bleiben erhalten.</p>, [
-      { text: 'Behalten' },
+    showModal(t.deleteTitle, <p className="text-body-lg">{t.deleteBody}</p>, [
+      { text: t.keep },
       {
-        text: 'Löschen',
+        text: t.delete,
         variant: 'danger',
         onClick: () => {
           deleteGame(game.id)
@@ -107,16 +111,16 @@ export function HistoryDetailScreen() {
 
   return (
     <div>
-      <SubPageHeader title={`${MODE_COPY[game.gameMode]?.name ?? 'Runde'}, ${formatDay(game.date)}`} back="/history" />
+      <SubPageHeader title={t.detailTitle(MODE_COPY[game.gameMode]?.name ?? t.round, formatDay(game.date))} back="/history" />
 
       <div className="pt-2 space-y-6" style={{ viewTransitionName: `game-${game.id}` }}>
         <section className="rounded-m3-xxl p-6" style={{ background: 'rgb(var(--mx-brand))', color: 'rgb(var(--mx-on-brand))' }}>
-          <p className="text-label-lg opacity-90">Gewonnen hat</p>
+          <p className="text-label-lg opacity-90">{t.winnerIs}</p>
           <p className="text-poster break-words" style={{ fontSize: 'clamp(2.2rem, 10vw, 3.2rem)' }}>
             {game.winner.name}
           </p>
           <p className="mt-2 text-body-md opacity-90">
-            {hardcore ? `${game.winner.score} Punkte` : `${game.winner.cards} Songs richtig`}, {formatTime(game.date)} Uhr
+            {t.resultAt(hardcore ? t.points(game.winner.score) : t.songsRight(game.winner.cards), formatTime(game.date))}
           </p>
         </section>
 
@@ -128,7 +132,7 @@ export function HistoryDetailScreen() {
                 <h2 className="text-title-md truncate">{p.name}</h2>
                 {p.members && <p className="meta truncate">{p.members.join(', ')}</p>}
               </div>
-              <span className="text-title-sm tabular">{hardcore ? `${p.score} Pkt.` : `${p.cards} Songs`}</span>
+              <span className="text-title-sm tabular">{hardcore ? t.pointsShort(p.score) : t.songs(p.cards)}</span>
             </div>
             {p.timeline.length > 0 ? (
               <ol className="space-y-1">
@@ -138,20 +142,20 @@ export function HistoryDetailScreen() {
                     <li key={s.id} className="flex items-baseline gap-3 py-1">
                       <span className="w-12 text-title-sm tabular text-md-primary">{s.year}</span>
                       <span className="min-w-0 flex-1 truncate text-body-md">
-                        {s.title} <span className="text-md-on-surface-variant">von {s.artist}</span>
+                        {s.title} <span className="text-md-on-surface-variant">{t.by} {s.artist}</span>
                       </span>
                     </li>
                   ))}
               </ol>
             ) : (
-              <p className="meta">Keine Songs gesammelt.</p>
+              <p className="meta">{t.noSongs}</p>
             )}
           </section>
         ))}
 
         <button type="button" className="btn btn-text m3-state-layer text-md-error" onClick={askDelete}>
           <Icon name="delete" size={20} />
-          Runde löschen
+          {t.deleteRound}
         </button>
       </div>
     </div>

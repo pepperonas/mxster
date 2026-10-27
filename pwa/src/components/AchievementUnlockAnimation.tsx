@@ -7,7 +7,9 @@
  * respects reduced motion.
  */
 import { Icon } from '@/components/ui/Icon'
-import { achievementIcon } from '@/types/achievements'
+import { achievementDescription, achievementIcon, achievementName } from '@/types/achievements'
+import { useMessages } from '@/i18n'
+import { achievementText } from '@/i18n/messages/achievements'
 import { useEffect } from 'react'
 import { createPortal } from 'react-dom'
 import { AnimatePresence, m } from 'motion/react'
@@ -21,6 +23,7 @@ const HOLD_MS = 3000
 export function AchievementUnlockAnimation() {
   const { currentNotification, removeCurrentNotification } = useAchievementNotifications()
   const { modal } = useUI()
+  const t = useMessages(achievementText)
   const visible = Boolean(currentNotification) && !modal.isOpen
 
   useEffect(() => {
@@ -61,9 +64,9 @@ export function AchievementUnlockAnimation() {
               <Icon name={achievementIcon(currentNotification.achievement.id)} size={52} />
             </m.div>
             <p className="text-label-lg uppercase tracking-wider opacity-80">{currentNotification.playerName}</p>
-            <p className="text-label-lg mt-1">Achievement freigeschaltet</p>
-            <p className="text-headline-sm mt-1">{currentNotification.achievement.name}</p>
-            <p className="text-body-md mt-2 opacity-90">{currentNotification.achievement.description}</p>
+            <p className="text-label-lg mt-1">{t.unlocked}</p>
+            <p className="text-headline-sm mt-1">{achievementName(currentNotification.achievement.id)}</p>
+            <p className="text-body-md mt-2 opacity-90">{achievementDescription(currentNotification.achievement.id)}</p>
           </m.div>
         )}
       </AnimatePresence>

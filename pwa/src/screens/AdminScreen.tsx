@@ -5,7 +5,7 @@
  */
 import { useCallback, useEffect, useState } from 'react'
 import { AnimatePresence, m } from 'motion/react'
-import { api, ApiError, type AccountStatus } from '@/api/client'
+import { api, type AccountStatus } from '@/api/client'
 import { useMe } from '@/auth/AuthContext'
 import { useUI } from '@/contexts'
 import { useAppNavigate } from '@/hooks/useAppNavigate'
@@ -14,6 +14,9 @@ import { Avatar } from '@/components/ui/Avatar'
 import { Icon } from '@/components/ui/Icon'
 import { spring } from '@/motion/springs'
 import { formatDay, formatTime } from '@/utils/format'
+import { msg, useMessages } from '@/i18n'
+import { adminText } from '@/i18n/messages/admin'
+import { apiErrorText } from '@/i18n/messages/errors'
 
 interface Account {
   id: number
@@ -30,10 +33,10 @@ interface Account {
 type Action = 'approve' | 'reject' | 'block' | 'unblock' | 'reset'
 type Tab = 'pending' | 'approved' | 'closed'
 
-const TABS: { id: Tab; label: string }[] = [
-  { id: 'pending', label: 'Wartend' },
-  { id: 'approved', label: 'Freigeschaltet' },
-  { id: 'closed', label: 'Abgelehnt' }
+const TABS: { id: Tab; label: 'tabPending' | 'tabApproved' | 'tabClosed' }[] = [
+  { id: 'pending', label: 'tabPending' },
+  { id: 'approved', label: 'tabApproved' },
+  { id: 'closed', label: 'tabClosed' }
 ]
 
 const inTab = (a: Account, tab: Tab) => (tab === 'closed' ? a.status === 'rejected' || a.status === 'blocked' : a.status === tab)
@@ -41,18 +44,11 @@ const inTab = (a: Account, tab: Tab) => (tab === 'closed' ? a.status === 'reject
 /** The action that restores a previous status (for undo). */
 const RESTORE: Record<AccountStatus, Action> = { pending: 'reset', approved: 'approve', rejected: 'reject', blocked: 'block' }
 
-const DONE: Record<Action, string> = {
-  approve: 'ist freigeschaltet',
-  unblock: 'ist wieder freigeschaltet',
-  reject: 'wurde abgelehnt',
-  block: 'ist gesperrt',
-  reset: 'wartet wieder'
-}
-
 export function AdminScreen() {
   const me = useMe()
   const navigate = useAppNavigate()
   const { addToast } = useUI()
+  const t = useMessages(adminText)
   const [accounts, setAccounts] = useState<Account[] | null>(null)
   const [tab, setTab] = useState<Tab>('pending')
   const [error, setError] = useState<string | null>(null)
@@ -67,7 +63,7 @@ export function AdminScreen() {
       setAccounts(res.users)
       setError(null)
     } catch {
-      setError('Die Liste konnte nicht geladen werden.')
+      setError('load')
     }
   }, [])
 
@@ -83,13 +79,13 @@ export function AdminScreen() {
         setAccounts((list) => list?.map((a) => (a.id === updated.id ? updated : a)) ?? null)
         const who = account.name || account.email
         addToast(
-          `${who} ${DONE[action]}`,
+          msg(adminText).done(who, action),
           'success',
           5000,
-          undoable ? { label: 'Rückgängig', onClick: () => void decide(updated, RESTORE[before], false) } : undefined
+          undoable ? { label: msg(adminText).undo, onClick: () => void decide(updated, RESTORE[before], false) } : undefined
         )
       } catch (e) {
-        addToast(e instanceof ApiError ? e.message : 'Das hat nicht geklappt.', 'error')
+        addToast(apiErrorText(e), 'error')
       }
     },
     [addToast]
@@ -104,23 +100,23 @@ export function AdminScreen() {
 
   return (
     <div>
-      <SubPageHeader title="Zugänge" back="/profile" />
+      <SubPageHeader title={t.title} back="/profile" />
 
-      <div role="tablist" aria-label="Status" className="flex border-b border-md-outline-variant/60 -mx-4 sm:mx-0 px-2 sm:px-0">
-        {TABS.map((t) => {
-          const active = tab === t.id
+      <div role="tablist" aria-label={t.statusLabel} className="flex border-b border-md-outline-variant/60 -mx-4 sm:mx-0 px-2 sm:px-0">
+        {TABS.map((tab_) => {
+          const active = tab === tab_.id
           return (
             <button
-              key={t.id}
+              key={tab_.id}
               type="button"
               role="tab"
               aria-selected={active}
-              onClick={() => setTab(t.id)}
+              onClick={() => setTab(tab_.id)}
               className={`relative flex-1 min-h-[48px] px-2 text-label-lg m3-state-layer ${active ? 'text-md-primary' : 'text-md-on-surface-variant'}`}
             >
               <span className="inline-flex items-center gap-2">
-                {t.label}
-                {t.id === 'pending' && counts.pending > 0 && (
+                {t[tab_.label]}
+                {tab_.id === 'pending' && counts.pending > 0 && (
                   <span
                     className={`grid place-items-center min-w-6 h-6 px-1.5 rounded-full text-label-md tabular ${
                       'bg-md-error text-md-on-error'
@@ -141,13 +137,13 @@ export function AdminScreen() {
       <div className="pt-4" role="tabpanel">
         {error && (
           <div className="surface p-6 text-center">
-            <p className="text-body-lg">{error}</p>
+            <p className="text-body-lg">{t.loadFailed}</p>
             <button type="button" className="btn btn-tonal m3-state-layer mt-4" onClick={() => void load()}>
-              Erneut laden
+              {t.reload}
             </button>
           </div>
         )}
-        {!accounts && !error && <div className="m3-loading mx-auto mt-10" aria-label="Lädt"><span className="m3-loading-arc" /></div>}
+        {!accounts && !error && <div className="m3-loading mx-auto mt-10" aria-label={t.loading}><span className="m3-loading-arc" /></div>}
 
         {accounts && shown.length === 0 && <EmptyTab tab={tab} />}
 
@@ -168,10 +164,10 @@ export function AdminScreen() {
                   <div className="min-w-0 flex-1">
                     <p className="text-title-md truncate">
                       {a.name || a.email}
-                      {a.isAdmin && <span className="ml-2 text-label-md text-md-primary">Admin</span>}
+                      {a.isAdmin && <span className="ml-2 text-label-md text-md-primary">{t.admin}</span>}
                     </p>
                     <p className="meta truncate">{a.email}</p>
-                    <p className="text-label-md text-md-on-surface-variant mt-0.5">{describe(a)}</p>
+                    <p className="text-label-md text-md-on-surface-variant mt-0.5">{describe(t, a)}</p>
                   </div>
                 </div>
 
@@ -180,24 +176,24 @@ export function AdminScreen() {
                     {a.status === 'pending' && (
                       <>
                         <button type="button" className="btn btn-text m3-state-layer" onClick={() => void decide(a, 'reject')}>
-                          Ablehnen
+                          {t.reject}
                         </button>
                         <button type="button" className="btn btn-filled m3-state-layer" onClick={() => void decide(a, 'approve')}>
                           <Icon name="check" size={20} />
-                          Freischalten
+                          {t.approve}
                         </button>
                       </>
                     )}
                     {a.status === 'approved' && (
                       <button type="button" className="btn btn-text m3-state-layer text-md-error" onClick={() => void decide(a, 'block')}>
                         <Icon name="block" size={20} />
-                        Sperren
+                        {t.block}
                       </button>
                     )}
                     {(a.status === 'rejected' || a.status === 'blocked') && (
                       <button type="button" className="btn btn-tonal m3-state-layer" onClick={() => void decide(a, 'approve')}>
                         <Icon name="check" size={20} />
-                        Doch freischalten
+                        {t.approveAnyway}
                       </button>
                     )}
                   </div>
@@ -211,25 +207,26 @@ export function AdminScreen() {
   )
 }
 
-function describe(a: Account): string {
+function describe(t: (typeof adminText)['de'], a: Account): string {
   const at = (iso: string | null) => (iso ? `${formatDay(iso)}, ${formatTime(iso)}` : '')
   switch (a.status) {
     case 'pending':
-      return `Angefragt ${at(a.createdAt)}`
+      return t.requested(at(a.createdAt))
     case 'approved':
-      return a.lastLoginAt ? `Zuletzt angemeldet ${at(a.lastLoginAt)}` : 'Freigeschaltet'
+      return a.lastLoginAt ? t.lastSignIn(at(a.lastLoginAt)) : t.approved
     case 'rejected':
-      return `Abgelehnt ${at(a.decidedAt)}`
+      return t.rejected(at(a.decidedAt))
     case 'blocked':
-      return `Gesperrt ${at(a.decidedAt)}`
+      return t.blocked(at(a.decidedAt))
   }
 }
 
 function EmptyTab({ tab }: { tab: Tab }) {
+  const t = useMessages(adminText)
   const copy = {
-    pending: ['Niemand wartet', 'Neue Anfragen erscheinen hier. Du bekommst zusätzlich eine E-Mail.'],
-    approved: ['Noch niemand freigeschaltet', 'Freigeschaltete Konten können sofort mitspielen.'],
-    closed: ['Keine abgelehnten Konten', 'Abgelehnte und gesperrte Konten landen hier.']
+    pending: [t.emptyPendingTitle, t.emptyPendingText],
+    approved: [t.emptyApprovedTitle, t.emptyApprovedText],
+    closed: [t.emptyClosedTitle, t.emptyClosedText]
   }[tab]
   return (
     <div className="py-12 text-center">

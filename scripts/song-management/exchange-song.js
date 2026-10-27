@@ -8,9 +8,9 @@
  * The id stays (history and recently-played lists keep working); title,
  * artist, year, album, genre, audio, cover and fact are replaced. The old
  * fact is dropped unless a new one is given (it was about the old song).
- * Flags: --year --album --genre --fact --exotic --yes --no-upload (see lib/songWizard.js).
+ * Flags: --year --album --genre --fact --fact-en --exotic --yes --no-upload (see lib/songWizard.js).
  */
-import { findDuplicate, loadFacts, loadSongs, saveAll } from './lib/songStore.js'
+import { findDuplicate, loadFacts, loadFactsEn, loadSongs, saveAll } from './lib/songStore.js'
 import { createPrompt, fetchMedia, parseArgs, proposeSong } from './lib/songWizard.js'
 
 async function main() {
@@ -53,9 +53,12 @@ async function main() {
     if (!media.audio) throw new Error('Audio-Download fehlgeschlagen — nichts geändert.')
 
     const facts = loadFacts()
+    const factsEn = loadFactsEn()
     delete facts[id]
+    delete factsEn[id]
     if (meta.fact) facts[id] = meta.fact
-    saveAll(songs.map((s, i) => (i === index ? song : s)), facts)
+    if (meta.factEn) factsEn[id] = meta.factEn
+    saveAll(songs.map((s, i) => (i === index ? song : s)), facts, factsEn)
 
     console.log(`\n✨ ${id}: ${song.artist} – ${song.title} (${song.year})`)
     console.log(`   Cover: ${media.cover ?? 'keins'}, Fakt: ${meta.fact ? 'neu' : 'keiner'}`)

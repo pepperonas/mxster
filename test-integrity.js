@@ -181,6 +181,35 @@ if (invalidSpotifyIds === 0) {
 }
 
 /**
+ * Test 7: English facts (docs/song-facts.en.json)
+ */
+console.log(`\n${colors.cyan}[Test 7] Validating English facts...${colors.reset}`);
+try {
+  const factsEnPath = path.join(__dirname, 'docs/song-facts.en.json');
+  const factsEn = fs.existsSync(factsEnPath) ? JSON.parse(fs.readFileSync(factsEnPath, 'utf8')) : {};
+  const byId = new Map(songs.map(s => [s.id, s]));
+  let badFacts = 0;
+  for (const [id, text] of Object.entries(factsEn)) {
+    const song = byId.get(id);
+    if (!song) {
+      logError('English fact for unknown song', id);
+      badFacts++;
+    } else if (typeof text !== 'string' || !text.trim()) {
+      logError('Empty English fact', id);
+      badFacts++;
+    } else if (text.includes(String(song.year))) {
+      logError('English fact reveals the year', `${id} (${song.year}): ${text}`);
+      badFacts++;
+    }
+  }
+  if (badFacts === 0) {
+    logSuccess(`All ${Object.keys(factsEn).length} English facts belong to known songs and hide the year`);
+  }
+} catch (error) {
+  logError('Failed to load song-facts.en.json', error.message);
+}
+
+/**
  * Summary
  */
 console.log('\n╔════════════════════════════════════════════╗');

@@ -21,6 +21,8 @@ import { spring } from '@/motion/springs'
 import type { Song } from '@/types'
 import type { AudioCue } from '@/online/protocol'
 import { cuePosition } from '@/online/clock'
+import { useMessages } from '@/i18n'
+import { gameText } from '@/i18n/messages/game'
 
 interface TurntableProps {
   song: Song | null
@@ -59,7 +61,7 @@ export function Turntable({
   revealYear,
   revealCorrect,
   revealCover,
-  drawLabel = 'Song ziehen',
+  drawLabel,
   onDraw,
   drawDisabled,
   compact = false,
@@ -69,6 +71,7 @@ export function Turntable({
   clockOffset = () => 0,
   onCue
 }: TurntableProps) {
+  const t = useMessages(gameText)
   const { settings } = useSettings()
   const { addToast } = useUI()
   const player = useRef(getPreviewPlayer())
@@ -199,7 +202,7 @@ export function Turntable({
   if (compact && song) {
     return (
       <section
-        aria-label="Plattenspieler"
+        aria-label={t.turntable}
         className="flex items-center gap-3 pl-2 pr-2 py-2 rounded-m3-xl bg-md-surface-container-high/95 backdrop-blur-md shadow-m3-1"
       >
         <m.div layoutId="turntable-record" transition={spring.spatialDefault} className="relative flex-shrink-0 w-14 h-14">
@@ -216,12 +219,12 @@ export function Turntable({
         <div className="min-w-0 flex-1">
           <p className="text-title-sm text-md-on-surface truncate" aria-live="polite">
             {blocked
-              ? 'Zum Abspielen tippen'
+              ? t.tapToPlay
               : revealed
-                ? `Der Song ist von ${revealYear}`
+                ? t.songIsFrom(revealYear ?? '')
                 : audioRole === 'silent'
-                  ? `${caption ?? 'Song läuft'} · beim Gastgeber`
-                  : (caption ?? 'Song läuft')}
+                  ? `${caption ?? t.playing} · ${t.atHost}`
+                  : (caption ?? t.playing)}
           </p>
           <div className="mt-1.5 flex items-center gap-2">
             <div className="h-1 flex-1 rounded-m3-full bg-md-surface-container-highest overflow-hidden" role="presentation">
@@ -240,7 +243,7 @@ export function Turntable({
             disabled={loading}
             className={`flex-shrink-0 grid place-items-center w-12 h-12 rounded-m3-full m3-state-layer ${blocked ? 'mx-attention' : ''}`}
             style={{ background: 'rgb(var(--mx-brand))', color: 'rgb(var(--mx-on-brand))' }}
-            aria-label={playing ? 'Pause' : 'Abspielen'}
+            aria-label={playing ? t.pause : t.play}
           >
             {loading ? (
               <span className="m3-loading-arc" style={{ borderTopColor: 'currentColor', borderRightColor: 'currentColor' }} />
@@ -254,7 +257,7 @@ export function Turntable({
   }
 
   return (
-    <section aria-label="Plattenspieler" className="flex flex-col items-center">
+    <section aria-label={t.turntable} className="flex flex-col items-center">
       <div className="relative" style={{ width: 'min(76vw, 320px)', aspectRatio: '1' }}>
         <ProgressHalo progress={song ? progress : 0} />
         <m.div layoutId="turntable-record" transition={spring.spatialDefault} className="absolute inset-[6%]">
@@ -296,7 +299,7 @@ export function Turntable({
                 transition={spring.spatialFast}
                 className="grid place-items-center w-[26%] aspect-square m3-state-layer"
                 style={{ background: 'rgb(var(--mx-brand))', color: 'rgb(var(--mx-on-brand))' }}
-                aria-label={playing ? 'Pause' : 'Abspielen'}
+                aria-label={playing ? t.pause : t.play}
               >
                 {loading ? (
                   <span className="m3-loading-arc" style={{ borderTopColor: 'currentColor', borderRightColor: 'currentColor' }} />
@@ -314,11 +317,11 @@ export function Turntable({
           ? revealed
             ? ''
             : audioRole === 'silent'
-              ? `Läuft beim Gastgeber · ${formatTime(position)}`
+              ? t.playingAtHost(formatTime(position))
               : blocked
-                ? 'Zum Abspielen auf die Platte tippen'
+                ? t.tapRecordToPlay
                 : loading
-                  ? 'Song wird geladen …'
+                  ? t.loading
                   : `${formatTime(position)} / ${formatTime(duration)}`
           : ''}
       </div>
@@ -337,7 +340,7 @@ export function Turntable({
             className="btn btn-lg btn-brand m3-state-layer mt-2 w-full max-w-xs"
           >
             <Icon name="note" />
-            {drawLabel}
+            {drawLabel ?? t.drawSong}
           </m.button>
         )}
       </AnimatePresence>

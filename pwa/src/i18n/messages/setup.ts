@@ -1,0 +1,145 @@
+/** The new-game screen (screens/SetupScreen.tsx). */
+import { defineMessages } from '../define'
+
+export const setupText = defineMessages({
+  de: {
+    title: 'Neues Spiel',
+    nameTaken: (name: string) => `${name} spielt schon mit.`,
+    roomFailed: 'Der Raum konnte nicht geöffnet werden. Bitte nochmal versuchen.',
+
+    devicesHeading: 'Wie sitzt ihr zusammen?',
+    devicesLabel: 'Geräte',
+    oneDevice: 'Ein Gerät',
+    ownDevices: 'Jeder sein Gerät',
+    oneDeviceHint: 'Ihr reicht ein Handy oder Tablet herum.',
+    ownDevicesHint:
+      'Jede Person spielt auf dem eigenen Handy, im selben Raum oder von zu Hause. Du bekommst einen Link und einen QR-Code; ein Google-Konto braucht niemand.',
+    musicLabel: 'Musik',
+    musicRoom: 'Gemeinsam im Raum',
+    musicEveryone: 'Jeder bei sich',
+    musicRoomHint: 'Die Musik läuft nur auf deinem Gerät, alle hören mit. Kein Echo.',
+    musicEveryoneHint: 'Die Musik läuft auf jedem Gerät, gleichzeitig. Für Runden über Entfernung.',
+
+    modeHeading: 'Wie wollt ihr spielen?',
+
+    playersHeading: 'Wer spielt mit?',
+    playersCount: (n: number) => `${n} dabei`,
+    removePlayer: (name: string) => `${name} entfernen`,
+    addName: 'Name hinzufügen',
+    add: 'Hinzufügen',
+    earlierPlayers: 'Frühere Mitspieler',
+
+    botsHeading: 'Gegen den Computer',
+    botsHint: 'Allein? Dann spielen Bots gegen dich.',
+    botsSwitch: 'Gegen den Computer spielen',
+    strength: 'Stärke',
+    count: 'Anzahl',
+    bots: (n: number) => (n === 1 ? '1 Bot' : `${n} Bots`),
+
+    teamsHeading: 'In Teams spielen',
+    teamsHint: 'Ein Team teilt sich Zeitleiste und Punkte, ihr wechselt euch am Zug ab.',
+    teamCount: 'Anzahl Teams',
+    teams: (n: number) => `${n} Teams`,
+    nobodyYet: 'Noch niemand',
+    moveToNextTeam: (name: string) => `${name} ins nächste Team setzen`,
+    moveHint: 'Tippe einen Namen an, um ihn ins nächste Team zu setzen.',
+    shuffle: 'Mischen',
+    emptyTeam: 'Jedes Team braucht mindestens eine Person.',
+
+    roundHeading: 'Die Runde',
+    length: 'Länge',
+    goalGlobal: (goal: string) => `Gespielt wird, bis ${goal} Songs auf der gemeinsamen Zeitleiste liegen.`,
+    goalPersonal: (goal: string) => `Wer zuerst ${goal} Songs richtig liegen hat, gewinnt.`,
+    goalHardcore: (goal: string, teams: boolean) => `${teams ? 'Jedes Team' : 'Jede:r'} rät ${goal} Songs.`,
+    decades: 'Jahrzehnte',
+    songs: (n: number) => `${n} Songs`,
+    all: 'Alle',
+    decadeChip: (label: string, n: number) => `${label}, ${n} Songs`,
+    poolTight: 'Knapp für eine ganze Runde. Gehen die Songs aus, kommen die übrigen Jahrzehnte dazu.',
+    recentHint: 'Songs aus euren letzten Runden kommen erst wieder, wenn nichts Neues mehr übrig ist.',
+    challenge: 'Einspruch',
+    challengeHint: (teams: boolean, n: number) =>
+      `${teams ? 'Jedes Team hat' : 'Jede:r hat'} ${n === 3 ? 'drei' : n} Einsprüche. Liegt eine Karte deiner Meinung nach falsch, leg sie woandershin. Hast du recht, gehört sie dir.`,
+    exotics: 'Exoten',
+    exoticsHint: (n: number) =>
+      `${n} Songs, die kaum jemand kennt: Club-Tracks, Remixe und Raritäten. Für Runden mit echten Musik-Nerds.`,
+    exoticsSwitch: 'Exoten mitspielen',
+
+    opening: 'Raum wird geöffnet …',
+    openRoom: 'Raum öffnen',
+    go: 'Los geht’s',
+    teamNeedsSomeone: 'Jedes Team braucht jemanden',
+    oneMore: 'Noch eine Person dazu',
+    twoMore: 'Noch zwei Personen dazu'
+  },
+  en: {
+    title: 'New game',
+    nameTaken: (name: string) => `${name} is already playing.`,
+    roomFailed: 'The room could not be opened. Please try again.',
+
+    devicesHeading: 'How are you playing?',
+    devicesLabel: 'Devices',
+    oneDevice: 'One device',
+    ownDevices: 'Everyone on their own device',
+    oneDeviceHint: 'You pass one phone or tablet around.',
+    ownDevicesHint:
+      'Everyone plays on their own phone, in the same room or from home. You get a link and a QR code; nobody needs a Google account.',
+    musicLabel: 'Music',
+    musicRoom: 'Together in the room',
+    musicEveryone: 'Everyone at home',
+    musicRoomHint: 'The music plays on your device only, everyone listens along. No echo.',
+    musicEveryoneHint: 'The music plays on every device at the same time. For rounds at a distance.',
+
+    modeHeading: 'How do you want to play?',
+
+    playersHeading: 'Who is playing?',
+    playersCount: (n: number) => `${n} in`,
+    removePlayer: (name: string) => `Remove ${name}`,
+    addName: 'Add a name',
+    add: 'Add',
+    earlierPlayers: 'Earlier players',
+
+    botsHeading: 'Against the computer',
+    botsHint: 'On your own? Then bots play against you.',
+    botsSwitch: 'Play against the computer',
+    strength: 'Strength',
+    count: 'Number',
+    bots: (n: number) => (n === 1 ? '1 bot' : `${n} bots`),
+
+    teamsHeading: 'Play in teams',
+    teamsHint: 'A team shares a timeline and points; you take turns at the controls.',
+    teamCount: 'Number of teams',
+    teams: (n: number) => `${n} teams`,
+    nobodyYet: 'Nobody yet',
+    moveToNextTeam: (name: string) => `Move ${name} to the next team`,
+    moveHint: 'Tap a name to move it to the next team.',
+    shuffle: 'Shuffle',
+    emptyTeam: 'Every team needs at least one person.',
+
+    roundHeading: 'The round',
+    length: 'Length',
+    goalGlobal: (goal: string) => `You play until ${goal} songs lie on the shared timeline.`,
+    goalPersonal: (goal: string) => `The first to have ${goal} songs in the right place wins.`,
+    goalHardcore: (goal: string, teams: boolean) => `${teams ? 'Every team' : 'Everyone'} guesses ${goal} songs.`,
+    decades: 'Decades',
+    songs: (n: number) => `${n} songs`,
+    all: 'All',
+    decadeChip: (label: string, n: number) => `${label}, ${n} songs`,
+    poolTight: 'Tight for a whole round. If the songs run out, the other decades join in.',
+    recentHint: 'Songs from your last rounds only come back when nothing new is left.',
+    challenge: 'Objection',
+    challengeHint: (teams: boolean, n: number) =>
+      `${teams ? 'Every team has' : 'Everyone has'} ${n === 3 ? 'three' : n} objections. If you think a card is in the wrong place, put it somewhere else. If you are right, it is yours.`,
+    exotics: 'Exotics',
+    exoticsHint: (n: number) =>
+      `${n} songs hardly anyone knows: club tracks, remixes and rarities. For rounds with real music nerds.`,
+    exoticsSwitch: 'Play with exotics',
+
+    opening: 'Opening the room …',
+    openRoom: 'Open room',
+    go: 'Let’s go',
+    teamNeedsSomeone: 'Every team needs someone',
+    oneMore: 'Add one more person',
+    twoMore: 'Add two more people'
+  }
+})

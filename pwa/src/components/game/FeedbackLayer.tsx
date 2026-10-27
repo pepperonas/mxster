@@ -10,17 +10,18 @@ import { useEffect, useState } from 'react'
 import type { Reveal } from '@/game/useTurnFlow'
 import { guessTier } from '@/game/guess'
 import { celebrate } from '@/motion/celebrate'
+import { msg } from '@/i18n'
+import { gameText } from '@/i18n/messages/game'
 
 export function announcementFor(reveal: Reveal): string {
+  const t = msg(gameText)
+  const { title, artist, year } = reveal.song
   if (reveal.kind === 'placement') {
-    if (reveal.isFirstCard) return `Startkarte gelegt: ${reveal.song.title}, ${reveal.song.year}.`
-    if (reveal.challenge?.won) return `Einspruch erfolgreich! ${reveal.song.title} ist von ${reveal.song.year}.`
-    return reveal.isCorrect
-      ? `Richtig platziert! ${reveal.song.title} ist von ${reveal.song.year}.`
-      : `Leider falsch. ${reveal.song.title} ist von ${reveal.song.year}.`
+    if (reveal.isFirstCard) return t.announceStart(title, year)
+    if (reveal.challenge?.won) return t.announceObjection(title, year)
+    return reveal.isCorrect ? t.announceRight(title, year) : t.announceWrong(title, year)
   }
-  const { total } = reveal.breakdown
-  return `${total} ${total === 1 ? 'Punkt' : 'Punkte'}. ${reveal.song.title} von ${reveal.song.artist}, ${reveal.song.year}.`
+  return t.announceGuess(reveal.breakdown.total, title, artist, year)
 }
 
 export function FeedbackLayer({ reveal }: { reveal: Reveal | null }) {

@@ -1,0 +1,52 @@
+import { defineMessages } from '../define'
+
+export const historyText = defineMessages({
+  de: {
+    title: 'Verlauf',
+    emptyTitle: 'Noch keine Runde gespielt',
+    emptyText: 'Jede beendete Runde landet hier, mit Rangliste und allen Songs.',
+    firstRound: 'Erste Runde starten',
+    wins: (name: string) => `${name} gewinnt`,
+    rowMeta: (players: number, mode: string) => `${players} Spieler, ${mode}`,
+    round: 'Runde',
+    gone: 'Diese Runde gibt es nicht mehr.',
+    deleteTitle: 'Runde löschen?',
+    deleteBody: 'Die Runde verschwindet aus dem Verlauf. Erfolge bleiben erhalten.',
+    keep: 'Behalten',
+    delete: 'Löschen',
+    deleteRound: 'Runde löschen',
+    detailTitle: (mode: string, day: string) => `${mode}, ${day}`,
+    winnerIs: 'Gewonnen hat',
+    points: (n: number) => `${n} Punkte`,
+    songsRight: (n: number) => `${n} Songs richtig`,
+    resultAt: (result: string, time: string) => `${result}, ${time} Uhr`,
+    pointsShort: (n: number) => `${n} Pkt.`,
+    songs: (n: number) => `${n} Songs`,
+    by: 'von',
+    noSongs: 'Keine Songs gesammelt.'
+  },
+  en: {
+    title: 'History',
+    emptyTitle: 'No rounds played yet',
+    emptyText: 'Every finished round lands here, with the ranking and all songs.',
+    firstRound: 'Start the first round',
+    wins: (name: string) => `${name} wins`,
+    rowMeta: (players: number, mode: string) => `${players} ${players === 1 ? 'player' : 'players'}, ${mode}`,
+    round: 'Round',
+    gone: 'This round no longer exists.',
+    deleteTitle: 'Delete round?',
+    deleteBody: 'The round disappears from the history. Achievements stay.',
+    keep: 'Keep',
+    delete: 'Delete',
+    deleteRound: 'Delete round',
+    detailTitle: (mode: string, day: string) => `${mode}, ${day}`,
+    winnerIs: 'The winner is',
+    points: (n: number) => (n === 1 ? '1 point' : `${n} points`),
+    songsRight: (n: number) => (n === 1 ? '1 song right' : `${n} songs right`),
+    resultAt: (result: string, time: string) => `${result}, ${time}`,
+    pointsShort: (n: number) => `${n} pts`,
+    songs: (n: number) => (n === 1 ? '1 song' : `${n} songs`),
+    by: 'by',
+    noSongs: 'No songs collected.'
+  }
+})

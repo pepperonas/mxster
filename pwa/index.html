@@ -18,6 +18,16 @@
         if (t === 'light') document.querySelector('meta[name="theme-color"]').content = '#fff8f7';
       }
     } catch (e) {}
+    // Language: stored choice, else the browser's first German or English preference
+    try {
+      var l = localStorage.getItem('mxtape_lang');
+      if (l !== 'de' && l !== 'en') {
+        l = 'en';
+        var ls = navigator.languages || [navigator.language];
+        for (var i = 0; i < ls.length; i++) { var b = String(ls[i]).toLowerCase().split('-')[0]; if (b === 'de' || b === 'en') { l = b; break; } }
+      }
+      document.documentElement.lang = l;
+    } catch (e) {}
   </script>
 
   <link rel="preload" href="/fonts/roboto-flex-latin.woff2" as="font" type="font/woff2" crossorigin>
