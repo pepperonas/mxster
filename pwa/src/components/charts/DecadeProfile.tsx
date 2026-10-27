@@ -19,6 +19,7 @@ type Metric = 'rate' | 'cards'
 export function DecadeProfile({ people }: { people: PlayerSummary[] }) {
   const t = useMessages(statsText)
   const hasRates = people.some((p) => p.tries > 0)
+  const hasCards = people.some((p) => DECADES.some((d) => p.byDecade[d].cards > 0))
   const [picked, setMetric] = useState<Metric | null>(null)
   const metric: Metric = picked ?? (hasRates ? 'rate' : 'cards')
   const axes = DECADES.map(decadeLabel)
@@ -63,9 +64,9 @@ export function DecadeProfile({ people }: { people: PlayerSummary[] }) {
           : t.cardsHint}
       </p>
 
-      {metric === 'rate' && !hasRates ? (
+      {(metric === 'rate' && !hasRates) || (metric === 'cards' && !hasCards) ? (
         <p className="rounded-m3-lg bg-md-surface-container p-4 text-body-md text-md-on-surface-variant">
-          {t.noRatesYet}
+          {metric === 'rate' ? t.noRatesYet : t.noCardsYet}
         </p>
       ) : (
         <>

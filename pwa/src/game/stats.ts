@@ -10,7 +10,7 @@
  *
  * People, not seats: a team's result counts for each member, bots are left out.
  */
-import type { GameMode, HistoryEntry, TurnRecord } from '@/types'
+import { GameMode, type HistoryEntry, type TurnRecord } from '@/types'
 import { DECADES, decadeOf } from './songPool'
 
 /** Bot names of rounds stored before players carried a bot flag. */
@@ -34,6 +34,25 @@ function people(p: HistoryPlayer): string[] {
 }
 
 /** Turns that say something about knowing the year: not a free first card, not a bot. */
+/**
+ * The years of the cards a seat won in a round. Own timeline and hardcore keep
+ * them on the seat. On the shared timeline the seat's own timeline stays empty
+ * (the cards lie on the common one, which is not stored), so they come from the
+ * turn log: a right placement goes to the placer, a wrong one to an objector
+ * whose gap was right. Rounds without a turn log give nothing here.
+ */
+export function cardYears(game: HistoryEntry, seat: HistoryPlayer): number[] {
+  if (seat.timeline.length > 0 || game.gameMode !== GameMode.TIMELINE_GLOBAL || !game.turns) {
+    return seat.timeline.map((song) => song.year)
+  }
+  const years: number[] = []
+  for (const t of game.turns) {
+    const placer = t.team ?? t.p
+    if (t.ok ? placer === seat.name : t.ch?.ok === true && t.ch.by === seat.name) years.push(t.y)
+  }
+  return years
+}
+
 export function countsForRate(t: TurnRecord): boolean {
   return !t.first && !t.bot
 }
@@ -120,8 +139,8 @@ export function summarize(history: readonly HistoryEntry[], hidden: readonly str
         if (!s) continue
         s.cards += seat.cards
         // Card decades: a team's cards belong to all its members
-        for (const song of seat.timeline) {
-          const d = decadeOf(song.year)
+        for (const year of cardYears(game, seat)) {
+          const d = decadeOf(year)
           if (s.byDecade[d]) s.byDecade[d].cards++
         }
         if (counted.has(name)) continue

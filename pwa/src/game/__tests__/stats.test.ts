@@ -218,3 +218,40 @@ describe('turn records', () => {
     expect(placementRecord({ ...anna, isBot: true }, song, true, false, null).bot).toBe(true)
   })
 })
+
+describe('cards on the shared timeline', () => {
+  // The seats' own timelines stay empty there; the cards come from the turn log
+  const shared = (turns?: TurnRecord[]) =>
+    game(1, 'Lisa', [seat('Lisa', [], { cards: 3 }), seat('Tom', [], { cards: 1 })], turns, 'timeline_global')
+
+  it('a right placement goes to the placer, a won objection to the objector', () => {
+    const [lisa, tom] = ['Lisa', 'Tom'].map((n) =>
+      summarize([
+        shared([
+          turn('Lisa', 1965, true, { first: true }),
+          turn('Tom', 1984, false, { ch: { by: 'Lisa', ok: true } }),
+          turn('Lisa', 1992, true),
+          turn('Tom', 2003, true),
+          turn('Lisa', 1971, false, { ch: { by: 'Tom', ok: false } })
+        ])
+      ]).find((p) => p.name === n)!
+    )
+    expect(decadeShares(lisa).filter((d) => d.cards > 0).map((d) => [d.decade, d.cards])).toEqual([
+      [1960, 1],
+      [1980, 1],
+      [1990, 1]
+    ])
+    expect(decadeShares(tom).filter((d) => d.cards > 0).map((d) => [d.decade, d.cards])).toEqual([[2000, 1]])
+  })
+
+  it('a team round credits the team name', () => {
+    const g = game(1, 'Rot', [seat('Rot', [], { cards: 1, members: ['Ana', 'Ben'] })], [turn('Ana', 1999, true, { team: 'Rot' })], 'timeline_global')
+    const ben = summarize([g]).find((p) => p.name === 'Ben')!
+    expect(ben.byDecade[1990].cards).toBe(1)
+  })
+
+  it('rounds without a turn log stay empty instead of guessing', () => {
+    const lisa = summarize([shared()]).find((p) => p.name === 'Lisa')!
+    expect(decadeShares(lisa).every((d) => d.cards === 0)).toBe(true)
+  })
+})
