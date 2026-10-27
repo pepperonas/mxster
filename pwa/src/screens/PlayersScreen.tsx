@@ -7,6 +7,7 @@ import { useState, type FormEvent } from 'react'
 import { useParams } from 'react-router-dom'
 import { m } from 'motion/react'
 import { useUI } from '@/contexts'
+import { useMe } from '@/auth/AuthContext'
 import { useAppNavigate } from '@/hooks/useAppNavigate'
 import { SubPageHeader } from '@/shell/AppShell'
 import { Icon } from '@/components/ui/Icon'
@@ -35,6 +36,7 @@ function line(p: KnownPlayer): string {
 export const playerPath = (name: string) => `/spieler/${encodeURIComponent(name)}`
 
 export function PlayersScreen() {
+  const me = useMe()
   const navigate = useAppNavigate()
   const { players, add, setQuickPick } = usePlayers()
   const [name, setName] = useState('')
@@ -102,7 +104,7 @@ export function PlayersScreen() {
               className="flex flex-1 min-w-0 items-center gap-4 min-h-[72px] pl-4 pr-2 py-3 text-left m3-state-layer"
               onClick={() => navigate(playerPath(p.name))}
             >
-              <Avatar name={p.name} size={44} />
+              <Avatar name={p.name} picture={p.isMe ? me.picture : undefined} size={44} />
               <span className="flex-1 min-w-0 text-left">
                 <span className="flex items-center gap-2">
                   <span className="text-title-md truncate">{p.name}</span>
@@ -135,6 +137,7 @@ export function PlayersScreen() {
 }
 
 export function PlayerDetailScreen() {
+  const me = useMe()
   const { name: raw = '' } = useParams()
   const name = decodeURIComponent(raw)
   const navigate = useAppNavigate()
@@ -221,7 +224,7 @@ export function PlayerDetailScreen() {
 
       <div className="pt-2 space-y-6">
         <section className="flex items-center gap-4">
-          <Avatar name={player.name} size={64} />
+          <Avatar name={player.name} picture={player.isMe ? me.picture : undefined} size={64} />
           {editing ? (
             <form onSubmit={saveName} className="flex-1 flex flex-wrap gap-2">
               <label htmlFor="rename" className="sr-only">

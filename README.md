@@ -3,7 +3,7 @@
 Song hören, Jahr raten, an die richtige Stelle der Zeitleiste legen. Ein Musikspiel für eure Runde, gespielt auf einem Gerät.
 
 [![App](https://img.shields.io/badge/mxster.celox.io-B90C55?style=for-the-badge&logo=googlechrome&logoColor=white)](https://mxster.celox.io)
-[![Version](https://img.shields.io/badge/v0.6.0-B90C55?style=for-the-badge&logo=semver&logoColor=white)](https://github.com/pepperonas/mxster/releases)
+[![Version](https://img.shields.io/badge/v0.6.1-B90C55?style=for-the-badge&logo=semver&logoColor=white)](https://github.com/pepperonas/mxster/releases)
 [![Tests](https://github.com/pepperonas/mxster/actions/workflows/ci.yml/badge.svg)](https://github.com/pepperonas/mxster/actions/workflows/ci.yml)
 
 ![React](https://img.shields.io/badge/React_19-61DAFB?style=flat-square&logo=react&logoColor=black)
