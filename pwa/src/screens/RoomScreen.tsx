@@ -17,6 +17,7 @@ import { QrCode } from '@/components/ui/QrCode'
 import { GameRound } from './GameScreen'
 import { RoomProvider, useRoom } from '@/online/RoomContext'
 import { roomApi, roomLink } from '@/online/roomApi'
+import { sanitizeResult } from '@/online/sanitize'
 import { friendsApi, type Person } from '@/online/friendsApi'
 import type { Member } from '@/online/protocol'
 import { MODE_COPY } from '@/game/modeCopy'
@@ -87,12 +88,17 @@ function useSaveOnlineResult(account: boolean) {
     const result = room.result
     if (!account || room.role !== 'player' || !result || saved.current === result) return
     saved.current = result
+    // The result comes from another device: check it before it goes into this account
+    const clean = sanitizeResult(result, game.gameMode, game.turnLog)
+    if (!clean) return
+    const started = typeof game.startedAt === 'number' ? game.startedAt : 0
+    const durationMs = started > 0 ? Date.now() - started : 0
     saveGame({
-      winner: { name: result.winner.name, cards: result.winner.cards, score: result.winner.score },
-      players: result.players,
-      gameMode: game.gameMode ?? '',
-      turns: game.turnLog,
-      durationMs: game.startedAt ? Date.now() - game.startedAt : undefined
+      winner: { name: clean.winner.name, cards: clean.winner.cards, score: clean.winner.score },
+      players: clean.players,
+      gameMode: clean.gameMode,
+      turns: clean.turns,
+      durationMs: durationMs > 0 && durationMs < 24 * 3600 * 1000 ? durationMs : undefined
     })
   }, [account, room.result, room.role, game.gameMode, game.turnLog, game.startedAt, saveGame])
 }

@@ -11,6 +11,7 @@ import { useGame } from '@/contexts'
 import type { TurnFlow } from '@/game/useTurnFlow'
 import { useRoom } from './RoomContext'
 import { indexOfSeat, mayAct } from './rules'
+import { blindSnapshot } from './sanitize'
 import type { Intent, Snapshot } from './protocol'
 import type { Player } from '@/types'
 
@@ -79,7 +80,8 @@ export function useHostBridge(flow: TurnFlow, result: Snapshot['result']) {
 
   // Snapshots
   const sent = useRef('')
-  const snapshot = isHost ? JSON.stringify({ game: stateOf(game), result }) : ''
+  // Before the reveal the song goes out without its year (sanitize.ts)
+  const snapshot = isHost ? JSON.stringify({ game: blindSnapshot(stateOf(game)), result }) : ''
   useEffect(() => {
     if (!room || !isHost || snapshot === sent.current) return
     const id = window.setTimeout(() => {
