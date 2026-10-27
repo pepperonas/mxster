@@ -1,7 +1,8 @@
 /**
- * App frame for the approved app: navigation bar (compact) or rail (≥ 840 px)
- * with four destinations, and a top bar on the pages below them. The running
- * game owns the whole screen.
+ * App frame for the approved app: navigation bar (compact) or rail (≥ 768 px)
+ * with five destinations (the M3 maximum), and a top bar on the pages below
+ * them. The profile sits behind the avatar — top bar on phones, foot of the
+ * rail on larger screens. The running game owns the whole screen.
  */
 import { Outlet, NavLink, useLocation, matchPath } from 'react-router-dom'
 import { m } from 'motion/react'
@@ -21,11 +22,13 @@ interface Destination {
 export const DESTINATIONS: Destination[] = [
   { to: '/', label: 'Spielen', icon: 'play' },
   { to: '/verlauf', label: 'Verlauf', icon: 'history' },
-  { to: '/erfolge', label: 'Erfolge', icon: 'trophy' },
-  { to: '/profil', label: 'Profil', icon: 'person' }
+  { to: '/statistik', label: 'Statistik', icon: 'insights' },
+  { to: '/spieler', label: 'Spieler', icon: 'groups' },
+  { to: '/erfolge', label: 'Erfolge', icon: 'trophy' }
 ]
 
-const TOP_LEVEL = DESTINATIONS.map((d) => d.to)
+// The profile is reached through the avatar but keeps the navigation around it
+const TOP_LEVEL = [...DESTINATIONS.map((d) => d.to), '/profil']
 
 export function AppShell() {
   const { pathname } = useLocation()
@@ -73,10 +76,10 @@ function NavItem({ dest, pathname, layout }: { dest: Destination; pathname: stri
     <NavLink
       to={dest.to}
       viewTransition={!prefersReducedMotion()}
-      className="group flex flex-col items-center gap-1 min-w-[64px] py-3 md:py-2 outline-none"
+      className="group flex flex-col items-center gap-1 min-w-0 flex-1 md:flex-none md:min-w-[64px] py-3 md:py-2 outline-none"
       aria-current={active ? 'page' : undefined}
     >
-      <span className="relative grid place-items-center w-16 h-8">
+      <span className="relative grid place-items-center w-14 sm:w-16 h-8">
         {active && (
           <m.span
             layoutId={`nav-pill-${layout}`}
@@ -105,7 +108,7 @@ function NavBar() {
       className="fixed inset-x-0 bottom-0 z-40 bg-md-surface-container md:hidden safe-bottom"
       style={{ viewTransitionName: 'nav-bar' }}
     >
-      <div className="mx-auto max-w-md flex justify-around">
+      <div className="mx-auto max-w-lg flex justify-around px-1">
         {DESTINATIONS.map((d) => (
           <NavItem key={d.to} dest={d} pathname={pathname} layout="bar" />
         ))}
@@ -128,7 +131,26 @@ function NavRail() {
       {DESTINATIONS.map((d) => (
         <NavItem key={d.to} dest={d} pathname={pathname} layout="rail" />
       ))}
+      <ProfileButton active={pathname === '/profil'} />
     </nav>
+  )
+}
+
+/** Avatar at the foot of the rail: the way to the profile on larger screens. */
+function ProfileButton({ active }: { active: boolean }) {
+  const me = useMe()
+  return (
+    <NavLink
+      to="/profil"
+      viewTransition={!prefersReducedMotion()}
+      aria-label="Profil"
+      aria-current={active ? 'page' : undefined}
+      className="mt-auto mb-6 grid place-items-center w-14 h-14 rounded-full m3-state-layer outline-none"
+    >
+      <span className={`rounded-full p-0.5 ${active ? 'ring-2 ring-md-primary' : ''}`}>
+        <Avatar name={me.name} picture={me.picture} size={40} />
+      </span>
+    </NavLink>
   )
 }
 

@@ -4,10 +4,11 @@
  */
 
 import { createContext, useContext, useCallback, ReactNode } from 'react'
-import type { HistoryEntry, GameHistoryData, Player } from '@/types'
+import type { HistoryEntry, GameHistoryData, Player, TurnRecord } from '@/types'
 import { GAME_CONFIG } from '@/utils/constants'
 import { useSyncedDoc } from '@/sync/useSyncedDoc'
 import { mergeHistory } from '@/sync/merge'
+import { renameInHistory } from '@/game/stats'
 
 interface SaveGameData {
   winner: {
@@ -19,6 +20,8 @@ interface SaveGameData {
   gameMode: string
   duration?: number
   totalRounds?: number
+  turns?: TurnRecord[]
+  durationMs?: number
 }
 
 interface GameStatistics {
@@ -47,6 +50,8 @@ interface GameHistoryContextType {
   exportAll: () => string
   importGames: (jsonData: string, merge?: boolean) => ImportResult
   getStatistics: () => GameStatistics
+  /** Rename a person in every stored round (merges onto an existing name). */
+  renamePlayer: (from: string, to: string) => void
 }
 
 const GameHistoryContext = createContext<GameHistoryContextType | undefined>(undefined)
@@ -83,6 +88,7 @@ export function GameHistoryProvider({ children }: { children: ReactNode }) {
           cards: p.cards,
           score: p.score,
           ...(p.members ? { members: p.members } : {}),
+          ...(p.isBot ? { bot: true as const } : {}),
           timeline: p.timeline.map((song) => ({
             id: song.id,
             title: song.title,
@@ -93,7 +99,9 @@ export function GameHistoryProvider({ children }: { children: ReactNode }) {
         })),
         gameMode: gameData.gameMode as any,
         duration: gameData.duration || undefined,
-        totalRounds: gameData.totalRounds || undefined
+        totalRounds: gameData.totalRounds || undefined,
+        ...(gameData.turns?.length ? { turns: gameData.turns } : {}),
+        ...(gameData.durationMs ? { durationMs: gameData.durationMs } : {})
       }
 
       // Keep only last 50 games to prevent localStorage overflow
@@ -250,6 +258,11 @@ export function GameHistoryProvider({ children }: { children: ReactNode }) {
     }
   }, [history])
 
+  const renamePlayer = useCallback(
+    (from: string, to: string) => setHistory((prev) => renameInHistory(prev, from, to)),
+    [setHistory]
+  )
+
   return (
     <GameHistoryContext.Provider
       value={{
@@ -262,7 +275,8 @@ export function GameHistoryProvider({ children }: { children: ReactNode }) {
         clearAll,
         exportAll,
         importGames,
-        getStatistics
+        getStatistics,
+        renamePlayer
       }}
     >
       {children}

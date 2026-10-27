@@ -12,13 +12,13 @@ import { toggleThemeWithReveal } from '@/utils/themeReveal'
 import { api } from '@/api/client'
 import { LegalLinks } from './LegalLinks'
 
-const VERSION = '0.5.1'
+const VERSION = '0.6.0'
 
 export function ProfileScreen() {
   const me = useMe()
   const { logout } = useAuth()
   const navigate = useAppNavigate()
-  const { settings, updateSettings, removePlayer } = useSettings()
+  const { settings, updateSettings } = useSettings()
   const { exportAll } = useGameHistory()
   const { exportAchievements } = useAchievements()
   const { showModal, addToast } = useUI()
@@ -107,21 +107,8 @@ export function ProfileScreen() {
         </Item>
       </Group>
 
-      <Group title="Gespeicherte Mitspieler">
-        {settings.savedPlayers.length === 0 ? (
-          <p className="meta px-4 py-3">Namen, die du im Spielaufbau hinzufügst, erscheinen hier und als Schnellwahl.</p>
-        ) : (
-          <div className="flex flex-wrap gap-2 p-3">
-            {settings.savedPlayers.map((n) => (
-              <span key={n} className="chip !pr-1">
-                {n}
-                <button type="button" className="grid place-items-center w-8 h-8 rounded-full m3-state-layer" onClick={() => removePlayer(n)} aria-label={`${n} entfernen`}>
-                  <Icon name="close" size={18} />
-                </button>
-              </span>
-            ))}
-          </div>
-        )}
+      <Group title="Mitspieler">
+        <ActionRow icon="groups" title="Spieler verwalten" text="Schnellauswahl, Umbenennen, Zusammenführen und Zahlen je Person." onClick={() => navigate('/spieler')} />
       </Group>
 
       <Group title="Daten">

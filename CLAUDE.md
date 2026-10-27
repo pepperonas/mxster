@@ -6,7 +6,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 **mxster** is a private music timeline game, played on one device by a group: hear a song, guess its year, place it on a timeline. Since v0.4.0 it is **sign-in only** (Google), new accounts wait for approval, and play is **virtual only** — physical QR cards, the card generator and Spotify were removed for good.
 
-**Current version**: v0.5.1 (2026-10) — audio as AAC (.m4a), exotics off by default, song_104 removed. v0.5.0: resume after reload, Einspruch, decades + recent-song avoidance, round length, teams, song info (cover/album/fact). v0.4.0: login + approval queue, server-side account data, frontend redesign (Material 3 Expressive, "vinyl magenta").
+**Current version**: v0.6.0 (2026-10) — statistics tab (spider web per decade), player management, turn log per round. v0.5.1: audio as AAC (.m4a), exotics off by default, song_104 removed. v0.5.0: resume after reload, Einspruch, decades + recent-song avoidance, round length, teams, song info (cover/album/fact). v0.4.0: login + approval queue, server-side account data, frontend redesign (Material 3 Expressive, "vinyl magenta").
 **Song database** (300 songs, 1950s–2020s; 39 marked `exotic: true` — little-known club tracks, remixes, rarities; drawn only when the round option „Exoten“ is on): source of truth `docs/songs.json` (with `album`), facts in `docs/song-facts.json`; both are merged into `pwa/src/data/songs.ts` by `node scripts/song-management/sync-songs-ts.js` (never edit songs.ts by hand). Covers live next to the audio files as `audio/covers/<id>.jpg` (gitignored locally, gated by nginx like the audio). Song data comes from MusicBrainz / Cover Art Archive — **no Spotify anywhere**; the old `spotifyId` values are only kept as stable keys, new songs have none.
 **Live**: https://mxster.celox.io (VPS 69.62.121.168)
 
@@ -72,8 +72,9 @@ Audio files and covers live on the VPS in `/var/www/html/mxster/audio/` (+ `audi
 ### Frontend flow
 `App.tsx`: `MotionProvider → AuthProvider → AuthGate → AppProviders → AppShell → route`.
 - `auth/AuthGate.tsx`: loading / offline / login / waiting room (pending, polls every 30 s + on tab focus) / closed door (rejected, blocked) / app. Nothing below the gate (incl. audio) loads before approval. A 401 or `not_approved` from any API call fires `mx:session-lost` and the gate re-checks.
-- Routes: `/` Home, `/neu` Setup, `/spiel` Game (full screen, no nav), `/verlauf`, `/verlauf/:id`, `/erfolge`, `/profil`, `/admin`.
-- `shell/AppShell.tsx`: bottom navigation bar (compact) / rail (≥ md) for the four destinations; sub-pages use `SubPageHeader`.
+- Routes: `/` Home, `/neu` Setup, `/spiel` Game (full screen, no nav), `/verlauf`, `/verlauf/:id`, `/statistik`, `/spieler`, `/spieler/:name`, `/erfolge` (`?spieler=` preselects a person), `/profil`, `/admin`.
+- `shell/AppShell.tsx`: bottom navigation bar (compact) / rail (≥ md) for five destinations — Spielen · Verlauf · Statistik · Spieler · Erfolge (the M3 maximum); the profile sits behind the avatar (top bar on phones, foot of the rail) and still counts as top level. Sub-pages use `SubPageHeader`.
+- `auth/AuthGate.tsx`: the `loading` state renders outside `AnimatePresence`. With `mode="wait"` the empty loading frame had to finish an exit animation first, and roughly one load in ten never got past it (blank page, prod build too).
 
 ### State
 - `GameContext` — mode, players, turn, current song, global timeline, played songs, skips, round options (`goal`, `decades`, `challengesEnabled`) and the turn state (`reveal`, `pending`, `finished`, `startedAt`, `rankingsHistory`). `rematch()` keeps players + options. **Persistence:** every change of a started, unfinished round is written to `localStorage.mxster_running_game` (`game/savedGame.ts`, max 3 days) and restored on start, so a reload resumes mid-turn without double credits; Home offers "Weiterspielen"/"Verwerfen". Reveal and pending placement must stay in the context for exactly that reason.
@@ -100,6 +101,13 @@ Mobile placing (below `lg`, 1024 px):
 - When placing (or objecting) starts, the page scrolls the board right under the sticky bar.
 - Drag auto-scroll (`PlacementDock` DragStage): the card starts inside the dock, i.e. inside the bottom edge zone — scrolling is only armed after the card has left the dock, never while it is over the dock, and only after it rests 350 ms at an edge (aiming at a gap right above the dock must not run the page away). Edges are measured from our own element ref: Motion's `onDragStart` event target is a window-level node, `event.target.closest()` finds nothing.
 - Autoplay blocked (always after a reload on phones): the player waits `paused`, starts on Howler's next `unlock` (first tap), and the bar says "Zum Abspielen tippen" with a pulsing play button — no toast.
+
+### Statistics and players
+- **Turn log**: every booked turn becomes a `TurnRecord` (`types/index.ts`, built in `game/turnRecord.ts`) — person at the controls (`p`; for teams the member, `team` names the team), song, year, `ok`, `first` (a first card is always right and never counts for rates), `bot`, hardcore `d`/`ti`/`ar`/`pts`, objection `ch`. Booked in `resolvePlacement` and in `continueTurn` (hardcore) via `book()`, which also updates `logRef` — `finishGame` runs before the state re-renders and must see the last record. Stored as `GameContext.turnLog` (persisted with the running round) and saved on the history entry as `turns` + `durationMs`; history seats carry `bot`.
+- **`game/stats.ts`** (pure, tested): `summarize(history, hidden)` per person (team results count for each member; bots out; a person counts once per round; hidden people out everywhere, also as members/objectors), `decadeRates`/`decadeShares`, `groupStats` (totals, modes, hardest/safest songs from ≥ 2 tries), `weeklyRounds`, `knownPlayers`, `renameInHistory`. Rates are `null` without a turn log — never show a made-up 0 %. Rounds before v0.6.0 have no `turns`; legacy bot seats are recognised by name.
+- **`game/usePlayers.ts`**: rename/merge and remove touch history, achievements and settings together (`hiddenPlayers` in settings; merged across devices, hidden names leave the quick picks). The account holder cannot be renamed or removed (name comes from Google).
+- **Charts** (`components/charts/`): hand-written SVG, no library. `RadarChart` (≤ 3 series, rings 25–100 %, a hole for `null`, readout under the web — never over it — filled by hover, tap or keyboard), `BarList`, `WeekColumns`, `ShareBar`, `StatTile`; `DecadeProfile` wraps the radar with the metric switch and a table view. Series colours `--mx-chart-1…3` (magenta, amber, blue — the `data` seed in `gen-tokens.mjs`), validated with the dataviz palette checker on the real card surfaces in both themes. Text never takes a series colour.
+- History keeps the last 50 rounds (`GAME_CONFIG.MAX_HISTORY_GAMES`, server doc cap 512 KB); the statistics say so.
 
 ### Audio
 `services/PreviewPlayerService.ts` (Howler, HTML5 audio). `audioSrc()` turns the absolute `previewUrl` (`https://mxster.celox.io/audio/song_XXX.m4a`) into a same-origin path, so the session cookie travels and nginx can gate it. `components/game/Turntable.tsx` owns playback for the game: plays on song change (optional random start), polls position at 4 Hz, stops on unmount.
@@ -138,7 +146,7 @@ Mobile placing (below `lg`, 1024 px):
 - Backup: `/opt/mxster-api/data/mxster.db` is picked up by the dynamic SQLite search in `vps-data-backup.sh` (`.backup`, not copied).
 - Live check after a deploy (verified 2026-10-26): `/` 200, `/api/session` 200 `{"me":null}`, `/api/me` + `/api/admin/users` 401 without session, `/audio/song_001.m4a` 401 without session (206 `audio/mp4` with one — verified 2026-10-27), 206 with an approved session, 401 pending; data 403 pending; admin 404 for non-admins. A probe user for such checks must be deleted afterwards (users + sessions).
 - Mail on the VPS goes via SMTP (`SMTP_*` in `.env`): the service user `mxster` cannot read `/etc/msmtprc`, so `SENDMAIL_PATH` does not work there. `MAIL_FROM` must be quoted in the `.env`.
-- PWA: Workbox cache id `mxster-v7`; `/api/` and `/audio/` are never precached, `/api/` navigations bypass the SW. Bump `cacheId` on shell changes.
+- PWA: Workbox cache id `mxster-v8`; `/api/` and `/audio/` are never precached, `/api/` navigations bypass the SW. Bump `cacheId` on shell changes.
 
 ## Best Practices
 - Song type: `export const songs: Song[] = [...]` (the integrity test parses it with `/export const songs(?:: Song\[\])? = (\[[\s\S]*\])/`).

@@ -207,6 +207,30 @@
   --md-ref-warning-96: 255 242 226;
   --md-ref-warning-98: 255 248 243;
   --md-ref-warning-100: 255 255 255;
+  /* data */
+  --md-ref-data-0: 0 0 0;
+  --md-ref-data-4: 0 15 33;
+  --md-ref-data-6: 0 20 42;
+  --md-ref-data-10: 0 28 56;
+  --md-ref-data-12: 0 32 63;
+  --md-ref-data-17: 0 43 80;
+  --md-ref-data-20: 0 49 91;
+  --md-ref-data-22: 0 54 98;
+  --md-ref-data-24: 0 58 106;
+  --md-ref-data-30: 0 72 129;
+  --md-ref-data-40: 0 96 168;
+  --md-ref-data-50: 0 121 210;
+  --md-ref-data-60: 51 148 241;
+  --md-ref-data-70: 106 174 255;
+  --md-ref-data-80: 162 201 255;
+  --md-ref-data-87: 196 220 255;
+  --md-ref-data-90: 211 228 255;
+  --md-ref-data-92: 220 233 255;
+  --md-ref-data-94: 230 238 255;
+  --md-ref-data-95: 234 241 255;
+  --md-ref-data-96: 239 244 255;
+  --md-ref-data-98: 248 249 255;
+  --md-ref-data-100: 255 255 255;
 }
 /* END GENERATED PALETTES */
 
@@ -275,6 +299,10 @@
   --mx-groove: var(--md-ref-neutral-17);
   --mx-label: var(--md-ref-primary-60);
   --mx-label-2: var(--md-ref-tertiary-70);
+  /* Chart series, fixed order (validated: dataviz validate_palette, dark surface) */
+  --mx-chart-1: var(--md-ref-primary-50);
+  --mx-chart-2: var(--md-ref-tertiary-60);
+  --mx-chart-3: var(--md-ref-data-60);
 }
 
 /* ════════════════════ SYS COLOR ROLES — LIGHT ════════════════════ */
@@ -335,6 +363,10 @@
   --mx-groove: var(--md-ref-neutral-24);
   --mx-label: var(--md-ref-primary-50);
   --mx-label-2: var(--md-ref-tertiary-60);
+  /* Chart series, fixed order (validated: dataviz validate_palette, light surface) */
+  --mx-chart-1: var(--md-ref-primary-40);
+  --mx-chart-2: var(--md-ref-tertiary-50);
+  --mx-chart-3: var(--md-ref-data-50);
 }
 
 /* ════════════════════ SHAPE — 10-step corner scale ════════════════════ */

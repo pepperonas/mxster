@@ -104,6 +104,8 @@ export interface HistoryEntry {
     score: number
     /** Team rounds: the people in the team. */
     members?: string[]
+    /** A bot played this seat (since v0.6.0). */
+    bot?: true
     timeline: Array<{
       id: string
       title: string
@@ -117,6 +119,36 @@ export interface HistoryEntry {
   gameVariant?: string
   duration?: number
   totalRounds?: number
+  /** Every booked turn in order (since v0.6.0; older rounds have none). */
+  turns?: TurnRecord[]
+  /** Wall-clock length of the round (since v0.6.0). */
+  durationMs?: number
+}
+
+/**
+ * One booked turn, kept compact (rounds are stored per account, 50 at most).
+ * `p` is the person at the controls — for a team the member whose turn it was,
+ * `team` then names the team. Hardcore fills the guess fields.
+ */
+export interface TurnRecord {
+  p: string
+  team?: string
+  bot?: true
+  /** Song id and its year. */
+  s: string
+  y: number
+  /** Timeline: the card lay right. Hardcore: the year was within ±2. */
+  ok: boolean
+  /** Timeline: it was the player's first card (always right, says nothing). */
+  first?: true
+  /** Hardcore: |guessed year − year|, absent when no year was given. */
+  d?: number
+  /** Hardcore: title / artist right, points scored. */
+  ti?: boolean
+  ar?: boolean
+  pts?: number
+  /** An objection on this card: by whom (person/team name) and whether its gap was right. */
+  ch?: { by: string; ok: boolean }
 }
 
 export interface GameHistoryData {

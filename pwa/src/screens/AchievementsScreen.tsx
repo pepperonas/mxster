@@ -7,7 +7,8 @@ import { achievementIcon } from '@/types/achievements'
 import { useMemo, useState } from 'react'
 import { m } from 'motion/react'
 import { useMe } from '@/auth/AuthContext'
-import { useAchievements } from '@/contexts'
+import { useAchievements, useSettings } from '@/contexts'
+import { useSearchParams } from 'react-router-dom'
 import { ProgressRing } from '@/components/ui/ProgressRing'
 import { ownPlayerName } from '@/game/owner'
 import { spring } from '@/motion/springs'
@@ -18,11 +19,15 @@ export function AchievementsScreen() {
   const me = useMe()
   const own = ownPlayerName(me.name)
   const { getPlayerAchievements, getAllPlayerNames } = useAchievements()
+  const { settings } = useSettings()
+  const [params] = useSearchParams()
   const names = useMemo(() => {
-    const all = getAllPlayerNames()
+    const all = getAllPlayerNames().filter((n) => !settings.hiddenPlayers.includes(n))
     return [own, ...all.filter((n) => n !== own)]
-  }, [getAllPlayerNames, own])
-  const [who, setWho] = useState(own)
+  }, [getAllPlayerNames, own, settings.hiddenPlayers])
+  // Opened from a person in the player management: start with them
+  const asked = params.get('spieler')
+  const [who, setWho] = useState(asked && names.includes(asked) ? asked : own)
 
   const stored = getPlayerAchievements(who)
   // Nobody played under this name yet: show every achievement as still open.

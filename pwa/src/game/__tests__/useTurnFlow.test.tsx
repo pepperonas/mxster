@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { renderHook, act, waitFor } from '@testing-library/react'
 import type { ReactNode } from 'react'
-import { AppProviders, useGame } from '@/contexts'
+import { AppProviders, useGame, useGameHistory } from '@/contexts'
 import { MotionTestProvider } from '@/test/MotionTestProvider'
 import { useTurnFlow, type SkipNotice } from '../useTurnFlow'
 import { BotPlayer } from '@/services/botPlayer'
@@ -443,5 +443,68 @@ describe('resume after reload', () => {
     t.unmount()
     const again = renderHook(() => useGame(), { wrapper })
     expect(again.result.current.isGameStarted).toBe(false)
+  })
+})
+
+describe('turn log for the statistics', () => {
+  function setupWithHistory(mode: 'hardcore' | 'timeline_personal', players: Array<Partial<Player> & { name: string }>) {
+    const hook = renderHook(
+      () => ({ game: useGame(), flow: useTurnFlow({ onGameOver: () => {}, onSkipNotice: () => {} }), history: useGameHistory() }),
+      { wrapper }
+    )
+    act(() => {
+      hook.result.current.game.setGameMode(mode as never)
+      players.forEach(({ name }) => hook.result.current.game.addPlayer(name))
+    })
+    players.forEach(({ name: _n, ...data }, i) => {
+      if (Object.keys(data).length) act(() => hook.result.current.game.updatePlayer(i, data))
+    })
+    return { get: () => hook.result.current }
+  }
+
+  it('books every turn, wrong ones and objections included, and stores them with the round', () => {
+    const tl = Array.from({ length: 9 }, (_, i) => song(1950 + i * 5))
+    const t = setupWithHistory('timeline_personal', [
+      { name: 'A', timeline: tl, cards: 9 },
+      { name: 'B', challenges: 3 }
+    ])
+    // A places wrong, B objects right
+    act(() => t.get().game.setCurrentSong(song(1952, 'x')))
+    act(() => t.get().flow.placeCard(9))
+    act(() => t.get().flow.startChallenge(1))
+    act(() => t.get().flow.claimGap(1))
+    act(() => t.get().flow.continueTurn())
+    expect(t.get().game.turnLog).toEqual([{ p: 'A', s: 'x', y: 1952, ok: false, ch: { by: 'B', ok: true } }])
+    // B: now owns the 1952 card (won objection), places 1990 after it
+    act(() => t.get().game.setCurrentSong(song(1990, 'y')))
+    act(() => t.get().flow.placeCard(1))
+    act(() => t.get().flow.revealPlacement())
+    act(() => t.get().flow.continueTurn())
+    // A wins with the 10th card
+    act(() => t.get().game.setCurrentSong(song(2020, 'z')))
+    act(() => t.get().flow.placeCard(9))
+    act(() => t.get().flow.revealPlacement())
+    act(() => t.get().flow.continueTurn())
+
+    const saved = t.get().history.history[0]
+    expect(saved.turns?.map((r) => [r.p, r.s, r.ok, Boolean(r.first)])).toEqual([
+      ['A', 'x', false, false],
+      ['B', 'y', true, false],
+      ['A', 'z', true, false]
+    ])
+    // The round was never started through startGame, so its length is unknown and not stored
+    expect('durationMs' in saved).toBe(false)
+  })
+
+  it('hardcore books the year distance and the points', () => {
+    const tl = Array.from({ length: 9 }, (_, i) => song(1960 + i))
+    const t = setupWithHistory('hardcore', [
+      { name: 'A', timeline: tl, cards: 9, score: 40 },
+      { name: 'B', timeline: tl, cards: 10, score: 30 }
+    ])
+    act(() => t.get().game.setCurrentSong(song(1999, 'q')))
+    act(() => t.get().flow.submitGuess('Song 1999', 'nope', '1996'))
+    act(() => t.get().flow.continueTurn())
+    expect(t.get().history.history[0].turns).toEqual([{ p: 'A', s: 'q', y: 1999, ok: false, d: 3, ti: true, ar: false, pts: 5 }])
   })
 })

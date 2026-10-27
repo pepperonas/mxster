@@ -38,6 +38,7 @@ import { pickSong, songKey } from './songPool'
 import { eligibleChallengers, resolveChallenge, type ChallengeClaim } from './challenge'
 import { isTeam } from './teams'
 import type { TurnPhase } from './turn'
+import { guessRecord, placementRecord } from './turnRecord'
 
 export type { Reveal, TurnPhase } from './turn'
 
@@ -86,7 +87,9 @@ export function useTurnFlow({ onGameOver, onSkipNotice }: Options) {
     finish,
     startedAt,
     rankingsHistory,
-    pushRanking
+    pushRanking,
+    turnLog,
+    logTurn
   } = game
   const { addToast } = useUI()
   const { settings, rememberSong } = useSettings()
@@ -96,6 +99,16 @@ export function useTurnFlow({ onGameOver, onSkipNotice }: Options) {
   const [isBotThinking, setIsBotThinking] = useState(false)
   const botBusy = useRef(false)
   const widenedNoticeShown = useRef(false)
+  // The log as of the latest booking — finishGame runs before the state has re-rendered
+  const logRef = useRef(turnLog)
+  logRef.current = turnLog
+  const book = useCallback(
+    (record: Parameters<typeof logTurn>[0]) => {
+      logRef.current = [...logRef.current, record]
+      logTurn(record)
+    },
+    [logTurn]
+  )
 
   const phase: TurnPhase = gameOver
     ? 'over'
@@ -157,7 +170,9 @@ export function useTurnFlow({ onGameOver, onSkipNotice }: Options) {
         saveGame({
           winner: { name: winner.name, cards: winner.cards, score: winner.score },
           players: finalPlayers,
-          gameMode: gameMode ?? ''
+          gameMode: gameMode ?? '',
+          turns: logRef.current,
+          durationMs: startedAt ? Date.now() - startedAt : undefined
         })
         addToast('Spiel wurde zur Historie hinzugefügt!', 'success')
       } catch (error) {
@@ -254,6 +269,15 @@ export function useTurnFlow({ onGameOver, onSkipNotice }: Options) {
         }
       }
 
+      book(
+        placementRecord(
+          placer,
+          currentSong,
+          result.placerCorrect,
+          isFirstCard,
+          claim ? { by: players[claim.playerIndex], ok: Boolean(result.challengerCorrect) } : null
+        )
+      )
       setPending(null)
       setReveal({
         kind: 'placement',
@@ -273,7 +297,7 @@ export function useTurnFlow({ onGameOver, onSkipNotice }: Options) {
           : null
       })
     },
-    [currentSong, players, gameMode, globalTimeline, addToGlobalTimeline, updatePlayer, setPending, setReveal]
+    [currentSong, players, gameMode, globalTimeline, addToGlobalTimeline, updatePlayer, setPending, setReveal, book]
   )
 
   const placeCard = useCallback(
@@ -393,6 +417,7 @@ export function useTurnFlow({ onGameOver, onSkipNotice }: Options) {
       score: newScore
     }
     updatePlayer(reveal.playerIndex, { timeline: updated.timeline, cards: updated.cards, score: updated.score })
+    book(guessRecord(player, song, check, breakdown.total))
     applyEffects(realtimeScoreAchievements(player.name, player.score, newScore))
 
     const updatedPlayers = players.map((p, i) => (i === reveal.playerIndex ? updated : p))
@@ -405,7 +430,7 @@ export function useTurnFlow({ onGameOver, onSkipNotice }: Options) {
     if (settleTurn(reveal.playerIndex, updatedPlayers) === 'over') return
     nextTurn()
     addToast('Karte platziert!', 'success')
-  }, [reveal, gameOver, players, settleTurn, nextTurn, updatePlayer, applyEffects, pushRanking, setReveal, addToast])
+  }, [reveal, gameOver, players, settleTurn, nextTurn, updatePlayer, applyEffects, pushRanking, setReveal, addToast, book])
 
   // ── Bots ─────────────────────────────────────────────────────────────────
   // Effect events always see the latest placeCard/submitGuess (no stale closures).

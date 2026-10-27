@@ -1,0 +1,226 @@
+/**
+ * Statistik — what the stored rounds say: headline numbers, the decade profile
+ * (spider web, up to three people side by side), wins, activity per week, the
+ * modes you play and the songs that trip everyone up.
+ */
+import { useMemo, useState } from 'react'
+import { useAppNavigate } from '@/hooks/useAppNavigate'
+import { Icon } from '@/components/ui/Icon'
+import { StatTile, BarList, WeekColumns, ShareBar } from '@/components/charts/Bars'
+import { DecadeProfile } from '@/components/charts/DecadeProfile'
+import { SERIES_COLORS } from '@/components/charts/RadarChart'
+import { usePlayers } from '@/game/usePlayers'
+import { groupStats, weeklyRounds } from '@/game/stats'
+import { MODE_COPY } from '@/game/modeCopy'
+import { songs } from '@/data/songs'
+import { GAME_CONFIG } from '@/utils/constants'
+import type { GameMode } from '@/types'
+
+const MAX_COMPARED = 3
+const SONG_BY_ID = new Map(songs.map((s) => [s.id, s]))
+const pct = (v: number | null) => (v === null ? '–' : `${Math.round(v * 100)} %`)
+
+function formatPlayTime(ms: number): string {
+  const min = Math.round(ms / 60000)
+  if (min < 60) return `${min} Min.`
+  const h = Math.floor(min / 60)
+  return `${h}:${String(min % 60).padStart(2, '0')} Std.`
+}
+
+export function StatisticsScreen() {
+  const navigate = useAppNavigate()
+  const { history, summaries, myName } = usePlayers()
+  const group = useMemo(() => groupStats(history), [history])
+  const weeks = useMemo(() => weeklyRounds(history), [history])
+
+  // Compared in the spider web: you first, then whoever played most
+  const defaults = useMemo(() => {
+    const byGames = [...summaries].sort((a, b) => b.games - a.games).map((s) => s.name)
+    const ordered = byGames.includes(myName) ? [myName, ...byGames.filter((n) => n !== myName)] : byGames
+    return ordered.slice(0, Math.min(2, MAX_COMPARED))
+  }, [summaries, myName])
+  const [chosen, setChosen] = useState<string[] | null>(null)
+  const compared = (chosen ?? defaults).filter((n) => summaries.some((s) => s.name === n))
+
+  const toggle = (name: string) =>
+    setChosen((prev) => {
+      const cur = (prev ?? defaults).filter((n) => summaries.some((s) => s.name === n))
+      if (cur.includes(name)) return cur.length > 1 ? cur.filter((n) => n !== name) : cur
+      return cur.length >= MAX_COMPARED ? [...cur.slice(1), name] : [...cur, name]
+    })
+
+  if (history.length === 0) {
+    return (
+      <div className="pt-4 md:pt-10">
+        <h1 className="text-headline-md mb-6">Statistik</h1>
+        <div className="surface p-8 text-center">
+          <Icon name="insights" size={40} className="mx-auto text-md-on-surface-variant" />
+          <p className="mt-4 text-title-md">Noch keine Zahlen</p>
+          <p className="mt-1 meta">Nach der ersten Runde siehst du hier Trefferquoten, Siege und euer Jahrzehnt-Profil.</p>
+          <button type="button" className="btn btn-brand m3-state-layer mt-6" onClick={() => navigate('/neu')}>
+            Erste Runde starten
+          </button>
+        </div>
+      </div>
+    )
+  }
+
+  const people = summaries.filter((s) => s.games > 0)
+  const ranked = people.slice(0, 8)
+  const hardcore = people.filter((s) => s.guesses > 0)
+
+  return (
+    <div className="pt-4 md:pt-10 space-y-6">
+      <header>
+        <h1 className="text-headline-md">Statistik</h1>
+        <p className="meta mt-1">
+          {history.length >= GAME_CONFIG.MAX_HISTORY_GAMES
+            ? `Aus euren letzten ${history.length} Runden.`
+            : `Aus ${history.length} ${history.length === 1 ? 'Runde' : 'Runden'}.`}
+        </p>
+      </header>
+
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+        <StatTile label="Runden" value={history.length} note={`${people.length} Spieler`} />
+        <StatTile label="Songs gespielt" value={group.songs} />
+        <StatTile
+          label="Trefferquote"
+          value={pct(group.accuracy)}
+          note={group.accuracy === null ? 'ab der nächsten Runde' : `${group.tries} Versuche`}
+        />
+        {group.timedRounds > 0 ? (
+          <StatTile
+            label="Spielzeit"
+            value={formatPlayTime(group.playMs)}
+            note={`Ø ${formatPlayTime(group.playMs / group.timedRounds)} je Runde`}
+          />
+        ) : (
+          <StatTile label="Spielzeit" value="–" note="ab der nächsten Runde" />
+        )}
+      </div>
+
+      <section className="surface p-5 space-y-4" aria-labelledby="profile-h">
+        <div>
+          <h2 id="profile-h" className="text-title-lg">
+            Jahrzehnt-Profil
+          </h2>
+          <p className="meta">Wählt bis zu drei Personen zum Vergleich.</p>
+        </div>
+        <div className="flex flex-wrap gap-2" role="group" aria-label="Personen im Vergleich">
+          {people.map((p) => {
+            const at = compared.indexOf(p.name)
+            return (
+              <button key={p.name} type="button" className="chip m3-state-layer" aria-pressed={at >= 0} onClick={() => toggle(p.name)}>
+                {at >= 0 && (
+                  <span className="inline-block w-3 h-3 rounded-full" style={{ background: `rgb(${SERIES_COLORS[at]})` }} aria-hidden />
+                )}
+                {p.name}
+              </button>
+            )
+          })}
+        </div>
+        <DecadeProfile people={compared.map((n) => people.find((p) => p.name === n)!).filter(Boolean)} />
+      </section>
+
+      <section className="surface p-5" aria-labelledby="wins-h">
+        <h2 id="wins-h" className="text-title-lg mb-4">
+          Siege
+        </h2>
+        <BarList
+          label="Siege je Person"
+          max={Math.max(1, ...ranked.map((s) => s.wins))}
+          rows={ranked.map((s) => ({
+            key: s.name,
+            label: s.name,
+            value: s.wins,
+            text: `${s.wins}`,
+            sub: `${s.games} ${s.games === 1 ? 'Runde' : 'Runden'} · ${Math.round((s.wins / Math.max(1, s.games)) * 100)} %`,
+            strong: s.name === myName
+          }))}
+        />
+      </section>
+
+      <section className="surface p-5" aria-labelledby="week-h">
+        <h2 id="week-h" className="text-title-lg mb-3">
+          Runden pro Woche
+        </h2>
+        <WeekColumns weeks={weeks} label="Runden pro Woche, letzte zwölf Wochen" />
+      </section>
+
+      <section className="surface p-5" aria-labelledby="modes-h">
+        <h2 id="modes-h" className="text-title-lg mb-4">
+          Spielmodi
+        </h2>
+        <ShareBar
+          label="Runden je Spielmodus"
+          parts={(['timeline_personal', 'timeline_global', 'hardcore'] as GameMode[]).map((m) => ({
+            label: MODE_COPY[m].name,
+            value: group.modes[m]
+          }))}
+        />
+      </section>
+
+      {hardcore.length > 0 && (
+        <section className="surface p-5" aria-labelledby="hc-h">
+          <h2 id="hc-h" className="text-title-lg">
+            Jahre raten
+          </h2>
+          <p className="meta mb-4">Im Hardcore-Modus: wie weit die Jahreszahl im Schnitt danebenlag.</p>
+          <BarList
+            label="Durchschnittliche Abweichung in Jahren"
+            max={Math.max(1, ...hardcore.map((s) => s.yearOff ?? 0))}
+            rows={[...hardcore]
+              .sort((a, b) => (a.yearOff ?? 99) - (b.yearOff ?? 99))
+              .map((s) => ({
+                key: s.name,
+                label: s.name,
+                value: s.yearOff ?? 0,
+                text: `± ${(s.yearOff ?? 0).toLocaleString('de-DE', { maximumFractionDigits: 1 })}`,
+                sub: `${s.exactYears} ${s.exactYears === 1 ? 'Jahr' : 'Jahre'} exakt`,
+                strong: s.name === myName
+              }))}
+          />
+        </section>
+      )}
+
+      {(group.hardest.length > 0 || group.safest.length > 0) && (
+        <div className="grid gap-6 md:grid-cols-2">
+          <SongList title="Die kniffligsten Songs" items={group.hardest} text={(s) => `${s.wrong} von ${s.tries} falsch`} />
+          <SongList title="Sichere Bank" items={group.safest} text={(s) => `${s.tries}-mal richtig`} />
+        </div>
+      )}
+    </div>
+  )
+}
+
+function SongList({
+  title,
+  items,
+  text
+}: {
+  title: string
+  items: Array<{ id: string; tries: number; wrong: number }>
+  text: (s: { tries: number; wrong: number }) => string
+}) {
+  if (items.length === 0) return null
+  return (
+    <section className="surface p-5" aria-label={title}>
+      <h2 className="text-title-lg mb-3">{title}</h2>
+      <ol className="space-y-2">
+        {items.map((s) => {
+          const song = SONG_BY_ID.get(s.id)
+          return (
+            <li key={s.id} className="flex items-baseline gap-3">
+              <span className="w-12 shrink-0 text-title-sm tabular text-md-primary">{song?.year ?? '–'}</span>
+              <span className="min-w-0 flex-1">
+                <span className="block truncate text-body-md">{song?.title ?? s.id}</span>
+                <span className="block truncate text-body-sm text-md-on-surface-variant">{song?.artist}</span>
+              </span>
+              <span className="shrink-0 text-body-sm tabular text-md-on-surface-variant">{text(s)}</span>
+            </li>
+          )
+        })}
+      </ol>
+    </section>
+  )
+}

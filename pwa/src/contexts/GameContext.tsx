@@ -1,5 +1,5 @@
 import { createContext, useContext, useEffect, useReducer, ReactNode } from 'react'
-import type { Player, Song, GameMode, GlobalTimelineCard } from '@/types'
+import type { Player, Song, GameMode, GlobalTimelineCard, TurnRecord } from '@/types'
 import { nextContender, type Tiebreak } from '@/game/tiebreak'
 import { DEFAULT_GOAL } from '@/game/roundEnd'
 import { STARTING_CHALLENGES } from '@/game/challenge'
@@ -54,6 +54,8 @@ interface GameState {
   finished: boolean
   startedAt: number
   rankingsHistory: RankingSnapshot[]
+  /** Booked turns of this round, for the statistics. */
+  turnLog: TurnRecord[]
 }
 
 export type RoundOptions = Pick<GameState, 'goal' | 'decades' | 'challengesEnabled' | 'exotics'>
@@ -85,6 +87,7 @@ type GameAction =
   | { type: 'SET_PENDING'; payload: PendingPlacement | null }
   | { type: 'FINISH' }
   | { type: 'PUSH_RANKING'; payload: RankingSnapshot }
+  | { type: 'LOG_TURN'; payload: TurnRecord }
 
 interface GameContextValue extends GameState {
   setGameMode: (mode: GameMode | null) => void
@@ -115,6 +118,7 @@ interface GameContextValue extends GameState {
   setPending: (pending: PendingPlacement | null) => void
   finish: () => void
   pushRanking: (snapshot: RankingSnapshot) => void
+  logTurn: (turn: TurnRecord) => void
 }
 
 // ============================================================================
@@ -147,7 +151,8 @@ const initialState: GameState = {
   pending: null,
   finished: false,
   startedAt: 0,
-  rankingsHistory: []
+  rankingsHistory: [],
+  turnLog: []
 }
 
 /** Fresh scores, timelines and challenges for a new round with the same line-up. */
@@ -270,6 +275,7 @@ function gameReducer(state: GameState, action: GameAction): GameState {
         playedSongs: [],
         currentSongSkips: {},
         rankingsHistory: [],
+        turnLog: [],
         startedAt: Date.now()
       }
 
@@ -305,6 +311,9 @@ function gameReducer(state: GameState, action: GameAction): GameState {
 
     case 'PUSH_RANKING':
       return { ...state, rankingsHistory: [...state.rankingsHistory, action.payload] }
+
+    case 'LOG_TURN':
+      return { ...state, turnLog: [...(state.turnLog ?? []), action.payload] }
 
     case 'LOAD_GAME_STATE':
       return { ...state, ...action.payload }
@@ -403,7 +412,8 @@ export function GameProvider({ children }: GameProviderProps) {
     setReveal: (reveal) => dispatch({ type: 'SET_REVEAL', payload: reveal }),
     setPending: (pending) => dispatch({ type: 'SET_PENDING', payload: pending }),
     finish: () => dispatch({ type: 'FINISH' }),
-    pushRanking: (snapshot) => dispatch({ type: 'PUSH_RANKING', payload: snapshot })
+    pushRanking: (snapshot) => dispatch({ type: 'PUSH_RANKING', payload: snapshot }),
+    logTurn: (turn) => dispatch({ type: 'LOG_TURN', payload: turn })
   }
 
   return <GameContext.Provider value={value}>{children}</GameContext.Provider>

@@ -26,6 +26,10 @@ interface AchievementContextType {
   getAllPlayerNames: () => string[]
   exportAchievements: () => string
   importAchievements: (data: string) => void
+  /** Move a person's achievements to another name (merges with what is there). */
+  renamePlayer: (from: string, to: string) => void
+  /** Drop a person's achievements. */
+  removePlayer: (name: string) => void
 }
 
 const AchievementContext = createContext<AchievementContextType | undefined>(undefined)
@@ -472,6 +476,29 @@ export function AchievementProvider({ children }: { children: ReactNode }) {
     }
   }
 
+  const renamePlayer = useCallback(
+    (from: string, to: string) =>
+      setDoc((prev) => {
+        const mine = prev[from]
+        if (!mine || from === to) return prev
+        const { [from]: _gone, ...rest } = prev
+        const moved = { ...mine, playerName: to }
+        const target = rest[to]
+        return { ...rest, [to]: target ? mergeAchievements({ [to]: moved }, { [to]: target })[to] : moved }
+      }),
+    [setDoc]
+  )
+
+  const removePlayer = useCallback(
+    (name: string) =>
+      setDoc((prev) => {
+        if (!prev[name]) return prev
+        const { [name]: _gone, ...rest } = prev
+        return rest
+      }),
+    [setDoc]
+  )
+
   return (
     <AchievementContext.Provider
       value={{
@@ -483,7 +510,9 @@ export function AchievementProvider({ children }: { children: ReactNode }) {
         getPlayerAchievements,
         getAllPlayerNames,
         exportAchievements,
-        importAchievements
+        importAchievements,
+        renamePlayer,
+        removePlayer
       }}
     >
       {children}

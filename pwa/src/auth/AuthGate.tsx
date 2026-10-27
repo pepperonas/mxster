@@ -27,12 +27,14 @@ export function AuthGate({ children }: { children: ReactNode }) {
     }
   }, [status, refresh])
 
+  // The first check is not part of the transition: with mode="wait" the empty
+  // loading frame had to finish an exit animation before the app could mount,
+  // and that exit sometimes never completed — the page stayed blank.
+  if (state.kind === 'loading') return <div className="min-h-dvh" />
+
   let key: string
   let view: ReactNode
-  if (state.kind === 'loading') {
-    key = 'loading'
-    view = <div className="min-h-dvh" />
-  } else if (state.kind === 'offline') {
+  if (state.kind === 'offline') {
     key = 'offline'
     view = <WaitingScreen variant="offline" />
   } else if (state.kind === 'anonymous') {

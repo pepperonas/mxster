@@ -10,6 +10,8 @@ import { SetupScreen } from '@/screens/SetupScreen'
 import { GameScreen } from '@/screens/GameScreen'
 import { HistoryScreen, HistoryDetailScreen } from '@/screens/HistoryScreen'
 import { AchievementsScreen } from '@/screens/AchievementsScreen'
+import { StatisticsScreen } from '@/screens/StatisticsScreen'
+import { PlayersScreen, PlayerDetailScreen } from '@/screens/PlayersScreen'
 import { ProfileScreen } from '@/screens/ProfileScreen'
 import { AdminScreen } from '@/screens/AdminScreen'
 import { initRipple } from '@/utils/ripple'
@@ -63,6 +65,9 @@ const router = createBrowserRouter([
           { path: '/spiel', element: <GameScreen /> },
           { path: '/verlauf', element: <HistoryScreen /> },
           { path: '/verlauf/:id', element: <HistoryDetailScreen /> },
+          { path: '/statistik', element: <StatisticsScreen /> },
+          { path: '/spieler', element: <PlayersScreen /> },
+          { path: '/spieler/:name', element: <PlayerDetailScreen /> },
           { path: '/erfolge', element: <AchievementsScreen /> },
           { path: '/profil', element: <ProfileScreen /> },
           { path: '/admin', element: <AdminScreen /> },

@@ -51,8 +51,14 @@ export function mergeAchievements(local: AchievementDoc, server: AchievementDoc)
 }
 
 /** Settings: the local edit wins field by field, saved players are united. */
-export function mergeSettings<T extends { savedPlayers: string[]; recentSongs?: string[] }>(local: T, server: T): T {
+export function mergeSettings<T extends { savedPlayers: string[]; recentSongs?: string[]; hiddenPlayers?: string[] }>(local: T, server: T): T {
   const merged = { ...server, ...local, savedPlayers: [...new Set([...server.savedPlayers, ...local.savedPlayers])] }
+  // A person hidden on one device stays hidden (and out of the quick picks)
+  if (local.hiddenPlayers || server.hiddenPlayers) {
+    const hidden = [...new Set([...(server.hiddenPlayers ?? []), ...(local.hiddenPlayers ?? [])])]
+    merged.hiddenPlayers = hidden
+    merged.savedPlayers = merged.savedPlayers.filter((n) => !hidden.includes(n))
+  }
   // Recently played songs from both devices: server first, local (newer) last, no doubles
   if (local.recentSongs || server.recentSongs) {
     const keys = [...(server.recentSongs ?? []), ...(local.recentSongs ?? [])]

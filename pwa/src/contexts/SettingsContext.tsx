@@ -18,6 +18,8 @@ export interface Settings {
   theme: ThemeMode
   /** Songs played in recent rounds (oldest first) — drawn again only when nothing fresh is left. */
   recentSongs: string[]
+  /** People removed in the player management: left out of lists and statistics. */
+  hiddenPlayers: string[]
 }
 
 interface SettingsContextType {
@@ -26,6 +28,10 @@ interface SettingsContextType {
   resetSettings: () => void
   addPlayer: (playerName: string) => void
   removePlayer: (playerName: string) => void
+  /** Rename a person in the quick picks (merges with an existing name). */
+  renamePlayer: (from: string, to: string) => void
+  /** Hide a person from lists and statistics (and drop the quick pick). */
+  hidePlayer: (playerName: string) => void
   /** Note a drawn song so later rounds prefer other songs. */
   rememberSong: (key: string) => void
 }
@@ -37,7 +43,8 @@ export const defaultSettings: Settings = {
   hideYearsInTimeline: false,
   savedPlayers: [],
   theme: readStoredTheme(),
-  recentSongs: []
+  recentSongs: [],
+  hiddenPlayers: []
 }
 
 function readStoredTheme(): ThemeMode {
@@ -56,7 +63,8 @@ export function normalizeSettings(raw: unknown): Settings {
     hideYearsInTimeline: Boolean(r.hideYearsInTimeline),
     savedPlayers: Array.isArray(r.savedPlayers) ? r.savedPlayers.filter((n) => typeof n === 'string') : [],
     theme: r.theme === 'light' ? 'light' : r.theme === 'dark' ? 'dark' : readStoredTheme(),
-    recentSongs: Array.isArray(r.recentSongs) ? r.recentSongs.filter((k) => typeof k === 'string').slice(-RECENT_LIMIT) : []
+    recentSongs: Array.isArray(r.recentSongs) ? r.recentSongs.filter((k) => typeof k === 'string').slice(-RECENT_LIMIT) : [],
+    hiddenPlayers: Array.isArray(r.hiddenPlayers) ? r.hiddenPlayers.filter((n) => typeof n === 'string') : []
   }
 }
 
@@ -96,8 +104,37 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
     (playerName: string) => {
       const name = playerName.trim()
       if (!name) return
-      setValue((prev) => (prev.savedPlayers.includes(name) ? prev : { ...prev, savedPlayers: [...prev.savedPlayers, name] }))
+      // Adding someone again brings a hidden person back
+      setValue((prev) =>
+        prev.savedPlayers.includes(name) && !prev.hiddenPlayers.includes(name)
+          ? prev
+          : {
+              ...prev,
+              savedPlayers: prev.savedPlayers.includes(name) ? prev.savedPlayers : [...prev.savedPlayers, name],
+              hiddenPlayers: prev.hiddenPlayers.filter((n) => n !== name)
+            }
+      )
     },
+    [setValue]
+  )
+
+  const renamePlayer = useCallback(
+    (from: string, to: string) =>
+      setValue((prev) => ({
+        ...prev,
+        savedPlayers: [...new Set(prev.savedPlayers.map((n) => (n === from ? to : n)))],
+        hiddenPlayers: prev.hiddenPlayers.filter((n) => n !== to && n !== from)
+      })),
+    [setValue]
+  )
+
+  const hidePlayer = useCallback(
+    (playerName: string) =>
+      setValue((prev) => ({
+        ...prev,
+        savedPlayers: prev.savedPlayers.filter((n) => n !== playerName),
+        hiddenPlayers: prev.hiddenPlayers.includes(playerName) ? prev.hiddenPlayers : [...prev.hiddenPlayers, playerName]
+      })),
     [setValue]
   )
 
@@ -112,7 +149,7 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
   )
 
   return (
-    <SettingsContext.Provider value={{ settings, updateSettings, resetSettings, addPlayer, removePlayer, rememberSong: remember }}>
+    <SettingsContext.Provider value={{ settings, updateSettings, resetSettings, addPlayer, removePlayer, renamePlayer, hidePlayer, rememberSong: remember }}>
       {children}
     </SettingsContext.Provider>
   )

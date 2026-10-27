@@ -19,6 +19,7 @@ export const SEEDS = {
   error: '#B3261E',
   success: '#2E9E5B',
   warning: '#F2A900',
+  data: '#1E88E5',      // cool third hue for charts only (series 3)
 }
 
 const TONES = [0, 4, 6, 10, 12, 17, 20, 22, 24, 30, 40, 50, 60, 70, 80, 87, 90, 92, 94, 95, 96, 98, 100]
@@ -35,6 +36,7 @@ function palettes() {
     error: TonalPalette.fromInt(argbFromHex(SEEDS.error)),
     success: TonalPalette.fromInt(argbFromHex(SEEDS.success)),
     warning: TonalPalette.fromInt(argbFromHex(SEEDS.warning)),
+    data: TonalPalette.fromInt(argbFromHex(SEEDS.data)),
   }
 }
 
