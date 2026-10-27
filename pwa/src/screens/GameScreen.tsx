@@ -235,7 +235,9 @@ export function GameRound({ onRematch }: { onRematch: () => void }) {
                 })),
               timeline: activeTimeline,
               gap: pending.gapIndex,
-              revealBy: can('reveal') ? undefined : turnName(players[pending.playerIndex] ?? activePlayer)
+              revealBy: can('reveal') ? undefined : turnName(players[pending.playerIndex] ?? activePlayer),
+              online,
+              ownCard: online && isMine(pending.playerIndex)
             }
         : phase === 'placing' && currentSong
           ? !humanTurn

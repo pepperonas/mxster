@@ -47,6 +47,10 @@ export type DockState =
       gap: number
       /** Online: this device may not reveal — who does. */
       revealBy?: string
+      /** Online: each device speaks for one person, so no names on the buttons. */
+      online?: boolean
+      /** Online: this device placed the card (others may object). */
+      ownCard?: boolean
     }
   | { kind: 'challenge-choose'; challengerName: string; previewGap: number | null; timeline: Song[] }
   | {
@@ -271,23 +275,42 @@ function ChallengeOfferStage({
       <div className="space-y-2">
         <p className="text-title-md text-md-on-surface">{t.hasPlaced(state.placerName)}</p>
         <PositionStrip timeline={state.timeline} gap={state.gap} />
-        <p className="text-body-sm text-md-on-surface-variant">{t.objectionHint}</p>
+        <p className="text-body-sm text-md-on-surface-variant">
+          {!state.online ? t.objectionHint : state.ownCard ? t.othersMayObject : state.challengers.length > 0 ? t.objectionHintOwn : null}
+        </p>
       </div>
-      <div className="flex flex-wrap gap-2" role="group" aria-label={t.lodgeObjection}>
-        {state.challengers.map((c) => (
+      {state.online ? (
+        // One person per device: a plain "Object" button, never one's own name
+        state.challengers.slice(0, 1).map((c) => (
           <button
             key={c.seat}
             type="button"
-            className="chip m3-state-layer"
+            className="btn btn-tonal m3-state-layer"
             onClick={() => onChallenge(c.seat)}
-            aria-label={t.objectsLeft(c.name, c.left)}
+            aria-label={`${t.lodgeObjection}, ${t.objectionsLeft(c.left)}`}
           >
             <Icon name="hand" size={18} />
-            {c.name}
+            {t.lodgeObjection}
             <ChallengeDots left={c.left} />
           </button>
-        ))}
-      </div>
+        ))
+      ) : (
+        <div className="flex flex-wrap gap-2" role="group" aria-label={t.lodgeObjection}>
+          {state.challengers.map((c) => (
+            <button
+              key={c.seat}
+              type="button"
+              className="chip m3-state-layer"
+              onClick={() => onChallenge(c.seat)}
+              aria-label={t.objectsLeft(c.name, c.left)}
+            >
+              <Icon name="hand" size={18} />
+              {c.name}
+              <ChallengeDots left={c.left} />
+            </button>
+          ))}
+        </div>
+      )}
       {state.revealBy ? (
         <p className="text-body-sm text-md-on-surface-variant text-center py-2">{t.revealsWhenNoOne(state.revealBy)}</p>
       ) : (
