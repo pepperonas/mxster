@@ -287,7 +287,7 @@ async function main() {
 
   // Show next steps
   log('\n📋 Next steps:', 'bright')
-  log('   1. Update URLs:  node scripts/audio-hosting/update-song-urls.js', 'cyan')
+  log('   1. Regenerate songs: node scripts/song-management/sync-songs-ts.js', 'cyan')
   log('   2. Validate:     node scripts/audio-hosting/validate-audio.js\n', 'cyan')
 }
 

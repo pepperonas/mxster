@@ -2,11 +2,11 @@
 
 /**
  * Download Single Song Utility
- * Downloads a single song from YouTube and uploads it to VPS
- * Used by add-song.js and exchange-song.js for automatic audio hosting
+ * Downloads a single song from YouTube and uploads it to VPS (plus covers via
+ * uploadFile). Used by add-song.js and exchange-song.js.
  */
 
-import { execSync } from 'child_process'
+import { execSync, execFileSync } from 'child_process'
 import fs from 'fs'
 import path from 'path'
 import { fileURLToPath } from 'url'
@@ -53,48 +53,81 @@ function checkRsync() {
 }
 
 /**
- * Download song from YouTube via yt-dlp
+ * Download song from YouTube via yt-dlp (arguments as a list — titles with
+ * quotes or apostrophes never reach a shell). Overwrites an existing file.
  * @param {Object} song - Song object with id, title, artist
  * @returns {Promise<boolean>} Success status
  */
 async function downloadFromYouTube(song) {
   const outputPath = path.join(AUDIO_DIR, `${song.id}.mp3`)
-  const searchQuery = `${song.artist} - ${song.title}`
+  const searchQuery = `${song.artist} - ${song.title} audio`
 
   console.log(`🔍 Searching YouTube: "${searchQuery}"`)
 
   try {
-    // Ensure output directory exists
-    if (!fs.existsSync(AUDIO_DIR)) {
-      fs.mkdirSync(AUDIO_DIR, { recursive: true })
-    }
+    fs.mkdirSync(AUDIO_DIR, { recursive: true })
+    execFileSync(
+      'yt-dlp',
+      [
+        '--extract-audio',
+        '--audio-format', 'mp3',
+        '--audio-quality', '128K',
+        '--format', 'bestaudio',
+        '--output', outputPath,
+        '--no-playlist',
+        '--force-overwrites',
+        '--quiet',
+        '--no-warnings',
+        `ytsearch1:${searchQuery}`
+      ],
+      { stdio: 'inherit' }
+    )
 
-    // yt-dlp command (based on download-songs.js)
-    const command = `yt-dlp \
-      --extract-audio \
-      --audio-format mp3 \
-      --audio-quality 128K \
-      --format "bestaudio" \
-      --output "${outputPath}" \
-      --no-playlist \
-      --quiet \
-      --no-warnings \
-      "ytsearch1:${searchQuery}"`
-
-    execSync(command, { stdio: 'inherit' })
-
-    // Verify file exists
-    if (fs.existsSync(outputPath)) {
-      const stats = fs.statSync(outputPath)
-      const sizeMB = (stats.size / (1024 * 1024)).toFixed(2)
-      console.log(`✅ Downloaded: ${song.id}.mp3 (${sizeMB} MB)`)
-      return true
-    } else {
-      console.error(`❌ Download failed: File not created`)
+    if (!fs.existsSync(outputPath)) {
+      console.error('❌ Download failed: file not created')
       return false
     }
+    const sizeMB = (fs.statSync(outputPath).size / (1024 * 1024)).toFixed(2)
+    const seconds = probeSeconds(outputPath)
+    console.log(`✅ Downloaded: ${song.id}.mp3 (${sizeMB} MB${seconds ? `, ${formatLength(seconds)}` : ''})`)
+    if (seconds && (seconds < 90 || seconds > 600)) {
+      console.warn(`⚠️  Unusual length ${formatLength(seconds)} — probably not the original recording. Listen before using it.`)
+    }
+    return true
   } catch (error) {
     console.error(`❌ Download error: ${error.message}`)
+    return false
+  }
+}
+
+/** Duration in seconds via ffprobe, or null if ffprobe is missing. */
+function probeSeconds(file) {
+  try {
+    const out = execFileSync('ffprobe', ['-v', 'error', '-show_entries', 'format=duration', '-of', 'csv=p=0', file], { encoding: 'utf8' })
+    const s = Math.round(parseFloat(out))
+    return Number.isFinite(s) ? s : null
+  } catch {
+    return null
+  }
+}
+
+function formatLength(s) {
+  return `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`
+}
+
+/** Upload any local file into the audio folder on the VPS (subdir e.g. 'covers'). */
+export function uploadFile(localPath, subdir = '') {
+  const remoteDir = subdir ? `${VPS_AUDIO_PATH}/${subdir}` : VPS_AUDIO_PATH
+  try {
+    execFileSync('ssh', [VPS_HOST, `mkdir -p ${remoteDir}`], { stdio: 'ignore' })
+    execFileSync('rsync', ['-az', localPath, `${VPS_HOST}:${remoteDir}/`], { stdio: 'inherit' })
+    execFileSync('ssh', [VPS_HOST, `chown www-data:www-data ${remoteDir}/${path.basename(localPath)} && chmod 644 ${remoteDir}/${path.basename(localPath)}`], {
+      stdio: 'ignore'
+    })
+    console.log(`✅ Uploaded: ${subdir ? `${subdir}/` : ''}${path.basename(localPath)}`)
+    return true
+  } catch (error) {
+    console.error(`❌ Upload error: ${error.message}`)
     return false
   }
 }
@@ -144,7 +177,7 @@ async function uploadToVPS(song) {
  * @param {Object} song - Song object with id, title, artist
  * @returns {Promise<string|null>} Self-hosted URL or null on failure
  */
-export async function downloadAndUploadSong(song) {
+export async function downloadAndUploadSong(song, { upload = true } = {}) {
   console.log(`\n🎵 Processing audio for: ${song.artist} - ${song.title}`)
 
   // Check dependencies
@@ -161,14 +194,16 @@ export async function downloadAndUploadSong(song) {
   // Download from YouTube
   const downloadSuccess = await downloadFromYouTube(song)
   if (!downloadSuccess) {
-    console.error('⚠️  Download failed, will use Spotify preview URL as fallback')
+    console.error('⚠️  Download failed')
     return null
   }
+
+  if (!upload) return `${SELF_HOSTED_BASE_URL}/${song.id}.mp3`
 
   // Upload to VPS
   const uploadSuccess = await uploadToVPS(song)
   if (!uploadSuccess) {
-    console.error('⚠️  Upload failed, will use Spotify preview URL as fallback')
+    console.error('⚠️  Upload failed')
     return null
   }
 

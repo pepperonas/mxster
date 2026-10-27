@@ -281,7 +281,7 @@ async function main() {
     log('🎉 Download complete!', 'green')
     log('\n📋 Next steps:', 'bright')
     log('   1. Upload to VPS:     node scripts/audio-hosting/upload-to-vps.js', 'cyan')
-    log('   2. Update URLs:       node scripts/audio-hosting/update-song-urls.js', 'cyan')
+    log('   2. Regenerate songs:  node scripts/song-management/sync-songs-ts.js', 'cyan')
     log('   3. Validate:          node scripts/audio-hosting/validate-audio.js\n', 'cyan')
   }
 

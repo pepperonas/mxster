@@ -47,11 +47,12 @@ npm test
 
 ### Song Management / Audio Hosting
 ```bash
-node scripts/song-management/sync-songs-ts.js              # songs.json + song-facts.json → pwa/src/data/songs.ts
-node scripts/song-management/add-song.js "spotify-url"      # LEGACY: still calls the Spotify API — do not use, see below
-node scripts/song-management/edit-song.js
-node scripts/song-management/exchange-song.js
-cd scripts/audio-hosting && node download-songs.js && node upload-to-vps.js && node validate-audio.js --full
+node scripts/song-management/add-song.js "Artist" "Title"            # lookup → check fields → MP3 + cover → upload → songs.json
+node scripts/song-management/exchange-song.js song_123 "Artist" "Title"  # new song under the same id
+node scripts/song-management/edit-song.js                              # fix title/artist/year/genre
+node scripts/song-management/sync-songs-ts.js                          # songs.json + song-facts.json → pwa/src/data/songs.ts
+# flags for add/exchange: --year --album --genre --fact --yes --no-upload; deploy web afterwards
+cd scripts/audio-hosting && node download-songs.js && node upload-to-vps.js && node validate-audio.js --full   # details: scripts/audio-hosting/README.md
 ```
 MP3s and covers live on the VPS in `/var/www/html/mxster/audio/` (+ `audio/covers/`, never touched by the web deploy) and locally in the gitignored `pwa/public/audio/` (served by Vite in dev, unauthenticated). Upload new files with rsync (`rsync -a pwa/public/audio/ root@69.62.121.168:/var/www/html/mxster/audio/`, then `chown -R www-data:www-data`).
 
@@ -139,7 +140,7 @@ Mobile placing (below `lg`, 1024 px):
 
 ## Best Practices
 - Song type: `export const songs: Song[] = [...]` (the integrity test parses it with `/export const songs(?:: Song\[\])? = (\[[\s\S]*\])/`).
-- Song data is maintained without Spotify (MusicBrainz for album/year cross-checks, Cover Art Archive or the iTunes Search API for covers, yt-dlp for audio; years are the original first release of that recording). `add-song.js`/`exchange-song.js` and `scripts/song-management/lib/spotifyApi.js` still use the Spotify API and are legacy — add songs by editing `docs/songs.json`, then run `sync-songs-ts.js`. Songs without a fact are fine (only confident facts, never the year).
+- Song data is maintained without Spotify: `lib/musicData.js` (MusicBrainz year + original album — only recordings credited to exactly that artist, no compilations/live/DJ mixes; Cover Art Archive, iTunes as fallback), `lib/songStore.js` (the only writer of songs.json/song-facts.json; regenerates songs.ts through sync — writing songs.ts directly drops every fact), `lib/songWizard.js` (shared add/exchange flow; refuses a year-spoiling fact; duplicate check ignores case/accents). The lookup is a suggestion — MusicBrainz misses originals sometimes (Bohemian Rhapsody comes back as 1976), so the wizard shows all candidates and asks for the year. yt-dlp runs with an argument list (titles with quotes are safe) and warns on lengths outside 1:30–10:00. Songs without a fact are fine (only confident facts, never the year).
 - Touch targets ≥ 48 px; `hoverOnlyWhenSupported` is on, so `hover:` never fires on touch.
 - UI copy is German, sentence case, active verbs; **no emoji anywhere** — every symbol is an inline SVG from `components/ui/Icon.tsx` (achievements map to icons via `achievementIcon(id)`; stored achievements may still carry old emoji strings, so never render `achievement.icon` from stored data directly).
 

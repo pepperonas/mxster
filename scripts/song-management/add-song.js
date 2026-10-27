@@ -1,241 +1,69 @@
 #!/usr/bin/env node
-
 /**
- * mxster - Add Song CLI Tool
+ * Add a song to mxster — without Spotify.
  *
- * Adds a new song to the game (docs/songs.json + pwa/src/data/songs.ts)
+ *   node scripts/song-management/add-song.js "Artist" "Title"
+ *   node scripts/song-management/add-song.js "a-ha" "Take on Me" --year 1985 --genre Pop --yes
  *
- * Usage:
- *   node add-song.js <spotify-url>
- *   node add-song.js "https://open.spotify.com/track/4u7EnebtmKWzUH433cf5Qv"
- *   node add-song.js --edit <spotify-url>  # Interaktiver Modus mit Vorauswahl
+ * Looks up year and album (MusicBrainz, iTunes), lets you check every field,
+ * downloads the audio (yt-dlp) and the cover, uploads both to the VPS and
+ * writes docs/songs.json (+ docs/song-facts.json), then regenerates songs.ts.
+ * Flags: --year --album --genre --fact --yes --no-upload (see lib/songWizard.js).
+ * Deploy the web app afterwards so the new song is in the bundle.
  */
-
-import dotenv from 'dotenv'
-import fs from 'fs/promises'
+import { execFileSync } from 'child_process'
 import path from 'path'
-import { fileURLToPath } from 'url'
-import readline from 'readline'
-import { execSync } from 'child_process'
-import { getTrackMetadata } from './lib/spotifyApi.js'
+import { ROOT, findDuplicate, loadFacts, loadSongs, nextId, previewUrlFor, saveAll } from './lib/songStore.js'
+import { createPrompt, fetchMedia, parseArgs, proposeSong } from './lib/songWizard.js'
 
-// ES Module equivalent of __dirname
-const __filename = fileURLToPath(import.meta.url)
-const __dirname = path.dirname(__filename)
-
-// Load .env from project root (two levels up)
-dotenv.config({ path: path.join(__dirname, '../../.env') })
-
-// Configuration
-const SONGS_JSON_PATH = path.join(__dirname, '../../docs/songs.json');
-const PWA_SONGS_PATH = path.join(__dirname, '../../pwa/src/data/songs.ts');
-
-/**
- * Main function
- */
 async function main() {
-  console.log('\n🎵 mxster - Add Song Tool\n');
-
-  // Check for --edit parameter
-  const editMode = process.argv[2] === '--edit';
-  const spotifyUrl = editMode ? process.argv[3] : process.argv[2];
-
-  if (!spotifyUrl) {
-    console.error('❌ Error: Please provide a Spotify URL');
-    console.log('\nUsage:');
-    console.log('  node add-song.js <spotify-url>');
-    console.log('  node add-song.js --edit <spotify-url>  # Interaktiver Modus');
-    console.log('\nExample:');
-    console.log('  node add-song.js "https://open.spotify.com/track/4u7EnebtmKWzUH433cf5Qv"');
-    console.log('  node add-song.js --edit "https://open.spotify.com/track/4u7EnebtmKWzUH433cf5Qv"');
-    process.exit(1);
-  }
-
-  if (editMode) {
-    console.log('🔧 Interaktiver Modus: Spotify-Metadaten können bearbeitet werden\n');
-  }
-
+  const { positional, flags } = parseArgs(process.argv.slice(2))
+  const prompt = createPrompt()
   try {
-    // 1. Fetch track metadata from Spotify
-    console.log('🔍 Fetching track metadata from Spotify...');
-    const trackData = await getTrackMetadata(spotifyUrl);
-    console.log(`   ✅ Found: "${trackData.title}" by ${trackData.artist} (${trackData.year})\n`);
+    let [artist, title] = positional
+    if (!artist) artist = await prompt.ask('Interpret: ')
+    if (!title) title = await prompt.ask('Titel: ')
+    if (!artist || !title) throw new Error('Interpret und Titel angeben: add-song.js "Artist" "Title"')
 
-    // 2. Load existing songs
-    console.log('📖 Loading existing songs...');
-    let songs = [];
-    try {
-      const songsData = await fs.readFile(SONGS_JSON_PATH, 'utf8');
-      songs = JSON.parse(songsData);
-      console.log(`   ℹ️  Current song count: ${songs.length}`);
-    } catch (error) {
-      if (error.code === 'ENOENT') {
-        console.log('   ℹ️  songs.json not found, creating new file');
-      } else {
-        throw error;
-      }
+    const songs = loadSongs()
+    const dup = findDuplicate(songs, artist, title)
+    if (dup) {
+      console.log(`ℹ️  Schon vorhanden: ${dup.id} ${dup.artist} – ${dup.title} (${dup.year}). Nichts geändert.`)
+      return
     }
 
-    // 3. Check for duplicates
-    const duplicate = songs.find(s => s.spotifyId === trackData.spotifyId);
-    if (duplicate) {
-      console.log(`\n⚠️  Song already exists in database:`);
-      console.log(`   ID: ${duplicate.id}`);
-      console.log(`   Title: ${duplicate.title}`);
-      console.log(`   Artist: ${duplicate.artist}`);
-      console.log(`   Year: ${duplicate.year}`);
+    const { meta, cover } = await proposeSong({ artist, title, flags, prompt })
+    const again = findDuplicate(songs, meta.artist, meta.title)
+    if (again) throw new Error(`Schon vorhanden als ${again.id}.`)
 
-      console.log('\nℹ️  Nothing to do — songs.json and songs.ts are unchanged.');
-      process.exit(0);
-    } else {
-      // 4. Generate new song ID
-      const maxId = songs.reduce((max, song) => {
-        const num = parseInt(song.id.replace('song_', ''));
-        return num > max ? num : max;
-      }, 0);
-      const newId = `song_${String(maxId + 1).padStart(3, '0')}`;
-      trackData.id = newId;
-
-      // 5. Interactive mode: Allow editing Spotify metadata
-      if (editMode) {
-        console.log('\n📝 Metadaten bearbeiten (leer lassen = Wert von Spotify behalten)\n');
-
-        const rl2 = readline.createInterface({
-          input: process.stdin,
-          output: process.stdout
-        });
-
-        const newTitle = await new Promise(resolve => {
-          rl2.question(`Titel [${trackData.title}]: `, resolve);
-        });
-
-        const newArtist = await new Promise(resolve => {
-          rl2.question(`Interpret [${trackData.artist}]: `, resolve);
-        });
-
-        const newYearInput = await new Promise(resolve => {
-          rl2.question(`Jahr [${trackData.year}]: `, resolve);
-        });
-
-        console.log('\n💡 Genre-Vorschläge: Pop, Rock, Hip-Hop, Electronic, R&B, Country, Jazz, Metal, Reggae, Soul');
-        const newGenreInput = await new Promise(resolve => {
-          rl2.question(`Genre (optional): `, resolve);
-        });
-
-        rl2.close();
-
-        // Update trackData with user input (if provided)
-        if (newTitle.trim()) {
-          trackData.title = newTitle.trim();
-        }
-        if (newArtist.trim()) {
-          trackData.artist = newArtist.trim();
-        }
-        if (newYearInput.trim()) {
-          trackData.year = parseInt(newYearInput.trim());
-        }
-        if (newGenreInput.trim()) {
-          trackData.genre = newGenreInput.trim();
-        }
-
-        console.log('\n✅ Verwendete Metadaten:');
-        console.log(`   Titel:    ${trackData.title}`);
-        console.log(`   Interpret: ${trackData.artist}`);
-        console.log(`   Jahr:     ${trackData.year}`);
-        if (trackData.genre) {
-          console.log(`   Genre:    ${trackData.genre}`);
-        }
-        console.log('');
-      }
-
-      // 6. Create song object
-      const newSong = {
-        id: trackData.id,
-        title: trackData.title,
-        artist: trackData.artist,
-        year: trackData.year,
-        spotifyId: trackData.spotifyId,
-        previewUrl: trackData.previewUrl
-      };
-
-      // Add genre if provided
-      if (trackData.genre) {
-        newSong.genre = trackData.genre;
-      }
-
-      // 6. Add to songs array
-      songs.push(newSong);
-      console.log(`   ✅ Added as ${newSong.id}\n`);
-
-      // 6.5. Download from YouTube and upload to VPS
-      try {
-        const { downloadAndUploadSong } = await import('../audio-hosting/download-single-song.js');
-        const selfHostedUrl = await downloadAndUploadSong(newSong);
-
-        if (selfHostedUrl) {
-          newSong.previewUrl = selfHostedUrl;
-          console.log(`   ✅ Updated previewUrl to self-hosted: ${selfHostedUrl}\n`);
-        } else {
-          console.log(`   ⚠️  Using Spotify preview URL as fallback: ${trackData.previewUrl || 'none'}\n`);
-        }
-      } catch (error) {
-        console.error(`   ❌ Audio download/upload failed: ${error.message}`);
-        console.log(`   ⚠️  Using Spotify preview URL as fallback: ${trackData.previewUrl || 'none'}\n`);
-      }
-
-      // 7. Save updated songs.json
-      console.log('💾 Saving songs.json...');
-      await fs.writeFile(
-        SONGS_JSON_PATH,
-        JSON.stringify(songs, null, 2),
-        'utf8'
-      );
-      console.log(`   ✅ songs.json updated (${songs.length} songs total)\n`);
-
-      // 8. Update PWA songs.ts
-      console.log('🔄 Updating PWA songs.ts...');
-      try {
-        const pwaSongsContent = `import type { Song } from '@/types'\n\nexport const songs: Song[] = ${JSON.stringify(songs, null, 2)}\n`;
-        await fs.writeFile(PWA_SONGS_PATH, pwaSongsContent, 'utf8');
-        console.log(`   ✅ PWA songs.ts updated\n`);
-      } catch (error) {
-        console.log(`   ⚠️  Could not update PWA songs.ts: ${error.message}\n`);
-      }
+    const id = nextId(songs)
+    const song = {
+      id,
+      title: meta.title,
+      artist: meta.artist,
+      year: meta.year,
+      ...(meta.album ? { album: meta.album } : {}),
+      previewUrl: previewUrlFor(id),
+      genre: meta.genre || ''
     }
 
-    // 9. Update song count in README.md
-    console.log('📊 Updating song count in README.md...');
-    try {
-      execSync('node update-song-count.js', { cwd: __dirname, stdio: 'inherit' });
-    } catch (error) {
-      console.log(`   ⚠️  Could not update README.md: ${error.message}\n`);
-    }
+    const media = await fetchMedia(song, cover, flags)
+    if (!media.audio) throw new Error('Audio-Download fehlgeschlagen — Song nicht gespeichert.')
 
-    // 10. Summary
-    console.log('✨ Success!\n');
-    console.log(`📊 Song Details:`);
-    console.log(`   Title:      ${trackData.title}`);
-    console.log(`   Artist:     ${trackData.artist}`);
-    console.log(`   Year:       ${trackData.year}`);
-    console.log(`   Album:      ${trackData.album}`);
-    console.log(`   Spotify ID: ${trackData.spotifyId}`);
-    console.log(`   Preview:    ${trackData.previewUrl ? 'Available' : 'Not available'}\n`);
+    const facts = loadFacts()
+    if (meta.fact) facts[id] = meta.fact
+    saveAll([...songs, song], facts)
+    execFileSync(process.execPath, [path.join(ROOT, 'scripts/song-management/update-song-count.js')], { stdio: 'ignore' })
 
-  } catch (error) {
-    console.error(`\n❌ Error: ${error.message}`);
-
-    if (error.message.includes('Spotify credentials')) {
-      console.log('\n💡 Setup instructions:');
-      console.log('   1. Go to https://developer.spotify.com/dashboard');
-      console.log('   2. Create an app and get Client ID and Client Secret');
-      console.log('   3. Create a .env file in the project root:');
-      console.log('      SPOTIFY_CLIENT_ID=your_client_id');
-      console.log('      SPOTIFY_CLIENT_SECRET=your_client_secret\n');
-    }
-
-    process.exit(1);
+    console.log(`\n✨ ${id}: ${song.artist} – ${song.title} (${song.year})${song.album ? `, ${song.album}` : ''}`)
+    console.log(`   Audio ${flags.upload ? 'hochgeladen' : 'lokal'}, Cover: ${media.cover ?? 'keins'}, Fakt: ${meta.fact ? 'ja' : 'nein'}`)
+    console.log('   Nächster Schritt: ./scripts/deployment/deploy.sh web')
+  } finally {
+    prompt.close()
   }
 }
 
-// Run the tool
-main();
+main().catch((e) => {
+  console.error(`\n❌ ${e.message}`)
+  process.exit(1)
+})

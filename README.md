@@ -85,6 +85,15 @@ cd pwa && npx tsc --noEmit && npx vitest run
 npm test                         # Songdaten-Integrität (Repo-Wurzel)
 ```
 
+## Songs pflegen
+
+```bash
+node scripts/song-management/add-song.js "a-ha" "Take on Me"   # schlägt Jahr und Album vor, lädt MP3 und Cover
+./scripts/deployment/deploy.sh web
+```
+
+Daten kommen von MusicBrainz, dem Cover Art Archive und iTunes; Spotify wird nicht benutzt. Details, Austauschen und Bearbeiten: [`scripts/audio-hosting/README.md`](scripts/audio-hosting/README.md).
+
 ## Deployment
 
 ```bash

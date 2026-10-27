@@ -4,15 +4,15 @@
  * Interactive Song Editor Wizard
  *
  * Ermöglicht das Bearbeiten bestehender Songs in der Datenbank
- * und aktualisiert docs/songs.json sowie pwa/src/data/songs.ts.
+ * und aktualisiert docs/songs.json; pwa/src/data/songs.ts wird daraus neu erzeugt.
  */
 
-import fs from 'fs/promises'
 import fsSync from 'fs'
 import path from 'path'
 import { fileURLToPath } from 'url'
 import readline from 'readline'
 import { execSync } from 'child_process'
+import { saveAll } from './lib/songStore.js'
 
 // ES Module equivalent of __dirname
 const __filename = fileURLToPath(import.meta.url)
@@ -51,27 +51,11 @@ function loadSongs() {
   return JSON.parse(songsData);
 }
 
-// Song-Datenbank speichern
-async function saveSongs(songs) {
-  const songsJsonPath = path.join(__dirname, '../../docs', 'songs.json');
-
-  // Backup erstellen
-  const timestamp = new Date().toISOString().split('T')[0];
-  const backupPath = path.join(__dirname, '../../docs', `songs.json.backup-${timestamp}`);
-  await fs.copyFile(songsJsonPath, backupPath);
-  log(`✅ Backup erstellt: ${backupPath}`, 'green');
-
-  // Speichern
-  await fs.writeFile(songsJsonPath, JSON.stringify(songs, null, 2));
-  log('✅ songs.json aktualisiert', 'green');
-}
-
-// songs.ts aktualisieren
-async function updateSongsJs(songs) {
-  const songsJsPath = path.join(__dirname, '../../pwa', 'src', 'data', 'songs.ts');
-  const content = `import type { Song } from '@/types'\n\nexport const songs: Song[] = ${JSON.stringify(songs, null, 2)}\n`;
-  await fs.writeFile(songsJsPath, content);
-  log('✅ pwa/src/data/songs.ts aktualisiert', 'green');
+// Song-Datenbank speichern: songs.json (mit Backup), danach songs.ts neu erzeugen.
+// Nie songs.ts direkt schreiben — sonst gehen die Fakten aus song-facts.json verloren.
+function saveSongs(songs) {
+  saveAll(songs)
+  log('✅ songs.json und songs.ts aktualisiert', 'green')
 }
 
 // Hauptfunktion
@@ -121,7 +105,7 @@ async function main() {
     log(`   Titel:    ${oldSong.title}`, 'cyan');
     log(`   Interpret: ${oldSong.artist}`, 'cyan');
     log(`   Jahr:     ${oldSong.year}`, 'cyan');
-    log(`   Spotify:  ${oldSong.spotifyId}\n`, 'cyan');
+    log(`   Album:    ${oldSong.album ?? '—'}\n`, 'cyan');
 
     // Schritt 2: Neue Daten abfragen
     log('Schritt 2/4: Neue Daten eingeben', 'bright');
@@ -181,8 +165,7 @@ async function main() {
     songs[songIndex] = updatedSong;
 
     // 2. Datenbanken speichern
-    await saveSongs(songs);
-    await updateSongsJs(songs);
+    saveSongs(songs);
 
     // Update song count in README.md
     log('\n📊 Updating song count in README.md...', 'cyan');
