@@ -22,8 +22,10 @@ mxster ist eine private App. Man meldet sich mit einem Google-Konto an; neue Kon
 | Modus | Ziel |
 |-------|------|
 | **Eigene Zeitleiste** | Jede:r baut eine eigene Zeitleiste. Wer zuerst zehn Songs richtig liegen hat, gewinnt. |
-| **Gemeinsame Zeitleiste** | Alle legen an dieselbe Zeitleiste, jeder richtige Song zählt für dich. |
+| **Gemeinsame Zeitleiste** | Alle legen an dieselbe Zeitleiste. Sobald zehn Songs richtig liegen, gewinnt, wer die meisten davon gelegt hat. |
 | **Hardcore** | Titel (+5), Interpret (+5) und Jahr (+5 exakt, +2 bei einem Jahr daneben, +1 bei zwei) raten. Nach zehn Songs gewinnt die höchste Punktzahl. |
+
+Unentschieden gibt es nicht. Liegen am Ende mehrere vorne, folgt ein **Stechen**: nur sie spielen weiter, je ein Song pro Runde, bis nach einer vollen Runde genau eine:r führt. Wer zurückfällt, scheidet aus; Überspringen ist im Stechen gesperrt. In der Rangliste steht der Gewinner allein auf Platz 1, darunter teilen sich Gleichstehende einen Platz.
 
 Allein? Dann spielen bis zu drei Bots gegen dich (leicht, mittel, schwer).
 
