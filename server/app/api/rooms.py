@@ -9,6 +9,7 @@ which is also what lets them hear the music while the room is open.
 import hashlib
 import json
 import secrets
+import time
 from datetime import timedelta
 
 from fastapi import APIRouter, Depends, Request, Response, WebSocket, WebSocketDisconnect
@@ -40,6 +41,7 @@ GUEST_COOKIE_MAX_AGE = 14 * 3600
 MAX_SNAPSHOT_BYTES = 256 * 1024
 MAX_INTENT_BYTES = 2048
 OPEN = ("lobby", "running")
+RECHECK_S = 10.0
 
 
 # ── helpers ─────────────────────────────────────────────────────────────────
@@ -331,6 +333,7 @@ async def room_socket(ws: WebSocket, code: str) -> None:
         })
         await hub.broadcast(code, {"type": "roster", "members": roster(db, room)}, exclude=seat)
 
+    checked = time.monotonic()
     try:
         while True:
             raw = await ws.receive_text()
@@ -341,6 +344,18 @@ async def room_socket(ws: WebSocket, code: str) -> None:
             if not isinstance(msg, dict):
                 continue
             kind = msg.get("type")
+
+            # The seat was checked when the socket opened; a blocked account, a
+            # signed-out session or a kick must not keep it alive. Re-check on
+            # anything that changes the game, at most every few seconds.
+            if kind in ("state", "audio", "intent") and time.monotonic() - checked > RECHECK_S:
+                checked = time.monotonic()
+                with SessionLocal() as db:
+                    room = db.get(Room, code)
+                    still = member_for(db, room, ws.cookies) if room is not None else None
+                    if room is None or still is None or still.seat != seat or room.status not in OPEN + ("finished",):
+                        await ws.close(code=4003, reason="revoked")
+                        break
 
             if kind == "ping":
                 await ws.send_json({"type": "pong", "t": msg.get("t"), "server": now_ms()})

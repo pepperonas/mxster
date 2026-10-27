@@ -241,3 +241,27 @@ def test_a_guest_cookie_opens_only_its_own_room(client, google):
     with pytest.raises(WebSocketDisconnect):
         with client.websocket_connect(f"/api/rooms/{second['code']}/ws", headers=ORIGIN) as ws:
             ws.receive_json()
+
+
+def test_a_blocked_host_loses_the_open_socket(client, google, monkeypatch):
+    from app.api import rooms as rooms_api
+    from app.db import Room
+
+    monkeypatch.setattr(rooms_api, "RECHECK_S", 0.0)
+    code, hc, _ = _lobby(client, google)
+    with _connect(client, code, hc) as h:
+        h.receive_json()
+        with app_db.SessionLocal() as db:
+            db.query(User).filter(User.email == "boss@example.com").one().status = "blocked"
+            db.commit()
+        h.send_json({"type": "state", "snapshot": {"after": "block"}})
+        # A ping right behind it: an open socket would answer (no hanging test)
+        h.send_json({"type": "ping", "t": 1})
+        closed = False
+        try:
+            h.receive_json()
+        except WebSocketDisconnect:
+            closed = True
+        assert closed
+    with app_db.SessionLocal() as db:
+        assert db.get(Room, code).rev == 0
