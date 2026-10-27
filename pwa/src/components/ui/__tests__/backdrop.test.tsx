@@ -2,7 +2,7 @@ import { readFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { describe, it, expect, afterEach } from 'vitest'
 import { render, renderHook } from '@testing-library/react'
-import { Backdrop } from '../Backdrop'
+import { Backdrop, wavePath } from '../Backdrop'
 import { useBackdropPlaying } from '@/hooks/useBackdropPlaying'
 
 const css = readFileSync(join(__dirname, '../../../styles/tailwind.css'), 'utf8')
@@ -19,7 +19,17 @@ describe('Backdrop', () => {
     const root = container.firstElementChild as HTMLElement
     expect(root.getAttribute('aria-hidden')).toBe('true')
     expect(root.querySelectorAll('a, button, input, [tabindex]').length).toBe(0)
-    expect(root.querySelectorAll('.mx-backdrop-sheen').length).toBe(2)
+    expect(root.querySelectorAll('.mx-backdrop-wave').length).toBeGreaterThanOrEqual(3)
+  })
+
+  it('a wave repeats exactly after one period, so the drift loops without a seam', () => {
+    const pts = wavePath({ parts: [[2, 20, 0.4], [5, 7, 1.3]], y: 100 })
+      .slice(1)
+      .split(' L')
+      .map((p) => p.split(' ').map(Number))
+    const at = (x: number) => pts.find(([px]) => px === x)![1]
+    expect(at(0)).toBeCloseTo(at(1200), 1)
+    expect(at(300)).toBeCloseTo(at(1500), 1)
   })
 })
 
@@ -69,6 +79,6 @@ describe('backdrop CSS', () => {
 
   it('stands still with reduced motion', () => {
     const reduced = /@media \(prefers-reduced-motion: reduce\) \{([\s\S]*?)\n\}/.exec(backdropCss)![1]
-    expect(reduced).toMatch(/\.mx-backdrop-sheen,[\s\S]*animation: none/)
+    expect(reduced).toMatch(/\.mx-backdrop-wave,[\s\S]*animation: none/)
   })
 })

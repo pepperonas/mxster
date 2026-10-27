@@ -22,11 +22,31 @@ interface VinylProps {
   style?: CSSProperties
 }
 
-const GROOVES = [46, 43.5, 41, 38.5, 36, 33.5, 31, 28.5, 26, 23.5]
+/**
+ * Fine grooves from the lead-in to the run-out, with smooth gaps between
+ * tracks (a real record shows them as darker bands). Opacity varies in a fixed
+ * pattern so the surface reads as pressed vinyl, not as a target.
+ */
+const TRACK_GAPS: [number, number][] = [
+  [39.6, 40.6],
+  [31.4, 32.2],
+  [25.2, 25.9]
+]
+const GROOVES: { r: number; o: number }[] = (() => {
+  const out: { r: number; o: number }[] = []
+  for (let r = 47.2; r > 20; r -= 0.62) {
+    const radius = Math.round(r * 100) / 100
+    if (TRACK_GAPS.some(([a, b]) => radius >= a && radius <= b)) continue
+    const i = out.length
+    out.push({ r: radius, o: 0.05 + ((i * 37) % 11) / 110 })
+  }
+  return out
+})()
 
 export function Vinyl({ size = 240, spinning = false, label, labelColor, labelImage, labelRing, className = '', style }: VinylProps) {
   const uid = useId().replace(/:/g, '')
-  const sheenId = `sheen-${uid}`
+  const bodyId = `body-${uid}`
+  const labelGlossId = `gloss-${uid}`
   const clipId = `label-${uid}`
   const [imageFailed, setImageFailed] = useState(false)
   useEffect(() => setImageFailed(false), [labelImage])
@@ -38,21 +58,29 @@ export function Vinyl({ size = 240, spinning = false, label, labelColor, labelIm
       aria-hidden="true"
     >
       <svg viewBox="0 0 100 100" className="vinyl absolute inset-0 w-full h-full" data-spinning={spinning}>
+        <defs>
+          <radialGradient id={bodyId} cx="50%" cy="50%" r="50%">
+            <stop offset="36%" stopColor="rgb(var(--mx-vinyl))" />
+            <stop offset="92%" stopColor="rgb(var(--mx-groove))" stopOpacity="0.55" />
+            <stop offset="100%" stopColor="rgb(var(--mx-vinyl))" />
+          </radialGradient>
+          <radialGradient id={labelGlossId} cx="38%" cy="32%" r="70%">
+            <stop offset="0%" stopColor="#fff" stopOpacity="0.28" />
+            <stop offset="55%" stopColor="#fff" stopOpacity="0" />
+            <stop offset="100%" stopColor="#000" stopOpacity="0.18" />
+          </radialGradient>
+        </defs>
         <circle cx="50" cy="50" r="49.5" fill="rgb(var(--mx-vinyl))" />
-        {GROOVES.map((r, i) => (
-          <circle
-            key={r}
-            cx="50"
-            cy="50"
-            r={r}
-            fill="none"
-            stroke="rgb(var(--mx-groove))"
-            strokeWidth={i % 3 === 0 ? 0.55 : 0.3}
-          />
+        <circle cx="50" cy="50" r="49.5" fill={`url(#${bodyId})`} />
+        {GROOVES.map((g) => (
+          <circle key={g.r} cx="50" cy="50" r={g.r} fill="none" stroke="#fff" strokeOpacity={g.o} strokeWidth="0.16" />
         ))}
+        {/* Lead-in edge and the smooth run-out area */}
+        <circle cx="50" cy="50" r="48.6" fill="none" stroke="#fff" strokeOpacity="0.1" strokeWidth="0.5" />
+        <circle cx="50" cy="50" r="19.4" fill="none" stroke="#fff" strokeOpacity="0.07" strokeWidth="0.4" />
         {/* Label with an off-centre mark so the rotation is visible */}
         <circle cx="50" cy="50" r="18" fill={labelColor ?? 'rgb(var(--mx-label))'} />
-        <circle cx="50" cy="50" r="18" fill="none" stroke="rgb(0 0 0 / 0.18)" strokeWidth="0.6" />
+        <circle cx="50" cy="50" r="16.2" fill="none" stroke="#fff" strokeOpacity="0.16" strokeWidth="0.25" />
         <path d="M50 35.5a14.5 14.5 0 0 1 12.6 7.3" stroke="rgb(var(--mx-label-2))" strokeWidth="2.2" fill="none" strokeLinecap="round" />
         {showImage && (
           <>
@@ -73,22 +101,18 @@ export function Vinyl({ size = 240, spinning = false, label, labelColor, labelIm
             <circle cx="50" cy="50" r="18" fill="rgb(0 0 0 / 0.38)" />
           </>
         )}
+        <circle cx="50" cy="50" r="18" fill={`url(#${labelGlossId})`} />
+        <circle cx="50" cy="50" r="18" fill="none" stroke="rgb(0 0 0 / 0.25)" strokeWidth="0.5" />
         {labelRing && <circle cx="50" cy="50" r="18.6" fill="none" stroke={labelRing} strokeWidth="1.6" />}
-        <circle cx="50" cy="50" r="1.6" fill="rgb(var(--md-sys-color-surface))" />
+        <circle cx="50" cy="50" r="1.9" fill="rgb(0 0 0 / 0.35)" />
+        <circle cx="50" cy="50" r="1.5" fill="rgb(var(--md-sys-color-surface))" />
       </svg>
 
-      {/* Static sheen: two soft wedges of reflected light */}
-      <svg viewBox="0 0 100 100" className="absolute inset-0 w-full h-full pointer-events-none">
-        <defs>
-          <radialGradient id={sheenId} cx="50%" cy="50%" r="50%">
-            <stop offset="38%" stopColor="#fff" stopOpacity="0" />
-            <stop offset="70%" stopColor="#fff" stopOpacity="0.13" />
-            <stop offset="100%" stopColor="#fff" stopOpacity="0" />
-          </radialGradient>
-        </defs>
-        <path d="M50 50 L22 6 A49 49 0 0 1 44 1.4 Z" fill={`url(#${sheenId})`} />
-        <path d="M50 50 L78 94 A49 49 0 0 1 56 98.6 Z" fill={`url(#${sheenId})`} />
-      </svg>
+      {/* Static sheen: light from the lamp catches the grooves in two soft,
+          opposite arcs (a conic gradient, so there are no hard edges), with a
+          faint warm/cool tint like the iridescence on real vinyl. It stays put
+          while the disc turns underneath. */}
+      <div className="vinyl-sheen" />
 
       {label && (
         <div className="absolute inset-0 grid place-items-center pointer-events-none">

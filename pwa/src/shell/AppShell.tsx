@@ -128,7 +128,7 @@ function NavRail() {
   return (
     <nav
       aria-label={t.mainNav}
-      className="hidden md:flex fixed inset-y-0 left-0 z-40 w-24 flex-col items-center gap-3 pt-6 bg-md-surface"
+      className="hidden md:flex fixed inset-y-0 left-0 z-40 w-24 flex-col items-center gap-3 pt-6"
       style={{ viewTransitionName: 'nav-rail' }}
     >
       <span className="text-poster mb-6" style={{ fontSize: '1.15rem' }}>

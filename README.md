@@ -15,8 +15,8 @@
 <h3>👉 <a href="https://mxtape.celox.io">mxtape.celox.io</a> — sign in with Google, or join a friend's room as a guest with just a link</h3>
 
 <!-- BADGES:BIG — version, tests, lines of code and songs; readme.test.ts keeps them true, scripts/readme-badges.mjs rewrites them. -->
-[![version](https://img.shields.io/badge/version-0.9.1-C2185B?style=for-the-badge&logo=semver&logoColor=white)](https://github.com/pepperonas/mxtape/releases/latest)
-[![tests](https://img.shields.io/badge/tests-508-2E9E5B?style=for-the-badge&logo=vitest&logoColor=white)](#tests-and-ci)
+[![version](https://img.shields.io/badge/version-0.9.2-C2185B?style=for-the-badge&logo=semver&logoColor=white)](https://github.com/pepperonas/mxtape/releases/latest)
+[![tests](https://img.shields.io/badge/tests-509-2E9E5B?style=for-the-badge&logo=vitest&logoColor=white)](#tests-and-ci)
 [![lines of code](https://img.shields.io/badge/lines%20of%20code-20.0k-4B6BDF?style=for-the-badge&logo=typescript&logoColor=white)](pwa/src)
 [![test code](https://img.shields.io/badge/test%20code-6.0k-2E9E5B?style=for-the-badge&logo=typescript&logoColor=white)](#tests-and-ci)
 [![songs](https://img.shields.io/badge/songs-300-FF8A3D?style=for-the-badge&logo=applemusic&logoColor=white)](#the-song-library)
@@ -193,7 +193,7 @@ Audio is AAC-LC at 96 kbit/s, cut at four minutes with a short fade. Details, sw
 
 ## Design
 
-Material 3 Expressive with its own identity: **vinyl magenta** as primary colour, warm amber as accent. The record is the one signature element — it spins while the song plays and shows the year on its label after the reveal; everything around it stays quiet. In the background the same record lies huge and cut off, just its grooves; a soft sheen sweeps over them and turns faster while a song plays.
+Material 3 Expressive with its own identity: **vinyl magenta** as primary colour, warm amber as accent. The record is the one signature element — it spins while the song plays and shows the year on its label after the reveal; everything around it stays quiet. In the background fine sound waves drift along the bottom of the screen and swell while a song plays.
 
 - Palettes are **generated** from seeds (`pwa/scripts/gen-tokens.mjs` → `pwa/src/styles/design-tokens.css`); no raw colours anywhere else
 - Real springs (stiffness + damping) as one source for JS (`motion`) and CSS (`linear()` curves)

@@ -84,7 +84,10 @@ export function SongInfo({ song, head = 'full', delay = 0 }: SongInfoProps) {
       )}
       {fact && (
         <p className="flex gap-2 text-body-sm text-md-on-surface-variant">
-          <Icon name="lightbulb" size={18} className="flex-shrink-0 mt-0.5 text-md-tertiary" />
+          {/* Same height as the first text line, so the bulb sits on it */}
+          <span className="flex h-4 flex-shrink-0 items-center text-md-tertiary">
+            <Icon name="lightbulb" size={16} />
+          </span>
           <span>
             <span className="text-md-on-surface">{t.didYouKnow}</span>
             {fact}

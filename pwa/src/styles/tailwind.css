@@ -239,6 +239,30 @@
 .vinyl[data-spinning='true'] {
   animation-play-state: running;
 }
+/* The lamp's reflection on the record (static, on top of the turning disc).
+   Masked to the grooved ring so the label and the edge stay clean. */
+.vinyl-sheen {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  pointer-events: none;
+  background: conic-gradient(
+    from -28deg,
+    transparent 0deg,
+    rgb(255 255 255 / 0.05) 12deg,
+    rgb(255 255 255 / 0.2) 28deg,
+    rgb(var(--mx-label-2) / 0.1) 40deg,
+    rgb(255 255 255 / 0.04) 58deg,
+    transparent 78deg 180deg,
+    rgb(255 255 255 / 0.04) 192deg,
+    rgb(255 255 255 / 0.15) 208deg,
+    rgb(var(--mx-label) / 0.1) 220deg,
+    rgb(255 255 255 / 0.03) 238deg,
+    transparent 258deg
+  );
+  -webkit-mask-image: radial-gradient(circle, transparent 0 39%, #000 46%, #000 90%, transparent 98%);
+  mask-image: radial-gradient(circle, transparent 0 39%, #000 46%, #000 90%, transparent 98%);
+}
 /* A control that wants a tap (e.g. autoplay was blocked): a soft pulsing ring */
 .mx-attention {
   animation: mx-attention 1.6s ease-in-out infinite;
@@ -371,11 +395,11 @@ input[type='number'] {
 }
 
 /* ── Backdrop ─────────────────────────────────────────────────────────────
-   A huge record cut off at the bottom right, drawn only as its grooves
-   (Backdrop.tsx). Only transform and opacity move. The sheen layers are
-   masked by the same grooves, so the light catches the rings, not the
-   surface. While music plays (html[data-playing]) the fast sheen fades in and
-   a warm glow breathes at the centre. */
+   Fine sound waves along the lower part of the screen (Backdrop.tsx). Each
+   wave is an SVG twice the screen width that slides left by half its width,
+   so it loops seamlessly; the waves drift at different speeds. While music
+   plays (html[data-playing]) the whole group swells and pulses gently.
+   Only transform moves. */
 .mx-backdrop {
   position: fixed;
   inset: 0;
@@ -383,75 +407,54 @@ input[type='number'] {
   pointer-events: none;
   overflow: hidden;
   contain: strict;
-  /* Quiet towards the top left, where most text starts */
-  -webkit-mask-image: radial-gradient(circle at 100% 100%, #000 0, #000 30%, transparent 92%);
-  mask-image: radial-gradient(circle at 100% 100%, #000 0, #000 30%, transparent 92%);
 }
-.mx-backdrop-disc {
-  --mx-grooves: repeating-radial-gradient(circle at 50% 50%, #000 0 2px, transparent 2px 14px);
+.mx-backdrop-swell {
   position: absolute;
-  width: 170vmax;
-  height: 170vmax;
-  right: -85vmax;
-  bottom: -85vmax;
-  border-radius: 50%;
-  overflow: hidden;
+  left: 0;
+  right: 0;
+  bottom: 4vh;
+  height: 42vh;
+  transform-origin: 50% 60%;
+  transform: scaleY(0.75);
+  transition: transform 1.6s var(--m3-ease-effects-slow);
+  /* Fade out towards the top and the left edge, where most text starts */
+  -webkit-mask-image: linear-gradient(to top, #000 35%, transparent 100%);
+  mask-image: linear-gradient(to top, #000 35%, transparent 100%);
 }
-.mx-backdrop-disc > * {
+.mx-backdrop-wave {
   position: absolute;
   inset: 0;
-  border-radius: 50%;
-}
-.mx-backdrop-grooves {
-  background: repeating-radial-gradient(
-    circle at 50% 50%,
-    rgb(var(--md-sys-color-on-surface) / var(--mx-backdrop-groove-alpha)) 0 2px,
-    transparent 2px 14px
-  );
-}
-.mx-backdrop-sheen {
-  background: conic-gradient(
-    from 0deg,
-    transparent 0deg 18deg,
-    rgb(var(--md-sys-color-on-surface) / var(--mx-backdrop-sheen-alpha)) 34deg,
-    transparent 52deg 198deg,
-    rgb(var(--md-sys-color-on-surface) / calc(var(--mx-backdrop-sheen-alpha) * 0.6)) 214deg,
-    transparent 232deg 360deg
-  );
-  -webkit-mask-image: var(--mx-grooves);
-  mask-image: var(--mx-grooves);
+  width: 200%;
+  height: 100%;
   will-change: transform;
-  animation: mx-backdrop-turn 90s linear infinite;
-  transition: opacity 1.2s var(--m3-ease-effects-slow);
+  animation: mx-backdrop-drift calc(70s + var(--i) * 17s) linear infinite;
+  animation-delay: calc(var(--i) * -9s);
 }
-.mx-backdrop-sheen[data-speed='play'] {
-  opacity: 0;
-  animation-duration: 12s;
+.mx-backdrop-wave path {
+  stroke-width: 1.25px;
+  stroke: rgb(var(--md-sys-color-on-surface) / var(--mx-wave-ink-alpha));
 }
-.mx-backdrop-glow {
-  background: radial-gradient(circle at 50% 50%, rgb(var(--mx-label-2) / var(--mx-backdrop-glow-alpha)) 0, transparent 22%);
-  opacity: 0;
-  will-change: opacity;
-  transition: opacity 1.2s var(--m3-ease-effects-slow);
+.mx-backdrop-wave[data-tone='brand'] path {
+  stroke: rgb(var(--mx-label) / var(--mx-wave-brand-alpha));
+  stroke-width: 1.6px;
 }
-html[data-playing] .mx-backdrop-sheen[data-speed='idle'] { opacity: 0; }
-html[data-playing] .mx-backdrop-sheen[data-speed='play'] { opacity: 1; }
-html[data-playing] .mx-backdrop-glow {
-  opacity: 1;
-  animation: mx-backdrop-breathe 4s ease-in-out infinite;
+.mx-backdrop-wave[data-tone='warm'] path {
+  stroke: rgb(var(--mx-label-2) / var(--mx-wave-warm-alpha));
+  stroke-width: 1.6px;
 }
-@keyframes mx-backdrop-turn {
-  to { transform: rotate(360deg); }
+html[data-playing] .mx-backdrop-swell {
+  transform: scaleY(1.25);
+  animation: mx-backdrop-pulse 2.4s ease-in-out infinite;
 }
-@keyframes mx-backdrop-breathe {
-  0%, 100% { opacity: 0.4; }
-  50% { opacity: 1; }
+@keyframes mx-backdrop-drift {
+  to { transform: translateX(-50%); }
+}
+@keyframes mx-backdrop-pulse {
+  0%, 100% { transform: scaleY(1.1); }
+  50% { transform: scaleY(1.35); }
 }
 @media (prefers-reduced-motion: reduce) {
-  .mx-backdrop-sheen,
-  .mx-backdrop-glow,
-  html[data-playing] .mx-backdrop-glow { animation: none; }
-  .mx-backdrop-sheen[data-speed='play'],
-  html[data-playing] .mx-backdrop-sheen[data-speed='play'] { opacity: 0; }
-  html[data-playing] .mx-backdrop-sheen[data-speed='idle'] { opacity: 1; }
+  .mx-backdrop-wave,
+  html[data-playing] .mx-backdrop-swell { animation: none; }
+  .mx-backdrop-swell { transition: none; }
 }

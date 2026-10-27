@@ -299,10 +299,10 @@
   --mx-groove: var(--md-ref-neutral-17);
   --mx-label: var(--md-ref-primary-60);
   --mx-label-2: var(--md-ref-tertiary-70);
-  /* Background record (Backdrop.tsx): groove ink and sheen strength */
-  --mx-backdrop-groove-alpha: 0.06;
-  --mx-backdrop-sheen-alpha: 0.08;
-  --mx-backdrop-glow-alpha: 0.1;
+  /* Background sound waves (Backdrop.tsx): line strength per tone */
+  --mx-wave-ink-alpha: 0.1;
+  --mx-wave-brand-alpha: 0.18;
+  --mx-wave-warm-alpha: 0.16;
   /* Chart series, fixed order (validated: dataviz validate_palette, dark surface) */
   --mx-chart-1: var(--md-ref-primary-50);
   --mx-chart-2: var(--md-ref-tertiary-60);
@@ -367,9 +367,9 @@
   --mx-groove: var(--md-ref-neutral-24);
   --mx-label: var(--md-ref-primary-50);
   --mx-label-2: var(--md-ref-tertiary-60);
-  --mx-backdrop-groove-alpha: 0.05;
-  --mx-backdrop-sheen-alpha: 0.07;
-  --mx-backdrop-glow-alpha: 0.12;
+  --mx-wave-ink-alpha: 0.09;
+  --mx-wave-brand-alpha: 0.16;
+  --mx-wave-warm-alpha: 0.2;
   /* Chart series, fixed order (validated: dataviz validate_palette, light surface) */
   --mx-chart-1: var(--md-ref-primary-40);
   --mx-chart-2: var(--md-ref-tertiary-50);
