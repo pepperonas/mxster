@@ -19,6 +19,7 @@ import { AdminScreen } from '@/screens/AdminScreen'
 import { initRipple } from '@/utils/ripple'
 import { englishPath, LEGACY_SEGMENTS } from '@/legacyPaths'
 import { MotionProvider } from '@/motion/MotionProvider'
+import { LanguageProvider } from '@/i18n'
 import './styles/design-tokens.css'
 import './styles/tailwind.css'
 import './styles/motion.css'
@@ -41,6 +42,7 @@ function Root() {
   }, [])
 
   return (
+    <LanguageProvider>
     <MotionProvider>
       <AuthProvider>
         <AuthGate>
@@ -53,6 +55,7 @@ function Root() {
         </AuthGate>
       </AuthProvider>
     </MotionProvider>
+    </LanguageProvider>
   )
 }
 

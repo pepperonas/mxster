@@ -61,6 +61,12 @@ Object.defineProperty(window, 'matchMedia', {
   })),
 })
 
+// Tests are written against the German texts: pin the language, also for code
+// that detects it from the browser (jsdom reports en-US).
+import { setCurrentLang } from '@/i18n/lang'
+Object.defineProperty(window.navigator, 'languages', { value: ['de-DE', 'de'], configurable: true })
+setCurrentLang('de')
+
 // Fake mxtape API: an in-memory /api/data store per test file, so providers
 // that sync with the server work without a network. Tests that need other
 // answers stub fetch themselves (vi.stubGlobal).
