@@ -6,8 +6,8 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 **mxster** is a private music timeline game, played on one device by a group: hear a song, guess its year, place it on a timeline. Since v0.4.0 it is **sign-in only** (Google), new accounts wait for approval, and play is **virtual only** — physical QR cards, the card generator and Spotify were removed for good.
 
-**Current version**: v0.5.0 (2026-10) — resume after reload, Einspruch, decades + recent-song avoidance, round length, teams, song info (cover/album/fact). v0.4.0: login + approval queue, server-side account data, frontend redesign (Material 3 Expressive, "vinyl magenta").
-**Song database** (301 songs, 1950s–2020s): source of truth `docs/songs.json` (with `album`), facts in `docs/song-facts.json`; both are merged into `pwa/src/data/songs.ts` by `node scripts/song-management/sync-songs-ts.js` (never edit songs.ts by hand). Covers live next to the MP3s as `audio/covers/<id>.jpg` (gitignored locally, gated by nginx like the MP3s). Song data comes from MusicBrainz / Cover Art Archive — **no Spotify anywhere**; the old `spotifyId` values are only kept as stable keys, new songs have none.
+**Current version**: v0.5.1 (2026-10) — audio as AAC (.m4a), exotics off by default, song_104 removed. v0.5.0: resume after reload, Einspruch, decades + recent-song avoidance, round length, teams, song info (cover/album/fact). v0.4.0: login + approval queue, server-side account data, frontend redesign (Material 3 Expressive, "vinyl magenta").
+**Song database** (300 songs, 1950s–2020s; 39 marked `exotic: true` — little-known club tracks, remixes, rarities; drawn only when the round option „Exoten“ is on): source of truth `docs/songs.json` (with `album`), facts in `docs/song-facts.json`; both are merged into `pwa/src/data/songs.ts` by `node scripts/song-management/sync-songs-ts.js` (never edit songs.ts by hand). Covers live next to the audio files as `audio/covers/<id>.jpg` (gitignored locally, gated by nginx like the audio). Song data comes from MusicBrainz / Cover Art Archive — **no Spotify anywhere**; the old `spotifyId` values are only kept as stable keys, new songs have none.
 **Live**: https://mxster.celox.io (VPS 69.62.121.168)
 
 ### Key Technologies
@@ -47,14 +47,15 @@ npm test
 
 ### Song Management / Audio Hosting
 ```bash
-node scripts/song-management/add-song.js "Artist" "Title"            # lookup → check fields → MP3 + cover → upload → songs.json
+node scripts/song-management/add-song.js "Artist" "Title"            # lookup → check fields → audio + cover → upload → songs.json (--exotic marks a deep cut)
 node scripts/song-management/exchange-song.js song_123 "Artist" "Title"  # new song under the same id
 node scripts/song-management/edit-song.js                              # fix title/artist/year/genre
 node scripts/song-management/sync-songs-ts.js                          # songs.json + song-facts.json → pwa/src/data/songs.ts
 # flags for add/exchange: --year --album --genre --fact --yes --no-upload; deploy web afterwards
 cd scripts/audio-hosting && node download-songs.js && node upload-to-vps.js && node validate-audio.js --full   # details: scripts/audio-hosting/README.md
 ```
-MP3s and covers live on the VPS in `/var/www/html/mxster/audio/` (+ `audio/covers/`, never touched by the web deploy) and locally in the gitignored `pwa/public/audio/` (served by Vite in dev, unauthenticated). Upload new files with rsync (`rsync -a pwa/public/audio/ root@69.62.121.168:/var/www/html/mxster/audio/`, then `chown -R www-data:www-data`).
+**Audio format** (since v0.5.1): AAC-LC 96 kbit/s `.m4a`, cut at 4:00 with a 3 s fade, no metadata, `+faststart` — one place: `scripts/audio-hosting/encode.js` (`encodeForGame`, also a CLI that converts any leftover source file). The cut is safe because the random start lies within the first 2:30 (`RANDOM_START_MAX_S`). Collection: 300 files, ~790 MB (was 1.3 GB as 128 kbit/s MP3). nginx must map `m4a` to `audio/mp4` (the `/audio/` location sets its own `types`). `audioSrc()` maps old `.mp3` URLs from rounds saved before v0.5.1 to `.m4a`.
+Audio files and covers live on the VPS in `/var/www/html/mxster/audio/` (+ `audio/covers/`, never touched by the web deploy) and locally in the gitignored `pwa/public/audio/` (served by Vite in dev, unauthenticated). Upload new files with rsync (`rsync -a pwa/public/audio/ root@69.62.121.168:/var/www/html/mxster/audio/`, then `chown -R www-data:www-data`).
 
 ## Architecture
 
@@ -88,6 +89,7 @@ MP3s and covers live on the VPS in `/var/www/html/mxster/audio/` (+ `audio/cover
 Round options and their rule modules (all pure, tested in `game/__tests__/roundOptions.test.ts`):
 - `roundEnd.ts` — `isRoundOver(players, mode, goal)`; goal 5/10/15. Personal: anyone reaches the goal (a challenge can put a card on someone not on turn).
 - `songPool.ts` — decade filter (empty = all), no repeats within a round, recent songs avoided; widens to all decades instead of stalling.
+  Exotics (`song.exotic`) are out unless the round option `exotics` is on (`catalogue()`); they are the last resort only after every well-known song is used up (toast says so).
 - `challenge.ts` — Einspruch: 3 per player/team per round, timeline modes only, never by bots, not on a first card, not in a tiebreak. Flow phase `challenge` (`pending` in context): `startChallenge(seat)` → `claimGap(gap)` or `revealPlacement()`. Placer right → placer gets the card; placer wrong + challenger right → challenger gets it (own timeline / credited on the shared one); the objection is spent either way.
 - `teams.ts` — a team is a `Player` with `members` + `memberTurn`; `NEXT_TURN` advances the member. Achievements are never credited to teams. Teams from 4 people, no bots.
 
@@ -100,7 +102,7 @@ Mobile placing (below `lg`, 1024 px):
 - Autoplay blocked (always after a reload on phones): the player waits `paused`, starts on Howler's next `unlock` (first tap), and the bar says "Zum Abspielen tippen" with a pulsing play button — no toast.
 
 ### Audio
-`services/PreviewPlayerService.ts` (Howler, HTML5 audio). `audioSrc()` turns the absolute `previewUrl` (`https://mxster.celox.io/audio/song_XXX.mp3`) into a same-origin path, so the session cookie travels and nginx can gate it. `components/game/Turntable.tsx` owns playback for the game: plays on song change (optional random start), polls position at 4 Hz, stops on unmount.
+`services/PreviewPlayerService.ts` (Howler, HTML5 audio). `audioSrc()` turns the absolute `previewUrl` (`https://mxster.celox.io/audio/song_XXX.m4a`) into a same-origin path, so the session cookie travels and nginx can gate it. `components/game/Turntable.tsx` owns playback for the game: plays on song change (optional random start), polls position at 4 Hz, stops on unmount.
 
 ## Design System — Material 3 Expressive ("vinyl magenta", v0.4.0)
 
@@ -127,16 +129,16 @@ Mobile placing (below `lg`, 1024 px):
 
 - `./scripts/deployment/deploy.sh [all|api|web]` — runs tests first.
   - **api**: rsync `server/` → `/opt/mxster-api` (no `.venv`, `data`, `.env`, `tests`), system user `mxster`, venv + requirements, installs `server/deploy/mxster-api.service`, restarts, health check.
-  - **web**: tsc + vitest, build, rsync `pwa/dist` (minus `audio/`) via `/tmp` staging into `/var/www/html/mxster`, MP3s untouched.
+  - **web**: tsc + vitest, build, rsync `pwa/dist` (minus `audio/`) via `/tmp` staging into `/var/www/html/mxster`, audio untouched.
 - Secrets **only** in `/opt/mxster-api/.env` (root:mxster 640): `GOOGLE_CLIENT_ID/SECRET`, `SESSION_SECRET` (≥ 32 chars, enforced in prod), `MXSTER_ADMIN_EMAILS`, `PUBLIC_URL=https://mxster.celox.io`, `MX_ENV=prod`, `SMTP_*`, `NOTIFY_EMAIL`. `MX_DEV_LOGIN` must never be set in prod (startup refuses).
 - Google OAuth client (Web application): authorised redirect URI `https://mxster.celox.io/api/auth/callback` (+ `http://127.0.0.1:5174/api/auth/callback` for local tests with real Google).
   - Client ID `575245359999-s185k3…apps.googleusercontent.com` (created 2026-10-26; the older client ending in …ttlih is unused). Secret only in the server `.env`.
   - ⚠️ While the consent screen is in **testing mode**, Google rejects every account that is not a listed test user — before our callback runs, so they never reach the waiting list. Publish the app (Audience → Publish); basic scopes need no verification.
 - nginx: vHost `/etc/nginx/sites-available/mxster.celox.io` (symlinked); the `/api/`, `/audio/` (auth_request) and `/_mx_audio_auth` locations are in `server/deploy/nginx-locations.conf`. Edit the file nginx actually loads (`nginx -T`), never while certbot runs. Umami is injected centrally via `sub_filter`.
 - Backup: `/opt/mxster-api/data/mxster.db` is picked up by the dynamic SQLite search in `vps-data-backup.sh` (`.backup`, not copied).
-- Live check after a deploy (verified 2026-10-26): `/` 200, `/api/session` 200 `{"me":null}`, `/api/me` + `/api/admin/users` 401 without session, `/audio/song_001.mp3` 401 without session, 206 with an approved session, 401 pending; data 403 pending; admin 404 for non-admins. A probe user for such checks must be deleted afterwards (users + sessions).
+- Live check after a deploy (verified 2026-10-26): `/` 200, `/api/session` 200 `{"me":null}`, `/api/me` + `/api/admin/users` 401 without session, `/audio/song_001.m4a` 401 without session (206 `audio/mp4` with one — verified 2026-10-27), 206 with an approved session, 401 pending; data 403 pending; admin 404 for non-admins. A probe user for such checks must be deleted afterwards (users + sessions).
 - Mail on the VPS goes via SMTP (`SMTP_*` in `.env`): the service user `mxster` cannot read `/etc/msmtprc`, so `SENDMAIL_PATH` does not work there. `MAIL_FROM` must be quoted in the `.env`.
-- PWA: Workbox cache id `mxster-v6`; `/api/` and `/audio/` are never precached, `/api/` navigations bypass the SW. Bump `cacheId` on shell changes.
+- PWA: Workbox cache id `mxster-v7`; `/api/` and `/audio/` are never precached, `/api/` navigations bypass the SW. Bump `cacheId` on shell changes.
 
 ## Best Practices
 - Song type: `export const songs: Song[] = [...]` (the integrity test parses it with `/export const songs(?:: Song\[\])? = (\[[\s\S]*\])/`).

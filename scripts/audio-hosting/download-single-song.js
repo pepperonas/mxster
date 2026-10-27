@@ -8,20 +8,15 @@
 
 import { execSync, execFileSync } from 'child_process'
 import fs from 'fs'
+import os from 'os'
 import path from 'path'
-import { fileURLToPath } from 'url'
-
-const __filename = fileURLToPath(import.meta.url)
-const __dirname = path.dirname(__filename)
+import { AUDIO_DIR, AUDIO_EXT, audioFile, encodeForGame, probeSeconds } from './encode.js'
 
 // Configuration
 const VPS_HOST = 'root@69.62.121.168'
 const VPS_AUDIO_PATH = '/var/www/html/mxster/audio'
 const SELF_HOSTED_BASE_URL = 'https://mxster.celox.io/audio'
 
-// Audio directory relative to project root
-const PROJECT_ROOT = path.resolve(__dirname, '../..')
-const AUDIO_DIR = path.join(PROJECT_ROOT, 'pwa/public/audio')
 
 /**
  * Check if yt-dlp is installed
@@ -54,12 +49,14 @@ function checkRsync() {
 
 /**
  * Download song from YouTube via yt-dlp (arguments as a list — titles with
- * quotes or apostrophes never reach a shell). Overwrites an existing file.
+ * quotes or apostrophes never reach a shell), then encode it into the game
+ * format (encode.js: AAC 96 kbit/s, max 4:00). Overwrites an existing file.
  * @param {Object} song - Song object with id, title, artist
  * @returns {Promise<boolean>} Success status
  */
 async function downloadFromYouTube(song) {
-  const outputPath = path.join(AUDIO_DIR, `${song.id}.mp3`)
+  const outputPath = audioFile(song.id)
+  const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'mxster-dl-'))
   const searchQuery = `${song.artist} - ${song.title} audio`
 
   console.log(`🔍 Searching YouTube: "${searchQuery}"`)
@@ -69,27 +66,26 @@ async function downloadFromYouTube(song) {
     execFileSync(
       'yt-dlp',
       [
-        '--extract-audio',
-        '--audio-format', 'mp3',
-        '--audio-quality', '128K',
         '--format', 'bestaudio',
-        '--output', outputPath,
+        '--output', path.join(tmpDir, 'source.%(ext)s'),
         '--no-playlist',
-        '--force-overwrites',
         '--quiet',
         '--no-warnings',
         `ytsearch1:${searchQuery}`
       ],
       { stdio: 'inherit' }
     )
-
-    if (!fs.existsSync(outputPath)) {
+    const source = fs.readdirSync(tmpDir).find((f) => f.startsWith('source.'))
+    if (!source) {
       console.error('❌ Download failed: file not created')
       return false
     }
+    // Judge the length of the download, not of the (capped) game file
+    const seconds = probeSeconds(path.join(tmpDir, source))
+    encodeForGame(path.join(tmpDir, source), outputPath)
+
     const sizeMB = (fs.statSync(outputPath).size / (1024 * 1024)).toFixed(2)
-    const seconds = probeSeconds(outputPath)
-    console.log(`✅ Downloaded: ${song.id}.mp3 (${sizeMB} MB${seconds ? `, ${formatLength(seconds)}` : ''})`)
+    console.log(`✅ Downloaded: ${path.basename(outputPath)} (${sizeMB} MB${seconds ? `, original ${formatLength(seconds)}` : ''})`)
     if (seconds && (seconds < 90 || seconds > 600)) {
       console.warn(`⚠️  Unusual length ${formatLength(seconds)} — probably not the original recording. Listen before using it.`)
     }
@@ -97,17 +93,8 @@ async function downloadFromYouTube(song) {
   } catch (error) {
     console.error(`❌ Download error: ${error.message}`)
     return false
-  }
-}
-
-/** Duration in seconds via ffprobe, or null if ffprobe is missing. */
-function probeSeconds(file) {
-  try {
-    const out = execFileSync('ffprobe', ['-v', 'error', '-show_entries', 'format=duration', '-of', 'csv=p=0', file], { encoding: 'utf8' })
-    const s = Math.round(parseFloat(out))
-    return Number.isFinite(s) ? s : null
-  } catch {
-    return null
+  } finally {
+    fs.rmSync(tmpDir, { recursive: true, force: true })
   }
 }
 
@@ -132,42 +119,15 @@ export function uploadFile(localPath, subdir = '') {
   }
 }
 
-/**
- * Upload MP3 file to VPS via rsync
- * @param {Object} song - Song object with id
- * @returns {Promise<boolean>} Success status
- */
+/** Upload the song's audio file to the VPS. */
 async function uploadToVPS(song) {
-  const localPath = path.join(AUDIO_DIR, `${song.id}.mp3`)
-  const remotePath = `${VPS_HOST}:${VPS_AUDIO_PATH}/`
-
-  console.log(`📤 Uploading to VPS: ${song.id}.mp3`)
-
-  try {
-    // Check if local file exists
-    if (!fs.existsSync(localPath)) {
-      console.error(`❌ Local file not found: ${localPath}`)
-      return false
-    }
-
-    // Ensure remote directory exists
-    const mkdirCommand = `ssh ${VPS_HOST} "mkdir -p ${VPS_AUDIO_PATH}"`
-    execSync(mkdirCommand, { stdio: 'ignore' })
-
-    // Upload via rsync (based on upload-to-vps.js)
-    const rsyncCommand = `rsync -avz --progress "${localPath}" "${remotePath}"`
-    execSync(rsyncCommand, { stdio: 'inherit' })
-
-    // Set correct permissions (644)
-    const chmodCommand = `ssh ${VPS_HOST} "chmod 644 ${VPS_AUDIO_PATH}/${song.id}.mp3"`
-    execSync(chmodCommand, { stdio: 'ignore' })
-
-    console.log(`✅ Uploaded: ${song.id}.mp3`)
-    return true
-  } catch (error) {
-    console.error(`❌ Upload error: ${error.message}`)
+  const localPath = audioFile(song.id)
+  if (!fs.existsSync(localPath)) {
+    console.error(`❌ Local file not found: ${localPath}`)
     return false
   }
+  console.log(`📤 Uploading to VPS: ${path.basename(localPath)}`)
+  return uploadFile(localPath)
 }
 
 /**
@@ -198,7 +158,7 @@ export async function downloadAndUploadSong(song, { upload = true } = {}) {
     return null
   }
 
-  if (!upload) return `${SELF_HOSTED_BASE_URL}/${song.id}.mp3`
+  if (!upload) return `${SELF_HOSTED_BASE_URL}/${song.id}.${AUDIO_EXT}`
 
   // Upload to VPS
   const uploadSuccess = await uploadToVPS(song)
@@ -208,7 +168,7 @@ export async function downloadAndUploadSong(song, { upload = true } = {}) {
   }
 
   // Return self-hosted URL
-  const selfHostedUrl = `${SELF_HOSTED_BASE_URL}/${song.id}.mp3`
+  const selfHostedUrl = `${SELF_HOSTED_BASE_URL}/${song.id}.${AUDIO_EXT}`
   console.log(`✅ Self-hosted URL: ${selfHostedUrl}`)
   return selfHostedUrl
 }

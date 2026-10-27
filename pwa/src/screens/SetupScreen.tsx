@@ -30,6 +30,7 @@ const MIN_PLAYERS = 2
 const LAST_MODE_KEY = 'mxster_last_mode'
 const LAST_OPTIONS_KEY = 'mxster_last_options'
 const SONGS_BY_DECADE = countByDecade(songs)
+const EXOTIC_COUNT = songs.filter((s) => s.exotic).length
 const DECADES_WITH_SONGS = DECADES.filter((d) => (SONGS_BY_DECADE[d] ?? 0) > 0)
 
 function readLastOptions(): Partial<RoundOptions> | null {
@@ -39,7 +40,8 @@ function readLastOptions(): Partial<RoundOptions> | null {
     return {
       goal: (GOAL_OPTIONS as readonly number[]).includes(raw.goal) ? raw.goal : undefined,
       decades: Array.isArray(raw.decades) ? raw.decades.filter((d: unknown) => DECADES_WITH_SONGS.includes(d as never)) : undefined,
-      challengesEnabled: typeof raw.challengesEnabled === 'boolean' ? raw.challengesEnabled : undefined
+      challengesEnabled: typeof raw.challengesEnabled === 'boolean' ? raw.challengesEnabled : undefined,
+      exotics: typeof raw.exotics === 'boolean' ? raw.exotics : undefined
     }
   } catch {
     return null
@@ -69,6 +71,7 @@ export function SetupScreen() {
     goal,
     decades,
     challengesEnabled,
+    exotics,
     setOptions
   } = useGame()
   const { settings, addPlayer: rememberPlayer } = useSettings()
@@ -177,7 +180,8 @@ export function SetupScreen() {
   const emptyTeam = teamsActive && teams.some((t) => t.length === 0)
 
   // ── Round ────────────────────────────────────────────────────────────────
-  const poolSize = useMemo(() => songPool(songs, decades).length, [decades])
+  const poolSize = useMemo(() => songPool(songs, decades, exotics).length, [decades, exotics])
+  const byDecade = useMemo(() => countByDecade(songs, exotics), [exotics])
   const timelineMode = gameMode !== 'hardcore'
   const seats = teamsActive ? teams.length : players.length
   // Rough songs a round needs: every seat plays until the goal, plus misses
@@ -194,7 +198,7 @@ export function SetupScreen() {
   const start = () => {
     if (!ready || !gameMode) return
     localStorage.setItem(LAST_MODE_KEY, gameMode)
-    localStorage.setItem(LAST_OPTIONS_KEY, JSON.stringify({ goal, decades, challengesEnabled }))
+    localStorage.setItem(LAST_OPTIONS_KEY, JSON.stringify({ goal, decades, challengesEnabled, exotics }))
     if (teamsActive) {
       setPlayers(
         teams.map<Player>((members, i) => ({ name: TEAMS[i].name, members, memberTurn: 0, timeline: [], cards: 0, score: 0 }))
@@ -537,7 +541,7 @@ export function SetupScreen() {
                     className={`chip m3-state-layer`}
                     aria-pressed={on}
                     onClick={() => toggleDecade(d)}
-                    aria-label={`${decadeLabel(d)}, ${SONGS_BY_DECADE[d]} Songs`}
+                    aria-label={`${decadeLabel(d)}, ${byDecade[d] ?? 0} Songs`}
                   >
                     {on && <Icon name="check" size={18} />}
                     {decadeLabel(d)}
@@ -566,6 +570,19 @@ export function SetupScreen() {
               <Switch checked={challengesEnabled} onChange={(on) => setOptions({ challengesEnabled: on })} ariaLabel="Einspruch" />
             </div>
           )}
+
+          <div className="surface p-4 flex items-start gap-4">
+            <span className="grid place-items-center w-10 h-10 shrink-0 rounded-full bg-md-surface-container-highest text-md-on-surface-variant">
+              <Icon name="diamond" size={20} />
+            </span>
+            <div className="flex-1 min-w-0">
+              <h3 className="text-title-md">Exoten</h3>
+              <p className="meta">
+                {EXOTIC_COUNT} Songs, die kaum jemand kennt: Club-Tracks, Remixe und Raritäten. Für Runden mit echten Musik-Nerds.
+              </p>
+            </div>
+            <Switch checked={exotics} onChange={(on) => setOptions({ exotics: on })} ariaLabel="Exoten mitspielen" />
+          </div>
         </section>
       </div>
 

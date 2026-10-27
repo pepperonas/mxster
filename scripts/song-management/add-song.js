@@ -8,7 +8,7 @@
  * Looks up year and album (MusicBrainz, iTunes), lets you check every field,
  * downloads the audio (yt-dlp) and the cover, uploads both to the VPS and
  * writes docs/songs.json (+ docs/song-facts.json), then regenerates songs.ts.
- * Flags: --year --album --genre --fact --yes --no-upload (see lib/songWizard.js).
+ * Flags: --year --album --genre --fact --exotic --yes --no-upload (see lib/songWizard.js).
  * Deploy the web app afterwards so the new song is in the bundle.
  */
 import { execFileSync } from 'child_process'
@@ -44,7 +44,8 @@ async function main() {
       year: meta.year,
       ...(meta.album ? { album: meta.album } : {}),
       previewUrl: previewUrlFor(id),
-      genre: meta.genre || ''
+      genre: meta.genre || '',
+      ...(meta.exotic ? { exotic: true } : {})
     }
 
     const media = await fetchMedia(song, cover, flags)

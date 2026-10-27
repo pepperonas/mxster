@@ -14,10 +14,13 @@
 import fs from 'fs'
 import path from 'path'
 import { fileURLToPath } from 'url'
-import { exec } from 'child_process'
+import os from 'os'
+import { exec, execFile } from 'child_process'
 import { promisify } from 'util'
+import { AUDIO_EXT, encodeForGame } from './encode.js'
 
 const execAsync = promisify(exec)
+const execFileAsync = promisify(execFile)
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
 // Configuration
@@ -26,7 +29,6 @@ const OUTPUT_DIR = path.join(__dirname, '../../pwa/public/audio')
 const REPORT_PATH = path.join(__dirname, '../../docs/download-report.json')
 const CONCURRENT_DOWNLOADS = 3 // Parallel downloads
 const MAX_RETRIES = 3
-const AUDIO_QUALITY = '128' // 128 kbps MP3
 
 // Parse CLI arguments
 const args = process.argv.slice(2)
@@ -64,7 +66,7 @@ async function checkYtDlp() {
  * Download single song via yt-dlp
  */
 async function downloadSong(song, attempt = 1) {
-  const fileName = `${song.id}.mp3`
+  const fileName = `${song.id}.${AUDIO_EXT}`
   const outputPath = path.join(OUTPUT_DIR, fileName)
 
   // Skip if file already exists (resume mode)
@@ -73,26 +75,18 @@ async function downloadSong(song, attempt = 1) {
     return { success: true, skipped: true, path: outputPath }
   }
 
-  const searchQuery = `${song.artist} - ${song.title}`.replace(/"/g, '\\"')
-
+  const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'mxster-dl-'))
   try {
     log(`📥 Downloading [${attempt}/${MAX_RETRIES}]: ${song.artist} - ${song.title}`, 'cyan')
 
-    // yt-dlp command for YouTube Music
-    const command = `yt-dlp \\
-      --extract-audio \\
-      --audio-format mp3 \\
-      --audio-quality ${AUDIO_QUALITY} \\
-      --format "bestaudio" \\
-      --output "${outputPath}" \\
-      --no-playlist \\
-      --quiet \\
-      --no-warnings \\
-      "ytsearch1:${searchQuery}"`
-
-    const { stdout, stderr } = await execAsync(command, {
-      timeout: 60000 // 60 second timeout per download
-    })
+    // Arguments as a list: quotes in titles never reach a shell
+    await execFileAsync(
+      'yt-dlp',
+      ['--format', 'bestaudio', '--output', path.join(tmpDir, 'source.%(ext)s'), '--no-playlist', '--quiet', '--no-warnings', `ytsearch1:${song.artist} - ${song.title}`],
+      { timeout: 120000 }
+    )
+    const source = fs.readdirSync(tmpDir).find((f) => f.startsWith('source.'))
+    if (source) encodeForGame(path.join(tmpDir, source), outputPath)
 
     // Check if file was created
     if (fs.existsSync(outputPath)) {
@@ -125,6 +119,8 @@ async function downloadSong(song, attempt = 1) {
       error: error.message,
       attempts: attempt
     }
+  } finally {
+    fs.rmSync(tmpDir, { recursive: true, force: true })
   }
 }
 

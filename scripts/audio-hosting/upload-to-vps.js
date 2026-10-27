@@ -52,10 +52,10 @@ function checkLocalFiles() {
     throw new Error(`Local audio directory not found: ${LOCAL_AUDIO_DIR}`)
   }
 
-  const files = fs.readdirSync(LOCAL_AUDIO_DIR).filter(f => f.endsWith('.mp3'))
+  const files = fs.readdirSync(LOCAL_AUDIO_DIR).filter(f => f.endsWith('.m4a'))
 
   if (files.length === 0) {
-    throw new Error('No MP3 files found in local audio directory')
+    throw new Error('No .m4a files found in local audio directory')
   }
 
   return files
@@ -140,7 +140,7 @@ async function setPermissions() {
   log('🔒 Setting file permissions (644)...', 'cyan')
 
   try {
-    await execAsync(`ssh ${VPS_HOST} "chmod 644 ${VPS_AUDIO_DIR}*.mp3"`)
+    await execAsync(`ssh ${VPS_HOST} "chmod 644 ${VPS_AUDIO_DIR}*.m4a"`)
     log('✅ Permissions set', 'green')
   } catch (error) {
     log(`⚠️  Warning: Could not set permissions: ${error.message}`, 'yellow')

@@ -76,6 +76,7 @@ export function useTurnFlow({ onGameOver, onSkipNotice }: Options) {
     setTiebreak,
     goal,
     decades,
+    exotics,
     challengesEnabled,
     reveal,
     setReveal,
@@ -127,20 +128,25 @@ export function useTurnFlow({ onGameOver, onSkipNotice }: Options) {
 
   // ── Song source ──────────────────────────────────────────────────────────
   const drawSong = useCallback((): Song | null => {
-    const { song, widened } = pickSong(songs, decades, playedSongs, settings.recentSongs)
+    const { song, widened } = pickSong(songs, decades, playedSongs, settings.recentSongs, Math.random, exotics)
     if (!song) {
       addToast('Alle Songs wurden bereits gespielt!', 'warning')
       return null
     }
     if (widened && !widenedNoticeShown.current) {
       widenedNoticeShown.current = true
-      addToast('Die gewählten Jahrzehnte sind durch – ab jetzt kommen Songs aus allen Jahrzehnten.', 'info')
+      addToast(
+        song.exotic && !exotics
+          ? 'Die bekannten Songs sind durch – ab jetzt kommen auch Exoten.'
+          : 'Die gewählten Jahrzehnte sind durch – ab jetzt kommen Songs aus allen Jahrzehnten.',
+        'info'
+      )
     }
     addToPlayedSongs(songKey(song))
     rememberSong(songKey(song))
     setCurrentSong(song)
     return song
-  }, [decades, playedSongs, settings.recentSongs, addToPlayedSongs, rememberSong, setCurrentSong, addToast])
+  }, [decades, exotics, playedSongs, settings.recentSongs, addToPlayedSongs, rememberSong, setCurrentSong, addToast])
 
   // ── Game end ─────────────────────────────────────────────────────────────
   const finishGame = useCallback(

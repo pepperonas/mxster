@@ -7,6 +7,7 @@
  *
  * Flags shared by both scripts:
  *   --year 1984  --album "…"  --genre Pop  --fact "…"   preset a field
+ *   --exotic     mark as little-known (only drawn when a round allows exotics)
  *   --yes        accept the suggestion without questions
  *   --no-upload  keep MP3 and cover local (upload later with rsync)
  */
@@ -21,11 +22,12 @@ export const GENRES = ['Pop', 'Rock', 'Hip-Hop', 'Electronic', 'Dance', 'House',
 /** argv → { positional: [...], flags: { year, album, genre, fact, yes, upload } } */
 export function parseArgs(argv) {
   const positional = []
-  const flags = { yes: false, upload: true }
+  const flags = { yes: false, upload: true, exotic: undefined }
   for (let i = 0; i < argv.length; i++) {
     const a = argv[i]
     if (a === '--yes' || a === '-y') flags.yes = true
     else if (a === '--no-upload') flags.upload = false
+    else if (a === '--exotic') flags.exotic = true
     else if (['--year', '--album', '--genre', '--fact'].includes(a)) flags[a.slice(2)] = argv[++i]
     else positional.push(a)
   }
@@ -68,7 +70,8 @@ export async function proposeSong({ artist, title, flags, prompt, current }) {
     year: flags.year ?? mb.year ?? it?.year ?? current?.year ?? null,
     album: flags.album ?? mb.album ?? it?.album ?? null,
     genre: flags.genre ?? current?.genre ?? '',
-    fact: flags.fact ?? ''
+    fact: flags.fact ?? '',
+    exotic: flags.exotic ?? false
   }
 
   if (!flags.yes) {
@@ -83,6 +86,9 @@ export async function proposeSong({ artist, title, flags, prompt, current }) {
     meta.genre = (await prompt.ask(`Genre [${meta.genre}]: `)) || meta.genre
     console.log('   „Wusstest du?“: ein Satz, nur wenn sicher wahr, ohne Jahreszahl. Leer = keiner.')
     meta.fact = (await prompt.ask('Fakt: ')) || meta.fact
+    console.log('   Exot = kaum bekannt (Club-Track, Remix, Rarität); kommt nur, wenn die Runde Exoten erlaubt.')
+    const ex = (await prompt.ask(`Exot? (j/n) [${meta.exotic ? 'j' : 'n'}]: `)).toLowerCase()
+    if (ex) meta.exotic = ex.startsWith('j') || ex.startsWith('y')
   }
 
   if (!Number.isInteger(meta.year) || meta.year < 1900 || meta.year > new Date().getFullYear()) {

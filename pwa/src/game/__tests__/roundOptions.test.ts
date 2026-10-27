@@ -1,6 +1,7 @@
 import { describe, it, expect, beforeEach } from 'vitest'
 import type { Player, Song } from '@/types'
-import { pickSong, rememberSong, songPool, decadeOf, RECENT_LIMIT, songKey } from '../songPool'
+import { pickSong, rememberSong, songPool, decadeOf, RECENT_LIMIT, songKey, countByDecade } from '../songPool'
+import { songs as catalogueSongs } from '@/data/songs'
 import { eligibleChallengers, resolveChallenge } from '../challenge'
 import { activeMember, initialOf, maxTeams, splitIntoTeams, turnName } from '../teams'
 import { isRoundOver } from '../roundEnd'
@@ -66,6 +67,43 @@ describe('song pool', () => {
       { savedPlayers: [], recentSongs: ['a', 'b'] }
     )
     expect(merged.recentSongs).toEqual(['a', 'b', 'c'])
+  })
+})
+
+describe('exotics', () => {
+  const exotic = (year: number, id: string): Song => ({ ...song(year, id), exotic: true })
+  const all = [song(1984, 'known'), exotic(1985, 'rare'), exotic(1986, 'rare2')]
+
+  it('are left out by default and in when allowed', () => {
+    expect(songPool(all, [], false).map((s) => s.id)).toEqual(['known'])
+    expect(songPool(all, [], true)).toHaveLength(3)
+    expect(countByDecade(all, false)[1980]).toBe(1)
+  })
+
+  it('never come up while a well-known song is left, even outside the decades', () => {
+    const more = [...all, song(1995, 'nineties')]
+    for (const r of [0, 0.5, 0.99]) {
+      const draw = pickSong(more, [1980], ['known'], [], () => r, false)
+      expect(draw.song?.id).toBe('nineties')
+      expect(draw.widened).toBe(true)
+    }
+  })
+
+  it('keep the round going once every well-known song is used up', () => {
+    const draw = pickSong(all, [], ['known'], [], () => 0, false)
+    expect(draw.song?.exotic).toBe(true)
+    expect(draw.widened).toBe(true)
+  })
+
+  it('are drawn normally when allowed', () => {
+    expect(pickSong(all, [], ['known'], [], () => 0, true).widened).toBe(false)
+  })
+
+  it('the catalogue marks some songs, but most stay in', () => {
+    const marked = catalogueSongs.filter((s) => s.exotic).length
+    expect(marked).toBeGreaterThan(0)
+    expect(marked).toBeLessThan(catalogueSongs.length / 4)
+    expect(catalogueSongs.some((s) => s.id === 'song_104')).toBe(false)
   })
 })
 

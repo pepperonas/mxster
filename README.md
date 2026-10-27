@@ -3,7 +3,7 @@
 Song hören, Jahr raten, an die richtige Stelle der Zeitleiste legen. Ein Musikspiel für eure Runde, gespielt auf einem Gerät.
 
 [![App](https://img.shields.io/badge/mxster.celox.io-B90C55?style=for-the-badge&logo=googlechrome&logoColor=white)](https://mxster.celox.io)
-[![Version](https://img.shields.io/badge/v0.5.0-B90C55?style=for-the-badge&logo=semver&logoColor=white)](https://github.com/pepperonas/mxster/releases)
+[![Version](https://img.shields.io/badge/v0.5.1-B90C55?style=for-the-badge&logo=semver&logoColor=white)](https://github.com/pepperonas/mxster/releases)
 [![Tests](https://github.com/pepperonas/mxster/actions/workflows/ci.yml/badge.svg)](https://github.com/pepperonas/mxster/actions/workflows/ci.yml)
 
 ![React](https://img.shields.io/badge/React_19-61DAFB?style=flat-square&logo=react&logoColor=black)
@@ -15,7 +15,7 @@ Song hören, Jahr raten, an die richtige Stelle der Zeitleiste legen. Ein Musiks
 
 ## Zugang
 
-mxster ist eine private App. Man meldet sich mit einem Google-Konto an; neue Konten landen auf einer Warteliste und werden einzeln freigeschaltet. Erst danach sind Spiel und Musik erreichbar — auch die MP3-Dateien liefert der Server nur an freigeschaltete Sitzungen aus.
+mxster ist eine private App. Man meldet sich mit einem Google-Konto an; neue Konten landen auf einer Warteliste und werden einzeln freigeschaltet. Erst danach sind Spiel und Musik erreichbar — auch die Musikdateien liefert der Server nur an freigeschaltete Sitzungen aus.
 
 ## Spielmodi
 
@@ -30,6 +30,7 @@ Vor jeder Runde legt ihr fest:
 - **Länge:** kurz (5 Songs), normal (10) oder lang (15).
 - **Jahrzehnte:** alle oder nur bestimmte, etwa nur 80er und 90er. Gehen die Songs der gewählten Jahrzehnte aus, kommen die übrigen dazu, damit die Runde nie stehen bleibt.
 - **Einspruch** (Zeitleisten-Modi): Jede:r hat drei Einsprüche. Nach dem Legen bleibt die Karte verdeckt, und wer anderer Meinung ist, legt sie in eine andere Lücke. Liegt die Person am Zug falsch und der Einspruch richtig, bekommt die Einspruch-Person die Karte. Ein Einspruch kostet immer einen der drei. Bots erheben keinen Einspruch, können aber angefochten werden.
+- **Exoten**: Standardmäßig aus. Eingeschaltet kommen auch kaum bekannte Songs dazu. Sind alle bekannten Songs einer Runde gespielt, kommen die Exoten trotzdem, damit die Runde weiterläuft.
 - **Teams** (ab vier Personen): Ein Team teilt sich Zeitleiste, Punkte und Einsprüche, die Mitglieder wechseln sich am Zug ab. Die App verteilt zufällig, ein Tipp auf einen Namen setzt ihn ins nächste Team.
 
 Songs aus euren letzten Runden kommen erst wieder, wenn nichts Neues mehr übrig ist; das merkt sich die App pro Konto.
@@ -40,7 +41,8 @@ Allein? Dann spielen bis zu drei Bots gegen dich (leicht, mittel, schwer).
 
 ## Was drin ist
 
-- 301 Songs von den 50ern bis heute als selbst gehostete MP3s, zufällige Startstelle auf Wunsch
+- 300 Songs von den 50ern bis heute, selbst gehostet (AAC, 96 kbit/s, höchstens vier Minuten je Song), zufällige Startstelle auf Wunsch
+- Exoten: 39 kaum bekannte Songs (Club-Tracks, Remixe, Raritäten) spielen nur mit, wenn man sie beim Spielaufbau einschaltet
 - Nach dem Aufdecken: Album-Cover auf dem Plattenlabel, Albumname und ein kurzes „Wusstest du?“
 - Eine laufende Runde übersteht Neuladen und geschlossene Tabs: Sie wird auf dem Gerät gesichert und auf der Startseite zum Weiterspielen angeboten
 - Fehlertolerante Antworten (Tippfehler, Groß- und Kleinschreibung)
@@ -64,7 +66,7 @@ Material 3 Expressive mit einer eigenen Identität: Vinyl-Magenta als Primärfar
 pwa/      React-19-PWA (Vite, Tailwind, motion)
 server/   FastAPI + SQLite: Google-Login, Warteliste, Admin, Spieldaten, Audio-Freigabe
 docs/     songs.json — die Songdatenbank (Quelle der Wahrheit)
-scripts/  Songs verwalten, MP3s hosten, Deployment
+scripts/  Songs verwalten, Audio hosten, Deployment
 ```
 
 ## Entwicklung
@@ -88,7 +90,7 @@ npm test                         # Songdaten-Integrität (Repo-Wurzel)
 ## Songs pflegen
 
 ```bash
-node scripts/song-management/add-song.js "a-ha" "Take on Me"   # schlägt Jahr und Album vor, lädt MP3 und Cover
+node scripts/song-management/add-song.js "a-ha" "Take on Me"   # schlägt Jahr und Album vor, lädt Audio und Cover
 ./scripts/deployment/deploy.sh web
 ```
 

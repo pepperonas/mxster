@@ -59,5 +59,5 @@ export function findDuplicate(songs, artist, title, exceptId) {
 }
 
 export function previewUrlFor(id) {
-  return `${PUBLIC_AUDIO_URL}/${id}.mp3`
+  return `${PUBLIC_AUDIO_URL}/${id}.m4a`
 }

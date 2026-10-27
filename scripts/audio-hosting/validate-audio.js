@@ -231,7 +231,7 @@ async function main() {
 
   if (songsWithPreview.length === 0) {
     log('❌ No songs with preview URLs found', 'red')
-    log('   previewUrl must be https://mxster.celox.io/audio/<id>.mp3 (see docs/songs.json)\n', 'yellow')
+    log('   previewUrl must be https://mxster.celox.io/audio/<id>.m4a (see docs/songs.json)\n', 'yellow')
     process.exit(1)
   }
 

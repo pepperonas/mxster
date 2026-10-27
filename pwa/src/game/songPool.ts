@@ -2,12 +2,15 @@
  * Which song comes next (pure).
  *
  * - The round can be limited to decades; an empty selection means all songs.
+ * - Exotics (little-known tracks, `song.exotic`) are left out unless the
+ *   round allows them.
  * - Songs played in recent rounds (`recent`, oldest first, kept per account)
  *   are avoided while fresh ones are left; after that the longest-unplayed
  *   songs come back first.
  * - A song never repeats within a round (`played`).
  * - If the chosen decades run dry mid-round (long game, tiebreak), the pool
- *   widens to all songs instead of stopping the game; `widened` tells the UI.
+ *   widens to all decades instead of stopping the game; `widened` tells the UI.
+ *   Exotics are the very last resort, after every well-known song is used up.
  */
 import type { Song } from '@/types'
 
@@ -28,13 +31,20 @@ export function decadeLabel(decade: number): string {
   return `${String(decade).slice(2)}er`
 }
 
-/** Songs of the chosen decades (all songs when none is chosen). */
-export function songPool(all: Song[], decades: readonly number[]): Song[] {
-  if (decades.length === 0) return all
-  return all.filter((s) => decades.includes(decadeOf(s.year)))
+/** The songs a round draws from: exotics only when allowed. */
+export function catalogue(all: Song[], exotics: boolean): Song[] {
+  return exotics ? all : all.filter((s) => !s.exotic)
 }
 
-export function countByDecade(all: Song[]): Record<number, number> {
+/** Songs of the chosen decades (all songs when none is chosen). */
+export function songPool(all: Song[], decades: readonly number[], exotics = true): Song[] {
+  const base = catalogue(all, exotics)
+  if (decades.length === 0) return base
+  return base.filter((s) => decades.includes(decadeOf(s.year)))
+}
+
+export function countByDecade(all: Song[], exotics = true): Record<number, number> {
+  all = catalogue(all, exotics)
   const out: Record<number, number> = {}
   for (const s of all) out[decadeOf(s.year)] = (out[decadeOf(s.year)] ?? 0) + 1
   return out
@@ -51,13 +61,17 @@ export function pickSong(
   decades: readonly number[],
   played: readonly string[],
   recent: readonly string[],
-  rand: () => number = Math.random
+  rand: () => number = Math.random,
+  exotics = true
 ): Draw {
   const unplayed = (list: Song[]) => list.filter((s) => !played.includes(songKey(s)))
-  const inPool = unplayed(songPool(all, decades))
+  const inPool = unplayed(songPool(all, decades, exotics))
   if (inPool.length > 0) return { song: preferFresh(inPool, recent, rand), widened: false }
-  const anywhere = unplayed(all)
+  const anywhere = unplayed(catalogue(all, exotics))
   if (anywhere.length > 0) return { song: preferFresh(anywhere, recent, rand), widened: decades.length > 0 }
+  // Every well-known song is used up: exotics keep the round going
+  const last = unplayed(all)
+  if (last.length > 0) return { song: preferFresh(last, recent, rand), widened: true }
   return { song: null, widened: false }
 }
 

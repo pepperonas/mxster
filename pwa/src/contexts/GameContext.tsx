@@ -44,6 +44,8 @@ interface GameState {
   decades: number[]
   /** Einspruch is on (timeline modes only). */
   challengesEnabled: boolean
+  /** Little-known tracks (song.exotic) may come up. */
+  exotics: boolean
 
   // Turn (kept here so a reload resumes exactly where the round stood)
   reveal: Reveal | null
@@ -54,7 +56,7 @@ interface GameState {
   rankingsHistory: RankingSnapshot[]
 }
 
-export type RoundOptions = Pick<GameState, 'goal' | 'decades' | 'challengesEnabled'>
+export type RoundOptions = Pick<GameState, 'goal' | 'decades' | 'challengesEnabled' | 'exotics'>
 
 type GameAction =
   | { type: 'SET_GAME_MODE'; payload: GameMode | null }
@@ -140,6 +142,7 @@ const initialState: GameState = {
   goal: DEFAULT_GOAL,
   decades: [],
   challengesEnabled: true,
+  exotics: false,
   reveal: null,
   pending: null,
   finished: false,
@@ -166,7 +169,8 @@ function keepOptions(state: GameState) {
     randomStartPosition: state.randomStartPosition,
     goal: state.goal,
     decades: state.decades,
-    challengesEnabled: state.challengesEnabled
+    challengesEnabled: state.challengesEnabled,
+    exotics: state.exotics
   }
 }
 

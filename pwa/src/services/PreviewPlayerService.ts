@@ -22,13 +22,18 @@ interface PreviewPlayerConfig {
  * Songs list absolute URLs (https://mxster.celox.io/audio/…). Playback always
  * goes to the same origin: /audio/ is behind the login (nginx auth_request),
  * so the session cookie must travel with the request.
+ *
+ * Since v0.5.1 the files are AAC (.m4a). A round saved before that still holds
+ * .mp3 URLs, which no longer exist — they are mapped to the new file.
  */
 export function audioSrc(previewUrl: string): string {
+  let path = previewUrl
   try {
-    return new URL(previewUrl, window.location.origin).pathname
+    path = new URL(previewUrl, window.location.origin).pathname
   } catch {
-    return previewUrl
+    /* keep as is */
   }
+  return path.replace(/^(\/audio\/song_\d+)\.mp3$/, '$1.m4a')
 }
 
 export class PreviewPlayerService {
