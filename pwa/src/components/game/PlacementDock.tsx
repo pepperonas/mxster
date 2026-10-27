@@ -25,7 +25,7 @@ import { computeInsertionIndex, isNearBoard, autoScrollSpeed } from '@/game/boar
 import { gapLabel } from '@/game/placement'
 import { spring } from '@/motion/springs'
 import { AnimatedNumber } from '@/components/ui/AnimatedNumber'
-import { PENDING_CARD_LAYOUT_ID } from './TimelineBoard'
+import { pendingCardLayoutId } from './TimelineBoard'
 import { Icon } from '@/components/ui/Icon'
 import { SongCover, SongInfo } from './SongInfo'
 
@@ -277,7 +277,7 @@ function DragStage({ song, boardRef, onHoverGap, onDrop }: DragStageProps) {
   return (
     <div ref={stageRef} className="flex flex-col gap-2">
       <m.div
-        layoutId={PENDING_CARD_LAYOUT_ID}
+        layoutId={pendingCardLayoutId(song.id)}
         drag
         dragSnapToOrigin
         dragElastic={0.18}

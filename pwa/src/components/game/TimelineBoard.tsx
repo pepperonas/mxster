@@ -9,9 +9,13 @@
  *
  * Motion:
  * - gaps spring in/out and the cards reflow with layout springs;
- * - the card being placed shares layoutId "pending-card" with the dock card,
- *   so it travels from the dock into the gap, and from the gap to its final
- *   slot when revealed;
+ * - the card being placed shares a layoutId with the dock card, so it travels
+ *   from the dock into the gap, and from the gap to its final slot when
+ *   revealed. The id is per song (`pendingCardLayoutId`): with one constant id
+ *   the card revealed last turn kept it registered, and as soon as the next
+ *   card was placed Motion treated the old one as the leaving copy and hid it
+ *   (opacity 0, stacked behind the new card) — the timeline looked empty right
+ *   when someone needed the years to object;
  * - the year flips in like a split-flap display on reveal; a wrong card
  *   shakes (damped) and stays as a ghost until the turn continues.
  * Gap highlight during a drag uses transform/colour only — the layout must
@@ -24,8 +28,10 @@ import { gapLabel } from '@/game/placement'
 import { spring } from '@/motion/springs'
 import { initialOf } from '@/game/teams'
 
-export const PENDING_CARD_LAYOUT_ID = 'pending-card'
-export const CHALLENGE_CARD_LAYOUT_ID = 'challenge-card'
+/** Shared element id of a card on its way from the dock to its slot — one per song. */
+export const pendingCardLayoutId = (songId: string) => `pending-card-${songId}`
+/** The objector's preview of the same card. */
+export const challengeCardLayoutId = (songId: string) => `challenge-card-${songId}`
 
 export interface BoardCard {
   song: Song
@@ -81,7 +87,7 @@ export function TimelineBoard({
   const renderGap = (gap: number) => {
     if (pendingSong && placedGap === gap) {
       items.push(
-        <BoardRow key={`placed-${gap}`} layoutId={PENDING_CARD_LAYOUT_ID} tone="placed">
+        <BoardRow key={`placed-${gap}`} layoutId={pendingCardLayoutId(pendingSong.id)} tone="placed">
           <CardContent song={pendingSong} yearHidden owner={placedBy} />
         </BoardRow>
       )
@@ -91,7 +97,7 @@ export function TimelineBoard({
       items.push(
         <BoardRow
           key={`preview-${gap}`}
-          layoutId={previewIsChallenge ? CHALLENGE_CARD_LAYOUT_ID : PENDING_CARD_LAYOUT_ID}
+          layoutId={previewIsChallenge ? challengeCardLayoutId(pendingSong.id) : pendingCardLayoutId(pendingSong.id)}
           tone={previewIsChallenge ? 'challenge' : 'preview'}
         >
           <CardContent song={pendingSong} yearHidden />
@@ -101,7 +107,7 @@ export function TimelineBoard({
     }
     if (reveal && !reveal.isCorrect && reveal.gapIndex === gap) {
       items.push(
-        <BoardRow key={`ghost-${reveal.song.id}`} layoutId={PENDING_CARD_LAYOUT_ID} tone="wrong" shake>
+        <BoardRow key={`ghost-${reveal.song.id}`} layoutId={pendingCardLayoutId(reveal.song.id)} tone="wrong" shake>
           <CardContent song={reveal.song} revealYear />
         </BoardRow>
       )
@@ -127,7 +133,7 @@ export function TimelineBoard({
     items.push(
       <BoardRow
         key={card.song.id}
-        layoutId={isRevealed ? PENDING_CARD_LAYOUT_ID : undefined}
+        layoutId={isRevealed ? pendingCardLayoutId(card.song.id) : undefined}
         tone={isRevealed ? 'correct' : 'default'}
       >
         <CardContent song={card.song} owner={card.owner} blurYear={hideYears && !isRevealed} revealYear={isRevealed} />
