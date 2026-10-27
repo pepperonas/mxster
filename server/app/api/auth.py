@@ -153,7 +153,13 @@ def logout(response: Response, row: SessionRow = Depends(current_session), db: S
 @router.delete("/me", dependencies=[Depends(require_csrf)])
 def delete_me(response: Response, user: User = Depends(current_user), db: Session = Depends(get_db)) -> dict:
     """Delete the account and everything attached to it: sessions, saved data,
-    friendships, invitations and the rooms this account hosts."""
+    friendships, invitations and the rooms this account hosts.
+
+    Rejected and blocked accounts cannot delete themselves: the row holds the
+    decision, and deleting it would let the next sign-in start a fresh request.
+    They are deleted on request (see the privacy policy)."""
+    if user.status in ("rejected", "blocked"):
+        raise err(403, "decision_kept", "Dieses Konto kann nur auf Anfrage gelöscht werden.")
     log.info("account deleted: user %s", user.id)
     db.delete(user)
     db.commit()

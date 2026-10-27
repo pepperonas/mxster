@@ -59,3 +59,15 @@ def test_expired_rooms_are_purged_with_their_guests(client, google):
         assert db.get(Room, old["code"]) is None
         assert db.query(RoomMember).filter(RoomMember.room_code == old["code"]).count() == 0
         assert db.get(Room, fresh["code"]) is not None
+
+
+def test_rejected_or_blocked_accounts_cannot_delete_themselves(client, google):
+    me = login(client, google, sub="x", email="x@example.com", name="X")
+    for status in ("rejected", "blocked"):
+        with app_db.SessionLocal() as db:
+            db.get(User, me["id"]).status = status
+            db.commit()
+        r = client.delete("/api/me", headers=csrf(me))
+        assert r.status_code == 403
+        assert r.json()["code"] == "decision_kept"
+        assert counts(me["id"])["user"] is True
