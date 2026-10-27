@@ -14,7 +14,7 @@ import { spring } from '@/motion/springs'
 const POLL_MS = 30_000
 
 /** A room link works without an account: guests join by name. */
-export const isRoomPath = (path: string) => /^\/(r|raum)\/[^/]+\/?$/.test(path)
+export const isRoomPath = (path: string) => /^\/(r|room|raum)\/[^/]+\/?$/.test(path)
 
 export function AuthGate({ children }: { children: ReactNode }) {
   const { state, refresh } = useAuth()

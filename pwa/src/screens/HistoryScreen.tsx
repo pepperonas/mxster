@@ -33,7 +33,7 @@ export function HistoryScreen() {
           <Icon name="history" size={40} className="mx-auto text-md-on-surface-variant" />
           <p className="mt-4 text-title-md">Noch keine Runde gespielt</p>
           <p className="mt-1 meta">Jede beendete Runde landet hier, mit Rangliste und allen Songs.</p>
-          <button type="button" className="btn btn-brand m3-state-layer mt-6" onClick={() => navigate('/neu')}>
+          <button type="button" className="btn btn-brand m3-state-layer mt-6" onClick={() => navigate('/new')}>
             Erste Runde starten
           </button>
         </div>
@@ -48,7 +48,7 @@ export function HistoryScreen() {
                     <button
                       type="button"
                       className="row m3-state-layer"
-                      onClick={() => navigate(`/verlauf/${g.id}`)}
+                      onClick={() => navigate(`/history/${g.id}`)}
                       style={{ viewTransitionName: `game-${g.id}` }}
                     >
                       <span className="grid place-items-center w-11 h-11 shrink-0 rounded-m3-md bg-md-tertiary-container text-md-on-tertiary-container">
@@ -83,7 +83,7 @@ export function HistoryDetailScreen() {
   if (!game) {
     return (
       <div>
-        <SubPageHeader title="Runde" back="/verlauf" />
+        <SubPageHeader title="Runde" back="/history" />
         <p className="meta pt-6">Diese Runde gibt es nicht mehr.</p>
       </div>
     )
@@ -100,14 +100,14 @@ export function HistoryDetailScreen() {
         variant: 'danger',
         onClick: () => {
           deleteGame(game.id)
-          navigate('/verlauf', { replace: true })
+          navigate('/history', { replace: true })
         }
       }
     ])
 
   return (
     <div>
-      <SubPageHeader title={`${MODE_COPY[game.gameMode]?.name ?? 'Runde'}, ${formatDay(game.date)}`} back="/verlauf" />
+      <SubPageHeader title={`${MODE_COPY[game.gameMode]?.name ?? 'Runde'}, ${formatDay(game.date)}`} back="/history" />
 
       <div className="pt-2 space-y-6" style={{ viewTransitionName: `game-${game.id}` }}>
         <section className="rounded-m3-xxl p-6" style={{ background: 'rgb(var(--mx-brand))', color: 'rgb(var(--mx-on-brand))' }}>

@@ -21,18 +21,18 @@ interface Destination {
 
 export const DESTINATIONS: Destination[] = [
   { to: '/', label: 'Spielen', icon: 'play' },
-  { to: '/verlauf', label: 'Verlauf', icon: 'history' },
-  { to: '/statistik', label: 'Statistik', icon: 'insights' },
-  { to: '/spieler', label: 'Spieler', icon: 'groups' },
-  { to: '/erfolge', label: 'Erfolge', icon: 'trophy' }
+  { to: '/history', label: 'Verlauf', icon: 'history' },
+  { to: '/stats', label: 'Statistik', icon: 'insights' },
+  { to: '/players', label: 'Spieler', icon: 'groups' },
+  { to: '/achievements', label: 'Erfolge', icon: 'trophy' }
 ]
 
 // The profile is reached through the avatar but keeps the navigation around it
-const TOP_LEVEL = [...DESTINATIONS.map((d) => d.to), '/profil']
+const TOP_LEVEL = [...DESTINATIONS.map((d) => d.to), '/profile']
 
 export function AppShell() {
   const { pathname } = useLocation()
-  const isGame = pathname === '/spiel'
+  const isGame = pathname === '/game'
   const isTopLevel = TOP_LEVEL.includes(pathname)
 
   if (isGame) return <Outlet />
@@ -58,7 +58,7 @@ function TopBar() {
         <span className="text-poster text-title-lg" style={{ fontSize: '1.6rem' }}>
           mxtape
         </span>
-        <button type="button" className="icon-btn m3-state-layer" onClick={() => navigate('/profil')} aria-label="Profil">
+        <button type="button" className="icon-btn m3-state-layer" onClick={() => navigate('/profile')} aria-label="Profil">
           <Avatar name={me.name} picture={me.picture} size={36} />
         </button>
       </div>
@@ -131,7 +131,7 @@ function NavRail() {
       {DESTINATIONS.map((d) => (
         <NavItem key={d.to} dest={d} pathname={pathname} layout="rail" />
       ))}
-      <ProfileButton active={pathname === '/profil'} />
+      <ProfileButton active={pathname === '/profile'} />
     </nav>
   )
 }
@@ -141,7 +141,7 @@ function ProfileButton({ active }: { active: boolean }) {
   const me = useMe()
   return (
     <NavLink
-      to="/profil"
+      to="/profile"
       viewTransition={!prefersReducedMotion()}
       aria-label="Profil"
       aria-current={active ? 'page' : undefined}

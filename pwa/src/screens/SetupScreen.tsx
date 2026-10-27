@@ -235,7 +235,7 @@ export function SetupScreen() {
     localStorage.setItem(LAST_OPTIONS_KEY, JSON.stringify({ goal, decades, challengesEnabled, exotics }))
     try {
       const room = await roomApi.create(music, { mode: gameMode, goal, decades, challengesEnabled, exotics })
-      navigate(`/raum/${room.code}`, { replace: true })
+      navigate(`/room/${room.code}`, { replace: true })
     } catch {
       addToast('Der Raum konnte nicht geöffnet werden. Bitte nochmal versuchen.', 'error')
       setOpening(false)
@@ -253,7 +253,7 @@ export function SetupScreen() {
       )
     }
     startGame()
-    navigate('/spiel', { replace: true })
+    navigate('/game', { replace: true })
   }
 
   return (

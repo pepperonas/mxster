@@ -104,7 +104,7 @@ export function AdminScreen() {
 
   return (
     <div>
-      <SubPageHeader title="Zugänge" back="/profil" />
+      <SubPageHeader title="Zugänge" back="/profile" />
 
       <div role="tablist" aria-label="Status" className="flex border-b border-md-outline-variant/60 -mx-4 sm:mx-0 px-2 sm:px-0">
         {TABS.map((t) => {

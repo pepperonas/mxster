@@ -57,7 +57,7 @@ export function StatisticsScreen() {
           <Icon name="insights" size={40} className="mx-auto text-md-on-surface-variant" />
           <p className="mt-4 text-title-md">Noch keine Zahlen</p>
           <p className="mt-1 meta">Nach der ersten Runde siehst du hier Trefferquoten, Siege und euer Jahrzehnt-Profil.</p>
-          <button type="button" className="btn btn-brand m3-state-layer mt-6" onClick={() => navigate('/neu')}>
+          <button type="button" className="btn btn-brand m3-state-layer mt-6" onClick={() => navigate('/new')}>
             Erste Runde starten
           </button>
         </div>

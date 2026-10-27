@@ -1,5 +1,5 @@
 /**
- * /raum/:code — a room: the lobby while people gather, then the round itself.
+ * /room/:code — a room: the lobby while people gather, then the round itself.
  *
  * Lobby: the code big in poster type, the QR code and the link to share,
  * who is here (online dot, guest badge), friends to invite. The host starts

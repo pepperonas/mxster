@@ -26,7 +26,7 @@ export function AchievementsScreen() {
     return [own, ...all.filter((n) => n !== own)]
   }, [getAllPlayerNames, own, settings.hiddenPlayers])
   // Opened from a person in the player management: start with them
-  const asked = params.get('spieler')
+  const asked = params.get('player')
   const [who, setWho] = useState(asked && names.includes(asked) ? asked : own)
 
   const stored = getPlayerAchievements(who)

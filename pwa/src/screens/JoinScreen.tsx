@@ -40,7 +40,7 @@ export function JoinScreen() {
     roomApi
       .read(code)
       .then((r) => {
-        if (r.me) navigate(`/raum/${r.code}`, { replace: true })
+        if (r.me) navigate(`/room/${r.code}`, { replace: true })
         else if (r.status !== 'lobby') setProblem(r.status === 'running' ? 'room_started' : 'room_closed')
         else setRoom(r)
       })
@@ -54,7 +54,7 @@ export function JoinScreen() {
     setError(null)
     try {
       const r = await roomApi.join(room.code, approved ? undefined : name.trim())
-      navigate(`/raum/${r.code}`, { replace: true })
+      navigate(`/room/${r.code}`, { replace: true })
     } catch (err) {
       const c = err instanceof ApiError ? err.code : 'unreachable'
       if (PROBLEM[c]) setProblem(c)

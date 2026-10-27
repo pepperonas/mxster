@@ -1,5 +1,5 @@
 import { useEffect } from 'react'
-import { createBrowserRouter, Navigate, Outlet, RouterProvider } from 'react-router-dom'
+import { createBrowserRouter, Navigate, Outlet, RouterProvider, useLocation } from 'react-router-dom'
 import { AppProviders } from '@/contexts'
 import { Modal, Toast, AchievementUnlockAnimation } from '@/components'
 import { AuthProvider } from '@/auth/AuthContext'
@@ -17,6 +17,7 @@ import { RoomScreen } from '@/screens/RoomScreen'
 import { ProfileScreen } from '@/screens/ProfileScreen'
 import { AdminScreen } from '@/screens/AdminScreen'
 import { initRipple } from '@/utils/ripple'
+import { englishPath, LEGACY_SEGMENTS } from '@/legacyPaths'
 import { MotionProvider } from '@/motion/MotionProvider'
 import './styles/design-tokens.css'
 import './styles/tailwind.css'
@@ -55,6 +56,17 @@ function Root() {
   )
 }
 
+/** An old German address (bookmark, installed app, shared link) → its English one. */
+function LegacyRedirect() {
+  const { pathname, search } = useLocation()
+  return <Navigate to={englishPath(pathname, search) ?? '/'} replace />
+}
+
+const legacyRoutes = (inShell: boolean) =>
+  Object.keys(LEGACY_SEGMENTS)
+    .filter((old) => (old === 'raum') !== inShell)
+    .map((old) => ({ path: `/${old}/*`, element: <LegacyRedirect /> }))
+
 const router = createBrowserRouter([
   {
     element: <Root />,
@@ -64,21 +76,23 @@ const router = createBrowserRouter([
         path: '/r/:code',
         element: <JoinScreen />
       },
-      { path: '/raum/:code', element: <RoomScreen /> },
+      { path: '/room/:code', element: <RoomScreen /> },
+      ...legacyRoutes(false),
       {
         element: <AppShell />,
         children: [
           { path: '/', element: <HomeScreen /> },
-          { path: '/neu', element: <SetupScreen /> },
-          { path: '/spiel', element: <GameScreen /> },
-          { path: '/verlauf', element: <HistoryScreen /> },
-          { path: '/verlauf/:id', element: <HistoryDetailScreen /> },
-          { path: '/statistik', element: <StatisticsScreen /> },
-          { path: '/spieler', element: <PlayersScreen /> },
-          { path: '/spieler/:name', element: <PlayerDetailScreen /> },
-          { path: '/erfolge', element: <AchievementsScreen /> },
-          { path: '/profil', element: <ProfileScreen /> },
+          { path: '/new', element: <SetupScreen /> },
+          { path: '/game', element: <GameScreen /> },
+          { path: '/history', element: <HistoryScreen /> },
+          { path: '/history/:id', element: <HistoryDetailScreen /> },
+          { path: '/stats', element: <StatisticsScreen /> },
+          { path: '/players', element: <PlayersScreen /> },
+          { path: '/players/:name', element: <PlayerDetailScreen /> },
+          { path: '/achievements', element: <AchievementsScreen /> },
+          { path: '/profile', element: <ProfileScreen /> },
           { path: '/admin', element: <AdminScreen /> },
+          ...legacyRoutes(true),
           { path: '*', element: <Navigate to="/" replace /> }
         ]
       }

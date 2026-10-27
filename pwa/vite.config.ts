@@ -47,7 +47,8 @@ export default defineConfig({
           // Room links must come from the network: an older cached shell does not
           // know these routes and would send a scanned invite to the start page
           /^\/r\//,
-          /^\/raum\//,
+          /^\/room\//,
+          /^\/raum\//, // old German room address, redirected by the app
           /\.[a-zA-Z0-9]+$/ // Files with extensions (except HTML)
         ],
         runtimeCaching: [

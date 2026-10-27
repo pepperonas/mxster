@@ -59,13 +59,13 @@ export function HomeScreen() {
   }
 
   function newGame() {
-    if (!running) return navigate('/neu')
+    if (!running) return navigate('/new')
     showModal(
       'Neue Runde starten?',
       <p className="text-body-lg">Eure laufende Runde wird dabei verworfen.</p>,
       [
-        { text: 'Weiterspielen', onClick: () => navigate('/spiel') },
-        { text: 'Neue Runde', variant: 'primary', onClick: () => navigate('/neu') }
+        { text: 'Weiterspielen', onClick: () => navigate('/game') },
+        { text: 'Neue Runde', variant: 'primary', onClick: () => navigate('/new') }
       ]
     )
   }
@@ -78,7 +78,7 @@ export function HomeScreen() {
 
       <Invites />
 
-      {running && <RunningRound onContinue={() => navigate('/spiel')} onDiscard={discard} />}
+      {running && <RunningRound onContinue={() => navigate('/game')} onDiscard={discard} />}
 
       {/* The sleeve: a brand-coloured card with the record sliding out of it */}
       <button
@@ -116,7 +116,7 @@ export function HomeScreen() {
           {last ? (
             <button
               type="button"
-              onClick={() => navigate(`/verlauf/${last.id}`)}
+              onClick={() => navigate(`/history/${last.id}`)}
               className="w-full text-left flex items-center gap-4 -m-2 p-2 rounded-m3-lg m3-state-layer"
             >
               <span className="grid place-items-center w-12 h-12 rounded-m3-lg bg-md-tertiary-container text-md-on-tertiary-container">
@@ -142,7 +142,7 @@ export function HomeScreen() {
           {next ? (
             <button
               type="button"
-              onClick={() => navigate('/erfolge')}
+              onClick={() => navigate('/achievements')}
               className="w-full text-left flex items-center gap-4 -m-2 p-2 rounded-m3-lg m3-state-layer"
             >
               <ProgressRing value={next.progress ?? 0} max={next.target ?? 1} size={48}>

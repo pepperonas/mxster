@@ -34,7 +34,7 @@ function line(p: KnownPlayer): string {
   return parts.join(' · ')
 }
 
-export const playerPath = (name: string) => `/spieler/${encodeURIComponent(name)}`
+export const playerPath = (name: string) => `/players/${encodeURIComponent(name)}`
 
 export function PlayersScreen() {
   const me = useMe()
@@ -155,7 +155,7 @@ export function PlayerDetailScreen() {
   if (!player) {
     return (
       <div>
-        <SubPageHeader title="Spieler" back="/spieler" />
+        <SubPageHeader title="Spieler" back="/players" />
         <p className="meta pt-6">Diese Person gibt es nicht mehr.</p>
       </div>
     )
@@ -217,7 +217,7 @@ export function PlayerDetailScreen() {
           variant: 'danger',
           onClick: () => {
             remove(player.name)
-            navigate('/spieler', { replace: true })
+            navigate('/players', { replace: true })
           }
         }
       ]
@@ -225,7 +225,7 @@ export function PlayerDetailScreen() {
 
   return (
     <div>
-      <SubPageHeader title={player.isMe ? `${player.name} (du)` : player.name} back="/spieler" />
+      <SubPageHeader title={player.isMe ? `${player.name} (du)` : player.name} back="/players" />
 
       <div className="pt-2 space-y-6">
         <section className="flex items-center gap-4">
@@ -310,7 +310,7 @@ export function PlayerDetailScreen() {
           <button
             type="button"
             className="row m3-state-layer !rounded-none"
-            onClick={() => navigate(`/erfolge?spieler=${encodeURIComponent(player.name)}`)}
+            onClick={() => navigate(`/achievements?player=${encodeURIComponent(player.name)}`)}
           >
             <Icon name="trophy" className="text-md-on-surface-variant" />
             <span className="flex-1 text-left">

@@ -45,7 +45,7 @@ export function GameScreen() {
   }, [])
   useEffect(() => {
     if (leaving) return
-    if (!gameMode || players.length === 0 || !isGameStarted) navigate('/neu', { replace: true })
+    if (!gameMode || players.length === 0 || !isGameStarted) navigate('/new', { replace: true })
   }, [gameMode, players.length, isGameStarted, navigate])
 
   // No reload warning any more: the round is saved on this device and

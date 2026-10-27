@@ -12,7 +12,7 @@ import { toggleThemeWithReveal } from '@/utils/themeReveal'
 import { api } from '@/api/client'
 import { LegalLinks } from './LegalLinks'
 
-const VERSION = '0.8.0'
+const VERSION = '0.8.1'
 
 export function ProfileScreen() {
   const me = useMe()
@@ -108,7 +108,7 @@ export function ProfileScreen() {
       </Group>
 
       <Group title="Mitspieler">
-        <ActionRow icon="groups" title="Spieler verwalten" text="Schnellauswahl, Umbenennen, Zusammenführen und Zahlen je Person." onClick={() => navigate('/spieler')} />
+        <ActionRow icon="groups" title="Spieler verwalten" text="Schnellauswahl, Umbenennen, Zusammenführen und Zahlen je Person." onClick={() => navigate('/players')} />
       </Group>
 
       <Group title="Daten">

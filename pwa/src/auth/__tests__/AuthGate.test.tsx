@@ -102,14 +102,14 @@ describe('AuthGate', () => {
 
   it('a pending account plays a room as a guest too, but nothing else', async () => {
     serveSession(me('pending'))
-    renderGate('/raum/ABCD2345')
+    renderGate('/room/ABCD2345')
     expect(await screen.findByText('DIE APP')).toBeInTheDocument()
   })
 
   it('only room links are open', () => {
     expect(isRoomPath('/r/ABCD2345')).toBe(true)
-    expect(isRoomPath('/raum/ABCD2345')).toBe(true)
-    expect(isRoomPath('/verlauf')).toBe(false)
+    expect(isRoomPath('/room/ABCD2345')).toBe(true)
+    expect(isRoomPath('/history')).toBe(false)
     expect(isRoomPath('/r/ABCD/extra')).toBe(false)
     expect(isRoomPath('/admin')).toBe(false)
   })
