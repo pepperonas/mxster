@@ -64,6 +64,65 @@ class AdminAction(Base):
     at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow)
 
 
+ROOM_STATUSES = ("lobby", "running", "finished", "closed")
+MUSIC_MODES = ("room", "everyone")
+MAX_SEATS = 10
+
+
+class Room(Base):
+    """A multiplayer round. The host's device runs the game; the server relays
+    messages and keeps the latest snapshot, so a restart or a host switching
+    devices loses nothing."""
+
+    __tablename__ = "rooms"
+    code: Mapped[str] = mapped_column(String(8), primary_key=True)
+    host_user_id: Mapped[int] = mapped_column(ForeignKey("users.id", ondelete="CASCADE"), index=True)
+    status: Mapped[str] = mapped_column(String(16), default="lobby", index=True)
+    music: Mapped[str] = mapped_column(String(16), default="room")
+    options: Mapped[str] = mapped_column(Text, default="{}")
+    snapshot: Mapped[str] = mapped_column(Text, default="null")
+    rev: Mapped[int] = mapped_column(Integer, default=0)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow)
+    expires_at: Mapped[datetime] = mapped_column(DateTime(timezone=True))
+
+
+class RoomMember(Base):
+    """A seat in a room: an account (user_id) or a guest (guest_name + token hash)."""
+
+    __tablename__ = "room_members"
+    __table_args__ = (UniqueConstraint("room_code", "seat"),)
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    room_code: Mapped[str] = mapped_column(ForeignKey("rooms.code", ondelete="CASCADE"), index=True)
+    seat: Mapped[int] = mapped_column(Integer)
+    user_id: Mapped[int | None] = mapped_column(ForeignKey("users.id", ondelete="CASCADE"), nullable=True, index=True)
+    name: Mapped[str] = mapped_column(String(40))
+    token_hash: Mapped[str | None] = mapped_column(String(64), nullable=True, index=True)
+    joined_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow)
+
+
+class Friendship(Base):
+    """One row per pair (user_a < user_b); pending until the other side accepts."""
+
+    __tablename__ = "friendships"
+    __table_args__ = (UniqueConstraint("user_a", "user_b"),)
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    user_a: Mapped[int] = mapped_column(ForeignKey("users.id", ondelete="CASCADE"), index=True)
+    user_b: Mapped[int] = mapped_column(ForeignKey("users.id", ondelete="CASCADE"), index=True)
+    requested_by: Mapped[int] = mapped_column(Integer)
+    status: Mapped[str] = mapped_column(String(16), default="pending")
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow)
+
+
+class RoomInvite(Base):
+    __tablename__ = "room_invites"
+    __table_args__ = (UniqueConstraint("room_code", "to_user"),)
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    room_code: Mapped[str] = mapped_column(ForeignKey("rooms.code", ondelete="CASCADE"), index=True)
+    from_user: Mapped[int] = mapped_column(ForeignKey("users.id", ondelete="CASCADE"))
+    to_user: Mapped[int] = mapped_column(ForeignKey("users.id", ondelete="CASCADE"), index=True)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow)
+
+
 def _configure_sqlite(dbapi_connection, _record) -> None:
     cur = dbapi_connection.cursor()
     cur.execute("PRAGMA journal_mode=WAL")

@@ -5,7 +5,7 @@ import logging
 from fastapi import FastAPI, HTTPException, Request
 from fastapi.responses import JSONResponse
 
-from app.api import admin, auth, data
+from app.api import admin, auth, data, friends, rooms
 from app.config import get_settings
 from app.db import init_db
 
@@ -33,6 +33,8 @@ def create_app() -> FastAPI:
     app.include_router(auth.router)
     app.include_router(admin.router)
     app.include_router(data.router)
+    app.include_router(rooms.router)
+    app.include_router(friends.router)
     return app
 
 

@@ -1,0 +1,243 @@
+"""Rooms: create, join as account or guest, lobby rules, audio for guests, live relay."""
+
+import pytest
+from starlette.websockets import WebSocketDisconnect
+
+from app import db as app_db
+from app.db import User
+from tests.conftest import login
+
+ORIGIN = {"origin": "http://localhost:5174"}
+
+
+def approve(email: str) -> None:
+    with app_db.SessionLocal() as db:
+        u = db.query(User).filter(User.email == email).one()
+        u.status = "approved"
+        db.commit()
+
+
+def host(client, google) -> dict:
+    me = login(client, google, sub="boss", email="boss@example.com", name="Martin Pfeffer")
+    return me
+
+
+def csrf(me: dict) -> dict:
+    return {"X-CSRF-Token": me["csrf"]}
+
+
+def create(client, me, music="room") -> dict:
+    r = client.post("/api/rooms", json={"music": music, "options": {"goal": 5}}, headers=csrf(me))
+    assert r.status_code == 200, r.text
+    return r.json()
+
+
+def as_guest(client, code: str, name: str):
+    """Drop every cookie and join as a guest; returns the response."""
+    client.cookies.clear()
+    return client.post(f"/api/rooms/{code}/join", json={"name": name})
+
+
+def test_create_puts_the_host_on_seat_zero(client, google):
+    me = host(client, google)
+    room = create(client, me)
+    assert len(room["code"]) == 8
+    assert room["members"] == [
+        {"seat": 0, "name": "Martin", "guest": False, "host": True, "picture": "", "online": False, "userId": me["id"]}
+    ]
+    assert room["me"]["host"] is True
+
+
+def test_only_approved_accounts_create_rooms(client, google):
+    me = login(client, google, sub="p", email="p@example.com")
+    assert client.post("/api/rooms", json={}, headers=csrf(me)).status_code == 403
+
+
+def test_guest_joins_with_a_name_and_gets_a_cookie(client, google):
+    room = create(client, host(client, google))
+    r = as_guest(client, room["code"], "  Lisa  ")
+    assert r.status_code == 200
+    assert "mx_guest" in r.cookies
+    assert r.json()["me"] == {"seat": 1, "name": "Lisa", "host": False}
+    # Joining again keeps the seat
+    assert client.post(f"/api/rooms/{room['code']}/join", json={"name": "Egal"}).json()["me"]["seat"] == 1
+
+
+def test_guest_names_must_be_sensible_and_unique(client, google):
+    room = create(client, host(client, google))
+    assert as_guest(client, room["code"], "L").status_code == 400
+    assert as_guest(client, room["code"], "martin").json()["me"]["name"] == "martin 2"
+
+
+def test_codes_forgive_typing(client, google):
+    room = create(client, host(client, google))
+    typed = room["code"].lower().replace("1", "l").replace("0", "o")
+    assert client.get(f"/api/rooms/{typed[:4]}-{typed[4:]}").json()["code"] == room["code"]
+
+
+def test_nobody_new_joins_after_the_start_but_guests_come_back(client, google):
+    me = host(client, google)
+    room = create(client, me)
+    host_cookies = dict(client.cookies)
+    as_guest(client, room["code"], "Lisa")
+    guest_cookies = dict(client.cookies)
+    client.cookies.clear()
+    client.cookies.update(host_cookies)
+    assert client.post(f"/api/rooms/{room['code']}/status", json={"status": "running"}, headers=csrf(me)).status_code == 200
+    assert as_guest(client, room["code"], "Tom").json()["code"] == "room_started"
+    client.cookies.clear()
+    client.cookies.update(guest_cookies)
+    assert client.post(f"/api/rooms/{room['code']}/join", json={}).json()["me"]["name"] == "Lisa"
+
+
+def test_status_only_by_the_host_and_in_order(client, google):
+    me = host(client, google)
+    room = create(client, me)
+    assert client.post(f"/api/rooms/{room['code']}/status", json={"status": "finished"}, headers=csrf(me)).status_code == 409
+    as_guest(client, room["code"], "Lisa")
+    assert client.post(f"/api/rooms/{room['code']}/status", json={"status": "running"}).status_code in (401, 403)
+
+
+def test_host_removes_a_guest_from_the_lobby(client, google):
+    me = host(client, google)
+    room = create(client, me)
+    host_cookies = dict(client.cookies)
+    as_guest(client, room["code"], "Lisa")
+    client.cookies.clear()
+    client.cookies.update(host_cookies)
+    assert client.post(f"/api/rooms/{room['code']}/kick/1", headers=csrf(me)).status_code == 200
+    assert [m["name"] for m in client.get(f"/api/rooms/{room['code']}").json()["members"]] == ["Martin"]
+    assert client.post(f"/api/rooms/{room['code']}/kick/0", headers=csrf(me)).status_code == 400
+
+
+def test_a_guest_hears_music_only_while_the_room_is_open(client, google):
+    me = host(client, google)
+    room = create(client, me)
+    host_cookies = dict(client.cookies)
+    as_guest(client, room["code"], "Lisa")
+    guest_cookies = dict(client.cookies)
+    assert client.get("/api/auth/audio-check").status_code == 204
+    client.cookies.clear()
+    client.cookies.update(host_cookies)
+    client.post(f"/api/rooms/{room['code']}/status", json={"status": "running"}, headers=csrf(me))
+    client.post(f"/api/rooms/{room['code']}/status", json={"status": "finished"}, headers=csrf(me))
+    client.cookies.clear()
+    client.cookies.update(guest_cookies)
+    assert client.get("/api/auth/audio-check").status_code == 401
+
+
+def test_a_forged_guest_cookie_gets_nothing(client, google):
+    room = create(client, host(client, google))
+    client.cookies.clear()
+    client.cookies.set("mx_guest", "eyJkIjp7ImMiOiJYIn19.deadbeef")
+    assert client.get("/api/auth/audio-check").status_code == 401
+    assert client.get(f"/api/rooms/{room['code']}").json()["me"] is None
+
+
+# ── live relay ──────────────────────────────────────────────────────────────
+
+def _lobby(client, google):
+    me = host(client, google)
+    room = create(client, me)
+    host_cookies = dict(client.cookies)
+    as_guest(client, room["code"], "Lisa")
+    guest_cookies = dict(client.cookies)
+    return room["code"], host_cookies, guest_cookies
+
+
+def _connect(client, code, cookies):
+    client.cookies.clear()
+    client.cookies.update(cookies)
+    return client.websocket_connect(f"/api/rooms/{code}/ws", headers=ORIGIN)
+
+
+def _until(ws, kind):
+    for _ in range(10):
+        msg = ws.receive_json()
+        if msg["type"] == kind:
+            return msg
+    raise AssertionError(f"no {kind}")
+
+
+def test_intents_reach_the_host_with_the_real_seat(client, google):
+    code, hc, gc = _lobby(client, google)
+    with _connect(client, code, hc) as h:
+        assert h.receive_json()["role"] == "host"
+        with _connect(client, code, gc) as g:
+            welcome = g.receive_json()
+            assert welcome["seat"] == 1 and welcome["role"] == "player"
+            g.send_json({"type": "intent", "action": "place", "gap": 2, "seat": 0})
+            msg = _until(h, "intent")
+            assert msg == {"type": "intent", "seat": 1, "action": "place", "gap": 2}
+
+
+def test_state_from_the_host_is_stored_and_relayed_but_not_from_players(client, google):
+    code, hc, gc = _lobby(client, google)
+    with _connect(client, code, hc) as h:
+        h.receive_json()
+        with _connect(client, code, gc) as g:
+            g.receive_json()
+            g.send_json({"type": "state", "snapshot": {"evil": True}})
+            h.send_json({"type": "state", "snapshot": {"turn": 1}})
+            msg = _until(g, "state")
+            assert msg["snapshot"] == {"turn": 1} and msg["rev"] == 1
+    # A late joiner gets the stored snapshot right away
+    with _connect(client, code, gc) as g:
+        assert g.receive_json()["snapshot"] == {"turn": 1}
+
+
+def test_audio_cues_carry_server_time(client, google):
+    code, hc, gc = _lobby(client, google)
+    with _connect(client, code, hc) as h:
+        h.receive_json()
+        with _connect(client, code, gc) as g:
+            g.receive_json()
+            h.send_json({"type": "audio", "songId": "song_001", "playing": True, "positionMs": 1500})
+            cue = _until(g, "audio")
+            assert cue["songId"] == "song_001" and cue["positionMs"] == 1500 and cue["at"] > 0
+
+
+def test_ping_answers_with_the_server_clock(client, google):
+    code, hc, _ = _lobby(client, google)
+    with _connect(client, code, hc) as h:
+        h.receive_json()
+        h.send_json({"type": "ping", "t": 42})
+        pong = _until(h, "pong")
+        assert pong["t"] == 42 and pong["server"] > 0
+
+
+@pytest.mark.parametrize("headers", [{"origin": "https://evil.example"}, {}])
+def test_foreign_origins_are_refused(client, google, headers):
+    code, hc, _ = _lobby(client, google)
+    client.cookies.clear()
+    client.cookies.update(hc)
+    with pytest.raises(WebSocketDisconnect):
+        with client.websocket_connect(f"/api/rooms/{code}/ws", headers=headers) as ws:
+            ws.receive_json()
+
+
+def test_strangers_cannot_connect(client, google):
+    code, _, _ = _lobby(client, google)
+    client.cookies.clear()
+    with pytest.raises(WebSocketDisconnect):
+        with client.websocket_connect(f"/api/rooms/{code}/ws", headers=ORIGIN) as ws:
+            ws.receive_json()
+
+
+def test_players_hear_when_the_host_is_offline(client, google):
+    code, _, gc = _lobby(client, google)
+    with _connect(client, code, gc) as g:
+        g.receive_json()
+        g.send_json({"type": "intent", "action": "draw"})
+        assert _until(g, "error")["code"] == "host_offline"
+
+
+def test_a_guest_cookie_opens_only_its_own_room(client, google):
+    me = host(client, google)
+    first = create(client, me)
+    second = create(client, me)
+    as_guest(client, first["code"], "Lisa")
+    assert client.get(f"/api/rooms/{second['code']}").json()["me"] is None
+    with pytest.raises(WebSocketDisconnect):
+        with client.websocket_connect(f"/api/rooms/{second['code']}/ws", headers=ORIGIN) as ws:
+            ws.receive_json()

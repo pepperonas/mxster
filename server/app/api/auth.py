@@ -9,6 +9,7 @@ from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from app import google_oauth, mail
+from app.api.rooms import GUEST_COOKIE, guest_may_listen
 from app.config import get_settings
 from app.db import SessionRow, User, get_db, utcnow
 from app.security import (
@@ -164,10 +165,13 @@ def session(request: Request, db: Session = Depends(get_db)) -> dict:
 
 @router.get("/auth/audio-check")
 def audio_check(request: Request, db: Session = Depends(get_db)) -> Response:
-    """nginx ``auth_request`` target for /audio/: 204 for approved sessions, else 401."""
+    """nginx ``auth_request`` target for /audio/: 204 for approved sessions and
+    for guests of a room that is still open (lobby or running), else 401."""
     row = load_session(request, db)
     if row is not None:
         user = db.get(User, row.user_id)
         if user is not None and user.status == "approved":
             return Response(status_code=204)
+    if guest_may_listen(db, request.cookies.get(GUEST_COOKIE)):
+        return Response(status_code=204)
     return Response(status_code=401)
