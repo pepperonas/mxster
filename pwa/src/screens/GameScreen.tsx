@@ -174,7 +174,9 @@ function GameRound({ onRematch }: { onRematch: () => void }) {
                 seat,
                 name: players[seat]?.name ?? '',
                 left: players[seat]?.challenges ?? 0
-              }))
+              })),
+              timeline: activeTimeline,
+              gap: pending.gapIndex
             }
         : phase === 'placing' && currentSong
           ? humanTurn

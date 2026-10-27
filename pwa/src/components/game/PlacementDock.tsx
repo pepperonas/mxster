@@ -22,10 +22,10 @@ import { useEffect, useRef, type RefObject } from 'react'
 import { AnimatePresence, m, useMotionValue, useSpring, useTransform, useVelocity, type PanInfo } from 'motion/react'
 import type { Song } from '@/types'
 import { computeInsertionIndex, isNearBoard, autoScrollSpeed } from '@/game/boardGeometry'
-import { gapLabel } from '@/game/placement'
 import { spring } from '@/motion/springs'
 import { AnimatedNumber } from '@/components/ui/AnimatedNumber'
 import { pendingCardLayoutId } from './TimelineBoard'
+import { PositionStrip } from './PositionStrip'
 import { Icon } from '@/components/ui/Icon'
 import { SongCover, SongInfo } from './SongInfo'
 
@@ -47,7 +47,7 @@ export interface DockChallenger {
 
 export type DockState =
   | { kind: 'placing'; song: Song; previewGap: number | null; timeline: Song[] }
-  | { kind: 'challenge-offer'; placerName: string; challengers: DockChallenger[] }
+  | { kind: 'challenge-offer'; placerName: string; challengers: DockChallenger[]; timeline: Song[]; gap: number }
   | { kind: 'challenge-choose'; challengerName: string; previewGap: number | null; timeline: Song[] }
   | {
       kind: 'revealed'
@@ -114,7 +114,8 @@ export function PlacementDock({
               )}
               {state.kind === 'placing' && state.previewGap !== null && (
                 <ConfirmStage
-                  label={gapLabel(state.timeline, state.previewGap)}
+                  timeline={state.timeline}
+                  gap={state.previewGap}
                   onBack={() => onPreview(null)}
                   onConfirm={onConfirm}
                 />
@@ -136,7 +137,9 @@ export function PlacementDock({
               {state.kind === 'challenge-choose' && state.previewGap !== null && (
                 <ConfirmStage
                   title={`Einspruch von ${state.challengerName}`}
-                  label={gapLabel(state.timeline, state.previewGap)}
+                  tone="tertiary"
+                  timeline={state.timeline}
+                  gap={state.previewGap}
                   confirmText="Einspruch einlegen"
                   onBack={() => onPreview(null)}
                   onConfirm={onConfirm}
@@ -330,29 +333,33 @@ function GripIcon() {
 // ─── confirm ───────────────────────────────────────────────────────────────
 
 function ConfirmStage({
-  label,
+  timeline,
+  gap,
   onBack,
   onConfirm,
   title = 'Platzieren – oder andere Lücke antippen',
-  confirmText = 'Hier platzieren'
+  confirmText = 'Hier platzieren',
+  tone = 'primary'
 }: {
-  label: string
+  timeline: Song[]
+  gap: number
   onBack: () => void
   onConfirm: () => void
   title?: string
   confirmText?: string
+  tone?: 'primary' | 'tertiary'
 }) {
   const confirmRef = useRef<HTMLButtonElement>(null)
   useEffect(() => {
     confirmRef.current?.focus({ preventScroll: true })
-  }, [label])
+  }, [gap])
 
   return (
     <div className="flex flex-col sm:flex-row sm:items-center gap-3">
-      <p className="flex-1 text-title-sm text-md-on-surface">
-        <span className="block text-label-md text-md-on-surface-variant">{title}</span>
-        {label}
-      </p>
+      <div className="flex-1 min-w-0 space-y-2">
+        <p className="text-label-md text-md-on-surface-variant">{title}</p>
+        <PositionStrip timeline={timeline} gap={gap} tone={tone} />
+      </div>
       <div className="flex gap-2">
         <button type="button" onClick={onBack} className="btn btn-text flex-1 sm:flex-none">
           Zurück
@@ -382,8 +389,9 @@ function ChallengeOfferStage({
   }, [])
   return (
     <div className="flex flex-col gap-3">
-      <div>
+      <div className="space-y-2">
         <p className="text-title-md text-md-on-surface">{state.placerName} hat gelegt</p>
+        <PositionStrip timeline={state.timeline} gap={state.gap} />
         <p className="text-body-sm text-md-on-surface-variant">Liegt die Karte falsch? Wer widerspricht, legt sie woandershin.</p>
       </div>
       <div className="flex flex-wrap gap-2" role="group" aria-label="Einspruch einlegen">

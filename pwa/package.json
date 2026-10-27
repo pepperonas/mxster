@@ -1,6 +1,6 @@
 {
   "name": "mxster-pwa",
-  "version": "0.6.3",
+  "version": "0.6.4",
   "description": "mxster - Musik-Zeitleisten-Spiel (PWA)",
   "type": "module",
   "scripts": {

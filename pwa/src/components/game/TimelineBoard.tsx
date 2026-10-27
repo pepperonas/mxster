@@ -84,6 +84,20 @@ export function TimelineBoard({
   const songs = cards.map((c) => c.song)
   const items: React.ReactNode[] = []
 
+  // A card waiting in a gap (placed or previewed) colours its two neighbours'
+  // year chips, so "between which years" is visible on the board. After the
+  // reveal the card shows its own year, so nothing is marked any more.
+  // During an objection both show: the placed card (primary) and the objector's
+  // preview (tertiary, wins where the two share a neighbour).
+  const marks = new Map<number, Mark>()
+  const markAround = (gap: number, tone: Mark) => {
+    marks.set(gap - 1, tone)
+    marks.set(gap, tone)
+  }
+  if (pendingSong && placedGap !== null) markAround(placedGap, 'primary')
+  if (interactive && pendingSong && previewGap !== null) markAround(previewGap, previewIsChallenge ? 'tertiary' : 'primary')
+  const markFor = (index: number): Mark | undefined => marks.get(index)
+
   const renderGap = (gap: number) => {
     if (pendingSong && placedGap === gap) {
       items.push(
@@ -136,7 +150,13 @@ export function TimelineBoard({
         layoutId={isRevealed ? pendingCardLayoutId(card.song.id) : undefined}
         tone={isRevealed ? 'correct' : 'default'}
       >
-        <CardContent song={card.song} owner={card.owner} blurYear={hideYears && !isRevealed} revealYear={isRevealed} />
+        <CardContent
+          song={card.song}
+          owner={card.owner}
+          blurYear={hideYears && !isRevealed}
+          revealYear={isRevealed}
+          mark={isRevealed ? undefined : markFor(i)}
+        />
       </BoardRow>
     )
   })
@@ -197,24 +217,36 @@ function BoardRow({ ref, children, layoutId, tone, shake }: BoardRowProps) {
   )
 }
 
+/** Colour of a neighbour's year chip next to a waiting card. */
+type Mark = 'primary' | 'tertiary'
+
+const MARK_CLASS: Record<Mark, string> = {
+  primary: 'bg-md-primary text-md-on-primary',
+  tertiary: 'bg-md-tertiary text-md-on-tertiary'
+}
+
 interface CardContentProps {
   song: Song
   owner?: string
   yearHidden?: boolean
   revealYear?: boolean
   blurYear?: boolean
+  /** Neighbour of the waiting card: the year chip takes the slot's colour. */
+  mark?: Mark
 }
 
-function CardContent({ song, owner, yearHidden, revealYear, blurYear }: CardContentProps) {
+function CardContent({ song, owner, yearHidden, revealYear, blurYear, mark }: CardContentProps) {
   return (
     <>
       <span
-        className="flex-shrink-0 w-[4.25rem] h-10 grid place-items-center rounded-m3-md bg-md-surface-container-highest text-title-md tabular-nums"
+        className={`flex-shrink-0 w-[4.25rem] h-10 grid place-items-center rounded-m3-md text-title-md tabular-nums transition-colors duration-m3-effects ${
+          mark ? MARK_CLASS[mark] : 'bg-md-surface-container-highest'
+        }`}
         style={{ perspective: 400 }}
       >
         {yearHidden ? (
-          <span aria-label="Jahr verdeckt" className="text-md-on-surface-variant">
-            ????
+          <span aria-label="Jahr verdeckt" className="text-poster" style={{ fontSize: '1.6rem' }}>
+            ?
           </span>
         ) : revealYear ? (
           <m.span
