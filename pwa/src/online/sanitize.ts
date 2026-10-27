@@ -47,6 +47,7 @@ function player(v: unknown): Player | null {
     cards: num(p.cards, 0, MAX_CARDS),
     score: num(p.score, -1000, 10000),
     ...(p.guest ? { guest: true } : {}),
+    ...(p.left ? { left: true } : {}),
     ...(Array.isArray(p.members) ? { members: p.members.slice(0, MAX_PLAYERS).map((m) => str(m, 40)).filter(Boolean) } : {})
   }
 }

@@ -29,7 +29,11 @@ interface GameOverProps {
 export function GameOver({ winner, players, mode, onRematch, onHome, rematchBy, homeLabel }: GameOverProps) {
   const t = useMessages(gameText)
   const hardcore = mode === 'hardcore'
-  const ranked = rankPlayers(players, mode, winner.name)
+  // Who left the room is listed last, without a place
+  const ranked: { player: Player; place: number | null }[] = [
+    ...rankPlayers(players.filter((p) => !p.left), mode, winner.name),
+    ...players.filter((p) => p.left).map((player) => ({ player, place: null }))
+  ]
 
   useEffect(() => {
     haptic('win')
@@ -75,10 +79,11 @@ export function GameOver({ winner, players, mode, onRematch, onHome, rematchBy, 
                 i === 0 ? 'bg-md-primary-container text-md-on-primary-container' : 'bg-md-surface-container-low'
               }`}
             >
-              <span className="w-6 text-title-md tabular">{place}.</span>
+              <span className="w-6 text-title-md tabular">{place === null ? '–' : `${place}.`}</span>
               <span className="flex-1 min-w-0">
                 <span className="block truncate text-body-lg">{p.name}</span>
                 {p.members && <span className="block truncate text-body-sm opacity-80">{p.members.join(', ')}</span>}
+                {p.left && <span className="block truncate text-body-sm text-md-on-surface-variant">{t.leftShort}</span>}
               </span>
               <span className="text-title-md tabular">{hardcore ? t.pointsValue(p.score) : t.songsValue(p.cards)}</span>
             </m.li>

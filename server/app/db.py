@@ -98,6 +98,8 @@ class RoomMember(Base):
     name: Mapped[str] = mapped_column(String(40))
     token_hash: Mapped[str | None] = mapped_column(String(64), nullable=True, index=True)
     joined_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow)
+    # Left a running round on purpose: out for the rest of it, the seat stays for the results
+    left_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
 
 
 class Friendship(Base):
@@ -145,6 +147,18 @@ SessionLocal = sessionmaker(bind=engine, autoflush=False, expire_on_commit=False
 
 def init_db() -> None:
     Base.metadata.create_all(engine)
+    _add_missing_columns()
+
+
+def _add_missing_columns() -> None:
+    """create_all never alters an existing table: add columns that came later."""
+    later = {"room_members": {"left_at": "DATETIME"}}
+    with engine.begin() as conn:
+        for table, columns in later.items():
+            have = {row[1] for row in conn.exec_driver_sql(f"PRAGMA table_info({table})")}
+            for name, kind in columns.items():
+                if name not in have:
+                    conn.exec_driver_sql(f"ALTER TABLE {table} ADD COLUMN {name} {kind}")
 
 
 def get_db() -> Generator[Session, None, None]:

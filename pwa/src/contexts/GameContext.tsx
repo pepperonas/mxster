@@ -1,6 +1,7 @@
 import { createContext, useContext, useEffect, useReducer, ReactNode } from 'react'
 import type { Player, Song, GameMode, GlobalTimelineCard, TurnRecord } from '@/types'
-import { nextContender, type Tiebreak } from '@/game/tiebreak'
+import { type Tiebreak } from '@/game/tiebreak'
+import { nextPresent } from '@/game/presence'
 import { DEFAULT_GOAL } from '@/game/roundEnd'
 import { STARTING_CHALLENGES } from '@/game/challenge'
 import type { PendingPlacement, Reveal } from '@/game/turn'
@@ -36,6 +37,8 @@ export interface GameState {
 
   /** Set while a level lead is played out (only contenders take turns). */
   tiebreak: Tiebreak | null
+  /** Online: player indices whose turns are skipped (away or left; see game/presence). */
+  absent: number[]
 
   // Round options
   /** Correct cards (timeline) / songs per player (hardcore) a round runs to. */
@@ -84,6 +87,7 @@ type GameAction =
   | { type: 'NEXT_TURN' }
   | { type: 'NEXT_PLAYER_ONLY' } // Switch player, keep currentSong
   | { type: 'SET_TIEBREAK'; payload: Tiebreak | null }
+  | { type: 'SET_ABSENT'; payload: number[] }
   | { type: 'SET_OPTIONS'; payload: Partial<RoundOptions> }
   | { type: 'SET_PLAYERS'; payload: Player[] }
   | { type: 'SET_REVEAL'; payload: Reveal | null }
@@ -114,6 +118,7 @@ interface GameContextValue extends GameState {
   nextTurn: () => void
   nextPlayerOnly: () => void // Switch player but keep song
   setTiebreak: (tiebreak: Tiebreak | null) => void
+  setAbsent: (absent: number[]) => void
   setOptions: (options: Partial<RoundOptions>) => void
   /** Replace the whole line-up (teams). */
   setPlayers: (players: Player[]) => void
@@ -146,6 +151,7 @@ const initialState: GameState = {
   currentSongSkips: {},
   isGameStarted: false,
   tiebreak: null,
+  absent: [],
   goal: DEFAULT_GOAL,
   decades: [],
   challengesEnabled: true,
@@ -267,7 +273,8 @@ function gameReducer(state: GameState, action: GameAction): GameState {
     case 'START_GAME':
       return {
         ...state,
-        players: freshPlayers(state.players, challengesInMode(state)),
+        // Who left the room is not in the next round
+        players: freshPlayers(state.players.filter((p) => !p.left), challengesInMode(state)),
         isGameStarted: true,
         finished: false,
         reveal: null,
@@ -326,6 +333,9 @@ function gameReducer(state: GameState, action: GameAction): GameState {
     case 'SET_TIEBREAK':
       return { ...state, tiebreak: action.payload }
 
+    case 'SET_ABSENT':
+      return { ...state, absent: action.payload }
+
     case 'NEXT_TURN': {
       const playerCount = state.players.length
       if (playerCount === 0) return state
@@ -363,10 +373,11 @@ function advanceMember(players: Player[], seat: number): Player[] {
   return players.map((p, i) => (i === seat ? { ...p, memberTurn: (p.memberTurn ?? 0) + 1 } : p))
 }
 
-/** Next seat in turn order; during a tiebreak only contenders play. */
-function nextSeat(state: GameState): number {
-  if (state.tiebreak && state.tiebreak.contenders.length > 0) return nextContender(state.tiebreak, state.currentPlayer)
-  return (state.currentPlayer + 1) % state.players.length
+/** Next seat in turn order; during a tiebreak only contenders play; absent players are skipped. */
+export function nextSeat(state: Pick<GameState, 'tiebreak' | 'currentPlayer' | 'players' | 'absent'>): number {
+  const order =
+    state.tiebreak && state.tiebreak.contenders.length > 0 ? state.tiebreak.contenders : state.players.map((_, i) => i)
+  return nextPresent(order, state.currentPlayer, state.absent ?? [])
 }
 
 // ============================================================================
@@ -414,6 +425,7 @@ export function GameProvider({ children }: GameProviderProps) {
     nextTurn: () => dispatch({ type: 'NEXT_TURN' }),
     nextPlayerOnly: () => dispatch({ type: 'NEXT_PLAYER_ONLY' }),
     setTiebreak: (tiebreak) => dispatch({ type: 'SET_TIEBREAK', payload: tiebreak }),
+    setAbsent: (absent) => dispatch({ type: 'SET_ABSENT', payload: absent }),
     setOptions: (options) => dispatch({ type: 'SET_OPTIONS', payload: options }),
     setPlayers: (players) => dispatch({ type: 'SET_PLAYERS', payload: players }),
     setReveal: (reveal) => dispatch({ type: 'SET_REVEAL', payload: reveal }),

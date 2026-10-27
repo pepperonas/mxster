@@ -116,7 +116,8 @@ def roster(db: Session, room: Room) -> list[dict]:
             "guest": m.user_id is None,
             "host": m.user_id == room.host_user_id,
             "picture": picture,
-            "online": m.seat in online,
+            "online": m.seat in online and m.left_at is None,
+            "left": m.left_at is not None,
             "userId": m.user_id,
         })
     return out
@@ -141,7 +142,8 @@ def guest_may_listen(db: Session, cookie: str | None) -> bool:
     room = db.get(Room, data["c"])
     if room is None or room.status not in OPEN or as_utc(room.expires_at) < utcnow():
         return False
-    return guest_member(db, room.code, cookie) is not None
+    member = guest_member(db, room.code, cookie)
+    return member is not None and member.left_at is None
 
 
 def session_user(db: Session, cookies: dict) -> User | None:
@@ -177,7 +179,9 @@ def public_room(db: Session, room: Room, me: RoomMember | None) -> dict:
         "host": {"name": first_name(host) if host else "", "picture": host.picture if host else ""},
         "members": roster(db, room),
         "maxSeats": MAX_SEATS,
-        "me": None if me is None else {"seat": me.seat, "name": me.name, "host": me.user_id == room.host_user_id},
+        "me": None if me is None else {
+            "seat": me.seat, "name": me.name, "host": me.user_id == room.host_user_id, "left": me.left_at is not None,
+        },
     }
 
 
@@ -228,6 +232,8 @@ def join_room(code: str, body: JoinIn, request: Request, response: Response, db:
     if existing is not None:  # coming back to one's seat is always allowed while the room is open
         if room.status not in OPEN:
             raise err(409, "room_closed", "Diese Runde ist vorbei.")
+        if existing.left_at is not None:
+            raise err(409, "left_round", "Du hast diese Runde verlassen.")
         return public_room(db, room, existing)
     if room.status != "lobby":
         raise err(409, "room_started" if room.status == "running" else "room_closed",
@@ -240,10 +246,7 @@ def join_room(code: str, body: JoinIn, request: Request, response: Response, db:
 
     if user is not None:
         # Account holders need CSRF like every other write of a session
-        header = request.headers.get("X-CSRF-Token", "")
-        row = load_session(request, db)
-        if row is None or not secrets.compare_digest(header, row.csrf_token):
-            raise err(403, "csrf_invalid", "Ungültiges CSRF-Token.")
+        _check_csrf(request, db)
         member = RoomMember(room_code=room.code, seat=seat, user_id=user.id, name=unique_name(db, room.code, first_name(user)))
         db.add(member)
     else:
@@ -261,6 +264,40 @@ def join_room(code: str, body: JoinIn, request: Request, response: Response, db:
     touch(room)
     db.commit()
     return public_room(db, room, member)
+
+
+def _check_csrf(request: Request, db: Session) -> None:
+    header = request.headers.get("X-CSRF-Token", "")
+    row = load_session(request, db)
+    if row is None or not secrets.compare_digest(header, row.csrf_token):
+        raise err(403, "csrf_invalid", "Ungültiges CSRF-Token.")
+
+
+@router.post("/rooms/{code}/leave")
+async def leave_room(code: str, request: Request, response: Response, db: Session = Depends(get_db)) -> dict:
+    """A player leaves: in the lobby the seat is freed; in a running round the
+    seat stays (cards and results) but is out for good and cannot reconnect.
+    The host does not leave — closing the room is the host's way out."""
+    room = get_room(db, code)
+    me = member_for(db, room, request.cookies)
+    if me is None:
+        raise err(404, "not_member", "Du sitzt nicht in diesem Raum.")
+    if me.user_id is not None:
+        _check_csrf(request, db)
+    if me.user_id == room.host_user_id:
+        raise err(409, "host_cannot_leave", "Als Gastgeber beendest du den Raum.")
+    seat = me.seat
+    if room.status == "lobby":
+        db.delete(me)
+    elif room.status == "running" and me.left_at is None:
+        me.left_at = utcnow()
+    if me.user_id is None:
+        response.delete_cookie(GUEST_COOKIE, path="/")
+    touch(room)
+    db.commit()
+    await hub.close_seat(room.code, seat, "left")
+    await hub.broadcast(room.code, {"type": "roster", "members": roster(db, room)})
+    return {"ok": True}
 
 
 def _host_room(db: Session, code: str, user: User) -> Room:
@@ -324,6 +361,9 @@ async def room_socket(ws: WebSocket, code: str) -> None:
         if room is None or member is None or room.status not in OPEN + ("finished",):
             await ws.close(code=4001, reason="unauthorized")
             return
+        if member.left_at is not None:
+            await ws.close(code=4003, reason="left")
+            return
         seat = member.seat
         is_host = member.user_id == room.host_user_id
         host_seat = 0
@@ -362,7 +402,7 @@ async def room_socket(ws: WebSocket, code: str) -> None:
                 with SessionLocal() as db:
                     room = db.get(Room, code)
                     still = member_for(db, room, ws.cookies) if room is not None else None
-                    if room is None or still is None or still.seat != seat or room.status not in OPEN + ("finished",):
+                    if room is None or still is None or still.seat != seat or still.left_at is not None or room.status not in OPEN + ("finished",):
                         await ws.close(code=4003, reason="revoked")
                         break
 

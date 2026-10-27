@@ -109,7 +109,7 @@ function useSaveOnlineResult(account: boolean) {
 function RoomProblem({ kind }: { kind: string }) {
   const navigate = useAppNavigate()
   const t = useMessages(roomsText)
-  const text = kind === 'kicked' ? t.kicked : kind === 'closed' ? t.closedByHost : kind === 'not_found' ? t.notFound : t.unreachable
+  const text = kind === 'kicked' ? t.kicked : kind === 'left' ? t.problem_left_round : kind === 'closed' ? t.closedByHost : kind === 'not_found' ? t.notFound : t.unreachable
   return (
     <div className="min-h-dvh grid place-items-center px-6 text-center">
       <div className="space-y-5">
@@ -182,7 +182,9 @@ function Lobby({ account }: { account: boolean }) {
         text: isHost ? t.close : t.leave,
         variant: 'danger',
         onClick: () => {
+          // The host closes the room for everyone; a player frees the seat
           if (isHost) void roomApi.setStatus(room.code, 'closed').catch(() => {})
+          else void roomApi.leave(room.code).catch(() => {})
           navigate('/', { replace: true })
         }
       }

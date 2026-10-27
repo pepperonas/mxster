@@ -31,6 +31,9 @@ export function useRemoteTurnFlow(send: (intent: Intent) => void): TurnFlow {
     revealPlacement: () => send({ action: 'reveal' }),
     submitGuess: (title: string, artist: string, year: string) => send({ action: 'guess', title, artist, year }),
     skip: () => send({ action: 'skip' }),
-    continueTurn: () => send({ action: 'continue' })
+    continueTurn: () => send({ action: 'continue' }),
+    // Only the host's device decides who is absent
+    passTurn: () => {},
+    markLeft: () => {}
   }
 }

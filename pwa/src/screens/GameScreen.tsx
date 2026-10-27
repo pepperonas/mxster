@@ -27,6 +27,7 @@ import { correctGapIndices, gapLabel } from '@/game/placement'
 import { useRoom } from '@/online/RoomContext'
 import { useRemoteTurnFlow } from '@/online/useRemoteTurnFlow'
 import { useHostBridge } from '@/online/useHostBridge'
+import { useHostPresence, usePresenceNotices } from '@/online/usePresence'
 import { mayAct } from '@/online/rules'
 import { roomApi } from '@/online/roomApi'
 import type { Intent } from '@/online/protocol'
@@ -84,11 +85,12 @@ export function GameRound({ onRematch }: { onRematch: () => void }) {
     leaving = true
     getPreviewPlayer().stop()
     await closeModal()
-    // The host ends the room for everyone; a player just leaves it
+    // The host ends the room for everyone; a player leaves it (out of this round for good)
     if (onlineHost && room) await roomApi.setStatus(room.code, 'closed').catch(() => {})
+    else if (onlinePlayer && room && !room.result) await roomApi.leave(room.code).catch(() => {})
     resetGame()
     navigate('/', { replace: true })
-  }, [closeModal, resetGame, navigate, onlineHost, room])
+  }, [closeModal, resetGame, navigate, onlineHost, onlinePlayer, room])
 
   const showSkipNotice = useCallback(
     (notice: SkipNotice, acknowledge: () => void) => {
@@ -137,6 +139,8 @@ export function GameRound({ onRematch }: { onRematch: () => void }) {
   const remoteFlow = useRemoteTurnFlow(room?.sendIntent ?? (noop as (i: Intent) => void))
   const flow = onlinePlayer ? remoteFlow : localFlow
   useHostBridge(localFlow, result ? { ...result, effects: [] } : null)
+  useHostPresence(localFlow, onlineHost)
+  usePresenceNotices(online)
   // Players see the end of the round when the host's snapshot says so
   const shownResult = onlinePlayer ? (room?.result ?? null) : result
   useEffect(() => {
@@ -147,6 +151,9 @@ export function GameRound({ onRematch }: { onRematch: () => void }) {
   /** May this device do that now? Always yes on a single device. */
   const can = (action: Intent['action']) =>
     !online || mayAct({ phase, players, currentPlayer, pending, reveal }, room!.seat!, action, onlineHost)
+  // Players' devices: the host (who runs the round) lost the connection
+  const hostMember = room?.members.find((m) => m.host)
+  const hostAway = onlinePlayer && room?.connection === 'open' && Boolean(hostMember) && !hostMember!.online && !shownResult
   const isMine = (index: number) => !online || players[index]?.seat === room!.seat
   const choosing = phase === 'challenge' && pending?.choosing != null ? pending.choosing : null
 
@@ -300,6 +307,12 @@ export function GameRound({ onRematch }: { onRematch: () => void }) {
 
       <main className="mx-auto max-w-6xl px-4 space-y-6">
         <PlayerStrip thinking={isBotThinking} />
+        {hostAway && (
+          <p role="status" className="flex items-center gap-2 rounded-m3-lg bg-md-error-container text-md-on-error-container px-4 py-3 text-body-md">
+            <Icon name="hourglass" size={18} />
+            {t.hostAway}
+          </p>
+        )}
 
         <div className="grid gap-5 lg:gap-8 lg:grid-cols-[minmax(0,5fr)_minmax(0,6fr)] lg:items-start">
           {/* On phones this column dissolves (contents), so the player bar can stick across the board */}

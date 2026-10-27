@@ -4,6 +4,7 @@
  */
 import { m } from 'motion/react'
 import { useGame } from '@/contexts'
+import { useRoom } from '@/online/RoomContext'
 import { Icon } from '@/components/ui/Icon'
 import { AnimatedNumber } from '@/components/ui/AnimatedNumber'
 import { spring } from '@/motion/springs'
@@ -14,7 +15,17 @@ import { gameText } from '@/i18n/messages/game'
 
 export function PlayerStrip({ thinking = false }: { thinking?: boolean }) {
   const t = useMessages(gameText)
-  const { players, currentPlayer, gameMode, tiebreak, challengesEnabled } = useGame()
+  const { players, currentPlayer, gameMode, tiebreak, challengesEnabled, absent } = useGame()
+  const room = useRoom()
+  /** Online: left, skipped, or only the connection is gone (still within the grace period). */
+  const presence = (i: number): string | null => {
+    const p = players[i]
+    if (p.left) return t.leftShort
+    if (!room || p.seat === undefined) return null
+    if ((absent ?? []).includes(i)) return t.skippedShort
+    const m = room.members.find((x) => x.seat === p.seat)
+    return m && !m.online && room.connection === 'open' ? t.awayShort : null
+  }
   const hardcore = gameMode === 'hardcore'
   const showChallenges = challengesEnabled && !hardcore
 
@@ -22,7 +33,8 @@ export function PlayerStrip({ thinking = false }: { thinking?: boolean }) {
     <ul className="flex gap-2 overflow-x-auto no-scrollbar -mx-4 px-4 py-1" aria-label={t.players}>
       {players.map((p, i) => {
         const active = i === currentPlayer
-        const out = Boolean(tiebreak) && !tiebreak!.contenders.includes(i)
+        const status = presence(i)
+        const out = (Boolean(tiebreak) && !tiebreak!.contenders.includes(i)) || Boolean(p.left)
         return (
           <m.li
             key={p.name}
@@ -65,6 +77,12 @@ export function PlayerStrip({ thinking = false }: { thinking?: boolean }) {
                   <>
                     <AnimatedNumber value={hardcore ? p.score : p.cards} /> {hardcore ? t.pointsShort : t.songWord(p.cards)}
                   </>
+                )}
+                {status && (
+                  <span data-presence className={active ? "font-medium" : "text-md-error"}>
+                    {' · '}
+                    {status}
+                  </span>
                 )}
               </span>
             </span>

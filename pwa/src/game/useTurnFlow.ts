@@ -32,7 +32,8 @@ import { evaluatePlacement, timelineSongsFor } from './placement'
 import { guessBreakdown, guessDetailsFor } from './guess'
 import { endOfGameAchievements, realtimeScoreAchievements, type AchievementEffect } from './achievementRules'
 import { evaluateSkip, SKIP_PENALTY_POINTS } from './skipRules'
-import { afterTiebreakTurn, leaders, startTiebreak } from './tiebreak'
+import { afterTiebreakTurn, leadersAmong, startTiebreak } from './tiebreak'
+import { stillIn } from './presence'
 import { isRoundOver } from './roundEnd'
 import { pickSong, songKey } from './songPool'
 import { eligibleChallengers, resolveChallenge, type ChallengeClaim } from './challenge'
@@ -91,7 +92,8 @@ export function useTurnFlow({ onGameOver, onSkipNotice }: Options) {
     rankingsHistory,
     pushRanking,
     turnLog,
-    logTurn
+    logTurn,
+    absent
   } = game
   const { addToast } = useUI()
   const { settings, rememberSong } = useSettings()
@@ -202,7 +204,10 @@ export function useTurnFlow({ onGameOver, onSkipNotice }: Options) {
   const settleTurn = useCallback(
     (playerIndex: number, finalPlayers: Player[]): 'over' | 'next' => {
       if (tiebreak) {
-        const step = afterTiebreakTurn(tiebreak, playerIndex, finalPlayers, gameMode)
+        // An absent contender's song is skipped — it counts as played, or the
+        // tiebreak round could never complete
+        const away = (absent ?? []).filter((i) => tiebreak.contenders.includes(i) && !tiebreak.played.includes(i))
+        const step = afterTiebreakTurn({ ...tiebreak, played: [...tiebreak.played, ...away] }, playerIndex, finalPlayers, gameMode)
         if (step.kind === 'winner') {
           setTiebreak(null)
           finishGame(finalPlayers[step.index], finalPlayers)
@@ -216,7 +221,8 @@ export function useTurnFlow({ onGameOver, onSkipNotice }: Options) {
       }
 
       if (!isRoundOver(finalPlayers, gameMode, goal)) return 'next'
-      const top = leaders(finalPlayers, gameMode)
+      // Who left cannot win
+      const top = leadersAmong(finalPlayers, stillIn(finalPlayers), gameMode)
       if (top.length === 1) {
         finishGame(finalPlayers[top[0]], finalPlayers)
         return 'over'
@@ -225,7 +231,46 @@ export function useTurnFlow({ onGameOver, onSkipNotice }: Options) {
       addToast(msg(modesText).tie(top.map((i) => finalPlayers[i].name)), 'info')
       return 'next'
     },
-    [tiebreak, gameMode, goal, setTiebreak, finishGame, addToast]
+    [tiebreak, gameMode, goal, setTiebreak, finishGame, addToast, absent]
+  )
+
+  // ── Online: absent players ───────────────────────────────────────────────
+  /** An absent player's turn moves on without booking anything. */
+  const passTurn = useCallback(() => {
+    if (gameOver) return
+    const index = reveal?.playerIndex ?? pending?.playerIndex ?? currentPlayer
+    setPending(null)
+    setReveal(null)
+    if (settleTurn(index, players) === 'over') return
+    nextTurn()
+  }, [gameOver, reveal, pending, currentPlayer, setPending, setReveal, settleTurn, players, nextTurn])
+
+  /**
+   * Someone left the room on purpose: out for the rest of the round. When
+   * only one player is left, they win; a tiebreak goes on without the leaver.
+   */
+  const markLeft = useCallback(
+    (index: number) => {
+      if (gameOver || !players[index] || players[index].left) return
+      const updated = players.map((p, i) => (i === index ? { ...p, left: true } : p))
+      updatePlayer(index, { left: true })
+      const remaining = stillIn(updated)
+      if (remaining.length === 1) {
+        if (tiebreak) setTiebreak(null)
+        finishGame(updated[remaining[0]], updated)
+        return
+      }
+      if (tiebreak?.contenders.includes(index)) {
+        const contenders = tiebreak.contenders.filter((i) => i !== index)
+        if (contenders.length === 1) {
+          setTiebreak(null)
+          finishGame(updated[contenders[0]], updated)
+          return
+        }
+        setTiebreak({ ...tiebreak, contenders, played: tiebreak.played.filter((i) => i !== index) })
+      }
+    },
+    [gameOver, players, updatePlayer, tiebreak, setTiebreak, finishGame]
   )
 
   // ── Timeline modes ───────────────────────────────────────────────────────
@@ -301,10 +346,11 @@ export function useTurnFlow({ onGameOver, onSkipNotice }: Options) {
   const placeCard = useCallback(
     (gapIndex: number) => {
       if (phase !== 'placing' || !currentSong || !activePlayer) return
+      // Nobody away or gone can object
       const challengers = eligibleChallengers(players, currentPlayer, activeTimeline, {
         enabled: challengesEnabled && gameMode !== 'hardcore',
         tiebreak: Boolean(tiebreak)
-      })
+      }).filter((i) => !(absent ?? []).includes(i) && !players[i]?.left)
       if (challengers.length > 0) {
         setPending({ playerIndex: currentPlayer, gapIndex, challengers, choosing: null, claim: null })
         return
@@ -478,7 +524,9 @@ export function useTurnFlow({ onGameOver, onSkipNotice }: Options) {
     revealPlacement,
     submitGuess,
     skip,
-    continueTurn
+    continueTurn,
+    passTurn,
+    markLeft
   }
 }
 

@@ -43,6 +43,8 @@ export interface Player {
   seat?: number
   /** Online rounds: joined by link without an account. */
   guest?: boolean
+  /** Online rounds: left on purpose — out for the rest of the round. */
+  left?: boolean
 }
 
 // ============================================================================

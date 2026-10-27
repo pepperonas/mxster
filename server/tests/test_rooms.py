@@ -43,7 +43,7 @@ def test_create_puts_the_host_on_seat_zero(client, google):
     room = create(client, me)
     assert len(room["code"]) == 8
     assert room["members"] == [
-        {"seat": 0, "name": "Martin", "guest": False, "host": True, "picture": "", "online": False, "userId": me["id"]}
+        {"seat": 0, "name": "Martin", "guest": False, "host": True, "picture": "", "online": False, "left": False, "userId": me["id"]}
     ]
     assert room["me"]["host"] is True
 
@@ -58,7 +58,7 @@ def test_guest_joins_with_a_name_and_gets_a_cookie(client, google):
     r = as_guest(client, room["code"], "  Lisa  ")
     assert r.status_code == 200
     assert "mx_guest" in r.cookies
-    assert r.json()["me"] == {"seat": 1, "name": "Lisa", "host": False}
+    assert r.json()["me"] == {"seat": 1, "name": "Lisa", "host": False, "left": False}
     # Joining again keeps the seat
     assert client.post(f"/api/rooms/{room['code']}/join", json={"name": "Egal"}).json()["me"]["seat"] == 1
 

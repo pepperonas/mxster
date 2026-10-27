@@ -8,6 +8,7 @@ export const roomApi = {
   join: (code: string, name?: string) => api<RoomInfo>(`/api/rooms/${encodeURIComponent(code)}/join`, { method: 'POST', json: { name } }),
   setStatus: (code: string, status: RoomStatus) =>
     api<RoomInfo>(`/api/rooms/${encodeURIComponent(code)}/status`, { method: 'POST', json: { status } }),
+  leave: (code: string) => api(`/api/rooms/${encodeURIComponent(code)}/leave`, { method: 'POST' }),
   kick: (code: string, seat: number) => api(`/api/rooms/${encodeURIComponent(code)}/kick/${seat}`, { method: 'POST' }),
   invite: (code: string, userId: number) => api(`/api/rooms/${encodeURIComponent(code)}/invite/${userId}`, { method: 'POST' })
 }

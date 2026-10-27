@@ -114,7 +114,7 @@ export function RoomProvider({ code, children }: { code: string; children: React
           setInfo((prev) => (prev ? { ...prev, status: msg.status } : prev))
           break
         case 'closed':
-          setProblem(msg.reason === 'kicked' ? 'kicked' : 'closed')
+          setProblem(msg.reason === 'kicked' || msg.reason === 'left' ? msg.reason : 'closed')
           break
         case 'error':
           break
@@ -128,6 +128,8 @@ export function RoomProvider({ code, children }: { code: string; children: React
     let cancelled = false
     void refresh().then((r) => {
       if (cancelled || !r || !r.me) return
+      // Left this round on purpose: no way back in
+      if (r.me.left) return void setProblem('left')
       const c = new RoomClient(code, { onMessage, onConnection: setConnection })
       client.current = c
       c.connect()

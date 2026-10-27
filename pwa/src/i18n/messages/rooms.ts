@@ -7,6 +7,7 @@ export const roomsText = defineMessages({
     problem_room_started: 'Die Runde läuft schon. Neue Leute können erst bei der nächsten Runde dazukommen.',
     problem_room_closed: 'Diese Runde ist vorbei.',
     problem_room_full: 'Der Raum ist voll.',
+    problem_left_round: 'Du hast diese Runde verlassen. Zurück geht es erst in der nächsten.',
     unreachable: 'Der Raum ist gerade nicht erreichbar.',
     toHome: 'Zur Startseite',
     loadingRoom: 'Raum wird geladen …',
@@ -33,7 +34,7 @@ export const roomsText = defineMessages({
     closeTitle: 'Raum schließen?',
     leaveTitle: 'Raum verlassen?',
     closeBody: 'Alle anderen fliegen raus.',
-    leaveBody: 'Über den Link kommst du zurück, solange die Runde nicht läuft.',
+    leaveBody: 'Dein Platz wird frei. Über den Link kommst du zurück, solange die Runde nicht läuft.',
     stay: 'Bleiben',
     close: 'Schließen',
     leave: 'Verlassen',
@@ -80,6 +81,7 @@ export const roomsText = defineMessages({
     problem_room_started: 'The round is already running. New people can join the next round.',
     problem_room_closed: 'This round is over.',
     problem_room_full: 'The room is full.',
+    problem_left_round: 'You left this round. You can join again in the next one.',
     unreachable: 'The room cannot be reached right now.',
     toHome: 'Go to start',
     loadingRoom: 'Loading the room …',
@@ -105,7 +107,7 @@ export const roomsText = defineMessages({
     closeTitle: 'Close the room?',
     leaveTitle: 'Leave the room?',
     closeBody: 'Everyone else will be sent out.',
-    leaveBody: 'You can come back through the link as long as the round has not started.',
+    leaveBody: 'Your seat is freed. You can come back through the link as long as the round has not started.',
     stay: 'Stay',
     close: 'Close',
     leave: 'Leave',
@@ -149,6 +151,6 @@ export const roomsText = defineMessages({
   }
 })
 
-export const ROOM_PROBLEMS = ['room_not_found', 'room_started', 'room_closed', 'room_full'] as const
+export const ROOM_PROBLEMS = ['room_not_found', 'room_started', 'room_closed', 'room_full', 'left_round'] as const
 export type RoomProblem = (typeof ROOM_PROBLEMS)[number]
 export const isRoomProblem = (code: string): code is RoomProblem => (ROOM_PROBLEMS as readonly string[]).includes(code)

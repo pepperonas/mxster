@@ -20,6 +20,8 @@ export interface Member {
   host: boolean
   picture: string
   online: boolean
+  /** Left the running round on purpose (out for good). */
+  left: boolean
   userId: number | null
 }
 
@@ -31,7 +33,7 @@ export interface RoomInfo {
   host: { name: string; picture: string }
   members: Member[]
   maxSeats: number
-  me: { seat: number; name: string; host: boolean } | null
+  me: { seat: number; name: string; host: boolean; left?: boolean } | null
 }
 
 /** What the host shares: the whole game state plus the end of the round. */
