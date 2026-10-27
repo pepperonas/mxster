@@ -29,7 +29,7 @@ export function usePlayers() {
   const summaries = useMemo(() => summarize(history, settings.hiddenPlayers), [history, settings.hiddenPlayers])
 
   const players: KnownPlayer[] = useMemo(() => {
-    const names = knownPlayers(history, [myName, ...settings.savedPlayers], settings.hiddenPlayers)
+    const names = knownPlayers(history, [myName, ...settings.savedPlayers], settings.hiddenPlayers, [...playerAchievements.keys()])
     const byName = new Map(summaries.map((s) => [s.name, s]))
     return names
       .map((name) => ({

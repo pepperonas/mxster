@@ -22,6 +22,11 @@ export function isBotSeat(p: HistoryPlayer): boolean {
   return Boolean(p.bot) || (!p.members && LEGACY_BOT.test(p.name))
 }
 
+/** A bot name as the game hands them out (Bot Alpha, KI-1, …). */
+export function isBotName(name: string): boolean {
+  return LEGACY_BOT.test(name)
+}
+
 /** The people behind a seat (a team's members, otherwise the player). */
 function people(p: HistoryPlayer): string[] {
   if (isBotSeat(p)) return []
@@ -291,11 +296,20 @@ export function weeklyRounds(history: readonly HistoryEntry[], weeks = 12, now =
 
 // ── Player management ───────────────────────────────────────────────────────
 
-/** All people known to the account: from rounds and the quick picks, minus hidden ones. */
-export function knownPlayers(history: readonly HistoryEntry[], saved: readonly string[], hidden: readonly string[] = []): string[] {
+/**
+ * All people known to the account, minus hidden ones: from rounds, the quick
+ * picks and `others` (names that only have achievements — someone typed into
+ * the setup who never finished a round must still be manageable). Bots never.
+ */
+export function knownPlayers(
+  history: readonly HistoryEntry[],
+  saved: readonly string[],
+  hidden: readonly string[] = [],
+  others: readonly string[] = []
+): string[] {
   const names = new Set<string>()
   for (const g of history) for (const seat of g.players) for (const n of people(seat)) names.add(n)
-  for (const n of saved) names.add(n)
+  for (const n of [...saved, ...others]) if (!isBotName(n)) names.add(n)
   for (const n of hidden) names.delete(n)
   return [...names]
 }

@@ -166,6 +166,10 @@ describe('player management', () => {
     expect(knownPlayers(h, ['Dora', 'Ben'], ['Cleo']).sort()).toEqual(['Ben', 'Dora', 'anna'])
   })
 
+  it('also lists people who only have achievements, so they can be removed', () => {
+    expect(knownPlayers(h, [], ['n'], ['m', 'n', 'Bot Alpha']).sort()).toEqual(['Ben', 'Cleo', 'anna', 'm'])
+  })
+
   it('renames everywhere and leaves other rounds untouched', () => {
     const other = game(2, 'Dora', [seat('Dora', [])])
     const withTurns = { ...h[0], winner: { name: 'anna', cards: 1, score: 0 }, turns: [turn('anna', 1980, true, { ch: { by: 'anna', ok: true } }), turn('Ben', 1981, false, { team: 'Rot' })] }
