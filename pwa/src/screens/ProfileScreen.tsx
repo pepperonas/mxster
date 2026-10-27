@@ -12,7 +12,7 @@ import { toggleThemeWithReveal } from '@/utils/themeReveal'
 import { api } from '@/api/client'
 import { LegalLinks } from './LegalLinks'
 
-const VERSION = '0.7.2'
+const VERSION = '0.8.0'
 
 export function ProfileScreen() {
   const me = useMe()
@@ -38,7 +38,7 @@ export function ProfileScreen() {
     )
     const a = document.createElement('a')
     a.href = URL.createObjectURL(blob)
-    a.download = `mxster-${new Date().toISOString().slice(0, 10)}.json`
+    a.download = `mxtape-${new Date().toISOString().slice(0, 10)}.json`
     a.click()
     URL.revokeObjectURL(a.href)
   }
@@ -122,7 +122,7 @@ export function ProfileScreen() {
       </button>
 
       <div className="text-center space-y-1 pt-2">
-        <p className="meta">mxster {VERSION}</p>
+        <p className="meta">mxtape {VERSION}</p>
         <LegalLinks />
       </div>
     </div>

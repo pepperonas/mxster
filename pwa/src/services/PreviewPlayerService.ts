@@ -19,7 +19,7 @@ interface PreviewPlayerConfig {
 }
 
 /**
- * Songs list absolute URLs (https://mxster.celox.io/audio/…). Playback always
+ * Songs list absolute URLs (https://mxtape.celox.io/audio/…). Playback always
  * goes to the same origin: /audio/ is behind the login (nginx auth_request),
  * so the session cookie must travel with the request.
  *

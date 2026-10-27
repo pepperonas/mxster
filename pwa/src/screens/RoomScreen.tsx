@@ -147,7 +147,7 @@ function Lobby({ account }: { account: boolean }) {
   }
   const share = async () => {
     try {
-      await navigator.share({ title: 'mxster', text: `${host?.name ?? 'Jemand'} lädt dich zu einer Runde mxster ein`, url: link })
+      await navigator.share({ title: 'mxtape', text: `${host?.name ?? 'Jemand'} lädt dich zu einer Runde mxtape ein`, url: link })
     } catch {
       /* cancelled */
     }

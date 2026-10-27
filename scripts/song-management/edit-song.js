@@ -61,7 +61,7 @@ function saveSongs(songs) {
 // Hauptfunktion
 async function main() {
   log('\n╔══════════════════════════════════════════╗', 'bright');
-  log('║  🎵  mxster Song Editor Wizard  🎵   ║', 'bright');
+  log('║  🎵  mxtape Song Editor Wizard  🎵   ║', 'bright');
   log('╚══════════════════════════════════════════╝\n', 'bright');
 
   try {

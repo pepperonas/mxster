@@ -98,7 +98,7 @@ SPOTIFY-REDIRECT-URI-SETUP.md
 
 # Deployment scripts (SENSIBEL - enthält Server-Infos)
 deploy.sh
-nginx-mxster.conf
+nginx-mx*.conf
 pwa-check.html
 
 # Backup files

@@ -61,7 +61,7 @@ Object.defineProperty(window, 'matchMedia', {
   })),
 })
 
-// Fake mxster API: an in-memory /api/data store per test file, so providers
+// Fake mxtape API: an in-memory /api/data store per test file, so providers
 // that sync with the server work without a network. Tests that need other
 // answers stub fetch themselves (vi.stubGlobal).
 import { fakeApiFetch, resetFakeApi } from './fakeApi'

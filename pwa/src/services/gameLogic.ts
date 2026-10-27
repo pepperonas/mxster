@@ -1,6 +1,6 @@
 /**
  * Game Logic Service
- * Core game mechanics for mxster
+ * Core game mechanics for mxtape
  */
 
 import type { Song, Player, GameMode } from '@/types'

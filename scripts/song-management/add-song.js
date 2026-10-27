@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Add a song to mxster — without Spotify.
+ * Add a song to mxtape — without Spotify.
  *
  *   node scripts/song-management/add-song.js "Artist" "Title"
  *   node scripts/song-management/add-song.js "a-ha" "Take on Me" --year 1985 --genre Pop --yes

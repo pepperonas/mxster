@@ -218,7 +218,7 @@ function generateReport(results, totalSongs) {
  */
 async function main() {
   log('\n╔══════════════════════════════════════════════════════╗', 'bright')
-  log('║     ✅  mxster Audio Validation Manager  ✅         ║', 'bright')
+  log('║     ✅  mxtape Audio Validation Manager  ✅         ║', 'bright')
   log('╚══════════════════════════════════════════════════════╝\n', 'bright')
 
   // Load songs
@@ -231,7 +231,7 @@ async function main() {
 
   if (songsWithPreview.length === 0) {
     log('❌ No songs with preview URLs found', 'red')
-    log('   previewUrl must be https://mxster.celox.io/audio/<id>.m4a (see docs/songs.json)\n', 'yellow')
+    log('   previewUrl must be https://mxtape.celox.io/audio/<id>.m4a (see docs/songs.json)\n', 'yellow')
     process.exit(1)
   }
 

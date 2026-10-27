@@ -1,6 +1,6 @@
 # Songs pflegen
 
-mxster spielt nur eigene Audiodateien: AAC mit 96 kbit/s (`.m4a`), höchstens vier Minuten mit kurzer Ausblendung (`encode.js`). Sie liegen auf dem VPS unter `/var/www/html/mxster/audio/`, die Cover unter `audio/covers/`. Beides liefert nginx nur an freigeschaltete Sitzungen aus. Lokal liegen dieselben Dateien in `pwa/public/audio/` (gitignored).
+mxtape spielt nur eigene Audiodateien: AAC mit 96 kbit/s (`.m4a`), höchstens vier Minuten mit kurzer Ausblendung (`encode.js`). Sie liegen auf dem VPS unter `/var/www/html/mxtape/audio/`, die Cover unter `audio/covers/`. Beides liefert nginx nur an freigeschaltete Sitzungen aus. Lokal liegen dieselben Dateien in `pwa/public/audio/` (gitignored).
 
 Spotify wird nirgends benutzt. Die Metadaten kommen von MusicBrainz, die Cover aus dem Cover Art Archive (Ersatz: iTunes Search API), das Audio per yt-dlp.
 
@@ -42,10 +42,10 @@ node scripts/song-management/edit-song.js                                     # 
 Alles auf einmal hochladen, inklusive Cover:
 
 ```bash
-rsync -a --ignore-existing pwa/public/audio/ root@69.62.121.168:/var/www/html/mxster/audio/
-ssh root@69.62.121.168 'chown -R www-data:www-data /var/www/html/mxster/audio'
+rsync -a --ignore-existing pwa/public/audio/ root@69.62.121.168:/var/www/html/mxtape/audio/
+ssh root@69.62.121.168 'chown -R www-data:www-data /var/www/html/mxtape/audio'
 ```
 
 Voraussetzungen: `yt-dlp`, `rsync`, SSH-Zugang zum VPS; `ffprobe` (aus ffmpeg) für die Längenprüfung, `sips` (macOS) zum Skalieren der Cover.
 
-Rechtlicher Hinweis: Das Herunterladen von Musik ist rechtlich heikel. mxster ist eine private, nicht-kommerzielle App, und die Dateien sind nur für freigeschaltete Konten erreichbar.
+Rechtlicher Hinweis: Das Herunterladen von Musik ist rechtlich heikel. mxtape ist eine private, nicht-kommerzielle App, und die Dateien sind nur für freigeschaltete Konten erreichbar.

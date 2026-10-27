@@ -1,12 +1,12 @@
-# Contributing to mxster
+# Contributing to mxtape
 
-Vielen Dank für dein Interesse an mxster! 🎵
+Vielen Dank für dein Interesse an mxtape! 🎵
 
 ## 📦 Repository-Struktur
 
 Dieses Projekt wird in **zwei Repositories** verwaltet:
 
-1. **Öffentliches Repository** (hier): https://github.com/pepperonas/mxster
+1. **Öffentliches Repository** (hier): https://github.com/pepperonas/mxtape
    - Enthält den kompletten Quellcode
    - Offen für Community Contributions
    - **KEINE** sensiblen Daten oder Credentials
@@ -22,8 +22,8 @@ Dieses Projekt wird in **zwei Repositories** verwaltet:
 ### 1. Fork & Clone
 
 ```bash
-git clone https://github.com/pepperonas/mxster.git
-cd mxster
+git clone https://github.com/pepperonas/mxtape.git
+cd mxtape
 ```
 
 ### 2. Branch erstellen
@@ -64,7 +64,7 @@ Dann erstelle einen Pull Request auf GitHub!
 
 ## 🐛 Bugs melden
 
-Gefundene Bugs bitte als [GitHub Issue](https://github.com/pepperonas/mxster/issues) melden:
+Gefundene Bugs bitte als [GitHub Issue](https://github.com/pepperonas/mxtape/issues) melden:
 
 1. Beschreibe das Problem klar
 2. Füge Schritte zur Reproduktion hinzu
@@ -73,7 +73,7 @@ Gefundene Bugs bitte als [GitHub Issue](https://github.com/pepperonas/mxster/iss
 
 ## 💡 Feature-Vorschläge
 
-Hast du eine Idee für ein neues Feature? Erstelle ein [GitHub Issue](https://github.com/pepperonas/mxster/issues) mit:
+Hast du eine Idee für ein neues Feature? Erstelle ein [GitHub Issue](https://github.com/pepperonas/mxtape/issues) mit:
 
 - Beschreibung des Features
 - Warum es nützlich wäre
@@ -114,13 +114,13 @@ Bevor du einen PR erstellst, prüfe:
 
 Bei Fragen kannst du:
 
-- Ein [GitHub Issue](https://github.com/pepperonas/mxster/issues) erstellen
-- Eine [Discussion](https://github.com/pepperonas/mxster/discussions) starten
+- Ein [GitHub Issue](https://github.com/pepperonas/mxtape/issues) erstellen
+- Eine [Discussion](https://github.com/pepperonas/mxtape/discussions) starten
 - Mich per E-Mail kontaktieren: martin.pfeffer@celox.io
 
 ## 🙏 Danke!
 
-Jeder Beitrag macht mxster besser - egal ob Code, Dokumentation, Bug-Reports oder Feature-Ideen!
+Jeder Beitrag macht mxtape besser - egal ob Code, Dokumentation, Bug-Reports oder Feature-Ideen!
 
 ---
 

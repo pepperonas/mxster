@@ -75,7 +75,7 @@ async function downloadSong(song, attempt = 1) {
     return { success: true, skipped: true, path: outputPath }
   }
 
-  const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'mxster-dl-'))
+  const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'mxtape-dl-'))
   try {
     log(`📥 Downloading [${attempt}/${MAX_RETRIES}]: ${song.artist} - ${song.title}`, 'cyan')
 
@@ -215,7 +215,7 @@ function generateReport(results) {
  */
 async function main() {
   log('\n╔══════════════════════════════════════════════════════╗', 'bright')
-  log('║     🎵  mxster Audio Download Manager  🎵           ║', 'bright')
+  log('║     🎵  mxtape Audio Download Manager  🎵           ║', 'bright')
   log('╚══════════════════════════════════════════════════════╝\n', 'bright')
 
   // Check yt-dlp installation

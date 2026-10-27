@@ -1,4 +1,4 @@
-"""mxster API: Google login with an approval queue, per-account data, audio gate."""
+"""mxtape API: Google login with an approval queue, per-account data, audio gate."""
 
 import logging
 
@@ -19,7 +19,7 @@ def create_app() -> FastAPI:
     if s.is_prod and s.mx_dev_login:
         raise RuntimeError("MX_DEV_LOGIN must never be enabled in production")
     init_db()
-    app = FastAPI(title="mxster", docs_url=None, redoc_url=None, openapi_url=None)
+    app = FastAPI(title="mxtape", docs_url=None, redoc_url=None, openapi_url=None)
 
     @app.exception_handler(HTTPException)
     async def _http(_: Request, exc: HTTPException) -> JSONResponse:

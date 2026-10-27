@@ -116,7 +116,7 @@ const html = `<!DOCTYPE html>
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>mxster - Song-Datenbank Analyse</title>
+  <title>mxtape - Song-Datenbank Analyse</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -395,7 +395,7 @@ const html = `<!DOCTYPE html>
 <body>
   <div class="container">
     <header>
-      <h1>🎵 mxster Song-Datenbank Analyse</h1>
+      <h1>🎵 mxtape Song-Datenbank Analyse</h1>
       <p class="subtitle">Verteilung nach Dekaden & Genres</p>
     </header>
 
@@ -524,7 +524,7 @@ const html = `<!DOCTYPE html>
         hour: '2-digit',
         minute: '2-digit'
       })}</p>
-      <p style="margin-top: 0.5rem;">mxster v0.0.19</p>
+      <p style="margin-top: 0.5rem;">mxtape v0.0.19</p>
     </footer>
   </div>
 </body>

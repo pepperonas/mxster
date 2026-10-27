@@ -1,5 +1,5 @@
 /**
- * Thin client for the mxster API (same origin, session cookie).
+ * Thin client for the mxtape API (same origin, session cookie).
  * State-changing requests carry the CSRF token from /api/me.
  */
 

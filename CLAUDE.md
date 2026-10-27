@@ -4,15 +4,15 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-**mxster** is a private music timeline game, played on one device by a group: hear a song, guess its year, place it on a timeline. Since v0.4.0 it is **sign-in only** (Google), new accounts wait for approval, and play is **virtual only** — physical QR cards, the card generator and Spotify were removed for good.
+**mxtape** is a private music timeline game, played on one device by a group: hear a song, guess its year, place it on a timeline. Since v0.4.0 it is **sign-in only** (Google), new accounts wait for approval, and play is **virtual only** — physical QR cards, the card generator and Spotify were removed for good.
 
-**Current version**: v0.7.2 (2026-10) — room links (QR code) always load from the network, so an older cached app no longer sends them to the start page. v0.7.1: snapshots hide the year before the reveal, stored online results are checked. v0.7.0: multiplayer: everyone on their own device, in one room or remote; guests by link without an account; friends and invitations. v0.6.4: where a card sits is shown as a picture: position strip in the dock, coloured neighbour years on the board. v0.6.3: placed cards stay visible while an objection is open (per-song layout ids). v0.6.2: people who only have achievements (never finished a round) are listed in the player management and can be removed. v0.6.1: the account holder shows the Google picture in the player screens. v0.6.0: statistics tab (spider web per decade), player management, turn log per round. v0.5.1: audio as AAC (.m4a), exotics off by default, song_104 removed. v0.5.0: resume after reload, Einspruch, decades + recent-song avoidance, round length, teams, song info (cover/album/fact). v0.4.0: login + approval queue, server-side account data, frontend redesign (Material 3 Expressive, "vinyl magenta").
+**Current version**: v0.8.0 (2026-10) — renamed from **mxster** to **mxtape** (see "Rename" under Deployment). v0.7.2: room links (QR code) always load from the network, so an older cached app no longer sends them to the start page. v0.7.1: snapshots hide the year before the reveal, stored online results are checked. v0.7.0: multiplayer: everyone on their own device, in one room or remote; guests by link without an account; friends and invitations. v0.6.4: where a card sits is shown as a picture: position strip in the dock, coloured neighbour years on the board. v0.6.3: placed cards stay visible while an objection is open (per-song layout ids). v0.6.2: people who only have achievements (never finished a round) are listed in the player management and can be removed. v0.6.1: the account holder shows the Google picture in the player screens. v0.6.0: statistics tab (spider web per decade), player management, turn log per round. v0.5.1: audio as AAC (.m4a), exotics off by default, song_104 removed. v0.5.0: resume after reload, Einspruch, decades + recent-song avoidance, round length, teams, song info (cover/album/fact). v0.4.0: login + approval queue, server-side account data, frontend redesign (Material 3 Expressive, "vinyl magenta").
 **Song database** (300 songs, 1950s–2020s; 39 marked `exotic: true` — little-known club tracks, remixes, rarities; drawn only when the round option „Exoten“ is on): source of truth `docs/songs.json` (with `album`), facts in `docs/song-facts.json`; both are merged into `pwa/src/data/songs.ts` by `node scripts/song-management/sync-songs-ts.js` (never edit songs.ts by hand). Covers live next to the audio files as `audio/covers/<id>.jpg` (gitignored locally, gated by nginx like the audio). Song data comes from MusicBrainz / Cover Art Archive — **no Spotify anywhere**; the old `spotifyId` values are only kept as stable keys, new songs have none.
-**Live**: https://mxster.celox.io (VPS 69.62.121.168)
+**Live**: https://mxtape.celox.io (VPS 69.62.121.168)
 
 ### Key Technologies
 - **Frontend** (`pwa/`): React 19 + TypeScript + Vite 5 + Tailwind 3.4, `motion` (motion.dev, `m.*` via LazyMotion), react-router 7 data router, Howler.js, vite-plugin-pwa
-- **Backend** (`server/`): FastAPI + SQLAlchemy 2 + SQLite (WAL), uvicorn, systemd `mxster-api` on 127.0.0.1:4274
+- **Backend** (`server/`): FastAPI + SQLAlchemy 2 + SQLite (WAL), uvicorn, systemd `mxtape-api` on 127.0.0.1:4274
 - **Auth**: server-side Google OAuth (code flow + PKCE), httpOnly session cookie `mx_session`, CSRF header `X-CSRF-Token`
 - **Tests**: Vitest + Testing Library (pwa), pytest (server), `test-integrity.js` (song data, repo root)
 
@@ -55,12 +55,12 @@ node scripts/song-management/sync-songs-ts.js                          # songs.j
 cd scripts/audio-hosting && node download-songs.js && node upload-to-vps.js && node validate-audio.js --full   # details: scripts/audio-hosting/README.md
 ```
 **Audio format** (since v0.5.1): AAC-LC 96 kbit/s `.m4a`, cut at 4:00 with a 3 s fade, no metadata, `+faststart` — one place: `scripts/audio-hosting/encode.js` (`encodeForGame`, also a CLI that converts any leftover source file). The cut is safe because the random start lies within the first 2:30 (`RANDOM_START_MAX_S`). Collection: 300 files, ~790 MB (was 1.3 GB as 128 kbit/s MP3). nginx must map `m4a` to `audio/mp4` (the `/audio/` location sets its own `types`). `audioSrc()` maps old `.mp3` URLs from rounds saved before v0.5.1 to `.m4a`.
-Audio files and covers live on the VPS in `/var/www/html/mxster/audio/` (+ `audio/covers/`, never touched by the web deploy) and locally in the gitignored `pwa/public/audio/` (served by Vite in dev, unauthenticated). Upload new files with rsync (`rsync -a pwa/public/audio/ root@69.62.121.168:/var/www/html/mxster/audio/`, then `chown -R www-data:www-data`).
+Audio files and covers live on the VPS in `/var/www/html/mxtape/audio/` (+ `audio/covers/`, never touched by the web deploy) and locally in the gitignored `pwa/public/audio/` (served by Vite in dev, unauthenticated). Upload new files with rsync (`rsync -a pwa/public/audio/ root@69.62.121.168:/var/www/html/mxtape/audio/`, then `chown -R www-data:www-data`).
 
 ## Architecture
 
 ### Access model (server/)
-- `GET /api/auth/login` → Google → `GET /api/auth/callback`: ID token checked (`aud`, `iss`, `exp`, `email_verified`), user upserted. **New users start `pending`** and trigger a mail to `NOTIFY_EMAIL`; addresses in `MXSTER_ADMIN_EMAILS` (martinpaush@gmail.com) are approved on the spot and can never be locked out.
+- `GET /api/auth/login` → Google → `GET /api/auth/callback`: ID token checked (`aud`, `iss`, `exp`, `email_verified`), user upserted. **New users start `pending`** and trigger a mail to `NOTIFY_EMAIL`; addresses in `MXTAPE_ADMIN_EMAILS` (martinpaush@gmail.com) are approved on the spot and can never be locked out.
 - Statuses: `pending | approved | rejected | blocked`. Reject/block delete the user's sessions.
 - `GET /api/session` → `{me: … | null}` (the client's source of truth, 200 even when signed out); `GET /api/me` (401 when signed out).
 - `/api/admin/*` answers **404** to everyone but admins (existence not revealed); every decision is logged in `admin_actions`.
@@ -125,7 +125,7 @@ Mobile placing (below `lg`, 1024 px):
 - History keeps the last 50 rounds (`GAME_CONFIG.MAX_HISTORY_GAMES`, server doc cap 512 KB); the statistics say so.
 
 ### Audio
-`services/PreviewPlayerService.ts` (Howler, HTML5 audio). `audioSrc()` turns the absolute `previewUrl` (`https://mxster.celox.io/audio/song_XXX.m4a`) into a same-origin path, so the session cookie travels and nginx can gate it. `components/game/Turntable.tsx` owns playback for the game: plays on song change (optional random start), polls position at 4 Hz, stops on unmount.
+`services/PreviewPlayerService.ts` (Howler, HTML5 audio). `audioSrc()` turns the absolute `previewUrl` (`https://mxtape.celox.io/audio/song_XXX.m4a`) into a same-origin path, so the session cookie travels and nginx can gate it. `components/game/Turntable.tsx` owns playback for the game: plays on song change (optional random start), polls position at 4 Hz, stops on unmount.
 
 ## Design System — Material 3 Expressive ("vinyl magenta", v0.4.0)
 
@@ -151,19 +151,26 @@ Mobile placing (below `lg`, 1024 px):
 ## Deployment
 
 - `./scripts/deployment/deploy.sh [all|api|web]` — runs tests first.
-  - **api**: rsync `server/` → `/opt/mxster-api` (no `.venv`, `data`, `.env`, `tests`), system user `mxster`, venv + requirements, installs `server/deploy/mxster-api.service`, restarts, health check.
-  - **web**: tsc + vitest, build, rsync `pwa/dist` (minus `audio/`) via `/tmp` staging into `/var/www/html/mxster`, audio untouched.
-- Secrets **only** in `/opt/mxster-api/.env` (root:mxster 640): `GOOGLE_CLIENT_ID/SECRET`, `SESSION_SECRET` (≥ 32 chars, enforced in prod), `MXSTER_ADMIN_EMAILS`, `PUBLIC_URL=https://mxster.celox.io`, `MX_ENV=prod`, `SMTP_*`, `NOTIFY_EMAIL`. `MX_DEV_LOGIN` must never be set in prod (startup refuses).
-- Google OAuth client (Web application): authorised redirect URI `https://mxster.celox.io/api/auth/callback` (+ `http://127.0.0.1:5174/api/auth/callback` for local tests with real Google).
+  - **api**: rsync `server/` → `/opt/mxtape-api` (no `.venv`, `data`, `.env`, `tests`), system user `mxtape`, venv + requirements, installs `server/deploy/mxtape-api.service`, restarts, health check.
+  - **web**: tsc + vitest, build, rsync `pwa/dist` (minus `audio/`) via `/tmp` staging into `/var/www/html/mxtape`, audio untouched.
+- Secrets **only** in `/opt/mxtape-api/.env` (root:mxtape 640): `GOOGLE_CLIENT_ID/SECRET`, `SESSION_SECRET` (≥ 32 chars, enforced in prod), `MXTAPE_ADMIN_EMAILS`, `PUBLIC_URL=https://mxtape.celox.io`, `MX_ENV=prod`, `SMTP_*`, `NOTIFY_EMAIL`. `MX_DEV_LOGIN` must never be set in prod (startup refuses).
+- Google OAuth client (Web application): authorised redirect URI `https://mxtape.celox.io/api/auth/callback` (+ `http://127.0.0.1:5174/api/auth/callback` for local tests with real Google).
   - Client ID `575245359999-s185k3…apps.googleusercontent.com` (created 2026-10-26; the older client ending in …ttlih is unused). Secret only in the server `.env`.
   - ⚠️ While the consent screen is in **testing mode**, Google rejects every account that is not a listed test user — before our callback runs, so they never reach the waiting list. Publish the app (Audience → Publish); basic scopes need no verification.
-- nginx: vHost `/etc/nginx/sites-available/mxster.celox.io` (symlinked); the `/api/`, `/audio/` (auth_request) and `/_mx_audio_auth` locations are in `server/deploy/nginx-locations.conf`. Edit the file nginx actually loads (`nginx -T`), never while certbot runs. Umami is injected centrally via `sub_filter`.
-- Backup: `/opt/mxster-api/data/mxster.db` is picked up by the dynamic SQLite search in `vps-data-backup.sh` (`.backup`, not copied).
-- ⚠️ **Touch the live database only as the service user** (`sudo -u mxster sqlite3 …`). Run as root, SQLite creates `mxster.db-wal`/`-shm` owned by root; the running service keeps working through its open files, but the next restart fails with "attempt to write a readonly database" (happened on the 0.7.0 deploy: API down ~4 min, fixed with `chown mxster:mxster mxster.db*`). The sqlite3 CLI does not enforce foreign keys either — deleting rooms by hand leaves `room_members` behind.
+- nginx: vHost `/etc/nginx/sites-available/mxtape.celox.io` (symlinked); the `/api/`, `/audio/` (auth_request) and `/_mx_audio_auth` locations are in `server/deploy/nginx-locations.conf`. Edit the file nginx actually loads (`nginx -T`), never while certbot runs. Umami is injected centrally via `sub_filter`.
+- Backup: `/opt/mxtape-api/data/mxtape.db` is picked up by the dynamic SQLite search in `vps-data-backup.sh` (`.backup`, not copied).
+- ⚠️ **Touch the live database only as the service user** (`sudo -u mxtape sqlite3 …`). Run as root, SQLite creates `mxtape.db-wal`/`-shm` owned by root; the running service keeps working through its open files, but the next restart fails with "attempt to write a readonly database" (happened on the 0.7.0 deploy: API down ~4 min, fixed with `chown mxtape:mxtape mxtape.db*`). The sqlite3 CLI does not enforce foreign keys either — deleting rooms by hand leaves `room_members` behind.
 - Live check of rooms (verified 2026-10-27, script-driven through the public URL): create 200, guest join sets `mx_guest`, guest `/audio/` 206 while the room is open and 401 after closing, anonymous 401; WebSocket welcome for host and guest, 403 for a foreign Origin and without a cookie, an intent reaches the host with the real seat; search returns no e-mail.
 - Live check after a deploy (verified 2026-10-26): `/` 200, `/api/session` 200 `{"me":null}`, `/api/me` + `/api/admin/users` 401 without session, `/audio/song_001.m4a` 401 without session (206 `audio/mp4` with one — verified 2026-10-27), 206 with an approved session, 401 pending; data 403 pending; admin 404 for non-admins. A probe user for such checks must be deleted afterwards (users + sessions).
-- Mail on the VPS goes via SMTP (`SMTP_*` in `.env`): the service user `mxster` cannot read `/etc/msmtprc`, so `SENDMAIL_PATH` does not work there. `MAIL_FROM` must be quoted in the `.env`.
-- PWA: Workbox cache id `mxster-v10`; `/api/` and `/audio/` are never precached, `/api/` navigations bypass the SW; `/r/` and `/raum/` are excluded from the precache fallback (an older cached shell does not know them and sent scanned invites to the start page). Bump `cacheId` on shell changes.
+- Mail on the VPS goes via SMTP (`SMTP_*` in `.env`): the service user `mxtape` cannot read `/etc/msmtprc`, so `SENDMAIL_PATH` does not work there. `MAIL_FROM` must be quoted in the `.env`.
+- PWA: Workbox cache id `mxtape-v10`; `/api/` and `/audio/` are never precached, `/api/` navigations bypass the SW; `/r/` and `/raum/` are excluded from the precache fallback (an older cached shell does not know them and sent scanned invites to the start page). Bump `cacheId` on shell changes.
+
+### Rename mxster → mxtape (v0.8.0, 2026-10-27)
+- Everything was renamed: domain `mxtape.celox.io` (served with the `*.celox.io` wildcard certificate in `/etc/nginx/ssl/celox-wildcard/`), service `mxtape-api`, system user `mxtape`, `/opt/mxtape-api`, `data/mxtape.db`, web root `/var/www/html/mxtape`, env `MXTAPE_ADMIN_EMAILS`, repo `pepperonas/mxtape` (GitHub redirects the old name). The local working copy is still called `~/claude/mxster`.
+- `mxster.celox.io` is a pure 301 to the same path on mxtape.celox.io (own vHost, keeps its Let's Encrypt certificate) — old links and printed QR codes keep working. Sessions are host-bound, so everyone signed in once more.
+- **Kept on purpose:** the browser storage keys `mxster_*` (running game, settings, history, theme, last options) — renaming them would drop saved rounds and settings on every device. Audio URLs in old saved rounds point to the old domain; `audioSrc()` only uses the path, so they still play.
+- Backups of the switch: DB `/root/mxster-db-bak-20261027-184801-vor-mxtape.db`, old vHost `/root/nginx-backups/mxster.celox.io.bak-20261027-184801-rename`, script `/root/mxtape-migrate.sh`.
+- ⚠️ Two traps hit during the move: a Python venv carries absolute paths and breaks when its folder is moved (`pip: cannot execute`) — delete it and let the deploy recreate it; and `deploy.sh` ran `chown -R root:… $API_ROOT`, which also took the database away from the service (readonly database, probably also the real cause of the 0.7.0 outage) — it now hands `data/` back recursively.
 
 ## Best Practices
 - Song type: `export const songs: Song[] = [...]` (the integrity test parses it with `/export const songs(?:: Song\[\])? = (\[[\s\S]*\])/`).

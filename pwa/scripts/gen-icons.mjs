@@ -83,7 +83,7 @@ const RENDERS = [
 
 for (const [name, body] of Object.entries(SOURCES)) writeFileSync(join(OUT, name), body)
 
-const tmp = mkdtempSync(join(tmpdir(), 'mxster-icons-'))
+const tmp = mkdtempSync(join(tmpdir(), 'mxtape-icons-'))
 try {
   for (const [src, size, out] of RENDERS) {
     const file = join(tmp, `${size}-${src}`)

@@ -14,8 +14,8 @@ import { AUDIO_DIR, AUDIO_EXT, audioFile, encodeForGame, probeSeconds } from './
 
 // Configuration
 const VPS_HOST = 'root@69.62.121.168'
-const VPS_AUDIO_PATH = '/var/www/html/mxster/audio'
-const SELF_HOSTED_BASE_URL = 'https://mxster.celox.io/audio'
+const VPS_AUDIO_PATH = '/var/www/html/mxtape/audio'
+const SELF_HOSTED_BASE_URL = 'https://mxtape.celox.io/audio'
 
 
 /**
@@ -56,7 +56,7 @@ function checkRsync() {
  */
 async function downloadFromYouTube(song) {
   const outputPath = audioFile(song.id)
-  const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'mxster-dl-'))
+  const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'mxtape-dl-'))
   const searchQuery = `${song.artist} - ${song.title} audio`
 
   console.log(`🔍 Searching YouTube: "${searchQuery}"`)

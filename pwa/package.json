@@ -1,7 +1,7 @@
 {
-  "name": "mxster-pwa",
-  "version": "0.7.2",
-  "description": "mxster - Musik-Zeitleisten-Spiel (PWA)",
+  "name": "mxtape-pwa",
+  "version": "0.8.0",
+  "description": "mxtape - Musik-Zeitleisten-Spiel (PWA)",
   "type": "module",
   "scripts": {
     "dev": "vite",

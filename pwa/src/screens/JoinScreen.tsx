@@ -85,7 +85,7 @@ export function JoinScreen() {
           <Vinyl size="100%" spinning={!problem} />
         </div>
         <p className="mt-6 text-poster text-md-on-surface" style={{ fontSize: '2.2rem' }}>
-          mxster
+          mxtape
         </p>
 
         {problem ? (

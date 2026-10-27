@@ -1,3 +1,3 @@
-# mxster is a private, sign-in-only app.
+# mxtape is a private, sign-in-only app.
 User-agent: *
 Disallow: /api/

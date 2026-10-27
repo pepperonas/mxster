@@ -1,14 +1,14 @@
 [Unit]
-Description=mxster API (FastAPI/uvicorn): Google login, approval queue, audio gate
+Description=mxtape API (FastAPI/uvicorn): Google login, approval queue, audio gate
 After=network.target
 
 [Service]
 Type=simple
-User=mxster
-Group=mxster
-WorkingDirectory=/opt/mxster-api
-EnvironmentFile=/opt/mxster-api/.env
-ExecStart=/opt/mxster-api/.venv/bin/uvicorn app.main:app --host 127.0.0.1 --port 4274 --proxy-headers --forwarded-allow-ips 127.0.0.1
+User=mxtape
+Group=mxtape
+WorkingDirectory=/opt/mxtape-api
+EnvironmentFile=/opt/mxtape-api/.env
+ExecStart=/opt/mxtape-api/.venv/bin/uvicorn app.main:app --host 127.0.0.1 --port 4274 --proxy-headers --forwarded-allow-ips 127.0.0.1
 Restart=on-failure
 RestartSec=3
 UMask=0027
@@ -24,7 +24,7 @@ ProtectKernelModules=true
 ProtectControlGroups=true
 RestrictSUIDSGID=true
 LockPersonality=true
-ReadWritePaths=/opt/mxster-api/data
+ReadWritePaths=/opt/mxtape-api/data
 # msmtp (sendmail) keeps a log/queue under /var/log; allow nothing else
 
 [Install]

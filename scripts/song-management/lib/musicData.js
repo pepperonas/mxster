@@ -16,7 +16,7 @@ import fs from 'fs'
 import path from 'path'
 import { execFileSync } from 'child_process'
 
-const UA = 'mxster-songdata/1.0 (martin.pfeffer@celox.io)'
+const UA = 'mxtape-songdata/1.0 (martin.pfeffer@celox.io)'
 let lastMb = 0
 
 async function mbGet(url) {

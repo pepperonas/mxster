@@ -14,7 +14,7 @@ class Settings(BaseSettings):
     mx_env: str = "dev"  # dev | test | prod
     public_url: str = "http://localhost:5174"  # origin the browser sees (vite proxies /api in dev)
     mx_port: int = 4274
-    mx_db_path: str = "data/mxster.db"
+    mx_db_path: str = "data/mxtape.db"
 
     google_client_id: str = ""
     google_client_secret: str = ""
@@ -22,7 +22,7 @@ class Settings(BaseSettings):
     session_secret: str = ""
     session_ttl_hours: int = 720
 
-    mxster_admin_emails: str = "martinpaush@gmail.com"
+    mxtape_admin_emails: str = "martinpaush@gmail.com"
     # Dev-only fake login (hard-refused in prod) so the UI can be driven locally.
     mx_dev_login: bool = False
 
@@ -32,7 +32,7 @@ class Settings(BaseSettings):
     smtp_port: int = 465
     smtp_user: str = ""
     smtp_pass: str = ""
-    mail_from: str = "mxster <support@celox.io>"
+    mail_from: str = "mxtape <support@celox.io>"
     notify_email: str = "martinpaush@gmail.com"
 
     # Upper bound for one stored document (history / achievements / settings).
@@ -40,7 +40,7 @@ class Settings(BaseSettings):
 
     @property
     def admin_emails(self) -> set[str]:
-        return {e.strip().lower() for e in self.mxster_admin_emails.split(",") if e.strip()}
+        return {e.strip().lower() for e in self.mxtape_admin_emails.split(",") if e.strip()}
 
     @property
     def is_prod(self) -> bool:

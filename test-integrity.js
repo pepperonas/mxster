@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 /**
- * mxster - Integrity Test Suite
+ * mxtape - Integrity Test Suite
  *
  * Basic Tests (Always Run):
  * 1. Song Data Integrity (JSON structure)
@@ -58,7 +58,7 @@ function logInfo(message) {
 }
 
 console.log('\n╔════════════════════════════════════════════╗');
-console.log('║   🧪 mxster Integrity Test Suite 🧪      ║');
+console.log('║   🧪 mxtape Integrity Test Suite 🧪      ║');
 console.log('╚════════════════════════════════════════════╝\n');
 
 // Main async function

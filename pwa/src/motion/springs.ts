@@ -1,5 +1,5 @@
 /**
- * M3 Expressive springs — the single source of truth for motion in mxster.
+ * M3 Expressive springs — the single source of truth for motion in mxtape.
  *
  * Material 3 Expressive specifies motion as physical springs (stiffness k and
  * damping ratio ζ, mass 1). From these parameters we derive:

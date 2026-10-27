@@ -11,11 +11,11 @@ os.environ["PUBLIC_URL"] = "http://localhost:5174"
 os.environ["SESSION_SECRET"] = "test-secret"
 os.environ["GOOGLE_CLIENT_ID"] = "test-client-id"
 os.environ["GOOGLE_CLIENT_SECRET"] = "test-client-secret"
-os.environ["MXSTER_ADMIN_EMAILS"] = "boss@example.com"
+os.environ["MXTAPE_ADMIN_EMAILS"] = "boss@example.com"
 os.environ["MX_DEV_LOGIN"] = "false"
 os.environ["SENDMAIL_PATH"] = ""
 os.environ["SMTP_HOST"] = ""
-os.environ["MX_DB_PATH"] = str(Path(tempfile.mkdtemp(prefix="mxster-test-")) / "test.db")
+os.environ["MX_DB_PATH"] = str(Path(tempfile.mkdtemp(prefix="mxtape-test-")) / "test.db")
 
 from fastapi.testclient import TestClient  # noqa: E402
 

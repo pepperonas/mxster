@@ -30,7 +30,7 @@ export function LoginScreen() {
         </m.div>
 
         <h1 className="hero-wordmark text-poster text-md-on-surface relative" style={{ fontSize: 'clamp(4rem, 22vw, 6.5rem)' }}>
-          mxster
+          mxtape
         </h1>
 
         <m.div

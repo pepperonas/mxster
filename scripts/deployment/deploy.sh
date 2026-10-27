@@ -1,20 +1,20 @@
 #!/bin/bash
-# Deploy mxster to mxster.celox.io
+# Deploy mxtape to mxtape.celox.io
 #
 #   ./scripts/deployment/deploy.sh          # API, then web app
 #   ./scripts/deployment/deploy.sh api      # only the FastAPI backend
 #   ./scripts/deployment/deploy.sh web      # only the PWA
 #
-# The API's secrets live only in /opt/mxster-api/.env on the VPS (see
+# The API's secrets live only in /opt/mxtape-api/.env on the VPS (see
 # server/.env.example); this script never writes them. nginx changes are a
 # one-time manual step (server/deploy/nginx-locations.conf).
 
 set -euo pipefail
 
-APP_NAME="mxster"
+APP_NAME="mxtape"
 VPS_HOST="root@69.62.121.168"
 VPS_ROOT="/var/www/html/$APP_NAME"
-API_ROOT="/opt/mxster-api"
+API_ROOT="/opt/mxtape-api"
 TARGET="${1:-all}"
 
 PROJECT_ROOT="$(cd "$(dirname "$0")/../.." && pwd)"
@@ -32,20 +32,22 @@ deploy_api() {
     "$SERVER_DIR/" "$VPS_HOST:$API_ROOT/"
 
   ssh "$VPS_HOST" "set -e
-    id mxster >/dev/null 2>&1 || useradd --system --home-dir $API_ROOT --shell /usr/sbin/nologin mxster
+    id mxtape >/dev/null 2>&1 || useradd --system --home-dir $API_ROOT --shell /usr/sbin/nologin mxtape
     mkdir -p $API_ROOT/data
-    chown -R root:mxster $API_ROOT && chmod -R g-w,o-rwx $API_ROOT
-    chown mxster:mxster $API_ROOT/data && chmod 750 $API_ROOT/data
+    chown -R root:mxtape $API_ROOT && chmod -R g-w,o-rwx $API_ROOT
+    # The recursive chown above also reached data/: hand the database back to the
+    # service, or the next restart fails with 'attempt to write a readonly database'
+    chown -R mxtape:mxtape $API_ROOT/data && chmod 750 $API_ROOT/data
     test -f $API_ROOT/.env || { echo '❌ $API_ROOT/.env fehlt (siehe server/.env.example)'; exit 1; }
-    chown root:mxster $API_ROOT/.env && chmod 640 $API_ROOT/.env
+    chown root:mxtape $API_ROOT/.env && chmod 640 $API_ROOT/.env
     test -x $API_ROOT/.venv/bin/python || python3 -m venv $API_ROOT/.venv
     $API_ROOT/.venv/bin/pip install -q --upgrade pip
     $API_ROOT/.venv/bin/pip install -q -r $API_ROOT/requirements.txt
-    chown -R root:mxster $API_ROOT/.venv && chmod -R o-rwx $API_ROOT/.venv
-    install -m 644 $API_ROOT/deploy/mxster-api.service /etc/systemd/system/mxster-api.service
+    chown -R root:mxtape $API_ROOT/.venv && chmod -R o-rwx $API_ROOT/.venv
+    install -m 644 $API_ROOT/deploy/mxtape-api.service /etc/systemd/system/mxtape-api.service
     systemctl daemon-reload
-    systemctl enable --quiet mxster-api
-    systemctl restart mxster-api
+    systemctl enable --quiet mxtape-api
+    systemctl restart mxtape-api
     for i in 1 2 3 4 5 6 7 8 9 10; do curl -sf http://127.0.0.1:4274/api/health >/dev/null && break; sleep 1; done
     curl -sf http://127.0.0.1:4274/api/health && echo
   "
@@ -81,4 +83,4 @@ case "$TARGET" in
   *) echo "Usage: $0 [all|api|web]"; exit 1 ;;
 esac
 
-echo "🌐 https://mxster.celox.io"
+echo "🌐 https://mxtape.celox.io"

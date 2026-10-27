@@ -1,5 +1,5 @@
 /**
- * SVG Icon Components for mxster
+ * SVG Icon Components for mxtape
  * Converted to React components for type safety and better integration
  */
 

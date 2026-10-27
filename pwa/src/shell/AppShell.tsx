@@ -56,7 +56,7 @@ function TopBar() {
     <header className="sticky top-0 z-30 bg-md-surface/90 backdrop-blur-md md:hidden" style={{ viewTransitionName: 'top-bar' }}>
       <div className="mx-auto max-w-3xl h-16 px-4 flex items-center justify-between">
         <span className="text-poster text-title-lg" style={{ fontSize: '1.6rem' }}>
-          mxster
+          mxtape
         </span>
         <button type="button" className="icon-btn m3-state-layer" onClick={() => navigate('/profil')} aria-label="Profil">
           <Avatar name={me.name} picture={me.picture} size={36} />

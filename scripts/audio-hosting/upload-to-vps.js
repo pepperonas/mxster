@@ -3,7 +3,7 @@
  * Upload Audio Files to VPS
  *
  * Uploads MP3 files from pwa/public/audio/ to VPS via rsync
- * Target: root@69.62.121.168:/var/www/html/mxster/audio/
+ * Target: root@69.62.121.168:/var/www/html/mxtape/audio/
  *
  * Usage:
  *   node scripts/audio-hosting/upload-to-vps.js
@@ -22,8 +22,8 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url))
 // Configuration
 const LOCAL_AUDIO_DIR = path.join(__dirname, '../../pwa/public/audio/')
 const VPS_HOST = 'root@69.62.121.168'
-const VPS_AUDIO_DIR = '/var/www/html/mxster/audio/'
-const VPS_NGINX_CONF = '/etc/nginx/sites-available/mxster.celox.io'
+const VPS_AUDIO_DIR = '/var/www/html/mxtape/audio/'
+const VPS_NGINX_CONF = '/etc/nginx/sites-available/mxtape.celox.io'
 
 // Parse CLI arguments
 const args = process.argv.slice(2)
@@ -164,7 +164,7 @@ async function checkNginxConfig() {
       log('─'.repeat(60), 'yellow')
       log(`
 location /audio/ {
-    alias /var/www/html/mxster/audio/;
+    alias /var/www/html/mxtape/audio/;
     add_header Cache-Control "public, max-age=31536000";
     add_header Access-Control-Allow-Origin "*";
     add_header Content-Type "audio/mpeg";
@@ -189,7 +189,7 @@ location /audio/ {
 async function testHTTPSAccess(sampleFile) {
   log('🌐 Testing HTTPS access...', 'cyan')
 
-  const testUrl = `https://mxster.celox.io/audio/${sampleFile}`
+  const testUrl = `https://mxtape.celox.io/audio/${sampleFile}`
 
   try {
     await execAsync(`curl -I "${testUrl}" | grep "200 OK"`)
@@ -207,7 +207,7 @@ async function testHTTPSAccess(sampleFile) {
  */
 async function main() {
   log('\n╔══════════════════════════════════════════════════════╗', 'bright')
-  log('║       🚀  mxster Audio Upload Manager  🚀           ║', 'bright')
+  log('║       🚀  mxtape Audio Upload Manager  🚀           ║', 'bright')
   log('╚══════════════════════════════════════════════════════╝\n', 'bright')
 
   if (dryRun) {
@@ -283,7 +283,7 @@ async function main() {
   log(`Total size:       ${totalSizeMB} MB`, 'green')
   log(`Upload time:      ${durationSeconds} seconds`, 'green')
   log(`VPS location:     ${VPS_AUDIO_DIR}`, 'blue')
-  log(`Public URL base:  https://mxster.celox.io/audio/`, 'blue')
+  log(`Public URL base:  https://mxtape.celox.io/audio/`, 'blue')
 
   // Show next steps
   log('\n📋 Next steps:', 'bright')

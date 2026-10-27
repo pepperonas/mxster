@@ -1,6 +1,6 @@
 /**
  * Game Mode Constants and Utilities
- * Defines the three game modes for mxster
+ * Defines the three game modes for mxtape
  */
 
 import type { GameMode, GameModeInfo, Song } from '@/types'

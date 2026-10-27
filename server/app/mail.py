@@ -13,7 +13,7 @@ from email.message import EmailMessage
 
 from app.config import get_settings
 
-log = logging.getLogger("mxster.mail")
+log = logging.getLogger("mxtape.mail")
 
 
 def send(to: str, subject: str, text: str) -> bool:
@@ -48,8 +48,8 @@ def notify_new_request(name: str, email: str) -> None:
     s = get_settings()
     args = (
         s.notify_email,
-        f"mxster: {name or email} möchte mitspielen",
-        f"Neue Anfrage auf mxster:\n\n  {name}\n  {email}\n\n"
+        f"mxtape: {name or email} möchte mitspielen",
+        f"Neue Anfrage auf mxtape:\n\n  {name}\n  {email}\n\n"
         f"Freischalten: {s.public_url.rstrip('/')}/admin\n",
     )
     if BACKGROUND:

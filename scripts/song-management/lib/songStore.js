@@ -17,7 +17,7 @@ export const SONGS_JSON = path.join(ROOT, 'docs/songs.json')
 export const FACTS_JSON = path.join(ROOT, 'docs/song-facts.json')
 export const AUDIO_DIR = path.join(ROOT, 'pwa/public/audio')
 export const COVER_DIR = path.join(AUDIO_DIR, 'covers')
-export const PUBLIC_AUDIO_URL = 'https://mxster.celox.io/audio'
+export const PUBLIC_AUDIO_URL = 'https://mxtape.celox.io/audio'
 
 export function loadSongs() {
   return JSON.parse(fs.readFileSync(SONGS_JSON, 'utf8'))

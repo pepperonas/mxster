@@ -1,10 +1,12 @@
-# mxster
+# mxtape
 
-Song hören, Jahr raten, an die richtige Stelle der Zeitleiste legen. Ein Musikspiel für eure Runde, gespielt auf einem Gerät.
+Song hören, Jahr raten, an die richtige Stelle der Zeitleiste legen. Ein Musikspiel für eure Runde – auf einem Gerät oder jeder auf seinem eigenen, im selben Raum oder von zu Hause.
 
-[![App](https://img.shields.io/badge/mxster.celox.io-B90C55?style=for-the-badge&logo=googlechrome&logoColor=white)](https://mxster.celox.io)
-[![Version](https://img.shields.io/badge/v0.7.2-B90C55?style=for-the-badge&logo=semver&logoColor=white)](https://github.com/pepperonas/mxster/releases)
-[![Tests](https://github.com/pepperonas/mxster/actions/workflows/ci.yml/badge.svg)](https://github.com/pepperonas/mxster/actions/workflows/ci.yml)
+> Bis Oktober 2026 hieß das Spiel **mxster** (mxster.celox.io). Die alte Adresse leitet dauerhaft auf mxtape.celox.io weiter, alte Links und QR-Codes funktionieren also weiter.
+
+[![App](https://img.shields.io/badge/mxtape.celox.io-B90C55?style=for-the-badge&logo=googlechrome&logoColor=white)](https://mxtape.celox.io)
+[![Version](https://img.shields.io/badge/v0.8.0-B90C55?style=for-the-badge&logo=semver&logoColor=white)](https://github.com/pepperonas/mxtape/releases)
+[![Tests](https://github.com/pepperonas/mxtape/actions/workflows/ci.yml/badge.svg)](https://github.com/pepperonas/mxtape/actions/workflows/ci.yml)
 
 ![React](https://img.shields.io/badge/React_19-61DAFB?style=flat-square&logo=react&logoColor=black)
 ![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=flat-square&logo=typescript&logoColor=white)
@@ -15,7 +17,7 @@ Song hören, Jahr raten, an die richtige Stelle der Zeitleiste legen. Ein Musiks
 
 ## Zugang
 
-mxster ist eine private App. Man meldet sich mit einem Google-Konto an; neue Konten landen auf einer Warteliste und werden einzeln freigeschaltet. Erst danach sind Spiel und Musik erreichbar — auch die Musikdateien liefert der Server nur an freigeschaltete Sitzungen aus.
+mxtape ist eine private App. Man meldet sich mit einem Google-Konto an; neue Konten landen auf einer Warteliste und werden einzeln freigeschaltet. Erst danach sind Spiel und Musik erreichbar — auch die Musikdateien liefert der Server nur an freigeschaltete Sitzungen aus.
 
 ## Spielmodi
 
@@ -121,9 +123,9 @@ Daten kommen von MusicBrainz, dem Cover Art Archive und iTunes; Spotify wird nic
 ./scripts/deployment/deploy.sh web    # nur PWA
 ```
 
-Einmalig auf dem Server: Geheimnisse in `/opt/mxster-api/.env` (Vorlage `server/.env.example`) und die nginx-Locations aus `server/deploy/nginx-locations.conf`.
+Einmalig auf dem Server: Geheimnisse in `/opt/mxtape-api/.env` (Vorlage `server/.env.example`) und die nginx-Locations aus `server/deploy/nginx-locations.conf`.
 
-Der Google-OAuth-Client (Typ Webanwendung) braucht die Weiterleitungs-URI `https://mxster.celox.io/api/auth/callback`. Solange der Zustimmungsbildschirm im **Testmodus** steht, lässt Google nur die dort eingetragenen Testnutzer durch – alle anderen scheitern schon bei Google und erreichen die Warteliste nie. Für den Betrieb also unter „Zielgruppe“ die App veröffentlichen (für `openid email profile` ohne Prüfung).
+Der Google-OAuth-Client (Typ Webanwendung) braucht die Weiterleitungs-URI `https://mxtape.celox.io/api/auth/callback`. Solange der Zustimmungsbildschirm im **Testmodus** steht, lässt Google nur die dort eingetragenen Testnutzer durch – alle anderen scheitern schon bei Google und erreichen die Warteliste nie. Für den Betrieb also unter „Zielgruppe“ die App veröffentlichen (für `openid email profile` ohne Prüfung).
 
 ## Lizenz
 

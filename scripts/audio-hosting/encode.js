@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * The one audio format mxster plays: AAC-LC, 96 kbit/s, in an .m4a container.
+ * The one audio format mxtape plays: AAC-LC, 96 kbit/s, in an .m4a container.
  *
  *  - AAC at 96 kbit/s sounds like the old 128 kbit/s MP3s and is a quarter smaller.
  *  - Songs are cut at 4:00 with a 3 s fade-out. A turn never needs more: the

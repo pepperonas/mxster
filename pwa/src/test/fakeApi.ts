@@ -1,5 +1,5 @@
 /**
- * Minimal stand-in for the mxster API in tests: /api/data/{kind} with the
+ * Minimal stand-in for the mxtape API in tests: /api/data/{kind} with the
  * server's versioning (409 + current document on a stale write).
  */
 type Doc = { version: number; data: unknown }

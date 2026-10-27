@@ -16,8 +16,8 @@ export default defineConfig({
       registerType: 'autoUpdate',
       includeAssets: [],
       manifest: {
-        name: 'mxster',
-        short_name: 'mxster',
+        name: 'mxtape',
+        short_name: 'mxtape',
         description: 'Song hören, Jahr raten, an die richtige Stelle der Zeitleiste legen.',
         // Mirrored from design-tokens.css: dark surface (neutral-6)
         theme_color: '#191113',
@@ -36,7 +36,7 @@ export default defineConfig({
         // Never precache audio: /audio/ needs a signed-in session (nginx auth_request)
         globPatterns: ['**/*.{js,css,html,ico,svg,woff2}'],
         globIgnores: ['**/assets/**/*.png', 'audio/**'],
-        cacheId: 'mxster-v10',
+        cacheId: 'mxtape-v10',
         cleanupOutdatedCaches: true,
         // Navigation fallback - always serve index.html for SPA routes
         navigateFallback: '/index.html',

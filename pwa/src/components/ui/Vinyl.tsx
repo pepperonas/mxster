@@ -1,5 +1,5 @@
 /**
- * The vinyl record — mxster's one signature element.
+ * The vinyl record — mxtape's one signature element.
  *
  * The disc (grooves + label) rotates while `spinning`; the light reflection
  * sits in a second, static layer on top, the way a real record catches the

@@ -28,7 +28,7 @@ from app.security import (
     unsign_payload,
 )
 
-log = logging.getLogger("mxster.auth")
+log = logging.getLogger("mxtape.auth")
 router = APIRouter(prefix="/api")
 
 STATE_PATH = "/api/auth"

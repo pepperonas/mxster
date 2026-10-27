@@ -62,7 +62,7 @@ export function DecadeProfile({ people }: { people: PlayerSummary[] }) {
 
       {metric === 'rate' && !hasRates ? (
         <p className="rounded-m3-lg bg-md-surface-container p-4 text-body-md text-md-on-surface-variant">
-          Trefferquoten gibt es ab der nächsten Runde: Erst seit dieser Version merkt sich mxster auch die falschen Karten.
+          Trefferquoten gibt es ab der nächsten Runde: Erst seit dieser Version merkt sich mxtape auch die falschen Karten.
         </p>
       ) : (
         <>
