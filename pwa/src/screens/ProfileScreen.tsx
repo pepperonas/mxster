@@ -12,7 +12,7 @@ import { toggleThemeWithReveal } from '@/utils/themeReveal'
 import { api } from '@/api/client'
 import { LegalLinks } from './LegalLinks'
 
-const VERSION = '0.7.1'
+const VERSION = '0.7.2'
 
 export function ProfileScreen() {
   const me = useMe()

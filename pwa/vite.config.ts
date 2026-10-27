@@ -36,7 +36,7 @@ export default defineConfig({
         // Never precache audio: /audio/ needs a signed-in session (nginx auth_request)
         globPatterns: ['**/*.{js,css,html,ico,svg,woff2}'],
         globIgnores: ['**/assets/**/*.png', 'audio/**'],
-        cacheId: 'mxster-v9',
+        cacheId: 'mxster-v10',
         cleanupOutdatedCaches: true,
         // Navigation fallback - always serve index.html for SPA routes
         navigateFallback: '/index.html',
@@ -44,6 +44,10 @@ export default defineConfig({
           // Don't use fallback for these patterns
           /^\/api\//,
           /^\/audio\//,
+          // Room links must come from the network: an older cached shell does not
+          // know these routes and would send a scanned invite to the start page
+          /^\/r\//,
+          /^\/raum\//,
           /\.[a-zA-Z0-9]+$/ // Files with extensions (except HTML)
         ],
         runtimeCaching: [
