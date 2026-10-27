@@ -37,7 +37,7 @@ import { isRoundOver } from './roundEnd'
 import { pickSong, songKey } from './songPool'
 import { eligibleChallengers, resolveChallenge, type ChallengeClaim } from './challenge'
 import { isTeam } from './teams'
-import type { TurnPhase } from './turn'
+import { deriveTurn } from './deriveTurn'
 import { guessRecord, placementRecord } from './turnRecord'
 
 export type { Reveal, TurnPhase } from './turn'
@@ -110,20 +110,16 @@ export function useTurnFlow({ onGameOver, onSkipNotice }: Options) {
     [logTurn]
   )
 
-  const phase: TurnPhase = gameOver
-    ? 'over'
-    : reveal
-      ? 'revealed'
-      : pending
-        ? 'challenge'
-        : !currentSong
-          ? 'idle'
-          : gameMode === 'hardcore'
-            ? 'guessing'
-            : 'placing'
-
-  const activePlayer: Player | undefined = players[currentPlayer]
-  const activeTimeline = timelineSongsFor(gameMode, activePlayer, globalTimeline)
+  const { phase, activePlayer, activeTimeline } = deriveTurn({
+    gameMode,
+    players,
+    currentPlayer,
+    currentSong,
+    globalTimeline,
+    reveal,
+    pending,
+    finished: gameOver
+  })
 
   // Achievements belong to people: a team's results are not credited to anyone
   const teamNames = players.filter(isTeam).map((p) => p.name)

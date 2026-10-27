@@ -24,6 +24,12 @@ import { getPreviewPlayer } from '@/services/PreviewPlayerService'
 import { spring } from '@/motion/springs'
 import type { Player, Song } from '@/types'
 import { correctGapIndices, gapLabel } from '@/game/placement'
+import { useRoom } from '@/online/RoomContext'
+import { useRemoteTurnFlow } from '@/online/useRemoteTurnFlow'
+import { useHostBridge } from '@/online/useHostBridge'
+import { mayAct } from '@/online/rules'
+import { roomApi } from '@/online/roomApi'
+import type { Intent } from '@/online/protocol'
 
 /** Set while we leave on purpose, so the "nothing to play" guard stays quiet. */
 let leaving = false
@@ -49,10 +55,22 @@ export function GameScreen() {
   return <GameRound key={round} onRematch={() => setRound((r) => r + 1)} />
 }
 
-function GameRound({ onRematch }: { onRematch: () => void }) {
+const noop = () => {}
+
+/**
+ * One round on screen. Offline it drives the local flow; in an online room
+ * the host's device does the same and shares it (useHostBridge), a player's
+ * device mirrors the host and sends intents (useRemoteTurnFlow). Every control
+ * asks `can()` whether this device may use it right now.
+ */
+export function GameRound({ onRematch }: { onRematch: () => void }) {
   const navigate = useAppNavigate()
-  const { showModal, closeModal } = useUI()
+  const { showModal, closeModal, addToast } = useUI()
   const { gameMode, players, currentPlayer, currentSong, resetGame, rematch, tiebreak, goal } = useGame()
+  const room = useRoom()
+  const online = Boolean(room && room.seat !== null)
+  const onlineHost = online && room!.role === 'host'
+  const onlinePlayer = online && room!.role === 'player'
 
   const [previewGap, setPreviewGap] = useState<number | null>(null)
   const [hoverGap, setHoverGap] = useState<number | null>(null)
@@ -63,9 +81,11 @@ function GameRound({ onRematch }: { onRematch: () => void }) {
     leaving = true
     getPreviewPlayer().stop()
     await closeModal()
+    // The host ends the room for everyone; a player just leaves it
+    if (onlineHost && room) await roomApi.setStatus(room.code, 'closed').catch(() => {})
     resetGame()
     navigate('/', { replace: true })
-  }, [closeModal, resetGame, navigate])
+  }, [closeModal, resetGame, navigate, onlineHost, room])
 
   const showSkipNotice = useCallback(
     (notice: SkipNotice, acknowledge: () => void) => {
@@ -97,14 +117,33 @@ function GameRound({ onRematch }: { onRematch: () => void }) {
     [showModal]
   )
 
-  const flow = useTurnFlow({
+  const localFlow = useTurnFlow({
     onGameOver: (winner, finalPlayers) => {
       getPreviewPlayer().stop()
       setResult({ winner, players: finalPlayers })
     },
-    onSkipNotice: showSkipNotice
+    // Online the skip is someone else's: no dialog on the host's device
+    onSkipNotice: online
+      ? (notice, acknowledge) => {
+          if (notice.kind === 'penalty') addToast(`Zu oft übersprungen: 3 Punkte Abzug (jetzt ${notice.newScore})`, 'warning')
+          acknowledge()
+        }
+      : showSkipNotice
   })
+  const remoteFlow = useRemoteTurnFlow(room?.sendIntent ?? (noop as (i: Intent) => void))
+  const flow = onlinePlayer ? remoteFlow : localFlow
+  useHostBridge(localFlow, result ? { ...result, effects: [] } : null)
+  // Players see the end of the round when the host's snapshot says so
+  const shownResult = onlinePlayer ? (room?.result ?? null) : result
+  useEffect(() => {
+    if (onlinePlayer && room?.result) getPreviewPlayer().stop()
+  }, [onlinePlayer, room?.result])
+
   const { phase, reveal, pending, activePlayer, activeTimeline, isBotThinking } = flow
+  /** May this device do that now? Always yes on a single device. */
+  const can = (action: Intent['action']) =>
+    !online || mayAct({ phase, players, currentPlayer, pending, reveal }, room!.seat!, action, onlineHost)
+  const isMine = (index: number) => !online || players[index]?.seat === room!.seat
   const choosing = phase === 'challenge' && pending?.choosing != null ? pending.choosing : null
 
   // Phones: while a song is on the platter the player shrinks into a sticky
@@ -140,8 +179,10 @@ function GameRound({ onRematch }: { onRematch: () => void }) {
 
   const isTimelineMode = gameMode !== 'hardcore'
   const humanTurn = !activePlayer.isBot
-  const humanPlacing = isTimelineMode && phase === 'placing' && humanTurn
-  const challengeChoosing = choosing !== null
+  const humanPlacing = isTimelineMode && phase === 'placing' && humanTurn && can('place')
+  const challengeChoosing = choosing !== null && can('claim')
+  const who = turnName(activePlayer)
+  const nameAt = (index: number | null | undefined) => (index == null ? '' : (players[index]?.name ?? ''))
 
   const placementReveal = reveal?.kind === 'placement' ? reveal : null
   const challenge = placementReveal?.challenge ?? null
@@ -162,26 +203,35 @@ function GameRound({ onRematch }: { onRematch: () => void }) {
           cards: placementReveal.cardsAfter,
           playerName: players[placementReveal.playerIndex]?.name ?? '',
           challenge: challenge ? { name: players[challenge.playerIndex]?.name ?? '', won: challenge.won } : null,
-          rightPlace: rightPlaceFor(placementReveal.isCorrect, placementReveal.song)
+          rightPlace: rightPlaceFor(placementReveal.isCorrect, placementReveal.song),
+          continueBy: can('continue') ? undefined : nameAt(placementReveal.playerIndex)
         }
       : phase === 'challenge' && pending
-        ? challengeChoosing
-          ? { kind: 'challenge-choose', challengerName: players[choosing!]?.name ?? '', previewGap, timeline: activeTimeline }
+        ? choosing !== null
+          ? challengeChoosing
+            ? { kind: 'challenge-choose', challengerName: nameAt(choosing), previewGap, timeline: activeTimeline }
+            : { kind: 'waiting', text: `${nameAt(choosing)} legt Einspruch ein und wählt eine Lücke` }
           : {
               kind: 'challenge-offer',
               placerName: turnName(players[pending.playerIndex] ?? activePlayer),
-              challengers: pending.challengers.map((seat) => ({
-                seat,
-                name: players[seat]?.name ?? '',
-                left: players[seat]?.challenges ?? 0
-              })),
+              // Online every device offers only its own objection
+              challengers: pending.challengers
+                .filter((seat) => isMine(seat))
+                .map((seat) => ({
+                  seat,
+                  name: players[seat]?.name ?? '',
+                  left: players[seat]?.challenges ?? 0
+                })),
               timeline: activeTimeline,
-              gap: pending.gapIndex
+              gap: pending.gapIndex,
+              revealBy: can('reveal') ? undefined : turnName(players[pending.playerIndex] ?? activePlayer)
             }
         : phase === 'placing' && currentSong
-          ? humanTurn
-            ? { kind: 'placing', song: currentSong, previewGap, timeline: activeTimeline }
-            : { kind: 'bot', playerName: activePlayer.name }
+          ? !humanTurn
+            ? { kind: 'bot', playerName: activePlayer.name }
+            : humanPlacing
+              ? { kind: 'placing', song: currentSong, previewGap, timeline: activeTimeline }
+              : { kind: 'waiting', text: `${who} ist dran und legt auf dem eigenen Gerät` }
           : null
 
   // Shared timeline: a won objection puts the card on the board — show it there
@@ -205,12 +255,20 @@ function GameRound({ onRematch }: { onRematch: () => void }) {
           : null
 
   const confirmLeave = () =>
-    showModal('Spiel beenden?', <p className="text-body-lg">Der Spielstand dieser Runde geht verloren.</p>, [
-      { text: 'Weiterspielen' },
-      { text: 'Beenden', variant: 'danger', closeOnClick: false, onClick: () => void leaveGame() }
-    ])
+    onlinePlayer
+      ? showModal('Raum verlassen?', <p className="text-body-lg">Die anderen spielen ohne dich weiter. Über den Link kommst du zurück.</p>, [
+          { text: 'Bleiben' },
+          { text: 'Verlassen', variant: 'danger', closeOnClick: false, onClick: () => void leaveGame() }
+        ])
+      : showModal(
+          onlineHost ? 'Runde für alle beenden?' : 'Spiel beenden?',
+          <p className="text-body-lg">{onlineHost ? 'Der Raum wird geschlossen, alle anderen fliegen raus.' : 'Der Spielstand dieser Runde geht verloren.'}</p>,
+          [
+            { text: 'Weiterspielen' },
+            { text: 'Beenden', variant: 'danger', closeOnClick: false, onClick: () => void leaveGame() }
+          ]
+        )
 
-  const who = turnName(activePlayer)
   const drawLabel = activePlayer.isBot
     ? `Song für ${who} ziehen`
     : activePlayer.members
@@ -245,14 +303,23 @@ function GameRound({ onRematch }: { onRematch: () => void }) {
             <div ref={playerBarRef} data-player-bar className={compactPlayer ? 'sticky top-16 z-20' : ''}>
             <Turntable
               compact={compactPlayer}
-              caption={activePlayer.isBot ? `${who} ist dran` : `${who}, du bist dran`}
+              caption={activePlayer.isBot || (online && !isMine(currentPlayer)) ? `${who} ist dran` : `${who}, du bist dran`}
               song={currentSong}
               revealYear={revealYear}
               revealCorrect={revealCorrect}
               revealCover={reveal ? coverSrc(reveal.song) : null}
-              onDraw={phase === 'idle' ? () => void flow.drawSong() : undefined}
+              onDraw={phase === 'idle' && can('draw') ? () => void flow.drawSong() : undefined}
               drawLabel={drawLabel}
+              audioRole={!online ? 'local' : onlineHost ? 'host' : room!.info?.music === 'everyone' ? 'follow' : 'silent'}
+              cue={room?.cue ?? null}
+              clockOffset={room?.clockOffset}
+              onCue={onlineHost ? room!.sendAudio : undefined}
             />
+            {online && phase === 'idle' && !can('draw') && (
+              <p className="text-center text-body-md text-md-on-surface-variant" role="status">
+                {who} zieht den nächsten Song
+              </p>
+            )}
             </div>
 
             {gameMode === 'hardcore' && (
@@ -265,7 +332,12 @@ function GameRound({ onRematch }: { onRematch: () => void }) {
                     breakdown={reveal.breakdown}
                     playerName={players[reveal.playerIndex]?.name ?? ''}
                     onContinue={flow.continueTurn}
+                    continueBy={can('continue') ? undefined : nameAt(reveal.playerIndex)}
                   />
+                ) : phase === 'guessing' && online && !can('guess') ? (
+                  <p key="waiting" className="surface p-5 text-center text-body-lg text-md-on-surface-variant" role="status">
+                    {who} rät auf dem eigenen Gerät
+                  </p>
                 ) : phase === 'guessing' && humanTurn ? (
                   <m.div
                     key={`form-${currentPlayer}`}
@@ -322,16 +394,22 @@ function GameRound({ onRematch }: { onRematch: () => void }) {
       <FeedbackLayer reveal={reveal} />
 
       <AnimatePresence>
-        {result && (
+        {shownResult && (
           <GameOver
-            winner={result.winner}
-            players={result.players}
+            winner={shownResult.winner}
+            players={shownResult.players}
             mode={gameMode}
-            onRematch={() => {
-              rematch()
-              onRematch()
-            }}
+            onRematch={
+              onlinePlayer
+                ? undefined
+                : () => {
+                    rematch()
+                    onRematch()
+                  }
+            }
+            rematchBy={onlinePlayer ? (room?.members.find((m) => m.host)?.name ?? 'der Gastgeber') : undefined}
             onHome={() => void leaveGame()}
+            homeLabel={onlineHost ? 'Raum schließen' : onlinePlayer ? 'Raum verlassen' : undefined}
           />
         )}
       </AnimatePresence>

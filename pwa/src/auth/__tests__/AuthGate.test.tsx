@@ -4,6 +4,8 @@ import { MotionTestProvider } from '@/test/MotionTestProvider'
 import { AuthProvider } from '../AuthContext'
 import { AuthGate } from '../AuthGate'
 import { fakeApiFetch } from '@/test/fakeApi'
+import { MemoryRouter } from 'react-router-dom'
+import { isRoomPath } from '../AuthGate'
 
 const me = (status: string) => ({
   id: 1,
@@ -30,15 +32,17 @@ function serveSession(...answers: Array<ReturnType<typeof me> | null>) {
   )
 }
 
-const renderGate = () =>
+const renderGate = (path = '/') =>
   render(
-    <MotionTestProvider>
-      <AuthProvider>
-        <AuthGate>
-          <p>DIE APP</p>
-        </AuthGate>
-      </AuthProvider>
-    </MotionTestProvider>
+    <MemoryRouter initialEntries={[path]}>
+      <MotionTestProvider>
+        <AuthProvider>
+          <AuthGate>
+            <p>DIE APP</p>
+          </AuthGate>
+        </AuthProvider>
+      </MotionTestProvider>
+    </MemoryRouter>
   )
 
 afterEach(() => {
@@ -88,5 +92,25 @@ describe('AuthGate', () => {
     vi.stubGlobal('fetch', vi.fn(async () => { throw new TypeError('offline') }))
     renderGate()
     expect(await screen.findByText('Keine Verbindung.')).toBeTruthy()
+  })
+
+  it('lets anyone onto a room link, as a guest', async () => {
+    serveSession(null)
+    renderGate('/r/ABCD2345')
+    expect(await screen.findByText('DIE APP')).toBeInTheDocument()
+  })
+
+  it('a pending account plays a room as a guest too, but nothing else', async () => {
+    serveSession(me('pending'))
+    renderGate('/raum/ABCD2345')
+    expect(await screen.findByText('DIE APP')).toBeInTheDocument()
+  })
+
+  it('only room links are open', () => {
+    expect(isRoomPath('/r/ABCD2345')).toBe(true)
+    expect(isRoomPath('/raum/ABCD2345')).toBe(true)
+    expect(isRoomPath('/verlauf')).toBe(false)
+    expect(isRoomPath('/r/ABCD/extra')).toBe(false)
+    expect(isRoomPath('/admin')).toBe(false)
   })
 })

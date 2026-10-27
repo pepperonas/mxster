@@ -20,6 +20,8 @@ interface GuessResultProps {
   breakdown: GuessBreakdown
   playerName: string
   onContinue: () => void
+  /** Online: who continues, when it is not this device. */
+  continueBy?: string
 }
 
 const HEADLINE = {
@@ -32,7 +34,7 @@ const HEADLINE = {
 
 const STAGGER = 0.11
 
-export function GuessResult({ song, check, breakdown, playerName, onContinue }: GuessResultProps) {
+export function GuessResult({ song, check, breakdown, playerName, onContinue, continueBy }: GuessResultProps) {
   const tier = guessTier(breakdown.total)
   const continueRef = useRef<HTMLButtonElement>(null)
   useEffect(() => {
@@ -120,9 +122,13 @@ export function GuessResult({ song, check, breakdown, playerName, onContinue }: 
           +<AnimatedNumber value={breakdown.total} from={0} />
           <span className="ml-2 text-title-md text-md-on-surface-variant">{breakdown.total === 1 ? 'Punkt' : 'Punkte'}</span>
         </m.p>
-        <button ref={continueRef} type="button" onClick={onContinue} className="btn btn-brand">
-          Weiter
-        </button>
+        {continueBy ? (
+          <p className="text-body-sm text-md-on-surface-variant">Weiter geht es bei {continueBy}</p>
+        ) : (
+          <button ref={continueRef} type="button" onClick={onContinue} className="btn btn-brand">
+            Weiter
+          </button>
+        )}
       </div>
     </m.section>
   )

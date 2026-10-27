@@ -12,6 +12,8 @@ import { HistoryScreen, HistoryDetailScreen } from '@/screens/HistoryScreen'
 import { AchievementsScreen } from '@/screens/AchievementsScreen'
 import { StatisticsScreen } from '@/screens/StatisticsScreen'
 import { PlayersScreen, PlayerDetailScreen } from '@/screens/PlayersScreen'
+import { JoinScreen } from '@/screens/JoinScreen'
+import { RoomScreen } from '@/screens/RoomScreen'
 import { ProfileScreen } from '@/screens/ProfileScreen'
 import { AdminScreen } from '@/screens/AdminScreen'
 import { initRipple } from '@/utils/ripple'
@@ -57,6 +59,12 @@ const router = createBrowserRouter([
   {
     element: <Root />,
     children: [
+      {
+        // Room links: full screen, also for guests without an account
+        path: '/r/:code',
+        element: <JoinScreen />
+      },
+      { path: '/raum/:code', element: <RoomScreen /> },
       {
         element: <AppShell />,
         children: [

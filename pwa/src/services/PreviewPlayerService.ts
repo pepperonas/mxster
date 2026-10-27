@@ -121,6 +121,11 @@ export class PreviewPlayerService {
     this.sound.play()
   }
 
+  /** The song loaded right now (null when stopped). */
+  getSongId(): string | null {
+    return this.currentSong?.id ?? null
+  }
+
   /**
    * Pause current playback
    */

@@ -16,6 +16,7 @@ import { Switch } from '@/components/ui/Switch'
 import { StatTile } from '@/components/charts/Bars'
 import { DecadeProfile } from '@/components/charts/DecadeProfile'
 import { usePlayers, type KnownPlayer } from '@/game/usePlayers'
+import { FriendsSection } from './FriendsSection'
 import { decadeLabel, DECADES } from '@/game/songPool'
 import { decadeRates } from '@/game/stats'
 import { formatDay } from '@/utils/format'
@@ -132,6 +133,10 @@ export function PlayersScreen() {
           </m.li>
         ))}
       </ul>
+
+      <div className="mt-10">
+        <FriendsSection />
+      </div>
     </div>
   )
 }

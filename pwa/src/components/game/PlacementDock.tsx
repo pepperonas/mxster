@@ -47,7 +47,15 @@ export interface DockChallenger {
 
 export type DockState =
   | { kind: 'placing'; song: Song; previewGap: number | null; timeline: Song[] }
-  | { kind: 'challenge-offer'; placerName: string; challengers: DockChallenger[]; timeline: Song[]; gap: number }
+  | {
+      kind: 'challenge-offer'
+      placerName: string
+      challengers: DockChallenger[]
+      timeline: Song[]
+      gap: number
+      /** Online: this device may not reveal — who does. */
+      revealBy?: string
+    }
   | { kind: 'challenge-choose'; challengerName: string; previewGap: number | null; timeline: Song[] }
   | {
       kind: 'revealed'
@@ -59,8 +67,12 @@ export type DockState =
       challenge: { name: string; won: boolean } | null
       /** Wrong card: where it would have belonged ("Zwischen 1991 und 2003"). */
       rightPlace?: string
+      /** Online: who continues, when it is not this device. */
+      continueBy?: string
     }
   | { kind: 'bot'; playerName: string }
+  /** Online: someone else acts on their own device. */
+  | { kind: 'waiting'; text: string }
 
 interface PlacementDockProps {
   state: DockState | null
@@ -147,6 +159,7 @@ export function PlacementDock({
               )}
               {state.kind === 'revealed' && <ResultStage state={state} goal={goal} onContinue={onContinue} />}
               {state.kind === 'bot' && <BotStage name={state.playerName} />}
+              {state.kind === 'waiting' && <WaitingStage text={state.text} />}
             </m.section>
           )}
         </AnimatePresence>
@@ -409,9 +422,13 @@ function ChallengeOfferStage({
           </button>
         ))}
       </div>
-      <button ref={revealRef} type="button" onClick={onReveal} className="btn btn-brand">
-        Kein Einspruch – aufdecken
-      </button>
+      {state.revealBy ? (
+        <p className="text-body-sm text-md-on-surface-variant text-center py-2">{state.revealBy} deckt auf, sobald niemand mehr widerspricht.</p>
+      ) : (
+        <button ref={revealRef} type="button" onClick={onReveal} className="btn btn-brand">
+          Kein Einspruch – aufdecken
+        </button>
+      )}
     </div>
   )
 }
@@ -496,9 +513,13 @@ function ResultStage({
             )}
           </div>
         </div>
-        <button ref={nextRef} type="button" onClick={onContinue} className="btn btn-brand">
-          Weiter
-        </button>
+        {state.continueBy ? (
+          <p className="text-body-sm text-md-on-surface-variant max-w-[9rem] text-right">Weiter geht es bei {state.continueBy}</p>
+        ) : (
+          <button ref={nextRef} type="button" onClick={onContinue} className="btn btn-brand">
+            Weiter
+          </button>
+        )}
       </div>
       <SongInfo song={song} head="none" delay={0.2} />
     </div>
@@ -506,6 +527,15 @@ function ResultStage({
 }
 
 // ─── bot ───────────────────────────────────────────────────────────────────
+
+function WaitingStage({ text }: { text: string }) {
+  return (
+    <div className="flex items-center justify-center gap-3 py-2 text-title-sm text-md-on-surface" role="status">
+      <Icon name="hourglass" size={20} />
+      <span>{text}</span>
+    </div>
+  )
+}
 
 function BotStage({ name }: { name: string }) {
   return (

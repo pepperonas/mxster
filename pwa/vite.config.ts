@@ -8,7 +8,7 @@ export default defineConfig({
     host: '127.0.0.1',
     port: 5174,
     // The FastAPI backend (server/) runs on 4274 in development
-    proxy: { '/api': { target: 'http://127.0.0.1:4274', xfwd: true } }
+    proxy: { '/api': { target: 'http://127.0.0.1:4274', xfwd: true, ws: true } }
   },
   plugins: [
     react(),
@@ -36,7 +36,7 @@ export default defineConfig({
         // Never precache audio: /audio/ needs a signed-in session (nginx auth_request)
         globPatterns: ['**/*.{js,css,html,ico,svg,woff2}'],
         globIgnores: ['**/assets/**/*.png', 'audio/**'],
-        cacheId: 'mxster-v8',
+        cacheId: 'mxster-v9',
         cleanupOutdatedCaches: true,
         // Navigation fallback - always serve index.html for SPA routes
         navigateFallback: '/index.html',

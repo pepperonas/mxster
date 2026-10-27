@@ -15,11 +15,15 @@ interface GameOverProps {
   winner: Player
   players: Player[]
   mode: GameMode
-  onRematch: () => void
+  /** Missing online on a player's device: only the host starts the next round. */
+  onRematch?: () => void
   onHome: () => void
+  /** Online, not the host: who starts the next round. */
+  rematchBy?: string
+  homeLabel?: string
 }
 
-export function GameOver({ winner, players, mode, onRematch, onHome }: GameOverProps) {
+export function GameOver({ winner, players, mode, onRematch, onHome, rematchBy, homeLabel = 'Zur Startseite' }: GameOverProps) {
   const hardcore = mode === 'hardcore'
   const ranked = rankPlayers(players, mode, winner.name)
 
@@ -75,12 +79,16 @@ export function GameOver({ winner, players, mode, onRematch, onHome }: GameOverP
         </ol>
 
         <div className="mt-auto pt-10 space-y-3">
-          <button type="button" className="btn btn-lg btn-brand m3-state-layer w-full" onClick={onRematch}>
-            <Icon name="replay" />
-            Nochmal mit denselben Leuten
-          </button>
+          {onRematch ? (
+            <button type="button" className="btn btn-lg btn-brand m3-state-layer w-full" onClick={onRematch}>
+              <Icon name="replay" />
+              Nochmal mit denselben Leuten
+            </button>
+          ) : rematchBy ? (
+            <p className="text-center text-body-md text-md-on-surface-variant">Eine neue Runde startet {rematchBy}.</p>
+          ) : null}
           <button type="button" className="btn btn-text m3-state-layer w-full" onClick={onHome}>
-            Zur Startseite
+            {homeLabel}
           </button>
         </div>
       </div>

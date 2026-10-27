@@ -37,6 +37,10 @@ export interface Player {
   members?: string[]
   /** Team only: how many turns the team has had (picks the member at the controls). */
   memberTurn?: number
+  /** Online rounds: the room seat (device) this player plays on. */
+  seat?: number
+  /** Online rounds: joined by link without an account. */
+  guest?: boolean
 }
 
 // ============================================================================

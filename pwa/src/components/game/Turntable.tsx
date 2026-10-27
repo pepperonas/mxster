@@ -19,6 +19,8 @@ import { useSettings, useUI } from '@/contexts'
 import { getPreviewPlayer, type PlayerState } from '@/services/PreviewPlayerService'
 import { spring } from '@/motion/springs'
 import type { Song } from '@/types'
+import type { AudioCue } from '@/online/protocol'
+import { cuePosition } from '@/online/clock'
 
 interface TurntableProps {
   song: Song | null
@@ -35,7 +37,20 @@ interface TurntableProps {
   compact?: boolean
   /** Who is on turn, shown in the compact bar. */
   caption?: string
+  /**
+   * Online rounds:
+   *  - 'host': plays like 'local' and reports every start, pause and jump (onCue);
+   *  - 'follow': plays in sync with the host's cue ("Jeder bei sich");
+   *  - 'silent': plays nothing, the host's device has the music ("Gemeinsam im Raum").
+   */
+  audioRole?: 'local' | 'host' | 'follow' | 'silent'
+  cue?: AudioCue | null
+  clockOffset?: () => number
+  onCue?: (cue: Omit<AudioCue, 'at'>) => void
 }
+
+/** A follower jumps when it is further than this from the host (seconds). */
+const SYNC_TOLERANCE_S = 0.25
 
 const RANDOM_START_MAX_S = 150 // ~3.5 min average song, keep ≥ 60 s left
 
@@ -48,7 +63,11 @@ export function Turntable({
   onDraw,
   drawDisabled,
   compact = false,
-  caption
+  caption,
+  audioRole = 'local',
+  cue = null,
+  clockOffset = () => 0,
+  onCue
 }: TurntableProps) {
   const { settings } = useSettings()
   const { addToast } = useUI()
@@ -76,7 +95,8 @@ export function Turntable({
     }
   }, [addToast])
 
-  // New song → play it (optionally from a random position)
+  // New song → play it (optionally from a random position). Followers wait
+  // for the host's cue, silent devices never play.
   const songKey = song?.id ?? null
   useEffect(() => {
     setBlocked(false)
@@ -84,12 +104,56 @@ export function Turntable({
       player.current.stop()
       setPosition(0)
       setDuration(0)
+      if (audioRole === 'host') onCue?.({ songId: null, playing: false, positionMs: 0 })
       return
     }
+    if (audioRole === 'follow' || audioRole === 'silent') return
     const start = settings.randomStartPosition ? Math.floor(Math.random() * RANDOM_START_MAX_S) : 0
     player.current.play(song, start).catch(() => {})
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [songKey])
+
+  // Host: tell the others where the music is — on every start/pause, and every
+  // few seconds while playing (late joiners, slow devices)
+  const report = useCallback(() => {
+    if (audioRole !== 'host' || !song) return
+    onCue?.({
+      songId: song.id,
+      playing: player.current.getState() === 'playing',
+      positionMs: Math.round(player.current.getCurrentTime() * 1000)
+    })
+  }, [audioRole, song, onCue])
+  useEffect(() => {
+    if (state === 'playing' || state === 'paused') report()
+  }, [state, report])
+  useEffect(() => {
+    if (audioRole !== 'host' || state !== 'playing') return
+    const id = window.setInterval(report, 4000)
+    return () => window.clearInterval(id)
+  }, [audioRole, state, report])
+
+  // Follower: start, jump or pause to match the host's cue; re-check every 2 s
+  useEffect(() => {
+    if (audioRole !== 'follow' || !song) return
+    const sync = () => {
+      if (!cue || cue.songId !== song.id) return
+      const target = cuePosition(cue, Date.now(), clockOffset())
+      const p = player.current
+      if (p.getSongId() !== song.id) {
+        if (cue.playing) p.play(song, target).catch(() => {})
+        return
+      }
+      if (!cue.playing) {
+        if (p.getState() === 'playing') p.pause()
+        return
+      }
+      if (p.getState() === 'paused') p.resume()
+      if (Math.abs(p.getCurrentTime() - target) > SYNC_TOLERANCE_S) p.seek(target)
+    }
+    sync()
+    const id = window.setInterval(sync, 2000)
+    return () => window.clearInterval(id)
+  }, [audioRole, song, cue, clockOffset])
 
   // Position polling while playing (4 Hz is plenty for a ring)
   useEffect(() => {
@@ -101,12 +165,24 @@ export function Turntable({
     return () => window.clearInterval(id)
   }, [state])
 
-  const playing = state === 'playing'
-  const loading = state === 'loading'
+  // Silent device: show the host's music, never play it
+  const silentPlaying = audioRole === 'silent' && Boolean(song && cue?.songId === song.id && cue.playing)
+  useEffect(() => {
+    if (audioRole !== 'silent' || !song || !cue || cue.songId !== song.id) return
+    const tick = () => setPosition(cuePosition(cue, Date.now(), clockOffset()))
+    tick()
+    if (!cue.playing) return
+    const id = window.setInterval(tick, 500)
+    return () => window.clearInterval(id)
+  }, [audioRole, song, cue, clockOffset])
+
+  const playing = audioRole === 'silent' ? silentPlaying : state === 'playing'
+  const loading = audioRole !== 'silent' && state === 'loading'
   const toggle = useCallback(() => {
+    if (audioRole === 'silent') return
     if (playing) player.current.pause()
     else player.current.resume()
-  }, [playing])
+  }, [playing, audioRole])
 
   const progress = duration > 0 ? Math.min(1, position / duration) : 0
   const revealed = revealYear != null
@@ -139,7 +215,13 @@ export function Turntable({
         </m.div>
         <div className="min-w-0 flex-1">
           <p className="text-title-sm text-md-on-surface truncate" aria-live="polite">
-            {blocked ? 'Zum Abspielen tippen' : revealed ? `Der Song ist von ${revealYear}` : caption ?? 'Song läuft'}
+            {blocked
+              ? 'Zum Abspielen tippen'
+              : revealed
+                ? `Der Song ist von ${revealYear}`
+                : audioRole === 'silent'
+                  ? `${caption ?? 'Song läuft'} · beim Gastgeber`
+                  : (caption ?? 'Song läuft')}
           </p>
           <div className="mt-1.5 flex items-center gap-2">
             <div className="h-1 flex-1 rounded-m3-full bg-md-surface-container-highest overflow-hidden" role="presentation">
@@ -148,25 +230,25 @@ export function Turntable({
                 style={{ transform: `scaleX(${progress})`, transition: 'transform 250ms linear' }}
               />
             </div>
-            <span className="text-label-sm text-md-on-surface-variant tabular">
-              {loading ? '…' : formatTime(position)}
-            </span>
+            <span className="text-label-sm text-md-on-surface-variant tabular">{loading ? '…' : formatTime(position)}</span>
           </div>
         </div>
-        <button
-          type="button"
-          onClick={toggle}
-          disabled={loading}
-          className={`flex-shrink-0 grid place-items-center w-12 h-12 rounded-m3-full m3-state-layer ${blocked ? 'mx-attention' : ''}`}
-          style={{ background: 'rgb(var(--mx-brand))', color: 'rgb(var(--mx-on-brand))' }}
-          aria-label={playing ? 'Pause' : 'Abspielen'}
-        >
-          {loading ? (
-            <span className="m3-loading-arc" style={{ borderTopColor: 'currentColor', borderRightColor: 'currentColor' }} />
-          ) : (
-            <Icon name={playing ? 'pause' : 'play'} />
-          )}
-        </button>
+        {audioRole !== 'silent' && (
+          <button
+            type="button"
+            onClick={toggle}
+            disabled={loading}
+            className={`flex-shrink-0 grid place-items-center w-12 h-12 rounded-m3-full m3-state-layer ${blocked ? 'mx-attention' : ''}`}
+            style={{ background: 'rgb(var(--mx-brand))', color: 'rgb(var(--mx-on-brand))' }}
+            aria-label={playing ? 'Pause' : 'Abspielen'}
+          >
+            {loading ? (
+              <span className="m3-loading-arc" style={{ borderTopColor: 'currentColor', borderRightColor: 'currentColor' }} />
+            ) : (
+              <Icon name={playing ? 'pause' : 'play'} />
+            )}
+          </button>
+        )}
       </section>
     )
   }
@@ -201,7 +283,7 @@ export function Turntable({
               >
                 {revealYear}
               </m.div>
-            ) : song ? (
+            ) : song && audioRole !== 'silent' ? (
               <m.button
                 key="control"
                 type="button"
@@ -216,7 +298,11 @@ export function Turntable({
                 style={{ background: 'rgb(var(--mx-brand))', color: 'rgb(var(--mx-on-brand))' }}
                 aria-label={playing ? 'Pause' : 'Abspielen'}
               >
-                {loading ? <span className="m3-loading-arc" style={{ borderTopColor: 'currentColor', borderRightColor: 'currentColor' }} /> : <Icon name={playing ? 'pause' : 'play'} size={32} />}
+                {loading ? (
+                  <span className="m3-loading-arc" style={{ borderTopColor: 'currentColor', borderRightColor: 'currentColor' }} />
+                ) : (
+                  <Icon name={playing ? 'pause' : 'play'} size={32} />
+                )}
               </m.button>
             ) : null}
           </AnimatePresence>
@@ -227,11 +313,13 @@ export function Turntable({
         {song
           ? revealed
             ? ''
-            : blocked
-              ? 'Zum Abspielen auf die Platte tippen'
-              : loading
-                ? 'Song wird geladen …'
-                : `${formatTime(position)} / ${formatTime(duration)}`
+            : audioRole === 'silent'
+              ? `Läuft beim Gastgeber · ${formatTime(position)}`
+              : blocked
+                ? 'Zum Abspielen auf die Platte tippen'
+                : loading
+                  ? 'Song wird geladen …'
+                  : `${formatTime(position)} / ${formatTime(duration)}`
           : ''}
       </div>
 

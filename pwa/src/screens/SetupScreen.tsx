@@ -7,7 +7,9 @@
 import { useEffect, useMemo, useRef, useState, type FormEvent } from 'react'
 import { AnimatePresence, m } from 'motion/react'
 import { useMe } from '@/auth/AuthContext'
-import { useGame, useSettings } from '@/contexts'
+import { useGame, useSettings, useUI } from '@/contexts'
+import { roomApi } from '@/online/roomApi'
+import type { MusicMode } from '@/online/protocol'
 import { useAppNavigate } from '@/hooks/useAppNavigate'
 import { SubPageHeader } from '@/shell/AppShell'
 import { Icon } from '@/components/ui/Icon'
@@ -29,6 +31,23 @@ type Difficulty = keyof typeof DIFFICULTY_LABEL
 const MIN_PLAYERS = 2
 const LAST_MODE_KEY = 'mxster_last_mode'
 const LAST_OPTIONS_KEY = 'mxster_last_options'
+const LAST_DEVICES_KEY = 'mxster_last_devices'
+const LAST_MUSIC_KEY = 'mxster_last_music'
+
+function readPref(key: string): string | null {
+  try {
+    return localStorage.getItem(key)
+  } catch {
+    return null
+  }
+}
+function writePref(key: string, value: string) {
+  try {
+    localStorage.setItem(key, value)
+  } catch {
+    /* private mode */
+  }
+}
 const SONGS_BY_DECADE = countByDecade(songs)
 const EXOTIC_COUNT = songs.filter((s) => s.exotic).length
 const DECADES_WITH_SONGS = DECADES.filter((d) => (SONGS_BY_DECADE[d] ?? 0) > 0)
@@ -193,9 +212,38 @@ export function SetupScreen() {
     setOptions({ decades: next.length === DECADES_WITH_SONGS.length ? [] : next })
   }
 
-  const ready = !!gameMode && players.length >= MIN_PLAYERS && !emptyTeam
+  // One device passed around, or everyone on their own (online room)
+  const [devices, setDevicesState] = useState<'one' | 'own'>(() => (readPref(LAST_DEVICES_KEY) === 'own' ? 'own' : 'one'))
+  const [music, setMusicState] = useState<MusicMode>(() => (readPref(LAST_MUSIC_KEY) === 'everyone' ? 'everyone' : 'room'))
+  const setDevices = (v: 'one' | 'own') => {
+    setDevicesState(v)
+    writePref(LAST_DEVICES_KEY, v)
+  }
+  const setMusic = (v: MusicMode) => {
+    setMusicState(v)
+    writePref(LAST_MUSIC_KEY, v)
+  }
+  const [opening, setOpening] = useState(false)
+  const { addToast } = useUI()
+
+  const ready = devices === 'own' ? !!gameMode : !!gameMode && players.length >= MIN_PLAYERS && !emptyTeam
+
+  const openRoom = async () => {
+    if (!gameMode) return
+    setOpening(true)
+    localStorage.setItem(LAST_MODE_KEY, gameMode)
+    localStorage.setItem(LAST_OPTIONS_KEY, JSON.stringify({ goal, decades, challengesEnabled, exotics }))
+    try {
+      const room = await roomApi.create(music, { mode: gameMode, goal, decades, challengesEnabled, exotics })
+      navigate(`/raum/${room.code}`, { replace: true })
+    } catch {
+      addToast('Der Raum konnte nicht geöffnet werden. Bitte nochmal versuchen.', 'error')
+      setOpening(false)
+    }
+  }
 
   const start = () => {
+    if (devices === 'own') return void openRoom()
     if (!ready || !gameMode) return
     localStorage.setItem(LAST_MODE_KEY, gameMode)
     localStorage.setItem(LAST_OPTIONS_KEY, JSON.stringify({ goal, decades, challengesEnabled, exotics }))
@@ -213,6 +261,45 @@ export function SetupScreen() {
       <SubPageHeader title="Neues Spiel" />
 
       <div className="space-y-8 pt-2 pb-40">
+        {/* Devices */}
+        <section aria-labelledby="devices-h" className="space-y-3">
+          <h2 id="devices-h" className="text-title-md">
+            Wie sitzt ihr zusammen?
+          </h2>
+          <SegmentedControl
+            label="Geräte"
+            value={devices}
+            onChange={setDevices}
+            segments={[
+              { value: 'one', label: 'Ein Gerät' },
+              { value: 'own', label: 'Jeder sein Gerät' }
+            ]}
+          />
+          <p className="meta">
+            {devices === 'one'
+              ? 'Ihr reicht ein Handy oder Tablet herum.'
+              : 'Jede Person spielt auf dem eigenen Handy, im selben Raum oder von zu Hause. Du bekommst einen Link und einen QR-Code; ein Google-Konto braucht niemand.'}
+          </p>
+          {devices === 'own' && (
+            <div className="space-y-2">
+              <SegmentedControl
+                label="Musik"
+                value={music}
+                onChange={setMusic}
+                segments={[
+                  { value: 'room', label: 'Gemeinsam im Raum' },
+                  { value: 'everyone', label: 'Jeder bei sich' }
+                ]}
+              />
+              <p className="meta">
+                {music === 'room'
+                  ? 'Die Musik läuft nur auf deinem Gerät, alle hören mit. Kein Echo.'
+                  : 'Die Musik läuft auf jedem Gerät, gleichzeitig. Für Runden über Entfernung.'}
+              </p>
+            </div>
+          )}
+        </section>
+
         {/* Mode */}
         <section aria-labelledby="mode-h">
           <h2 id="mode-h" className="text-title-md mb-3">
@@ -274,6 +361,8 @@ export function SetupScreen() {
           </div>
         </section>
 
+        {devices === 'one' && (
+          <>
         {/* Players */}
         <section aria-labelledby="players-h">
           <div className="flex items-baseline justify-between mb-3">
@@ -493,6 +582,9 @@ export function SetupScreen() {
           )}
         </AnimatePresence>
 
+          </>
+        )}
+
         {/* The round */}
         <section aria-labelledby="round-h" className="space-y-5">
           <h2 id="round-h" className="text-title-md">
@@ -589,9 +681,13 @@ export function SetupScreen() {
       {/* Start */}
       <div className="fixed inset-x-0 bottom-0 z-30 md:pl-24 bg-gradient-to-t from-md-surface via-md-surface/95 to-transparent pt-8 safe-bottom">
         <div className="mx-auto max-w-3xl px-4 sm:px-6 pb-4">
-          <button type="button" className="btn btn-lg btn-brand m3-state-layer w-full" disabled={!ready} onClick={start}>
+          <button type="button" className="btn btn-lg btn-brand m3-state-layer w-full" disabled={!ready || opening} onClick={start}>
             <Icon name="play" />
-            {ready
+            {devices === 'own'
+              ? opening
+                ? 'Raum wird geöffnet …'
+                : 'Raum öffnen'
+              : ready
               ? 'Los geht’s'
               : emptyTeam
                 ? 'Jedes Team braucht jemanden'

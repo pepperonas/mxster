@@ -11,7 +11,7 @@ import { clearSavedGame, loadSavedGame, saveGame } from '@/game/savedGame'
 // Types
 // ============================================================================
 
-interface GameState {
+export interface GameState {
   // Game Configuration
   gameMode: GameMode | null
   randomStartPosition: boolean
@@ -56,6 +56,9 @@ interface GameState {
   rankingsHistory: RankingSnapshot[]
   /** Booked turns of this round, for the statistics. */
   turnLog: TurnRecord[]
+  /** Set for an online round: the room code. Such rounds live on the server,
+   *  not in this device's saved game. */
+  onlineRoom: string | null
 }
 
 export type RoundOptions = Pick<GameState, 'goal' | 'decades' | 'challengesEnabled' | 'exotics'>
@@ -152,7 +155,8 @@ const initialState: GameState = {
   finished: false,
   startedAt: 0,
   rankingsHistory: [],
-  turnLog: []
+  turnLog: [],
+  onlineRoom: null
 }
 
 /** Fresh scores, timelines and challenges for a new round with the same line-up. */
@@ -289,6 +293,7 @@ function gameReducer(state: GameState, action: GameAction): GameState {
       return {
         ...initialState,
         ...keepOptions(state),
+        onlineRoom: state.onlineRoom,
         players: freshPlayers(state.players, challengesInMode(state)),
         isGameStarted: true,
         startedAt: Date.now()
@@ -375,12 +380,14 @@ interface GameProviderProps {
 export function GameProvider({ children }: GameProviderProps) {
   const [state, dispatch] = useReducer(gameReducer, undefined, () => {
     const saved = loadSavedGame<GameState>()
-    return saved ? { ...initialState, ...saved } : initialState
+    return saved && !saved.onlineRoom ? { ...initialState, ...saved } : initialState
   })
 
   // A running round is mirrored to this device, so a reload (or a closed tab)
   // picks it up exactly where it stood. A finished or ended round is dropped.
   useEffect(() => {
+    // Online rounds are kept by the room on the server
+    if (state.onlineRoom) return
     if (state.isGameStarted && !state.finished) saveGame(state)
     else clearSavedGame()
   }, [state])

@@ -3,6 +3,8 @@
  * or the app. Nothing of the app (or its audio) loads before approval.
  */
 import { useEffect, type ReactNode } from 'react'
+import { useLocation } from 'react-router-dom'
+import { SyncModeProvider } from '@/sync/syncMode'
 import { AnimatePresence, m } from 'motion/react'
 import { useAuth } from './AuthContext'
 import { LoginScreen } from '@/screens/LoginScreen'
@@ -11,8 +13,12 @@ import { spring } from '@/motion/springs'
 
 const POLL_MS = 30_000
 
+/** A room link works without an account: guests join by name. */
+export const isRoomPath = (path: string) => /^\/(r|raum)\/[^/]+\/?$/.test(path)
+
 export function AuthGate({ children }: { children: ReactNode }) {
   const { state, refresh } = useAuth()
+  const { pathname } = useLocation()
   const status = state.kind === 'signed-in' ? state.me.status : null
 
   // While waiting for approval: check again every 30 s and when the tab returns.
@@ -31,6 +37,11 @@ export function AuthGate({ children }: { children: ReactNode }) {
   // loading frame had to finish an exit animation before the app could mount,
   // and that exit sometimes never completed — the page stayed blank.
   if (state.kind === 'loading') return <div className="min-h-dvh" />
+
+  // Room links: anyone without an approved account plays as a guest — the app
+  // runs without account data (nothing loaded, nothing saved)
+  const approved = state.kind === 'signed-in' && state.me.status === 'approved'
+  if (!approved && isRoomPath(pathname)) return <SyncModeProvider mode="guest">{children}</SyncModeProvider>
 
   let key: string
   let view: ReactNode

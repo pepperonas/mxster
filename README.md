@@ -3,7 +3,7 @@
 Song hören, Jahr raten, an die richtige Stelle der Zeitleiste legen. Ein Musikspiel für eure Runde, gespielt auf einem Gerät.
 
 [![App](https://img.shields.io/badge/mxster.celox.io-B90C55?style=for-the-badge&logo=googlechrome&logoColor=white)](https://mxster.celox.io)
-[![Version](https://img.shields.io/badge/v0.6.4-B90C55?style=for-the-badge&logo=semver&logoColor=white)](https://github.com/pepperonas/mxster/releases)
+[![Version](https://img.shields.io/badge/v0.7.0-B90C55?style=for-the-badge&logo=semver&logoColor=white)](https://github.com/pepperonas/mxster/releases)
 [![Tests](https://github.com/pepperonas/mxster/actions/workflows/ci.yml/badge.svg)](https://github.com/pepperonas/mxster/actions/workflows/ci.yml)
 
 ![React](https://img.shields.io/badge/React_19-61DAFB?style=flat-square&logo=react&logoColor=black)
@@ -39,6 +39,17 @@ Unentschieden gibt es nicht. Liegen am Ende mehrere vorne, folgt ein **Stechen**
 
 Allein? Dann spielen bis zu drei Bots gegen dich (leicht, mittel, schwer).
 
+## Mehrspieler
+
+Statt ein Handy herumzureichen, spielt jede Person auf dem eigenen Gerät – im selben Raum oder jeder bei sich zu Hause.
+
+- **Raum öffnen:** Im Spielaufbau „Jeder sein Gerät“ wählen. Es gibt einen Link, einen QR-Code und einen Raumcode zum Abtippen.
+- **Ohne Konto dabei:** Wer den Link öffnet, gibt nur einen Namen ein und spielt mit. Für Gäste wird nichts gespeichert, sie hören die Musik nur, solange der Raum offen ist.
+- **Musik:** „Gemeinsam im Raum“ – nur das Gerät des Gastgebers spielt, kein Echo. „Jeder bei sich“ – alle Geräte spielen gleichzeitig.
+- **Spielen:** Wer dran ist, legt oder rät auf dem eigenen Gerät, alle anderen sehen live mit und legen vom eigenen Handy Einspruch ein. Neu laden oder kurz offline gehen kostet nichts: Jeder kommt auf seinen Platz zurück.
+- **Freunde:** Im Tab „Spieler“ andere Konten per Name oder E-Mail suchen und als Freunde hinzufügen. Freunde lassen sich direkt aus dem Raum einladen, die Einladung erscheint auf ihrer Startseite.
+- Am Ende landet die Runde im Verlauf jedes Mitspielers mit Konto.
+
 ## Was drin ist
 
 - 300 Songs von den 50ern bis heute, selbst gehostet (AAC, 96 kbit/s, höchstens vier Minuten je Song), zufällige Startstelle auf Wunsch
@@ -70,7 +81,7 @@ Material 3 Expressive mit einer eigenen Identität: Vinyl-Magenta als Primärfar
 
 ```
 pwa/      React-19-PWA (Vite, Tailwind, motion)
-server/   FastAPI + SQLite: Google-Login, Warteliste, Admin, Spieldaten, Audio-Freigabe
+server/   FastAPI + SQLite: Google-Login, Warteliste, Admin, Spieldaten, Audio-Freigabe, Räume (WebSocket), Freunde
 docs/     songs.json — die Songdatenbank (Quelle der Wahrheit)
 scripts/  Songs verwalten, Audio hosten, Deployment
 ```

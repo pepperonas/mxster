@@ -11,6 +11,7 @@
  */
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { api, ApiError } from '@/api/client'
+import { useSyncMode } from './syncMode'
 
 export type DocKind = 'history' | 'achievements' | 'settings'
 
@@ -49,6 +50,7 @@ export function readLegacy<T>(key: string | undefined, fromLegacy?: (raw: unknow
 export function useSyncedDoc<T>(kind: DocKind, options: SyncedDocOptions<T>) {
   const opts = useRef(options)
   opts.current = options
+  const guest = useSyncMode() === 'guest'
 
   const [value, setValueState] = useState<T>(options.initial)
   const [status, setStatus] = useState<SyncStatus>('loading')
@@ -63,6 +65,7 @@ export function useSyncedDoc<T>(kind: DocKind, options: SyncedDocOptions<T>) {
   const loaded = useRef(false)
 
   const save = useCallback(async () => {
+    if (guest) return
     if (saving.current || !dirty.current || !loaded.current) return
     saving.current = true
     try {
@@ -97,7 +100,7 @@ export function useSyncedDoc<T>(kind: DocKind, options: SyncedDocOptions<T>) {
     } finally {
       saving.current = false
     }
-  }, [kind])
+  }, [kind, guest])
 
   const schedule = useCallback(() => {
     window.clearTimeout(timer.current)
@@ -106,6 +109,12 @@ export function useSyncedDoc<T>(kind: DocKind, options: SyncedDocOptions<T>) {
 
   useEffect(() => {
     alive.current = true
+    if (guest) {
+      // No account: start empty and keep everything in memory
+      loaded.current = true
+      setStatus('ready')
+      return
+    }
     let cancelled = false
     api<Doc<unknown>>(`/api/data/${kind}`)
       .then((doc) => {
@@ -135,7 +144,7 @@ export function useSyncedDoc<T>(kind: DocKind, options: SyncedDocOptions<T>) {
     return () => {
       cancelled = true
     }
-  }, [kind, save])
+  }, [kind, save, guest])
 
   // Flush pending writes when the page goes away.
   useEffect(() => {

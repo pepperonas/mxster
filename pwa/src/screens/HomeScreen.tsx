@@ -4,7 +4,11 @@
  * new round (the record half out of its sleeve), the last round and the
  * nearest achievement. Nothing else competes for attention.
  */
-import { m } from 'motion/react'
+import { useCallback, useEffect, useState } from 'react'
+import { AnimatePresence, m } from 'motion/react'
+import { Avatar } from '@/components/ui/Avatar'
+import { friendsApi, type Invite } from '@/online/friendsApi'
+import { PENDING_ROOM_KEY } from './JoinScreen'
 import { useMe } from '@/auth/AuthContext'
 import { useAchievements, useGame, useGameHistory, useUI } from '@/contexts'
 import { useAppNavigate } from '@/hooks/useAppNavigate'
@@ -25,7 +29,20 @@ export function HomeScreen() {
   const { getPlayerAchievements } = useAchievements()
   const game = useGame()
   const { showModal } = useUI()
-  const running = game.isGameStarted && !game.finished && game.players.length > 0 && game.gameMode
+  // Online rounds live in their room, not on this device
+  const running = !game.onlineRoom && game.isGameStarted && !game.finished && game.players.length > 0 && game.gameMode
+
+  // Came back from the Google sign-in that started on a room link: into the room
+  useEffect(() => {
+    let code: string | null = null
+    try {
+      code = localStorage.getItem(PENDING_ROOM_KEY)
+      if (code) localStorage.removeItem(PENDING_ROOM_KEY)
+    } catch {
+      /* private mode */
+    }
+    if (code) navigate(`/r/${code}`, { replace: true })
+  }, [navigate])
   const firstName = ownPlayerName(me.name)
   const last = history[0]
   const stored = getPlayerAchievements(firstName)
@@ -58,6 +75,8 @@ export function HomeScreen() {
       <h1 className="text-headline-md text-md-on-surface">
         {running ? `Weiter geht’s, ${firstName}.` : last ? `Noch eine Runde, ${firstName}?` : `Willkommen, ${firstName}.`}
       </h1>
+
+      <Invites />
 
       {running && <RunningRound onContinue={() => navigate('/spiel')} onDiscard={discard} />}
 
@@ -203,4 +222,62 @@ function nearestAchievement(list: Achievement[]): Achievement | null {
     .filter((a) => a.target && (a.progress ?? 0) > 0)
     .sort((a, b) => (b.progress ?? 0) / (b.target ?? 1) - (a.progress ?? 0) / (a.target ?? 1))
   return withProgress[0] ?? locked[0]
+}
+
+/** Invitations from friends into an open room: checked every 30 s and when the tab returns. */
+function Invites() {
+  const navigate = useAppNavigate()
+  const [invites, setInvites] = useState<Invite[]>([])
+  const load = useCallback(() => {
+    friendsApi
+      .invites()
+      .then((r) => setInvites(r.invites))
+      .catch(() => {})
+  }, [])
+  useEffect(() => {
+    load()
+    const id = window.setInterval(load, 30_000)
+    const onVisible = () => document.visibilityState === 'visible' && load()
+    document.addEventListener('visibilitychange', onVisible)
+    return () => {
+      window.clearInterval(id)
+      document.removeEventListener('visibilitychange', onVisible)
+    }
+  }, [load])
+
+  const dismiss = (inv: Invite) => {
+    setInvites((list) => list.filter((i) => i.id !== inv.id))
+    void friendsApi.dismissInvite(inv.id).catch(() => {})
+  }
+
+  return (
+    <AnimatePresence initial={false}>
+      {invites.map((inv) => (
+        <m.section
+          key={inv.id}
+          layout
+          initial={{ opacity: 0, y: -12 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, height: 0, transition: spring.effectsDefault }}
+          transition={spring.spatialDefault}
+          className="surface p-4 flex flex-wrap items-center gap-x-4 gap-y-3"
+          aria-label="Einladung"
+        >
+          <Avatar name={inv.from?.name ?? '?'} picture={inv.from?.picture || undefined} size={48} />
+          <div className="flex-1 min-w-[12rem]">
+            <p className="text-title-md">{inv.from?.firstName ?? 'Jemand'} lädt dich zu einer Runde ein</p>
+            <p className="meta">Der Raum ist offen, die Runde hat noch nicht begonnen.</p>
+          </div>
+          <div className="flex gap-2 w-full sm:w-auto justify-end">
+            <button type="button" className="btn btn-brand m3-state-layer" onClick={() => navigate(`/r/${inv.code}`)}>
+              Beitreten
+            </button>
+            <button type="button" className="btn btn-text m3-state-layer" onClick={() => dismiss(inv)}>
+              Später
+            </button>
+          </div>
+        </m.section>
+      ))}
+    </AnimatePresence>
+  )
 }
