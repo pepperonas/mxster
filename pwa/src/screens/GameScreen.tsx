@@ -18,9 +18,12 @@ import { useTurnFlow, type SkipNotice } from '@/game/useTurnFlow'
 import { MODE_COPY } from '@/game/modeCopy'
 import { turnName } from '@/game/teams'
 import { coverSrc } from '@/utils/cover'
+import { useMediaQuery } from '@/hooks/useMediaQuery'
+import { prefersReducedMotion } from '@/motion/policy'
 import { getPreviewPlayer } from '@/services/PreviewPlayerService'
 import { spring } from '@/motion/springs'
-import type { Player } from '@/types'
+import type { Player, Song } from '@/types'
+import { correctGapIndices, gapLabel } from '@/game/placement'
 
 /** Set while we leave on purpose, so the "nothing to play" guard stays quiet. */
 let leaving = false
@@ -104,6 +107,30 @@ function GameRound({ onRematch }: { onRematch: () => void }) {
   const { phase, reveal, pending, activePlayer, activeTimeline, isBotThinking } = flow
   const choosing = phase === 'challenge' && pending?.choosing != null ? pending.choosing : null
 
+  // Phones: while a song is on the platter the player shrinks into a sticky
+  // bar, so the board (where the action is) gets the screen.
+  const narrow = useMediaQuery('(max-width: 1023px)')
+  const compactPlayer = narrow && Boolean(currentSong)
+  const playerBarRef = useRef<HTMLDivElement>(null)
+
+  // When it is time to place (or to object), bring the board into view just
+  // below the sticky bar — no hunting for the timeline under the record.
+  const placingKey = (phase === 'placing' || choosing !== null) && narrow ? `${currentSong?.id}-${currentPlayer}-${choosing}` : null
+  useEffect(() => {
+    if (!placingKey) return
+    const id = requestAnimationFrame(() => {
+      const board = boardRef.current?.closest('section') ?? boardRef.current
+      const bar = playerBarRef.current
+      if (!board) return
+      // Where the bar sits once it sticks: under the 64 px header
+      const stickyBottom = 64 + (bar ? bar.getBoundingClientRect().height : 0)
+      const top = board.getBoundingClientRect().top + window.scrollY - stickyBottom - 12
+      if (Math.abs(top - window.scrollY) < 24) return
+      window.scrollTo({ top, behavior: prefersReducedMotion() ? 'auto' : 'smooth' })
+    })
+    return () => cancelAnimationFrame(id)
+  }, [placingKey])
+
   useEffect(() => {
     setPreviewGap(null)
     setHoverGap(null)
@@ -118,6 +145,12 @@ function GameRound({ onRematch }: { onRematch: () => void }) {
 
   const placementReveal = reveal?.kind === 'placement' ? reveal : null
   const challenge = placementReveal?.challenge ?? null
+  // A wrong card leaves the placer's timeline unchanged, so the gaps still match
+  const rightPlaceFor = (correct: boolean, song: Song) => {
+    if (correct) return undefined
+    const gap = correctGapIndices(activeTimeline, song)[0]
+    return gap === undefined ? undefined : gapLabel(activeTimeline, gap)
+  }
   const dockState: DockState | null = !isTimelineMode
     ? null
     : placementReveal
@@ -128,7 +161,8 @@ function GameRound({ onRematch }: { onRematch: () => void }) {
           isFirstCard: placementReveal.isFirstCard,
           cards: placementReveal.cardsAfter,
           playerName: players[placementReveal.playerIndex]?.name ?? '',
-          challenge: challenge ? { name: players[challenge.playerIndex]?.name ?? '', won: challenge.won } : null
+          challenge: challenge ? { name: players[challenge.playerIndex]?.name ?? '', won: challenge.won } : null,
+          rightPlace: rightPlaceFor(placementReveal.isCorrect, placementReveal.song)
         }
       : phase === 'challenge' && pending
         ? challengeChoosing
@@ -203,9 +237,13 @@ function GameRound({ onRematch }: { onRematch: () => void }) {
       <main className="mx-auto max-w-6xl px-4 space-y-6">
         <PlayerStrip thinking={isBotThinking} />
 
-        <div className="grid gap-8 lg:grid-cols-[minmax(0,5fr)_minmax(0,6fr)] lg:items-start">
-          <div className="min-w-0 space-y-6 lg:sticky lg:top-20">
+        <div className="grid gap-5 lg:gap-8 lg:grid-cols-[minmax(0,5fr)_minmax(0,6fr)] lg:items-start">
+          {/* On phones this column dissolves (contents), so the player bar can stick across the board */}
+          <div className="min-w-0 max-lg:contents lg:space-y-6 lg:sticky lg:top-20">
+            <div ref={playerBarRef} data-player-bar className={compactPlayer ? 'sticky top-16 z-20' : ''}>
             <Turntable
+              compact={compactPlayer}
+              caption={activePlayer.isBot ? `${who} ist dran` : `${who}, du bist dran`}
               song={currentSong}
               revealYear={revealYear}
               revealCorrect={revealCorrect}
@@ -213,6 +251,7 @@ function GameRound({ onRematch }: { onRematch: () => void }) {
               onDraw={phase === 'idle' ? () => void flow.drawSong() : undefined}
               drawLabel={drawLabel}
             />
+            </div>
 
             {gameMode === 'hardcore' && (
               <AnimatePresence mode="wait" initial={false}>

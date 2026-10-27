@@ -89,7 +89,13 @@ Round options and their rule modules (all pure, tested in `game/__tests__/roundO
 - `challenge.ts` — Einspruch: 3 per player/team per round, timeline modes only, never by bots, not on a first card, not in a tiebreak. Flow phase `challenge` (`pending` in context): `startChallenge(seat)` → `claimGap(gap)` or `revealPlacement()`. Placer right → placer gets the card; placer wrong + challenger right → challenger gets it (own timeline / credited on the shared one); the objection is spent either way.
 - `teams.ts` — a team is a `Player` with `members` + `memberTurn`; `NEXT_TURN` advances the member. Achievements are never credited to teams. Teams from 4 people, no bots.
 
-Board: `components/game/TimelineBoard.tsx` + `PlacementDock.tsx` (drag or tap a gap → preview → confirm; `game/boardGeometry.ts`). **Never render the year of a pending card.**
+Board: `components/game/TimelineBoard.tsx` + `PlacementDock.tsx` (drag or tap a gap → preview → confirm; `game/boardGeometry.ts`). **Never render the year of a pending card.** A wrong card's result names where it belonged (`correctGapIndices` → "Richtig wäre: …").
+
+Mobile placing (below `lg`, 1024 px):
+- While a song is on the platter the `Turntable` renders `compact` — a sticky bar under the header (small record, whose turn, progress, play/pause). It is the same component instance, so audio is untouched; the record is a shared element (`layoutId="turntable-record"`). The left grid column is `max-lg:contents` so the bar can stick across the board.
+- When placing (or objecting) starts, the page scrolls the board right under the sticky bar.
+- Drag auto-scroll (`PlacementDock` DragStage): the card starts inside the dock, i.e. inside the bottom edge zone — scrolling is only armed after the card has left the dock, never while it is over the dock, and only after it rests 350 ms at an edge (aiming at a gap right above the dock must not run the page away). Edges are measured from our own element ref: Motion's `onDragStart` event target is a window-level node, `event.target.closest()` finds nothing.
+- Autoplay blocked (always after a reload on phones): the player waits `paused`, starts on Howler's next `unlock` (first tap), and the bar says "Zum Abspielen tippen" with a pulsing play button — no toast.
 
 ### Audio
 `services/PreviewPlayerService.ts` (Howler, HTML5 audio). `audioSrc()` turns the absolute `previewUrl` (`https://mxster.celox.io/audio/song_XXX.mp3`) into a same-origin path, so the session cookie travels and nginx can gate it. `components/game/Turntable.tsx` owns playback for the game: plays on song change (optional random start), polls position at 4 Hz, stops on unmount.

@@ -5,6 +5,11 @@
  * and the label in the middle is the control: play/pause during the song, the
  * year once the card is revealed. With no song on the platter the big button
  * below draws the next one.
+ *
+ * compact: on phones, once a song is on the platter, the player shrinks into a
+ * slim bar (small record, who is on turn, progress, play/pause) so the board
+ * gets the screen. The record travels between both layouts as one shared
+ * element; the audio is untouched (same component, same player).
  */
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { AnimatePresence, m } from 'motion/react'
@@ -26,23 +31,43 @@ interface TurntableProps {
   drawLabel?: string
   onDraw?: () => void
   drawDisabled?: boolean
+  /** Slim bar layout (phones while a song is on the platter). */
+  compact?: boolean
+  /** Who is on turn, shown in the compact bar. */
+  caption?: string
 }
 
 const RANDOM_START_MAX_S = 150 // ~3.5 min average song, keep ≥ 60 s left
 
-export function Turntable({ song, revealYear, revealCorrect, revealCover, drawLabel = 'Song ziehen', onDraw, drawDisabled }: TurntableProps) {
+export function Turntable({
+  song,
+  revealYear,
+  revealCorrect,
+  revealCover,
+  drawLabel = 'Song ziehen',
+  onDraw,
+  drawDisabled,
+  compact = false,
+  caption
+}: TurntableProps) {
   const { settings } = useSettings()
   const { addToast } = useUI()
   const player = useRef(getPreviewPlayer())
   const [state, setState] = useState<PlayerState>('idle')
   const [position, setPosition] = useState(0)
   const [duration, setDuration] = useState(0)
+  /** The browser blocked autoplay (after a reload): ask for a tap, no toast. */
+  const [blocked, setBlocked] = useState(false)
+  useEffect(() => {
+    if (state === 'playing') setBlocked(false)
+  }, [state])
 
   useEffect(() => {
     const p = player.current
     p.setConfig({
       onStateChange: setState,
       onError: (msg) => addToast(msg, 'error'),
+      onBlocked: () => setBlocked(true),
       onEnd: () => setPosition(0)
     })
     return () => {
@@ -54,6 +79,7 @@ export function Turntable({ song, revealYear, revealCorrect, revealCover, drawLa
   // New song → play it (optionally from a random position)
   const songKey = song?.id ?? null
   useEffect(() => {
+    setBlocked(false)
     if (!song) {
       player.current.stop()
       setPosition(0)
@@ -84,23 +110,79 @@ export function Turntable({ song, revealYear, revealCorrect, revealCover, drawLa
 
   const progress = duration > 0 ? Math.min(1, position / duration) : 0
   const revealed = revealYear != null
+  const record = (
+    <Vinyl
+      size="100%"
+      spinning={playing && !revealed}
+      labelColor={revealed ? labelColorFor(revealCorrect) : undefined}
+      labelImage={revealed ? revealCover : null}
+      labelRing={revealed ? ringColorFor(revealCorrect) : undefined}
+    />
+  )
+
+  if (compact && song) {
+    return (
+      <section
+        aria-label="Plattenspieler"
+        className="flex items-center gap-3 pl-2 pr-2 py-2 rounded-m3-xl bg-md-surface-container-high/95 backdrop-blur-md shadow-m3-1"
+      >
+        <m.div layoutId="turntable-record" transition={spring.spatialDefault} className="relative flex-shrink-0 w-14 h-14">
+          {record}
+          {revealed && (
+            <span
+              className="absolute inset-0 grid place-items-center text-label-lg tabular font-bold"
+              style={{ color: '#fff', textShadow: '0 1px 4px rgb(0 0 0 / 0.7)' }}
+            >
+              {revealYear}
+            </span>
+          )}
+        </m.div>
+        <div className="min-w-0 flex-1">
+          <p className="text-title-sm text-md-on-surface truncate" aria-live="polite">
+            {blocked ? 'Zum Abspielen tippen' : revealed ? `Der Song ist von ${revealYear}` : caption ?? 'Song läuft'}
+          </p>
+          <div className="mt-1.5 flex items-center gap-2">
+            <div className="h-1 flex-1 rounded-m3-full bg-md-surface-container-highest overflow-hidden" role="presentation">
+              <div
+                className="h-full rounded-m3-full bg-md-primary origin-left"
+                style={{ transform: `scaleX(${progress})`, transition: 'transform 250ms linear' }}
+              />
+            </div>
+            <span className="text-label-sm text-md-on-surface-variant tabular">
+              {loading ? '…' : formatTime(position)}
+            </span>
+          </div>
+        </div>
+        <button
+          type="button"
+          onClick={toggle}
+          disabled={loading}
+          className={`flex-shrink-0 grid place-items-center w-12 h-12 rounded-m3-full m3-state-layer ${blocked ? 'mx-attention' : ''}`}
+          style={{ background: 'rgb(var(--mx-brand))', color: 'rgb(var(--mx-on-brand))' }}
+          aria-label={playing ? 'Pause' : 'Abspielen'}
+        >
+          {loading ? (
+            <span className="m3-loading-arc" style={{ borderTopColor: 'currentColor', borderRightColor: 'currentColor' }} />
+          ) : (
+            <Icon name={playing ? 'pause' : 'play'} />
+          )}
+        </button>
+      </section>
+    )
+  }
 
   return (
     <section aria-label="Plattenspieler" className="flex flex-col items-center">
       <div className="relative" style={{ width: 'min(76vw, 320px)', aspectRatio: '1' }}>
         <ProgressHalo progress={song ? progress : 0} />
-        <m.div
-          className="absolute inset-[6%]"
-          animate={{ scale: song ? 1 : 0.94, opacity: song ? 1 : 0.85 }}
-          transition={spring.spatialDefault}
-        >
-          <Vinyl
-            size="100%"
-            spinning={playing && !revealed}
-            labelColor={revealed ? labelColorFor(revealCorrect) : undefined}
-            labelImage={revealed ? revealCover : null}
-            labelRing={revealed ? ringColorFor(revealCorrect) : undefined}
-          />
+        <m.div layoutId="turntable-record" transition={spring.spatialDefault} className="absolute inset-[6%]">
+          <m.div
+            className="w-full h-full"
+            animate={{ scale: song ? 1 : 0.94, opacity: song ? 1 : 0.85 }}
+            transition={spring.spatialDefault}
+          >
+            {record}
+          </m.div>
         </m.div>
 
         {/* Centre control */}
@@ -142,7 +224,15 @@ export function Turntable({ song, revealYear, revealCorrect, revealCover, drawLa
       </div>
 
       <div className="mt-4 h-6 text-label-lg text-md-on-surface-variant tabular" aria-live="polite">
-        {song ? (revealed ? '' : loading ? 'Song wird geladen …' : `${formatTime(position)} / ${formatTime(duration)}`) : ''}
+        {song
+          ? revealed
+            ? ''
+            : blocked
+              ? 'Zum Abspielen auf die Platte tippen'
+              : loading
+                ? 'Song wird geladen …'
+                : `${formatTime(position)} / ${formatTime(duration)}`
+          : ''}
       </div>
 
       <AnimatePresence initial={false}>

@@ -14,6 +14,8 @@ interface PreviewPlayerConfig {
   onProgress?: (progress: number) => void
   onEnd?: () => void
   onError?: (error: string) => void
+  /** The browser blocked autoplay; playback starts on the next tap. */
+  onBlocked?: () => void
 }
 
 /**
@@ -70,8 +72,7 @@ export class PreviewPlayerService {
       volume: 0.8,
       preload: true,
       onload: () => {
-        this.setState('playing')
-
+        // 'playing' is set by onplay — the browser may still block autoplay
         // Seek to start position if specified
         if (startTime > 0 && this.sound) {
           this.sound.seek(startTime)
@@ -100,10 +101,14 @@ export class PreviewPlayerService {
         this.setState('error')
         this.config.onError?.('Der Song konnte nicht geladen werden.')
       },
-      onplayerror: (_id, error) => {
-        console.error(`Preview play error: ${song.title}`, error)
-        this.setState('error')
-        this.config.onError?.('Der Song konnte nicht abgespielt werden. Tippe auf Abspielen.')
+      onplayerror: () => {
+        // Autoplay blocked (typical after a reload on phones): wait paused and
+        // start on the browser's next unlock (the first tap anywhere).
+        this.setState('paused')
+        this.config.onBlocked?.()
+        this.sound?.once('unlock', () => {
+          if (this.sound && this.state === 'paused') this.sound.play()
+        })
       }
     })
 
@@ -125,7 +130,7 @@ export class PreviewPlayerService {
    * Resume playback
    */
   resume(): void {
-    if (this.sound && this.state === 'paused') {
+    if (this.sound && (this.state === 'paused' || this.state === 'error')) {
       this.sound.play()
       this.startProgressTracking()
     }

@@ -29,7 +29,15 @@ import { PENDING_CARD_LAYOUT_ID } from './TimelineBoard'
 import { Icon } from '@/components/ui/Icon'
 import { SongCover, SongInfo } from './SongInfo'
 
-const ACTION_BAR_HEIGHT = 64
+const EDGE_ZONE = 56
+const EDGE_DWELL_MS = 350
+
+/** Top edge for auto-scroll: below the sticky header and player bar. */
+function stickyTop(): number {
+  const bar = document.querySelector<HTMLElement>('[data-player-bar]')
+  const bottom = bar?.getBoundingClientRect().bottom ?? 0
+  return Math.max(64, bottom)
+}
 
 export interface DockChallenger {
   seat: number
@@ -49,6 +57,8 @@ export type DockState =
       cards: number
       playerName: string
       challenge: { name: string; won: boolean } | null
+      /** Wrong card: where it would have belonged ("Zwischen 1991 und 2003"). */
+      rightPlace?: string
     }
   | { kind: 'bot'; playerName: string }
 
@@ -152,6 +162,7 @@ interface DragStageProps {
 }
 
 function DragStage({ song, boardRef, onHoverGap, onDrop }: DragStageProps) {
+  const stageRef = useRef<HTMLDivElement>(null)
   const x = useMotionValue(0)
   const xVelocity = useVelocity(x)
   const tilt = useSpring(useTransform(xVelocity, [-1600, 1600], [-9, 9], { clamp: true }), spring.spatialFast)
@@ -204,13 +215,27 @@ function DragStage({ song, boardRef, onHoverGap, onDrop }: DragStageProps) {
     const geometry = measure()
     if (!geometry) return
     const point = pointerOf(event)
+    // Measured on our own element: Motion hands over a window-level event
+    const dockEl = stageRef.current?.closest('section')
+    const edges = { top: stickyTop(), bottom: dockEl ? dockEl.getBoundingClientRect().top : window.innerHeight - 140 }
+    let armed = false
+    let edgeSince: number | null = null
     // The gesture gets the main thread: the WebGL background steps down
     drag.current = { ...geometry, clientX: point.x, clientY: point.y, velocityY: 0, hover: null, raf: 0 }
     const tick = () => {
       const d = drag.current
       if (!d) return
-      const dockTop = window.innerHeight - 140
-      const speed = autoScrollSpeed(d.clientY, ACTION_BAR_HEIGHT, dockTop)
+      // The card starts inside the dock, i.e. inside the bottom edge zone: only
+      // scroll once it has been lifted above the dock, and never while it is
+      // back over the dock (that's the way to cancel).
+      if (d.clientY < edges.bottom - 8) armed = true
+      const raw = armed && d.clientY <= edges.bottom ? autoScrollSpeed(d.clientY, edges.top, edges.bottom, EDGE_ZONE) : 0
+      // Only scroll after the card rests at an edge for a moment: aiming at a
+      // gap right next to the dock must not run the page away.
+      const now = performance.now()
+      if (raw === 0) edgeSince = null
+      else if (edgeSince === null) edgeSince = now
+      const speed = raw !== 0 && edgeSince !== null && now - edgeSince > EDGE_DWELL_MS ? raw : 0
       if (speed !== 0) {
         window.scrollBy(0, speed)
         updateHover()
@@ -250,7 +275,7 @@ function DragStage({ song, boardRef, onHoverGap, onDrop }: DragStageProps) {
   )
 
   return (
-    <div className="flex flex-col gap-2">
+    <div ref={stageRef} className="flex flex-col gap-2">
       <m.div
         layoutId={PENDING_CARD_LAYOUT_ID}
         drag
@@ -263,7 +288,7 @@ function DragStage({ song, boardRef, onHoverGap, onDrop }: DragStageProps) {
         whileDrag={{ scale: 1.05, boxShadow: 'var(--md-sys-elevation-4)', zIndex: 50 }}
         style={{ x, rotate: tilt }}
         transition={spring.spatialDefault}
-        className="relative flex items-center gap-3 min-h-[64px] px-3 py-2 rounded-m3-lg border-2 border-md-primary bg-md-primary-container text-md-on-primary-container touch-none select-none cursor-grab active:cursor-grabbing"
+        className="relative flex items-center gap-3 min-h-[56px] px-3 py-1.5 rounded-m3-lg border-2 border-md-primary bg-md-primary-container text-md-on-primary-container touch-none select-none cursor-grab active:cursor-grabbing"
         aria-label={`${song.title} von ${song.artist} — ziehe die Karte auf die Zeitleiste oder tippe eine Lücke`}
         role="group"
       >
@@ -276,9 +301,7 @@ function DragStage({ song, boardRef, onHoverGap, onDrop }: DragStageProps) {
         </span>
         <GripIcon />
       </m.div>
-      <p className="text-center text-body-sm text-md-on-surface-variant">
-        Ziehe die Karte in die richtige Lücke – oder tippe eine Lücke an.
-      </p>
+      <p className="text-center text-body-sm text-md-on-surface-variant">Karte in eine Lücke ziehen oder Lücke antippen</p>
     </div>
   )
 }
@@ -310,7 +333,7 @@ function ConfirmStage({
   label,
   onBack,
   onConfirm,
-  title = 'Platzieren',
+  title = 'Platzieren – oder andere Lücke antippen',
   confirmText = 'Hier platzieren'
 }: {
   label: string
@@ -401,7 +424,10 @@ export function ChallengeDots({ left, max = 3 }: { left: number; max?: number })
 function verdictText(state: Extract<DockState, { kind: 'revealed' }>): { title: string; detail?: string; good: boolean } {
   const { isFirstCard, isCorrect, challenge } = state
   if (isFirstCard) return { title: 'Startkarte gelegt', good: true }
-  if (!challenge) return isCorrect ? { title: 'Richtig platziert!', good: true } : { title: 'Leider falsch', good: false }
+  if (!challenge)
+    return isCorrect
+      ? { title: 'Richtig platziert!', good: true }
+      : { title: 'Leider falsch', detail: state.rightPlace ? `Richtig wäre: ${state.rightPlace}.` : undefined, good: false }
   if (isCorrect) return { title: 'Richtig platziert!', detail: `Der Einspruch von ${challenge.name} war daneben.`, good: true }
   if (challenge.won) return { title: 'Einspruch erfolgreich!', detail: `${challenge.name} bekommt die Karte.`, good: true }
   return { title: 'Beide daneben', detail: 'Die Karte bekommt niemand.', good: false }
@@ -454,14 +480,12 @@ function ResultStage({
             <p className="text-body-sm text-md-on-surface-variant truncate">
               {song.title} – {song.artist} · <span className="tabular-nums">{song.year}</span>
             </p>
-            <p className="text-body-sm text-md-on-surface-variant truncate">
-              {verdict.detail ? `${verdict.detail} ` : ''}
-              {!state.challenge?.won && (
-                <>
-                  {playerName}: <AnimatedNumber value={cards} from={isCorrect ? cards - 1 : cards} />/{goal}
-                </>
-              )}
-            </p>
+            {verdict.detail && <p className="text-body-sm text-md-on-surface">{verdict.detail}</p>}
+            {!state.challenge?.won && (
+              <p className="text-body-sm text-md-on-surface-variant tabular-nums">
+                {playerName}: <AnimatedNumber value={cards} from={isCorrect ? cards - 1 : cards} />/{goal}
+              </p>
+            )}
           </div>
         </div>
         <button ref={nextRef} type="button" onClick={onContinue} className="btn btn-brand">

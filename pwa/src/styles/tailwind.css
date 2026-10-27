@@ -237,6 +237,26 @@
 .vinyl[data-spinning='true'] {
   animation-play-state: running;
 }
+/* A control that wants a tap (e.g. autoplay was blocked): a soft pulsing ring */
+.mx-attention {
+  animation: mx-attention 1.6s ease-in-out infinite;
+}
+@keyframes mx-attention {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgb(var(--mx-brand) / 0.55);
+  }
+  50% {
+    box-shadow: 0 0 0 8px rgb(var(--mx-brand) / 0);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .mx-attention {
+    animation: none;
+    box-shadow: 0 0 0 3px rgb(var(--md-sys-color-primary));
+  }
+}
+
 @keyframes vinyl-spin {
   to { transform: rotate(360deg); }
 }

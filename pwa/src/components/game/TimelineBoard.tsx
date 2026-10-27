@@ -137,7 +137,7 @@ export function TimelineBoard({
   renderGap(cards.length)
 
   return (
-    <ol ref={boardRef} aria-label={label} className="flex flex-col gap-2">
+    <ol ref={boardRef} aria-label={label} className="flex flex-col gap-1.5">
       <AnimatePresence initial={false} mode="popLayout">
         {items}
       </AnimatePresence>
@@ -184,7 +184,7 @@ function BoardRow({ ref, children, layoutId, tone, shake }: BoardRowProps) {
           ? { default: spring.spatialDefault, x: { duration: 0.55, ease: [0.36, 0.07, 0.19, 0.97] } }
           : spring.spatialDefault
       }
-      className={`relative flex items-center gap-3 min-h-[56px] px-3 py-2 rounded-m3-lg border-2 transition-colors duration-m3-effects-slow ease-m3-effects-slow ${TONE_CLASS[tone]}`}
+      className={`relative flex items-center gap-3 min-h-[52px] px-3 py-1.5 rounded-m3-lg border-2 transition-colors duration-m3-effects-slow ease-m3-effects-slow ${TONE_CLASS[tone]}`}
     >
       {children}
     </m.li>
@@ -269,15 +269,15 @@ function GapButton({ ref, gap, label, highlighted, large, onSelect }: GapButtonP
         animate={{ scale: highlighted ? 1.03 : 1 }}
         transition={spring.spatialFast}
         aria-label={`Hier einfügen: ${label}`}
-        className={`m3-state-layer w-full flex items-center justify-center gap-2 rounded-m3-md border-2 border-dashed text-label-lg transition-colors duration-m3-effects ease-m3-effects ${
-          large ? 'min-h-[88px]' : 'min-h-[44px]'
-        } ${
+        className={`m3-state-layer relative w-full flex items-center justify-center gap-2 rounded-m3-md border-2 border-dashed transition-colors duration-m3-effects ease-m3-effects ${
+          large ? 'min-h-[88px] text-label-lg' : 'min-h-[36px] text-label-md'
+        } before:absolute before:inset-x-0 before:-inset-y-1.5 before:content-[''] ${
           highlighted
             ? 'border-md-primary bg-md-primary-container text-md-on-primary-container'
             : 'border-md-outline-variant text-md-on-surface-variant'
         }`}
       >
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" aria-hidden="true">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" aria-hidden="true">
           <path d="M12 5v14M5 12h14" />
         </svg>
         <span>{label}</span>
