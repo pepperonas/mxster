@@ -15,10 +15,10 @@
 <h3>👉 <a href="https://mxtape.celox.io">mxtape.celox.io</a> — mit Google oder E-Mail anmelden oder als Gast nur per Link in den Raum von Freunden</h3>
 
 <!-- BADGES:BIG — version, tests, lines of code and songs; readme.test.ts keeps them true, scripts/readme-badges.mjs rewrites them. -->
-[![version](https://img.shields.io/badge/version-0.14.6-C2185B?style=for-the-badge&logo=semver&logoColor=white)](https://github.com/pepperonas/mxtape/releases/latest)
-[![tests](https://img.shields.io/badge/tests-929-2E9E5B?style=for-the-badge&logo=vitest&logoColor=white)](#tests-und-ci)
-[![lines of code](https://img.shields.io/badge/lines%20of%20code-26.8k-4B6BDF?style=for-the-badge&logo=typescript&logoColor=white)](pwa/src)
-[![test code](https://img.shields.io/badge/test%20code-10.6k-2E9E5B?style=for-the-badge&logo=typescript&logoColor=white)](#tests-und-ci)
+[![version](https://img.shields.io/badge/version-0.14.7-C2185B?style=for-the-badge&logo=semver&logoColor=white)](https://github.com/pepperonas/mxtape/releases/latest)
+[![tests](https://img.shields.io/badge/tests-935-2E9E5B?style=for-the-badge&logo=vitest&logoColor=white)](#tests-und-ci)
+[![lines of code](https://img.shields.io/badge/lines%20of%20code-26.9k-4B6BDF?style=for-the-badge&logo=typescript&logoColor=white)](pwa/src)
+[![test code](https://img.shields.io/badge/test%20code-10.7k-2E9E5B?style=for-the-badge&logo=typescript&logoColor=white)](#tests-und-ci)
 [![songs](https://img.shields.io/badge/songs-500-FF8A3D?style=for-the-badge&logo=applemusic&logoColor=white)](#die-songsammlung)
 
 [![Donate with PayPal](https://img.shields.io/badge/PayPal-support%20this%20project-00457C?style=for-the-badge&logo=paypal&logoColor=white)](https://www.paypal.com/donate/?business=martin.pfeffer@celox.io&currency_code=EUR&item_name=mxtape)
@@ -186,6 +186,7 @@ Statt ein Handy herumzureichen, spielt jede Person auf dem eigenen Gerät – im
 - **Zurück führt zurück:** keine gestapelten Seiten, die Leiste springt immer zur Startseite zurück
 - **Bots hören erst zu:** 3–6 Sekunden, bevor sie legen; das Lied läuft danach weiter
 - **Einstellungen überstehen Neuladen:** Modus, Ziel, Jahrzehnte, Themen, Einspruch und Bonus bleiben gesetzt, in der Lobby auch Bots und Teams
+- **Online-Erfolge für alle:** Mitspieler mit Konto sehen ihre Freischaltungen auf dem eigenen Gerät und sammeln sie im eigenen Konto
 - **Nochmal mit denselben Leuten:** Wer zuletzt kam, fängt die nächste Runde an
 - **Fehlertolerante Antworten** für Titel und Interpret, im Hardcore und beim Bonus: Tippfehler je nach Länge, Groß- und Kleinschreibung, andere Schreibweisen („und“ statt „&“, ohne „The“ oder Klammerteil, „Five“ für „5“, „ae“ für „ä“), ein Interpret von mehreren — ein einzelnes Wort, das auch in einem anderen Song steht („Crazy“ für „She Drives Me Crazy“), zählt aber nicht
 - **50 Erfolge** in jedem Modus (seit v0.12.3 auch auf der Zeitleiste; ältere Runden werden nachgetragen), Verlauf jeder Runde mit Rangliste und allen Songs

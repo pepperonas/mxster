@@ -341,6 +341,16 @@ describe('fuzzyMatch', () => {
   // Substring matching
   // A single word of a longer answer is not the answer (game/answerMatch decides
   // whether it names it alone in the catalogue)
+  it('should match the band without its backing band, and one artist of a list', () => {
+    expect(fuzzyMatch('Bill Haley', 'Bill Haley & His Comets', 'artist')).toBe(true)
+    expect(fuzzyMatch('Huey Lewis', 'Huey Lewis & The News', 'artist')).toBe(true)
+    expect(fuzzyMatch('Bruno Mars', 'Lady Gaga, Bruno Mars', 'artist')).toBe(true)
+    // "Earth, Wind & Fire" is one band, not a list
+    expect(fuzzyMatch('Earth', 'Earth, Wind & Fire', 'artist')).toBe(false)
+    // only artists are split
+    expect(fuzzyMatch('Sugar', 'Sugar, Sugar', 'title')).toBe(false)
+  })
+
   it('should NOT match a part of the answer on its own', () => {
     expect(fuzzyMatch('Jean', 'Billie Jean')).toBe(false)
     expect(fuzzyMatch('Crazy', 'She Drives Me Crazy')).toBe(false)

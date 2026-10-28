@@ -79,6 +79,8 @@ describe('end of round', () => {
     expect(delays[3]).toBeLessThan(delays[2])
     expect(delays[2]).toBeLessThan(delays[1])
     expect(delays[0]).toBeGreaterThan(delays[1])
+    // …and a beat later than the rows before it come one after the other
+    expect(delays[0] - delays[1]).toBeGreaterThan(delays[1] - delays[2])
     expect(rankDelay(0, 1)).toBeGreaterThan(0)
   })
 })

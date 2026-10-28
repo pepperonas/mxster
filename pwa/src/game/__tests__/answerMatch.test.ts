@@ -72,6 +72,9 @@ describe('a part of the answer', () => {
   })
   it('never with fewer than 5 letters, and never one that is in another answer', () => {
     expect(answerMatches('Jean', 'Billie Jean', 'title', ['Billie Jean'])).toBe(false)
+    // a 4-letter guess one typo from a 5-letter word is still too short
+    expect(answerMatches('Hous', 'House Party', 'title', ['House Party', 'Beat It'])).toBe(false)
+    expect(answerMatches('House', 'House Party', 'title', ['House Party', 'Beat It'])).toBe(true)
     expect(answerMatches('Gentle', 'Gentle Ben', 'title', ['Gentle Ben', 'Gentle on My Mind'])).toBe(false)
     expect(answerMatches('Gentle', 'Gentle Ben', 'title', ['Gentle Ben', 'Beat It'])).toBe(true)
   })

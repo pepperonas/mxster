@@ -15,10 +15,10 @@
 <h3>👉 <a href="https://mxtape.celox.io">mxtape.celox.io</a> — sign in with Google or email, or join a friend's room as a guest with just a link</h3>
 
 <!-- BADGES:BIG — version, tests, lines of code and songs; readme.test.ts keeps them true, scripts/readme-badges.mjs rewrites them. -->
-[![version](https://img.shields.io/badge/version-0.14.6-C2185B?style=for-the-badge&logo=semver&logoColor=white)](https://github.com/pepperonas/mxtape/releases/latest)
-[![tests](https://img.shields.io/badge/tests-929-2E9E5B?style=for-the-badge&logo=vitest&logoColor=white)](#tests-and-ci)
-[![lines of code](https://img.shields.io/badge/lines%20of%20code-26.8k-4B6BDF?style=for-the-badge&logo=typescript&logoColor=white)](pwa/src)
-[![test code](https://img.shields.io/badge/test%20code-10.6k-2E9E5B?style=for-the-badge&logo=typescript&logoColor=white)](#tests-and-ci)
+[![version](https://img.shields.io/badge/version-0.14.7-C2185B?style=for-the-badge&logo=semver&logoColor=white)](https://github.com/pepperonas/mxtape/releases/latest)
+[![tests](https://img.shields.io/badge/tests-935-2E9E5B?style=for-the-badge&logo=vitest&logoColor=white)](#tests-and-ci)
+[![lines of code](https://img.shields.io/badge/lines%20of%20code-26.9k-4B6BDF?style=for-the-badge&logo=typescript&logoColor=white)](pwa/src)
+[![test code](https://img.shields.io/badge/test%20code-10.7k-2E9E5B?style=for-the-badge&logo=typescript&logoColor=white)](#tests-and-ci)
 [![songs](https://img.shields.io/badge/songs-500-FF8A3D?style=for-the-badge&logo=applemusic&logoColor=white)](#the-song-library)
 
 [![Donate with PayPal](https://img.shields.io/badge/PayPal-support%20this%20project-00457C?style=for-the-badge&logo=paypal&logoColor=white)](https://www.paypal.com/donate/?business=martin.pfeffer@celox.io&currency_code=EUR&item_name=mxtape)
@@ -185,6 +185,7 @@ Instead of passing one phone around, everyone plays on their own device — in t
 - **Back goes back:** no stacked pages, the navigation bar always returns to Home
 - **Bots listen first:** 3–6 seconds before they place; the song keeps playing afterwards
 - **Settings survive a reload:** mode, goal, decades, themes, objections and bonus stay set, in a lobby bots and teams too
+- **Online achievements for everyone:** players with an account see their own unlocks on their own device and collect them in their own account
 - **Again with the same people:** whoever came last starts the next round
 - **Forgiving answers** for title and artist, in hardcore and for the bonus: typos by length, case, other spellings ("and" for "&", without "The" or the part in brackets, "Five" for "5", "ae" for "ä"), one artist of several — but a single word that is also in another song ("Crazy" for "She Drives Me Crazy") does not count
 - **50 achievements** in every mode (on the timeline too since v0.12.3; older rounds are credited afterwards), a history of every round with ranking and all songs

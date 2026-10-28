@@ -6,6 +6,10 @@
  * the round once two people are in; everyone else waits for that.
  */
 import { markSaved, resultKey, wasSaved } from '@/online/savedResults'
+import { ownRoundAchievements } from '@/online/ownAchievements'
+import { ownPlayerName } from '@/game/owner'
+import { songById } from '@/data/catalogue'
+import { useAchievements } from '@/contexts/AchievementContext'
 import { useEffect, useRef, useState } from 'react'
 import { COLLECTIONS, GENRE_GROUPS, type Collection } from '@/game/songPool'
 import { buildLineup, playingMembers, teamsPossible } from '@/online/lineup'
@@ -67,7 +71,7 @@ function Room() {
     []
   )
 
-  useSaveOnlineResult(account)
+  useSaveOnlineResult(account, state.kind === 'signed-in' ? state.me.name : '')
 
   if (room.problem) return <RoomProblem kind={room.problem} />
   if (!room.info || room.seat === null) {
@@ -86,10 +90,11 @@ function Room() {
 }
 
 /** Account players keep the round in their own history (the host's flow does that itself). */
-function useSaveOnlineResult(account: boolean) {
+function useSaveOnlineResult(account: boolean, accountName: string) {
   const room = useRoom()!
   const game = useGame()
-  const { saveGame } = useGameHistory()
+  const { saveGame, history } = useGameHistory()
+  const { applyEffects } = useAchievements()
   const saved = useRef<string | null>(null)
   useEffect(() => {
     const result = room.result
@@ -104,14 +109,30 @@ function useSaveOnlineResult(account: boolean) {
     if (!clean) return
     const started = typeof game.startedAt === 'number' ? game.startedAt : 0
     const durationMs = started > 0 ? Date.now() - started : 0
-    saveGame({
+    const keptMs = durationMs > 0 && durationMs < 24 * 3600 * 1000 ? durationMs : undefined
+    const entry = saveGame({
       winner: { name: clean.winner.name, cards: clean.winner.cards, score: clean.winner.score },
       players: clean.players,
       gameMode: clean.gameMode,
       turns: clean.turns,
-      durationMs: durationMs > 0 && durationMs < 24 * 3600 * 1000 ? durationMs : undefined
+      durationMs: keptMs
     })
-  }, [account, room.code, room.result, room.role, game.gameMode, game.turnLog, game.startedAt, saveGame])
+    // The host's device credits everyone into the host's account; this one
+    // evaluates the same rules for its own seat, into this account
+    applyEffects(
+      ownRoundAchievements({
+        live: game.players,
+        seat: room.seat,
+        ownName: ownPlayerName(accountName),
+        result: clean,
+        games: [entry, ...(history ?? []).filter((g) => g.id !== entry.id)],
+        entry,
+        durationMinutes: keptMs ? keptMs / 60000 : Infinity,
+        finishedAt: Date.now(),
+        genreOf: (id) => songById(id)?.genre
+      })
+    )
+  }, [account, room.code, room.result, room.role, room.seat, game.gameMode, game.turnLog, game.startedAt, game.players, saveGame, history, applyEffects, accountName])
 }
 
 function RoomProblem({ kind }: { kind: string }) {
