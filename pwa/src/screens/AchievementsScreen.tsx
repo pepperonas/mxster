@@ -1,8 +1,8 @@
 /**
  * Erfolge — per player name (achievements belong to whoever played). On top
- * the shown person's rank and achievement points, then the leaderboard
- * (everyone on this account plus friends; tapping someone on this account
- * shows their achievements), then the achievements with what each is worth.
+ * the leaderboard (everyone on this account plus friends; tapping someone on
+ * this account picks them), then the picked person: their rank and
+ * achievement points, then their achievements with what each is worth.
  */
 import { Icon } from '@/components/ui/Icon'
 import { achievementDescription, achievementIcon, achievementName } from '@/types/achievements'
@@ -100,20 +100,25 @@ export function AchievementsScreen() {
 
   return (
     <div className="pt-4 md:pt-10">
-      <div className="flex items-end justify-between gap-4 mb-4">
-        <h1 className="text-headline-md">{t.title}</h1>
-        <p className="meta tabular">
+      <h1 className="text-headline-md mb-4">{t.title}</h1>
+
+      {/* The people first; the picked person's rank then heads their achievements */}
+      {board.length > 1 && (
+        <div className="mb-8">
+          <PointsBoard entries={board} selected={who} onSelect={setWho} hasFriends={friends.length > 0} />
+        </div>
+      )}
+
+      <div className="flex items-end justify-between gap-4 mb-3">
+        {board.length > 1 ? <h2 className="text-title-lg min-w-0 truncate">{t.ofPerson(who)}</h2> : <span />}
+        <p className="meta tabular shrink-0">
           {t.countOf(unlocked, list.length)}
           {fresh > 0 && <span className="ml-2 text-md-primary font-medium">· {t.newCount(fresh)}</span>}
         </p>
       </div>
-
-      <div className="space-y-6 mb-6">
+      <div className="mb-4">
         <RankCard points={points} />
-        {board.length > 1 && <PointsBoard entries={board} selected={who} onSelect={setWho} hasFriends={friends.length > 0} />}
       </div>
-
-      {board.length > 1 && <h2 className="text-title-lg mb-3">{t.ofPerson(who)}</h2>}
 
       <ul className="grid gap-3 sm:grid-cols-2" key={who}>
           {sorted.map((a, i) => (

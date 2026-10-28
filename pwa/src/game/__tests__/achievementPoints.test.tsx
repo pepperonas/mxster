@@ -145,6 +145,21 @@ describe('rank card', () => {
   })
 })
 
+describe('achievements page', () => {
+  it('shows the people first, then the picked person: count, rank, achievements', () => {
+    const page = readFileSync(join(process.cwd(), 'src/screens/AchievementsScreen.tsx'), 'utf8').replace(/\{\/\*[\s\S]*?\*\/\}/g, '')
+    const at = (needle: string) => {
+      const i = page.indexOf(needle)
+      expect(i, needle).toBeGreaterThan(-1)
+      return i
+    }
+    expect(at('<PointsBoard')).toBeLessThan(at('t.ofPerson(who)'))
+    expect(at('t.ofPerson(who)')).toBeLessThan(at('t.countOf(unlocked'))
+    expect(at('t.countOf(unlocked')).toBeLessThan(at('<RankCard'))
+    expect(at('<RankCard')).toBeLessThan(at('sorted.map('))
+  })
+})
+
 describe('points in the game', () => {
   const src = (f: string) => readFileSync(join(process.cwd(), f), 'utf8')
   it('the unlock card says what the achievement is worth', () => {
