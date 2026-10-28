@@ -13,8 +13,8 @@ import { useAppNavigate } from '@/hooks/useAppNavigate'
 import { SubPageHeader } from '@/shell/AppShell'
 import { Avatar } from '@/components/ui/Avatar'
 import { Icon } from '@/components/ui/Icon'
-import { allSongs } from '@/data/catalogue'
 import { DAILY_SONGS, dailySongs, localDay } from '@/game/daily'
+import { songs as bundledSongs } from '@/data/songs'
 import { ownPlayerName } from '@/game/owner'
 import { spring } from '@/motion/springs'
 import { getLang, localeOf, useMessages } from '@/i18n'
@@ -65,7 +65,9 @@ export function DailyScreen() {
 
   function start() {
     setStarting(true)
-    const songs = dailySongs(day, allSongs())
+    // From the bundled list, so an admin correction during the day does not
+    // give later players other songs; the years still come corrected (songById)
+    const songs = dailySongs(day, bundledSongs)
     game.resetGame()
     game.setGameMode(GameMode.TIMELINE_PERSONAL)
     game.setOptions({

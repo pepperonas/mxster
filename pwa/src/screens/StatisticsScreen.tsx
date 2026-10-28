@@ -3,6 +3,7 @@
  * (spider web, up to three people side by side), wins, activity per week, the
  * modes you play and the songs that trip everyone up.
  */
+import { useGameHistory } from '@/contexts/GameHistoryContext'
 import { useMemo, useState } from 'react'
 import { useAppNavigate } from '@/hooks/useAppNavigate'
 import { Icon } from '@/components/ui/Icon'
@@ -34,6 +35,7 @@ export function StatisticsScreen() {
   const navigate = useAppNavigate()
   const t = useMessages(statsText)
   const { history, summaries, myName } = usePlayers()
+  const { ready } = useGameHistory()
   const group = useMemo(() => groupStats(history), [history])
   const weeks = useMemo(() => weeklyRounds(history), [history])
 
@@ -53,6 +55,13 @@ export function StatisticsScreen() {
       return cur.length >= MAX_COMPARED ? [...cur.slice(1), name] : [...cur, name]
     })
 
+  // Still loading from the account: no "nothing here yet" in the meantime
+  if (history.length === 0 && !ready)
+    return (
+      <div className="pt-4 md:pt-10">
+        <h1 className="text-headline-md mb-6">{t.title}</h1>
+      </div>
+    )
   if (history.length === 0) {
     return (
       <div className="pt-4 md:pt-10">

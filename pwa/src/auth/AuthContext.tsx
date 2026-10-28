@@ -1,4 +1,5 @@
 import { createContext, useCallback, useContext, useEffect, useState, type ReactNode } from 'react'
+import { clearSavedGame } from '@/game/savedGame'
 import { api, setCsrfToken, SESSION_LOST, type Me } from '@/api/client'
 
 type AuthState =
@@ -35,6 +36,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     try {
       await api('/api/auth/logout', { method: 'POST' })
     } finally {
+      // The round on this device belongs to this account: the next one
+      // signing in here must not be offered it
+      clearSavedGame()
       setCsrfToken('')
       setState({ kind: 'anonymous' })
     }

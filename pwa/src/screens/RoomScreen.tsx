@@ -5,6 +5,7 @@
  * who is here (online dot, guest badge), friends to invite. The host starts
  * the round once two people are in; everyone else waits for that.
  */
+import { markSaved, resultKey, wasSaved } from '@/online/savedResults'
 import { useEffect, useRef, useState } from 'react'
 import { COLLECTIONS, GENRE_GROUPS, type Collection } from '@/game/songPool'
 import { buildLineup, playingMembers, teamsPossible } from '@/online/lineup'
@@ -89,11 +90,15 @@ function useSaveOnlineResult(account: boolean) {
   const room = useRoom()!
   const game = useGame()
   const { saveGame } = useGameHistory()
-  const saved = useRef<object | null>(null)
+  const saved = useRef<string | null>(null)
   useEffect(() => {
     const result = room.result
-    if (!account || room.role !== 'player' || !result || saved.current === result) return
-    saved.current = result
+    if (!account || room.role !== 'player' || !result) return
+    // The same result comes again after a reconnect or reload: save it once
+    const key = resultKey(room.code, result)
+    if (saved.current === key || wasSaved(key)) return
+    saved.current = key
+    markSaved(key)
     // The result comes from another device: check it before it goes into this account
     const clean = sanitizeResult(result, game.gameMode, game.turnLog)
     if (!clean) return
@@ -106,13 +111,13 @@ function useSaveOnlineResult(account: boolean) {
       turns: clean.turns,
       durationMs: durationMs > 0 && durationMs < 24 * 3600 * 1000 ? durationMs : undefined
     })
-  }, [account, room.result, room.role, game.gameMode, game.turnLog, game.startedAt, saveGame])
+  }, [account, room.code, room.result, room.role, game.gameMode, game.turnLog, game.startedAt, saveGame])
 }
 
 function RoomProblem({ kind }: { kind: string }) {
   const navigate = useAppNavigate()
   const t = useMessages(roomsText)
-  const text = kind === 'kicked' ? t.kicked : kind === 'left' ? t.problem_left_round : kind === 'closed' ? t.closedByHost : kind === 'not_found' ? t.notFound : t.unreachable
+  const text = kind === 'replaced' ? t.replaced : kind === 'kicked' ? t.kicked : kind === 'left' ? t.problem_left_round : kind === 'closed' ? t.closedByHost : kind === 'not_found' ? t.notFound : t.unreachable
   return (
     <div className="min-h-dvh grid place-items-center px-6 text-center">
       <div className="space-y-5">
@@ -218,10 +223,12 @@ function Lobby({ account }: { account: boolean }) {
         songIds: Array.isArray(options.songIds) ? options.songIds.filter((x) => typeof x === 'string').slice(0, 200) : null,
         bonus: Boolean(options.bonus)
       })
+      // The room is running on the server first; only then does the round start
+      // here (a failed call must not leave the host playing in a lobby)
+      await roomApi.setStatus(room.code, 'running')
       game.setPlayers(buildLineup(room.members, { bots: teamsOn ? 0 : bots, difficulty, teams: teamsOn ? teams : 0 }))
       game.loadGameState({ onlineRoom: room.code })
       game.startGame()
-      await roomApi.setStatus(room.code, 'running')
     } catch {
       addToast(msg(roomsText).startFailed, 'error')
     } finally {
@@ -358,10 +365,12 @@ function Lobby({ account }: { account: boolean }) {
           </section>
         )}
 
-        <p className="meta flex gap-2">
-          <Icon name="tv" size={18} className="shrink-0" />
-          {t.screenTip}
-        </p>
+        <div className="flex items-center gap-3">
+          <span className="grid place-items-center w-10 h-10 shrink-0 rounded-full bg-md-surface-container-highest text-md-on-surface-variant">
+            <Icon name="tv" size={20} />
+          </span>
+          <p className="meta">{t.screenTip}</p>
+        </div>
 
         {account && <InviteFriends />}
       </main>

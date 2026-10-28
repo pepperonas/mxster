@@ -1,11 +1,11 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
+import { describe, it, expect, vi, beforeEach, afterEach, afterAll } from 'vitest'
 import { renderHook, act, waitFor } from '@testing-library/react'
 import type { ReactNode } from 'react'
 import { AppProviders, useAchievements, useGame, useGameHistory } from '@/contexts'
 import { AchievementId } from '@/types/achievements'
 import { MotionTestProvider } from '@/test/MotionTestProvider'
 import { useTurnFlow, type SkipNotice } from '../useTurnFlow'
-import { BotPlayer } from '@/services/botPlayer'
+import { BotPlayer, BOT_LISTEN_MS } from '@/services/botPlayer'
 import type { Player, Song } from '@/types'
 
 const song = (year: number, id = `s${year}`): Song => ({ id, title: `Song ${year}`, artist: 'Artist', year })
@@ -38,7 +38,13 @@ function setup(mode: 'hardcore' | 'timeline_personal' | 'timeline_global', playe
   return { ...hook, onGameOver, notices, get: () => hook.result.current }
 }
 
-beforeEach(() => localStorage.clear())
+// Bots listen 3–6 s in the game; the flow tests do not wait that long
+const LISTEN = { ...BOT_LISTEN_MS }
+beforeEach(() => {
+  localStorage.clear()
+  Object.assign(BOT_LISTEN_MS, { min: 50, max: 80 })
+})
+afterAll(() => Object.assign(BOT_LISTEN_MS, LISTEN))
 afterEach(() => vi.restoreAllMocks())
 
 describe('timeline modes', () => {
@@ -292,6 +298,16 @@ describe('no draw: tiebreak ("Stechen")', () => {
     expect(t.onGameOver.mock.calls[0][0]).toMatchObject({ name: 'A', score: 50 })
   })
 
+  it('a rematch leaves out who left the room, and starts everyone afresh', () => {
+    const t = setup('timeline_personal', [{ name: 'A', cards: 4 }, { name: 'B', cards: 2 }, { name: 'C', cards: 3 }])
+    act(() => t.get().game.updatePlayer(1, { left: true }))
+    act(() => t.get().game.rematch())
+    expect(t.get().game.players.map((p) => [p.name, p.cards, Boolean(p.left)])).toEqual([
+      ['A', 0, false],
+      ['C', 0, false]
+    ])
+  })
+
   it('a rematch starts without a tiebreak', () => {
     const t = setup('timeline_global', [{ name: 'A', cards: 5 }, { name: 'B', cards: 4 }])
     seed(t)
@@ -532,5 +548,22 @@ describe('achievements', () => {
     expect(a.find((x) => x.id === AchievementId.MARATHON_RUNNER)?.progress).toBe(1)
     expect(a.find((x) => x.id === AchievementId.PERFECTIONIST)?.unlocked).toBe(false)
     expect(get().ach.getAllPlayerNames()).not.toContain('Bot Alpha')
+  })
+})
+
+describe('daily round options', () => {
+  it('do not carry over into the next setup after a reset', () => {
+    const t = setup('timeline_personal', [{ name: 'A' }])
+    act(() => t.get().game.setOptions({ goal: 15, challengesEnabled: true, bonus: true }))
+    act(() => t.get().game.resetGame())
+    expect(t.get().game).toMatchObject({ goal: 15, bonus: true })
+    // a daily round: fixed goal, no objections
+    act(() => t.get().game.setOptions({ goal: 99, challengesEnabled: false, daily: '2026-10-28', songIds: ['song_001'] }))
+    act(() => t.get().game.resetGame())
+    const g = t.get().game
+    expect(g.goal).not.toBe(99)
+    expect(g.challengesEnabled).toBe(true)
+    expect(g.daily).toBeNull()
+    expect(g.songIds).toBeNull()
   })
 })

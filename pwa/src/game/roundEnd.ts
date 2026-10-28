@@ -35,7 +35,11 @@ export function goalWord(goal: number): string {
 
 export function isRoundOver(players: Player[], mode: GameMode | string | null, goal: number): boolean {
   if (players.length === 0) return false
-  if (mode === 'hardcore') return players.every((p) => p.cards >= goal)
+  // Who left the round keeps their cards but plays no more: the others decide
+  if (mode === 'hardcore') {
+    const inRound = players.filter((p) => !p.left)
+    return inRound.length > 0 && inRound.every((p) => p.cards >= goal)
+  }
   if (mode === 'timeline_global') return players.reduce((sum, p) => sum + p.cards, 0) >= goal
   return players.some((p) => p.cards >= goal)
 }

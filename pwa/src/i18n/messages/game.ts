@@ -100,7 +100,7 @@ export const gameText = defineMessages({
     nobodyGetsCard: 'Die Karte bekommt niemand.',
     continuesAt: (name: string) => `Weiter geht es bei ${name}`,
     next: 'Weiter',
-    thinking: (name: string) => `${name} überlegt`,
+    thinking: (name: string) => `${name} hört zu`,
 
     // PositionStrip
     firstCard: 'Erste Karte',
@@ -143,7 +143,7 @@ export const gameText = defineMessages({
     players: 'Spieler',
     notInTiebreak: (name: string) => `${name}, nicht im Stechen`,
     objectionsLeft: (n: number) => `${n} Einsprüche übrig`,
-    thinkingShort: 'überlegt …',
+    thinkingShort: 'hört zu …',
     memberTurn: (name: string) => `${name} ist dran`,
     isOnTurn: 'ist dran',
     pointsShort: 'Pkt.',
@@ -318,7 +318,7 @@ export const gameText = defineMessages({
     nobodyGetsCard: 'Nobody gets the card.',
     continuesAt: (name: string) => `${name} continues`,
     next: 'Next',
-    thinking: (name: string) => `${name} is thinking`,
+    thinking: (name: string) => `${name} is listening`,
 
     firstCard: 'First card',
     earlier: 'earlier',
@@ -357,7 +357,7 @@ export const gameText = defineMessages({
     players: 'Players',
     notInTiebreak: (name: string) => `${name}, not in the tiebreak`,
     objectionsLeft: (n: number) => `${n} ${n === 1 ? 'objection' : 'objections'} left`,
-    thinkingShort: 'thinking …',
+    thinkingShort: 'listening …',
     memberTurn: (name: string) => `${name}'s turn`,
     isOnTurn: 'on turn',
     pointsShort: 'pts',

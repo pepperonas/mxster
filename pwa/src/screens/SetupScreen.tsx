@@ -6,6 +6,7 @@
  */
 import { useEffect, useMemo, useRef, useState, type FormEvent } from 'react'
 import { AnimatePresence, m } from 'motion/react'
+import { useLocation } from 'react-router-dom'
 import { useMe } from '@/auth/AuthContext'
 import { useGame, useGameHistory, useSettings, useUI } from '@/contexts'
 import { roomApi } from '@/online/roomApi'
@@ -101,8 +102,11 @@ export function SetupScreen() {
     genres,
     collection,
     bonus,
-    setOptions
+    setOptions,
+    finished,
+    onlineRoom
   } = useGame()
+  const location = useLocation()
   const { history } = useGameHistory()
   const missed = useMemo(() => missedSongs(history ?? []), [history])
   const nemesisLocked = missed.length < NEMESIS_MIN
@@ -129,6 +133,14 @@ export function SetupScreen() {
   useEffect(() => {
     if (prepared.current) return
     prepared.current = true
+    // A round running on this device is only given up after asking (Home
+    // does that); any other way here (empty history, a typed address) goes
+    // back to Home, where it can be continued or discarded
+    const running = !onlineRoom && isGameStarted && !finished && players.length > 0 && Boolean(gameMode)
+    if (running && !(location.state as { newRound?: boolean } | null)?.newRound) {
+      navigate('/', { replace: true })
+      return
+    }
     if (isGameStarted) resetGame()
     if (!gameMode) setGameMode((localStorage.getItem(LAST_MODE_KEY) as GameMode | null) ?? MODE_ORDER[0])
     const last = readLastOptions()

@@ -202,8 +202,13 @@ function freshPlayers(players: Player[], challenges: boolean): Player[] {
   }))
 }
 
-/** Round options survive a reset — the setup remembers the last choice. */
+/**
+ * Round options survive a reset — the setup remembers the last choice. The
+ * daily round's options are fixed by the day, not chosen: they never carry
+ * over (its goal of 99 and objections off would land in the next setup).
+ */
 function keepOptions(state: GameState) {
+  if (state.daily) return { randomStartPosition: state.randomStartPosition }
   return {
     gameMode: state.gameMode,
     randomStartPosition: state.randomStartPosition,
@@ -328,7 +333,8 @@ function gameReducer(state: GameState, action: GameAction): GameState {
         ...initialState,
         ...keepOptions(state),
         onlineRoom: state.onlineRoom,
-        players: freshPlayers(state.players, challengesInMode(state)),
+        // Who left the room is not in the rematch either
+        players: freshPlayers(state.players.filter((p) => !p.left), challengesInMode(state)),
         isGameStarted: true,
         startedAt: Date.now()
       }

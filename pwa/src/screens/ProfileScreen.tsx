@@ -1,6 +1,7 @@
 /**
  * Profil — account, appearance, game options, saved players, data, admin.
  */
+import { clearSavedGame } from '@/game/savedGame'
 import { useEffect, useRef, useState, type ReactNode } from 'react'
 import { useAuth, useMe } from '@/auth/AuthContext'
 import { useAchievements, useGameHistory, useSettings, useUI } from '@/contexts'
@@ -16,7 +17,7 @@ import { LanguageSwitch } from '@/components/ui/LanguageSwitch'
 import { useMessages } from '@/i18n'
 import { profileText } from '@/i18n/messages/profile'
 
-const VERSION = '0.12.3'
+const VERSION = '0.12.4'
 
 export function ProfileScreen() {
   const me = useMe()
@@ -78,6 +79,7 @@ export function ProfileScreen() {
         onClick: async () => {
           try {
             await api('/api/me', { method: 'DELETE' })
+            clearSavedGame()
             window.location.replace('/')
           } catch {
             addToast(t.deleteAccountFailed, 'error')

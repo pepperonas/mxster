@@ -17,7 +17,7 @@ import { useMessages } from '@/i18n'
 import { historyText } from '@/i18n/messages/history'
 
 export function HistoryScreen() {
-  const { history } = useGameHistory()
+  const { history, ready } = useGameHistory()
   const navigate = useAppNavigate()
   const t = useMessages(historyText)
 
@@ -31,7 +31,8 @@ export function HistoryScreen() {
     <div className="pt-4 md:pt-10">
       <h1 className="text-headline-md mb-6">{t.title}</h1>
 
-      {history.length === 0 ? (
+      {/* Still loading from the account: no "nothing here yet" in the meantime */}
+      {history.length === 0 && !ready ? null : history.length === 0 ? (
         <div className="surface p-8 text-center">
           <Icon name="history" size={40} className="mx-auto text-md-on-surface-variant" />
           <p className="mt-4 text-title-md">{t.emptyTitle}</p>

@@ -26,3 +26,17 @@ describe('daily round', () => {
     expect(localDay(new Date(2026, 0, 5, 23, 59))).toBe('2026-01-05')
   })
 })
+
+describe('daily songs and admin corrections', () => {
+  it('a corrected year or a blocked song elsewhere does not change the day for later players', async () => {
+    const { dailySongs } = await import('../daily')
+    const { songs } = await import('@/data/songs')
+    const { applyOverrides } = await import('@/data/catalogue')
+    const before = dailySongs('2026-10-28', songs).map((x) => x.id)
+    // the screen draws from the bundled list, so this is what stays stable
+    expect(dailySongs('2026-10-28', songs).map((x) => x.id)).toEqual(before)
+    // whereas a list with corrections laid over it can differ (why the bundled list is used)
+    const blocked = Object.fromEntries(before.slice(0, 1).map((id) => [id, { blocked: true }]))
+    expect(dailySongs('2026-10-28', applyOverrides(songs, blocked)).map((x) => x.id)).not.toEqual(before)
+  })
+})

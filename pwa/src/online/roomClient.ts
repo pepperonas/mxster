@@ -81,7 +81,14 @@ export class RoomClient {
         if (!this.stopped && ev.code !== 4000) this.handlers.onMessage({ type: 'closed', reason: ev.reason || 'closed' })
         return
       }
-      if (ev.code === 4000) return // replaced by a newer connection of the same seat
+      if (ev.code === 4000) {
+        // Replaced by a newer connection of the same seat (another tab or device):
+        // this one is dead — say so instead of looking connected
+        this.stopped = true
+        this.handlers.onConnection('closed')
+        this.handlers.onMessage({ type: 'closed', reason: 'replaced' })
+        return
+      }
       this.handlers.onConnection('connecting')
       this.retry = window.setTimeout(() => this.connect(), this.backoff)
       this.backoff = Math.min(MAX_BACKOFF_MS, this.backoff * 2)

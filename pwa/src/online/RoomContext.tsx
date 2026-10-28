@@ -136,7 +136,7 @@ export function RoomProvider({ code, children }: { code: string; children: React
           setInfo((prev) => (prev ? { ...prev, status: msg.status } : prev))
           break
         case 'closed':
-          setProblem(msg.reason === 'kicked' || msg.reason === 'left' ? msg.reason : 'closed')
+          setProblem(msg.reason === 'kicked' || msg.reason === 'left' || msg.reason === 'replaced' ? msg.reason : 'closed')
           break
         case 'error':
           break

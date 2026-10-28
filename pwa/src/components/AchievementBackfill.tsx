@@ -13,17 +13,18 @@ import { songById } from '@/data/catalogue'
 export function AchievementBackfill() {
   const { history, ready: historyReady } = useGameHistory()
   const { applyEffects, ready } = useAchievements()
-  const { settings } = useSettings()
+  const { settings, ready: settingsReady } = useSettings()
   const done = useRef(false)
 
   useEffect(() => {
-    if (done.current || !historyReady || !ready) return
+    // Settings too: they say who was removed (and must not come back)
+    if (done.current || !historyReady || !ready || !settingsReady) return
     done.current = true
     applyEffects(
       backfillAchievements(history ?? [], (id) => songById(id)?.genre, settings.hiddenPlayers ?? []),
       { silent: true }
     )
-  }, [historyReady, ready, history, applyEffects, settings.hiddenPlayers])
+  }, [historyReady, ready, settingsReady, history, applyEffects, settings.hiddenPlayers])
 
   return null
 }

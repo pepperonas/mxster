@@ -3,7 +3,7 @@
  * Tests bot card placement logic with different difficulty levels
  */
 
-import { describe, it, expect } from 'vitest'
+import { describe, it, expect, vi } from 'vitest'
 import { TimelineBotStrategy } from '../timelineBotStrategy'
 import type { BotConfig } from '../types'
 import type { Song } from '@/types'
@@ -232,5 +232,40 @@ describe('TimelineBotStrategy', () => {
       expect(position).toBeGreaterThanOrEqual(0)
       expect(position).toBeLessThanOrEqual(timeline.length)
     })
+  })
+})
+
+describe('TimelineBotStrategy wrong placements', () => {
+  const s = (year: number, id = `y${year}`): Song => ({ id, title: 't', artist: 'a', year })
+
+  it('a miss is really a miss, also when equal years make several gaps right', async () => {
+    const { correctGapIndices } = await import('@/game/placement')
+    const timeline = [s(1970), s(1985), s(1985), s(2000)]
+    const song = s(1985, 'x')
+    const rand = vi.spyOn(Math, 'random')
+    try {
+      for (let k = 0; k < 50; k++) {
+        // first draw decides "wrong" (above every accuracy), the second picks the gap
+        const pick = k / 50
+        let call = 0
+        rand.mockImplementation(() => (call++ === 0 ? 0.999 : pick))
+        const pos = new TimelineBotStrategy({ difficulty: 'easy', thinkingTimeMs: { min: 0, max: 0 } }).selectPosition(song, timeline)
+        expect(correctGapIndices(timeline, song)).not.toContain(pos)
+      }
+    } finally {
+      rand.mockRestore()
+    }
+  })
+
+  it('places anywhere when every gap is right (all the same year)', () => {
+    const timeline = [s(1990, 'a'), s(1990, 'b')]
+    const rand = vi.spyOn(Math, 'random').mockReturnValue(0.999)
+    try {
+      const pos = new TimelineBotStrategy({ difficulty: 'easy', thinkingTimeMs: { min: 0, max: 0 } }).selectPosition(s(1990), timeline)
+      expect(pos).toBeGreaterThanOrEqual(0)
+      expect(pos).toBeLessThanOrEqual(2)
+    } finally {
+      rand.mockRestore()
+    }
   })
 })

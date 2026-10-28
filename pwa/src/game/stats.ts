@@ -48,7 +48,10 @@ export function cardYears(game: HistoryEntry, seat: HistoryPlayer): number[] {
   const years: number[] = []
   for (const t of game.turns) {
     const placer = t.team ?? t.p
-    if (t.ok ? placer === seat.name : t.ch?.ok === true && t.ch.by === seat.name) years.push(t.y)
+    // An objection names the member who raised it, not the team
+    const objector = t.ch?.by
+    const objectedBySeat = objector !== undefined && (objector === seat.name || (seat.members ?? []).includes(objector))
+    if (t.ok ? placer === seat.name : t.ch?.ok === true && objectedBySeat) years.push(t.y)
   }
   return years
 }

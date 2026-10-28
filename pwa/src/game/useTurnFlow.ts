@@ -475,7 +475,8 @@ export function useTurnFlow({ onGameOver, onSkipNotice, runBots = true }: Option
   const skip = useCallback(() => {
     if (phase !== 'guessing' || !currentSong || !activePlayer || tiebreak) return
     incrementSkipCount(currentPlayer)
-    const result = evaluateSkip(currentSongSkips, currentPlayer, players.length, gameMode === 'hardcore')
+    // Only players still in the round take turns (and can pass the song on)
+    const result = evaluateSkip(currentSongSkips, currentPlayer, stillIn(players).length, gameMode === 'hardcore')
 
     if (result.penaltyApplied) {
       const newScore = activePlayer.score - SKIP_PENALTY_POINTS
@@ -563,6 +564,10 @@ export function useTurnFlow({ onGameOver, onSkipNotice, runBots = true }: Option
   const currentKey = currentSong ? songKey(currentSong) : null
   const botTurn = runBots && Boolean(activePlayer?.isBot) && (phase === 'placing' || phase === 'guessing')
 
+  // A bot still listening when the game screen goes away must not play on
+  const botAbort = useRef<AbortController | null>(null)
+  useEffect(() => () => botAbort.current?.abort(), [])
+
   useEffect(() => {
     // botBusy: if the song changes while the bot is still thinking (someone
     // draws again), the re-run must not start a second bot turn.
@@ -570,8 +575,9 @@ export function useTurnFlow({ onGameOver, onSkipNotice, runBots = true }: Option
     botBusy.current = true
     setIsBotThinking(true)
     const bot = new BotPlayer(activePlayer)
+    botAbort.current = new AbortController()
     bot
-      .executeTurn(gameMode!, currentSong, activeTimeline, (action) => onBotAction(action))
+      .executeTurn(gameMode!, currentSong, activeTimeline, (action) => onBotAction(action), botAbort.current.signal)
       .catch(() => onBotError())
       .finally(() => {
         botBusy.current = false

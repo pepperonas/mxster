@@ -183,12 +183,9 @@ export function AchievementProvider({ children }: { children: ReactNode }) {
     const achievements = playerAchievements.get(playerName)
     if (!achievements) return []
 
-    // Migrate if needed
+    // Read-only: the document is already migrated when it loads (normalize);
+    // writing state here would update during render
     const migrated = migratePlayerAchievements(achievements)
-    if (migrated !== achievements) {
-      // Update the map if migration happened
-      setPlayerAchievements(prev => new Map(prev).set(playerName, migrated))
-    }
 
     // ALWAYS clean achievements before returning (removes progress from one-time achievements).
     // Name and description come from the definitions in the current language: the

@@ -62,11 +62,15 @@ export function applyAchievementEffects(
   const out: AchievementDoc = { ...doc }
   const unlocked: Unlocked[] = []
   const touched = new Set<string>()
+  // Nothing new → the same document back, so nothing is written to the server
+  let changed = false
 
   const person = (name: string): PlayerAchievements => {
     if (!touched.has(name)) {
       touched.add(name)
-      const base = out[name] ? complete(out[name]) : initializePlayerAchievements(name)
+      const existing = out[name]
+      const base = existing ? complete(existing) : initializePlayerAchievements(name)
+      if (base !== existing) changed = true
       out[name] = { ...base, achievements: base.achievements.map((a) => ({ ...a })) }
     }
     return out[name]
@@ -74,6 +78,7 @@ export function applyAchievementEffects(
 
   const unlock = (name: string, a: Achievement) => {
     if (a.unlocked) return
+    changed = true
     a.unlocked = true
     a.unlockedAt = now
     unlocked.push({ player: name, id: a.id, achievement: { ...a } })
@@ -89,9 +94,11 @@ export function applyAchievementEffects(
     if (a.target === undefined) continue
     const current = a.progress ?? 0
     const next = fx.type === 'add' ? Math.max(current + fx.value, fx.atLeast ?? 0) : Math.max(current, fx.value)
-    a.progress = Math.min(next, a.target)
+    const progress = Math.min(next, a.target)
+    if (progress !== a.progress) changed = true
+    a.progress = progress
     if (a.progress >= a.target) unlock(fx.player, a)
   }
 
-  return { doc: out, unlocked }
+  return { doc: changed ? out : doc, unlocked }
 }

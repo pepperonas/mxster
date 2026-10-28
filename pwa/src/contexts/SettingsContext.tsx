@@ -27,6 +27,8 @@ export interface Settings {
 
 interface SettingsContextType {
   settings: Settings
+  /** The settings have loaded from the account. */
+  ready: boolean
   updateSettings: (newSettings: Partial<Settings>) => void
   resetSettings: () => void
   addPlayer: (playerName: string) => void
@@ -82,7 +84,7 @@ export const THEME_COLOR: Record<ThemeMode, string> = {
 const SettingsContext = createContext<SettingsContextType | undefined>(undefined)
 
 export function SettingsProvider({ children }: { children: ReactNode }) {
-  const { value: settings, setValue } = useSyncedDoc<Settings>('settings', {
+  const { value: settings, setValue, status } = useSyncedDoc<Settings>('settings', {
     initial: defaultSettings,
     merge: mergeSettings,
     legacyKey: 'mxster_settings',
@@ -156,7 +158,7 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
   )
 
   return (
-    <SettingsContext.Provider value={{ settings, updateSettings, resetSettings, addPlayer, removePlayer, renamePlayer, hidePlayer, rememberSong: remember }}>
+    <SettingsContext.Provider value={{ settings, ready: status === 'ready', updateSettings, resetSettings, addPlayer, removePlayer, renamePlayer, hidePlayer, rememberSong: remember }}>
       {children}
     </SettingsContext.Provider>
   )

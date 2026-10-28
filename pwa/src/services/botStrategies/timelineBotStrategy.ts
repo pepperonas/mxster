@@ -5,6 +5,7 @@
 
 import type { Song } from '@/types'
 import type { BotConfig } from './types'
+import { correctGapIndices } from '@/game/placement'
 
 export class TimelineBotStrategy {
   private config: BotConfig
@@ -39,7 +40,7 @@ export class TimelineBotStrategy {
       return position
     } else {
       // Incorrect placement - random position away from correct
-      return this.randomWrongPosition(correctPosition, timeline.length)
+      return this.randomWrongPosition(currentSong, timeline)
     }
   }
 
@@ -53,12 +54,15 @@ export class TimelineBotStrategy {
     return timeline.length // Append at end
   }
 
-  private randomWrongPosition(correctPosition: number, timelineLength: number): number {
-    // Generate random position that's NOT the correct one
-    let wrongPosition: number
-    do {
-      wrongPosition = Math.floor(Math.random() * (timelineLength + 1))
-    } while (wrongPosition === correctPosition && timelineLength > 0)
-    return wrongPosition
+  /**
+   * A position that is really wrong. With equal years several gaps are right,
+   * so excluding one index is not enough; when every gap is right (all the
+   * same year) any gap will do.
+   */
+  private randomWrongPosition(song: Song, timeline: Song[]): number {
+    const right = new Set(correctGapIndices(timeline, song))
+    const wrong = Array.from({ length: timeline.length + 1 }, (_, i) => i).filter((i) => !right.has(i))
+    const options = wrong.length > 0 ? wrong : [...right]
+    return options[Math.floor(Math.random() * options.length)]
   }
 }

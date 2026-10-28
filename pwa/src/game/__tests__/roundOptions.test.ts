@@ -167,6 +167,13 @@ describe('round length', () => {
     expect(isRoundOver([p('A', { cards: 4 }), p('B', { cards: 4 })], 'timeline_personal', 5)).toBe(false)
   })
 
+  it('Hardcore still ends when someone left before reaching the goal', () => {
+    const players = [p('A', { cards: 5 }), p('B', { cards: 2, left: true }), p('C', { cards: 5 })]
+    expect(isRoundOver(players, 'hardcore', 5)).toBe(true)
+    expect(isRoundOver([p('A', { cards: 4 }), p('B', { cards: 2, left: true })], 'hardcore', 5)).toBe(false)
+    expect(isRoundOver([p('A', { cards: 9, left: true })], 'hardcore', 5)).toBe(false)
+  })
+
   it('Gemeinsame Zeitleiste ends when the shared timeline holds the goal', () => {
     expect(isRoundOver([p('A', { cards: 8 }), p('B', { cards: 7 })], 'timeline_global', 15)).toBe(true)
     expect(isRoundOver([p('A', { cards: 8 }), p('B', { cards: 6 })], 'timeline_global', 15)).toBe(false)

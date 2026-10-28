@@ -425,3 +425,46 @@ def test_a_screen_joins_in_the_lobby_only_shows_the_round_and_cannot_act(client,
                 assert msg["type"] != "intent"
                 if msg["type"] == "pong":
                     break
+
+
+@pytest.mark.parametrize(
+    "position, expected",
+    [("x", 0), (None, 0), (-50, 0), (1e400, 0), (2500.7, 2500), (10**12, 3_600_000), ([1], 0)],
+)
+def test_odd_cue_positions_neither_crash_the_socket_nor_travel(client, google, position, expected):
+    code, hc, gc = _lobby(client, google)
+    with _connect(client, code, hc) as h:
+        h.receive_json()
+        with _connect(client, code, gc) as g:
+            g.receive_json()
+            h.send_json({"type": "audio", "songId": "song_001", "playing": True, "positionMs": position})
+            assert _until(g, "audio")["positionMs"] == expected
+            # the host's socket is still alive
+            h.send_json({"type": "ping", "t": 1})
+            assert _until(h, "pong")["t"] == 1
+
+
+def test_only_a_short_song_id_is_relayed(client, google):
+    code, hc, gc = _lobby(client, google)
+    with _connect(client, code, hc) as h:
+        h.receive_json()
+        with _connect(client, code, gc) as g:
+            g.receive_json()
+            h.send_json({"type": "audio", "songId": {"huge": "x" * 5000}, "playing": True, "positionMs": 0})
+            assert _until(g, "audio")["songId"] is None
+
+
+def test_an_expired_room_cannot_be_entered_again(client, google):
+    from datetime import timedelta
+
+    from app.db import Room, utcnow
+
+    code, hc, _ = _lobby(client, google)
+    with app_db.SessionLocal() as db:
+        room = db.get(Room, code)
+        room.expires_at = utcnow() - timedelta(minutes=1)
+        db.commit()
+    with pytest.raises(WebSocketDisconnect) as closed:
+        with _connect(client, code, hc) as h:
+            h.receive_json()
+    assert closed.value.code == 4003

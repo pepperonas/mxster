@@ -399,6 +399,20 @@ def _origin_ok(ws: WebSocket) -> bool:
     return ws.headers.get("origin", "").rstrip("/") == get_settings().public_url.rstrip("/")
 
 
+def _position_ms(value: object) -> int:
+    """A song position from a client: a number of ms within a song, anything else 0."""
+    try:
+        ms = int(float(value))  # type: ignore[arg-type]
+    except (TypeError, ValueError, OverflowError):
+        return 0
+    return max(0, min(ms, 3_600_000))
+
+
+def _song_id(value: object) -> str | None:
+    """Only a short string id is relayed to the others."""
+    return value if isinstance(value, str) and 0 < len(value) <= 64 else None
+
+
 @router.websocket("/rooms/{code}/ws")
 async def room_socket(ws: WebSocket, code: str) -> None:
     code = normalize_code(code)
@@ -410,6 +424,10 @@ async def room_socket(ws: WebSocket, code: str) -> None:
         member = member_for(db, room, ws.cookies) if room is not None else None
         if room is None or member is None or room.status not in OPEN + ("finished",):
             await ws.close(code=4001, reason="unauthorized")
+            return
+        # A room past its time is gone, even if it has not been purged yet
+        if as_utc(room.expires_at) < utcnow():
+            await ws.close(code=4003, reason="closed")
             return
         if member.left_at is not None:
             await ws.close(code=4003, reason="left")
@@ -490,9 +508,9 @@ async def room_socket(ws: WebSocket, code: str) -> None:
             elif kind == "audio" and may_cue():
                 cue = {
                     "type": "audio",
-                    "songId": msg.get("songId"),
+                    "songId": _song_id(msg.get("songId")),
                     "playing": bool(msg.get("playing")),
-                    "positionMs": int(msg.get("positionMs") or 0),
+                    "positionMs": _position_ms(msg.get("positionMs")),
                     "at": now_ms(),
                 }
                 hub.audio[code] = cue

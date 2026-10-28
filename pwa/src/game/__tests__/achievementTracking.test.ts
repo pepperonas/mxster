@@ -181,3 +181,16 @@ describe('backfillAchievements', () => {
     expect(again.unlocked).toEqual([])
   })
 })
+
+describe('applyAchievementEffects without news', () => {
+  it('hands back the same document, so nothing is written', () => {
+    const fx: AchievementEffect[] = [
+      { type: 'progress', player: 'A', id: AchievementId.ZEITMASCHINE, value: 2 },
+      { type: 'unlock', player: 'A', id: AchievementId.LIGHTNING_FAST }
+    ]
+    const once = applyAchievementEffects({}, fx, 1).doc
+    expect(applyAchievementEffects(once, fx, 2).doc).toBe(once)
+    expect(applyAchievementEffects(once, [{ type: 'progress', player: 'A', id: AchievementId.ZEITMASCHINE, value: 1 }], 3).doc).toBe(once)
+    expect(applyAchievementEffects(once, [{ type: 'progress', player: 'A', id: AchievementId.ZEITMASCHINE, value: 3 }], 3).doc).not.toBe(once)
+  })
+})

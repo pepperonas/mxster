@@ -255,3 +255,27 @@ describe('cards on the shared timeline', () => {
     expect(decadeShares(lisa).every((d) => d.cards === 0)).toBe(true)
   })
 })
+
+describe('cardYears in team rounds', () => {
+  it('credits a won objection to the team of the member who raised it', async () => {
+    const { cardYears } = await import('../stats')
+    const g = {
+      id: 1,
+      timestamp: 1,
+      date: '',
+      gameMode: 'timeline_global',
+      winner: { name: 'Rot', cards: 2, score: 0 },
+      players: [
+        { name: 'Rot', cards: 2, score: 0, members: ['Anna', 'Ben'], timeline: [] },
+        { name: 'Blau', cards: 1, score: 0, members: ['Cleo', 'Dan'], timeline: [] }
+      ],
+      turns: [
+        { p: 'Cleo', team: 'Blau', s: 'a', y: 1980, ok: true },
+        { p: 'Cleo', team: 'Blau', s: 'b', y: 1995, ok: false, ch: { by: 'Ben', ok: true } }
+      ]
+    } as never
+    const [rot, blau] = (g as { players: never[] }).players
+    expect(cardYears(g, rot)).toEqual([1995])
+    expect(cardYears(g, blau)).toEqual([1980])
+  })
+})

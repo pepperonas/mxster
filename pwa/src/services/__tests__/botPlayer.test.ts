@@ -3,8 +3,14 @@
  * Tests bot player orchestration and name generation
  */
 
-import { describe, it, expect, vi } from 'vitest'
-import { BotPlayer, generateBotName, createBotPlayers } from '../botPlayer'
+import { describe, it, expect, vi, beforeEach, afterAll } from 'vitest'
+import { BotPlayer, BOT_LISTEN_MS, generateBotName, createBotPlayers } from '../botPlayer'
+
+const REAL_LISTEN = { ...BOT_LISTEN_MS }
+const realListening = () => Object.assign(BOT_LISTEN_MS, REAL_LISTEN)
+// Most tests here are about the answer, not the wait
+beforeEach(() => Object.assign(BOT_LISTEN_MS, { min: 1, max: 2 }))
+afterAll(realListening)
 import { GameMode, type Player, type Song } from '@/types'
 
 describe('BotPlayer', () => {
@@ -80,21 +86,66 @@ describe('BotPlayer', () => {
       expect(action.data).toHaveProperty('year')
     })
 
-    it('should delay execution based on thinking time', async () => {
-      const player = createTestPlayer('Bot Alpha', 'easy')
-      const botPlayer = new BotPlayer(player)
+    it('listens 3–6 seconds before it answers, every strength alike', async () => {
+      realListening()
+      vi.useFakeTimers()
+      try {
+        for (const level of ['easy', 'medium', 'hard'] as const) {
+          const bot = new BotPlayer(createTestPlayer('Bot Alpha', level))
+          expect(bot.listenMs).toEqual({ min: 3000, max: 6000 })
+          const done = vi.fn()
+          const turn = bot.executeTurn(GameMode.HARDCORE, testSong, [], done)
+          await vi.advanceTimersByTimeAsync(2999)
+          expect(done).not.toHaveBeenCalled()
+          await vi.advanceTimersByTimeAsync(3001)
+          await turn
+          expect(done).toHaveBeenCalledTimes(1)
+        }
+      } finally {
+        vi.useRealTimers()
+      }
+    })
 
-      const mockCallback = vi.fn()
-      const startTime = Date.now()
+    it('answers at the shortest and the longest listening time', async () => {
+      realListening()
+      vi.useFakeTimers()
+      const rand = vi.spyOn(Math, 'random')
+      try {
+        for (const [r, ms] of [[0, 3000], [0.9999999, 6000]] as const) {
+          rand.mockReturnValue(r)
+          const done = vi.fn()
+          const turn = new BotPlayer(createTestPlayer('Bot Alpha', 'easy')).executeTurn(GameMode.HARDCORE, testSong, [], done)
+          await vi.advanceTimersByTimeAsync(ms - 1)
+          expect(done).not.toHaveBeenCalled()
+          await vi.advanceTimersByTimeAsync(1)
+          await turn
+          expect(done).toHaveBeenCalledTimes(1)
+        }
+      } finally {
+        rand.mockRestore()
+        vi.useRealTimers()
+      }
+    })
 
-      await botPlayer.executeTurn(GameMode.HARDCORE, testSong, [], mockCallback)
+    it('never answers once its turn was called off', async () => {
+      realListening()
+      vi.useFakeTimers()
+      try {
+        const ctrl = new AbortController()
+        const done = vi.fn()
+        const turn = new BotPlayer(createTestPlayer('Bot Alpha', 'hard')).executeTurn(GameMode.TIMELINE_GLOBAL, testSong, [], done, ctrl.signal)
+        await vi.advanceTimersByTimeAsync(1000)
+        ctrl.abort()
+        await vi.advanceTimersByTimeAsync(10000)
+        await turn
+        expect(done).not.toHaveBeenCalled()
+      } finally {
+        vi.useRealTimers()
+      }
+    })
 
-      const elapsed = Date.now() - startTime
-
-      // All difficulties: 500-800ms thinking time (see botPlayer.ts DIFFICULTY_CONFIGS)
-      // CI environments have overhead, so we allow generous tolerance
-      expect(elapsed).toBeGreaterThanOrEqual(400) // Allow 100ms tolerance for CI
-      expect(elapsed).toBeLessThan(1000) // Allow 200ms tolerance for CI
+    it('rejects an unknown strength', () => {
+      expect(() => new BotPlayer({ ...createTestPlayer('Bot X', 'easy'), botDifficulty: 'insane' as never })).toThrow()
     })
   })
 

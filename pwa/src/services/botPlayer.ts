@@ -8,20 +8,13 @@ import type { BotAction, BotConfig } from './botStrategies/types'
 import { HardcoreBotStrategy } from './botStrategies/hardcoreBotStrategy'
 import { TimelineBotStrategy } from './botStrategies/timelineBotStrategy'
 
-const DIFFICULTY_CONFIGS: Record<'easy' | 'medium' | 'hard', BotConfig> = {
-  easy: {
-    difficulty: 'easy',
-    thinkingTimeMs: { min: 500, max: 800 } // Fast response
-  },
-  medium: {
-    difficulty: 'medium',
-    thinkingTimeMs: { min: 500, max: 800 } // Same speed as easy
-  },
-  hard: {
-    difficulty: 'hard',
-    thinkingTimeMs: { min: 500, max: 800 } // Same speed - only accuracy differs
-  }
-}
+/**
+ * How long a bot listens before it answers: like a person, a few seconds of
+ * the song (all strengths alike — only accuracy differs). Tests shorten it.
+ */
+export const BOT_LISTEN_MS = { min: 3000, max: 6000 }
+
+const DIFFICULTIES = ['easy', 'medium', 'hard'] as const
 
 export class BotPlayer {
   private config: BotConfig
@@ -31,18 +24,20 @@ export class BotPlayer {
       throw new Error('Player must be a bot with difficulty set')
     }
 
-    this.config = DIFFICULTY_CONFIGS[player.botDifficulty]
+    if (!DIFFICULTIES.includes(player.botDifficulty)) throw new Error(`Unknown bot difficulty: ${player.botDifficulty}`)
+    this.config = { difficulty: player.botDifficulty, thinkingTimeMs: { ...BOT_LISTEN_MS } }
   }
 
   async executeTurn(
     gameMode: GameMode,
     currentSong: Song,
     timeline: Song[],
-    onComplete: (action: BotAction) => void
+    onComplete: (action: BotAction) => void,
+    signal?: AbortSignal
   ): Promise<void> {
-    // Simulate thinking time
-    const thinkingTime = this.randomDelay()
-    await this.delay(thinkingTime)
+    // Listen to the song for a few seconds, then answer
+    await this.delay(this.randomDelay(), signal)
+    if (signal?.aborted) return
 
     // Execute mode-specific strategy
     if (gameMode === 'hardcore') {
@@ -62,8 +57,20 @@ export class BotPlayer {
     return Math.floor(Math.random() * (max - min + 1)) + min
   }
 
-  private delay(ms: number): Promise<void> {
-    return new Promise((resolve) => setTimeout(resolve, ms))
+  private delay(ms: number, signal?: AbortSignal): Promise<void> {
+    return new Promise((resolve) => {
+      if (signal?.aborted) return resolve()
+      const timer = setTimeout(resolve, ms)
+      signal?.addEventListener('abort', () => {
+        clearTimeout(timer)
+        resolve()
+      })
+    })
+  }
+
+  /** The listening time this bot uses (ms range). */
+  get listenMs() {
+    return { ...this.config.thinkingTimeMs }
   }
 }
 

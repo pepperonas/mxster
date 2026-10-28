@@ -71,7 +71,8 @@ export function HomeScreen() {
       <p className="text-body-lg">{t.newRoundBody}</p>,
       [
         { text: t.continue, onClick: () => navigate('/game') },
-        { text: t.newRound, variant: 'primary', onClick: () => navigate('/new') }
+        // Says that discarding the running round was confirmed (Setup checks)
+        { text: t.newRound, variant: 'primary', onClick: () => navigate('/new', { state: { newRound: true } }) }
       ]
     )
   }
