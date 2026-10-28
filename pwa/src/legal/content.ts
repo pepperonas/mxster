@@ -122,6 +122,7 @@ const privacy: Record<Lang, LegalDoc> = {
         heading: '7. Konto und Freischaltung',
         body: [
           'Gespeichert werden: Google-Kennung (bei Anmeldung mit Google), E-Mail-Adresse, Name, Adresse des Profilbilds, bei Anmeldung mit E-Mail der Passwort-Hash und der Zeitpunkt der Bestätigung, Status (wartend, freigeschaltet, abgelehnt, gesperrt) sowie die Zeitpunkte der Anmeldung, der letzten Anmeldung und der Entscheidung.',
+          'Für eine Nutzungsstatistik vermerke ich, an welchen Tagen ein freigeschaltetes Konto die App geöffnet hat – nur den Tag, keine Uhrzeit und keine Inhalte. Die Einträge werden nach 400 Tagen gelöscht, mit dem Konto sofort. Als Betreiber sehe ich daraus und aus den gespeicherten Runden nur Summen (zum Beispiel aktive Konten pro Tag, Runden pro Tag, wie oft ein Song richtig lag), keine Auswertung einzelner Personen. Rechtsgrundlage ist Art. 6 Abs. 1 lit. f DSGVO, mein berechtigtes Interesse, die App zu verbessern.',
           'Neue Konten werden von Hand freigeschaltet; eine automatisierte Entscheidung findet nicht statt. Bei einer neuen Anfrage erhalte ich eine E-Mail mit Name und E-Mail-Adresse; der Versand läuft über den Mailserver des Hosters (siehe Abschnitt 3). Jede Entscheidung wird mit Zeitpunkt protokolliert.',
           'Rechtsgrundlage ist Art. 6 Abs. 1 lit. b DSGVO, für das Protokoll Art. 6 Abs. 1 lit. f DSGVO (Nachvollziehbarkeit der Freischaltungen).'
         ]
@@ -174,7 +175,7 @@ const privacy: Record<Lang, LegalDoc> = {
       {
         heading: '12. Speicherdauer und Löschen',
         body: [
-          'Dein Konto und deine Spieldaten bleiben gespeichert, bis du sie löschst. Im Profil kannst du jederzeit nur die Spieldaten oder das ganze Konto löschen; beim Löschen des Kontos entfernt der Server sofort Konto, Sitzungen, Spieldaten, Freundschaften, Einladungen, Tagesrunden-Ergebnisse, Erfolgspunkte, Song-Meldungen und deine Räume.',
+          'Dein Konto und deine Spieldaten bleiben gespeichert, bis du sie löschst. Im Profil kannst du jederzeit nur die Spieldaten oder das ganze Konto löschen; beim Löschen des Kontos entfernt der Server sofort Konto, Sitzungen, Spieldaten, Freundschaften, Einladungen, Tagesrunden-Ergebnisse, Erfolgspunkte, Aktivitätstage, Song-Meldungen und deine Räume.',
           'Abgelehnte und gesperrte Konten bewahre ich auf, damit die Entscheidung bei einer erneuten Anmeldung erhalten bleibt; auf Anfrage lösche ich sie.',
           'Der Server wird jede Nacht verschlüsselt gesichert; Sicherungen werden nach spätestens rund einem Monat überschrieben. Gelöschte Daten verschwinden daher spätestens dann auch aus den Sicherungen.'
         ]
@@ -240,6 +241,7 @@ const privacy: Record<Lang, LegalDoc> = {
         heading: '7. Account and approval',
         body: [
           'Stored are: Google account ID (when signing in with Google), e-mail address, name, profile picture address, for e-mail sign-in the password hash and the time of confirmation, status (waiting, approved, rejected, blocked) and the times of registration, last sign-in and the decision.',
+          'For a usage statistic I note on which days an approved account opened the app – only the day, no time and no content. The entries are deleted after 400 days, with the account at once. As the operator I only see totals from this and from the stored rounds (for example active accounts per day, rounds per day, how often a song was placed right), no evaluation of individual people. The legal basis is Art. 6(1)(f) GDPR, my legitimate interest in improving the app.',
           'New accounts are approved by hand; there is no automated decision. For each new request I receive an e-mail with name and e-mail address, sent via the host\'s mail server (see section 3). Every decision is logged with its time.',
           'Legal basis: Art. 6 (1) (b) GDPR, for the log Art. 6 (1) (f) GDPR (traceability of approvals).'
         ]
@@ -292,7 +294,7 @@ const privacy: Record<Lang, LegalDoc> = {
       {
         heading: '12. Retention and deletion',
         body: [
-          'Your account and game data are kept until you delete them. In your profile you can delete just the game data or the whole account at any time; deleting the account immediately removes account, sessions, game data, friendships, invitations, daily results, achievement points, song reports and your rooms from the server.',
+          'Your account and game data are kept until you delete them. In your profile you can delete just the game data or the whole account at any time; deleting the account immediately removes account, sessions, game data, friendships, invitations, daily results, achievement points, activity days, song reports and your rooms from the server.',
           'I keep rejected and blocked accounts so that the decision still applies if you sign in again; I delete them on request.',
           'The server is backed up every night in encrypted form; backups are overwritten after about a month at the latest. Deleted data therefore also disappears from the backups by then.'
         ]

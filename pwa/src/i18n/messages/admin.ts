@@ -4,6 +4,7 @@ export const adminText = defineMessages({
   de: {
     title: 'Verwaltung',
     tabReports: 'Meldungen',
+    tabStats: 'Statistik',
     reportsCount: (n: number) => (n === 1 ? '1 Meldung' : `${n} Meldungen`),
     reportsEmptyTitle: 'Keine offenen Meldungen',
     reportsEmptyText: 'Wenn jemand beim Aufdecken einen Song meldet, steht er hier.',
@@ -65,6 +66,7 @@ export const adminText = defineMessages({
   en: {
     title: 'Admin',
     tabReports: 'Reports',
+    tabStats: 'Statistics',
     reportsCount: (n: number) => (n === 1 ? '1 report' : `${n} reports`),
     reportsEmptyTitle: 'No open reports',
     reportsEmptyText: 'When someone reports a song after the reveal, it shows up here.',

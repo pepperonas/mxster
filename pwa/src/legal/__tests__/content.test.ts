@@ -57,6 +57,17 @@ describe('privacy policy matches the code', () => {
     expect(server('api/daily.py')).toMatch(/DailyResult\.day < cutoff\)\.delete\(\)/)
   })
 
+  it('states when activity days are deleted, and the server deletes them and keeps no time', () => {
+    const days = Number(num(server('activity.py'), /KEEP_DAYS = (\d+)/))
+    expect(text('de')).toContain(`nach ${days} Tagen gelöscht, mit dem Konto sofort`)
+    expect(text('en')).toContain(`deleted after ${days} days, with the account at once`)
+    expect(server('activity.py')).toMatch(/delete\(ActivityDay\)\.where\(ActivityDay\.day < cutoff\)/)
+    // only the day: the table has no time column, and it goes with the account
+    const table = /class ActivityDay[\s\S]*?\n\n\n/.exec(server('db.py'))![0]
+    expect(table).toContain('ondelete="CASCADE"')
+    expect(table).not.toMatch(/DateTime/)
+  })
+
   it('names song reports, and they are deleted with the account', () => {
     expect(server('db.py')).toMatch(/class SongReport[\s\S]*?ForeignKey\("users\.id", ondelete="CASCADE"\)/)
     expect(text('de')).toContain('Meldest du einen Song')

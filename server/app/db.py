@@ -168,6 +168,15 @@ class SongOverride(Base):
     updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow)
 
 
+class ActivityDay(Base):
+    """An approved account used the app on this day (Europe/Berlin) — nothing
+    more: no time, no content. For the admin's usage chart; kept 400 days."""
+
+    __tablename__ = "activity_days"
+    user_id: Mapped[int] = mapped_column(ForeignKey("users.id", ondelete="CASCADE"), primary_key=True)
+    day: Mapped[str] = mapped_column(String(10), primary_key=True, index=True)
+
+
 class AchievementScore(Base):
     """The account holder's achievement points, so friends can compare.
     Written by the device from the account's own achievements document."""

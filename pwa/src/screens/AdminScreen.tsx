@@ -18,6 +18,7 @@ import { msg, useMessages } from '@/i18n'
 import { adminText } from '@/i18n/messages/admin'
 import { apiErrorText } from '@/i18n/messages/errors'
 import { AdminReports, useReportCount } from './AdminReports'
+import { AdminStats } from './AdminStats'
 
 interface Account {
   id: number
@@ -34,16 +35,17 @@ interface Account {
 }
 
 type Action = 'approve' | 'reject' | 'block' | 'unblock' | 'reset'
-type Tab = 'pending' | 'approved' | 'closed' | 'reports'
+type Tab = 'pending' | 'approved' | 'closed' | 'reports' | 'stats'
 
-const TABS: { id: Tab; label: 'tabPending' | 'tabApproved' | 'tabClosed' | 'tabReports' }[] = [
+const TABS: { id: Tab; label: 'tabPending' | 'tabApproved' | 'tabClosed' | 'tabReports' | 'tabStats' }[] = [
   { id: 'pending', label: 'tabPending' },
   { id: 'approved', label: 'tabApproved' },
   { id: 'closed', label: 'tabClosed' },
-  { id: 'reports', label: 'tabReports' }
+  { id: 'reports', label: 'tabReports' },
+  { id: 'stats', label: 'tabStats' }
 ]
 
-const inTab = (a: Account, tab: Exclude<Tab, 'reports'>) => (tab === 'closed' ? a.status === 'rejected' || a.status === 'blocked' : a.status === tab)
+const inTab = (a: Account, tab: Exclude<Tab, 'reports' | 'stats'>) => (tab === 'closed' ? a.status === 'rejected' || a.status === 'blocked' : a.status === tab)
 
 /** The action that restores a previous status (for undo). */
 const RESTORE: Record<AccountStatus, Action> = { pending: 'reset', approved: 'approve', rejected: 'reject', blocked: 'block' }
@@ -104,7 +106,7 @@ export function AdminScreen() {
     closed: accounts?.filter((a) => inTab(a, 'closed')).length ?? 0,
     reports: openReports
   }
-  const shown = tab === 'reports' ? [] : (accounts?.filter((a) => inTab(a, tab)) ?? [])
+  const shown = tab === 'reports' || tab === 'stats' ? [] : (accounts?.filter((a) => inTab(a, tab)) ?? [])
 
   return (
     <div>
@@ -120,7 +122,7 @@ export function AdminScreen() {
               role="tab"
               aria-selected={active}
               onClick={() => setTab(tab_.id)}
-              className={`relative flex-1 shrink-0 whitespace-nowrap min-h-[48px] px-3 text-label-lg m3-state-layer ${active ? 'text-md-primary' : 'text-md-on-surface-variant'}`}
+              className={`relative flex-1 shrink-0 min-w-max whitespace-nowrap min-h-[48px] px-3 text-label-lg m3-state-layer ${active ? 'text-md-primary' : 'text-md-on-surface-variant'}`}
             >
               <span className="inline-flex items-center gap-2">
                 {t[tab_.label]}
@@ -142,7 +144,11 @@ export function AdminScreen() {
         })}
       </div>
 
-      {tab === 'reports' ? (
+      {tab === 'stats' ? (
+        <div className="pt-6" role="tabpanel">
+          <AdminStats />
+        </div>
+      ) : tab === 'reports' ? (
         <div className="pt-4" role="tabpanel">
           <AdminReports onCount={setReportCount} />
         </div>
@@ -238,7 +244,7 @@ function describe(t: (typeof adminText)['de'], a: Account): string {
   }
 }
 
-function EmptyTab({ tab }: { tab: Exclude<Tab, 'reports'> }) {
+function EmptyTab({ tab }: { tab: Exclude<Tab, 'reports' | 'stats'> }) {
   const t = useMessages(adminText)
   const copy = {
     pending: [t.emptyPendingTitle, t.emptyPendingText],
