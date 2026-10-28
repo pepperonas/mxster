@@ -12,6 +12,8 @@
 import type { PendingPlacement } from './turn'
 
 export const OBJECTION_WINDOW_MS = 10_000
+/** Time to pick a gap after objecting; then the objection is dropped. */
+export const CHOOSE_GAP_MS = 30_000
 
 /** Who may still object: allowed, has not passed, is not away. */
 export function waitingOn(pending: PendingPlacement, absent: readonly number[] = []): number[] {
@@ -19,11 +21,15 @@ export function waitingOn(pending: PendingPlacement, absent: readonly number[] =
   return pending.challengers.filter((i) => !passed.includes(i) && !absent.includes(i))
 }
 
-export type WindowStep = 'none' | 'start' | 'reveal'
+export type WindowStep = 'none' | 'start' | 'reveal' | 'startChoosing' | 'dropObjection'
 
 /** What the host's device does next with an open objection window. */
 export function windowStep(pending: PendingPlacement | null, absent: readonly number[], serverNow: number): WindowStep {
-  if (!pending || pending.choosing !== null || pending.claim) return 'none'
+  if (!pending || pending.claim) return 'none'
+  if (pending.choosing !== null) {
+    if (pending.deadlineAt == null) return 'startChoosing'
+    return serverNow >= pending.deadlineAt ? 'dropObjection' : 'none'
+  }
   if (waitingOn(pending, absent).length === 0) return 'reveal'
   if (pending.deadlineAt == null) return 'start'
   return serverNow >= pending.deadlineAt ? 'reveal' : 'none'

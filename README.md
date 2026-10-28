@@ -16,7 +16,7 @@
 
 <!-- BADGES:BIG — version, tests, lines of code and songs; readme.test.ts keeps them true, scripts/readme-badges.mjs rewrites them. -->
 [![version](https://img.shields.io/badge/version-0.9.9-C2185B?style=for-the-badge&logo=semver&logoColor=white)](https://github.com/pepperonas/mxtape/releases/latest)
-[![tests](https://img.shields.io/badge/tests-613-2E9E5B?style=for-the-badge&logo=vitest&logoColor=white)](#tests-and-ci)
+[![tests](https://img.shields.io/badge/tests-614-2E9E5B?style=for-the-badge&logo=vitest&logoColor=white)](#tests-and-ci)
 [![lines of code](https://img.shields.io/badge/lines%20of%20code-22.2k-4B6BDF?style=for-the-badge&logo=typescript&logoColor=white)](pwa/src)
 [![test code](https://img.shields.io/badge/test%20code-7.7k-2E9E5B?style=for-the-badge&logo=typescript&logoColor=white)](#tests-and-ci)
 [![songs](https://img.shields.io/badge/songs-300-FF8A3D?style=for-the-badge&logo=applemusic&logoColor=white)](#the-song-library)

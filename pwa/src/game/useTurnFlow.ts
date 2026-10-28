@@ -364,15 +364,25 @@ export function useTurnFlow({ onGameOver, onSkipNotice }: Options) {
   const startChallenge = useCallback(
     (seat: number) => {
       if (phase !== 'challenge' || !pending || !pending.challengers.includes(seat) || (pending.passed ?? []).includes(seat)) return
-      setPending({ ...pending, choosing: seat })
+      // The deadline now times the choice of a gap (objectionWindow.ts)
+      setPending({ ...pending, choosing: seat, deadlineAt: null })
     },
     [phase, pending, setPending]
   )
 
   const cancelChallenge = useCallback(() => {
     if (phase !== 'challenge' || !pending) return
-    // Online the window opens again with a fresh countdown
-    setPending({ ...pending, choosing: null, deadlineAt: null })
+    // Whoever drops an objection has had their chance on this card (counts as
+    // "Kein Einspruch", or one person could hold the round forever); the
+    // others get a fresh countdown
+    const passed = pending.passed ?? []
+    const by = pending.choosing
+    setPending({
+      ...pending,
+      choosing: null,
+      deadlineAt: null,
+      passed: by !== null && !passed.includes(by) ? [...passed, by] : passed
+    })
   }, [phase, pending, setPending])
 
   /** Online: someone allowed to object lets it go ("Kein Einspruch"). */

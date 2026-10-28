@@ -7,7 +7,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { useGame } from '@/contexts'
 import type { TurnFlow } from '@/game/useTurnFlow'
-import { OBJECTION_WINDOW_MS, windowStep } from '@/game/objectionWindow'
+import { CHOOSE_GAP_MS, OBJECTION_WINDOW_MS, windowStep } from '@/game/objectionWindow'
 
 export function useObjectionWindow(flow: TurnFlow, enabled: boolean, serverNow: () => number) {
   const { absent, currentSong } = useGame()
@@ -24,7 +24,7 @@ export function useObjectionWindow(flow: TurnFlow, enabled: boolean, serverNow: 
   }, [deadline, serverNow])
 
   const done = useRef<string | null>(null)
-  const situation = pending ? `${currentSong?.id}|${pending.playerIndex}|${pending.gapIndex}|${step}|${deadline}` : null
+  const situation = pending ? `${currentSong?.id}|${pending.playerIndex}|${pending.gapIndex}|${pending.choosing}|${step}|${deadline}` : null
   useEffect(() => {
     // Nothing to do: forget the last step, so the same step can come again
     // (an objection dropped opens the window anew)
@@ -35,6 +35,8 @@ export function useObjectionWindow(flow: TurnFlow, enabled: boolean, serverNow: 
     if (situation === done.current) return
     done.current = situation
     if (step === 'start') flow.setObjectionDeadline(serverNow() + OBJECTION_WINDOW_MS)
+    else if (step === 'startChoosing') flow.setObjectionDeadline(serverNow() + CHOOSE_GAP_MS)
+    else if (step === 'dropObjection') flow.cancelChallenge()
     else flow.revealPlacement()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [situation, tick])

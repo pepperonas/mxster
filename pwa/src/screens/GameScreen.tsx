@@ -278,7 +278,7 @@ export function GameRound({ onRematch }: { onRematch: () => void }) {
               placerName: turnName(players[pending.playerIndex] ?? activePlayer),
               // Online every device offers only its own objection
               challengers: pending.challengers
-                .filter((seat) => isMine(seat) && !(online && (pending.passed ?? []).includes(seat)))
+                .filter((seat) => isMine(seat) && !(pending.passed ?? []).includes(seat))
                 .map((seat) => ({
                   seat,
                   name: players[seat]?.name ?? '',
