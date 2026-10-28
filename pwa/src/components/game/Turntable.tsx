@@ -83,6 +83,10 @@ export function Turntable({
   const { settings } = useSettings()
   const { addToast } = useUI()
   const player = useRef(getPreviewPlayer())
+  // A stable report: the room context hands a new onCue after every cue, and
+  // reporting again on that would loop (each report is a new cue)
+  const onCueRef = useRef(onCue)
+  onCueRef.current = onCue
   const [state, setState] = useState<PlayerState>('idle')
   const [position, setPosition] = useState(0)
   const [duration, setDuration] = useState(0)
@@ -115,7 +119,7 @@ export function Turntable({
       player.current.stop()
       setPosition(0)
       setDuration(0)
-      if (audioRole === 'host') onCue?.({ songId: null, playing: false, positionMs: 0 })
+      if (audioRole === 'host') onCueRef.current?.({ songId: null, playing: false, positionMs: 0 })
       return
     }
     if (audioRole === 'follow' || audioRole === 'silent') return
@@ -149,14 +153,19 @@ export function Turntable({
   // few seconds while playing (late joiners, slow devices)
   const report = useCallback(() => {
     if (audioRole !== 'host' || !song) return
-    onCue?.({
+    onCueRef.current?.({
       songId: song.id,
       playing: player.current.getState() === 'playing',
       positionMs: Math.round(player.current.getCurrentTime() * 1000)
     })
-  }, [audioRole, song, onCue])
+  }, [audioRole, song])
+  const heard = useRef(false)
   useEffect(() => {
+    // Also when a song ends (idle) or is stopped: the host's step clock gives
+    // 30 s to place once the music has stopped
     if (state === 'playing' || state === 'paused') report()
+    else if ((state === 'idle' || state === 'stopped') && heard.current) report()
+    heard.current = state === 'playing' || state === 'paused'
   }, [state, report])
   useEffect(() => {
     if (audioRole !== 'host' || state !== 'playing') return

@@ -160,7 +160,12 @@ export function RoomProvider({ code, children }: { code: string; children: React
       clockOffset: () => client.current?.offset ?? 0,
       sendIntent: (intent) => client.current?.sendIntent(intent),
       sendState: (snapshot) => client.current?.sendState(snapshot),
-      sendAudio: (c) => client.current?.sendAudio(c),
+      sendAudio: (c) => {
+        client.current?.sendAudio(c)
+        // The sender hears no echo: keep its own cue too (the host's step
+        // clock reads it when the host's device has the music)
+        setCue({ ...c, at: Date.now() + (client.current?.offset ?? 0) })
+      },
       intentHandler,
       refresh
     }),

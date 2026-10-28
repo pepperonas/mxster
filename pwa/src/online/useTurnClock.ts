@@ -6,10 +6,13 @@
 import { useEffect, useRef, useState } from 'react'
 import { useGame } from '@/contexts'
 import type { TurnFlow } from '@/game/useTurnFlow'
-import { STEP_LIMITS_MS, actionFor, clockStep, stepKey } from '@/game/turnClock'
+import { STEP_LIMITS_MS, actionFor, clockStep, placingAt, stepKey } from '@/game/turnClock'
+import { useRoom } from './RoomContext'
 
 export function useTurnClock(flow: TurnFlow, enabled: boolean, serverNow: () => number) {
   const game = useGame()
+  const room = useRoom()
+  const cue = room?.cue ?? null
   const [tick, setTick] = useState(0)
   const songId = flow.reveal?.song.id ?? game.currentSong?.id
   const key = stepKey(flow.phase, game.currentPlayer, songId, game.turnLog?.length ?? 0, game.playedSongs?.length ?? 0)
@@ -23,6 +26,16 @@ export function useTurnClock(flow: TurnFlow, enabled: boolean, serverNow: () => 
     return () => window.clearTimeout(id)
   }, [at, serverNow])
 
+  // Placing: the deadline follows the music (playing → none, stopped → 30 s)
+  const placingStep = live && (flow.phase === 'placing' || flow.phase === 'guessing') && game.stepClock?.key === key
+  const since = placingStep ? (game.stepClock?.since ?? null) : null
+  const wanted = since != null ? placingAt(songId, cue, since) : null
+  useEffect(() => {
+    if (wanted == null || !game.stepClock || game.stepClock.at === wanted) return
+    game.setStepClock({ ...game.stepClock, at: wanted })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [wanted])
+
   const done = useRef<string | null>(null)
   useEffect(() => {
     if (step === 'none') return
@@ -30,7 +43,9 @@ export function useTurnClock(flow: TurnFlow, enabled: boolean, serverNow: () => 
     if (done.current === once) return
     done.current = once
     if (step === 'start') {
-      game.setStepClock({ key, at: serverNow() + (STEP_LIMITS_MS[flow.phase] ?? 0) })
+      const now = serverNow()
+      const placing = flow.phase === 'placing' || flow.phase === 'guessing'
+      game.setStepClock({ key, since: now, at: placing ? placingAt(songId, cue, now) : now + (STEP_LIMITS_MS[flow.phase] ?? 0) })
       return
     }
     // Someone absent is handled by presence (useHostPresence): acting here too

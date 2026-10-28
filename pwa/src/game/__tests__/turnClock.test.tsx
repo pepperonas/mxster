@@ -4,7 +4,7 @@ import type { ReactNode } from 'react'
 import { AppProviders, useGame } from '@/contexts'
 import { MotionTestProvider } from '@/test/MotionTestProvider'
 import { useTurnFlow } from '../useTurnFlow'
-import { STEP_LIMITS_MS, SHOW_COUNTDOWN_MS, clockStep, stepKey, visibleSecondsLeft } from '../turnClock'
+import { AFTER_MUSIC_MS, PLACE_CAP_MS, STEP_LIMITS_MS, SHOW_COUNTDOWN_MS, clockStep, placingAt, stepKey, visibleSecondsLeft } from '../turnClock'
 import { useTurnClock } from '@/online/useTurnClock'
 import { GameMode, type Player } from '@/types'
 
@@ -22,6 +22,21 @@ describe('step clock (pure)', () => {
   it('a new draw or turn is a new step, even for the same player', () => {
     expect(stepKey('idle', 0, null, 3, 4)).not.toBe(stepKey('idle', 0, null, 3, 5))
     expect(stepKey('revealed', 0, 's1', 3, 4)).not.toBe(stepKey('revealed', 0, 's1', 4, 4))
+  })
+
+  it('placing: no limit while the song plays, 30 s once it stopped, never past the cap', () => {
+    const since = 1_000_000
+    // Not started yet (e.g. blocked autoplay): 30 s from the draw
+    expect(placingAt('s1', null, since)).toBe(since + AFTER_MUSIC_MS)
+    // Playing: only the cap
+    expect(placingAt('s1', { songId: 's1', playing: true, at: since + 5000 }, since)).toBe(since + PLACE_CAP_MS)
+    // Ended or paused at 3:40: 30 s from then
+    const stop = since + 220_000
+    expect(placingAt('s1', { songId: 's1', playing: false, at: stop }, since)).toBe(stop + AFTER_MUSIC_MS)
+    // A cue of another song does not count
+    expect(placingAt('s1', { songId: 's0', playing: true, at: since }, since)).toBe(since + AFTER_MUSIC_MS)
+    // Pausing late cannot push past the cap
+    expect(placingAt('s1', { songId: 's1', playing: false, at: since + PLACE_CAP_MS - 1000 }, since)).toBe(since + PLACE_CAP_MS)
   })
 
   it('shows only the last seconds', () => {
