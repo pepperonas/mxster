@@ -66,9 +66,9 @@ export function RankCard({ points }: { points: number }) {
           transition={spring.spatialSlow}
         />
       </div>
-      <p className="mt-2 flex justify-between gap-3 meta">
+      <p className="mt-2 flex flex-wrap justify-between gap-x-3 gap-y-0.5 meta">
         <span>{next ? t.toNext(toNext, rankName(next.id)) : t.topRank}</span>
-        <span className="tabular shrink-0">{t.shareOfAll(share, MAX_POINTS)}</span>
+        <span className="tabular">{t.shareOfAll(share)}</span>
       </p>
     </section>
   )

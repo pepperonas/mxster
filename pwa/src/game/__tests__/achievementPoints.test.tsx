@@ -150,6 +150,7 @@ describe('rank card', () => {
     expect(screen.getByText('Single')).toBeTruthy()
     expect(screen.getAllByText('Noch 350 EP bis Album').length).toBeGreaterThan(0)
     expect(screen.getByRole('progressbar').getAttribute('aria-valuenow')).toBe('30')
+    expect(screen.getByText('6 % aller Erfolgspunkte')).toBeTruthy()
   })
 
   it('the info button opens every rank with its points, the current one marked', async () => {
@@ -163,6 +164,8 @@ describe('rank card', () => {
     expect(dialog.textContent).toContain('ab 750\u00a0EP')
     expect(dialog.textContent).toContain('ab 6000\u00a0EP')
     expect(dialog.textContent).toContain('Legende')
+    // The maximum is explained, not just named
+    expect(dialog.textContent).toContain('Alle 50 Erfolge zusammen bringen 6950\u00a0EP. Davon gesammelt: 1800\u00a0EP (26 %).')
   })
 })
 
@@ -216,5 +219,13 @@ describe('rank info button', () => {
     const btn = card.slice(card.indexOf('<button'), card.indexOf('</button>'))
     expect(btn).toContain('icon-btn')
     expect(btn).not.toMatch(/!w-|!h-/)
+  })
+})
+
+describe('achievements page on narrow phones', () => {
+  it('the grid columns may shrink below their content (no sideways scrolling at 320 px)', () => {
+    const page = readFileSync(join(process.cwd(), 'src/screens/AchievementsScreen.tsx'), 'utf8')
+    expect(page).toContain('grid-cols-[minmax(0,1fr)]')
+    expect(page).toContain('sm:grid-cols-[repeat(2,minmax(0,1fr))]')
   })
 })

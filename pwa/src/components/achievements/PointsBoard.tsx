@@ -37,8 +37,11 @@ export function PointsBoard({
           const active = local && e.name === selected
           const body = (
             <>
-              <span className={`w-7 text-title-md num-poster ${e.place === 1 ? 'text-md-primary' : 'text-md-on-surface-variant'}`}>{e.place}.</span>
-              <Avatar name={e.name} picture={e.picture} size={40} />
+              <span className={`w-6 shrink-0 text-title-md num-poster ${e.place === 1 ? 'text-md-primary' : 'text-md-on-surface-variant'}`}>{e.place}.</span>
+              {/* Below 360 px the name needs the room more than the picture */}
+              <span className="hidden min-[360px]:block shrink-0">
+                <Avatar name={e.name} picture={e.picture} size={40} />
+              </span>
               <span className="flex-1 min-w-0 text-left">
                 <span className="flex items-center gap-2">
                   <span className="text-title-md truncate">{e.name}</span>
@@ -77,14 +80,14 @@ export function PointsBoard({
               {local ? (
                 <button
                   type="button"
-                  className={`row m3-state-layer ${active ? '!bg-md-secondary-container !text-md-on-secondary-container' : ''}`}
+                  className={`row !gap-3 m3-state-layer ${active ? '!bg-md-secondary-container !text-md-on-secondary-container' : ''}`}
                   aria-current={active ? 'true' : undefined}
                   onClick={() => onSelect(e.name)}
                 >
                   {body}
                 </button>
               ) : (
-                <div className="row">{body}</div>
+                <div className="row !gap-3">{body}</div>
               )}
             </m.li>
           )

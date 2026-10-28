@@ -4,7 +4,7 @@
  * current one is marked.
  */
 import { Icon } from '@/components/ui/Icon'
-import { MAX_POINTS, RANKS, rankFor } from '@/game/achievementPoints'
+import { ACHIEVEMENT_POINTS, MAX_POINTS, RANKS, rankFor } from '@/game/achievementPoints'
 import { useMessages } from '@/i18n'
 import { achievementText } from '@/i18n/messages/achievements'
 
@@ -44,7 +44,9 @@ export function RankList({ points }: { points: number }) {
           )
         })}
       </ol>
-      <p className="mt-4 meta num-poster">{t.shareOfAll(Math.round((points / MAX_POINTS) * 100), MAX_POINTS)}</p>
+      <p className="mt-4 meta">
+        {t.maxExplained(Object.keys(ACHIEVEMENT_POINTS).length, MAX_POINTS, points, Math.round((points / MAX_POINTS) * 100))}
+      </p>
     </div>
   )
 }

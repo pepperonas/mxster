@@ -120,7 +120,7 @@ export function AchievementsScreen() {
         <RankCard points={points} />
       </div>
 
-      <ul className="grid gap-3 sm:grid-cols-2" key={who}>
+      <ul className="grid grid-cols-[minmax(0,1fr)] gap-3 sm:grid-cols-[repeat(2,minmax(0,1fr))]" key={who}>
           {sorted.map((a, i) => (
             <m.li
               key={a.id}

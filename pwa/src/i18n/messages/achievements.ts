@@ -134,7 +134,9 @@ export const achievementText = defineMessages({
     rank_legend: 'Legende',
     toNext: (n: number, rank: string) => `Noch ${n} EP bis ${rank}`,
     topRank: 'Höchster Rang erreicht',
-    shareOfAll: (pct: number, max: number) => `${pct} % von ${max} EP`,
+    shareOfAll: (pct: number) => `${pct} % aller Erfolgspunkte`,
+    maxExplained: (count: number, max: number, points: number, pct: number) =>
+      `Alle ${count} Erfolge zusammen bringen ${max}\u00a0EP. Davon gesammelt: ${points}\u00a0EP (${pct} %).`,
     board: 'Bestenliste',
     boardText: 'Alle auf diesem Konto und deine Freunde, nach Erfolgspunkten.',
     boardFriends: 'Füge unter „Spieler“ Freunde hinzu, dann stehen sie hier mit drin.',
@@ -277,7 +279,9 @@ export const achievementText = defineMessages({
     rank_legend: 'Legend',
     toNext: (n: number, rank: string) => `${n} AP to ${rank}`,
     topRank: 'Top rank reached',
-    shareOfAll: (pct: number, max: number) => `${pct} % of ${max} AP`,
+    shareOfAll: (pct: number) => `${pct} % of all achievement points`,
+    maxExplained: (count: number, max: number, points: number, pct: number) =>
+      `All ${count} achievements together are worth ${max}\u00a0AP. Collected so far: ${points}\u00a0AP (${pct} %).`,
     board: 'Leaderboard',
     boardText: 'Everyone on this account and your friends, by achievement points.',
     boardFriends: 'Add friends under “Players” and they show up here too.',
