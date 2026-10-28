@@ -3,6 +3,10 @@
  * round (ranking and the songs everyone collected).
  */
 import { useParams } from 'react-router-dom'
+import { roundSongIds } from '@/utils/cover'
+import { SongCover } from '@/components/game/SongInfo'
+import { songById } from '@/data/catalogue'
+import type { IconName } from '@/components/ui/Icon'
 import { EmptyState } from '@/components/ui/EmptyState'
 import { SkeletonRows } from '@/components/ui/Skeleton'
 import { sharedElement } from '@/motion/vtName'
@@ -58,9 +62,7 @@ export function HistoryScreen() {
                       onClick={() => navigate(`/history/${g.id}`)}
                       style={sharedElement(`game-${g.id}`)}
                     >
-                      <span className="grid place-items-center w-11 h-11 shrink-0 rounded-m3-md bg-md-tertiary-container text-md-on-tertiary-container">
-                        <Icon name={MODE_COPY[g.gameMode]?.icon ?? 'note'} size={22} />
-                      </span>
+                      <RoundCovers game={g} fallback={MODE_COPY[g.gameMode]?.icon ?? 'note'} />
                       <span className="flex-1 min-w-0">
                         <span className="block text-title-md truncate">{t.wins(g.winner.name)}</span>
                         <span className="block meta truncate">
@@ -128,6 +130,8 @@ export function HistoryDetailScreen() {
           </p>
         </section>
 
+        <RoundCoverGrid game={game} />
+
         {ranked.map(({ player: p, place }) => (
           <section key={p.name} className="surface p-5" aria-label={p.name}>
             <div className="flex items-center gap-3 mb-3">
@@ -163,5 +167,50 @@ export function HistoryDetailScreen() {
         </button>
       </div>
     </div>
+  )
+}
+
+/** Up to three covers of the round, fanned out; the mode's icon when the round has no songs stored. */
+function RoundCovers({ game, fallback }: { game: HistoryEntry; fallback: IconName }) {
+  const ids = roundSongIds(game).slice(0, 3)
+  if (ids.length === 0)
+    return (
+      <span className="grid place-items-center w-11 h-11 shrink-0 rounded-m3-md bg-md-tertiary-container text-md-on-tertiary-container">
+        <Icon name={fallback} size={22} />
+      </span>
+    )
+  return (
+    <span className="relative shrink-0 h-11" style={{ width: 44 + (ids.length - 1) * 12 }} aria-hidden="true" data-round-covers>
+      {ids.map((id, i) => (
+        <span key={id} className="absolute top-0 rounded-m3-md shadow-m3-1 ring-2 ring-md-surface-container-low" style={{ left: i * 12, zIndex: 3 - i }}>
+          <SongCover song={{ id }} size={44} />
+        </span>
+      ))}
+    </span>
+  )
+}
+
+/** Every song of the round as a cover with its year, in play order. */
+function RoundCoverGrid({ game }: { game: HistoryEntry }) {
+  const t = useMessages(historyText)
+  const songs = roundSongIds(game)
+    .map((id) => songById(id))
+    .filter((s): s is NonNullable<ReturnType<typeof songById>> => Boolean(s))
+  if (songs.length === 0) return null
+  return (
+    <section className="surface p-5" aria-label={t.roundSongs}>
+      <h2 className="text-title-md mb-3">{t.roundSongs}</h2>
+      <ul className="grid grid-cols-4 sm:grid-cols-6 gap-2" data-round-cover-grid>
+        {songs.map((s) => (
+          <li key={s.id} className="relative" title={`${s.title} – ${s.artist} (${s.year})`}>
+            <span className="block aspect-square [&>span]:!w-full [&>span]:!h-full">
+              <SongCover song={s} size={96} />
+            </span>
+            <span className="absolute left-1 bottom-1 rounded-m3-xs bg-md-surface/85 px-1 text-label-sm num-poster text-md-on-surface">{s.year}</span>
+            <span className="sr-only">{`${s.title} – ${s.artist}, ${s.year}`}</span>
+          </li>
+        ))}
+      </ul>
+    </section>
   )
 }

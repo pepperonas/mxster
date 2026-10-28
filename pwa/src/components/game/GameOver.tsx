@@ -4,6 +4,7 @@
  */
 import { useEffect } from 'react'
 import { rematchStarter } from '@/game/rematch'
+import { coverSrc } from '@/utils/cover'
 import { m } from 'motion/react'
 import { Vinyl } from '@/components/ui/Vinyl'
 import { Icon } from '@/components/ui/Icon'
@@ -16,7 +17,7 @@ import { useMessages } from '@/i18n'
 import { gameText } from '@/i18n/messages/game'
 import { achievementText } from '@/i18n/messages/achievements'
 import { SignUpOffer } from './SignUpOffer'
-import { shareResultCard } from '@/utils/resultImage'
+import { COVER_MAX, shareResultCard } from '@/utils/resultImage'
 import { formatDay } from '@/utils/format'
 import { dailyText } from '@/i18n/messages/daily'
 
@@ -36,6 +37,8 @@ interface GameOverProps {
   daily?: { score: number; total: number }
   /** Achievement points each seat earned this round (a team: its members together). */
   earned?: Record<string, number>
+  /** Song ids of the round, for the blurred cover mosaic behind the result. */
+  songIds?: string[]
 }
 
 /** Points per seat this round; a team adds up its members. Seats without any are left out. */
@@ -55,7 +58,7 @@ export function rankDelay(index: number, count: number): number {
   return 0.4 + fromBottom * 0.08 + (index === 0 ? 0.18 : 0)
 }
 
-export function GameOver({ winner, players, mode, onRematch, onHome, rematchBy, homeLabel, signUpName, daily, earned }: GameOverProps) {
+export function GameOver({ winner, players, mode, onRematch, onHome, rematchBy, homeLabel, signUpName, daily, earned, songIds = [] }: GameOverProps) {
   const t = useMessages(gameText)
   const at = useMessages(achievementText)
   const dt = useMessages(dailyText)
@@ -84,7 +87,8 @@ export function GameOver({ winner, players, mode, onRematch, onHome, rematchBy, 
       animate={{ opacity: 1 }}
       transition={spring.effectsSlow}
     >
-      <div className="mx-auto max-w-md px-6 pt-12 pb-10 min-h-full flex flex-col">
+      <CoverMosaic ids={songIds} />
+      <div className="relative mx-auto max-w-md px-6 pt-12 pb-10 min-h-full flex flex-col">
         <m.div
           className="self-center"
           initial={{ scale: 0.3, rotate: -90 }}
@@ -158,7 +162,8 @@ export function GameOver({ winner, players, mode, onRematch, onHome, rematchBy, 
                       name: p.name,
                       value: hardcore ? t.pointsValue(p.score) : t.songsValue(p.cards)
                     })),
-                footer: `${formatDay(new Date().toISOString())} · mxtape.celox.io`
+                footer: `${formatDay(new Date().toISOString())} · mxtape.celox.io`,
+                covers: songIds.slice(0, COVER_MAX).map((id) => coverSrc({ id }))
               })
             }
           >
@@ -182,5 +187,38 @@ export function GameOver({ winner, players, mode, onRematch, onHome, rematchBy, 
         </div>
       </div>
     </m.div>
+  )
+}
+
+/** Covers shown in the mosaic (enough to fill a phone screen, no more requests). */
+export const MOSAIC_MAX = 12
+
+/**
+ * The round's covers as a soft, heavily blurred mosaic behind the result. A
+ * surface veil on top keeps text readable: the covers add at most
+ * MOSAIC_OPACITY × (1 − MOSAIC_VEIL) ≈ a sixth of their colour (worst case,
+ * computed: muted text ≈ 6:1 light, ≈ 6.9:1 dark). Nothing without covers.
+ */
+export const MOSAIC_OPACITY = 0.55
+export const MOSAIC_VEIL = 0.7
+
+function CoverMosaic({ ids }: { ids: string[] }) {
+  const shown = ids.slice(0, MOSAIC_MAX)
+  if (shown.length === 0) return null
+  return (
+    <div className="fixed inset-0 overflow-hidden pointer-events-none" aria-hidden="true" data-cover-mosaic>
+      <m.div
+        className="absolute -inset-[8%] grid grid-cols-3 sm:grid-cols-4"
+        style={{ filter: 'blur(32px) saturate(1.25)' }}
+        initial={{ opacity: 0, scale: 1.08 }}
+        animate={{ opacity: MOSAIC_OPACITY, scale: 1 }}
+        transition={spring.effectsSlow}
+      >
+        {Array.from({ length: 12 }, (_, i) => shown[i % shown.length]).map((id, i) => (
+          <img key={i} src={coverSrc({ id })} alt="" className="w-full h-full object-cover aspect-square" loading="eager" />
+        ))}
+      </m.div>
+      <div className="absolute inset-0 bg-md-surface" style={{ opacity: MOSAIC_VEIL }} />
+    </div>
   )
 }

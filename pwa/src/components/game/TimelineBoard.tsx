@@ -24,6 +24,7 @@
  * not change while the drag measures it.
  */
 import { useCallback, useEffect, useRef, type Ref, type RefObject } from 'react'
+import { SongCover } from './SongInfo'
 import { AnimatePresence, animate, m, useMotionValue } from 'motion/react'
 import type { Song } from '@/types'
 import { gapLabel } from '@/game/placement'
@@ -374,6 +375,13 @@ function CardContent({ song, owner, yearHidden, revealYear, blurYear, mark }: Ca
           </span>
         )}
       </span>
+      {/* The cover of every card that lies face up (never the waiting card: it could hint the era).
+          Left out on the narrowest phones, where the title needs the room. */}
+      {!yearHidden && (
+        <span className="hidden min-[360px]:block" data-card-cover>
+          <SongCover song={song} size={40} />
+        </span>
+      )}
       <span className="min-w-0 flex-1">
         <span className="block text-title-sm truncate">{song.title}</span>
         <span className="block text-body-sm opacity-80 truncate">{song.artist}</span>

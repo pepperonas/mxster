@@ -48,6 +48,24 @@ describe('loading placeholders', () => {
     expect(screen.getByRole('button')).toBeTruthy()
   })
 
+  it('a round in the history shows up to three of its covers, the mode icon when it has none', () => {
+    state.ready = true
+    state.history = [
+      { id: 1, timestamp: 1, date: new Date().toISOString(), gameMode: 'timeline_global', winner: { name: 'A', cards: 5, score: 0 },
+        players: [{ name: 'A', cards: 5, score: 0, timeline: [] }], turns: ['song_001', 'song_002', 'song_003', 'song_004'].map((s) => ({ p: 'A', s, y: 1990, ok: true })) },
+      { id: 2, timestamp: 2, date: new Date().toISOString(), gameMode: 'timeline_global', winner: { name: 'A', cards: 0, score: 0 },
+        players: [{ name: 'A', cards: 0, score: 0, timeline: [] }] }
+    ]
+    renderHistory()
+    const stacks = document.querySelectorAll('[data-round-covers]')
+    expect(stacks).toHaveLength(1)
+    expect([...stacks[0].querySelectorAll('img')].map((i) => i.getAttribute('src'))).toEqual([
+      '/audio/covers/song_001.jpg',
+      '/audio/covers/song_002.jpg',
+      '/audio/covers/song_003.jpg'
+    ])
+  })
+
   it('the statistics show placeholders while loading', () => {
     const src = readFileSync(join(process.cwd(), 'src/screens/StatisticsScreen.tsx'), 'utf8')
     const loading = src.slice(src.indexOf('history.length === 0 && !ready'), src.indexOf('if (history.length === 0) {'))

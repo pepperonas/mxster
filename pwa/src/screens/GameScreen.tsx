@@ -54,7 +54,7 @@ import { Icon } from '@/components/ui/Icon'
 import { useTurnFlow, type SkipNotice } from '@/game/useTurnFlow'
 import { MODE_COPY } from '@/game/modeCopy'
 import { turnName } from '@/game/teams'
-import { coverSrc } from '@/utils/cover'
+import { coverSrc, roundSongIds } from '@/utils/cover'
 import { useMediaQuery } from '@/hooks/useMediaQuery'
 import { prefersReducedMotion } from '@/motion/policy'
 import { getPreviewPlayer } from '@/services/PreviewPlayerService'
@@ -632,6 +632,7 @@ export function GameRound({ onRematch }: { onRematch: () => void }) {
             mode={gameMode}
             daily={daily ? { score: dailyScore(shownResult.winner.cards), total: DAILY_SONGS } : undefined}
             earned={earnedThisRound(shownResult.players, (name) => pointsSince(getPlayerAchievements(name), startedAt))}
+            songIds={roundSongIds({ turns: turnLog, players: shownResult.players })}
             onRematch={
               onlinePlayer || daily
                 ? undefined

@@ -10,6 +10,35 @@ export interface ResultCard {
   kicker: string
   rows: { place: string; name: string; value: string }[]
   footer: string
+  /** Covers of the round (same-origin URLs), drawn as a fanned row; up to COVER_MAX. */
+  covers?: string[]
+}
+
+export const COVER_MAX = 5
+const COVER_SIZE = 150
+const COVER_STEP = 96
+
+/** Loads an image, or null when it fails or takes longer than `ms`. */
+export function loadImage(src: string, ms = 2500): Promise<HTMLImageElement | null> {
+  return new Promise((resolve) => {
+    const img = new Image()
+    const timer = setTimeout(() => resolve(null), ms)
+    img.onload = () => {
+      clearTimeout(timer)
+      resolve(img)
+    }
+    img.onerror = () => {
+      clearTimeout(timer)
+      resolve(null)
+    }
+    img.src = src
+  })
+}
+
+/** Where the covers go: a fanned row from the left, clear of the record on the right. */
+export function coverSlots(count: number): { x: number; y: number; angle: number }[] {
+  const n = Math.min(count, COVER_MAX)
+  return Array.from({ length: n }, (_, i) => ({ x: 80 + i * COVER_STEP, y: 210, angle: (i - (n - 1) / 2) * 0.05 }))
 }
 
 const W = 1080
@@ -76,6 +105,28 @@ export async function drawResultCard(card: ResultCard): Promise<Blob | null> {
   ctx.textBaseline = 'alphabetic'
   ctx.font = `800 64px ${family}`
   ctx.fillText('mxtape', 80, 140)
+
+  // The round's covers, fanned out under the name (missing ones are left out)
+  const images = (await Promise.all((card.covers ?? []).slice(0, COVER_MAX).map((src) => loadImage(src)))).filter(
+    (img): img is HTMLImageElement => img !== null
+  )
+  coverSlots(images.length).forEach((slot, i) => {
+    ctx.save()
+    ctx.translate(slot.x + COVER_SIZE / 2, slot.y + COVER_SIZE / 2)
+    ctx.rotate(slot.angle)
+    ctx.shadowColor = 'rgba(0,0,0,0.35)'
+    ctx.shadowBlur = 24
+    ctx.shadowOffsetY = 8
+    ctx.beginPath()
+    ctx.roundRect(-COVER_SIZE / 2, -COVER_SIZE / 2, COVER_SIZE, COVER_SIZE, 16)
+    ctx.fillStyle = '#111014'
+    ctx.fill()
+    ctx.shadowColor = 'transparent'
+    ctx.clip()
+    ctx.drawImage(images[i], -COVER_SIZE / 2, -COVER_SIZE / 2, COVER_SIZE, COVER_SIZE)
+    ctx.restore()
+  })
+  ctx.fillStyle = onBrand
 
   ctx.globalAlpha = 0.85
   ctx.font = `500 44px ${family}`

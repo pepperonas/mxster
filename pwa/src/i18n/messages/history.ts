@@ -23,6 +23,7 @@ export const historyText = defineMessages({
     pointsShort: (n: number) => `${n} Pkt.`,
     songs: (n: number) => `${n} Songs`,
     by: 'von',
+    roundSongs: 'Songs der Runde',
     noSongs: 'Keine Songs gesammelt.'
   },
   en: {
@@ -47,6 +48,7 @@ export const historyText = defineMessages({
     pointsShort: (n: number) => `${n} pts`,
     songs: (n: number) => (n === 1 ? '1 song' : `${n} songs`),
     by: 'by',
+    roundSongs: 'Songs of the round',
     noSongs: 'No songs collected.'
   }
 })

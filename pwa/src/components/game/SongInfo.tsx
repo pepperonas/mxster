@@ -23,7 +23,7 @@ interface SongInfoProps {
   delay?: number
 }
 
-export function SongCover({ song, size }: { song: Song; size: number }) {
+export function SongCover({ song, size }: { song: Pick<Song, 'id'>; size: number }) {
   const [failed, setFailed] = useState(false)
   return (
     <span
