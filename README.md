@@ -259,7 +259,7 @@ pwa/      React 19 PWA (Vite, Tailwind, motion)
   src/game/     pure game rules: placement, guesses, objection, tiebreak, song pool, stats
   src/online/   rooms: protocol, client, host bridge, permission rules, sanitizing
   src/screens/  one file per screen
-server/   FastAPI + SQLite: Google and email sign-in, waiting list, admin, account data, audio gate, rooms (WebSocket), friends
+server/   FastAPI + SQLite: Google and email sign-in, waiting list, admin, account data, audio gate, rooms (WebSocket), friends, daily round, achievement points
 docs/     songs.json — the song database (source of truth), facts, screenshots
 scripts/  song management, audio hosting, deployment
 ```
@@ -269,7 +269,7 @@ scripts/  song management, audio hosting, deployment
 | Suite | What it covers |
 |-------|----------------|
 | `cd pwa && npx vitest run` | game rules, turn flow, objection, tiebreak, stats, sync and merge, online permissions and sanitizing, screens |
-| `cd server && .venv/bin/python -m pytest -q` | sign-in and approval, data versioning, audio gate, rooms and WebSocket relay, friends and search, song reports, daily round |
+| `cd server && .venv/bin/python -m pytest -q` | sign-in and approval, data versioning, audio gate, rooms and WebSocket relay, friends and search, song reports, daily round, achievement points between friends |
 | `npm test` (repo root) | integrity of the song data |
 | `cd pwa && npm run e2e` | two browsers play an online round against the real API (join, place, pass, object) |
 | `cd pwa && npx tsc --noEmit` | types |

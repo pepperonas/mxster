@@ -260,7 +260,7 @@ pwa/      React-19-PWA (Vite, Tailwind, motion)
   src/game/     reine Spielregeln: Legen, Raten, Einspruch, Stechen, Songauswahl, Statistik
   src/online/   Räume: Protokoll, Client, Gastgeber-Brücke, Rechte, Bereinigung
   src/screens/  eine Datei je Bildschirm
-server/   FastAPI + SQLite: Google- und E-Mail-Login, Warteliste, Admin, Kontodaten, Audio-Freigabe, Räume (WebSocket), Freunde
+server/   FastAPI + SQLite: Google- und E-Mail-Login, Warteliste, Admin, Kontodaten, Audio-Freigabe, Räume (WebSocket), Freunde, Tagesrunde, Erfolgspunkte
 docs/     songs.json – die Songdatenbank (Quelle der Wahrheit), Anekdoten, Screenshots
 scripts/  Songs verwalten, Audio hosten, Deployment
 ```
@@ -270,7 +270,7 @@ scripts/  Songs verwalten, Audio hosten, Deployment
 | Suite | Was sie abdeckt |
 |-------|-----------------|
 | `cd pwa && npx vitest run` | Spielregeln, Zugablauf, Einspruch, Stechen, Statistik, Abgleich zwischen Geräten, Rechte und Bereinigung im Mehrspieler, Bildschirme |
-| `cd server && .venv/bin/python -m pytest -q` | Anmeldung und Freischaltung, Versionierung der Daten, Audio-Freigabe, Räume und WebSocket, Freunde und Suche, Song-Meldungen, Tagesrunde |
+| `cd server && .venv/bin/python -m pytest -q` | Anmeldung und Freischaltung, Versionierung der Daten, Audio-Freigabe, Räume und WebSocket, Freunde und Suche, Song-Meldungen, Tagesrunde, Erfolgspunkte unter Freunden |
 | `npm test` (Repo-Wurzel) | Integrität der Songdaten |
 | `cd pwa && npm run e2e` | zwei Browser spielen eine Online-Runde gegen die echte API (Beitreten, Legen, Kein Einspruch, Einspruch) |
 | `cd pwa && npx tsc --noEmit` | Typen |
