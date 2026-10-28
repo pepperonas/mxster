@@ -174,3 +174,17 @@ describe('points in the game', () => {
     expect(src('src/components/AchievementScoreSync.tsx')).toContain("api('/api/achievements/score', { method: 'PUT', json: { points, unlocked } })")
   })
 })
+
+describe('numbers in the poster face', () => {
+  const src = (f: string) => readFileSync(join(process.cwd(), f), 'utf8')
+  it('every counting number uses it, and the style exists', () => {
+    expect(src('src/components/ui/AnimatedNumber.tsx')).toContain('className={`num-poster ')
+    expect(src('src/styles/tailwind.css')).toMatch(/\.num-poster \{[^}]*'wght' 820[^}]*tabular-nums/)
+  })
+  it('fixed scores do too: round end, leaderboard, statistic tiles, n/goal', () => {
+    expect(src('src/components/game/GameOver.tsx')).toContain('text-title-md num-poster')
+    expect(src('src/components/achievements/PointsBoard.tsx')).toContain('text-title-md num-poster')
+    expect(src('src/components/charts/Bars.tsx')).toContain('text-headline-sm num-poster')
+    expect(src('src/components/game/GameBoards.tsx').match(/num-poster/g)?.length).toBe(2)
+  })
+})

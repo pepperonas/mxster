@@ -133,7 +133,7 @@ function BoardCard({ title, cards, goal, children }: { title: string; cards: num
     <section className="surface p-4 sm:p-5">
       <div className="flex items-center justify-between gap-3 mb-3">
         <h3 className="min-w-0 text-title-lg text-md-on-surface truncate">{title}</h3>
-        <span className="flex-shrink-0 text-label-lg px-3 py-1 rounded-m3-full bg-md-secondary-container text-md-on-secondary-container tabular-nums">
+        <span className="flex-shrink-0 text-label-lg px-3 py-1 rounded-m3-full bg-md-secondary-container text-md-on-secondary-container num-poster">
           <AnimatedNumber value={cards} />/{goal}
         </span>
       </div>
@@ -162,7 +162,7 @@ function PlayerSummary({ player, hideYears, goal }: { player: Player; hideYears:
     <m.li layout transition={spring.spatialDefault} className="rounded-m3-lg bg-md-surface-container-low p-3">
       <div className="flex items-center justify-between gap-2 mb-2">
         <p className="text-title-sm text-md-on-surface truncate">{player.name}</p>
-        <span className="text-label-md text-md-on-surface-variant tabular-nums">
+        <span className="text-label-md text-md-on-surface-variant num-poster">
           <AnimatedNumber value={player.cards} />/{goal}
         </span>
       </div>

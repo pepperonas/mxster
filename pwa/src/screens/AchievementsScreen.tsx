@@ -148,7 +148,7 @@ export function AchievementsScreen() {
                     </m.span>
                   )}
                   <span
-                    className={`ml-auto shrink-0 rounded-m3-full px-2 text-label-md tabular ${a.unlocked ? 'bg-md-on-tertiary-container/10' : 'bg-md-surface-container-highest text-md-on-surface-variant'}`}
+                    className={`ml-auto shrink-0 rounded-m3-full px-2 text-label-md num-poster ${a.unlocked ? 'bg-md-on-tertiary-container/10' : 'bg-md-surface-container-highest text-md-on-surface-variant'}`}
                   >
                     {a.unlocked ? t.plusPoints(pointsFor(a.id)) : t.worth(pointsFor(a.id))}
                   </span>

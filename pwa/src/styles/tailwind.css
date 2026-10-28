@@ -208,6 +208,13 @@
     letter-spacing: -0.035em;
     line-height: 0.9;
   }
+  /* Scores and hit counts in the poster face: heavy, a little wide, even
+     digits (tabular) so a counting number never jumps sideways. */
+  .num-poster {
+    font-variation-settings: 'wdth' 118, 'wght' 820, 'opsz' 144;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: -0.01em;
+  }
   .text-condensed {
     font-variation-settings: 'wdth' 82, 'wght' 680;
   }

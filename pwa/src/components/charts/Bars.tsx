@@ -17,7 +17,7 @@ export function StatTile({ label, value, note }: { label: string; value: ReactNo
   return (
     <div className="surface p-4 min-w-0">
       <p className="text-label-lg text-md-on-surface-variant">{label}</p>
-      <p className="mt-1 text-headline-sm text-md-on-surface truncate">{value}</p>
+      <p className="mt-1 text-headline-sm num-poster text-md-on-surface truncate">{value}</p>
       {note && <p className="mt-0.5 text-body-sm text-md-on-surface-variant">{note}</p>}
     </div>
   )

@@ -510,7 +510,7 @@ function ResultStage({
             {state.naming && <NamingLine result={state.naming} />}
             {!state.challenge?.won && (
               <p className="text-body-sm text-md-on-surface-variant tabular-nums">
-                {playerName}: <AnimatedNumber value={cards} from={isCorrect ? cards - 1 : cards} />/{goal}
+                {playerName}: <span className="num-poster"><AnimatedNumber value={cards} from={isCorrect ? cards - 1 : cards} />/{goal}</span>
               </p>
             )}
           </div>

@@ -119,10 +119,10 @@ export function GameOver({ winner, players, mode, onRematch, onHome, rematchBy, 
                 {p.left && <span className="block truncate text-body-sm text-md-on-surface-variant">{t.leftShort}</span>}
               </span>
               <span className="text-right">
-                <span className="block text-title-md tabular">{hardcore ? t.pointsValue(p.score) : t.songsValue(p.cards)}</span>
+                <span className="block text-title-md num-poster">{hardcore ? t.pointsValue(p.score) : t.songsValue(p.cards)}</span>
                 {earned?.[p.name] ? (
                   <m.span
-                    className="block text-label-md tabular font-medium opacity-90"
+                    className="block text-label-md num-poster opacity-90"
                     initial={{ opacity: 0, scale: 0.6 }}
                     animate={{ opacity: 1, scale: 1 }}
                     transition={{ ...spring.spatialFast, delay: rankDelay(i, ranked.length) + 0.35 }}

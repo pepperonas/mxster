@@ -37,7 +37,7 @@ export function PointsBoard({
           const active = local && e.name === selected
           const body = (
             <>
-              <span className={`w-7 text-title-md tabular ${e.place === 1 ? 'text-md-primary' : 'text-md-on-surface-variant'}`}>{e.place}.</span>
+              <span className={`w-7 text-title-md num-poster ${e.place === 1 ? 'text-md-primary' : 'text-md-on-surface-variant'}`}>{e.place}.</span>
               <Avatar name={e.name} picture={e.picture} size={40} />
               <span className="flex-1 min-w-0 text-left">
                 <span className="flex items-center gap-2">
@@ -53,7 +53,7 @@ export function PointsBoard({
                 </span>
               </span>
               <span className="text-right shrink-0">
-                <span className="block text-title-md tabular">
+                <span className="block text-title-md num-poster">
                   {e.points}
                   <span className="ml-1 text-label-md text-md-on-surface-variant">{t.pointsUnit}</span>
                 </span>
