@@ -16,7 +16,7 @@
 
 <!-- BADGES:BIG — version, tests, lines of code and songs; readme.test.ts keeps them true, scripts/readme-badges.mjs rewrites them. -->
 [![version](https://img.shields.io/badge/version-0.14.7-C2185B?style=for-the-badge&logo=semver&logoColor=white)](https://github.com/pepperonas/mxtape/releases/latest)
-[![tests](https://img.shields.io/badge/tests-935-2E9E5B?style=for-the-badge&logo=vitest&logoColor=white)](#tests-und-ci)
+[![tests](https://img.shields.io/badge/tests-937-2E9E5B?style=for-the-badge&logo=vitest&logoColor=white)](#tests-und-ci)
 [![lines of code](https://img.shields.io/badge/lines%20of%20code-26.9k-4B6BDF?style=for-the-badge&logo=typescript&logoColor=white)](pwa/src)
 [![test code](https://img.shields.io/badge/test%20code-10.7k-2E9E5B?style=for-the-badge&logo=typescript&logoColor=white)](#tests-und-ci)
 [![songs](https://img.shields.io/badge/songs-500-FF8A3D?style=for-the-badge&logo=applemusic&logoColor=white)](#die-songsammlung)
@@ -79,7 +79,7 @@
 [![Multiplayer](https://img.shields.io/badge/multiplayer-own%20devices%2C%20up%20to%2010-FF8A3D)](#mehrspieler)
 [![Guests](https://img.shields.io/badge/guests-join%20by%20link%2C%20no%20account-FF8A3D)](#mehrspieler)
 [![Bots](https://img.shields.io/badge/bots-easy%20%C2%B7%20medium%20%C2%B7%20hard-795548)](#spielmodi)
-[![Achievements](https://img.shields.io/badge/achievements-24-FFB74D)](#funktionen)
+[![Achievements](https://img.shields.io/badge/achievements-50-FFB74D)](#funktionen)
 [![Tiebreak](https://img.shields.io/badge/draws-never%2C%20there%E2%80%99s%20a%20tiebreak-B71C1C)](#spielmodi)
 
 <!-- What mxtape deliberately does not do -->
@@ -314,7 +314,6 @@ Einmalig auf dem Server: Geheimnisse in `/opt/mxtape-api/.env` (Vorlage `server/
 
 ## Ausblick
 
-- Erfolge für alle Konten einer Online-Runde (heute nur für den Gastgeber)
 - Mehr Songs, besonders aus den 50ern und den 2020ern
 
 Ideen und Fehlermeldungen gern als [Issue](https://github.com/pepperonas/mxtape/issues).

@@ -6,6 +6,7 @@
 import { readFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { describe, it, expect } from 'vitest'
+import { ACHIEVEMENT_DEFINITIONS } from '@/types/achievements'
 // @ts-expect-error plain ESM helper shared with the badge script
 import { ROOT, READMES, appVersion, codeLines, songCount, thousands, writtenTests } from '../../../scripts/readme-stats.mjs'
 
@@ -22,6 +23,10 @@ const toNumber = (k: string) => Math.round(parseFloat(k) * 1000)
 describe('README badges', () => {
   it.each(readmes)('$name shows the app version', ({ text }) => {
     expect(badge(text, 'version')).toBe(appVersion())
+  })
+
+  it.each(readmes)('$name shows the number of achievements', ({ text }) => {
+    expect(badge(text, 'achievements')).toBe(String(Object.keys(ACHIEVEMENT_DEFINITIONS).length))
   })
 
   it.each(readmes)('$name shows the song count', ({ text }) => {
