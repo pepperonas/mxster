@@ -4,7 +4,7 @@
  */
 
 import type { Song, Player, GameMode } from '@/types'
-import { fuzzyMatch } from '@/utils/textMatcher'
+import { answerMatches } from '@/game/answerMatch'
 
 // ============================================================================
 // Guess Validation
@@ -33,10 +33,10 @@ export function validateGuess(
   song: Song
 ): GuessValidationResult {
   // Title match (fuzzy matching with dynamic tolerance based on text length)
-  const titleMatch = guessTitle ? fuzzyMatch(guessTitle, song.title) : false
+  const titleMatch = guessTitle ? answerMatches(guessTitle, song.title, 'title') : false
 
   // Artist match (fuzzy matching with dynamic tolerance based on text length)
-  const artistMatch = guessArtist ? fuzzyMatch(guessArtist, song.artist) : false
+  const artistMatch = guessArtist ? answerMatches(guessArtist, song.artist, 'artist') : false
 
   // Year match (exact match required)
   const yearNum = parseInt(guessYear)

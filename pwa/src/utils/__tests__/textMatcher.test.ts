@@ -5,6 +5,7 @@
 
 import { describe, it, expect } from 'vitest'
 import {
+  allowedTypos,
   fuzzyMatch,
   removeTrackSuffixes,
   normalizeText,
@@ -330,17 +331,25 @@ describe('fuzzyMatch', () => {
   // Too many typos
   it('should NOT match with too many typos', () => {
     expect(fuzzyMatch('xyz', 'abc')).toBe(false) // 3 typos, 3 chars = 100%
-    expect(fuzzyMatch('test', 'best')).toBe(true) // 1 typo, 4 chars = 25%
+    // A short name only forgives a swap: one other letter is another name
+    expect(fuzzyMatch('test', 'best')).toBe(false)
+    expect(fuzzyMatch('Aqua', 'ABBA', 'artist')).toBe(false)
+    expect(fuzzyMatch('M.I.A.', 'Mika', 'artist')).toBe(false)
+    expect(fuzzyMatch('Glue', 'Blue (Da Ba Dee)')).toBe(false)
   })
 
   // Substring matching
-  it('should match substring (short guess)', () => {
-    expect(fuzzyMatch('Jean', 'Billie Jean')).toBe(true)
-    expect(fuzzyMatch('Jackson', 'Michael Jackson')).toBe(true)
+  // A single word of a longer answer is not the answer (game/answerMatch decides
+  // whether it names it alone in the catalogue)
+  it('should NOT match a part of the answer on its own', () => {
+    expect(fuzzyMatch('Jean', 'Billie Jean')).toBe(false)
+    expect(fuzzyMatch('Crazy', 'She Drives Me Crazy')).toBe(false)
+    expect(fuzzyMatch('Dreams', 'Sweet Dreams')).toBe(false)
   })
 
-  it('should match substring (short correct)', () => {
-    expect(fuzzyMatch('Billie Jean', 'Jean')).toBe(true)
+  it('should NOT match a longer guess that contains the answer', () => {
+    expect(fuzzyMatch('Billie Jean', 'Jean')).toBe(false)
+    expect(fuzzyMatch('One More Time', 'One')).toBe(false)
   })
 
   // Special characters (normalized)
@@ -409,10 +418,18 @@ describe('fuzzyMatch', () => {
     expect(fuzzyMatch('Michael Jaksoon', 'Michael Jackson')).toBe(true) // 2 typos OK
   })
 
-  it('should use minimum 2 errors for short strings', () => {
-    // "AC/DC" (4 chars normalized: "acdc") → tolerance 2 (min)
-    expect(fuzzyMatch('ABCD', 'ACDC')).toBe(true) // 1 typo OK
-    expect(fuzzyMatch('AXCD', 'ACDC')).toBe(true) // 1 typo OK
+  it('allows typos by length: none under 5 letters (but a swap), then 1, 2, about 12 %', () => {
+    expect(allowedTypos(4)).toBe(0)
+    expect(allowedTypos(5)).toBe(1)
+    expect(allowedTypos(11)).toBe(1)
+    expect(allowedTypos(12)).toBe(2)
+    expect(allowedTypos(17)).toBe(2)
+    expect(allowedTypos(25)).toBe(3)
+    expect(fuzzyMatch('ACDC', 'AC/DC', 'artist')).toBe(true)
+    expect(fuzzyMatch('CADC', 'AC/DC', 'artist')).toBe(true) // a swap
+    expect(fuzzyMatch('AXDC', 'AC/DC', 'artist')).toBe(false) // another letter
+    expect(fuzzyMatch('Rolling Stoned', 'The Rolling Stones', 'artist')).toBe(true)
+    expect(fuzzyMatch('Rollin Stonez', 'The Rolling Stones', 'artist')).toBe(true)
   })
 })
 
@@ -475,12 +492,12 @@ describe('checkSongGuess', () => {
     expect(result.correctCount).toBe(2)
   })
 
-  it('should handle partial matches (substring)', () => {
+  it('should not take a single word of the answer as the answer', () => {
     const result = checkSongGuess('Jean', 'Jackson', testSong)
 
-    expect(result.titleMatch).toBe(true) // Substring
-    expect(result.artistMatch).toBe(true) // Substring
-    expect(result.bothMatch).toBe(true)
+    expect(result.titleMatch).toBe(false)
+    expect(result.artistMatch).toBe(false)
+    expect(result.bothMatch).toBe(false)
   })
 
   it('should handle track suffix in title', () => {

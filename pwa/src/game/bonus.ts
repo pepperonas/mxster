@@ -5,7 +5,7 @@
  * place (draw another one). Pure rules; the flow lives in useTurnFlow.
  */
 import type { Player, Song } from '@/types'
-import { fuzzyMatch } from '@/utils/textMatcher'
+import { answerMatches } from './answerMatch'
 
 export const MAX_JOKERS = 3
 /** Typed names are cut to this length (they cross devices online). */
@@ -32,8 +32,8 @@ export function cleanNaming(v: unknown): Naming | null {
 }
 
 export function judgeNaming(song: Song, naming: Naming, jokers: number): NamingResult {
-  const titleOk = Boolean(naming.title) && fuzzyMatch(naming.title, song.title)
-  const artistOk = Boolean(naming.artist) && fuzzyMatch(naming.artist, song.artist)
+  const titleOk = Boolean(naming.title) && answerMatches(naming.title, song.title, 'title')
+  const artistOk = Boolean(naming.artist) && answerMatches(naming.artist, song.artist, 'artist')
   return { ...naming, titleOk, artistOk, earned: titleOk && artistOk && jokers < MAX_JOKERS }
 }
 

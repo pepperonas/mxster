@@ -59,7 +59,7 @@ export const gameText = defineMessages({
     namingLabel: 'Titel und Interpret nennen',
     namingTitle: 'Titel',
     namingArtist: 'Interpret',
-    namingHint: 'Freiwillig: beides richtig bringt einen Joker.',
+    namingHint: 'Freiwillig: beides richtig bringt einen Joker. Kleine Tippfehler zählen nicht.',
     namingEarned: 'Titel und Interpret richtig – ein Joker dazu',
     namingFull: 'Titel und Interpret richtig (Joker-Fach ist voll)',
     namingHalf: (what: string) => `Nur ${what} richtig – kein Joker`,
@@ -181,7 +181,7 @@ export const gameText = defineMessages({
     plusYear: '(+5/2/1 Punkte)',
     titlePlaceholder: 'Wie heißt der Song?',
     artistPlaceholder: 'Wer singt?',
-    typosHint: 'Kleine Tippfehler und Groß- oder Kleinschreibung zählen nicht.',
+    typosHint: 'Kleine Tippfehler, Groß- und Kleinschreibung und andere Schreibweisen zählen nicht – „und“ statt „&“, ohne „The“ oder Klammerteil, ein Interpret von mehreren.',
     check: 'Prüfen',
 
     // GuessResult
@@ -277,7 +277,7 @@ export const gameText = defineMessages({
     namingLabel: 'Name title and artist',
     namingTitle: 'Title',
     namingArtist: 'Artist',
-    namingHint: 'Optional: both right earns a joker.',
+    namingHint: 'Optional: both right earns a joker. Small typos don’t count.',
     namingEarned: 'Title and artist right – one more joker',
     namingFull: 'Title and artist right (no room for another joker)',
     namingHalf: (what: string) => `Only the ${what.toLowerCase()} right – no joker`,
@@ -392,7 +392,7 @@ export const gameText = defineMessages({
     plusYear: '(+5/2/1 points)',
     titlePlaceholder: 'What is the song called?',
     artistPlaceholder: 'Who sings it?',
-    typosHint: 'Small typos and upper or lower case don’t count.',
+    typosHint: 'Small typos, upper or lower case and other spellings don’t count – “and” for “&”, without “The” or the part in brackets, one artist of several.',
     check: 'Check',
 
     perfect: 'Perfect! Maximum score',

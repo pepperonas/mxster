@@ -3,9 +3,10 @@
  *
  * Features:
  * - Normalization (lowercase, remove special chars, track suffixes)
- * - Levenshtein distance for typo detection
- * - Configurable tolerance (default: 3 typos)
+ * - Levenshtein distance for typo detection, allowed typos by length
  * - Phonetic normalization (similar-sounding letters)
+ * - Equal words (& = and = und, five = 5, 2 = to, u = you) and spaces ignored
+ * - The forms an answer may take (without brackets, one artist of a list …)
  */
 
 import type { Song, GuessResult } from '@/types'
@@ -159,54 +160,115 @@ export function levenshteinDistance(a: string, b: string): number {
   return matrix[b.length][a.length]
 }
 
+/** Answer kinds: a title has bracketed parts, an artist can be several people. */
+export type AnswerKind = 'title' | 'artist'
+
 /**
- * Check if two texts "match" (within tolerance)
- *
- * @param guess - Guessed text
- * @param correct - Correct text
- * @param maxErrors - Maximum allowed typos (optional - defaults to 15% of text length, min 2)
- * @returns true if match
+ * Words with the same meaning in a guess and an answer, after normalizeText:
+ * conjunctions vanish ("Simon & Garfunkel" = "Simon and/und Garfunkel" =
+ * "Simon Garfunkel"), number words become digits ("Jackson Five" = "Jackson 5",
+ * "Mambo Number 5" = "Mambo No. 5"), and the usual shorthand ("2 U" = "to you").
  */
-export function fuzzyMatch(guess: string, correct: string, maxErrors?: number): boolean {
+const TOKEN: Record<string, string> = Object.assign(Object.create(null) as Record<string, string>, {
+  and: '', und: '', n: '',
+  one: '1', eins: '1', ein: '1', two: '2', zwei: '2', to: '2', too: '2', three: '3', drei: '3',
+  four: '4', vier: '4', for: '4', five: '5', funf: '5', six: '6', sechs: '6', seven: '7', siben: '7',
+  eight: '8', acht: '8', nine: '9', neun: '9', ten: '10', zehn: '10', eleven: '11', elf: '11', twelve: '12', zwolf: '12',
+  number: 'no', nummer: 'no', nr: 'no', you: 'u', part: 'pt', teil: 'pt'
+})
+
+/** Words of a text in comparable form ("The Jackson 5" → ["jakson", "5"]). */
+export function answerWords(text: string): string[] {
+  return normalizeText(text)
+    .replace(/^(die|der|das)\s+/, '')
+    .replace(/[()[\]{}"+*#]/g, ' ')
+    .split(' ')
+    .map((w) => (Object.prototype.hasOwnProperty.call(TOKEN, w) ? TOKEN[w] : w))
+    .filter(Boolean)
+}
+
+/** One comparable string: words joined without spaces ("AC DC" = "ACDC", "a-ha" = "aha"). */
+export function compact(text: string): string {
+  return answerWords(text).join('')
+}
+
+/** Spelling the umlauts out: "Grönemeyer" also as "Groenemeyer". */
+function spelledOut(text: string): string {
+  return text.replace(/ä/g, 'ae').replace(/ö/g, 'oe').replace(/ü/g, 'ue').replace(/Ä/g, 'Ae').replace(/Ö/g, 'Oe').replace(/Ü/g, 'Ue')
+}
+
+/**
+ * The forms an answer may be given in, each a whole answer on its own.
+ * Title: as it is, without the bracketed part ("Montero"), the bracketed part
+ * alone ("Call Me By Your Name"), the parts around a slash, and without a
+ * trailing ", Pt. 2". Artist: as it is, every credited artist of a list
+ * ("Lady Gaga, Bruno Mars"), and a band without its backing band
+ * ("Bill Haley & His Comets" → "Bill Haley").
+ */
+export function answerVariants(correct: string, kind: AnswerKind = 'title'): string[] {
+  const base = removeTrackSuffixes(correct.trim())
+  const out = new Set<string>([base])
+  if (kind === 'title') {
+    const bracket = /[([](.*?)[)\]]/g
+    const without = base.replace(bracket, ' ').replace(/\s+/g, ' ').trim()
+    if (without) out.add(without)
+    for (const m of base.matchAll(bracket)) if (m[1].trim()) out.add(m[1].trim())
+    out.add(base.replace(/[()[\]]/g, ' '))
+    for (const part of base.split(/\s+\/\s+/)) out.add(part)
+    out.add(base.replace(/,?\s*(pt|part|teil)\.?\s*\d+$/i, ''))
+  } else {
+    // "A, B & C" is a list of people; a comma together with "&" is a band name ("Earth, Wind & Fire")
+    if (base.includes(',') && !/&| and | und /i.test(base)) for (const part of base.split(',')) out.add(part)
+    else if (base.includes(',')) for (const part of base.split(/,(?![^,]*&)/)) out.add(part)
+    const band = /^(.+?)\s+(&|and|und)\s+(the|his|her|their|die|seine|ihre)\s+.+$/i.exec(base)
+    if (band) out.add(band[1])
+  }
+  for (const v of [...out]) if (/[äöüÄÖÜ]/.test(v)) out.add(spelledOut(v))
+  return [...out].map((v) => v.trim()).filter((v) => compact(v).length > 0)
+}
+
+/**
+ * Typos allowed for an answer of this many letters (spaces not counted).
+ * Short names must be exact: "ABBA" is not "Aqua", "Mika" is not "M.I.A.", "Blue" is not "Glue".
+ */
+export function allowedTypos(length: number): number {
+  if (length < 5) return 0
+  if (length < 12) return 1
+  if (length < 18) return 2
+  return Math.floor(length * 0.12)
+}
+
+/** Two neighbouring letters swapped, nothing else ("tets" for "test"). */
+export function isSwap(a: string, b: string): boolean {
+  if (a.length !== b.length || a.length < 2) return false
+  let i = 0
+  while (i < a.length && a[i] === b[i]) i++
+  return i < a.length - 1 && a[i] === b[i + 1] && a[i + 1] === b[i] && a.slice(i + 2) === b.slice(i + 2)
+}
+
+/** Within the typos allowed for `correct` (both already compact). A short answer only forgives a swap. */
+export function closeEnough(guess: string, correct: string, maxErrors?: number): boolean {
   if (!guess || !correct) return false
+  if (guess === correct) return true
+  if (maxErrors === undefined && correct.length < 5) return correct.length >= 3 && isSwap(guess, correct)
+  const allowed = maxErrors ?? allowedTypos(correct.length)
+  if (Math.abs(guess.length - correct.length) > allowed) return false
+  return levenshteinDistance(guess, correct) <= allowed
+}
 
-  // Normalize both texts
-  const normalizedGuess = normalizeText(guess)
-  const normalizedCorrect = normalizeText(correct)
-
-  // Calculate dynamic max errors if not provided
-  if (maxErrors === undefined) {
-    // Use 15% of the longer normalized text as tolerance (minimum 2 errors)
-    const longerLength = Math.max(normalizedGuess.length, normalizedCorrect.length)
-    maxErrors = Math.max(2, Math.floor(longerLength * 0.15))
-
-  }
-
-  // Exact match after normalization
-  if (normalizedGuess === normalizedCorrect) {
-    return true
-  }
-
-  // Substring match (one text contains the other)
-  // ONLY if the guess is at least 40% of the correct text length (minimum 4 chars)
-  const minSubstringLength = Math.max(4, Math.ceil(normalizedCorrect.length * 0.4))
-  if (normalizedGuess.length >= minSubstringLength) {
-    if (
-      normalizedCorrect.includes(normalizedGuess) ||
-      normalizedGuess.includes(normalizedCorrect)
-    ) {
-      return true
-    }
-  }
-
-  // Levenshtein distance check
-  const distance = levenshteinDistance(normalizedGuess, normalizedCorrect)
-  const isMatch = distance <= maxErrors
-
-  if (maxErrors !== 3) { // Only log when using dynamic tolerance
-  }
-
-  return isMatch
+/**
+ * Does the guess name the answer? Any spelling of one of its forms counts
+ * (see answerVariants), with a few typos by length (see allowedTypos). A
+ * single word out of a longer answer does not count here — whether that is
+ * enough depends on the rest of the catalogue (game/answerMatch.ts).
+ */
+export function fuzzyMatch(guess: string, correct: string, kindOrMaxErrors?: AnswerKind | number): boolean {
+  if (!guess || !correct) return false
+  const kind = typeof kindOrMaxErrors === 'string' ? kindOrMaxErrors : 'title'
+  const maxErrors = typeof kindOrMaxErrors === 'number' ? kindOrMaxErrors : undefined
+  const g = compact(guess)
+  if (!g) return false
+  return answerVariants(correct, kind).some((v) => closeEnough(g, compact(v), maxErrors))
 }
 
 /**
@@ -222,8 +284,8 @@ export function checkSongGuess(
   guessArtist: string,
   song: Song
 ): GuessResult {
-  const titleMatch = fuzzyMatch(guessTitle, song.title)
-  const artistMatch = fuzzyMatch(guessArtist, song.artist)
+  const titleMatch = fuzzyMatch(guessTitle, song.title, 'title')
+  const artistMatch = fuzzyMatch(guessArtist, song.artist, 'artist')
 
   return {
     titleMatch,
@@ -245,14 +307,10 @@ export function debugMatch(
   distance: number
   dynamicMaxErrors: number
 } {
-  const normalized1 = normalizeText(guess)
-  const normalized2 = normalizeText(correct)
+  const normalized1 = compact(guess)
+  const normalized2 = compact(correct)
   const distance = levenshteinDistance(normalized1, normalized2)
-
-  // Calculate dynamic max errors
-  const longerLength = Math.max(normalized1.length, normalized2.length)
-  const dynamicMaxErrors = Math.max(2, Math.floor(longerLength * 0.15))
-
+  const dynamicMaxErrors = allowedTypos(normalized2.length)
 
   return { normalized1, normalized2, distance, dynamicMaxErrors }
 }
