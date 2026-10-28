@@ -1,5 +1,6 @@
 import { createContext, useContext, useEffect, useReducer, ReactNode } from 'react'
 import type { StepClock } from '@/game/turnClock'
+import type { Collection } from '@/game/songPool'
 import type { Player, Song, GameMode, GlobalTimelineCard, TurnRecord } from '@/types'
 import { type Tiebreak } from '@/game/tiebreak'
 import { nextPresent } from '@/game/presence'
@@ -52,6 +53,16 @@ export interface GameState {
   challengesEnabled: boolean
   /** Little-known tracks (song.exotic) may come up. */
   exotics: boolean
+  /** Genre groups songs are drawn from (game/songPool GENRE_GROUPS); empty = all. */
+  genres: string[]
+  /** Themed selection: all, party classics, German songs, the group's misses. */
+  collection: Collection
+  /** Collection "nemesis": the songs it is made of (fixed when the round starts). */
+  songIds: string[] | null
+  /** Timeline modes: naming title and artist earns a joker (game/bonus). */
+  bonus: boolean
+  /** Today's round: its day; songIds then holds its songs in playing order. */
+  daily: string | null
 
   // Turn (kept here so a reload resumes exactly where the round stood)
   reveal: Reveal | null
@@ -67,7 +78,10 @@ export interface GameState {
   onlineRoom: string | null
 }
 
-export type RoundOptions = Pick<GameState, 'goal' | 'decades' | 'challengesEnabled' | 'exotics'>
+export type RoundOptions = Pick<
+  GameState,
+  'goal' | 'decades' | 'challengesEnabled' | 'exotics' | 'genres' | 'collection' | 'songIds' | 'bonus' | 'daily'
+>
 
 type GameAction =
   | { type: 'SET_GAME_MODE'; payload: GameMode | null }
@@ -162,6 +176,11 @@ const initialState: GameState = {
   decades: [],
   challengesEnabled: true,
   exotics: false,
+  genres: [],
+  collection: 'all',
+  songIds: null,
+  bonus: false,
+  daily: null,
   reveal: null,
   pending: null,
   finished: false,
@@ -191,7 +210,11 @@ function keepOptions(state: GameState) {
     goal: state.goal,
     decades: state.decades,
     challengesEnabled: state.challengesEnabled,
-    exotics: state.exotics
+    exotics: state.exotics,
+    genres: state.genres,
+    collection: state.collection,
+    songIds: state.songIds,
+    bonus: state.bonus
   }
 }
 
@@ -256,10 +279,8 @@ function gameReducer(state: GameState, action: GameAction): GameState {
     }
 
     case 'ADD_TO_PLAYED_SONGS':
-      if (state.playedSongs.includes(action.payload)) {
-        return state
-      }
-      return { ...state, playedSongs: [...state.playedSongs, action.payload] }
+      // A song that comes round again (every song was played) moves to the end
+      return { ...state, playedSongs: [...state.playedSongs.filter((k) => k !== action.payload), action.payload] }
 
     case 'INCREMENT_SKIP_COUNT': {
       const playerIndex = action.payload

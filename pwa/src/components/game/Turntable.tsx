@@ -63,6 +63,16 @@ const SYNC_TOLERANCE_S = 0.25
 
 const RANDOM_START_MAX_S = 150 // ~3.5 min average song, keep ≥ 60 s left
 
+/**
+ * Where a new song starts (s): where it becomes recognisable (`startMs`,
+ * silence and quiet intros skipped) — or a random point after that.
+ */
+export function startPosition(song: Pick<Song, 'startMs'>, random: boolean, rand: () => number): number {
+  const from = (song.startMs ?? 0) / 1000
+  if (!random) return from
+  return Math.floor(from + rand() * Math.max(0, RANDOM_START_MAX_S - from))
+}
+
 export function Turntable({
   song,
   revealYear,
@@ -123,7 +133,7 @@ export function Turntable({
       return
     }
     if (audioRole === 'follow' || audioRole === 'silent') return
-    const start = settings.randomStartPosition ? Math.floor(Math.random() * RANDOM_START_MAX_S) : 0
+    const start = startPosition(song, settings.randomStartPosition, Math.random)
     player.current.play(song, start).catch(() => {})
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [songKey])
@@ -144,7 +154,7 @@ export function Turntable({
     if (cue && cue.songId === song.id) {
       if (cue.playing) p.play(song, cuePosition(cue, Date.now(), clockOffset())).catch(() => {})
     } else {
-      p.play(song, 0).catch(() => {})
+      p.play(song, startPosition(song, false, Math.random)).catch(() => {})
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [audioRole])

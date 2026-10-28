@@ -50,6 +50,19 @@ describe('privacy policy matches the code', () => {
     expect(server('api/rooms.py')).toMatch(/delete\(Room\)\.where\(Room\.expires_at < utcnow\(\)\)/)
   })
 
+  it('states when daily results are deleted, and the server deletes them', () => {
+    const days = Number(num(server('api/daily.py'), /KEEP_DAYS = (\d+)/))
+    expect(text('de')).toContain(`nach ${days} Tagen wird es gelöscht`)
+    expect(text('en')).toContain(`deleted after ${days} days`)
+    expect(server('api/daily.py')).toMatch(/DailyResult\.day < cutoff\)\.delete\(\)/)
+  })
+
+  it('names song reports, and they are deleted with the account', () => {
+    expect(server('db.py')).toMatch(/class SongReport[\s\S]*?ForeignKey\("users\.id", ondelete="CASCADE"\)/)
+    expect(text('de')).toContain('Meldest du einen Song')
+    expect(text('en')).toContain('If you report a song')
+  })
+
   it('promises account deletion, and the API offers it', () => {
     expect(server('api/auth.py')).toMatch(/@router\.delete\("\/me"/)
     expect(text('de')).toContain('ganze Konto löschen')

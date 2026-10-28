@@ -5,6 +5,7 @@
 import { useEffect, type ReactNode } from 'react'
 import { useLocation } from 'react-router-dom'
 import { SyncModeProvider } from '@/sync/syncMode'
+import { useSongOverrides } from '@/data/useSongOverrides'
 import { AnimatePresence, m } from 'motion/react'
 import { useAuth } from './AuthContext'
 import { LoginScreen } from '@/screens/LoginScreen'
@@ -37,6 +38,8 @@ export function AuthGate({ children }: { children: ReactNode }) {
       document.removeEventListener('visibilitychange', onFocus)
     }
   }, [status, refresh])
+
+  useSongOverrides(state.kind === 'signed-in' && state.me.status === 'approved')
 
   // The first check is not part of the transition: with mode="wait" the empty
   // loading frame had to finish an exit animation before the app could mount,

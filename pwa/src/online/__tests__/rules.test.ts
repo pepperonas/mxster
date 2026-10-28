@@ -85,7 +85,7 @@ describe('carryOut (host side)', () => {
   it('carries out an allowed intent with the same function as the local controls', () => {
     const f = flow({})
     expect(carryOut(f, { players, currentPlayer: 1 }, 2, { action: 'place', gap: 1 })).toBe(true)
-    expect(f.placeCard).toHaveBeenCalledWith(1)
+    expect(f.placeCard).toHaveBeenCalledWith(1, null)
   })
 
   it('refuses intents out of turn and gaps that are not on the board', () => {

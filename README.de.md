@@ -15,10 +15,10 @@
 <h3>👉 <a href="https://mxtape.celox.io">mxtape.celox.io</a> — mit Google oder E-Mail anmelden oder als Gast nur per Link in den Raum von Freunden</h3>
 
 <!-- BADGES:BIG — version, tests, lines of code and songs; readme.test.ts keeps them true, scripts/readme-badges.mjs rewrites them. -->
-[![version](https://img.shields.io/badge/version-0.10.2-C2185B?style=for-the-badge&logo=semver&logoColor=white)](https://github.com/pepperonas/mxtape/releases/latest)
-[![tests](https://img.shields.io/badge/tests-619-2E9E5B?style=for-the-badge&logo=vitest&logoColor=white)](#tests-und-ci)
-[![lines of code](https://img.shields.io/badge/lines%20of%20code-22.4k-4B6BDF?style=for-the-badge&logo=typescript&logoColor=white)](pwa/src)
-[![test code](https://img.shields.io/badge/test%20code-7.8k-2E9E5B?style=for-the-badge&logo=typescript&logoColor=white)](#tests-und-ci)
+[![version](https://img.shields.io/badge/version-0.11.0-C2185B?style=for-the-badge&logo=semver&logoColor=white)](https://github.com/pepperonas/mxtape/releases/latest)
+[![tests](https://img.shields.io/badge/tests-654-2E9E5B?style=for-the-badge&logo=vitest&logoColor=white)](#tests-und-ci)
+[![lines of code](https://img.shields.io/badge/lines%20of%20code-24.3k-4B6BDF?style=for-the-badge&logo=typescript&logoColor=white)](pwa/src)
+[![test code](https://img.shields.io/badge/test%20code-8.2k-2E9E5B?style=for-the-badge&logo=typescript&logoColor=white)](#tests-und-ci)
 [![songs](https://img.shields.io/badge/songs-500-FF8A3D?style=for-the-badge&logo=applemusic&logoColor=white)](#die-songsammlung)
 
 [![Donate with PayPal](https://img.shields.io/badge/PayPal-support%20this%20project-00457C?style=for-the-badge&logo=paypal&logoColor=white)](https://www.paypal.com/donate/?business=martin.pfeffer@celox.io&currency_code=EUR&item_name=mxtape)
@@ -149,11 +149,13 @@ Vor jeder Runde legt ihr fest:
 
 - **Länge:** kurz (5 Songs), normal (10) oder lang (15).
 - **Jahrzehnte:** alle oder nur bestimmte, etwa nur 80er und 90er. Gehen deren Songs aus, kommen die übrigen dazu, damit die Runde nie stehen bleibt.
+- **Musikrichtung und Auswahl:** Pop, Rock, Soul & R&B, Hip-Hop, Elektro, Sonstiges – und eine Auswahl: alle Songs, *Party-Klassiker*, *Deutschsprachig* oder *Eure Angstgegner* (die Songs, die bei euch schon falsch lagen, ab zehn Stück).
+- **Bonus für Titel und Interpret** (Zeitleisten-Modi): Die Karte bleibt verdeckt, ihr hört nur. Wer beim Legen Titel und Interpret richtig nennt, bekommt einen Joker (höchstens drei); damit tauscht man einen Song, den man nicht legen will.
 - **Einspruch** (Zeitleisten-Modi): Jede:r hat drei. Nach dem Legen bleibt die Karte verdeckt, und wer anderer Meinung ist, legt sie in eine andere Lücke. Lag die Person am Zug falsch und der Einspruch richtig, bekommt die Einspruch-Person die Karte. Ein Einspruch kostet immer einen der drei.
 - **Exoten:** standardmäßig aus. Eingeschaltet kommen kaum bekannte Club-Tracks, Remixe und Raritäten dazu.
 - **Teams** (ab vier Personen): Ein Team teilt sich Zeitleiste, Punkte und Einsprüche, die Mitglieder wechseln sich ab.
 
-Songs aus euren letzten Runden kommen erst wieder, wenn nichts Neues mehr übrig ist. **Unentschieden gibt es nicht:** Liegen am Ende mehrere vorne, folgt ein Stechen – nur sie spielen weiter, je ein Song pro Runde, bis genau eine:r führt. Allein? Dann spielen bis zu drei Bots (leicht, mittel, schwer) gegen dich.
+Songs aus euren letzten Runden kommen erst wieder, wenn nichts Neues mehr übrig ist; Songs starten dort, wo man sie erkennt (Stille und leise Intros werden übersprungen). **Unentschieden gibt es nicht:** Liegen am Ende mehrere vorne, folgt ein Stechen – nur sie spielen weiter, je ein Song pro Runde, bis genau eine:r führt. Allein? Dann spielen bis zu drei Bots (leicht, mittel, schwer) gegen dich.
 
 ## Mehrspieler
 
@@ -171,6 +173,9 @@ Statt ein Handy herumzureichen, spielt jede Person auf dem eigenen Gerät – im
 ## Funktionen
 
 - **500 Songs** von den 50ern bis heute, selbst gehostet, auf Wunsch mit zufälliger Startstelle
+- **Tagesrunde:** jeden Tag dieselben zehn Songs für alle, ein Versuch, danach die Ergebnisse deiner Freunde
+- **Ergebnis teilen** als Bild (WhatsApp und Co.) direkt vom Endbildschirm
+- **Song melden** nach dem Aufdecken (falsches Jahr, falsche Version, schlechter Ton, falsches Cover); der Admin korrigiert das Jahr oder nimmt den Song heraus – sofort für alle Runden
 - **Aufdecken mit Hintergrund:** Album-Cover auf dem Plattenlabel, Albumname und ein kurzes „Wusstest du?“
 - **Sofort sichtbar, wohin die Karte kommt:** Die Nachbarjahre leuchten auf, eine Positionsleiste zeigt `2008 — ? — 2020` in der Plakatschrift
 - **Eine laufende Runde übersteht Neuladen** oder einen geschlossenen Tab und wird auf der Startseite angeboten
@@ -255,8 +260,9 @@ scripts/  Songs verwalten, Audio hosten, Deployment
 | Suite | Was sie abdeckt |
 |-------|-----------------|
 | `cd pwa && npx vitest run` | Spielregeln, Zugablauf, Einspruch, Stechen, Statistik, Abgleich zwischen Geräten, Rechte und Bereinigung im Mehrspieler, Bildschirme |
-| `cd server && .venv/bin/python -m pytest -q` | Anmeldung und Freischaltung, Versionierung der Daten, Audio-Freigabe, Räume und WebSocket, Freunde und Suche |
+| `cd server && .venv/bin/python -m pytest -q` | Anmeldung und Freischaltung, Versionierung der Daten, Audio-Freigabe, Räume und WebSocket, Freunde und Suche, Song-Meldungen, Tagesrunde |
 | `npm test` (Repo-Wurzel) | Integrität der Songdaten |
+| `cd pwa && npm run e2e` | zwei Browser spielen eine Online-Runde gegen die echte API (Beitreten, Legen, Kein Einspruch, Einspruch) |
 | `cd pwa && npx tsc --noEmit` | Typen |
 
 GitHub Actions führt alles bei jedem Push aus ([`ci.yml`](.github/workflows/ci.yml)). Die großen Zahlen oben hält `pwa/src/__tests__/readme.test.ts` ehrlich; `node scripts/readme-badges.mjs` zählt neu und schreibt sie um.

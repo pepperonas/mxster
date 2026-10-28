@@ -367,3 +367,25 @@ export function renameInHistory(history: readonly HistoryEntry[], from: string, 
     }
   })
 }
+
+/** "Eure Angstgegner" unlocks at this many missed songs. */
+export const NEMESIS_MIN = 10
+/** Never more in one round option (room options are capped in size). */
+export const NEMESIS_MAX = 200
+
+/**
+ * Songs the group got wrong before (a wrong placement or a hardcore year off
+ * by more than 2), newest misses first, each once. Bots don't count.
+ */
+export function missedSongs(history: readonly HistoryEntry[]): string[] {
+  const out: string[] = []
+  const seen = new Set<string>()
+  for (const game of [...history].sort((a, b) => b.timestamp - a.timestamp)) {
+    for (const turn of [...(game.turns ?? [])].reverse()) {
+      if (turn.bot || !countsForRate(turn) || turn.ok || seen.has(turn.s)) continue
+      seen.add(turn.s)
+      out.push(turn.s)
+    }
+  }
+  return out.slice(0, NEMESIS_MAX)
+}

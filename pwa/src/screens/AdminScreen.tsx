@@ -17,6 +17,7 @@ import { formatDay, formatTime } from '@/utils/format'
 import { msg, useMessages } from '@/i18n'
 import { adminText } from '@/i18n/messages/admin'
 import { apiErrorText } from '@/i18n/messages/errors'
+import { AdminReports, useReportCount } from './AdminReports'
 
 interface Account {
   id: number
@@ -33,15 +34,16 @@ interface Account {
 }
 
 type Action = 'approve' | 'reject' | 'block' | 'unblock' | 'reset'
-type Tab = 'pending' | 'approved' | 'closed'
+type Tab = 'pending' | 'approved' | 'closed' | 'reports'
 
-const TABS: { id: Tab; label: 'tabPending' | 'tabApproved' | 'tabClosed' }[] = [
+const TABS: { id: Tab; label: 'tabPending' | 'tabApproved' | 'tabClosed' | 'tabReports' }[] = [
   { id: 'pending', label: 'tabPending' },
   { id: 'approved', label: 'tabApproved' },
-  { id: 'closed', label: 'tabClosed' }
+  { id: 'closed', label: 'tabClosed' },
+  { id: 'reports', label: 'tabReports' }
 ]
 
-const inTab = (a: Account, tab: Tab) => (tab === 'closed' ? a.status === 'rejected' || a.status === 'blocked' : a.status === tab)
+const inTab = (a: Account, tab: Exclude<Tab, 'reports'>) => (tab === 'closed' ? a.status === 'rejected' || a.status === 'blocked' : a.status === tab)
 
 /** The action that restores a previous status (for undo). */
 const RESTORE: Record<AccountStatus, Action> = { pending: 'reset', approved: 'approve', rejected: 'reject', blocked: 'block' }
@@ -54,6 +56,9 @@ export function AdminScreen() {
   const [accounts, setAccounts] = useState<Account[] | null>(null)
   const [tab, setTab] = useState<Tab>('pending')
   const [error, setError] = useState<string | null>(null)
+  const initialReports = useReportCount()
+  const [reportCount, setReportCount] = useState<number | null>(null)
+  const openReports = reportCount ?? initialReports
 
   useEffect(() => {
     if (!me.isAdmin) navigate('/', { replace: true })
@@ -96,15 +101,16 @@ export function AdminScreen() {
   const counts = {
     pending: accounts?.filter((a) => inTab(a, 'pending')).length ?? 0,
     approved: accounts?.filter((a) => inTab(a, 'approved')).length ?? 0,
-    closed: accounts?.filter((a) => inTab(a, 'closed')).length ?? 0
+    closed: accounts?.filter((a) => inTab(a, 'closed')).length ?? 0,
+    reports: openReports
   }
-  const shown = accounts?.filter((a) => inTab(a, tab)) ?? []
+  const shown = tab === 'reports' ? [] : (accounts?.filter((a) => inTab(a, tab)) ?? [])
 
   return (
     <div>
       <SubPageHeader title={t.title} back="/profile" />
 
-      <div role="tablist" aria-label={t.statusLabel} className="flex border-b border-md-outline-variant/60 -mx-4 sm:mx-0 px-2 sm:px-0">
+      <div role="tablist" aria-label={t.statusLabel} className="flex overflow-x-auto border-b border-md-outline-variant/60 -mx-4 sm:mx-0 px-2 sm:px-0">
         {TABS.map((tab_) => {
           const active = tab === tab_.id
           return (
@@ -114,17 +120,17 @@ export function AdminScreen() {
               role="tab"
               aria-selected={active}
               onClick={() => setTab(tab_.id)}
-              className={`relative flex-1 min-h-[48px] px-2 text-label-lg m3-state-layer ${active ? 'text-md-primary' : 'text-md-on-surface-variant'}`}
+              className={`relative flex-1 shrink-0 whitespace-nowrap min-h-[48px] px-3 text-label-lg m3-state-layer ${active ? 'text-md-primary' : 'text-md-on-surface-variant'}`}
             >
               <span className="inline-flex items-center gap-2">
                 {t[tab_.label]}
-                {tab_.id === 'pending' && counts.pending > 0 && (
+                {(tab_.id === 'pending' || tab_.id === 'reports') && counts[tab_.id] > 0 && (
                   <span
                     className={`grid place-items-center min-w-6 h-6 px-1.5 rounded-full text-label-md tabular ${
                       'bg-md-error text-md-on-error'
                     }`}
                   >
-                    {counts.pending}
+                    {counts[tab_.id]}
                   </span>
                 )}
               </span>
@@ -136,6 +142,11 @@ export function AdminScreen() {
         })}
       </div>
 
+      {tab === 'reports' ? (
+        <div className="pt-4" role="tabpanel">
+          <AdminReports onCount={setReportCount} />
+        </div>
+      ) : (
       <div className="pt-4" role="tabpanel">
         {error && (
           <div className="surface p-6 text-center">
@@ -208,6 +219,7 @@ export function AdminScreen() {
           </AnimatePresence>
         </ul>
       </div>
+      )}
     </div>
   )
 }
@@ -226,7 +238,7 @@ function describe(t: (typeof adminText)['de'], a: Account): string {
   }
 }
 
-function EmptyTab({ tab }: { tab: Tab }) {
+function EmptyTab({ tab }: { tab: Exclude<Tab, 'reports'> }) {
   const t = useMessages(adminText)
   const copy = {
     pending: [t.emptyPendingTitle, t.emptyPendingText],

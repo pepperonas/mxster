@@ -10,7 +10,8 @@
  * - Nobody turns a placed card over by hand online: the objection window
  *   (game/objectionWindow.ts) does, once everyone passed or time ran out.
  * - The host may draw and continue for a player who is away (not connected,
- *   or skipped as absent) — and only then.
+ *   or skipped as absent) — and only then — and for bots (they have no device).
+ * - Only the player on turn spends a joker (bonus option).
  */
 import type { Player } from '@/types'
 import type { PendingPlacement, Reveal, TurnPhase } from '@/game/turn'
@@ -34,13 +35,15 @@ const seatAt = (players: Player[], index: number | null | undefined) => (index =
 
 export function mayAct(view: TurnView, seat: number, action: Intent['action'], isHost = false): boolean {
   const { phase, players, currentPlayer, pending, reveal, away = [] } = view
-  const forAway = (index: number | null | undefined) => isHost && index != null && away.includes(index)
+  const forAway = (index: number | null | undefined) =>
+    isHost && index != null && (away.includes(index) || Boolean(players[index]?.isBot))
   const onTurn = seatAt(players, currentPlayer) === seat
   const me = indexOfSeat(players, seat)
   switch (action) {
     case 'draw':
       return phase === 'idle' && (onTurn || forAway(currentPlayer))
     case 'place':
+    case 'swap':
       return phase === 'placing' && onTurn
     case 'guess':
     case 'skip':

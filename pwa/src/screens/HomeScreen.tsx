@@ -22,6 +22,9 @@ import { formatDay } from '@/utils/format'
 import { turnName } from '@/game/teams'
 import { useMessages } from '@/i18n'
 import { homeText } from '@/i18n/messages/home'
+import { dailyText } from '@/i18n/messages/daily'
+import { useDailyBoard } from './DailyScreen'
+import { DAILY_SONGS } from '@/game/daily'
 import { ACHIEVEMENT_DEFINITIONS, achievementIcon, type Achievement } from '@/types/achievements'
 
 export function HomeScreen() {
@@ -110,6 +113,8 @@ export function HomeScreen() {
           </m.div>
         </div>
       </button>
+
+      <DailyCard />
 
       <div className="grid gap-4 sm:grid-cols-2">
         <section aria-labelledby="last-round" className="surface p-5">
@@ -284,5 +289,30 @@ function Invites() {
         </m.section>
       ))}
     </AnimatePresence>
+  )
+}
+
+/** Tagesrunde: open today, or today's result. */
+function DailyCard() {
+  const t = useMessages(dailyText)
+  const navigate = useAppNavigate()
+  const { board } = useDailyBoard()
+  return (
+    <button
+      type="button"
+      onClick={() => navigate('/daily')}
+      className="w-full text-left surface p-5 flex items-center gap-4 m3-state-layer"
+    >
+      <span className="grid place-items-center w-12 h-12 rounded-m3-lg bg-md-secondary-container text-md-on-secondary-container">
+        <Icon name="today" />
+      </span>
+      <span className="min-w-0 flex-1">
+        <span className="block text-title-md">{t.homeTitle}</span>
+        <span className="block meta truncate">
+          {board?.mine ? t.homeDone(board.mine.score, board.mine.total) : t.homeOpen(DAILY_SONGS)}
+        </span>
+      </span>
+      <Icon name="chevron" className="text-md-on-surface-variant" />
+    </button>
   )
 }

@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach } from 'vitest'
 import type { Player, Song } from '@/types'
-import { pickSong, rememberSong, songPool, decadeOf, RECENT_LIMIT, songKey, countByDecade } from '../songPool'
+import { pickSong, rememberSong, songPool, decadeOf, RECENT_LIMIT, songKey, countByDecade, REPLAY_GAP } from '../songPool'
 import { songs as catalogueSongs } from '@/data/songs'
 import { eligibleChallengers, resolveChallenge } from '../challenge'
 import { activeMember, initialOf, maxTeams, splitIntoTeams, turnName } from '../teams'
@@ -38,7 +38,7 @@ describe('song pool', () => {
   })
 
   it('returns no song once everything was played', () => {
-    expect(pickSong(all, [], all.map(songKey), [])).toEqual({ song: null, widened: false })
+    expect(pickSong([], [], [], [])).toEqual({ song: null, widened: false })
   })
 
   it('prefers songs not played in recent rounds', () => {
@@ -197,5 +197,37 @@ describe('saved round', () => {
   it('ignores broken data', () => {
     localStorage.setItem('mxster_running_game', '{not json')
     expect(loadSavedGame()).toBeNull()
+  })
+})
+
+describe('every song played (long tiebreak)', () => {
+  const many = Array.from({ length: 60 }, (_, i) => ({ id: `song_${100 + i}`, title: 't', artist: 'a', year: 1980 + (i % 30) }))
+  it('brings back a song, never one of the last ones', () => {
+    const played = many.map(songKey)
+    for (let r = 0; r < 30; r++) {
+      const draw = pickSong(many, [], played, [], () => r / 30)
+      expect(draw.replayed).toBe(true)
+      expect(played.slice(-REPLAY_GAP)).not.toContain(songKey(draw.song!))
+    }
+  })
+  it('a tiny catalogue still never stops', () => {
+    const two = many.slice(0, 2)
+    const draw = pickSong(two, [], two.map(songKey), [], () => 0)
+    expect(draw.song?.id).toBe(two[0].id)
+  })
+})
+
+describe('where a song starts', () => {
+  it('skips the quiet intro, random starts come after it', async () => {
+    const { startPosition } = await import('@/components/game/Turntable')
+    expect(startPosition({}, false, () => 0.5)).toBe(0)
+    expect(startPosition({ startMs: 12500 }, false, () => 0.5)).toBe(12.5)
+    expect(startPosition({ startMs: 20000 }, true, () => 0)).toBe(20)
+    expect(startPosition({ startMs: 20000 }, true, () => 0.999)).toBeLessThanOrEqual(150)
+    expect(startPosition({}, true, () => 0.5)).toBe(75)
+  })
+  it('the song list carries start points', () => {
+    expect(catalogueSongs.filter((s) => (s.startMs ?? 0) > 0).length).toBeGreaterThan(100)
+    expect(catalogueSongs.every((s) => s.startMs === undefined || (s.startMs >= 1500 && s.startMs <= 40000))).toBe(true)
   })
 })

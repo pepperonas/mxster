@@ -10,7 +10,7 @@
  *   checked and everything unexpected is dropped or cut.
  */
 import type { GameMode, Player, Song, TurnRecord } from '@/types'
-import { songs } from '@/data/songs'
+import { songById } from '@/data/catalogue'
 import type { Snapshot } from './protocol'
 
 const MODES: GameMode[] = ['timeline_personal', 'timeline_global', 'hardcore'] as GameMode[]
@@ -24,12 +24,12 @@ const num = (v: unknown, min: number, max: number) => (typeof v === 'number' && 
 /**
  * The host's device takes a stored snapshot back (reload, another device):
  * the song on the platter was stored blind, so put the real one back from the
- * bundled song list — judging a placement against year 0 would be wrong.
+ * song list (with the admin's corrections) — judging a placement against year 0 would be wrong.
  */
 export function restoreSong(game: Snapshot['game']): Snapshot['game'] {
   const song = game.currentSong
   if (!song || game.reveal) return game
-  const real = songs.find((s) => s.id === song.id)
+  const real = songById(song.id)
   return real ? { ...game, currentSong: real } : game
 }
 
@@ -37,7 +37,9 @@ export function blindSnapshot(game: Snapshot['game']): Snapshot['game'] {
   const song = game.currentSong
   if (!song || game.reveal) return game
   const { year: _y, album: _a, fact: _f, ...rest } = song
-  return { ...game, currentSong: { ...rest, year: 0 } as Song }
+  // Bonus option: title and artist are part of the answer too
+  const hidden = game.bonus ? { title: '', artist: '' } : {}
+  return { ...game, currentSong: { ...rest, ...hidden, year: 0 } as Song }
 }
 
 function card(v: unknown): Song | null {

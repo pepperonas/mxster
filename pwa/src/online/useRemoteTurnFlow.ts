@@ -24,7 +24,9 @@ export function useRemoteTurnFlow(send: (intent: Intent) => void): TurnFlow {
       send({ action: 'draw' })
       return null
     },
-    placeCard: (gap: number) => send({ action: 'place', gap }),
+    placeCard: (gap: number, naming?: { title: string; artist: string } | null) =>
+      send(naming ? { action: 'place', gap, naming } : { action: 'place', gap }),
+    swapSong: () => send({ action: 'swap' }),
     startChallenge: () => send({ action: 'challenge' }),
     cancelChallenge: () => send({ action: 'cancelChallenge' }),
     passChallenge: () => send({ action: 'pass' }),

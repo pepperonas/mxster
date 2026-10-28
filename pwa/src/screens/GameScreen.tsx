@@ -8,6 +8,10 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { AnimatePresence, m } from 'motion/react'
 import { useAppNavigate } from '@/hooks/useAppNavigate'
+import { concealed, jokersOf } from '@/game/bonus'
+import { api, ApiError } from '@/api/client'
+import { DAILY_SONGS, dailyScore } from '@/game/daily'
+import { dailyText } from '@/i18n/messages/daily'
 import { useGame, useUI } from '@/contexts'
 import { GuessForm, GameBoards, GuessResult, PlacementDock, FeedbackLayer, ScoreOverview, type DockState } from '@/components/game'
 import { Turntable } from '@/components/game/Turntable'
@@ -76,7 +80,23 @@ export function GameRound({ onRematch }: { onRematch: () => void }) {
   const navigate = useAppNavigate()
   const t = useMessages(gameText)
   const { showModal, closeModal, addToast } = useUI()
-  const { gameMode, players, currentPlayer, currentSong, resetGame, rematch, tiebreak, goal, absent, stepClock, turnLog, playedSongs } = useGame()
+  const {
+    gameMode,
+    players,
+    currentPlayer,
+    currentSong,
+    resetGame,
+    rematch,
+    tiebreak,
+    goal,
+    absent,
+    stepClock,
+    turnLog,
+    playedSongs,
+    bonus,
+    daily
+  } = useGame()
+  const dt = useMessages(dailyText)
   const room = useRoom()
   const online = Boolean(room && room.seat !== null)
   const onlineHost = online && room!.role === 'host'
@@ -100,9 +120,10 @@ export function GameRound({ onRematch }: { onRematch: () => void }) {
     // The host ends the room for everyone; a player leaves it (out of this round for good)
     if (onlineHost && room) await roomApi.setStatus(room.code, 'closed').catch(() => {})
     else if (onlinePlayer && room && !room.result) await roomApi.leave(room.code).catch(() => {})
+    const wasDaily = daily
     resetGame()
-    navigate('/', { replace: true })
-  }, [closeModal, resetGame, navigate, onlineHost, onlinePlayer, room])
+    navigate(wasDaily ? '/daily' : '/', { replace: true })
+  }, [closeModal, resetGame, navigate, onlineHost, onlinePlayer, room, daily])
 
   const showSkipNotice = useCallback(
     (notice: SkipNotice, acknowledge: () => void) => {
@@ -139,6 +160,12 @@ export function GameRound({ onRematch }: { onRematch: () => void }) {
     onGameOver: (winner, finalPlayers) => {
       getPreviewPlayer().stop()
       setResult({ winner, players: finalPlayers })
+      // Today's round: one result per day on the server
+      if (daily) {
+        api(`/api/daily/${daily}`, { method: 'POST', json: { score: dailyScore(winner.cards), total: DAILY_SONGS } }).catch((e) =>
+          addToast(e instanceof ApiError && e.code === 'already_played' ? dt.alreadyPlayed : dt.savedFailed, 'warning')
+        )
+      }
     },
     // Online the skip is someone else's: no dialog on the host's device
     onSkipNotice: online
@@ -255,6 +282,9 @@ export function GameRound({ onRematch }: { onRematch: () => void }) {
   const who = turnName(activePlayer)
   const nameAt = (index: number | null | undefined) => (index == null ? '' : (players[index]?.name ?? ''))
 
+  // Bonus option: the card stays face down until the reveal
+  const shownSong =
+    currentSong && bonus && isTimelineMode && !reveal ? concealed(currentSong, t.hiddenTitle, t.hiddenArtist) : currentSong
   const placementReveal = reveal?.kind === 'placement' ? reveal : null
   const challenge = placementReveal?.challenge ?? null
   // A wrong card leaves the placer's timeline unchanged, so the gaps still match
@@ -277,7 +307,8 @@ export function GameRound({ onRematch }: { onRematch: () => void }) {
           playerName: players[placementReveal.playerIndex]?.name ?? '',
           challenge: challenge ? { name: players[challenge.playerIndex]?.name ?? '', won: challenge.won } : null,
           rightPlace: rightPlaceFor(placementReveal.isCorrect, placementReveal.song),
-          continueBy: can('continue') ? undefined : nameAt(placementReveal.playerIndex)
+          continueBy: can('continue') ? undefined : nameAt(placementReveal.playerIndex),
+          naming: placementReveal.naming ?? null
         }
       : phase === 'challenge' && pending
         ? choosing !== null
@@ -308,7 +339,14 @@ export function GameRound({ onRematch }: { onRematch: () => void }) {
           ? !humanTurn
             ? { kind: 'bot', playerName: activePlayer.name }
             : humanPlacing
-              ? { kind: 'placing', song: currentSong, previewGap, timeline: activeTimeline }
+              ? {
+                  kind: 'placing',
+                  song: shownSong!,
+                  previewGap,
+                  timeline: activeTimeline,
+                  naming: bonus && !tiebreak,
+                  jokers: jokersOf(activePlayer)
+                }
               : { kind: 'waiting', text: t.placingOwnDevice(who) }
           : null
 
@@ -452,6 +490,7 @@ export function GameRound({ onRematch }: { onRematch: () => void }) {
               placedGap={phase === 'challenge' ? (pending?.gapIndex ?? null) : null}
               placedBy={pending ? turnName(players[pending.playerIndex] ?? activePlayer) : undefined}
               previewIsChallenge={challengeChoosing}
+              pendingSong={shownSong}
             />
           </div>
         </div>
@@ -463,10 +502,10 @@ export function GameRound({ onRematch }: { onRematch: () => void }) {
           boardRef={boardRef}
           onHoverGap={setHoverGap}
           onPreview={setPreviewGap}
-          onConfirm={() => {
+          onConfirm={(naming) => {
             if (previewGap === null) return
             if (challengeChoosing) flow.claimGap(previewGap)
-            else flow.placeCard(previewGap)
+            else flow.placeCard(previewGap, naming ?? null)
             if (onlinePlayer) setAwaiting(true)
             else setPreviewGap(null)
           }}
@@ -475,6 +514,7 @@ export function GameRound({ onRematch }: { onRematch: () => void }) {
           onPass={(seat) => flow.passChallenge(seat)}
           onCancelChallenge={flow.cancelChallenge}
           onReveal={flow.revealPlacement}
+          onSwap={can('swap') && !tiebreak ? flow.swapSong : undefined}
           goal={goal}
         />
       )}
@@ -510,8 +550,9 @@ export function GameRound({ onRematch }: { onRematch: () => void }) {
             winner={shownResult.winner}
             players={shownResult.players}
             mode={gameMode}
+            daily={daily ? { score: dailyScore(shownResult.winner.cards), total: DAILY_SONGS } : undefined}
             onRematch={
-              onlinePlayer
+              onlinePlayer || daily
                 ? undefined
                 : () => {
                     rematch()
@@ -520,7 +561,7 @@ export function GameRound({ onRematch }: { onRematch: () => void }) {
             }
             rematchBy={onlinePlayer ? (room?.members.find((m) => m.host)?.name ?? t.theHost) : undefined}
             onHome={() => void leaveGame()}
-            homeLabel={onlineHost ? t.closeRoom : onlinePlayer ? t.leaveRoomButton : undefined}
+            homeLabel={daily ? dt.toBoard : onlineHost ? t.closeRoom : onlinePlayer ? t.leaveRoomButton : undefined}
             signUpName={guestName}
           />
         )}

@@ -6,6 +6,7 @@
  * the round once two people are in; everyone else waits for that.
  */
 import { useEffect, useRef, useState } from 'react'
+import { COLLECTIONS, GENRE_GROUPS, type Collection } from '@/game/songPool'
 import { useParams } from 'react-router-dom'
 import { AnimatePresence, m } from 'motion/react'
 import { useAuth } from '@/auth/AuthContext'
@@ -131,7 +132,17 @@ function Lobby({ account }: { account: boolean }) {
   const info = room.info!
   const isHost = room.role === 'host'
   const link = roomLink(room.code)
-  const options = info.options as { mode?: GameMode; goal?: number; decades?: number[]; challengesEnabled?: boolean; exotics?: boolean }
+  const options = info.options as {
+    mode?: GameMode
+    goal?: number
+    decades?: number[]
+    challengesEnabled?: boolean
+    exotics?: boolean
+    genres?: string[]
+    collection?: Collection
+    songIds?: string[] | null
+    bonus?: boolean
+  }
   const host = room.members.find((m) => m.host)
   const [starting, setStarting] = useState(false)
 
@@ -160,7 +171,11 @@ function Lobby({ account }: { account: boolean }) {
         goal: options.goal ?? 10,
         decades: options.decades ?? [],
         challengesEnabled: options.challengesEnabled ?? true,
-        exotics: options.exotics ?? false
+        exotics: options.exotics ?? false,
+        genres: Array.isArray(options.genres) ? options.genres.filter((g) => GENRE_GROUPS.includes(g as never)) : [],
+        collection: COLLECTIONS.includes(options.collection as never) ? (options.collection as Collection) : 'all',
+        songIds: Array.isArray(options.songIds) ? options.songIds.filter((x) => typeof x === 'string').slice(0, 200) : null,
+        bonus: Boolean(options.bonus)
       })
       game.setPlayers(
         room.members.map((mem) => ({ name: mem.name, seat: mem.seat, guest: mem.guest || undefined, timeline: [], cards: 0, score: 0 }))

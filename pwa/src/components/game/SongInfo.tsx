@@ -11,6 +11,7 @@ import { coverSrc } from '@/utils/cover'
 import { spring } from '@/motion/springs'
 import { useLang, useMessages } from '@/i18n'
 import { gameText } from '@/i18n/messages/game'
+import { ReportSongButton } from './ReportSong'
 
 interface SongInfoProps {
   song: Song
@@ -55,7 +56,6 @@ export function factFor(song: Song, lang: 'de' | 'en'): string | undefined {
 export function SongInfo({ song, head = 'full', delay = 0 }: SongInfoProps) {
   const t = useMessages(gameText)
   const fact = factFor(song, useLang().lang)
-  if (head === 'none' && !fact) return null
   return (
     <m.div
       initial={{ opacity: 0, y: 8 }}
@@ -94,6 +94,7 @@ export function SongInfo({ song, head = 'full', delay = 0 }: SongInfoProps) {
           </span>
         </p>
       )}
+      <ReportSongButton song={song} />
     </m.div>
   )
 }

@@ -70,6 +70,13 @@ export function PlayerStrip({ thinking = false }: { thinking?: boolean }) {
                     <span className="sr-only">, {t.objectionsLeft(p.challenges ?? 0)}</span>
                   </span>
                 )}
+                {(p.jokers ?? 0) > 0 && (
+                  <span className="inline-flex items-center gap-0.5 opacity-80 tabular" title={t.jokersLeft(p.jokers ?? 0)}>
+                    <Icon name="swap" size={14} />
+                    {p.jokers}
+                    <span className="sr-only">, {t.jokersLeft(p.jokers ?? 0)}</span>
+                  </span>
+                )}
               </span>
               <span className={`text-label-sm tabular ${active ? '' : 'text-md-on-surface-variant'}`}>
                 {active ? (p.isBot && thinking ? t.thinkingShort : p.members ? t.memberTurn(activeMember(p) ?? '') : t.isOnTurn) : null}

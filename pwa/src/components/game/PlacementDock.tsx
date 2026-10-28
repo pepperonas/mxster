@@ -17,7 +17,7 @@
  * horizontal velocity, lifts on grab, snaps back to the dock if released away
  * from the board.
  */
-import { useEffect, useRef, type RefObject } from 'react'
+import { useEffect, useRef, useState, type RefObject } from 'react'
 import { AnimatePresence, m } from 'motion/react'
 import type { Song } from '@/types'
 import { useCardDrag } from '@/game/useCardDrag'
@@ -28,6 +28,7 @@ import { PositionStrip } from './PositionStrip'
 import { Icon } from '@/components/ui/Icon'
 import { GripIcon } from '@/components/ui/GripIcon'
 import { SongCover, SongInfo } from './SongInfo'
+import { MAX_JOKERS, type Naming, type NamingResult } from '@/game/bonus'
 import { useMessages } from '@/i18n'
 import { gameText } from '@/i18n/messages/game'
 
@@ -38,7 +39,16 @@ export interface DockChallenger {
 }
 
 export type DockState =
-  | { kind: 'placing'; song: Song; previewGap: number | null; timeline: Song[] }
+  | {
+      kind: 'placing'
+      song: Song
+      previewGap: number | null
+      timeline: Song[]
+      /** Bonus option: the placer may name title and artist. */
+      naming?: boolean
+      /** Bonus option: jokers left; a swap is offered when > 0. */
+      jokers?: number
+    }
   | {
       kind: 'challenge-offer'
       placerName: string
@@ -69,6 +79,8 @@ export type DockState =
       rightPlace?: string
       /** Online: who continues, when it is not this device. */
       continueBy?: string
+      /** Bonus option: what the placer named, judged. */
+      naming?: NamingResult | null
     }
   | { kind: 'bot'; playerName: string }
   /** Online: someone else acts on their own device. */
@@ -79,8 +91,10 @@ interface PlacementDockProps {
   boardRef: RefObject<HTMLOListElement | null>
   onHoverGap: (gap: number | null) => void
   onPreview: (gap: number | null) => void
-  onConfirm: () => void
+  onConfirm: (naming?: Naming | null) => void
   onContinue: () => void
+  /** Bonus option: spend a joker on another song. */
+  onSwap?: () => void
   onChallenge?: (seat: number) => void
   onCancelChallenge?: () => void
   onReveal?: () => void
@@ -101,6 +115,7 @@ export function PlacementDock({
   onCancelChallenge,
   onReveal,
   onPass,
+  onSwap,
   goal = 10
 }: PlacementDockProps) {
   const t = useMessages(gameText)
@@ -127,7 +142,14 @@ export function PlacementDock({
               aria-label={t.placeCard}
             >
               {state.kind === 'placing' && state.previewGap === null && (
-                <DragStage song={state.song} boardRef={boardRef} onHoverGap={onHoverGap} onDrop={onPreview} />
+                <DragStage
+                  song={state.song}
+                  boardRef={boardRef}
+                  onHoverGap={onHoverGap}
+                  onDrop={onPreview}
+                  jokers={state.naming ? (state.jokers ?? 0) : undefined}
+                  onSwap={onSwap}
+                />
               )}
               {state.kind === 'placing' && state.previewGap !== null && (
                 <ConfirmStage
@@ -135,6 +157,7 @@ export function PlacementDock({
                   gap={state.previewGap}
                   onBack={() => onPreview(null)}
                   onConfirm={onConfirm}
+                  naming={state.naming}
                 />
               )}
               {state.kind === 'challenge-offer' && (
@@ -164,7 +187,7 @@ export function PlacementDock({
                   gap={state.previewGap}
                   confirmText={t.lodgeObjection}
                   onBack={() => onPreview(null)}
-                  onConfirm={onConfirm}
+                  onConfirm={() => onConfirm()}
                 />
               )}
               {state.kind === 'revealed' && <ResultStage state={state} goal={goal} onContinue={onContinue} />}
@@ -185,9 +208,12 @@ interface DragStageProps {
   boardRef: RefObject<HTMLOListElement | null>
   onHoverGap: (gap: number | null) => void
   onDrop: (gap: number) => void
+  /** Bonus option: jokers left (undefined: no bonus round). */
+  jokers?: number
+  onSwap?: () => void
 }
 
-function DragStage({ song, boardRef, onHoverGap, onDrop }: DragStageProps) {
+function DragStage({ song, boardRef, onHoverGap, onDrop, jokers, onSwap }: DragStageProps) {
   const t = useMessages(gameText)
   const { x, tilt, onDragStart, onDrag, onDragEnd } = useCardDrag({ boardRef, onHoverGap, onDrop })
 
@@ -218,7 +244,22 @@ function DragStage({ song, boardRef, onHoverGap, onDrop }: DragStageProps) {
         </span>
         <GripIcon />
       </m.div>
-      <p className="text-center text-body-sm text-md-on-surface-variant">{t.dragHint}</p>
+      <div className="flex items-center justify-center gap-3">
+        <p className="text-center text-body-sm text-md-on-surface-variant">{t.dragHint}</p>
+        {jokers !== undefined && (
+          <button
+            type="button"
+            className="btn btn-text m3-state-layer shrink-0"
+            disabled={jokers < 1 || !onSwap}
+            onClick={onSwap}
+            aria-label={t.swapLabel(jokers)}
+          >
+            <Icon name="swap" size={18} />
+            {t.swap}
+            <ChallengeDots left={jokers} max={MAX_JOKERS} />
+          </button>
+        )}
+      </div>
     </div>
   )
 }
@@ -232,18 +273,23 @@ function ConfirmStage({
   onConfirm,
   title,
   confirmText,
-  tone = 'primary'
+  tone = 'primary',
+  naming
 }: {
   timeline: Song[]
   gap: number
   onBack: () => void
-  onConfirm: () => void
+  onConfirm: (naming?: Naming | null) => void
   title?: string
   confirmText?: string
   tone?: 'primary' | 'tertiary'
+  /** Bonus option: offer the title/artist fields. */
+  naming?: boolean
 }) {
   const t = useMessages(gameText)
   const confirmRef = useRef<HTMLButtonElement>(null)
+  const [named, setNamed] = useState<Naming>({ title: '', artist: '' })
+  const confirm = () => onConfirm(naming && (named.title.trim() || named.artist.trim()) ? named : null)
   useEffect(() => {
     confirmRef.current?.focus({ preventScroll: true })
   }, [gap])
@@ -254,11 +300,42 @@ function ConfirmStage({
         <p className="text-label-md text-md-on-surface-variant">{title ?? t.confirmTitle}</p>
         <PositionStrip timeline={timeline} gap={gap} tone={tone} />
       </div>
+      {naming && (
+        <form
+          className="grid grid-cols-2 gap-2 sm:w-64"
+          onSubmit={(e) => {
+            e.preventDefault()
+            confirm()
+          }}
+          aria-label={t.namingLabel}
+        >
+          <input
+            className="field min-w-0"
+            value={named.title}
+            maxLength={120}
+            placeholder={t.namingTitle}
+            aria-label={t.namingTitle}
+            autoComplete="off"
+            onChange={(e) => setNamed((n) => ({ ...n, title: e.target.value }))}
+          />
+          <input
+            className="field min-w-0"
+            value={named.artist}
+            maxLength={120}
+            placeholder={t.namingArtist}
+            aria-label={t.namingArtist}
+            autoComplete="off"
+            onChange={(e) => setNamed((n) => ({ ...n, artist: e.target.value }))}
+          />
+          <p className="col-span-2 text-label-md text-md-on-surface-variant">{t.namingHint}</p>
+          <button type="submit" hidden />
+        </form>
+      )}
       <div className="flex gap-2">
         <button type="button" onClick={onBack} className="btn btn-text flex-1 sm:flex-none">
           {t.back}
         </button>
-        <button ref={confirmRef} type="button" onClick={onConfirm} className="btn btn-brand flex-1 sm:flex-none">
+        <button ref={confirmRef} type="button" onClick={confirm} className="btn btn-brand flex-1 sm:flex-none">
           {confirmText ?? t.placeHere}
         </button>
       </div>
@@ -430,6 +507,7 @@ function ResultStage({
               {song.title} – {song.artist} · <span className="tabular-nums">{song.year}</span>
             </p>
             {verdict.detail && <p className="text-body-sm text-md-on-surface">{verdict.detail}</p>}
+            {state.naming && <NamingLine result={state.naming} />}
             {!state.challenge?.won && (
               <p className="text-body-sm text-md-on-surface-variant tabular-nums">
                 {playerName}: <AnimatedNumber value={cards} from={isCorrect ? cards - 1 : cards} />/{goal}
@@ -447,6 +525,23 @@ function ResultStage({
       </div>
       <SongInfo song={song} head="none" delay={0.2} />
     </div>
+  )
+}
+
+function NamingLine({ result }: { result: NamingResult }) {
+  const t = useMessages(gameText)
+  const text = result.earned
+    ? t.namingEarned
+    : result.titleOk && result.artistOk
+      ? t.namingFull
+      : result.titleOk || result.artistOk
+        ? t.namingHalf(result.titleOk ? t.namingTitle : t.namingArtist)
+        : t.namingMissed
+  return (
+    <p className={`text-body-sm flex items-center gap-1.5 ${result.earned ? 'text-md-primary' : 'text-md-on-surface-variant'}`}>
+      <Icon name="swap" size={16} />
+      {text}
+    </p>
   )
 }
 

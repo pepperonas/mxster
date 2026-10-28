@@ -10,6 +10,7 @@ export const songs: Song[] = [
     "spotifyId": "4PTG3Z6ehGkBFwjybzWkR8",
     "previewUrl": "https://mxtape.celox.io/audio/song_000.m4a",
     "genre": "Pop",
+    "party": true,
     "fact": "Der Song wurde Jahrzehnte später als „Rickroll“ zum Internet-Streich, bei dem Ahnungslose per Link auf das Video gelockt werden.",
     "factEn": "Decades later the song became the \"Rickroll\", an internet prank that lures unsuspecting people to the video with a link."
   },
@@ -22,6 +23,7 @@ export const songs: Song[] = [
     "spotifyId": "4u7EnebtmKWzUH433cf5Qv",
     "previewUrl": "https://mxtape.celox.io/audio/song_001.m4a",
     "genre": "Rock",
+    "startMs": 2000,
     "fact": "Die Plattenfirma hielt den rund sechsminütigen Song ohne Refrain für zu lang fürs Radio – er wurde trotzdem ein Welthit.",
     "factEn": "The record company thought the roughly six-minute song without a chorus was too long for radio – it became a worldwide hit anyway."
   },
@@ -34,6 +36,7 @@ export const songs: Song[] = [
     "spotifyId": "5ChkMS8OtdzJeqyybCc9R5",
     "previewUrl": "https://mxtape.celox.io/audio/song_002.m4a",
     "genre": "Pop",
+    "party": true,
     "fact": "Bei einem TV-Auftritt zu diesem Song zeigte Michael Jackson zum ersten Mal öffentlich den Moonwalk.",
     "factEn": "Michael Jackson performed the moonwalk in public for the first time during a TV appearance with this song."
   },
@@ -46,6 +49,8 @@ export const songs: Song[] = [
     "spotifyId": "0apQVuKL33S64ivuHUQrQ3",
     "previewUrl": "https://mxtape.celox.io/audio/song_003.m4a",
     "genre": "Pop",
+    "startMs": 2000,
+    "party": true,
     "fact": "Pepsi zog einen Werbespot mit Madonna zurück, nachdem das Musikvideo mit brennenden Kreuzen Proteste ausgelöst hatte.",
     "factEn": "Pepsi pulled a commercial with Madonna after the music video with burning crosses sparked protests."
   },
@@ -58,6 +63,7 @@ export const songs: Song[] = [
     "spotifyId": "4CeeEOM32jQcH3eN9Q2dGj",
     "previewUrl": "https://mxtape.celox.io/audio/song_004.m4a",
     "genre": "Rock",
+    "startMs": 7500,
     "fact": "Der Titel geht auf einen Spruch über Kurt Cobain zurück – „Teen Spirit“ war ein Deo, was er damals nicht wusste.",
     "factEn": "The title goes back to a remark about Kurt Cobain – \"Teen Spirit\" was a deodorant, which he didn't know at the time."
   },
@@ -70,6 +76,7 @@ export const songs: Song[] = [
     "spotifyId": "5qqabIl2vWzo9ApSC317sa",
     "previewUrl": "https://mxtape.celox.io/audio/song_005.m4a",
     "genre": "Rock",
+    "startMs": 38000,
     "fact": "Der Titel ist vom Soloalbum „Wonderwall Music“ von Beatle George Harrison inspiriert.",
     "factEn": "The title is inspired by the solo album \"Wonderwall Music\" by Beatle George Harrison."
   },
@@ -82,6 +89,7 @@ export const songs: Song[] = [
     "spotifyId": "4d6eqRtpDX7tydHJGDZUBQ",
     "previewUrl": "https://mxtape.celox.io/audio/song_006.m4a",
     "genre": "Pop",
+    "startMs": 2500,
     "fact": "Sänger Roland Gift ist auch als Schauspieler bekannt, etwa aus dem Film „Sammy and Rosie Get Laid“.",
     "factEn": "Singer Roland Gift is also known as an actor, for example from the film \"Sammy and Rosie Get Laid\"."
   },
@@ -94,6 +102,7 @@ export const songs: Song[] = [
     "spotifyId": "7arHM2KZ0KzIZXFVDRGClI",
     "previewUrl": "https://mxtape.celox.io/audio/song_007.m4a",
     "genre": "Pop",
+    "startMs": 2000,
     "fact": "Produziert wurde der Song von Madonnas damaligem Freund, dem DJ John „Jellybean“ Benitez.",
     "factEn": "The song was produced by Madonna's boyfriend at the time, DJ John \"Jellybean\" Benitez."
   },
@@ -106,6 +115,7 @@ export const songs: Song[] = [
     "spotifyId": "0uyoXwOQ3U5tGfNNmR5Y1p",
     "previewUrl": "https://mxtape.celox.io/audio/song_008.m4a",
     "genre": "Pop",
+    "startMs": 1500,
     "fact": "Taylor Dayne heißt eigentlich Leslie Wunderman und nahm den Künstlernamen für ihre Solokarriere an.",
     "factEn": "Taylor Dayne's real name is Leslie Wunderman; she adopted the stage name for her solo career."
   },
@@ -118,6 +128,7 @@ export const songs: Song[] = [
     "spotifyId": "2aGw77pZqli064JiPuXYRi",
     "previewUrl": "https://mxtape.celox.io/audio/song_009.m4a",
     "genre": "Pop",
+    "startMs": 3500,
     "fact": "Für den Song gewann Nelly Furtado einen Grammy für die beste weibliche Gesangsdarbietung im Pop.",
     "factEn": "Nelly Furtado won a Grammy for Best Female Pop Vocal Performance for the song."
   },
@@ -141,6 +152,7 @@ export const songs: Song[] = [
     "spotifyId": "19kHhX6f6EfLU7rcO3RqjO",
     "previewUrl": "https://mxtape.celox.io/audio/song_011.m4a",
     "genre": "Soul",
+    "startMs": 3500,
     "fact": "Jungle wurde von den Jugendfreunden Josh Lloyd-Watson und Tom McFarland in London gegründet.",
     "factEn": "Jungle was founded in London by childhood friends Josh Lloyd-Watson and Tom McFarland."
   },
@@ -153,6 +165,7 @@ export const songs: Song[] = [
     "spotifyId": "4yrM5BVyJzy5Ed4GPO6e8j",
     "previewUrl": "https://mxtape.celox.io/audio/song_012.m4a",
     "genre": "R&B",
+    "startMs": 1500,
     "fact": "Prince spielte auf seinem zweiten Album fast alle Instrumente selbst ein.",
     "factEn": "Prince played almost all the instruments himself on his second album."
   },
@@ -190,6 +203,7 @@ export const songs: Song[] = [
     "spotifyId": "7xkQdy0cy5ymoWT7nedvLz",
     "previewUrl": "https://mxtape.celox.io/audio/song_015.m4a",
     "genre": "R&B",
+    "startMs": 3500,
     "fact": "Der Refrain basiert auf einem Sample von „Hide and Seek“ der britischen Musikerin Imogen Heap.",
     "factEn": "The chorus is built on a sample of \"Hide and Seek\" by British musician Imogen Heap."
   },
@@ -202,6 +216,7 @@ export const songs: Song[] = [
     "spotifyId": "0oks4FnzhNp5QPTZtoet7c",
     "previewUrl": "https://mxtape.celox.io/audio/song_016.m4a",
     "genre": "Electronic",
+    "startMs": 7000,
     "fact": "Giorgio Moroder erzählt im Track selbst seine Lebensgeschichte, aufgenommen mit Mikrofonen aus verschiedenen Jahrzehnten.",
     "factEn": "Giorgio Moroder tells his own life story in the track, recorded with microphones from different decades."
   },
@@ -214,6 +229,7 @@ export const songs: Song[] = [
     "spotifyId": "2HZLXBOnaSRhXStMLrq9fD",
     "previewUrl": "https://mxtape.celox.io/audio/song_017.m4a",
     "genre": "Metal",
+    "startMs": 4000,
     "fact": "Der Song ging Jahre nach Erscheinen über TikTok viral und wurde so zum größten Hit der schwedischen Band.",
     "factEn": "Years after its release the song went viral on TikTok and became the Swedish band's biggest hit."
   },
@@ -249,6 +265,7 @@ export const songs: Song[] = [
     "spotifyId": "5xAeXQqVX1eVC9ev9p5Ckv",
     "previewUrl": "https://mxtape.celox.io/audio/song_020.m4a",
     "genre": "Pop",
+    "startMs": 10000,
     "fact": "Im Song singt ein Gospelchor unter der Leitung von Andraé Crouch mit.",
     "factEn": "A gospel choir led by Andraé Crouch sings on the song."
   },
@@ -261,7 +278,8 @@ export const songs: Song[] = [
     "spotifyId": "0xIdZ9u8lIGYl54UNOlFMn",
     "previewUrl": "https://mxtape.celox.io/audio/song_021.m4a",
     "genre": "Electronic",
-    "exotic": true
+    "exotic": true,
+    "startMs": 8000
   },
   {
     "id": "song_022",
@@ -272,6 +290,7 @@ export const songs: Song[] = [
     "spotifyId": "00FDHurakzVEiPutdUxXXq",
     "previewUrl": "https://mxtape.celox.io/audio/song_022.m4a",
     "genre": "Pop",
+    "startMs": 24000,
     "fact": "Nik Kershaw schrieb später auch „The One and Only“ für Chesney Hawkes.",
     "factEn": "Nik Kershaw later also wrote \"The One and Only\" for Chesney Hawkes."
   },
@@ -284,6 +303,7 @@ export const songs: Song[] = [
     "spotifyId": "17S4XrLvF5jlGvGCJHgF51",
     "previewUrl": "https://mxtape.celox.io/audio/song_023.m4a",
     "genre": "Rock",
+    "startMs": 1500,
     "fact": "Tom Petty schrieb den Song zusammen mit Jeff Lynne von Electric Light Orchestra.",
     "factEn": "Tom Petty wrote the song together with Jeff Lynne of Electric Light Orchestra."
   },
@@ -296,6 +316,7 @@ export const songs: Song[] = [
     "spotifyId": "0ofHAoxe9vBkTCp2UQIavz",
     "previewUrl": "https://mxtape.celox.io/audio/song_024.m4a",
     "genre": "Rock",
+    "startMs": 2000,
     "fact": "Ein virales Video eines Skateboarders mit Cranberrysaft brachte den Song Jahrzehnte später zurück in die Charts.",
     "factEn": "A viral video of a skateboarder with cranberry juice brought the song back into the charts decades later."
   },
@@ -308,6 +329,7 @@ export const songs: Song[] = [
     "spotifyId": "4bJygwUKrRgq1stlNXcgMg",
     "previewUrl": "https://mxtape.celox.io/audio/song_025.m4a",
     "genre": "Pop",
+    "startMs": 11000,
     "fact": "Die russische Originalversion heißt übersetzt „Ich habe den Verstand verloren“.",
     "factEn": "The title of the Russian original translates as \"I've lost my mind\"."
   },
@@ -319,7 +341,8 @@ export const songs: Song[] = [
     "album": "The Eminem Show",
     "spotifyId": "4woTEX1wYOTGDqNXuavlRC",
     "previewUrl": "https://mxtape.celox.io/audio/song_026.m4a",
-    "genre": "Hip-Hop"
+    "genre": "Hip-Hop",
+    "startMs": 5000
   },
   {
     "id": "song_027",
@@ -388,6 +411,7 @@ export const songs: Song[] = [
     "spotifyId": "5SnOyuBtyzufoXBAKOdcxD",
     "previewUrl": "https://mxtape.celox.io/audio/song_032.m4a",
     "genre": "Metal",
+    "startMs": 3500,
     "fact": "Die Strophen sind laut und die Refrains leise – umgekehrt wie in den meisten Rocksongs.",
     "factEn": "The verses are loud and the choruses quiet – the reverse of most rock songs."
   },
@@ -411,6 +435,8 @@ export const songs: Song[] = [
     "spotifyId": "5FgtdSf7I5lClThz2ptWvl",
     "previewUrl": "https://mxtape.celox.io/audio/song_034.m4a",
     "genre": "Electronic",
+    "startMs": 1500,
+    "party": true,
     "fact": "Eiffel 65 kommen aus Turin; die verfremdete Stimme gehört Sänger Jeffrey Jey.",
     "factEn": "Eiffel 65 come from Turin; the processed voice belongs to singer Jeffrey Jey."
   },
@@ -423,6 +449,7 @@ export const songs: Song[] = [
     "spotifyId": "0I3q5fE6wg7LIfHGngUTnV",
     "previewUrl": "https://mxtape.celox.io/audio/song_035.m4a",
     "genre": "Hip-Hop",
+    "startMs": 3500,
     "fact": "André 3000 richtet den Song an die Mutter seiner Ex-Freundin, der Sängerin Erykah Badu.",
     "factEn": "André 3000 addresses the song to the mother of his ex-girlfriend, the singer Erykah Badu."
   },
@@ -459,6 +486,7 @@ export const songs: Song[] = [
     "previewUrl": "https://mxtape.celox.io/audio/song_038.m4a",
     "genre": "Pop",
     "exotic": true,
+    "startMs": 1500,
     "fact": "Brenda Fassie wurde in Südafrika als „Madonna der Townships“ bezeichnet.",
     "factEn": "In South Africa, Brenda Fassie was called the \"Madonna of the Townships\"."
   },
@@ -482,7 +510,9 @@ export const songs: Song[] = [
     "spotifyId": "5MmXILyuHEWAQ0IqYHwm1G",
     "previewUrl": "https://mxtape.celox.io/audio/song_040.m4a",
     "genre": "Rock",
-    "exotic": true
+    "exotic": true,
+    "startMs": 4000,
+    "german": true
   },
   {
     "id": "song_041",
@@ -493,7 +523,8 @@ export const songs: Song[] = [
     "spotifyId": "51lq1JlxFQztlTJpJYsyWL",
     "previewUrl": "https://mxtape.celox.io/audio/song_041.m4a",
     "genre": "Electronic",
-    "exotic": true
+    "exotic": true,
+    "startMs": 4000
   },
   {
     "id": "song_042",
@@ -527,7 +558,8 @@ export const songs: Song[] = [
     "spotifyId": "3nuSWxFEkdtGiP9huP3NoH",
     "previewUrl": "https://mxtape.celox.io/audio/song_044.m4a",
     "genre": "Electronic",
-    "exotic": true
+    "exotic": true,
+    "startMs": 4500
   },
   {
     "id": "song_045",
@@ -538,7 +570,8 @@ export const songs: Song[] = [
     "spotifyId": "5TaNnFsq2RSPHpsb8euzib",
     "previewUrl": "https://mxtape.celox.io/audio/song_045.m4a",
     "genre": "Electronic",
-    "exotic": true
+    "exotic": true,
+    "startMs": 1500
   },
   {
     "id": "song_046",
@@ -549,6 +582,8 @@ export const songs: Song[] = [
     "spotifyId": "3vkQ5DAB1qQMYO4Mr9zJN6",
     "previewUrl": "https://mxtape.celox.io/audio/song_046.m4a",
     "genre": "Pop",
+    "startMs": 2500,
+    "party": true,
     "fact": "Madonna sampelte das Synthesizer-Riff für „Hung Up“ – ABBA geben für so etwas nur selten ihre Erlaubnis.",
     "factEn": "Madonna sampled the synthesizer riff for \"Hung Up\" – ABBA rarely give permission for that."
   },
@@ -561,6 +596,8 @@ export const songs: Song[] = [
     "spotifyId": "6a0lr0jt8lKDJhsAYA49NS",
     "previewUrl": "https://mxtape.celox.io/audio/song_047.m4a",
     "genre": "Pop",
+    "startMs": 5000,
+    "german": true,
     "fact": "Mehrere Radiosender boykottierten den Song, weil sie darin die Verharmlosung eines Verbrechens sahen.",
     "factEn": "Several radio stations boycotted the song because they saw it as trivialising a crime."
   },
@@ -573,7 +610,9 @@ export const songs: Song[] = [
     "spotifyId": "5hZQIDpkhRxKez0j8TZvoG",
     "previewUrl": "https://mxtape.celox.io/audio/song_048.m4a",
     "genre": "Pop",
-    "exotic": true
+    "exotic": true,
+    "startMs": 9000,
+    "german": true
   },
   {
     "id": "song_049",
@@ -585,6 +624,7 @@ export const songs: Song[] = [
     "previewUrl": "https://mxtape.celox.io/audio/song_049.m4a",
     "genre": "R&B",
     "exotic": true,
+    "startMs": 9000,
     "fact": "Der Song erschien ursprünglich nur als B-Seite der Single „When Doves Cry“.",
     "factEn": "The song was originally released only as the B-side of the single \"When Doves Cry\"."
   },
@@ -631,6 +671,7 @@ export const songs: Song[] = [
     "spotifyId": "5tdKaKLnC4SgtDZ6RlWeal",
     "previewUrl": "https://mxtape.celox.io/audio/song_053.m4a",
     "genre": "Pop",
+    "startMs": 3000,
     "fact": "Der Song war ursprünglich für Janet Jackson geschrieben, die ihn ablehnte.",
     "factEn": "The song was originally written for Janet Jackson, who turned it down."
   },
@@ -656,6 +697,7 @@ export const songs: Song[] = [
     "spotifyId": "6hTcuIQa0sxrrByu9wTD7s",
     "previewUrl": "https://mxtape.celox.io/audio/song_055.m4a",
     "genre": "Rock",
+    "startMs": 3000,
     "fact": "Bruce Springsteen arbeitete rund ein halbes Jahr an diesem einen Song.",
     "factEn": "Bruce Springsteen worked on this one song for about half a year."
   },
@@ -667,7 +709,8 @@ export const songs: Song[] = [
     "album": "Human Racing",
     "spotifyId": "65YtzNpiPhGVzg6GPzkotn",
     "previewUrl": "https://mxtape.celox.io/audio/song_056.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "startMs": 2000
   },
   {
     "id": "song_057",
@@ -702,6 +745,7 @@ export const songs: Song[] = [
     "spotifyId": "07GvNcU1WdyZJq3XxP0kZa",
     "previewUrl": "https://mxtape.celox.io/audio/song_059.m4a",
     "genre": "Rock",
+    "startMs": 3500,
     "fact": "Lindsey Buckingham schrieb den Song über die Trennung von Stevie Nicks – die ihn dann mitsingen musste.",
     "factEn": "Lindsey Buckingham wrote the song about his breakup with Stevie Nicks – who then had to sing on it."
   },
@@ -714,6 +758,8 @@ export const songs: Song[] = [
     "spotifyId": "2WfaOiMkCvy7F5fcp2zZ8L",
     "previewUrl": "https://mxtape.celox.io/audio/song_060.m4a",
     "genre": "Pop",
+    "startMs": 3000,
+    "party": true,
     "fact": "Für das berühmte Video wurden rund 3000 Einzelbilder per Hand nachgezeichnet.",
     "factEn": "For the famous video, around 3000 individual frames were traced by hand."
   },
@@ -738,6 +784,7 @@ export const songs: Song[] = [
     "spotifyId": "00SmB7n85SKROGjybsyq5i",
     "previewUrl": "https://mxtape.celox.io/audio/song_062.m4a",
     "genre": "Reggae",
+    "startMs": 6000,
     "fact": "Manu Chao war vorher Sänger der französischen Band Mano Negra.",
     "factEn": "Manu Chao was previously the singer of the French band Mano Negra."
   },
@@ -749,7 +796,8 @@ export const songs: Song[] = [
     "album": "Hear My Cry",
     "spotifyId": "39TChHld3lrragesFXhdkc",
     "previewUrl": "https://mxtape.celox.io/audio/song_063.m4a",
-    "genre": "Electronic"
+    "genre": "Electronic",
+    "startMs": 13000
   },
   {
     "id": "song_064",
@@ -760,6 +808,7 @@ export const songs: Song[] = [
     "spotifyId": "1jJci4qxiYcOHhQR247rEU",
     "previewUrl": "https://mxtape.celox.io/audio/song_064.m4a",
     "genre": "Pop",
+    "startMs": 11500,
     "fact": "Die Bandmitglieder von MGMT lernten sich als Studenten an der Wesleyan University kennen.",
     "factEn": "The members of MGMT met as students at Wesleyan University."
   },
@@ -772,6 +821,8 @@ export const songs: Song[] = [
     "spotifyId": "5gUXZV2Ir17qOWdtUJSh7l",
     "previewUrl": "https://mxtape.celox.io/audio/song_065.m4a",
     "genre": "Hip-Hop",
+    "startMs": 3500,
+    "german": true,
     "fact": "Fettes Brot verabschiedeten sich nach über 30 Jahren Bandgeschichte mit großen Abschiedskonzerten in Hamburg.",
     "factEn": "After more than 30 years as a band, Fettes Brot said goodbye with big farewell concerts in Hamburg."
   },
@@ -783,7 +834,9 @@ export const songs: Song[] = [
     "album": "Sexismus gegen Rechts",
     "spotifyId": "3CFfSQD1HTpn2eeGu9xY7J",
     "previewUrl": "https://mxtape.celox.io/audio/song_066.m4a",
-    "genre": "Hip-Hop"
+    "genre": "Hip-Hop",
+    "startMs": 5000,
+    "german": true
   },
   {
     "id": "song_067",
@@ -793,7 +846,8 @@ export const songs: Song[] = [
     "album": "Triebwerke",
     "spotifyId": "3FcqFCeCD6QRtRo6WGLCnC",
     "previewUrl": "https://mxtape.celox.io/audio/song_067.m4a",
-    "genre": "Hip-Hop"
+    "genre": "Hip-Hop",
+    "german": true
   },
   {
     "id": "song_068",
@@ -814,6 +868,7 @@ export const songs: Song[] = [
     "spotifyId": "5aWpvFnByyWodgqYlC9kha",
     "previewUrl": "https://mxtape.celox.io/audio/song_069.m4a",
     "genre": "Rock",
+    "german": true,
     "fact": "Westerland ist der Hauptort der Nordseeinsel Sylt.",
     "factEn": "Westerland is the main town on the North Sea island of Sylt."
   },
@@ -826,6 +881,8 @@ export const songs: Song[] = [
     "spotifyId": "6lXKNdOsnaLv9LwulZbxNl",
     "previewUrl": "https://mxtape.celox.io/audio/song_070.m4a",
     "genre": "Pop",
+    "startMs": 6000,
+    "german": true,
     "fact": "Die Figur Major Tom stammt aus David Bowies Song „Space Oddity“.",
     "factEn": "The character Major Tom comes from David Bowie's song \"Space Oddity\"."
   },
@@ -850,7 +907,8 @@ export const songs: Song[] = [
     "spotifyId": "0a2LIqhveniOMVXt1BzQKR",
     "previewUrl": "https://mxtape.celox.io/audio/song_072.m4a",
     "genre": "Electronic",
-    "exotic": true
+    "exotic": true,
+    "startMs": 1500
   },
   {
     "id": "song_073",
@@ -861,6 +919,8 @@ export const songs: Song[] = [
     "spotifyId": "0xrkyEMkG4dVa5OMLQZOX8",
     "previewUrl": "https://mxtape.celox.io/audio/song_073.m4a",
     "genre": "Metal",
+    "startMs": 7000,
+    "german": true,
     "fact": "Die Frauenstimme im Refrain gehört der Sängerin Christiane „Bobo“ Hebold.",
     "factEn": "The female voice in the chorus belongs to singer Christiane \"Bobo\" Hebold."
   },
@@ -873,6 +933,7 @@ export const songs: Song[] = [
     "spotifyId": "3FtYbEfBqAlGO46NUDQSAt",
     "previewUrl": "https://mxtape.celox.io/audio/song_074.m4a",
     "genre": "Pop",
+    "startMs": 2500,
     "fact": "Das französische Duo Justice gewann für seinen Remix des Songs einen Grammy.",
     "factEn": "The French duo Justice won a Grammy for their remix of the song."
   },
@@ -884,7 +945,9 @@ export const songs: Song[] = [
     "album": "Triebwerke",
     "spotifyId": "1EC0COi0MYuxILNfvvVIkI",
     "previewUrl": "https://mxtape.celox.io/audio/song_075.m4a",
-    "genre": "Hip-Hop"
+    "genre": "Hip-Hop",
+    "startMs": 16000,
+    "german": true
   },
   {
     "id": "song_076",
@@ -895,7 +958,8 @@ export const songs: Song[] = [
     "spotifyId": "7za2bHIESAb7RVIhQzwn6H",
     "previewUrl": "https://mxtape.celox.io/audio/song_076.m4a",
     "genre": "Electronic",
-    "exotic": true
+    "exotic": true,
+    "startMs": 7500
   },
   {
     "id": "song_077",
@@ -917,6 +981,7 @@ export const songs: Song[] = [
     "spotifyId": "1UMdbkqX19OiwfExH7gzYA",
     "previewUrl": "https://mxtape.celox.io/audio/song_078.m4a",
     "genre": "Metal",
+    "startMs": 1500,
     "fact": "Der Song gilt als einer der schwersten im Videospiel „Guitar Hero III“.",
     "factEn": "The song is considered one of the hardest in the video game \"Guitar Hero III\"."
   },
@@ -929,6 +994,8 @@ export const songs: Song[] = [
     "spotifyId": "2urspvjqMlyq8JVAudN3DK",
     "previewUrl": "https://mxtape.celox.io/audio/song_079.m4a",
     "genre": "Pop",
+    "startMs": 3000,
+    "german": true,
     "fact": "Herbert Grönemeyer verarbeitete in seinen Songs dieser Zeit den Tod seiner Frau und seines Bruders.",
     "factEn": "In his songs from this period, Herbert Grönemeyer dealt with the deaths of his wife and his brother."
   },
@@ -941,6 +1008,7 @@ export const songs: Song[] = [
     "spotifyId": "623rRTKwGmgjH6sjE9uWLh",
     "previewUrl": "https://mxtape.celox.io/audio/song_080.m4a",
     "genre": "Electronic",
+    "party": true,
     "fact": "Scatman John stotterte seit seiner Kindheit und machte das Scatten zu seinem Markenzeichen.",
     "factEn": "Scatman John had stuttered since childhood and made scatting his trademark."
   },
@@ -953,6 +1021,8 @@ export const songs: Song[] = [
     "spotifyId": "2rTYgHxgcndkUrRoU7x0Sv",
     "previewUrl": "https://mxtape.celox.io/audio/song_081.m4a",
     "genre": "Electronic",
+    "startMs": 7000,
+    "party": true,
     "fact": "Den Rap übernimmt Jay Supreme, die Stimme im Refrain gehört Tania Evans.",
     "factEn": "The rap is by Jay Supreme; the voice in the chorus belongs to Tania Evans."
   },
@@ -976,6 +1046,7 @@ export const songs: Song[] = [
     "spotifyId": "2NVpYQqdraEcQwqT7GhUkh",
     "previewUrl": "https://mxtape.celox.io/audio/song_083.m4a",
     "genre": "R&B",
+    "startMs": 4500,
     "fact": "Der Song erschien noch unter dem Bandnamen Rufus and Chaka Khan.",
     "factEn": "The song was still released under the band name Rufus and Chaka Khan."
   },
@@ -988,6 +1059,7 @@ export const songs: Song[] = [
     "spotifyId": "3BZGi1yUqQyCNC868AqUGG",
     "previewUrl": "https://mxtape.celox.io/audio/song_084.m4a",
     "genre": "Pop",
+    "startMs": 5500,
     "fact": "Alphaville stammen aus Münster und nannten sich zuerst Forever Young.",
     "factEn": "Alphaville come from Münster and first called themselves Forever Young."
   },
@@ -1000,6 +1072,7 @@ export const songs: Song[] = [
     "spotifyId": "6JNJERZGJwDVgkmbohBw7u",
     "previewUrl": "https://mxtape.celox.io/audio/song_085.m4a",
     "genre": "Pop",
+    "startMs": 2500,
     "fact": "Das Original ist ein italienischer Song des Sängers Raf, Laura Branigan sang die englische Version.",
     "factEn": "The original is an Italian song by the singer Raf; Laura Branigan sang the English version."
   },
@@ -1024,6 +1097,7 @@ export const songs: Song[] = [
     "spotifyId": "2374M0fQpWi3dLnB54qaLX",
     "previewUrl": "https://mxtape.celox.io/audio/song_087.m4a",
     "genre": "Rock",
+    "startMs": 3500,
     "fact": "Ein Kunstprojekt in der Namib-Wüste spielt den Song in Dauerschleife über solarbetriebene Lautsprecher.",
     "factEn": "An art project in the Namib Desert plays the song on an endless loop through solar-powered speakers."
   },
@@ -1036,6 +1110,7 @@ export const songs: Song[] = [
     "spotifyId": "67CfbIKKTCKFqmQLJwUftX",
     "previewUrl": "https://mxtape.celox.io/audio/song_088.m4a",
     "genre": "Pop",
+    "startMs": 1500,
     "fact": "Der Song ist eine Hommage an die Jazzsängerin Ella Fitzgerald.",
     "factEn": "The song is a tribute to the jazz singer Ella Fitzgerald."
   },
@@ -1048,6 +1123,7 @@ export const songs: Song[] = [
     "spotifyId": "2M9ro2krNb7nr7HSprkEgo",
     "previewUrl": "https://mxtape.celox.io/audio/song_089.m4a",
     "genre": "Rock",
+    "startMs": 2000,
     "fact": "Ein Country-Cover von Luke Combs brachte Tracy Chapman Jahrzehnte später den CMA-Preis für den Song des Jahres.",
     "factEn": "Decades later, a country cover by Luke Combs earned Tracy Chapman the CMA award for Song of the Year."
   },
@@ -1060,6 +1136,7 @@ export const songs: Song[] = [
     "spotifyId": "0C7dYeCLF6ukChtW64UNge",
     "previewUrl": "https://mxtape.celox.io/audio/song_090.m4a",
     "genre": "Pop",
+    "party": true,
     "fact": "Rob und Fab sangen nicht selbst – deshalb wurde ihnen der Grammy als beste neue Künstler aberkannt.",
     "factEn": "Rob and Fab didn't actually sing – which is why their Grammy for Best New Artist was revoked."
   },
@@ -1072,6 +1149,7 @@ export const songs: Song[] = [
     "spotifyId": "18AXbzPzBS8Y3AkgSxzJPb",
     "previewUrl": "https://mxtape.celox.io/audio/song_091.m4a",
     "genre": "Rock",
+    "startMs": 15500,
     "fact": "Das berühmte Schlagzeug-Break nutzt den Gated-Reverb-Effekt, der den Sound der Achtziger prägte.",
     "factEn": "The famous drum break uses the gated reverb effect that shaped the sound of the eighties."
   },
@@ -1094,6 +1172,8 @@ export const songs: Song[] = [
     "spotifyId": "2vlgOAH3M8Fmo19wOjeRyw",
     "previewUrl": "https://mxtape.celox.io/audio/song_093.m4a",
     "genre": "Hip-Hop",
+    "startMs": 4000,
+    "party": true,
     "fact": "Bomfunk MC's stammen aus Finnland.",
     "factEn": "Bomfunk MC's come from Finland."
   },
@@ -1106,6 +1186,7 @@ export const songs: Song[] = [
     "spotifyId": "6vGW3d8X48CBaLdU0PQbey",
     "previewUrl": "https://mxtape.celox.io/audio/song_094.m4a",
     "genre": "Pop",
+    "startMs": 9000,
     "fact": "M People benannten sich nach Gründer Mike Pickering.",
     "factEn": "M People named themselves after founder Mike Pickering."
   },
@@ -1118,6 +1199,7 @@ export const songs: Song[] = [
     "spotifyId": "3vSn1frPgFcRXrjWOfhMLl",
     "previewUrl": "https://mxtape.celox.io/audio/song_095.m4a",
     "genre": "Electronic",
+    "party": true,
     "fact": "Sängerin Melanie Thornton kam später bei einem Flugzeugabsturz in der Schweiz ums Leben.",
     "factEn": "Singer Melanie Thornton later died in a plane crash in Switzerland."
   },
@@ -1153,7 +1235,8 @@ export const songs: Song[] = [
     "album": "Double Wide",
     "spotifyId": "4KoecuyOpZaNFZ0UqVsllc",
     "previewUrl": "https://mxtape.celox.io/audio/song_098.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "startMs": 12500
   },
   {
     "id": "song_099",
@@ -1176,6 +1259,7 @@ export const songs: Song[] = [
     "spotifyId": "2hdhm6piUJnmKXmEmskXCg",
     "previewUrl": "https://mxtape.celox.io/audio/song_100.m4a",
     "genre": "Rock",
+    "startMs": 3500,
     "fact": "Eagle-Eye Cherry ist der Sohn des Jazztrompeters Don Cherry und Bruder von Neneh Cherry.",
     "factEn": "Eagle-Eye Cherry is the son of jazz trumpeter Don Cherry and the brother of Neneh Cherry."
   },
@@ -1223,6 +1307,7 @@ export const songs: Song[] = [
     "previewUrl": "https://mxtape.celox.io/audio/song_105.m4a",
     "genre": "Soul",
     "exotic": true,
+    "startMs": 1500,
     "fact": "Der Franzose Cerrone ist Schlagzeuger und produzierte seine Disco-Hits selbst.",
     "factEn": "Frenchman Cerrone is a drummer and produced his disco hits himself."
   },
@@ -1247,6 +1332,7 @@ export const songs: Song[] = [
     "spotifyId": "5dEBcymDDG9TUjJnAouOPp",
     "previewUrl": "https://mxtape.celox.io/audio/song_107.m4a",
     "genre": "Pop",
+    "startMs": 3500,
     "fact": "Das Original stammt von Annie Lennox.",
     "factEn": "The original is by Annie Lennox."
   },
@@ -1282,6 +1368,7 @@ export const songs: Song[] = [
     "spotifyId": "7GmHOAdriOnI9s5S79GAUr",
     "previewUrl": "https://mxtape.celox.io/audio/song_110.m4a",
     "genre": "Pop",
+    "startMs": 8000,
     "fact": "Titiyo ist die Halbschwester von Neneh Cherry.",
     "factEn": "Titiyo is Neneh Cherry's half-sister."
   },
@@ -1294,6 +1381,7 @@ export const songs: Song[] = [
     "spotifyId": "1fr92Vupmcs2vgLMFVQ7rd",
     "previewUrl": "https://mxtape.celox.io/audio/song_111.m4a",
     "genre": "Rock",
+    "startMs": 11500,
     "fact": "The Rasmus stammen aus Helsinki.",
     "factEn": "The Rasmus come from Helsinki."
   },
@@ -1305,7 +1393,8 @@ export const songs: Song[] = [
     "album": "Desire",
     "spotifyId": "6ou0PY1UD7gdRnHbbyiHaA",
     "previewUrl": "https://mxtape.celox.io/audio/song_112.m4a",
-    "genre": "Electronic"
+    "genre": "Electronic",
+    "startMs": 7500
   },
   {
     "id": "song_113",
@@ -1316,6 +1405,7 @@ export const songs: Song[] = [
     "spotifyId": "4rJdaSwOCHLBhxdMsymeMw",
     "previewUrl": "https://mxtape.celox.io/audio/song_113.m4a",
     "genre": "Rock",
+    "startMs": 31000,
     "fact": "Héroes del Silencio stammen aus Saragossa.",
     "factEn": "Héroes del Silencio come from Zaragoza."
   },
@@ -1328,6 +1418,8 @@ export const songs: Song[] = [
     "spotifyId": "0ZqveF2rEFlz2oqF2xrriP",
     "previewUrl": "https://mxtape.celox.io/audio/song_114.m4a",
     "genre": "Electronic",
+    "startMs": 8000,
+    "party": true,
     "fact": "Die Melodie stammt aus dem gleichnamigen Song von Nik Kershaw.",
     "factEn": "The melody comes from the Nik Kershaw song of the same name."
   },
@@ -1340,7 +1432,8 @@ export const songs: Song[] = [
     "spotifyId": "593pYRPHQ17uYUECWqEEEL",
     "previewUrl": "https://mxtape.celox.io/audio/song_115.m4a",
     "genre": "Electronic",
-    "exotic": true
+    "exotic": true,
+    "startMs": 25500
   },
   {
     "id": "song_116",
@@ -1351,6 +1444,7 @@ export const songs: Song[] = [
     "spotifyId": "6kWJvPfC4DgUpRsXKNa9z9",
     "previewUrl": "https://mxtape.celox.io/audio/song_116.m4a",
     "genre": "Pop",
+    "party": true,
     "fact": "Ace of Base sind drei Geschwister und ein Freund aus Göteborg.",
     "factEn": "Ace of Base are three siblings and a friend from Gothenburg."
   },
@@ -1363,6 +1457,7 @@ export const songs: Song[] = [
     "spotifyId": "2qjDNbgLzfBpCvDwfw11Qg",
     "previewUrl": "https://mxtape.celox.io/audio/song_117.m4a",
     "genre": "Electronic",
+    "party": true,
     "fact": "Dr. Alban ist tatsächlich ausgebildeter Zahnarzt.",
     "factEn": "Dr. Alban really is a trained dentist."
   },
@@ -1375,6 +1470,7 @@ export const songs: Song[] = [
     "spotifyId": "5uFYYOyT3EclOVhiFzPJSz",
     "previewUrl": "https://mxtape.celox.io/audio/song_118.m4a",
     "genre": "Electronic",
+    "party": true,
     "fact": "Der Song enthält die berüchtigte Rap-Zeile „I'm serious as cancer“.",
     "factEn": "The song contains the notorious rap line \"I'm serious as cancer\"."
   },
@@ -1387,7 +1483,9 @@ export const songs: Song[] = [
     "spotifyId": "1tVhmi6ltumhZtd1pM8Tya",
     "previewUrl": "https://mxtape.celox.io/audio/song_119.m4a",
     "genre": "Hip-Hop",
-    "exotic": true
+    "exotic": true,
+    "startMs": 11500,
+    "german": true
   },
   {
     "id": "song_120",
@@ -1397,7 +1495,8 @@ export const songs: Song[] = [
     "album": "M.O.",
     "spotifyId": "7rbWpbXVwY2DFrZpWYPtVj",
     "previewUrl": "https://mxtape.celox.io/audio/song_120.m4a",
-    "genre": "Hip-Hop"
+    "genre": "Hip-Hop",
+    "startMs": 4000
   },
   {
     "id": "song_121",
@@ -1420,6 +1519,7 @@ export const songs: Song[] = [
     "spotifyId": "0Fnb2pfBfu0ka33d6Yki17",
     "previewUrl": "https://mxtape.celox.io/audio/song_122.m4a",
     "genre": "Rock",
+    "startMs": 2500,
     "fact": "Jimi Hendrix' Coverversion gefiel Bob Dylan so gut, dass er den Song danach selbst ähnlich spielte.",
     "factEn": "Bob Dylan liked Jimi Hendrix's cover so much that he afterwards played the song in a similar way himself."
   },
@@ -1441,7 +1541,8 @@ export const songs: Song[] = [
     "album": "Nowhere Else",
     "spotifyId": "0eTScHHJpojI1zWkbwelg2",
     "previewUrl": "https://mxtape.celox.io/audio/song_124.m4a",
-    "genre": "Electronic"
+    "genre": "Electronic",
+    "startMs": 33500
   },
   {
     "id": "song_125",
@@ -1452,7 +1553,8 @@ export const songs: Song[] = [
     "spotifyId": "4xVtkEmgVrqKqiowB8NA9E",
     "previewUrl": "https://mxtape.celox.io/audio/song_125.m4a",
     "genre": "Electronic",
-    "exotic": true
+    "exotic": true,
+    "startMs": 40000
   },
   {
     "id": "song_126",
@@ -1486,7 +1588,8 @@ export const songs: Song[] = [
     "spotifyId": "56ev3tFYAzuMEUIKUhLcTO",
     "previewUrl": "https://mxtape.celox.io/audio/song_128.m4a",
     "genre": "Electronic",
-    "exotic": true
+    "exotic": true,
+    "german": true
   },
   {
     "id": "song_129",
@@ -1497,6 +1600,7 @@ export const songs: Song[] = [
     "spotifyId": "0jpk88zk40MjQ63ljrq7V2",
     "previewUrl": "https://mxtape.celox.io/audio/song_129.m4a",
     "genre": "Electronic",
+    "startMs": 1500,
     "fact": "Der Song sampelt das Spiellied „Green Sally Up“ und lief im Film „Nur noch 60 Sekunden“.",
     "factEn": "The song samples the playground song \"Green Sally Up\" and was used in the film \"Gone in 60 Seconds\"."
   },
@@ -1509,6 +1613,7 @@ export const songs: Song[] = [
     "spotifyId": "7MJQ9Nfxzh8LPZ9e9u68Fq",
     "previewUrl": "https://mxtape.celox.io/audio/song_130.m4a",
     "genre": "Hip-Hop",
+    "startMs": 31500,
     "fact": "Es war der erste Rapsong, der den Oscar für den besten Filmsong gewann.",
     "factEn": "It was the first rap song to win the Oscar for Best Original Song."
   },
@@ -1521,6 +1626,7 @@ export const songs: Song[] = [
     "spotifyId": "2m1hi0nfMR9vdGC8UcrnwU",
     "previewUrl": "https://mxtape.celox.io/audio/song_131.m4a",
     "genre": "Rock",
+    "startMs": 1500,
     "fact": "Das Video parodiert Boybands wie die Backstreet Boys.",
     "factEn": "The video parodies boy bands like the Backstreet Boys."
   },
@@ -1546,6 +1652,7 @@ export const songs: Song[] = [
     "previewUrl": "https://mxtape.celox.io/audio/song_133.m4a",
     "genre": "Soul",
     "exotic": true,
+    "startMs": 11500,
     "fact": "Take That landeten mit ihrer Coverversion zusammen mit Lulu einen Nummer-eins-Hit in Großbritannien.",
     "factEn": "Take That scored a UK number one with their cover version together with Lulu."
   },
@@ -1558,6 +1665,7 @@ export const songs: Song[] = [
     "spotifyId": "0tm6gsXe0LSm9zeSspyMQu",
     "previewUrl": "https://mxtape.celox.io/audio/song_134.m4a",
     "genre": "Hip-Hop",
+    "startMs": 2000,
     "fact": "Er gilt als erster großer Hip-Hop-Hit; die Musik basiert auf „Good Times“ von Chic.",
     "factEn": "It is considered the first big hip-hop hit; the music is based on \"Good Times\" by Chic."
   },
@@ -1606,6 +1714,7 @@ export const songs: Song[] = [
     "previewUrl": "https://mxtape.celox.io/audio/song_138.m4a",
     "genre": "Electronic",
     "exotic": true,
+    "startMs": 2000,
     "fact": "Róisín Murphy war vorher Sängerin des Duos Moloko.",
     "factEn": "Róisín Murphy was previously the singer of the duo Moloko."
   },
@@ -1643,6 +1752,7 @@ export const songs: Song[] = [
     "spotifyId": "4oDZ5L8izBals6jKBJDBcX",
     "previewUrl": "https://mxtape.celox.io/audio/song_141.m4a",
     "genre": "Rock",
+    "startMs": 7000,
     "fact": "Obwohl The Outfield aus London stammen, waren sie vor allem in den USA erfolgreich.",
     "factEn": "Although The Outfield came from London, they were most successful in the USA."
   },
@@ -1668,7 +1778,8 @@ export const songs: Song[] = [
     "spotifyId": "351hT2qfzHywu9sanfSn9o",
     "previewUrl": "https://mxtape.celox.io/audio/song_143.m4a",
     "genre": "Electronic",
-    "exotic": true
+    "exotic": true,
+    "startMs": 2000
   },
   {
     "id": "song_144",
@@ -1691,6 +1802,7 @@ export const songs: Song[] = [
     "spotifyId": "7gUMShP1l20tC0xf17Zplk",
     "previewUrl": "https://mxtape.celox.io/audio/song_145.m4a",
     "genre": "Rock",
+    "startMs": 2000,
     "fact": "Im Hintergrund singt Michael McDonald von den Doobie Brothers.",
     "factEn": "Michael McDonald of the Doobie Brothers sings backing vocals."
   },
@@ -1737,6 +1849,7 @@ export const songs: Song[] = [
     "spotifyId": "47BBI51FKFwOMlIiX6m8ya",
     "previewUrl": "https://mxtape.celox.io/audio/song_149.m4a",
     "genre": "Pop",
+    "party": true,
     "fact": "Den Song schrieben die Schweden Max Martin und Andreas Carlsson.",
     "factEn": "The song was written by the Swedes Max Martin and Andreas Carlsson."
   },
@@ -1749,6 +1862,8 @@ export const songs: Song[] = [
     "spotifyId": "0SiywuOBRcynK0uKGWdCnn",
     "previewUrl": "https://mxtape.celox.io/audio/song_150.m4a",
     "genre": "Pop",
+    "startMs": 13000,
+    "party": true,
     "fact": "Das Musikvideo gewann den Grammy für das beste Kurzform-Musikvideo.",
     "factEn": "The music video won the Grammy for Best Short Form Music Video."
   },
@@ -1761,6 +1876,7 @@ export const songs: Song[] = [
     "spotifyId": "4P4PHxZQ1FcwQKKnfEPsAZ",
     "previewUrl": "https://mxtape.celox.io/audio/song_151.m4a",
     "genre": "Rock",
+    "german": true,
     "fact": "Eine Internetaktion gegen Fremdenhass brachte den Song viele Jahre später auf Platz eins der deutschen Charts.",
     "factEn": "An online campaign against xenophobia took the song to number one in the German charts many years later."
   },
@@ -1773,6 +1889,8 @@ export const songs: Song[] = [
     "spotifyId": "2KH16WveTQWT6KOG9Rg6e2",
     "previewUrl": "https://mxtape.celox.io/audio/song_152.m4a",
     "genre": "Rock",
+    "startMs": 3000,
+    "party": true,
     "fact": "Sylvester Stallone bat Survivor um den Song, weil er „Another One Bites the Dust“ nicht für „Rocky III“ bekam.",
     "factEn": "Sylvester Stallone asked Survivor for the song because he couldn't get \"Another One Bites the Dust\" for \"Rocky III\"."
   },
@@ -1797,6 +1915,8 @@ export const songs: Song[] = [
     "spotifyId": "2IJftBfq7pJ43tfnOR0RB3",
     "previewUrl": "https://mxtape.celox.io/audio/song_154.m4a",
     "genre": "Pop",
+    "german": true,
+    "party": true,
     "fact": "Die Idee kam Gitarrist Carlo Karges bei einem Rolling-Stones-Konzert in Berlin, als Luftballons aufstiegen.",
     "factEn": "Guitarist Carlo Karges got the idea at a Rolling Stones concert in Berlin when balloons rose into the sky."
   },
@@ -1809,6 +1929,7 @@ export const songs: Song[] = [
     "spotifyId": "0cqRj7pUJDkTCEsJkx8snD",
     "previewUrl": "https://mxtape.celox.io/audio/song_155.m4a",
     "genre": "Pop",
+    "party": true,
     "fact": "Produziert wurde der Song von Max Martin und Shellback.",
     "factEn": "The song was produced by Max Martin and Shellback."
   },
@@ -1821,6 +1942,8 @@ export const songs: Song[] = [
     "spotifyId": "4y1LsJpmMti1PfRQV9AWWe",
     "previewUrl": "https://mxtape.celox.io/audio/song_156.m4a",
     "genre": "Pop",
+    "startMs": 7000,
+    "party": true,
     "fact": "Das Original von Robert Hazard war aus männlicher Sicht geschrieben.",
     "factEn": "Robert Hazard's original was written from a male perspective."
   },
@@ -1833,6 +1956,7 @@ export const songs: Song[] = [
     "spotifyId": "3AhXZa8sUQht0UEdBJgpGc",
     "previewUrl": "https://mxtape.celox.io/audio/song_157.m4a",
     "genre": "Rock",
+    "startMs": 1500,
     "fact": "Der Song dauert rund sechs Minuten – für eine Single der damaligen Zeit ungewöhnlich lang.",
     "factEn": "The song runs about six minutes – unusually long for a single at the time."
   },
@@ -1845,6 +1969,7 @@ export const songs: Song[] = [
     "spotifyId": "63T7DJ1AFDD6Bn8VzG6JE8",
     "previewUrl": "https://mxtape.celox.io/audio/song_158.m4a",
     "genre": "Rock",
+    "startMs": 8000,
     "fact": "Brian Jones spielt im Song eine Sitar.",
     "factEn": "Brian Jones plays a sitar on the song."
   },
@@ -1857,6 +1982,7 @@ export const songs: Song[] = [
     "spotifyId": "3dPQuX8Gs42Y7b454ybpMR",
     "previewUrl": "https://mxtape.celox.io/audio/song_159.m4a",
     "genre": "Rock",
+    "startMs": 3000,
     "fact": "Das Riff klingt nach Bass, wird aber auf einer Gitarre mit Oktaver-Effekt gespielt.",
     "factEn": "The riff sounds like a bass but is played on a guitar with an octave effect."
   },
@@ -1869,6 +1995,7 @@ export const songs: Song[] = [
     "spotifyId": "7e89621JPkKaeDSTQ3avtg",
     "previewUrl": "https://mxtape.celox.io/audio/song_160.m4a",
     "genre": "Rock",
+    "startMs": 3500,
     "fact": "Der Song ist eine Antwort auf Neil Youngs Songs „Southern Man“ und „Alabama“.",
     "factEn": "The song is a response to Neil Young's songs \"Southern Man\" and \"Alabama\"."
   },
@@ -1881,6 +2008,7 @@ export const songs: Song[] = [
     "spotifyId": "4qL9VYPB4XwJKAOq4xn2Mh",
     "previewUrl": "https://mxtape.celox.io/audio/song_161.m4a",
     "genre": "Soul",
+    "startMs": 2500,
     "fact": "Der Refrain hieß ursprünglich „Fuck off“ – Chic waren zuvor an der Tür des Studio 54 abgewiesen worden.",
     "factEn": "The chorus was originally \"Fuck off\" – Chic had just been turned away at the door of Studio 54."
   },
@@ -1905,6 +2033,7 @@ export const songs: Song[] = [
     "spotifyId": "0lnxrQAd9ZxbhBBe7d8FO8",
     "previewUrl": "https://mxtape.celox.io/audio/song_163.m4a",
     "genre": "Pop",
+    "party": true,
     "fact": "Hanson sind drei Brüder aus Tulsa in Oklahoma.",
     "factEn": "Hanson are three brothers from Tulsa, Oklahoma."
   },
@@ -1917,6 +2046,7 @@ export const songs: Song[] = [
     "spotifyId": "1q9l6c8bAzqWcvO3DM6FsR",
     "previewUrl": "https://mxtape.celox.io/audio/song_164.m4a",
     "genre": "Pop",
+    "startMs": 5000,
     "fact": "Elton John spielt auf dem Song Klavier.",
     "factEn": "Elton John plays piano on the song."
   },
@@ -1928,7 +2058,8 @@ export const songs: Song[] = [
     "album": "Von hier an blind",
     "spotifyId": "4hYinIaRxdaoEFSQni6K6I",
     "previewUrl": "https://mxtape.celox.io/audio/song_165.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "german": true
   },
   {
     "id": "song_166",
@@ -1938,7 +2069,9 @@ export const songs: Song[] = [
     "album": "Global Warming: Meltdown",
     "spotifyId": "3cHyrEgdyYRjgJKSOiOtcS",
     "previewUrl": "https://mxtape.celox.io/audio/song_166.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "startMs": 8500,
+    "party": true
   },
   {
     "id": "song_167",
@@ -1997,6 +2130,8 @@ export const songs: Song[] = [
     "spotifyId": "77NNZQSqzLNqh2A9JhLRkg",
     "previewUrl": "https://mxtape.celox.io/audio/song_171.m4a",
     "genre": "Rock",
+    "startMs": 1500,
+    "party": true,
     "fact": "Eine Stadt namens South Detroit, die im Text vorkommt, gibt es gar nicht.",
     "factEn": "A city called South Detroit, which is mentioned in the lyrics, doesn't actually exist."
   },
@@ -2008,7 +2143,9 @@ export const songs: Song[] = [
     "album": "So Excited!",
     "spotifyId": "1ot6jEe4w4hYnsOPjd3xKQ",
     "previewUrl": "https://mxtape.celox.io/audio/song_172.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "startMs": 5500,
+    "party": true
   },
   {
     "id": "song_173",
@@ -2019,6 +2156,8 @@ export const songs: Song[] = [
     "spotifyId": "7gaQtc0vrSpmRJpSMDiPEk",
     "previewUrl": "https://mxtape.celox.io/audio/song_173.m4a",
     "genre": "R&B",
+    "startMs": 10500,
+    "party": true,
     "fact": "Lionel Richie war vorher Sänger der Commodores.",
     "factEn": "Lionel Richie was previously the singer of the Commodores."
   },
@@ -2043,6 +2182,7 @@ export const songs: Song[] = [
     "spotifyId": "1QEEqeFIZktqIpPI4jSVSF",
     "previewUrl": "https://mxtape.celox.io/audio/song_175.m4a",
     "genre": "Rock",
+    "startMs": 9500,
     "fact": "Tom Scholz nahm die Demos für die Band in seinem Kellerstudio auf.",
     "factEn": "Tom Scholz recorded the band's demos in his basement studio."
   },
@@ -2055,6 +2195,7 @@ export const songs: Song[] = [
     "spotifyId": "3BovdzfaX4jb5KFQwoPfAw",
     "previewUrl": "https://mxtape.celox.io/audio/song_176.m4a",
     "genre": "Pop",
+    "startMs": 21500,
     "fact": "Das Gitarrensolo spielt Eddie Van Halen – ohne Gage.",
     "factEn": "The guitar solo is played by Eddie Van Halen – without a fee."
   },
@@ -2079,6 +2220,7 @@ export const songs: Song[] = [
     "spotifyId": "2MaBAGBIttgv86bYytdx1f",
     "previewUrl": "https://mxtape.celox.io/audio/song_178.m4a",
     "genre": "Pop",
+    "startMs": 12000,
     "fact": "Roxette sind das schwedische Duo Per Gessle und Marie Fredriksson.",
     "factEn": "Roxette are the Swedish duo Per Gessle and Marie Fredriksson."
   },
@@ -2091,6 +2233,7 @@ export const songs: Song[] = [
     "spotifyId": "54eZmuggBFJbV7k248bTTt",
     "previewUrl": "https://mxtape.celox.io/audio/song_179.m4a",
     "genre": "Rock",
+    "startMs": 7500,
     "fact": "Viele hielten den Song wegen der ähnlichen Stimme anfangs für ein Stück von Neil Young.",
     "factEn": "Because of the similar voice, many people at first thought the song was by Neil Young."
   },
@@ -2103,6 +2246,7 @@ export const songs: Song[] = [
     "spotifyId": "5QTxFnGygVM4jFQiBovmRo",
     "previewUrl": "https://mxtape.celox.io/audio/song_180.m4a",
     "genre": "Rock",
+    "startMs": 5000,
     "fact": "Ein berühmter Sketch bei „Saturday Night Live“ machte die Kuhglocke im Song legendär.",
     "factEn": "A famous \"Saturday Night Live\" sketch made the cowbell in the song legendary."
   },
@@ -2139,6 +2283,8 @@ export const songs: Song[] = [
     "spotifyId": "7DnAm9FOTWE3cUvso43HhI",
     "previewUrl": "https://mxtape.celox.io/audio/song_183.m4a",
     "genre": "Pop",
+    "startMs": 8000,
+    "party": true,
     "fact": "Ava Max heißt eigentlich Amanda Koci und hat albanische Wurzeln.",
     "factEn": "Ava Max's real name is Amanda Koci, and she has Albanian roots."
   },
@@ -2151,6 +2297,7 @@ export const songs: Song[] = [
     "spotifyId": "6mhw2fEPH4fMF0wolNm96e",
     "previewUrl": "https://mxtape.celox.io/audio/song_184.m4a",
     "genre": "Pop",
+    "party": true,
     "fact": "Los del Río stammen aus Dos Hermanas bei Sevilla.",
     "factEn": "Los del Río come from Dos Hermanas near Seville."
   },
@@ -2163,6 +2310,7 @@ export const songs: Song[] = [
     "spotifyId": "1Jaah2tmN9Hv81A87KZ1MU",
     "previewUrl": "https://mxtape.celox.io/audio/song_185.m4a",
     "genre": "Pop",
+    "startMs": 12000,
     "fact": "Das Original stammt von der US-Band Ednaswap.",
     "factEn": "The original is by the US band Ednaswap."
   },
@@ -2185,6 +2333,8 @@ export const songs: Song[] = [
     "spotifyId": "4r8lRYnoOGdEi6YyI5OC1o",
     "previewUrl": "https://mxtape.celox.io/audio/song_187.m4a",
     "genre": "Pop",
+    "startMs": 18500,
+    "party": true,
     "fact": "Der Song gilt als Abrechnung der Band mit ihrem früheren Manager Lou Pearlman.",
     "factEn": "The song is seen as the band's reckoning with their former manager Lou Pearlman."
   },
@@ -2197,6 +2347,7 @@ export const songs: Song[] = [
     "spotifyId": "1ChulFMnwxoD74Me8eX2TU",
     "previewUrl": "https://mxtape.celox.io/audio/song_188.m4a",
     "genre": "Pop",
+    "party": true,
     "fact": "Er war der erste Nummer-eins-Hit des Produzententeams Stock Aitken Waterman.",
     "factEn": "It was the first number-one hit for the production team Stock Aitken Waterman."
   },
@@ -2209,6 +2360,7 @@ export const songs: Song[] = [
     "spotifyId": "0xpBr84T3FTm9j4D1MdPtk",
     "previewUrl": "https://mxtape.celox.io/audio/song_189.m4a",
     "genre": "Rock",
+    "startMs": 7500,
     "fact": "Es ist der einzige Nummer-eins-Hit von Genesis in den USA.",
     "factEn": "It is Genesis's only number-one hit in the USA."
   },
@@ -2221,6 +2373,7 @@ export const songs: Song[] = [
     "spotifyId": "6md4w95cnKaW64JyEQ3A0L",
     "previewUrl": "https://mxtape.celox.io/audio/song_190.m4a",
     "genre": "Pop",
+    "startMs": 3500,
     "fact": "Gotye heißt eigentlich Wouter De Backer und wurde in Belgien geboren.",
     "factEn": "Gotye's real name is Wouter De Backer, and he was born in Belgium."
   },
@@ -2232,7 +2385,8 @@ export const songs: Song[] = [
     "album": "Let Go",
     "spotifyId": "5xEM5hIgJ1jjgcEBfpkt2F",
     "previewUrl": "https://mxtape.celox.io/audio/song_191.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "startMs": 1500
   },
   {
     "id": "song_192",
@@ -2243,6 +2397,7 @@ export const songs: Song[] = [
     "spotifyId": "52Rp3xBJFYYdmpgzDy0Quf",
     "previewUrl": "https://mxtape.celox.io/audio/song_192.m4a",
     "genre": "Pop",
+    "startMs": 2000,
     "fact": "Das Original stammt von der jamaikanischen Gruppe The Paragons.",
     "factEn": "The original is by the Jamaican group The Paragons."
   },
@@ -2267,6 +2422,7 @@ export const songs: Song[] = [
     "spotifyId": "013AWvizllIUEC2FOBzOnh",
     "previewUrl": "https://mxtape.celox.io/audio/song_194.m4a",
     "genre": "Pop",
+    "startMs": 4500,
     "fact": "Savage Garden waren ein Duo aus Brisbane in Australien.",
     "factEn": "Savage Garden were a duo from Brisbane, Australia."
   },
@@ -2279,6 +2435,7 @@ export const songs: Song[] = [
     "spotifyId": "6ZOBP3NvffbU4SZcrnt1k6",
     "previewUrl": "https://mxtape.celox.io/audio/song_195.m4a",
     "genre": "Rock",
+    "startMs": 8000,
     "fact": "Sänger Brad Arnold schrieb den Text nach eigener Aussage als Schüler im Matheunterricht.",
     "factEn": "Singer Brad Arnold says he wrote the lyrics as a schoolboy in maths class."
   },
@@ -2300,7 +2457,8 @@ export const songs: Song[] = [
     "album": "Loose",
     "spotifyId": "2aI21FnmY7TJVKeMaoQZ0t",
     "previewUrl": "https://mxtape.celox.io/audio/song_197.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "startMs": 7000
   },
   {
     "id": "song_198",
@@ -2311,6 +2469,7 @@ export const songs: Song[] = [
     "spotifyId": "6QAsrXPnMSXIbV0yEJHlEX",
     "previewUrl": "https://mxtape.celox.io/audio/song_198.m4a",
     "genre": "Metal",
+    "startMs": 3000,
     "fact": "James Hetfield schrieb den Song unterwegs auf Tour, als er seine Freundin vermisste.",
     "factEn": "James Hetfield wrote the song on tour when he was missing his girlfriend."
   },
@@ -2335,6 +2494,7 @@ export const songs: Song[] = [
     "spotifyId": "3bidbhpOYeV4knp8AIu8Xn",
     "previewUrl": "https://mxtape.celox.io/audio/song_200.m4a",
     "genre": "Hip-Hop",
+    "startMs": 19000,
     "fact": "Macklemore und Ryan Lewis landeten ihre Hits als unabhängige Künstler ohne großes Plattenlabel.",
     "factEn": "Macklemore and Ryan Lewis scored their hits as independent artists without a major label."
   },
@@ -2347,6 +2507,7 @@ export const songs: Song[] = [
     "spotifyId": "2wz5weI4PREzpexKfrKgwv",
     "previewUrl": "https://mxtape.celox.io/audio/song_201.m4a",
     "genre": "Electronic",
+    "party": true,
     "fact": "Hinter dem Projekt La Bouche stand Produzent Frank Farian.",
     "factEn": "The project La Bouche was masterminded by producer Frank Farian."
   },
@@ -2371,6 +2532,7 @@ export const songs: Song[] = [
     "spotifyId": "0MSAWjq5aWfTUNL9hv7Epd",
     "previewUrl": "https://mxtape.celox.io/audio/song_203.m4a",
     "genre": "Pop",
+    "startMs": 8500,
     "fact": "Produziert hat ihr späterer Ehemann Michael Cretu, der danach mit Enigma Erfolg hatte.",
     "factEn": "It was produced by her later husband Michael Cretu, who went on to success with Enigma."
   },
@@ -2383,6 +2545,7 @@ export const songs: Song[] = [
     "spotifyId": "0Zn63G0XTiqXwr1KSmARWz",
     "previewUrl": "https://mxtape.celox.io/audio/song_204.m4a",
     "genre": "Pop",
+    "party": true,
     "fact": "Die hohen Refrainstimmen sangen Studiosänger, nicht Dieter Bohlen und Thomas Anders.",
     "factEn": "The high chorus vocals were sung by session singers, not Dieter Bohlen and Thomas Anders."
   },
@@ -2395,6 +2558,7 @@ export const songs: Song[] = [
     "spotifyId": "1GbyYL0B0Mjn3kSbrEwKKI",
     "previewUrl": "https://mxtape.celox.io/audio/song_205.m4a",
     "genre": "Pop",
+    "startMs": 13000,
     "fact": "Das Musikvideo zeigt die Weihnachtsgeschichte, deshalb läuft der Song oft zur Weihnachtszeit.",
     "factEn": "The music video tells the Christmas story, which is why the song is often played at Christmas time."
   },
@@ -2406,7 +2570,8 @@ export const songs: Song[] = [
     "album": "Nervous Night",
     "spotifyId": "0jvrac0ac39rXsPgG2MSZ3",
     "previewUrl": "https://mxtape.celox.io/audio/song_206.m4a",
-    "genre": "Rock"
+    "genre": "Rock",
+    "startMs": 13000
   },
   {
     "id": "song_207",
@@ -2441,6 +2606,7 @@ export const songs: Song[] = [
     "spotifyId": "4t32A4kkfs2hNqa8g7aC2U",
     "previewUrl": "https://mxtape.celox.io/audio/song_209.m4a",
     "genre": "Pop",
+    "startMs": 2500,
     "fact": "Die Strophen singt Country-Legende Tammy Wynette.",
     "factEn": "The verses are sung by country legend Tammy Wynette."
   },
@@ -2453,6 +2619,7 @@ export const songs: Song[] = [
     "spotifyId": "2plbrEY59IikOBgBGLjaoe",
     "previewUrl": "https://mxtape.celox.io/audio/song_210.m4a",
     "genre": "Pop",
+    "startMs": 3500,
     "fact": "Der Song gewann den Grammy für die beste Pop-Duo-Darbietung.",
     "factEn": "The song won the Grammy for Best Pop Duo Performance."
   },
@@ -2530,6 +2697,7 @@ export const songs: Song[] = [
     "album": "Kinks",
     "previewUrl": "https://mxtape.celox.io/audio/song_217.m4a",
     "genre": "Rock",
+    "startMs": 2000,
     "fact": "Den verzerrten Gitarrensound erzeugte Dave Davies, indem er die Membran seines Verstärkers aufschlitzte.",
     "factEn": "Dave Davies created the distorted guitar sound by slashing the speaker cone of his amplifier."
   },
@@ -2552,6 +2720,7 @@ export const songs: Song[] = [
     "album": "Smiley Smile",
     "previewUrl": "https://mxtape.celox.io/audio/song_219.m4a",
     "genre": "Pop",
+    "startMs": 1500,
     "fact": "Im Song ist ein Elektro-Theremin zu hören, das damals in der Popmusik kaum jemand einsetzte.",
     "factEn": "The song features an electro-theremin, which hardly anyone used in pop music at the time."
   },
@@ -2607,6 +2776,7 @@ export const songs: Song[] = [
     "album": "Green River",
     "previewUrl": "https://mxtape.celox.io/audio/song_224.m4a",
     "genre": "Rock",
+    "startMs": 2500,
     "fact": "Der fröhlich klingende Song handelt eigentlich von einem drohenden Weltuntergang.",
     "factEn": "The cheerful-sounding song is actually about an impending end of the world."
   },
@@ -2618,6 +2788,7 @@ export const songs: Song[] = [
     "album": "If You Can Believe Your Eyes and Ears",
     "previewUrl": "https://mxtape.celox.io/audio/song_225.m4a",
     "genre": "Pop",
+    "startMs": 5000,
     "fact": "John und Michelle Phillips schrieben den Song in einem kalten New Yorker Winter.",
     "factEn": "John and Michelle Phillips wrote the song during a cold New York winter."
   },
@@ -2629,6 +2800,7 @@ export const songs: Song[] = [
     "album": "Don't Play That Song!",
     "previewUrl": "https://mxtape.celox.io/audio/song_226.m4a",
     "genre": "Soul",
+    "startMs": 2000,
     "fact": "Der Song wurde durch den gleichnamigen Film Jahrzehnte später erneut ein Hit.",
     "factEn": "The film of the same name made the song a hit again decades later."
   },
@@ -2640,6 +2812,7 @@ export const songs: Song[] = [
     "album": "In the Groove",
     "previewUrl": "https://mxtape.celox.io/audio/song_227.m4a",
     "genre": "Soul",
+    "startMs": 4000,
     "fact": "Gladys Knight & the Pips hatten den Song schon vor Marvin Gaye als Single veröffentlicht.",
     "factEn": "Gladys Knight & the Pips had released the song as a single before Marvin Gaye."
   },
@@ -2706,6 +2879,7 @@ export const songs: Song[] = [
     "album": "Marmor, Stein und Eisen bricht",
     "previewUrl": "https://mxtape.celox.io/audio/song_233.m4a",
     "genre": "Pop",
+    "german": true,
     "fact": "Drafi Deutscher schrieb den Song gemeinsam mit dem Komponisten Christian Bruhn.",
     "factEn": "Drafi Deutscher wrote the song together with the composer Christian Bruhn."
   },
@@ -2717,6 +2891,8 @@ export const songs: Song[] = [
     "album": "Arrival",
     "previewUrl": "https://mxtape.celox.io/audio/song_234.m4a",
     "genre": "Pop",
+    "startMs": 2000,
+    "party": true,
     "fact": "ABBA sangen den Song bei einer Gala am Vorabend der Hochzeit des schwedischen Königs.",
     "factEn": "ABBA sang the song at a gala on the eve of the Swedish king's wedding."
   },
@@ -2728,6 +2904,7 @@ export const songs: Song[] = [
     "album": "Saturday Night Fever",
     "previewUrl": "https://mxtape.celox.io/audio/song_235.m4a",
     "genre": "Soul",
+    "party": true,
     "fact": "Wegen seines Tempos wird der Song als Takthilfe für die Herzdruckmassage empfohlen.",
     "factEn": "Because of its tempo, the song is recommended as a rhythm guide for chest compressions in CPR."
   },
@@ -2739,6 +2916,8 @@ export const songs: Song[] = [
     "album": "Love Tracks",
     "previewUrl": "https://mxtape.celox.io/audio/song_236.m4a",
     "genre": "Soul",
+    "startMs": 7000,
+    "party": true,
     "fact": "Der Song erschien zunächst nur als B-Seite einer anderen Single.",
     "factEn": "The song was first released only as the B-side of another single."
   },
@@ -2750,6 +2929,7 @@ export const songs: Song[] = [
     "album": "Nightflight to Venus",
     "previewUrl": "https://mxtape.celox.io/audio/song_237.m4a",
     "genre": "Pop",
+    "party": true,
     "fact": "Hinter Boney M. stand der deutsche Produzent Frank Farian.",
     "factEn": "Boney M. were masterminded by the German producer Frank Farian."
   },
@@ -2761,6 +2941,7 @@ export const songs: Song[] = [
     "album": "Cruisin'",
     "previewUrl": "https://mxtape.celox.io/audio/song_238.m4a",
     "genre": "Pop",
+    "party": true,
     "fact": "Die berühmten Armbewegungen zum Refrain erfand das Publikum, nicht die Band.",
     "factEn": "The famous arm movements during the chorus were invented by the audience, not the band."
   },
@@ -2772,6 +2953,8 @@ export const songs: Song[] = [
     "album": "News of the World",
     "previewUrl": "https://mxtape.celox.io/audio/song_239.m4a",
     "genre": "Rock",
+    "startMs": 11000,
+    "party": true,
     "fact": "Den Stampf-Klatsch-Rhythmus nahm die Band in einem Studio auf, das früher eine Kirche war.",
     "factEn": "The band recorded the stomp-clap rhythm in a studio that used to be a church."
   },
@@ -2783,6 +2966,7 @@ export const songs: Song[] = [
     "album": "Machine Head",
     "previewUrl": "https://mxtape.celox.io/audio/song_240.m4a",
     "genre": "Rock",
+    "startMs": 7000,
     "fact": "Der Text erzählt vom Brand des Casinos in Montreux während eines Konzerts von Frank Zappa.",
     "factEn": "The lyrics tell of the fire at the Montreux Casino during a Frank Zappa concert."
   },
@@ -2794,6 +2978,7 @@ export const songs: Song[] = [
     "album": "Highway to Hell",
     "previewUrl": "https://mxtape.celox.io/audio/song_241.m4a",
     "genre": "Rock",
+    "startMs": 2000,
     "fact": "Es ist einer der letzten Songs mit Sänger Bon Scott, der kurz darauf starb.",
     "factEn": "It is one of the last songs with singer Bon Scott, who died shortly afterwards."
   },
@@ -2805,6 +2990,7 @@ export const songs: Song[] = [
     "album": "Don't Shoot Me I'm Only the Piano Player",
     "previewUrl": "https://mxtape.celox.io/audio/song_242.m4a",
     "genre": "Rock",
+    "startMs": 5000,
     "fact": "Den Text schrieb Bernie Taupin, die Musik Elton John – wie bei fast allen seinen Hits.",
     "factEn": "Bernie Taupin wrote the lyrics and Elton John the music – as on almost all of his hits."
   },
@@ -2816,6 +3002,7 @@ export const songs: Song[] = [
     "album": "I Remember Yesterday",
     "previewUrl": "https://mxtape.celox.io/audio/song_243.m4a",
     "genre": "Electronic",
+    "startMs": 11000,
     "fact": "Der komplette Begleitsound kommt aus einem Moog-Synthesizer, produziert von Giorgio Moroder.",
     "factEn": "The entire backing sound comes from a Moog synthesizer, produced by Giorgio Moroder."
   },
@@ -2827,6 +3014,8 @@ export const songs: Song[] = [
     "album": "September",
     "previewUrl": "https://mxtape.celox.io/audio/song_244.m4a",
     "genre": "Soul",
+    "startMs": 11000,
+    "party": true,
     "fact": "Die Silben „ba-dee-ya“ im Refrain haben keine Bedeutung – Maurice White fand einfach, dass sie gut klingen.",
     "factEn": "The syllables \"ba-dee-ya\" in the chorus mean nothing – Maurice White simply thought they sounded good."
   },
@@ -2849,6 +3038,8 @@ export const songs: Song[] = [
     "album": "Die Mensch-Maschine",
     "previewUrl": "https://mxtape.celox.io/audio/song_246.m4a",
     "genre": "Electronic",
+    "startMs": 2000,
+    "german": true,
     "fact": "In Großbritannien wurde die englische Version „The Model“ erst Jahre später ein Nummer-eins-Hit.",
     "factEn": "In the UK, the English version \"The Model\" only became a number-one hit years later."
   },
@@ -2882,6 +3073,7 @@ export const songs: Song[] = [
     "album": "The Album",
     "previewUrl": "https://mxtape.celox.io/audio/song_249.m4a",
     "genre": "Electronic",
+    "party": true,
     "fact": "Ein Sketch bei „Saturday Night Live“ mit Kopfnicken im Auto machte den Song erneut berühmt.",
     "factEn": "A \"Saturday Night Live\" sketch with head-bobbing in a car made the song famous all over again."
   },
@@ -2893,6 +3085,7 @@ export const songs: Song[] = [
     "album": "Spice",
     "previewUrl": "https://mxtape.celox.io/audio/song_250.m4a",
     "genre": "Pop",
+    "party": true,
     "fact": "Das Musikvideo wurde in einer einzigen Einstellung ohne Schnitt gedreht.",
     "factEn": "The music video was shot in a single take without a cut."
   },
@@ -2904,6 +3097,8 @@ export const songs: Song[] = [
     "album": "...Baby One More Time",
     "previewUrl": "https://mxtape.celox.io/audio/song_251.m4a",
     "genre": "Pop",
+    "startMs": 15500,
+    "party": true,
     "fact": "Max Martin bot den Song zuerst der Gruppe TLC an, die ablehnte.",
     "factEn": "Max Martin first offered the song to the group TLC, who turned it down."
   },
@@ -2915,6 +3110,8 @@ export const songs: Song[] = [
     "album": "A Little Bit of Mambo",
     "previewUrl": "https://mxtape.celox.io/audio/song_252.m4a",
     "genre": "Pop",
+    "startMs": 5000,
+    "party": true,
     "fact": "Das Original ist ein Instrumentalstück des Mambo-Königs Pérez Prado.",
     "factEn": "The original is an instrumental by the King of Mambo, Pérez Prado."
   },
@@ -2926,6 +3123,8 @@ export const songs: Song[] = [
     "album": "Aquarium",
     "previewUrl": "https://mxtape.celox.io/audio/song_253.m4a",
     "genre": "Pop",
+    "startMs": 7000,
+    "party": true,
     "fact": "Der Spielzeughersteller Mattel verklagte die Band wegen des Songs – und verlor.",
     "factEn": "Toy manufacturer Mattel sued the band over the song – and lost."
   },
@@ -2959,6 +3158,8 @@ export const songs: Song[] = [
     "album": "4 gewinnt",
     "previewUrl": "https://mxtape.celox.io/audio/song_256.m4a",
     "genre": "Hip-Hop",
+    "startMs": 4000,
+    "german": true,
     "fact": "Der Song gilt als erster großer Hit mit deutschsprachigem Rap.",
     "factEn": "The song is considered the first big hit with German-language rap."
   },
@@ -2970,6 +3171,7 @@ export const songs: Song[] = [
     "album": "Speakerboxxx/The Love Below",
     "previewUrl": "https://mxtape.celox.io/audio/song_257.m4a",
     "genre": "Hip-Hop",
+    "party": true,
     "fact": "Polaroid riet davon ab, Sofortbilder zu schütteln, nachdem der Song genau dazu aufgerufen hatte.",
     "factEn": "Polaroid advised against shaking instant photos after the song had called for exactly that."
   },
@@ -2981,6 +3183,7 @@ export const songs: Song[] = [
     "album": "Dangerously in Love",
     "previewUrl": "https://mxtape.celox.io/audio/song_258.m4a",
     "genre": "R&B",
+    "party": true,
     "fact": "Das Bläser-Riff sampelt „Are You My Woman“ von den Chi-Lites.",
     "factEn": "The horn riff samples \"Are You My Woman\" by the Chi-Lites."
   },
@@ -2992,6 +3195,8 @@ export const songs: Song[] = [
     "album": "Hot Fuss",
     "previewUrl": "https://mxtape.celox.io/audio/song_259.m4a",
     "genre": "Rock",
+    "startMs": 5000,
+    "party": true,
     "fact": "Der Song hält sich seit vielen Jahren fast ununterbrochen in den britischen Top 100.",
     "factEn": "For many years the song has stayed almost continuously in the UK Top 100."
   },
@@ -3003,6 +3208,8 @@ export const songs: Song[] = [
     "album": "Oral Fixation, Vol. 2",
     "previewUrl": "https://mxtape.celox.io/audio/song_260.m4a",
     "genre": "Pop",
+    "startMs": 4000,
+    "party": true,
     "fact": "Wyclef Jean ist als Gast auf dem Song zu hören.",
     "factEn": "Wyclef Jean features as a guest on the song."
   },
@@ -3014,6 +3221,7 @@ export const songs: Song[] = [
     "album": "Back to Black",
     "previewUrl": "https://mxtape.celox.io/audio/song_261.m4a",
     "genre": "Soul",
+    "startMs": 2500,
     "fact": "Der Text handelt davon, dass ihr Management Amy Winehouse zu einem Entzug drängte.",
     "factEn": "The lyrics are about Amy Winehouse's management pushing her into rehab."
   },
@@ -3025,6 +3233,7 @@ export const songs: Song[] = [
     "album": "Good Girl Gone Bad",
     "previewUrl": "https://mxtape.celox.io/audio/song_262.m4a",
     "genre": "R&B",
+    "party": true,
     "fact": "Der Song wurde zuerst Britney Spears angeboten.",
     "factEn": "The song was first offered to Britney Spears."
   },
@@ -3036,6 +3245,7 @@ export const songs: Song[] = [
     "album": "The E.N.D.",
     "previewUrl": "https://mxtape.celox.io/audio/song_263.m4a",
     "genre": "Pop",
+    "party": true,
     "fact": "Produziert wurde der Song gemeinsam mit David Guetta.",
     "factEn": "The song was produced together with David Guetta."
   },
@@ -3047,6 +3257,7 @@ export const songs: Song[] = [
     "album": "Only by the Night",
     "previewUrl": "https://mxtape.celox.io/audio/song_264.m4a",
     "genre": "Rock",
+    "startMs": 4000,
     "fact": "Kings of Leon sind drei Brüder und ein Cousin aus der Familie Followill.",
     "factEn": "Kings of Leon are three brothers and a cousin from the Followill family."
   },
@@ -3058,6 +3269,8 @@ export const songs: Song[] = [
     "album": "Stadtaffe",
     "previewUrl": "https://mxtape.celox.io/audio/song_265.m4a",
     "genre": "Hip-Hop",
+    "startMs": 6000,
+    "german": true,
     "fact": "Peter Fox ist sonst einer der Sänger der Berliner Band Seeed.",
     "factEn": "Peter Fox is otherwise one of the singers of the Berlin band Seeed."
   },
@@ -3069,6 +3282,8 @@ export const songs: Song[] = [
     "album": "Es ist Juli",
     "previewUrl": "https://mxtape.celox.io/audio/song_266.m4a",
     "genre": "Rock",
+    "startMs": 11500,
+    "german": true,
     "fact": "Nach dem Tsunami im Indischen Ozean spielten viele Radiosender den Song eine Zeit lang nicht.",
     "factEn": "After the Indian Ocean tsunami, many radio stations stopped playing the song for a while."
   },
@@ -3091,6 +3306,7 @@ export const songs: Song[] = [
     "album": "Hijas del Tomate",
     "previewUrl": "https://mxtape.celox.io/audio/song_268.m4a",
     "genre": "Pop",
+    "party": true,
     "fact": "Der Refrain ahmt lautmalerisch eine Zeile aus „Rapper's Delight“ der Sugarhill Gang nach.",
     "factEn": "The chorus imitates a line from \"Rapper's Delight\" by the Sugarhill Gang with sound-alike syllables."
   },
@@ -3102,6 +3318,8 @@ export const songs: Song[] = [
     "album": "Despicable Me 2",
     "previewUrl": "https://mxtape.celox.io/audio/song_269.m4a",
     "genre": "Soul",
+    "startMs": 5000,
+    "party": true,
     "fact": "Zum Song gab es ein 24 Stunden langes Musikvideo.",
     "factEn": "The song got a 24-hour-long music video."
   },
@@ -3113,6 +3331,8 @@ export const songs: Song[] = [
     "album": "Uptown Special",
     "previewUrl": "https://mxtape.celox.io/audio/song_270.m4a",
     "genre": "Soul",
+    "startMs": 6000,
+    "party": true,
     "fact": "Den Gesang übernimmt Bruno Mars, offizieller Hauptkünstler ist Produzent Mark Ronson.",
     "factEn": "Bruno Mars sings, but the official lead artist is producer Mark Ronson."
   },
@@ -3124,6 +3344,7 @@ export const songs: Song[] = [
     "album": "Random Access Memories",
     "previewUrl": "https://mxtape.celox.io/audio/song_271.m4a",
     "genre": "Electronic",
+    "party": true,
     "fact": "Nile Rodgers von Chic spielt auf dem Song die Gitarre.",
     "factEn": "Nile Rodgers of Chic plays guitar on the song."
   },
@@ -3135,6 +3356,8 @@ export const songs: Song[] = [
     "album": "÷",
     "previewUrl": "https://mxtape.celox.io/audio/song_272.m4a",
     "genre": "Pop",
+    "startMs": 5500,
+    "party": true,
     "fact": "Ed Sheeran hatte den Song ursprünglich für Rihanna im Kopf.",
     "factEn": "Ed Sheeran originally had Rihanna in mind for the song."
   },
@@ -3146,6 +3369,8 @@ export const songs: Song[] = [
     "album": "Vida",
     "previewUrl": "https://mxtape.celox.io/audio/song_273.m4a",
     "genre": "Pop",
+    "startMs": 29500,
+    "party": true,
     "fact": "Das Musikvideo war jahrelang das meistgesehene Video auf YouTube.",
     "factEn": "For years the music video was the most-watched video on YouTube."
   },
@@ -3157,6 +3382,8 @@ export const songs: Song[] = [
     "album": "Psy 6 (Six Rules), Part 1",
     "previewUrl": "https://mxtape.celox.io/audio/song_274.m4a",
     "genre": "Pop",
+    "startMs": 4000,
+    "party": true,
     "fact": "Es war das erste YouTube-Video mit mehr als einer Milliarde Aufrufen.",
     "factEn": "It was the first YouTube video with more than a billion views."
   },
@@ -3167,7 +3394,8 @@ export const songs: Song[] = [
     "year": 2010,
     "album": "21",
     "previewUrl": "https://mxtape.celox.io/audio/song_275.m4a",
-    "genre": "Soul"
+    "genre": "Soul",
+    "startMs": 2000
   },
   {
     "id": "song_276",
@@ -3177,6 +3405,8 @@ export const songs: Song[] = [
     "album": "Raop",
     "previewUrl": "https://mxtape.celox.io/audio/song_276.m4a",
     "genre": "Hip-Hop",
+    "startMs": 2000,
+    "german": true,
     "fact": "Cro tritt immer mit einer Pandamaske auf.",
     "factEn": "Cro always performs wearing a panda mask."
   },
@@ -3188,6 +3418,7 @@ export const songs: Song[] = [
     "album": "True",
     "previewUrl": "https://mxtape.celox.io/audio/song_277.m4a",
     "genre": "Electronic",
+    "party": true,
     "fact": "Gesungen hat der Soulsänger Aloe Blacc.",
     "factEn": "The vocals are by soul singer Aloe Blacc."
   },
@@ -3208,6 +3439,7 @@ export const songs: Song[] = [
     "album": "When We All Fall Asleep, Where Do We Go?",
     "previewUrl": "https://mxtape.celox.io/audio/song_279.m4a",
     "genre": "Pop",
+    "startMs": 13000,
     "fact": "Billie Eilish nahm den Song mit ihrem Bruder Finneas in dessen Kinderzimmer auf.",
     "factEn": "Billie Eilish recorded the song with her brother Finneas in his childhood bedroom."
   },
@@ -3219,6 +3451,7 @@ export const songs: Song[] = [
     "album": "Hey",
     "previewUrl": "https://mxtape.celox.io/audio/song_280.m4a",
     "genre": "Pop",
+    "german": true,
     "fact": "Die ARD setzte den Song bei ihrer Berichterstattung über die Fußball-Weltmeisterschaft ein.",
     "factEn": "German broadcaster ARD used the song in its coverage of the FIFA World Cup."
   },
@@ -3229,7 +3462,9 @@ export const songs: Song[] = [
     "year": 2020,
     "album": "Future Nostalgia",
     "previewUrl": "https://mxtape.celox.io/audio/song_281.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "startMs": 2000,
+    "party": true
   },
   {
     "id": "song_282",
@@ -3238,7 +3473,8 @@ export const songs: Song[] = [
     "year": 2022,
     "album": "Harry's House",
     "previewUrl": "https://mxtape.celox.io/audio/song_282.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "startMs": 5500
   },
   {
     "id": "song_283",
@@ -3248,6 +3484,7 @@ export const songs: Song[] = [
     "album": "Endless Summer Vacation",
     "previewUrl": "https://mxtape.celox.io/audio/song_283.m4a",
     "genre": "Pop",
+    "startMs": 8000,
     "fact": "Der Text gilt als Antwort auf „When I Was Your Man“ von Bruno Mars.",
     "factEn": "The lyrics are seen as a response to \"When I Was Your Man\" by Bruno Mars."
   },
@@ -3259,6 +3496,7 @@ export const songs: Song[] = [
     "album": "Sour",
     "previewUrl": "https://mxtape.celox.io/audio/song_284.m4a",
     "genre": "Pop",
+    "startMs": 12000,
     "fact": "Olivia Rodrigo war vorher als Schauspielerin in Disney-Serien bekannt.",
     "factEn": "Olivia Rodrigo was previously known as an actress in Disney series."
   },
@@ -3270,6 +3508,7 @@ export const songs: Song[] = [
     "album": "Dreamland",
     "previewUrl": "https://mxtape.celox.io/audio/song_285.m4a",
     "genre": "Pop",
+    "startMs": 18000,
     "fact": "Der Song brauchte über ein Jahr bis an die Spitze der US-Charts.",
     "factEn": "The song took more than a year to reach the top of the US charts."
   },
@@ -3280,7 +3519,8 @@ export const songs: Song[] = [
     "year": 2021,
     "album": "Montero",
     "previewUrl": "https://mxtape.celox.io/audio/song_286.m4a",
-    "genre": "Hip-Hop"
+    "genre": "Hip-Hop",
+    "startMs": 3500
   },
   {
     "id": "song_287",
@@ -3289,7 +3529,8 @@ export const songs: Song[] = [
     "year": 2021,
     "album": "F*ck Love 3: Over You",
     "previewUrl": "https://mxtape.celox.io/audio/song_287.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "startMs": 13000
   },
   {
     "id": "song_288",
@@ -3299,6 +3540,7 @@ export const songs: Song[] = [
     "album": "The Lockdown Sessions",
     "previewUrl": "https://mxtape.celox.io/audio/song_288.m4a",
     "genre": "Electronic",
+    "startMs": 21500,
     "fact": "Der Song setzt Teile mehrerer Elton-John-Hits wie „Rocket Man“ neu zusammen.",
     "factEn": "The song stitches together parts of several Elton John hits such as \"Rocket Man\"."
   },
@@ -3309,7 +3551,8 @@ export const songs: Song[] = [
     "year": 2024,
     "album": "Short n' Sweet",
     "previewUrl": "https://mxtape.celox.io/audio/song_289.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "startMs": 3500
   },
   {
     "id": "song_290",
@@ -3327,7 +3570,8 @@ export const songs: Song[] = [
     "year": 2021,
     "album": "=",
     "previewUrl": "https://mxtape.celox.io/audio/song_291.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "startMs": 5500
   },
   {
     "id": "song_292",
@@ -3336,7 +3580,8 @@ export const songs: Song[] = [
     "year": 2024,
     "album": "Fireworks & Rollerblades",
     "previewUrl": "https://mxtape.celox.io/audio/song_292.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "startMs": 6000
   },
   {
     "id": "song_293",
@@ -3355,6 +3600,7 @@ export const songs: Song[] = [
     "album": "Komet",
     "previewUrl": "https://mxtape.celox.io/audio/song_294.m4a",
     "genre": "Pop",
+    "german": true,
     "fact": "Udo Lindenberg wurde damit zum ältesten Künstler mit einem Nummer-eins-Hit in Deutschland.",
     "factEn": "It made Udo Lindenberg the oldest artist with a number-one hit in Germany."
   },
@@ -3366,6 +3612,8 @@ export const songs: Song[] = [
     "album": "Love Songs",
     "previewUrl": "https://mxtape.celox.io/audio/song_295.m4a",
     "genre": "Hip-Hop",
+    "startMs": 4000,
+    "german": true,
     "fact": "Den Refrain singt die Berliner Sängerin Inéz.",
     "factEn": "The chorus is sung by Berlin singer Inéz."
   },
@@ -3377,6 +3625,7 @@ export const songs: Song[] = [
     "album": "Rosie",
     "previewUrl": "https://mxtape.celox.io/audio/song_296.m4a",
     "genre": "Pop",
+    "startMs": 6500,
     "fact": "Der Titel bezieht sich auf ein koreanisches Trinkspiel namens Apartment.",
     "factEn": "The title refers to a Korean drinking game called Apartment."
   },
@@ -3387,7 +3636,8 @@ export const songs: Song[] = [
     "year": 2020,
     "album": "Exotica",
     "previewUrl": "https://mxtape.celox.io/audio/song_297.m4a",
-    "genre": "Electronic"
+    "genre": "Electronic",
+    "startMs": 3000
   },
   {
     "id": "song_298",
@@ -3397,6 +3647,8 @@ export const songs: Song[] = [
     "album": "Friesenjung",
     "previewUrl": "https://mxtape.celox.io/audio/song_298.m4a",
     "genre": "Hip-Hop",
+    "german": true,
+    "party": true,
     "fact": "Der Song baut auf einem alten Friesenjung-Lied von Otto Waalkes auf.",
     "factEn": "The song builds on an old \"Friesenjung\" song by Otto Waalkes."
   },
@@ -3407,7 +3659,8 @@ export const songs: Song[] = [
     "year": 2023,
     "album": "I've Tried Everything but Therapy (Part 1)",
     "previewUrl": "https://mxtape.celox.io/audio/song_299.m4a",
-    "genre": "Soul"
+    "genre": "Soul",
+    "startMs": 4500
   },
   {
     "id": "song_300",
@@ -3433,7 +3686,8 @@ export const songs: Song[] = [
     "year": 1960,
     "album": "Your Twist Party (With The King Of Twist)",
     "previewUrl": "https://mxtape.celox.io/audio/song_302.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "party": true
   },
   {
     "id": "song_303",
@@ -3451,7 +3705,9 @@ export const songs: Song[] = [
     "year": 1980,
     "album": "The Game",
     "previewUrl": "https://mxtape.celox.io/audio/song_304.m4a",
-    "genre": "Rock"
+    "genre": "Rock",
+    "startMs": 4000,
+    "party": true
   },
   {
     "id": "song_305",
@@ -3460,7 +3716,9 @@ export const songs: Song[] = [
     "year": 1990,
     "previewUrl": "https://mxtape.celox.io/audio/song_305.m4a",
     "genre": "Hip-Hop",
-    "album": "Please Hammer, Don't Hurt 'Em"
+    "album": "Please Hammer, Don't Hurt 'Em",
+    "startMs": 4000,
+    "party": true
   },
   {
     "id": "song_306",
@@ -3469,7 +3727,8 @@ export const songs: Song[] = [
     "year": 2000,
     "previewUrl": "https://mxtape.celox.io/audio/song_306.m4a",
     "genre": "Electronic",
-    "album": "Modjo"
+    "album": "Modjo",
+    "party": true
   },
   {
     "id": "song_307",
@@ -3521,7 +3780,8 @@ export const songs: Song[] = [
     "year": 1980,
     "album": "You Shook Me All Night Long",
     "previewUrl": "https://mxtape.celox.io/audio/song_312.m4a",
-    "genre": "Rock"
+    "genre": "Rock",
+    "startMs": 5500
   },
   {
     "id": "song_313",
@@ -3530,7 +3790,9 @@ export const songs: Song[] = [
     "year": 1990,
     "previewUrl": "https://mxtape.celox.io/audio/song_313.m4a",
     "genre": "Hip-Hop",
-    "album": "To the Extreme"
+    "album": "To the Extreme",
+    "startMs": 13500,
+    "party": true
   },
   {
     "id": "song_314",
@@ -3539,7 +3801,9 @@ export const songs: Song[] = [
     "year": 2000,
     "album": "Hot Shot",
     "previewUrl": "https://mxtape.celox.io/audio/song_314.m4a",
-    "genre": "Reggae"
+    "genre": "Reggae",
+    "startMs": 10500,
+    "party": true
   },
   {
     "id": "song_315",
@@ -3548,7 +3812,9 @@ export const songs: Song[] = [
     "year": 2011,
     "previewUrl": "https://mxtape.celox.io/audio/song_315.m4a",
     "genre": "Pop",
-    "album": "Talk That Talk"
+    "album": "Talk That Talk",
+    "startMs": 7500,
+    "party": true
   },
   {
     "id": "song_316",
@@ -3557,7 +3823,8 @@ export const songs: Song[] = [
     "year": 2021,
     "previewUrl": "https://mxtape.celox.io/audio/song_316.m4a",
     "genre": "Pop",
-    "album": "Planet Her"
+    "album": "Planet Her",
+    "startMs": 1500
   },
   {
     "id": "song_317",
@@ -3593,7 +3860,8 @@ export const songs: Song[] = [
     "year": 1980,
     "previewUrl": "https://mxtape.celox.io/audio/song_320.m4a",
     "genre": "Soul",
-    "album": "Celebrate!"
+    "album": "Celebrate!",
+    "party": true
   },
   {
     "id": "song_321",
@@ -3602,7 +3870,9 @@ export const songs: Song[] = [
     "year": 1990,
     "album": "Maxi Hit Sensation - Doppel-Dosis Maxi Power",
     "previewUrl": "https://mxtape.celox.io/audio/song_321.m4a",
-    "genre": "Electronic"
+    "genre": "Electronic",
+    "startMs": 1500,
+    "party": true
   },
   {
     "id": "song_322",
@@ -3611,7 +3881,8 @@ export const songs: Song[] = [
     "year": 2003,
     "previewUrl": "https://mxtape.celox.io/audio/song_322.m4a",
     "genre": "Rock",
-    "album": "Meteora"
+    "album": "Meteora",
+    "startMs": 3500
   },
   {
     "id": "song_323",
@@ -3620,7 +3891,8 @@ export const songs: Song[] = [
     "year": 2011,
     "previewUrl": "https://mxtape.celox.io/audio/song_323.m4a",
     "genre": "Electronic",
-    "album": "Sorry for Party Rocking"
+    "album": "Sorry for Party Rocking",
+    "party": true
   },
   {
     "id": "song_324",
@@ -3647,7 +3919,8 @@ export const songs: Song[] = [
     "year": 1963,
     "album": "Be My Baby / Tedesco and Pitman",
     "previewUrl": "https://mxtape.celox.io/audio/song_326.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "startMs": 1500
   },
   {
     "id": "song_327",
@@ -3664,7 +3937,9 @@ export const songs: Song[] = [
     "artist": "Trio",
     "year": 1982,
     "previewUrl": "https://mxtape.celox.io/audio/song_328.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "german": true,
+    "party": true
   },
   {
     "id": "song_329",
@@ -3682,7 +3957,8 @@ export const songs: Song[] = [
     "year": 2000,
     "previewUrl": "https://mxtape.celox.io/audio/song_330.m4a",
     "genre": "Electronic",
-    "album": "Discovery"
+    "album": "Discovery",
+    "startMs": 30000
   },
   {
     "id": "song_331",
@@ -3691,7 +3967,9 @@ export const songs: Song[] = [
     "year": 2011,
     "album": "Call Me Maybe",
     "previewUrl": "https://mxtape.celox.io/audio/song_331.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "startMs": 4000,
+    "party": true
   },
   {
     "id": "song_332",
@@ -3700,7 +3978,8 @@ export const songs: Song[] = [
     "year": 2021,
     "previewUrl": "https://mxtape.celox.io/audio/song_332.m4a",
     "genre": "Rock",
-    "album": "SOUR"
+    "album": "SOUR",
+    "startMs": 3000
   },
   {
     "id": "song_333",
@@ -3725,7 +4004,8 @@ export const songs: Song[] = [
     "year": 1971,
     "album": "Imagine",
     "previewUrl": "https://mxtape.celox.io/audio/song_335.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "startMs": 2500
   },
   {
     "id": "song_336",
@@ -3733,7 +4013,9 @@ export const songs: Song[] = [
     "artist": "Spider Murphy Gang",
     "year": 1981,
     "previewUrl": "https://mxtape.celox.io/audio/song_336.m4a",
-    "genre": "Rock"
+    "genre": "Rock",
+    "german": true,
+    "party": true
   },
   {
     "id": "song_337",
@@ -3751,7 +4033,8 @@ export const songs: Song[] = [
     "year": 2001,
     "previewUrl": "https://mxtape.celox.io/audio/song_338.m4a",
     "genre": "Pop",
-    "album": "Fever"
+    "album": "Fever",
+    "party": true
   },
   {
     "id": "song_339",
@@ -3760,7 +4043,8 @@ export const songs: Song[] = [
     "year": 2012,
     "album": "Night Visions",
     "previewUrl": "https://mxtape.celox.io/audio/song_339.m4a",
-    "genre": "Rock"
+    "genre": "Rock",
+    "startMs": 8500
   },
   {
     "id": "song_340",
@@ -3804,7 +4088,10 @@ export const songs: Song[] = [
     "year": 1982,
     "album": "Kugelblitze und Raketen",
     "previewUrl": "https://mxtape.celox.io/audio/song_344.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "startMs": 2000,
+    "german": true,
+    "party": true
   },
   {
     "id": "song_345",
@@ -3822,7 +4109,8 @@ export const songs: Song[] = [
     "year": 2001,
     "album": "Gorillaz (album Sampler)",
     "previewUrl": "https://mxtape.celox.io/audio/song_346.m4a",
-    "genre": "Hip-Hop"
+    "genre": "Hip-Hop",
+    "startMs": 8000
   },
   {
     "id": "song_347",
@@ -3840,7 +4128,8 @@ export const songs: Song[] = [
     "year": 2022,
     "previewUrl": "https://mxtape.celox.io/audio/song_348.m4a",
     "genre": "Pop",
-    "album": "Special"
+    "album": "Special",
+    "startMs": 1500
   },
   {
     "id": "song_349",
@@ -3876,7 +4165,8 @@ export const songs: Song[] = [
     "year": 1981,
     "album": "Einzelhaft",
     "previewUrl": "https://mxtape.celox.io/audio/song_352.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "german": true
   },
   {
     "id": "song_353",
@@ -3903,7 +4193,8 @@ export const songs: Song[] = [
     "year": 2014,
     "previewUrl": "https://mxtape.celox.io/audio/song_355.m4a",
     "genre": "Electronic",
-    "album": "Motion"
+    "album": "Motion",
+    "startMs": 2500
   },
   {
     "id": "song_356",
@@ -3948,7 +4239,10 @@ export const songs: Song[] = [
     "year": 1985,
     "album": "Falco 3",
     "previewUrl": "https://mxtape.celox.io/audio/song_360.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "startMs": 2500,
+    "german": true,
+    "party": true
   },
   {
     "id": "song_361",
@@ -3957,7 +4251,9 @@ export const songs: Song[] = [
     "year": 1993,
     "previewUrl": "https://mxtape.celox.io/audio/song_361.m4a",
     "genre": "Electronic",
-    "album": "No Limits!"
+    "album": "No Limits!",
+    "startMs": 2000,
+    "party": true
   },
   {
     "id": "song_362",
@@ -3966,7 +4262,9 @@ export const songs: Song[] = [
     "year": 2001,
     "album": "Laundry Service",
     "previewUrl": "https://mxtape.celox.io/audio/song_362.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "startMs": 7000,
+    "party": true
   },
   {
     "id": "song_363",
@@ -3984,7 +4282,8 @@ export const songs: Song[] = [
     "year": 2022,
     "album": "SOS",
     "previewUrl": "https://mxtape.celox.io/audio/song_364.m4a",
-    "genre": "R&B"
+    "genre": "R&B",
+    "startMs": 11500
   },
   {
     "id": "song_365",
@@ -4047,7 +4346,8 @@ export const songs: Song[] = [
     "year": 2016,
     "album": "Tape",
     "previewUrl": "https://mxtape.celox.io/audio/song_371.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "german": true
   },
   {
     "id": "song_372",
@@ -4056,7 +4356,8 @@ export const songs: Song[] = [
     "year": 2023,
     "album": "Daylight",
     "previewUrl": "https://mxtape.celox.io/audio/song_372.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "startMs": 16000
   },
   {
     "id": "song_373",
@@ -4065,7 +4366,8 @@ export const songs: Song[] = [
     "year": 1957,
     "album": "Wake Up Little Susie / Maybe Tomorrow",
     "previewUrl": "https://mxtape.celox.io/audio/song_373.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "startMs": 1500
   },
   {
     "id": "song_374",
@@ -4083,7 +4385,8 @@ export const songs: Song[] = [
     "year": 1972,
     "album": "Still Bill",
     "previewUrl": "https://mxtape.celox.io/audio/song_375.m4a",
-    "genre": "Soul"
+    "genre": "Soul",
+    "startMs": 15000
   },
   {
     "id": "song_376",
@@ -4101,7 +4404,8 @@ export const songs: Song[] = [
     "year": 1992,
     "album": "Bigger, Better, Faster, More!",
     "previewUrl": "https://mxtape.celox.io/audio/song_377.m4a",
-    "genre": "Rock"
+    "genre": "Rock",
+    "startMs": 2000
   },
   {
     "id": "song_378",
@@ -4110,7 +4414,8 @@ export const songs: Song[] = [
     "year": 2003,
     "album": "Daredevil: The Album",
     "previewUrl": "https://mxtape.celox.io/audio/song_378.m4a",
-    "genre": "Rock"
+    "genre": "Rock",
+    "startMs": 10500
   },
   {
     "id": "song_379",
@@ -4119,7 +4424,9 @@ export const songs: Song[] = [
     "year": 2016,
     "album": "Alles nix Konkretes",
     "previewUrl": "https://mxtape.celox.io/audio/song_379.m4a",
-    "genre": "Rock"
+    "genre": "Rock",
+    "startMs": 6000,
+    "german": true
   },
   {
     "id": "song_380",
@@ -4128,7 +4435,8 @@ export const songs: Song[] = [
     "year": 2023,
     "previewUrl": "https://mxtape.celox.io/audio/song_380.m4a",
     "genre": "Pop",
-    "album": "Houdini"
+    "album": "Houdini",
+    "startMs": 2500
   },
   {
     "id": "song_381",
@@ -4137,7 +4445,8 @@ export const songs: Song[] = [
     "year": 1958,
     "album": "All I Have to Do Is Dream / Claudette",
     "previewUrl": "https://mxtape.celox.io/audio/song_381.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "startMs": 2500
   },
   {
     "id": "song_382",
@@ -4164,7 +4473,8 @@ export const songs: Song[] = [
     "year": 1984,
     "album": "Make It Big",
     "previewUrl": "https://mxtape.celox.io/audio/song_384.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "party": true
   },
   {
     "id": "song_385",
@@ -4173,7 +4483,8 @@ export const songs: Song[] = [
     "year": 1994,
     "album": "Zombie",
     "previewUrl": "https://mxtape.celox.io/audio/song_385.m4a",
-    "genre": "Rock"
+    "genre": "Rock",
+    "startMs": 12000
   },
   {
     "id": "song_386",
@@ -4182,7 +4493,8 @@ export const songs: Song[] = [
     "year": 2003,
     "album": "In da Club",
     "previewUrl": "https://mxtape.celox.io/audio/song_386.m4a",
-    "genre": "Hip-Hop"
+    "genre": "Hip-Hop",
+    "party": true
   },
   {
     "id": "song_387",
@@ -4245,7 +4557,8 @@ export const songs: Song[] = [
     "year": 2003,
     "album": "Elephunk",
     "previewUrl": "https://mxtape.celox.io/audio/song_393.m4a",
-    "genre": "Hip-Hop"
+    "genre": "Hip-Hop",
+    "startMs": 8500
   },
   {
     "id": "song_394",
@@ -4299,7 +4612,8 @@ export const songs: Song[] = [
     "year": 1985,
     "album": "Don’t You (Forget About Me)",
     "previewUrl": "https://mxtape.celox.io/audio/song_399.m4a",
-    "genre": "Rock"
+    "genre": "Rock",
+    "startMs": 2000
   },
   {
     "id": "song_400",
@@ -4308,7 +4622,8 @@ export const songs: Song[] = [
     "year": 1997,
     "album": "Blur",
     "previewUrl": "https://mxtape.celox.io/audio/song_400.m4a",
-    "genre": "Rock"
+    "genre": "Rock",
+    "startMs": 14500
   },
   {
     "id": "song_401",
@@ -4326,7 +4641,8 @@ export const songs: Song[] = [
     "year": 2019,
     "album": "Blinding Lights",
     "previewUrl": "https://mxtape.celox.io/audio/song_402.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "party": true
   },
   {
     "id": "song_403",
@@ -4335,7 +4651,8 @@ export const songs: Song[] = [
     "year": 2024,
     "album": "Where I’ve Been, isn’t Where I’m Going",
     "previewUrl": "https://mxtape.celox.io/audio/song_403.m4a",
-    "genre": "Country"
+    "genre": "Country",
+    "party": true
   },
   {
     "id": "song_404",
@@ -4362,7 +4679,8 @@ export const songs: Song[] = [
     "year": 1972,
     "previewUrl": "https://mxtape.celox.io/audio/song_406.m4a",
     "genre": "Pop",
-    "album": "Honky Château"
+    "album": "Honky Château",
+    "startMs": 2500
   },
   {
     "id": "song_407",
@@ -4371,7 +4689,8 @@ export const songs: Song[] = [
     "year": 1984,
     "album": "Live Is Life",
     "previewUrl": "https://mxtape.celox.io/audio/song_407.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "party": true
   },
   {
     "id": "song_408",
@@ -4380,7 +4699,8 @@ export const songs: Song[] = [
     "year": 1997,
     "album": "Urban Hymns",
     "previewUrl": "https://mxtape.celox.io/audio/song_408.m4a",
-    "genre": "Rock"
+    "genre": "Rock",
+    "startMs": 29000
   },
   {
     "id": "song_409",
@@ -4389,7 +4709,9 @@ export const songs: Song[] = [
     "year": 2004,
     "previewUrl": "https://mxtape.celox.io/audio/song_409.m4a",
     "genre": "R&B",
-    "album": "Confessions"
+    "album": "Confessions",
+    "startMs": 1500,
+    "party": true
   },
   {
     "id": "song_410",
@@ -4398,7 +4720,8 @@ export const songs: Song[] = [
     "year": 2018,
     "previewUrl": "https://mxtape.celox.io/audio/song_410.m4a",
     "genre": "Pop",
-    "album": "Divinely Uninspired To A Hellish Extent"
+    "album": "Divinely Uninspired To A Hellish Extent",
+    "startMs": 2000
   },
   {
     "id": "song_411",
@@ -4434,7 +4757,8 @@ export const songs: Song[] = [
     "year": 1973,
     "previewUrl": "https://mxtape.celox.io/audio/song_414.m4a",
     "genre": "Rock",
-    "album": "The Dark Side of the Moon"
+    "album": "The Dark Side of the Moon",
+    "startMs": 12500
   },
   {
     "id": "song_415",
@@ -4443,7 +4767,8 @@ export const songs: Song[] = [
     "year": 1986,
     "album": "The Final Countdown",
     "previewUrl": "https://mxtape.celox.io/audio/song_415.m4a",
-    "genre": "Rock"
+    "genre": "Rock",
+    "party": true
   },
   {
     "id": "song_416",
@@ -4461,7 +4786,9 @@ export const songs: Song[] = [
     "year": 2019,
     "previewUrl": "https://mxtape.celox.io/audio/song_417.m4a",
     "genre": "Pop",
-    "album": "The Kids Are Coming"
+    "album": "The Kids Are Coming",
+    "startMs": 8500,
+    "party": true
   },
   {
     "id": "song_418",
@@ -4470,7 +4797,9 @@ export const songs: Song[] = [
     "year": 2020,
     "album": "Roller",
     "previewUrl": "https://mxtape.celox.io/audio/song_418.m4a",
-    "genre": "Hip-Hop"
+    "genre": "Hip-Hop",
+    "startMs": 8000,
+    "german": true
   },
   {
     "id": "song_419",
@@ -4497,7 +4826,8 @@ export const songs: Song[] = [
     "year": 1973,
     "album": "Let’s Get It On",
     "previewUrl": "https://mxtape.celox.io/audio/song_421.m4a",
-    "genre": "Soul"
+    "genre": "Soul",
+    "startMs": 1500
   },
   {
     "id": "song_422",
@@ -4506,7 +4836,9 @@ export const songs: Song[] = [
     "year": 1986,
     "previewUrl": "https://mxtape.celox.io/audio/song_422.m4a",
     "genre": "Rock",
-    "album": "Slippery When Wet"
+    "album": "Slippery When Wet",
+    "startMs": 13000,
+    "party": true
   },
   {
     "id": "song_423",
@@ -4515,7 +4847,8 @@ export const songs: Song[] = [
     "year": 1997,
     "previewUrl": "https://mxtape.celox.io/audio/song_423.m4a",
     "genre": "Hip-Hop",
-    "album": "Men In Black - The Album"
+    "album": "Men In Black - The Album",
+    "startMs": 6500
   },
   {
     "id": "song_424",
@@ -4524,7 +4857,8 @@ export const songs: Song[] = [
     "year": 2004,
     "album": "Breakaway",
     "previewUrl": "https://mxtape.celox.io/audio/song_424.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "startMs": 3500
   },
   {
     "id": "song_425",
@@ -4533,7 +4867,9 @@ export const songs: Song[] = [
     "year": 2017,
     "previewUrl": "https://mxtape.celox.io/audio/song_425.m4a",
     "genre": "Pop",
-    "album": "Dua Lipa"
+    "album": "Dua Lipa",
+    "startMs": 6000,
+    "party": true
   },
   {
     "id": "song_426",
@@ -4542,7 +4878,8 @@ export const songs: Song[] = [
     "year": 2022,
     "album": "Wildberry Lillet",
     "previewUrl": "https://mxtape.celox.io/audio/song_426.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "german": true
   },
   {
     "id": "song_427",
@@ -4551,7 +4888,8 @@ export const songs: Song[] = [
     "year": 1959,
     "album": "That's All",
     "previewUrl": "https://mxtape.celox.io/audio/song_427.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "startMs": 6500
   },
   {
     "id": "song_428",
@@ -4578,7 +4916,8 @@ export const songs: Song[] = [
     "year": 1986,
     "previewUrl": "https://mxtape.celox.io/audio/song_430.m4a",
     "genre": "Pop",
-    "album": "True Confessions"
+    "album": "True Confessions",
+    "party": true
   },
   {
     "id": "song_431",
@@ -4587,7 +4926,8 @@ export const songs: Song[] = [
     "year": 1997,
     "previewUrl": "https://mxtape.celox.io/audio/song_431.m4a",
     "genre": "Pop",
-    "album": "Backstreet Boys"
+    "album": "Backstreet Boys",
+    "party": true
   },
   {
     "id": "song_432",
@@ -4641,7 +4981,8 @@ export const songs: Song[] = [
     "year": 1974,
     "album": "Kung Fu Fighting",
     "previewUrl": "https://mxtape.celox.io/audio/song_437.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "party": true
   },
   {
     "id": "song_438",
@@ -4659,7 +5000,8 @@ export const songs: Song[] = [
     "year": 1997,
     "previewUrl": "https://mxtape.celox.io/audio/song_439.m4a",
     "genre": "Pop",
-    "album": "Let's Talk About Love"
+    "album": "Let's Talk About Love",
+    "startMs": 10500
   },
   {
     "id": "song_440",
@@ -4668,7 +5010,9 @@ export const songs: Song[] = [
     "year": 2005,
     "album": "Confessions on a Dance Floor",
     "previewUrl": "https://mxtape.celox.io/audio/song_440.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "startMs": 14000,
+    "party": true
   },
   {
     "id": "song_441",
@@ -4677,7 +5021,8 @@ export const songs: Song[] = [
     "year": 2014,
     "album": "Firestone",
     "previewUrl": "https://mxtape.celox.io/audio/song_441.m4a",
-    "genre": "Electronic"
+    "genre": "Electronic",
+    "startMs": 8000
   },
   {
     "id": "song_442",
@@ -4704,7 +5049,8 @@ export const songs: Song[] = [
     "year": 1967,
     "previewUrl": "https://mxtape.celox.io/audio/song_444.m4a",
     "genre": "Soul",
-    "album": "Soul Men"
+    "album": "Soul Men",
+    "startMs": 1500
   },
   {
     "id": "song_445",
@@ -4713,7 +5059,8 @@ export const songs: Song[] = [
     "year": 1974,
     "album": "Waterloo",
     "previewUrl": "https://mxtape.celox.io/audio/song_445.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "party": true
   },
   {
     "id": "song_446",
@@ -4722,7 +5069,8 @@ export const songs: Song[] = [
     "year": 1983,
     "album": "Faster Than the Speed of Night",
     "previewUrl": "https://mxtape.celox.io/audio/song_446.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "startMs": 18000
   },
   {
     "id": "song_447",
@@ -4731,7 +5079,9 @@ export const songs: Song[] = [
     "year": 1998,
     "album": "Backstage",
     "previewUrl": "https://mxtape.celox.io/audio/song_447.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "startMs": 15000,
+    "party": true
   },
   {
     "id": "song_448",
@@ -4749,7 +5099,8 @@ export const songs: Song[] = [
     "year": 2014,
     "album": "Rather Be",
     "previewUrl": "https://mxtape.celox.io/audio/song_449.m4a",
-    "genre": "Electronic"
+    "genre": "Electronic",
+    "startMs": 9000
   },
   {
     "id": "song_450",
@@ -4758,7 +5109,8 @@ export const songs: Song[] = [
     "year": 2025,
     "album": "You’ll Be Alright, Kid (Chapter 1)",
     "previewUrl": "https://mxtape.celox.io/audio/song_450.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "startMs": 7500
   },
   {
     "id": "song_451",
@@ -4766,7 +5118,8 @@ export const songs: Song[] = [
     "artist": "Doris Day",
     "year": 1956,
     "previewUrl": "https://mxtape.celox.io/audio/song_451.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "startMs": 1500
   },
   {
     "id": "song_452",
@@ -4784,7 +5137,8 @@ export const songs: Song[] = [
     "year": 1974,
     "album": "Sheer Heart Attack",
     "previewUrl": "https://mxtape.celox.io/audio/song_453.m4a",
-    "genre": "Rock"
+    "genre": "Rock",
+    "startMs": 6000
   },
   {
     "id": "song_454",
@@ -4793,7 +5147,8 @@ export const songs: Song[] = [
     "year": 1982,
     "previewUrl": "https://mxtape.celox.io/audio/song_454.m4a",
     "genre": "Pop",
-    "album": "Too Rye Ay"
+    "album": "Too Rye Ay",
+    "party": true
   },
   {
     "id": "song_455",
@@ -4802,7 +5157,8 @@ export const songs: Song[] = [
     "year": 1999,
     "album": "Ricky Martin",
     "previewUrl": "https://mxtape.celox.io/audio/song_455.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "party": true
   },
   {
     "id": "song_456",
@@ -4829,7 +5185,8 @@ export const songs: Song[] = [
     "year": 2022,
     "previewUrl": "https://mxtape.celox.io/audio/song_458.m4a",
     "genre": "R&B",
-    "album": "Escapism."
+    "album": "Escapism.",
+    "startMs": 10000
   },
   {
     "id": "song_459",
@@ -4838,7 +5195,8 @@ export const songs: Song[] = [
     "year": 1956,
     "previewUrl": "https://mxtape.celox.io/audio/song_459.m4a",
     "genre": "Pop",
-    "album": "Calypso"
+    "album": "Calypso",
+    "startMs": 3000
   },
   {
     "id": "song_460",
@@ -4847,7 +5205,8 @@ export const songs: Song[] = [
     "year": 1967,
     "album": "Happy Together",
     "previewUrl": "https://mxtape.celox.io/audio/song_460.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "startMs": 4000
   },
   {
     "id": "song_461",
@@ -4856,7 +5215,8 @@ export const songs: Song[] = [
     "year": 1975,
     "album": "KC and the Sunshine Band",
     "previewUrl": "https://mxtape.celox.io/audio/song_461.m4a",
-    "genre": "Soul"
+    "genre": "Soul",
+    "party": true
   },
   {
     "id": "song_462",
@@ -4883,7 +5243,8 @@ export const songs: Song[] = [
     "year": 2007,
     "previewUrl": "https://mxtape.celox.io/audio/song_464.m4a",
     "genre": "Pop",
-    "album": "Life In Cartoon Motion"
+    "album": "Life In Cartoon Motion",
+    "startMs": 4000
   },
   {
     "id": "song_465",
@@ -4919,7 +5280,9 @@ export const songs: Song[] = [
     "year": 1975,
     "previewUrl": "https://mxtape.celox.io/audio/song_468.m4a",
     "genre": "Soul",
-    "album": "Disco Baby"
+    "album": "Disco Baby",
+    "startMs": 2000,
+    "party": true
   },
   {
     "id": "song_469",
@@ -4946,7 +5309,8 @@ export const songs: Song[] = [
     "year": 2007,
     "album": "Bleeding Love",
     "previewUrl": "https://mxtape.celox.io/audio/song_471.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "startMs": 4000
   },
   {
     "id": "song_472",
@@ -4955,7 +5319,8 @@ export const songs: Song[] = [
     "year": 2012,
     "album": "Mit K",
     "previewUrl": "https://mxtape.celox.io/audio/song_472.m4a",
-    "genre": "Rock"
+    "genre": "Rock",
+    "german": true
   },
   {
     "id": "song_473",
@@ -4973,7 +5338,8 @@ export const songs: Song[] = [
     "year": 1967,
     "album": "The Voice of Scott McKenzie",
     "previewUrl": "https://mxtape.celox.io/audio/song_474.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "startMs": 2500
   },
   {
     "id": "song_475",
@@ -4991,7 +5357,8 @@ export const songs: Song[] = [
     "year": 1983,
     "album": "Blue Monday",
     "previewUrl": "https://mxtape.celox.io/audio/song_476.m4a",
-    "genre": "Electronic"
+    "genre": "Electronic",
+    "startMs": 2000
   },
   {
     "id": "song_477",
@@ -5000,7 +5367,8 @@ export const songs: Song[] = [
     "year": 1995,
     "previewUrl": "https://mxtape.celox.io/audio/song_477.m4a",
     "genre": "Rock",
-    "album": "Jagged Little Pill"
+    "album": "Jagged Little Pill",
+    "startMs": 17500
   },
   {
     "id": "song_478",
@@ -5009,7 +5377,8 @@ export const songs: Song[] = [
     "year": 2008,
     "album": "Rockferry",
     "previewUrl": "https://mxtape.celox.io/audio/song_478.m4a",
-    "genre": "Soul"
+    "genre": "Soul",
+    "startMs": 1500
   },
   {
     "id": "song_479",
@@ -5026,7 +5395,8 @@ export const songs: Song[] = [
     "year": 1967,
     "album": "The Letter / Neon Rainbow",
     "previewUrl": "https://mxtape.celox.io/audio/song_480.m4a",
-    "genre": "Rock"
+    "genre": "Rock",
+    "startMs": 2500
   },
   {
     "id": "song_481",
@@ -5035,7 +5405,9 @@ export const songs: Song[] = [
     "year": 1976,
     "album": "Wild Cherry",
     "previewUrl": "https://mxtape.celox.io/audio/song_481.m4a",
-    "genre": "Soul"
+    "genre": "Soul",
+    "startMs": 7000,
+    "party": true
   },
   {
     "id": "song_482",
@@ -5062,7 +5434,8 @@ export const songs: Song[] = [
     "year": 2008,
     "previewUrl": "https://mxtape.celox.io/audio/song_484.m4a",
     "genre": "Pop",
-    "album": "One of the Boys"
+    "album": "One of the Boys",
+    "party": true
   },
   {
     "id": "song_485",
@@ -5134,7 +5507,8 @@ export const songs: Song[] = [
     "year": 1987,
     "previewUrl": "https://mxtape.celox.io/audio/song_492.m4a",
     "genre": "Rock",
-    "album": "Appetite For Destruction"
+    "album": "Appetite For Destruction",
+    "party": true
   },
   {
     "id": "song_493",
@@ -5143,7 +5517,9 @@ export const songs: Song[] = [
     "year": 2002,
     "album": "Die gute Seite",
     "previewUrl": "https://mxtape.celox.io/audio/song_493.m4a",
-    "genre": "Rock"
+    "genre": "Rock",
+    "startMs": 9500,
+    "german": true
   },
   {
     "id": "song_494",
@@ -5161,7 +5537,9 @@ export const songs: Song[] = [
     "year": 1978,
     "album": "Blondes Have More Fun",
     "previewUrl": "https://mxtape.celox.io/audio/song_495.m4a",
-    "genre": "Rock"
+    "genre": "Rock",
+    "startMs": 1500,
+    "party": true
   },
   {
     "id": "song_496",
@@ -5179,7 +5557,9 @@ export const songs: Song[] = [
     "year": 2004,
     "album": "Verschwende deine Zeit",
     "previewUrl": "https://mxtape.celox.io/audio/song_497.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "startMs": 17500,
+    "german": true
   },
   {
     "id": "song_498",
@@ -5187,7 +5567,8 @@ export const songs: Song[] = [
     "artist": "The Rolling Stones",
     "year": 1969,
     "previewUrl": "https://mxtape.celox.io/audio/song_498.m4a",
-    "genre": "Rock"
+    "genre": "Rock",
+    "startMs": 4000
   },
   {
     "id": "song_499",
@@ -5196,7 +5577,8 @@ export const songs: Song[] = [
     "year": 1978,
     "album": "Outlandos d'Amour",
     "previewUrl": "https://mxtape.celox.io/audio/song_499.m4a",
-    "genre": "Rock"
+    "genre": "Rock",
+    "startMs": 4000
   },
   {
     "id": "song_500",
@@ -5205,6 +5587,7 @@ export const songs: Song[] = [
     "year": 1988,
     "previewUrl": "https://mxtape.celox.io/audio/song_500.m4a",
     "genre": "Pop",
-    "album": "Simple Pleasures"
+    "album": "Simple Pleasures",
+    "party": true
   }
 ]

@@ -7,7 +7,7 @@
 import { useEffect, useMemo, useRef, useState, type FormEvent } from 'react'
 import { AnimatePresence, m } from 'motion/react'
 import { useMe } from '@/auth/AuthContext'
-import { useGame, useSettings, useUI } from '@/contexts'
+import { useGame, useGameHistory, useSettings, useUI } from '@/contexts'
 import { roomApi } from '@/online/roomApi'
 import type { MusicMode } from '@/online/protocol'
 import { useAppNavigate } from '@/hooks/useAppNavigate'
@@ -19,8 +19,10 @@ import { MODE_COPY, MODE_ORDER, DIFFICULTY_LABEL } from '@/game/modeCopy'
 import { ownPlayerName } from '@/game/owner'
 import { createBotPlayers } from '@/services/botPlayer'
 import { spring } from '@/motion/springs'
-import { songs } from '@/data/songs'
-import { DECADES, countByDecade, decadeLabel, songPool } from '@/game/songPool'
+import { allSongs } from '@/data/catalogue'
+import { missedSongs, NEMESIS_MIN } from '@/game/stats'
+import { MAX_JOKERS } from '@/game/bonus'
+import { COLLECTIONS, DECADES, GENRE_GROUPS, countByDecade, decadeLabel, songPool, type Collection } from '@/game/songPool'
 import { GOAL_LABEL, GOAL_OPTIONS, goalWord } from '@/game/roundEnd'
 import { STARTING_CHALLENGES } from '@/game/challenge'
 import { MIN_TEAM_PEOPLE, TEAMS, maxTeams, splitIntoTeams } from '@/game/teams'
@@ -50,8 +52,8 @@ function writePref(key: string, value: string) {
     /* private mode */
   }
 }
-const SONGS_BY_DECADE = countByDecade(songs)
-const EXOTIC_COUNT = songs.filter((s) => s.exotic).length
+const SONGS_BY_DECADE = countByDecade(allSongs())
+const EXOTIC_COUNT = allSongs().filter((s) => s.exotic).length
 const DECADES_WITH_SONGS = DECADES.filter((d) => (SONGS_BY_DECADE[d] ?? 0) > 0)
 
 function readLastOptions(): Partial<RoundOptions> | null {
@@ -62,7 +64,10 @@ function readLastOptions(): Partial<RoundOptions> | null {
       goal: (GOAL_OPTIONS as readonly number[]).includes(raw.goal) ? raw.goal : undefined,
       decades: Array.isArray(raw.decades) ? raw.decades.filter((d: unknown) => DECADES_WITH_SONGS.includes(d as never)) : undefined,
       challengesEnabled: typeof raw.challengesEnabled === 'boolean' ? raw.challengesEnabled : undefined,
-      exotics: typeof raw.exotics === 'boolean' ? raw.exotics : undefined
+      exotics: typeof raw.exotics === 'boolean' ? raw.exotics : undefined,
+      genres: Array.isArray(raw.genres) ? raw.genres.filter((g: unknown) => GENRE_GROUPS.includes(g as never)) : undefined,
+      collection: COLLECTIONS.includes(raw.collection) && raw.collection !== 'nemesis' ? raw.collection : undefined,
+      bonus: typeof raw.bonus === 'boolean' ? raw.bonus : undefined
     }
   } catch {
     return null
@@ -93,8 +98,14 @@ export function SetupScreen() {
     decades,
     challengesEnabled,
     exotics,
+    genres,
+    collection,
+    bonus,
     setOptions
   } = useGame()
+  const { history } = useGameHistory()
+  const missed = useMemo(() => missedSongs(history ?? []), [history])
+  const theme = { genres, collection, songIds: collection === 'nemesis' ? missed : null }
   const t = useMessages(setupText)
   const { settings, addPlayer: rememberPlayer } = useSettings()
   const [name, setName] = useState('')
@@ -202,12 +213,34 @@ export function SetupScreen() {
   const emptyTeam = teamsActive && teams.some((t) => t.length === 0)
 
   // ── Round ────────────────────────────────────────────────────────────────
-  const poolSize = useMemo(() => songPool(songs, decades, exotics).length, [decades, exotics])
-  const byDecade = useMemo(() => countByDecade(songs, exotics), [exotics])
+  const poolSize = useMemo(
+    () => songPool(allSongs(), decades, exotics, theme).length,
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [decades, exotics, genres.join(), collection, missed.length]
+  )
+  const byDecade = useMemo(() => countByDecade(allSongs(), exotics), [exotics])
   const timelineMode = gameMode !== 'hardcore'
   const seats = teamsActive ? teams.length : players.length
   // Rough songs a round needs: every seat plays until the goal, plus misses
   const songsNeeded = goal * Math.max(2, seats) * (timelineMode ? 2 : 1)
+
+  const toggleGenre = (g: string) => {
+    const next = genres.includes(g) ? genres.filter((x) => x !== g) : [...genres, g]
+    setOptions({ genres: next.length === GENRE_GROUPS.length ? [] : next })
+  }
+  // The nemesis list is fixed when the round starts (it travels with a room)
+  const roundOptions = () => ({
+    goal,
+    decades,
+    challengesEnabled,
+    exotics,
+    genres,
+    collection,
+    songIds: collection === 'nemesis' ? missed : null,
+    bonus
+  })
+  const rememberOptions = () =>
+    localStorage.setItem(LAST_OPTIONS_KEY, JSON.stringify({ goal, decades, challengesEnabled, exotics, genres, collection, bonus }))
 
   const toggleDecade = (decade: number) => {
     const next = decades.includes(decade) ? decades.filter((d) => d !== decade) : [...decades, decade].sort()
@@ -235,9 +268,9 @@ export function SetupScreen() {
     if (!gameMode) return
     setOpening(true)
     localStorage.setItem(LAST_MODE_KEY, gameMode)
-    localStorage.setItem(LAST_OPTIONS_KEY, JSON.stringify({ goal, decades, challengesEnabled, exotics }))
+    rememberOptions()
     try {
-      const room = await roomApi.create(music, { mode: gameMode, goal, decades, challengesEnabled, exotics })
+      const room = await roomApi.create(music, { mode: gameMode, ...roundOptions() })
       navigate(`/room/${room.code}`, { replace: true })
     } catch {
       addToast(t.roomFailed, 'error')
@@ -249,7 +282,8 @@ export function SetupScreen() {
     if (devices === 'own') return void openRoom()
     if (!ready || !gameMode) return
     localStorage.setItem(LAST_MODE_KEY, gameMode)
-    localStorage.setItem(LAST_OPTIONS_KEY, JSON.stringify({ goal, decades, challengesEnabled, exotics }))
+    rememberOptions()
+    setOptions({ songIds: roundOptions().songIds, daily: null })
     if (teamsActive) {
       setPlayers(
         teams.map<Player>((members, i) => ({ name: TEAMS[i].name, members, memberTurn: 0, timeline: [], cards: 0, score: 0 }))
@@ -650,6 +684,59 @@ export function SetupScreen() {
             <p className="meta">{t.recentHint}</p>
           </div>
 
+
+          <div className="space-y-2">
+            <h3 id="genres-h" className="text-title-sm">
+              {t.genres}
+            </h3>
+            <div className="flex flex-wrap gap-2" role="group" aria-labelledby="genres-h">
+              <button type="button" className="chip m3-state-layer" aria-pressed={genres.length === 0} onClick={() => setOptions({ genres: [] })}>
+                {genres.length === 0 && <Icon name="check" size={18} />}
+                {t.all}
+              </button>
+              {GENRE_GROUPS.map((g) => {
+                const on = genres.includes(g)
+                return (
+                  <button key={g} type="button" className="chip m3-state-layer" aria-pressed={on} onClick={() => toggleGenre(g)}>
+                    {on && <Icon name="check" size={18} />}
+                    {t[`genre_${g}`]}
+                  </button>
+                )
+              })}
+            </div>
+          </div>
+
+          <div className="space-y-2">
+            <h3 id="collection-h" className="text-title-sm">
+              {t.collection}
+            </h3>
+            <div className="flex flex-wrap gap-2" role="radiogroup" aria-labelledby="collection-h">
+              {COLLECTIONS.map((c) => {
+                const on = collection === c
+                const locked = c === 'nemesis' && missed.length < NEMESIS_MIN
+                return (
+                  <button
+                    key={c}
+                    type="button"
+                    role="radio"
+                    aria-checked={on}
+                    data-selected={on}
+                    disabled={locked}
+                    className="chip m3-state-layer disabled:opacity-50"
+                    onClick={() => setOptions({ collection: c as Collection })}
+                  >
+                    {on && <Icon name="check" size={18} />}
+                    {t[`collection_${c}`]}
+                  </button>
+                )
+              })}
+            </div>
+            <p className="meta">
+              {collection === 'nemesis' ? t.collectionHint_nemesis(missed.length) : t[`collectionHint_${collection}`]}
+            </p>
+            {missed.length < NEMESIS_MIN && <p className="meta">{t.nemesisLocked(missed.length, NEMESIS_MIN)}</p>}
+          </div>
+
           {timelineMode && (
             <div className="surface p-4 flex items-start gap-4">
               <span className="grid place-items-center w-10 h-10 shrink-0 rounded-full bg-md-surface-container-highest text-md-on-surface-variant">
@@ -660,6 +747,19 @@ export function SetupScreen() {
                 <p className="meta">{t.challengeHint(teamsActive, STARTING_CHALLENGES)}</p>
               </div>
               <Switch checked={challengesEnabled} onChange={(on) => setOptions({ challengesEnabled: on })} ariaLabel={t.challenge} />
+            </div>
+          )}
+
+          {timelineMode && (
+            <div className="surface p-4 flex items-start gap-4">
+              <span className="grid place-items-center w-10 h-10 shrink-0 rounded-full bg-md-surface-container-highest text-md-on-surface-variant">
+                <Icon name="swap" size={20} />
+              </span>
+              <div className="flex-1 min-w-0">
+                <h3 className="text-title-md">{t.bonus}</h3>
+                <p className="meta">{t.bonusHint(MAX_JOKERS)}</p>
+              </div>
+              <Switch checked={bonus} onChange={(on) => setOptions({ bonus: on })} ariaLabel={t.bonus} />
             </div>
           )}
 

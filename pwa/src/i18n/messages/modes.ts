@@ -47,6 +47,8 @@ export const modesText = defineMessages({
 
     // useTurnFlow toasts
     allPlayed: 'Alle Songs wurden bereits gespielt!',
+    replaying: 'Alle Songs waren schon dran – ab jetzt kommen die ersten wieder.',
+    widenedTheme: 'Die Songs dieser Auswahl sind durch – ab jetzt kommen alle Songs.',
     widenedExotics: 'Die bekannten Songs sind durch – ab jetzt kommen auch Exoten.',
     widenedDecades: 'Die gewählten Jahrzehnte sind durch – ab jetzt kommen Songs aus allen Jahrzehnten.',
     savedToHistory: 'Spiel wurde zur Historie hinzugefügt!',
@@ -139,6 +141,8 @@ export const modesText = defineMessages({
     between: (a: number, b: number) => `Between ${a} and ${b}`,
 
     allPlayed: 'Every song has been played already.',
+    replaying: 'Every song has had its turn – the first ones come round again.',
+    widenedTheme: 'The songs of this selection are used up – all songs from now on.',
     widenedExotics: 'The well-known songs are used up – exotics are in from now on.',
     widenedDecades: 'The chosen decades are used up – songs from all decades are in from now on.',
     savedToHistory: 'Round saved to your history.',

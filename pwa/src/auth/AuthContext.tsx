@@ -56,6 +56,11 @@ export function useAuth() {
   return ctx
 }
 
+/** The auth state, or null outside the provider (components used in tests and previews). */
+export function useAuthMaybe() {
+  return useContext(AuthContext)
+}
+
 /** The signed-in, approved account. Only valid inside the approved app. */
 export function useMe(): Me {
   const { state } = useAuth()

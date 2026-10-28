@@ -26,7 +26,7 @@ import { useGame, useUI, useAchievements, useGameHistory, useSettings } from '@/
 import { validateGuess, placeCardInTimeline } from '@/services'
 import { BotPlayer } from '@/services/botPlayer'
 import type { BotAction } from '@/services/botStrategies/types'
-import { songs } from '@/data/songs'
+import { allSongs, songById } from '@/data/catalogue'
 import type { Player, Song } from '@/types'
 import { evaluatePlacement, timelineSongsFor } from './placement'
 import { guessBreakdown, guessDetailsFor } from './guess'
@@ -39,6 +39,7 @@ import { pickSong, songKey } from './songPool'
 import { eligibleChallengers, resolveChallenge, type ChallengeClaim } from './challenge'
 import { isTeam } from './teams'
 import { deriveTurn } from './deriveTurn'
+import { judgeNaming, jokersOf, type Naming } from './bonus'
 import { guessRecord, placementRecord } from './turnRecord'
 import { msg } from '@/i18n'
 import { modesText } from '@/i18n/messages/modes'
@@ -81,7 +82,12 @@ export function useTurnFlow({ onGameOver, onSkipNotice }: Options) {
     goal,
     decades,
     exotics,
+    genres,
+    collection,
+    songIds,
     challengesEnabled,
+    bonus,
+    daily,
     reveal,
     setReveal,
     pending,
@@ -103,6 +109,7 @@ export function useTurnFlow({ onGameOver, onSkipNotice }: Options) {
   const [isBotThinking, setIsBotThinking] = useState(false)
   const botBusy = useRef(false)
   const widenedNoticeShown = useRef(false)
+  const replayNoticeShown = useRef(false)
   // The log as of the latest booking — finishGame runs before the state has re-rendered
   const logRef = useRef(turnLog)
   logRef.current = turnLog
@@ -141,17 +148,34 @@ export function useTurnFlow({ onGameOver, onSkipNotice }: Options) {
 
   // ── Song source ──────────────────────────────────────────────────────────
   const drawSong = useCallback((): Song | null => {
-    const { song, widened } = pickSong(songs, decades, playedSongs, settings.recentSongs, Math.random, exotics)
+    // Today's round: its songs, one after the other
+    if (daily && songIds) {
+      const next = songIds.map(songById).find((s) => s && !playedSongs.includes(songKey(s)))
+      if (!next) return null
+      addToPlayedSongs(songKey(next))
+      setCurrentSong(next)
+      return next
+    }
+    const { song, widened, replayed } = pickSong(allSongs(), decades, playedSongs, settings.recentSongs, Math.random, exotics, {
+      genres,
+      collection,
+      songIds
+    })
     if (!song) {
       addToast(msg(modesText).allPlayed, 'warning')
       return null
     }
-    if (widened && !widenedNoticeShown.current) {
+    if (replayed && !replayNoticeShown.current) {
+      replayNoticeShown.current = true
+      addToast(msg(modesText).replaying, 'info')
+    } else if (widened && !replayed && !widenedNoticeShown.current) {
       widenedNoticeShown.current = true
       addToast(
         song.exotic && !exotics
           ? msg(modesText).widenedExotics
-          : msg(modesText).widenedDecades,
+          : decades.length > 0
+            ? msg(modesText).widenedDecades
+            : msg(modesText).widenedTheme,
         'info'
       )
     }
@@ -159,7 +183,7 @@ export function useTurnFlow({ onGameOver, onSkipNotice }: Options) {
     rememberSong(songKey(song))
     setCurrentSong(song)
     return song
-  }, [decades, exotics, playedSongs, settings.recentSongs, addToPlayedSongs, rememberSong, setCurrentSong, addToast])
+  }, [daily, decades, exotics, genres, collection, songIds, playedSongs, settings.recentSongs, addToPlayedSongs, rememberSong, setCurrentSong, addToast])
 
   // ── Game end ─────────────────────────────────────────────────────────────
   const finishGame = useCallback(
@@ -220,6 +244,12 @@ export function useTurnFlow({ onGameOver, onSkipNotice }: Options) {
         return 'next'
       }
 
+      // Today's round ends after its last song
+      if (daily) {
+        if (logRef.current.length < (songIds?.length ?? 0)) return 'next'
+        finishGame(finalPlayers[playerIndex], finalPlayers)
+        return 'over'
+      }
       if (!isRoundOver(finalPlayers, gameMode, goal)) return 'next'
       // Who left cannot win
       const top = leadersAmong(finalPlayers, stillIn(finalPlayers), gameMode)
@@ -231,7 +261,7 @@ export function useTurnFlow({ onGameOver, onSkipNotice }: Options) {
       addToast(msg(modesText).tie(top.map((i) => finalPlayers[i].name)), 'info')
       return 'next'
     },
-    [tiebreak, gameMode, goal, setTiebreak, finishGame, addToast, absent]
+    [tiebreak, gameMode, goal, setTiebreak, finishGame, addToast, absent, daily, songIds]
   )
 
   // ── Online: absent players ───────────────────────────────────────────────
@@ -276,10 +306,13 @@ export function useTurnFlow({ onGameOver, onSkipNotice }: Options) {
   // ── Timeline modes ───────────────────────────────────────────────────────
   /** Credit the card (placer or challenger) and show the result. */
   const resolvePlacement = useCallback(
-    (playerIndex: number, gapIndex: number, claim: ChallengeClaim | null) => {
+    (playerIndex: number, gapIndex: number, claim: ChallengeClaim | null, naming: Naming | null = null) => {
       if (!currentSong) return
       const placer = players[playerIndex]
       if (!placer) return
+      // Bonus: title and artist named right earns a joker, whatever the card did
+      const named = bonus && naming && gameMode !== 'hardcore' ? judgeNaming(currentSong, naming, jokersOf(placer)) : null
+      const jokers = named?.earned ? { jokers: jokersOf(placer) + 1 } : {}
       const timeline = timelineSongsFor(gameMode, placer, globalTimeline)
       const { isFirstCard, newTimeline } = evaluatePlacement(timeline, currentSong, gapIndex)
       const result = resolveChallenge(timeline, currentSong, gapIndex, claim)
@@ -287,10 +320,12 @@ export function useTurnFlow({ onGameOver, onSkipNotice }: Options) {
       if (result.outcome === 'placer') {
         if (gameMode === 'timeline_global') {
           addToGlobalTimeline(currentSong, playerIndex)
-          updatePlayer(playerIndex, { cards: placer.cards + 1 })
+          updatePlayer(playerIndex, { cards: placer.cards + 1, ...jokers })
         } else {
-          updatePlayer(playerIndex, { timeline: newTimeline, cards: placer.cards + 1 })
+          updatePlayer(playerIndex, { timeline: newTimeline, cards: placer.cards + 1, ...jokers })
         }
+      } else if (named?.earned) {
+        updatePlayer(playerIndex, jokers)
       }
 
       if (claim) {
@@ -337,14 +372,15 @@ export function useTurnFlow({ onGameOver, onSkipNotice }: Options) {
               isCorrect: Boolean(result.challengerCorrect),
               won: result.outcome === 'challenger'
             }
-          : null
+          : null,
+        naming: named
       })
     },
-    [currentSong, players, gameMode, globalTimeline, addToGlobalTimeline, updatePlayer, setPending, setReveal, book]
+    [currentSong, players, gameMode, globalTimeline, addToGlobalTimeline, updatePlayer, setPending, setReveal, book, bonus]
   )
 
   const placeCard = useCallback(
-    (gapIndex: number) => {
+    (gapIndex: number, naming: Naming | null = null) => {
       if (phase !== 'placing' || !currentSong || !activePlayer) return
       // Nobody away or gone can object
       const challengers = eligibleChallengers(players, currentPlayer, activeTimeline, {
@@ -352,10 +388,10 @@ export function useTurnFlow({ onGameOver, onSkipNotice }: Options) {
         tiebreak: Boolean(tiebreak)
       }).filter((i) => !(absent ?? []).includes(i) && !players[i]?.left)
       if (challengers.length > 0) {
-        setPending({ playerIndex: currentPlayer, gapIndex, challengers, choosing: null, claim: null })
+        setPending({ playerIndex: currentPlayer, gapIndex, challengers, choosing: null, claim: null, naming })
         return
       }
-      resolvePlacement(currentPlayer, gapIndex, null)
+      resolvePlacement(currentPlayer, gapIndex, null, naming)
     },
     [phase, currentSong, activePlayer, players, currentPlayer, activeTimeline, challengesEnabled, gameMode, tiebreak, setPending, resolvePlacement]
   )
@@ -409,7 +445,7 @@ export function useTurnFlow({ onGameOver, onSkipNotice }: Options) {
   const claimGap = useCallback(
     (gapIndex: number) => {
       if (phase !== 'challenge' || !pending || pending.choosing === null || gapIndex === pending.gapIndex) return
-      resolvePlacement(pending.playerIndex, pending.gapIndex, { playerIndex: pending.choosing, gapIndex })
+      resolvePlacement(pending.playerIndex, pending.gapIndex, { playerIndex: pending.choosing, gapIndex }, pending.naming ?? null)
     },
     [phase, pending, resolvePlacement]
   )
@@ -417,8 +453,15 @@ export function useTurnFlow({ onGameOver, onSkipNotice }: Options) {
   /** Nobody objects: turn the card over. */
   const revealPlacement = useCallback(() => {
     if (phase !== 'challenge' || !pending) return
-    resolvePlacement(pending.playerIndex, pending.gapIndex, null)
+    resolvePlacement(pending.playerIndex, pending.gapIndex, null, pending.naming ?? null)
   }, [phase, pending, resolvePlacement])
+
+  /** Bonus: spend a joker on another song (the old one counts as played). */
+  const swapSong = useCallback(() => {
+    if (phase !== 'placing' || !bonus || tiebreak || !activePlayer || activePlayer.isBot || jokersOf(activePlayer) < 1) return
+    updatePlayer(currentPlayer, { jokers: jokersOf(activePlayer) - 1 })
+    drawSong()
+  }, [phase, bonus, tiebreak, activePlayer, currentPlayer, updatePlayer, drawSong])
 
   // ── Hardcore ─────────────────────────────────────────────────────────────
   const submitGuess = useCallback(
@@ -555,6 +598,7 @@ export function useTurnFlow({ onGameOver, onSkipNotice }: Options) {
     setObjectionDeadline,
     claimGap,
     revealPlacement,
+    swapSong,
     submitGuess,
     skip,
     continueTurn,

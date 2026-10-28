@@ -145,6 +145,8 @@ const privacy: Record<Lang, LegalDoc> = {
           'Öffnest du einen Raum, speichere ich den Raumcode, die Rundenoptionen, die Plätze (Konto oder Gastname), einen verschlüsselten Platzschlüssel und den jeweils aktuellen Spielstand. Mitspielende im Raum sehen Vornamen und Profilbilder der anderen. Räume werden 12 Stunden nach der letzten Aktivität mitsamt Gastnamen und Einladungen gelöscht; das Ergebnis bleibt im Verlauf der Mitspielenden mit Konto.',
           'Gäste geben nur einen Namen ein. Für sie wird ein Cookie gesetzt, das sie ihrem Platz zuordnet (14 Stunden gültig); darüber hinaus wird für Gäste nichts gespeichert.',
           'Andere Konten findest du über einen Teil des Namens oder die genaue E-Mail-Adresse; gezeigt werden nur Name und Profilbild, E-Mail-Adressen nie. Freundschaften und Einladungen bleiben gespeichert, bis eine Seite sie entfernt oder der Raum gelöscht wird.',
+          'Spielst du die Tagesrunde, speichere ich dein Ergebnis (Tag und Punktzahl). Deine Freunde sehen es mit Name und Profilbild; nach 60 Tagen wird es gelöscht.',
+          'Meldest du einen Song („Stimmt was nicht?“), speichere ich Song, Grund, deinen freiwilligen Hinweis und dein Konto, damit ich nachfragen kann. Meldungen bleiben gespeichert, bis du dein Konto löschst.',
           'Rechtsgrundlage ist Art. 6 Abs. 1 lit. b DSGVO.'
         ]
       },
@@ -171,7 +173,7 @@ const privacy: Record<Lang, LegalDoc> = {
       {
         heading: '12. Speicherdauer und Löschen',
         body: [
-          'Dein Konto und deine Spieldaten bleiben gespeichert, bis du sie löschst. Im Profil kannst du jederzeit nur die Spieldaten oder das ganze Konto löschen; beim Löschen des Kontos entfernt der Server sofort Konto, Sitzungen, Spieldaten, Freundschaften, Einladungen und deine Räume.',
+          'Dein Konto und deine Spieldaten bleiben gespeichert, bis du sie löschst. Im Profil kannst du jederzeit nur die Spieldaten oder das ganze Konto löschen; beim Löschen des Kontos entfernt der Server sofort Konto, Sitzungen, Spieldaten, Freundschaften, Einladungen, Tagesrunden-Ergebnisse, Song-Meldungen und deine Räume.',
           'Abgelehnte und gesperrte Konten bewahre ich auf, damit die Entscheidung bei einer erneuten Anmeldung erhalten bleibt; auf Anfrage lösche ich sie.',
           'Der Server wird jede Nacht verschlüsselt gesichert; Sicherungen werden nach spätestens rund einem Monat überschrieben. Gelöschte Daten verschwinden daher spätestens dann auch aus den Sicherungen.'
         ]
@@ -260,6 +262,8 @@ const privacy: Record<Lang, LegalDoc> = {
           'When you open a room, I store the room code, the round options, the seats (account or guest name), an encrypted seat key and the current game state. People in the room see each other\'s first names and profile pictures. Rooms are deleted 12 hours after the last activity together with guest names and invitations; the result stays in the history of the players with an account.',
           'Guests only enter a name. A cookie links them to their seat (valid for 14 hours); beyond that nothing is stored for guests.',
           'You can find other accounts by part of the name or the exact e-mail address; only name and profile picture are shown, never e-mail addresses. Friendships and invitations stay stored until one side removes them or the room is deleted.',
+          'If you play the daily round, I store your result (day and score). Your friends see it with your name and profile picture; it is deleted after 60 days.',
+          'If you report a song ("Something wrong?"), I store the song, the reason, your optional note and your account so I can ask back. Reports stay stored until you delete your account.',
           'Legal basis: Art. 6 (1) (b) GDPR.'
         ]
       },
@@ -286,7 +290,7 @@ const privacy: Record<Lang, LegalDoc> = {
       {
         heading: '12. Retention and deletion',
         body: [
-          'Your account and game data are kept until you delete them. In your profile you can delete just the game data or the whole account at any time; deleting the account immediately removes account, sessions, game data, friendships, invitations and your rooms from the server.',
+          'Your account and game data are kept until you delete them. In your profile you can delete just the game data or the whole account at any time; deleting the account immediately removes account, sessions, game data, friendships, invitations, daily results, song reports and your rooms from the server.',
           'I keep rejected and blocked accounts so that the decision still applies if you sign in again; I delete them on request.',
           'The server is backed up every night in encrypted form; backups are overwritten after about a month at the latest. Deleted data therefore also disappears from the backups by then.'
         ]

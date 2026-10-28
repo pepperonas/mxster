@@ -52,7 +52,8 @@ export interface AudioCue {
 
 export type Intent =
   | { action: 'draw' }
-  | { action: 'place'; gap: number }
+  | { action: 'place'; gap: number; naming?: { title: string; artist: string } }
+  | { action: 'swap' }
   | { action: 'challenge' }
   | { action: 'claim'; gap: number }
   | { action: 'cancelChallenge' }

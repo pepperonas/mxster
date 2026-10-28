@@ -13,6 +13,7 @@ import type { TurnFlow } from '@/game/useTurnFlow'
 import { useRoom } from './RoomContext'
 import { indexOfSeat, mayAct } from './rules'
 import { blindSnapshot } from './sanitize'
+import { cleanNaming } from '@/game/bonus'
 import type { Intent, Snapshot } from './protocol'
 import type { Player } from '@/types'
 
@@ -33,7 +34,10 @@ export function carryOut(flow: TurnFlow, game: { players: Player[]; currentPlaye
       flow.drawSong()
       return true
     case 'place':
-      flow.placeCard(Number(intent.gap))
+      flow.placeCard(Number(intent.gap), cleanNaming(intent.naming))
+      return true
+    case 'swap':
+      flow.swapSong()
       return true
     case 'challenge':
       flow.startChallenge(indexOfSeat(game.players, seat))

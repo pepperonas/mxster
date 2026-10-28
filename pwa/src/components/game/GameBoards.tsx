@@ -12,6 +12,7 @@ import { useGame, useSettings } from '@/contexts'
 import type { Player } from '@/types'
 import { spring } from '@/motion/springs'
 import { AnimatedNumber } from '@/components/ui/AnimatedNumber'
+import type { Song } from '@/types'
 import { TimelineBoard, type BoardReveal } from './TimelineBoard'
 import { initialOf } from '@/game/teams'
 import { useMessages } from '@/i18n'
@@ -31,6 +32,8 @@ interface GameBoardsProps {
   placedGap?: number | null
   placedBy?: string
   previewIsChallenge?: boolean
+  /** The card in play as the table may see it (bonus option hides title and artist). */
+  pendingSong?: Song | null
 }
 
 export function GameBoards({
@@ -44,10 +47,13 @@ export function GameBoards({
   boardRef,
   placedGap = null,
   placedBy,
-  previewIsChallenge = false
+  previewIsChallenge = false,
+  pendingSong
 }: GameBoardsProps) {
   const t = useMessages(gameText)
-  const { players, currentPlayer, gameMode, globalTimeline, currentSong, goal } = useGame()
+  const { players, currentPlayer, gameMode, globalTimeline, currentSong: songInPlay, goal } = useGame()
+  // The card as the table sees it (bonus option: title and artist hidden)
+  const currentSong = pendingSong === undefined ? songInPlay : pendingSong
   const challengeProps = { placedGap, placedBy, previewIsChallenge, onPreviewMove: onGapSelect, onHoverGap }
   const { settings } = useSettings()
   const hideYears = Boolean(settings.hideYearsInTimeline)

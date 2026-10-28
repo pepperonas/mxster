@@ -65,6 +65,16 @@ def notify_new_request(name: str, email: str, method: str = "Google") -> None:
     )
 
 
+def notify_song_report(song_id: str, reason: str, note: str, by: str) -> None:
+    """First open report on a song: tell the admin (later ones only count up)."""
+    s = get_settings()
+    send_later(
+        s.notify_email,
+        f"mxtape: Song {song_id} gemeldet",
+        f"{by} meldet {song_id} ({reason})." + (f"\n\n  „{note}“" if note else "") + f"\n\nAnsehen: {_url('/admin')}\n",
+    )
+
+
 _SIGN = {"de": "\n\nmxtape\n{url}\n", "en": "\n\nmxtape\n{url}\n"}
 
 

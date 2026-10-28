@@ -7,7 +7,8 @@
     "album": "Whenever You Need Somebody",
     "spotifyId": "4PTG3Z6ehGkBFwjybzWkR8",
     "previewUrl": "https://mxtape.celox.io/audio/song_000.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "party": true
   },
   {
     "id": "song_001",
@@ -17,7 +18,8 @@
     "album": "A Night at the Opera",
     "spotifyId": "4u7EnebtmKWzUH433cf5Qv",
     "previewUrl": "https://mxtape.celox.io/audio/song_001.m4a",
-    "genre": "Rock"
+    "genre": "Rock",
+    "startMs": 2000
   },
   {
     "id": "song_002",
@@ -27,7 +29,8 @@
     "album": "Thriller",
     "spotifyId": "5ChkMS8OtdzJeqyybCc9R5",
     "previewUrl": "https://mxtape.celox.io/audio/song_002.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "party": true
   },
   {
     "id": "song_003",
@@ -37,7 +40,9 @@
     "album": "Like a Prayer",
     "spotifyId": "0apQVuKL33S64ivuHUQrQ3",
     "previewUrl": "https://mxtape.celox.io/audio/song_003.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "startMs": 2000,
+    "party": true
   },
   {
     "id": "song_004",
@@ -47,7 +52,8 @@
     "album": "Nevermind",
     "spotifyId": "4CeeEOM32jQcH3eN9Q2dGj",
     "previewUrl": "https://mxtape.celox.io/audio/song_004.m4a",
-    "genre": "Rock"
+    "genre": "Rock",
+    "startMs": 7500
   },
   {
     "id": "song_005",
@@ -57,7 +63,8 @@
     "album": "(What's the Story) Morning Glory?",
     "spotifyId": "5qqabIl2vWzo9ApSC317sa",
     "previewUrl": "https://mxtape.celox.io/audio/song_005.m4a",
-    "genre": "Rock"
+    "genre": "Rock",
+    "startMs": 38000
   },
   {
     "id": "song_006",
@@ -67,7 +74,8 @@
     "album": "The Raw & the Cooked",
     "spotifyId": "4d6eqRtpDX7tydHJGDZUBQ",
     "previewUrl": "https://mxtape.celox.io/audio/song_006.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "startMs": 2500
   },
   {
     "id": "song_007",
@@ -77,7 +85,8 @@
     "album": "Madonna",
     "spotifyId": "7arHM2KZ0KzIZXFVDRGClI",
     "previewUrl": "https://mxtape.celox.io/audio/song_007.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "startMs": 2000
   },
   {
     "id": "song_008",
@@ -87,7 +96,8 @@
     "album": "Tell It to My Heart",
     "spotifyId": "0uyoXwOQ3U5tGfNNmR5Y1p",
     "previewUrl": "https://mxtape.celox.io/audio/song_008.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "startMs": 1500
   },
   {
     "id": "song_009",
@@ -97,7 +107,8 @@
     "album": "Whoa, Nelly!",
     "spotifyId": "2aGw77pZqli064JiPuXYRi",
     "previewUrl": "https://mxtape.celox.io/audio/song_009.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "startMs": 3500
   },
   {
     "id": "song_010",
@@ -118,7 +129,8 @@
     "album": "Volcano",
     "spotifyId": "19kHhX6f6EfLU7rcO3RqjO",
     "previewUrl": "https://mxtape.celox.io/audio/song_011.m4a",
-    "genre": "Soul"
+    "genre": "Soul",
+    "startMs": 3500
   },
   {
     "id": "song_012",
@@ -128,7 +140,8 @@
     "album": "Prince",
     "spotifyId": "4yrM5BVyJzy5Ed4GPO6e8j",
     "previewUrl": "https://mxtape.celox.io/audio/song_012.m4a",
-    "genre": "R&B"
+    "genre": "R&B",
+    "startMs": 1500
   },
   {
     "id": "song_013",
@@ -159,7 +172,8 @@
     "album": "Jason Derülo",
     "spotifyId": "7xkQdy0cy5ymoWT7nedvLz",
     "previewUrl": "https://mxtape.celox.io/audio/song_015.m4a",
-    "genre": "R&B"
+    "genre": "R&B",
+    "startMs": 3500
   },
   {
     "id": "song_016",
@@ -169,7 +183,8 @@
     "album": "Random Access Memories",
     "spotifyId": "0oks4FnzhNp5QPTZtoet7c",
     "previewUrl": "https://mxtape.celox.io/audio/song_016.m4a",
-    "genre": "Electronic"
+    "genre": "Electronic",
+    "startMs": 7000
   },
   {
     "id": "song_017",
@@ -179,7 +194,8 @@
     "album": "Seven Inches of Satanic Panic",
     "spotifyId": "2HZLXBOnaSRhXStMLrq9fD",
     "previewUrl": "https://mxtape.celox.io/audio/song_017.m4a",
-    "genre": "Metal"
+    "genre": "Metal",
+    "startMs": 4000
   },
   {
     "id": "song_018",
@@ -210,7 +226,8 @@
     "album": "Like a Prayer",
     "spotifyId": "5xAeXQqVX1eVC9ev9p5Ckv",
     "previewUrl": "https://mxtape.celox.io/audio/song_020.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "startMs": 10000
   },
   {
     "id": "song_021",
@@ -221,7 +238,8 @@
     "spotifyId": "0xIdZ9u8lIGYl54UNOlFMn",
     "previewUrl": "https://mxtape.celox.io/audio/song_021.m4a",
     "genre": "Electronic",
-    "exotic": true
+    "exotic": true,
+    "startMs": 8000
   },
   {
     "id": "song_022",
@@ -231,7 +249,8 @@
     "album": "Human Racing",
     "spotifyId": "00FDHurakzVEiPutdUxXXq",
     "previewUrl": "https://mxtape.celox.io/audio/song_022.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "startMs": 24000
   },
   {
     "id": "song_023",
@@ -241,7 +260,8 @@
     "album": "Into the Great Wide Open",
     "spotifyId": "17S4XrLvF5jlGvGCJHgF51",
     "previewUrl": "https://mxtape.celox.io/audio/song_023.m4a",
-    "genre": "Rock"
+    "genre": "Rock",
+    "startMs": 1500
   },
   {
     "id": "song_024",
@@ -251,7 +271,8 @@
     "album": "Rumours",
     "spotifyId": "0ofHAoxe9vBkTCp2UQIavz",
     "previewUrl": "https://mxtape.celox.io/audio/song_024.m4a",
-    "genre": "Rock"
+    "genre": "Rock",
+    "startMs": 2000
   },
   {
     "id": "song_025",
@@ -261,7 +282,8 @@
     "album": "200 km/h in the Wrong Lane",
     "spotifyId": "4bJygwUKrRgq1stlNXcgMg",
     "previewUrl": "https://mxtape.celox.io/audio/song_025.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "startMs": 11000
   },
   {
     "id": "song_026",
@@ -271,7 +293,8 @@
     "album": "The Eminem Show",
     "spotifyId": "4woTEX1wYOTGDqNXuavlRC",
     "previewUrl": "https://mxtape.celox.io/audio/song_026.m4a",
-    "genre": "Hip-Hop"
+    "genre": "Hip-Hop",
+    "startMs": 5000
   },
   {
     "id": "song_027",
@@ -335,7 +358,8 @@
     "album": "Metallica",
     "spotifyId": "5SnOyuBtyzufoXBAKOdcxD",
     "previewUrl": "https://mxtape.celox.io/audio/song_032.m4a",
-    "genre": "Metal"
+    "genre": "Metal",
+    "startMs": 3500
   },
   {
     "id": "song_033",
@@ -356,7 +380,9 @@
     "album": "Europop",
     "spotifyId": "5FgtdSf7I5lClThz2ptWvl",
     "previewUrl": "https://mxtape.celox.io/audio/song_034.m4a",
-    "genre": "Electronic"
+    "genre": "Electronic",
+    "startMs": 1500,
+    "party": true
   },
   {
     "id": "song_035",
@@ -366,7 +392,8 @@
     "album": "Stankonia",
     "spotifyId": "0I3q5fE6wg7LIfHGngUTnV",
     "previewUrl": "https://mxtape.celox.io/audio/song_035.m4a",
-    "genre": "Hip-Hop"
+    "genre": "Hip-Hop",
+    "startMs": 3500
   },
   {
     "id": "song_036",
@@ -398,7 +425,8 @@
     "spotifyId": "5xFw5Kw4hqhcwXXjFOZKIw",
     "previewUrl": "https://mxtape.celox.io/audio/song_038.m4a",
     "genre": "Pop",
-    "exotic": true
+    "exotic": true,
+    "startMs": 1500
   },
   {
     "id": "song_039",
@@ -420,7 +448,9 @@
     "spotifyId": "5MmXILyuHEWAQ0IqYHwm1G",
     "previewUrl": "https://mxtape.celox.io/audio/song_040.m4a",
     "genre": "Rock",
-    "exotic": true
+    "exotic": true,
+    "startMs": 4000,
+    "german": true
   },
   {
     "id": "song_041",
@@ -431,7 +461,8 @@
     "spotifyId": "51lq1JlxFQztlTJpJYsyWL",
     "previewUrl": "https://mxtape.celox.io/audio/song_041.m4a",
     "genre": "Electronic",
-    "exotic": true
+    "exotic": true,
+    "startMs": 4000
   },
   {
     "id": "song_042",
@@ -463,7 +494,8 @@
     "spotifyId": "3nuSWxFEkdtGiP9huP3NoH",
     "previewUrl": "https://mxtape.celox.io/audio/song_044.m4a",
     "genre": "Electronic",
-    "exotic": true
+    "exotic": true,
+    "startMs": 4500
   },
   {
     "id": "song_045",
@@ -474,7 +506,8 @@
     "spotifyId": "5TaNnFsq2RSPHpsb8euzib",
     "previewUrl": "https://mxtape.celox.io/audio/song_045.m4a",
     "genre": "Electronic",
-    "exotic": true
+    "exotic": true,
+    "startMs": 1500
   },
   {
     "id": "song_046",
@@ -484,7 +517,9 @@
     "album": "Gimme! Gimme! Gimme! (A Man After Midnight)",
     "spotifyId": "3vkQ5DAB1qQMYO4Mr9zJN6",
     "previewUrl": "https://mxtape.celox.io/audio/song_046.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "startMs": 2500,
+    "party": true
   },
   {
     "id": "song_047",
@@ -494,7 +529,9 @@
     "album": "Falco 3",
     "spotifyId": "6a0lr0jt8lKDJhsAYA49NS",
     "previewUrl": "https://mxtape.celox.io/audio/song_047.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "startMs": 5000,
+    "german": true
   },
   {
     "id": "song_048",
@@ -505,7 +542,9 @@
     "spotifyId": "5hZQIDpkhRxKez0j8TZvoG",
     "previewUrl": "https://mxtape.celox.io/audio/song_048.m4a",
     "genre": "Pop",
-    "exotic": true
+    "exotic": true,
+    "startMs": 9000,
+    "german": true
   },
   {
     "id": "song_049",
@@ -516,7 +555,8 @@
     "spotifyId": "7rwPVahewLXhDGKUjfbzU3",
     "previewUrl": "https://mxtape.celox.io/audio/song_049.m4a",
     "genre": "R&B",
-    "exotic": true
+    "exotic": true,
+    "startMs": 9000
   },
   {
     "id": "song_050",
@@ -556,7 +596,8 @@
     "album": "Whitney Houston",
     "spotifyId": "5tdKaKLnC4SgtDZ6RlWeal",
     "previewUrl": "https://mxtape.celox.io/audio/song_053.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "startMs": 3000
   },
   {
     "id": "song_054",
@@ -577,7 +618,8 @@
     "album": "Born to Run",
     "spotifyId": "6hTcuIQa0sxrrByu9wTD7s",
     "previewUrl": "https://mxtape.celox.io/audio/song_055.m4a",
-    "genre": "Rock"
+    "genre": "Rock",
+    "startMs": 3000
   },
   {
     "id": "song_056",
@@ -587,7 +629,8 @@
     "album": "Human Racing",
     "spotifyId": "65YtzNpiPhGVzg6GPzkotn",
     "previewUrl": "https://mxtape.celox.io/audio/song_056.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "startMs": 2000
   },
   {
     "id": "song_057",
@@ -617,7 +660,8 @@
     "album": "Rumours",
     "spotifyId": "07GvNcU1WdyZJq3XxP0kZa",
     "previewUrl": "https://mxtape.celox.io/audio/song_059.m4a",
-    "genre": "Rock"
+    "genre": "Rock",
+    "startMs": 3500
   },
   {
     "id": "song_060",
@@ -627,7 +671,9 @@
     "album": "Hunting High and Low",
     "spotifyId": "2WfaOiMkCvy7F5fcp2zZ8L",
     "previewUrl": "https://mxtape.celox.io/audio/song_060.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "startMs": 3000,
+    "party": true
   },
   {
     "id": "song_061",
@@ -647,7 +693,8 @@
     "album": "Clandestino",
     "spotifyId": "00SmB7n85SKROGjybsyq5i",
     "previewUrl": "https://mxtape.celox.io/audio/song_062.m4a",
-    "genre": "Reggae"
+    "genre": "Reggae",
+    "startMs": 6000
   },
   {
     "id": "song_063",
@@ -657,7 +704,8 @@
     "album": "Hear My Cry",
     "spotifyId": "39TChHld3lrragesFXhdkc",
     "previewUrl": "https://mxtape.celox.io/audio/song_063.m4a",
-    "genre": "Electronic"
+    "genre": "Electronic",
+    "startMs": 13000
   },
   {
     "id": "song_064",
@@ -667,7 +715,8 @@
     "album": "Oracular Spectacular",
     "spotifyId": "1jJci4qxiYcOHhQR247rEU",
     "previewUrl": "https://mxtape.celox.io/audio/song_064.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "startMs": 11500
   },
   {
     "id": "song_065",
@@ -677,7 +726,9 @@
     "album": "Am Wasser gebaut",
     "spotifyId": "5gUXZV2Ir17qOWdtUJSh7l",
     "previewUrl": "https://mxtape.celox.io/audio/song_065.m4a",
-    "genre": "Hip-Hop"
+    "genre": "Hip-Hop",
+    "startMs": 3500,
+    "german": true
   },
   {
     "id": "song_066",
@@ -687,7 +738,9 @@
     "album": "Sexismus gegen Rechts",
     "spotifyId": "3CFfSQD1HTpn2eeGu9xY7J",
     "previewUrl": "https://mxtape.celox.io/audio/song_066.m4a",
-    "genre": "Hip-Hop"
+    "genre": "Hip-Hop",
+    "startMs": 5000,
+    "german": true
   },
   {
     "id": "song_067",
@@ -697,7 +750,8 @@
     "album": "Triebwerke",
     "spotifyId": "3FcqFCeCD6QRtRo6WGLCnC",
     "previewUrl": "https://mxtape.celox.io/audio/song_067.m4a",
-    "genre": "Hip-Hop"
+    "genre": "Hip-Hop",
+    "german": true
   },
   {
     "id": "song_068",
@@ -717,7 +771,8 @@
     "album": "Das ist nicht die ganze Wahrheit…",
     "spotifyId": "5aWpvFnByyWodgqYlC9kha",
     "previewUrl": "https://mxtape.celox.io/audio/song_069.m4a",
-    "genre": "Rock"
+    "genre": "Rock",
+    "german": true
   },
   {
     "id": "song_070",
@@ -727,7 +782,9 @@
     "album": "Fehler im System",
     "spotifyId": "6lXKNdOsnaLv9LwulZbxNl",
     "previewUrl": "https://mxtape.celox.io/audio/song_070.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "startMs": 6000,
+    "german": true
   },
   {
     "id": "song_071",
@@ -748,7 +805,8 @@
     "spotifyId": "0a2LIqhveniOMVXt1BzQKR",
     "previewUrl": "https://mxtape.celox.io/audio/song_072.m4a",
     "genre": "Electronic",
-    "exotic": true
+    "exotic": true,
+    "startMs": 1500
   },
   {
     "id": "song_073",
@@ -758,7 +816,9 @@
     "album": "Sehnsucht",
     "spotifyId": "0xrkyEMkG4dVa5OMLQZOX8",
     "previewUrl": "https://mxtape.celox.io/audio/song_073.m4a",
-    "genre": "Metal"
+    "genre": "Metal",
+    "startMs": 7000,
+    "german": true
   },
   {
     "id": "song_074",
@@ -768,7 +828,8 @@
     "album": "Oracular Spectacular",
     "spotifyId": "3FtYbEfBqAlGO46NUDQSAt",
     "previewUrl": "https://mxtape.celox.io/audio/song_074.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "startMs": 2500
   },
   {
     "id": "song_075",
@@ -778,7 +839,9 @@
     "album": "Triebwerke",
     "spotifyId": "1EC0COi0MYuxILNfvvVIkI",
     "previewUrl": "https://mxtape.celox.io/audio/song_075.m4a",
-    "genre": "Hip-Hop"
+    "genre": "Hip-Hop",
+    "startMs": 16000,
+    "german": true
   },
   {
     "id": "song_076",
@@ -789,7 +852,8 @@
     "spotifyId": "7za2bHIESAb7RVIhQzwn6H",
     "previewUrl": "https://mxtape.celox.io/audio/song_076.m4a",
     "genre": "Electronic",
-    "exotic": true
+    "exotic": true,
+    "startMs": 7500
   },
   {
     "id": "song_077",
@@ -810,7 +874,8 @@
     "album": "Inhuman Rampage",
     "spotifyId": "1UMdbkqX19OiwfExH7gzYA",
     "previewUrl": "https://mxtape.celox.io/audio/song_078.m4a",
-    "genre": "Metal"
+    "genre": "Metal",
+    "startMs": 1500
   },
   {
     "id": "song_079",
@@ -820,7 +885,9 @@
     "album": "Mensch",
     "spotifyId": "2urspvjqMlyq8JVAudN3DK",
     "previewUrl": "https://mxtape.celox.io/audio/song_079.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "startMs": 3000,
+    "german": true
   },
   {
     "id": "song_080",
@@ -830,7 +897,8 @@
     "album": "Scatman's World",
     "spotifyId": "623rRTKwGmgjH6sjE9uWLh",
     "previewUrl": "https://mxtape.celox.io/audio/song_080.m4a",
-    "genre": "Electronic"
+    "genre": "Electronic",
+    "party": true
   },
   {
     "id": "song_081",
@@ -840,7 +908,9 @@
     "album": "Serenity",
     "spotifyId": "2rTYgHxgcndkUrRoU7x0Sv",
     "previewUrl": "https://mxtape.celox.io/audio/song_081.m4a",
-    "genre": "Electronic"
+    "genre": "Electronic",
+    "startMs": 7000,
+    "party": true
   },
   {
     "id": "song_082",
@@ -861,7 +931,8 @@
     "album": "Stompin' at the Savoy",
     "spotifyId": "2NVpYQqdraEcQwqT7GhUkh",
     "previewUrl": "https://mxtape.celox.io/audio/song_083.m4a",
-    "genre": "R&B"
+    "genre": "R&B",
+    "startMs": 4500
   },
   {
     "id": "song_084",
@@ -871,7 +942,8 @@
     "album": "Forever Young",
     "spotifyId": "3BZGi1yUqQyCNC868AqUGG",
     "previewUrl": "https://mxtape.celox.io/audio/song_084.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "startMs": 5500
   },
   {
     "id": "song_085",
@@ -881,7 +953,8 @@
     "album": "Self Control",
     "spotifyId": "6JNJERZGJwDVgkmbohBw7u",
     "previewUrl": "https://mxtape.celox.io/audio/song_085.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "startMs": 2500
   },
   {
     "id": "song_086",
@@ -901,7 +974,8 @@
     "album": "Toto IV",
     "spotifyId": "2374M0fQpWi3dLnB54qaLX",
     "previewUrl": "https://mxtape.celox.io/audio/song_087.m4a",
-    "genre": "Rock"
+    "genre": "Rock",
+    "startMs": 3500
   },
   {
     "id": "song_088",
@@ -911,7 +985,8 @@
     "album": "Babacar",
     "spotifyId": "67CfbIKKTCKFqmQLJwUftX",
     "previewUrl": "https://mxtape.celox.io/audio/song_088.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "startMs": 1500
   },
   {
     "id": "song_089",
@@ -921,7 +996,8 @@
     "album": "Tracy Chapman",
     "spotifyId": "2M9ro2krNb7nr7HSprkEgo",
     "previewUrl": "https://mxtape.celox.io/audio/song_089.m4a",
-    "genre": "Rock"
+    "genre": "Rock",
+    "startMs": 2000
   },
   {
     "id": "song_090",
@@ -931,7 +1007,8 @@
     "album": "All or Nothing",
     "spotifyId": "0C7dYeCLF6ukChtW64UNge",
     "previewUrl": "https://mxtape.celox.io/audio/song_090.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "party": true
   },
   {
     "id": "song_091",
@@ -941,7 +1018,8 @@
     "album": "Face Value",
     "spotifyId": "18AXbzPzBS8Y3AkgSxzJPb",
     "previewUrl": "https://mxtape.celox.io/audio/song_091.m4a",
-    "genre": "Rock"
+    "genre": "Rock",
+    "startMs": 15500
   },
   {
     "id": "song_092",
@@ -961,7 +1039,9 @@
     "album": "In Stereo",
     "spotifyId": "2vlgOAH3M8Fmo19wOjeRyw",
     "previewUrl": "https://mxtape.celox.io/audio/song_093.m4a",
-    "genre": "Hip-Hop"
+    "genre": "Hip-Hop",
+    "startMs": 4000,
+    "party": true
   },
   {
     "id": "song_094",
@@ -971,7 +1051,8 @@
     "album": "Elegant Slumming",
     "spotifyId": "6vGW3d8X48CBaLdU0PQbey",
     "previewUrl": "https://mxtape.celox.io/audio/song_094.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "startMs": 9000
   },
   {
     "id": "song_095",
@@ -981,7 +1062,8 @@
     "album": "Sweet Dreams",
     "spotifyId": "3vSn1frPgFcRXrjWOfhMLl",
     "previewUrl": "https://mxtape.celox.io/audio/song_095.m4a",
-    "genre": "Electronic"
+    "genre": "Electronic",
+    "party": true
   },
   {
     "id": "song_096",
@@ -1011,7 +1093,8 @@
     "album": "Double Wide",
     "spotifyId": "4KoecuyOpZaNFZ0UqVsllc",
     "previewUrl": "https://mxtape.celox.io/audio/song_098.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "startMs": 12500
   },
   {
     "id": "song_099",
@@ -1031,7 +1114,8 @@
     "album": "Desireless",
     "spotifyId": "2hdhm6piUJnmKXmEmskXCg",
     "previewUrl": "https://mxtape.celox.io/audio/song_100.m4a",
-    "genre": "Rock"
+    "genre": "Rock",
+    "startMs": 3500
   },
   {
     "id": "song_101",
@@ -1072,7 +1156,8 @@
     "spotifyId": "2ffCT6Pe2LYriwN2Y5ObIg",
     "previewUrl": "https://mxtape.celox.io/audio/song_105.m4a",
     "genre": "Soul",
-    "exotic": true
+    "exotic": true,
+    "startMs": 1500
   },
   {
     "id": "song_106",
@@ -1092,7 +1177,8 @@
     "album": "The Preacher's Wife",
     "spotifyId": "5dEBcymDDG9TUjJnAouOPp",
     "previewUrl": "https://mxtape.celox.io/audio/song_107.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "startMs": 3500
   },
   {
     "id": "song_108",
@@ -1123,7 +1209,8 @@
     "album": "Come Along",
     "spotifyId": "7GmHOAdriOnI9s5S79GAUr",
     "previewUrl": "https://mxtape.celox.io/audio/song_110.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "startMs": 8000
   },
   {
     "id": "song_111",
@@ -1133,7 +1220,8 @@
     "album": "Dead Letters",
     "spotifyId": "1fr92Vupmcs2vgLMFVQ7rd",
     "previewUrl": "https://mxtape.celox.io/audio/song_111.m4a",
-    "genre": "Rock"
+    "genre": "Rock",
+    "startMs": 11500
   },
   {
     "id": "song_112",
@@ -1143,7 +1231,8 @@
     "album": "Desire",
     "spotifyId": "6ou0PY1UD7gdRnHbbyiHaA",
     "previewUrl": "https://mxtape.celox.io/audio/song_112.m4a",
-    "genre": "Electronic"
+    "genre": "Electronic",
+    "startMs": 7500
   },
   {
     "id": "song_113",
@@ -1153,7 +1242,8 @@
     "album": "Senderos de traición",
     "spotifyId": "4rJdaSwOCHLBhxdMsymeMw",
     "previewUrl": "https://mxtape.celox.io/audio/song_113.m4a",
-    "genre": "Rock"
+    "genre": "Rock",
+    "startMs": 31000
   },
   {
     "id": "song_114",
@@ -1163,7 +1253,9 @@
     "album": "L'Amour Toujours",
     "spotifyId": "0ZqveF2rEFlz2oqF2xrriP",
     "previewUrl": "https://mxtape.celox.io/audio/song_114.m4a",
-    "genre": "Electronic"
+    "genre": "Electronic",
+    "startMs": 8000,
+    "party": true
   },
   {
     "id": "song_115",
@@ -1174,7 +1266,8 @@
     "spotifyId": "593pYRPHQ17uYUECWqEEEL",
     "previewUrl": "https://mxtape.celox.io/audio/song_115.m4a",
     "genre": "Electronic",
-    "exotic": true
+    "exotic": true,
+    "startMs": 25500
   },
   {
     "id": "song_116",
@@ -1184,7 +1277,8 @@
     "album": "Happy Nation",
     "spotifyId": "6kWJvPfC4DgUpRsXKNa9z9",
     "previewUrl": "https://mxtape.celox.io/audio/song_116.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "party": true
   },
   {
     "id": "song_117",
@@ -1194,7 +1288,8 @@
     "album": "One Love",
     "spotifyId": "2qjDNbgLzfBpCvDwfw11Qg",
     "previewUrl": "https://mxtape.celox.io/audio/song_117.m4a",
-    "genre": "Electronic"
+    "genre": "Electronic",
+    "party": true
   },
   {
     "id": "song_118",
@@ -1204,7 +1299,8 @@
     "album": "The Madman's Return",
     "spotifyId": "5uFYYOyT3EclOVhiFzPJSz",
     "previewUrl": "https://mxtape.celox.io/audio/song_118.m4a",
-    "genre": "Electronic"
+    "genre": "Electronic",
+    "party": true
   },
   {
     "id": "song_119",
@@ -1215,7 +1311,9 @@
     "spotifyId": "1tVhmi6ltumhZtd1pM8Tya",
     "previewUrl": "https://mxtape.celox.io/audio/song_119.m4a",
     "genre": "Hip-Hop",
-    "exotic": true
+    "exotic": true,
+    "startMs": 11500,
+    "german": true
   },
   {
     "id": "song_120",
@@ -1225,7 +1323,8 @@
     "album": "M.O.",
     "spotifyId": "7rbWpbXVwY2DFrZpWYPtVj",
     "previewUrl": "https://mxtape.celox.io/audio/song_120.m4a",
-    "genre": "Hip-Hop"
+    "genre": "Hip-Hop",
+    "startMs": 4000
   },
   {
     "id": "song_121",
@@ -1245,7 +1344,8 @@
     "album": "John Wesley Harding",
     "spotifyId": "0Fnb2pfBfu0ka33d6Yki17",
     "previewUrl": "https://mxtape.celox.io/audio/song_122.m4a",
-    "genre": "Rock"
+    "genre": "Rock",
+    "startMs": 2500
   },
   {
     "id": "song_123",
@@ -1265,7 +1365,8 @@
     "album": "Nowhere Else",
     "spotifyId": "0eTScHHJpojI1zWkbwelg2",
     "previewUrl": "https://mxtape.celox.io/audio/song_124.m4a",
-    "genre": "Electronic"
+    "genre": "Electronic",
+    "startMs": 33500
   },
   {
     "id": "song_125",
@@ -1276,7 +1377,8 @@
     "spotifyId": "4xVtkEmgVrqKqiowB8NA9E",
     "previewUrl": "https://mxtape.celox.io/audio/song_125.m4a",
     "genre": "Electronic",
-    "exotic": true
+    "exotic": true,
+    "startMs": 40000
   },
   {
     "id": "song_126",
@@ -1308,7 +1410,8 @@
     "spotifyId": "56ev3tFYAzuMEUIKUhLcTO",
     "previewUrl": "https://mxtape.celox.io/audio/song_128.m4a",
     "genre": "Electronic",
-    "exotic": true
+    "exotic": true,
+    "german": true
   },
   {
     "id": "song_129",
@@ -1318,7 +1421,8 @@
     "album": "Play",
     "spotifyId": "0jpk88zk40MjQ63ljrq7V2",
     "previewUrl": "https://mxtape.celox.io/audio/song_129.m4a",
-    "genre": "Electronic"
+    "genre": "Electronic",
+    "startMs": 1500
   },
   {
     "id": "song_130",
@@ -1328,7 +1432,8 @@
     "album": "8 Mile",
     "spotifyId": "7MJQ9Nfxzh8LPZ9e9u68Fq",
     "previewUrl": "https://mxtape.celox.io/audio/song_130.m4a",
-    "genre": "Hip-Hop"
+    "genre": "Hip-Hop",
+    "startMs": 31500
   },
   {
     "id": "song_131",
@@ -1338,7 +1443,8 @@
     "album": "Enema of the State",
     "spotifyId": "2m1hi0nfMR9vdGC8UcrnwU",
     "previewUrl": "https://mxtape.celox.io/audio/song_131.m4a",
-    "genre": "Rock"
+    "genre": "Rock",
+    "startMs": 1500
   },
   {
     "id": "song_132",
@@ -1359,7 +1465,8 @@
     "spotifyId": "22P9rbM3of2anwOn9kz520",
     "previewUrl": "https://mxtape.celox.io/audio/song_133.m4a",
     "genre": "Soul",
-    "exotic": true
+    "exotic": true,
+    "startMs": 11500
   },
   {
     "id": "song_134",
@@ -1369,7 +1476,8 @@
     "album": "Sugarhill Gang",
     "spotifyId": "0tm6gsXe0LSm9zeSspyMQu",
     "previewUrl": "https://mxtape.celox.io/audio/song_134.m4a",
-    "genre": "Hip-Hop"
+    "genre": "Hip-Hop",
+    "startMs": 2000
   },
   {
     "id": "song_135",
@@ -1413,7 +1521,8 @@
     "spotifyId": "0kjRETCIY4HVUYlsPXvHXA",
     "previewUrl": "https://mxtape.celox.io/audio/song_138.m4a",
     "genre": "Electronic",
-    "exotic": true
+    "exotic": true,
+    "startMs": 2000
   },
   {
     "id": "song_139",
@@ -1444,7 +1553,8 @@
     "album": "Play Deep",
     "spotifyId": "4oDZ5L8izBals6jKBJDBcX",
     "previewUrl": "https://mxtape.celox.io/audio/song_141.m4a",
-    "genre": "Rock"
+    "genre": "Rock",
+    "startMs": 7000
   },
   {
     "id": "song_142",
@@ -1466,7 +1576,8 @@
     "spotifyId": "351hT2qfzHywu9sanfSn9o",
     "previewUrl": "https://mxtape.celox.io/audio/song_143.m4a",
     "genre": "Electronic",
-    "exotic": true
+    "exotic": true,
+    "startMs": 2000
   },
   {
     "id": "song_144",
@@ -1486,7 +1597,8 @@
     "album": "Christopher Cross",
     "spotifyId": "7gUMShP1l20tC0xf17Zplk",
     "previewUrl": "https://mxtape.celox.io/audio/song_145.m4a",
-    "genre": "Rock"
+    "genre": "Rock",
+    "startMs": 2000
   },
   {
     "id": "song_146",
@@ -1526,7 +1638,8 @@
     "album": "Millennium",
     "spotifyId": "47BBI51FKFwOMlIiX6m8ya",
     "previewUrl": "https://mxtape.celox.io/audio/song_149.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "party": true
   },
   {
     "id": "song_150",
@@ -1536,7 +1649,9 @@
     "album": "The Fame Monster",
     "spotifyId": "0SiywuOBRcynK0uKGWdCnn",
     "previewUrl": "https://mxtape.celox.io/audio/song_150.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "startMs": 13000,
+    "party": true
   },
   {
     "id": "song_151",
@@ -1546,7 +1661,8 @@
     "album": "Die Bestie in Menschengestalt",
     "spotifyId": "4P4PHxZQ1FcwQKKnfEPsAZ",
     "previewUrl": "https://mxtape.celox.io/audio/song_151.m4a",
-    "genre": "Rock"
+    "genre": "Rock",
+    "german": true
   },
   {
     "id": "song_152",
@@ -1556,7 +1672,9 @@
     "album": "Eye of the Tiger",
     "spotifyId": "2KH16WveTQWT6KOG9Rg6e2",
     "previewUrl": "https://mxtape.celox.io/audio/song_152.m4a",
-    "genre": "Rock"
+    "genre": "Rock",
+    "startMs": 3000,
+    "party": true
   },
   {
     "id": "song_153",
@@ -1576,7 +1694,9 @@
     "album": "Nena",
     "spotifyId": "2IJftBfq7pJ43tfnOR0RB3",
     "previewUrl": "https://mxtape.celox.io/audio/song_154.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "german": true,
+    "party": true
   },
   {
     "id": "song_155",
@@ -1586,7 +1706,8 @@
     "album": "1989",
     "spotifyId": "0cqRj7pUJDkTCEsJkx8snD",
     "previewUrl": "https://mxtape.celox.io/audio/song_155.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "party": true
   },
   {
     "id": "song_156",
@@ -1596,7 +1717,9 @@
     "album": "She's So Unusual",
     "spotifyId": "4y1LsJpmMti1PfRQV9AWWe",
     "previewUrl": "https://mxtape.celox.io/audio/song_156.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "startMs": 7000,
+    "party": true
   },
   {
     "id": "song_157",
@@ -1606,7 +1729,8 @@
     "album": "Highway 61 Revisited",
     "spotifyId": "3AhXZa8sUQht0UEdBJgpGc",
     "previewUrl": "https://mxtape.celox.io/audio/song_157.m4a",
-    "genre": "Rock"
+    "genre": "Rock",
+    "startMs": 1500
   },
   {
     "id": "song_158",
@@ -1616,7 +1740,8 @@
     "album": "Aftermath",
     "spotifyId": "63T7DJ1AFDD6Bn8VzG6JE8",
     "previewUrl": "https://mxtape.celox.io/audio/song_158.m4a",
-    "genre": "Rock"
+    "genre": "Rock",
+    "startMs": 8000
   },
   {
     "id": "song_159",
@@ -1626,7 +1751,8 @@
     "album": "Elephant",
     "spotifyId": "3dPQuX8Gs42Y7b454ybpMR",
     "previewUrl": "https://mxtape.celox.io/audio/song_159.m4a",
-    "genre": "Rock"
+    "genre": "Rock",
+    "startMs": 3000
   },
   {
     "id": "song_160",
@@ -1636,7 +1762,8 @@
     "album": "Second Helping",
     "spotifyId": "7e89621JPkKaeDSTQ3avtg",
     "previewUrl": "https://mxtape.celox.io/audio/song_160.m4a",
-    "genre": "Rock"
+    "genre": "Rock",
+    "startMs": 3500
   },
   {
     "id": "song_161",
@@ -1646,7 +1773,8 @@
     "album": "C'est Chic",
     "spotifyId": "4qL9VYPB4XwJKAOq4xn2Mh",
     "previewUrl": "https://mxtape.celox.io/audio/song_161.m4a",
-    "genre": "Soul"
+    "genre": "Soul",
+    "startMs": 2500
   },
   {
     "id": "song_162",
@@ -1666,7 +1794,8 @@
     "album": "Middle of Nowhere",
     "spotifyId": "0lnxrQAd9ZxbhBBe7d8FO8",
     "previewUrl": "https://mxtape.celox.io/audio/song_163.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "party": true
   },
   {
     "id": "song_164",
@@ -1676,7 +1805,8 @@
     "album": "Ta-Dah",
     "spotifyId": "1q9l6c8bAzqWcvO3DM6FsR",
     "previewUrl": "https://mxtape.celox.io/audio/song_164.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "startMs": 5000
   },
   {
     "id": "song_165",
@@ -1686,7 +1816,8 @@
     "album": "Von hier an blind",
     "spotifyId": "4hYinIaRxdaoEFSQni6K6I",
     "previewUrl": "https://mxtape.celox.io/audio/song_165.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "german": true
   },
   {
     "id": "song_166",
@@ -1696,7 +1827,9 @@
     "album": "Global Warming: Meltdown",
     "spotifyId": "3cHyrEgdyYRjgJKSOiOtcS",
     "previewUrl": "https://mxtape.celox.io/audio/song_166.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "startMs": 8500,
+    "party": true
   },
   {
     "id": "song_167",
@@ -1746,7 +1879,9 @@
     "album": "Escape",
     "spotifyId": "77NNZQSqzLNqh2A9JhLRkg",
     "previewUrl": "https://mxtape.celox.io/audio/song_171.m4a",
-    "genre": "Rock"
+    "genre": "Rock",
+    "startMs": 1500,
+    "party": true
   },
   {
     "id": "song_172",
@@ -1756,7 +1891,9 @@
     "album": "So Excited!",
     "spotifyId": "1ot6jEe4w4hYnsOPjd3xKQ",
     "previewUrl": "https://mxtape.celox.io/audio/song_172.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "startMs": 5500,
+    "party": true
   },
   {
     "id": "song_173",
@@ -1766,7 +1903,9 @@
     "album": "Can't Slow Down",
     "spotifyId": "7gaQtc0vrSpmRJpSMDiPEk",
     "previewUrl": "https://mxtape.celox.io/audio/song_173.m4a",
-    "genre": "R&B"
+    "genre": "R&B",
+    "startMs": 10500,
+    "party": true
   },
   {
     "id": "song_174",
@@ -1786,7 +1925,8 @@
     "album": "Boston",
     "spotifyId": "1QEEqeFIZktqIpPI4jSVSF",
     "previewUrl": "https://mxtape.celox.io/audio/song_175.m4a",
-    "genre": "Rock"
+    "genre": "Rock",
+    "startMs": 9500
   },
   {
     "id": "song_176",
@@ -1796,7 +1936,8 @@
     "album": "Thriller",
     "spotifyId": "3BovdzfaX4jb5KFQwoPfAw",
     "previewUrl": "https://mxtape.celox.io/audio/song_176.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "startMs": 21500
   },
   {
     "id": "song_177",
@@ -1816,7 +1957,8 @@
     "album": "Look Sharp!",
     "spotifyId": "2MaBAGBIttgv86bYytdx1f",
     "previewUrl": "https://mxtape.celox.io/audio/song_178.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "startMs": 12000
   },
   {
     "id": "song_179",
@@ -1826,7 +1968,8 @@
     "album": "America",
     "spotifyId": "54eZmuggBFJbV7k248bTTt",
     "previewUrl": "https://mxtape.celox.io/audio/song_179.m4a",
-    "genre": "Rock"
+    "genre": "Rock",
+    "startMs": 7500
   },
   {
     "id": "song_180",
@@ -1836,7 +1979,8 @@
     "album": "Agents of Fortune",
     "spotifyId": "5QTxFnGygVM4jFQiBovmRo",
     "previewUrl": "https://mxtape.celox.io/audio/song_180.m4a",
-    "genre": "Rock"
+    "genre": "Rock",
+    "startMs": 5000
   },
   {
     "id": "song_181",
@@ -1866,7 +2010,9 @@
     "album": "Heaven & Hell",
     "spotifyId": "7DnAm9FOTWE3cUvso43HhI",
     "previewUrl": "https://mxtape.celox.io/audio/song_183.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "startMs": 8000,
+    "party": true
   },
   {
     "id": "song_184",
@@ -1876,7 +2022,8 @@
     "album": "A mí me gusta",
     "spotifyId": "6mhw2fEPH4fMF0wolNm96e",
     "previewUrl": "https://mxtape.celox.io/audio/song_184.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "party": true
   },
   {
     "id": "song_185",
@@ -1886,7 +2033,8 @@
     "album": "Left of the Middle",
     "spotifyId": "1Jaah2tmN9Hv81A87KZ1MU",
     "previewUrl": "https://mxtape.celox.io/audio/song_185.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "startMs": 12000
   },
   {
     "id": "song_186",
@@ -1906,7 +2054,9 @@
     "album": "No Strings Attached",
     "spotifyId": "4r8lRYnoOGdEi6YyI5OC1o",
     "previewUrl": "https://mxtape.celox.io/audio/song_187.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "startMs": 18500,
+    "party": true
   },
   {
     "id": "song_188",
@@ -1916,7 +2066,8 @@
     "album": "Youthquake",
     "spotifyId": "1ChulFMnwxoD74Me8eX2TU",
     "previewUrl": "https://mxtape.celox.io/audio/song_188.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "party": true
   },
   {
     "id": "song_189",
@@ -1926,7 +2077,8 @@
     "album": "Invisible Touch",
     "spotifyId": "0xpBr84T3FTm9j4D1MdPtk",
     "previewUrl": "https://mxtape.celox.io/audio/song_189.m4a",
-    "genre": "Rock"
+    "genre": "Rock",
+    "startMs": 7500
   },
   {
     "id": "song_190",
@@ -1936,7 +2088,8 @@
     "album": "Making Mirrors",
     "spotifyId": "6md4w95cnKaW64JyEQ3A0L",
     "previewUrl": "https://mxtape.celox.io/audio/song_190.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "startMs": 3500
   },
   {
     "id": "song_191",
@@ -1946,7 +2099,8 @@
     "album": "Let Go",
     "spotifyId": "5xEM5hIgJ1jjgcEBfpkt2F",
     "previewUrl": "https://mxtape.celox.io/audio/song_191.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "startMs": 1500
   },
   {
     "id": "song_192",
@@ -1956,7 +2110,8 @@
     "album": "Autoamerican",
     "spotifyId": "52Rp3xBJFYYdmpgzDy0Quf",
     "previewUrl": "https://mxtape.celox.io/audio/song_192.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "startMs": 2000
   },
   {
     "id": "song_193",
@@ -1976,7 +2131,8 @@
     "album": "Savage Garden",
     "spotifyId": "013AWvizllIUEC2FOBzOnh",
     "previewUrl": "https://mxtape.celox.io/audio/song_194.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "startMs": 4500
   },
   {
     "id": "song_195",
@@ -1986,7 +2142,8 @@
     "album": "The Better Life",
     "spotifyId": "6ZOBP3NvffbU4SZcrnt1k6",
     "previewUrl": "https://mxtape.celox.io/audio/song_195.m4a",
-    "genre": "Rock"
+    "genre": "Rock",
+    "startMs": 8000
   },
   {
     "id": "song_196",
@@ -2006,7 +2163,8 @@
     "album": "Loose",
     "spotifyId": "2aI21FnmY7TJVKeMaoQZ0t",
     "previewUrl": "https://mxtape.celox.io/audio/song_197.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "startMs": 7000
   },
   {
     "id": "song_198",
@@ -2016,7 +2174,8 @@
     "album": "Metallica",
     "spotifyId": "6QAsrXPnMSXIbV0yEJHlEX",
     "previewUrl": "https://mxtape.celox.io/audio/song_198.m4a",
-    "genre": "Metal"
+    "genre": "Metal",
+    "startMs": 3000
   },
   {
     "id": "song_199",
@@ -2036,7 +2195,8 @@
     "album": "The Heist",
     "spotifyId": "3bidbhpOYeV4knp8AIu8Xn",
     "previewUrl": "https://mxtape.celox.io/audio/song_200.m4a",
-    "genre": "Hip-Hop"
+    "genre": "Hip-Hop",
+    "startMs": 19000
   },
   {
     "id": "song_201",
@@ -2046,7 +2206,8 @@
     "album": "Sweet Dreams",
     "spotifyId": "2wz5weI4PREzpexKfrKgwv",
     "previewUrl": "https://mxtape.celox.io/audio/song_201.m4a",
-    "genre": "Electronic"
+    "genre": "Electronic",
+    "party": true
   },
   {
     "id": "song_202",
@@ -2066,7 +2227,8 @@
     "album": "The Long Play",
     "spotifyId": "0MSAWjq5aWfTUNL9hv7Epd",
     "previewUrl": "https://mxtape.celox.io/audio/song_203.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "startMs": 8500
   },
   {
     "id": "song_204",
@@ -2076,7 +2238,8 @@
     "album": "The 1st Album",
     "spotifyId": "0Zn63G0XTiqXwr1KSmARWz",
     "previewUrl": "https://mxtape.celox.io/audio/song_204.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "party": true
   },
   {
     "id": "song_205",
@@ -2086,7 +2249,8 @@
     "album": "Welcome to the Pleasuredome",
     "spotifyId": "1GbyYL0B0Mjn3kSbrEwKKI",
     "previewUrl": "https://mxtape.celox.io/audio/song_205.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "startMs": 13000
   },
   {
     "id": "song_206",
@@ -2096,7 +2260,8 @@
     "album": "Nervous Night",
     "spotifyId": "0jvrac0ac39rXsPgG2MSZ3",
     "previewUrl": "https://mxtape.celox.io/audio/song_206.m4a",
-    "genre": "Rock"
+    "genre": "Rock",
+    "startMs": 13000
   },
   {
     "id": "song_207",
@@ -2126,7 +2291,8 @@
     "album": "The White Room",
     "spotifyId": "4t32A4kkfs2hNqa8g7aC2U",
     "previewUrl": "https://mxtape.celox.io/audio/song_209.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "startMs": 2500
   },
   {
     "id": "song_210",
@@ -2136,7 +2302,8 @@
     "album": "Die with a Smile",
     "spotifyId": "2plbrEY59IikOBgBGLjaoe",
     "previewUrl": "https://mxtape.celox.io/audio/song_210.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "startMs": 3500
   },
   {
     "id": "song_211",
@@ -2199,7 +2366,8 @@
     "year": 1964,
     "album": "Kinks",
     "previewUrl": "https://mxtape.celox.io/audio/song_217.m4a",
-    "genre": "Rock"
+    "genre": "Rock",
+    "startMs": 2000
   },
   {
     "id": "song_218",
@@ -2217,7 +2385,8 @@
     "year": 1966,
     "album": "Smiley Smile",
     "previewUrl": "https://mxtape.celox.io/audio/song_219.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "startMs": 1500
   },
   {
     "id": "song_220",
@@ -2262,7 +2431,8 @@
     "year": 1969,
     "album": "Green River",
     "previewUrl": "https://mxtape.celox.io/audio/song_224.m4a",
-    "genre": "Rock"
+    "genre": "Rock",
+    "startMs": 2500
   },
   {
     "id": "song_225",
@@ -2271,7 +2441,8 @@
     "year": 1965,
     "album": "If You Can Believe Your Eyes and Ears",
     "previewUrl": "https://mxtape.celox.io/audio/song_225.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "startMs": 5000
   },
   {
     "id": "song_226",
@@ -2280,7 +2451,8 @@
     "year": 1961,
     "album": "Don't Play That Song!",
     "previewUrl": "https://mxtape.celox.io/audio/song_226.m4a",
-    "genre": "Soul"
+    "genre": "Soul",
+    "startMs": 2000
   },
   {
     "id": "song_227",
@@ -2289,7 +2461,8 @@
     "year": 1968,
     "album": "In the Groove",
     "previewUrl": "https://mxtape.celox.io/audio/song_227.m4a",
-    "genre": "Soul"
+    "genre": "Soul",
+    "startMs": 4000
   },
   {
     "id": "song_228",
@@ -2343,7 +2516,8 @@
     "year": 1965,
     "album": "Marmor, Stein und Eisen bricht",
     "previewUrl": "https://mxtape.celox.io/audio/song_233.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "german": true
   },
   {
     "id": "song_234",
@@ -2352,7 +2526,9 @@
     "year": 1976,
     "album": "Arrival",
     "previewUrl": "https://mxtape.celox.io/audio/song_234.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "startMs": 2000,
+    "party": true
   },
   {
     "id": "song_235",
@@ -2361,7 +2537,8 @@
     "year": 1977,
     "album": "Saturday Night Fever",
     "previewUrl": "https://mxtape.celox.io/audio/song_235.m4a",
-    "genre": "Soul"
+    "genre": "Soul",
+    "party": true
   },
   {
     "id": "song_236",
@@ -2370,7 +2547,9 @@
     "year": 1978,
     "album": "Love Tracks",
     "previewUrl": "https://mxtape.celox.io/audio/song_236.m4a",
-    "genre": "Soul"
+    "genre": "Soul",
+    "startMs": 7000,
+    "party": true
   },
   {
     "id": "song_237",
@@ -2379,7 +2558,8 @@
     "year": 1978,
     "album": "Nightflight to Venus",
     "previewUrl": "https://mxtape.celox.io/audio/song_237.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "party": true
   },
   {
     "id": "song_238",
@@ -2388,7 +2568,8 @@
     "year": 1978,
     "album": "Cruisin'",
     "previewUrl": "https://mxtape.celox.io/audio/song_238.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "party": true
   },
   {
     "id": "song_239",
@@ -2397,7 +2578,9 @@
     "year": 1977,
     "album": "News of the World",
     "previewUrl": "https://mxtape.celox.io/audio/song_239.m4a",
-    "genre": "Rock"
+    "genre": "Rock",
+    "startMs": 11000,
+    "party": true
   },
   {
     "id": "song_240",
@@ -2406,7 +2589,8 @@
     "year": 1972,
     "album": "Machine Head",
     "previewUrl": "https://mxtape.celox.io/audio/song_240.m4a",
-    "genre": "Rock"
+    "genre": "Rock",
+    "startMs": 7000
   },
   {
     "id": "song_241",
@@ -2415,7 +2599,8 @@
     "year": 1979,
     "album": "Highway to Hell",
     "previewUrl": "https://mxtape.celox.io/audio/song_241.m4a",
-    "genre": "Rock"
+    "genre": "Rock",
+    "startMs": 2000
   },
   {
     "id": "song_242",
@@ -2424,7 +2609,8 @@
     "year": 1972,
     "album": "Don't Shoot Me I'm Only the Piano Player",
     "previewUrl": "https://mxtape.celox.io/audio/song_242.m4a",
-    "genre": "Rock"
+    "genre": "Rock",
+    "startMs": 5000
   },
   {
     "id": "song_243",
@@ -2433,7 +2619,8 @@
     "year": 1977,
     "album": "I Remember Yesterday",
     "previewUrl": "https://mxtape.celox.io/audio/song_243.m4a",
-    "genre": "Electronic"
+    "genre": "Electronic",
+    "startMs": 11000
   },
   {
     "id": "song_244",
@@ -2442,7 +2629,9 @@
     "year": 1978,
     "album": "September",
     "previewUrl": "https://mxtape.celox.io/audio/song_244.m4a",
-    "genre": "Soul"
+    "genre": "Soul",
+    "startMs": 11000,
+    "party": true
   },
   {
     "id": "song_245",
@@ -2460,7 +2649,9 @@
     "year": 1978,
     "album": "Die Mensch-Maschine",
     "previewUrl": "https://mxtape.celox.io/audio/song_246.m4a",
-    "genre": "Electronic"
+    "genre": "Electronic",
+    "startMs": 2000,
+    "german": true
   },
   {
     "id": "song_247",
@@ -2487,7 +2678,8 @@
     "year": 1993,
     "album": "The Album",
     "previewUrl": "https://mxtape.celox.io/audio/song_249.m4a",
-    "genre": "Electronic"
+    "genre": "Electronic",
+    "party": true
   },
   {
     "id": "song_250",
@@ -2496,7 +2688,8 @@
     "year": 1996,
     "album": "Spice",
     "previewUrl": "https://mxtape.celox.io/audio/song_250.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "party": true
   },
   {
     "id": "song_251",
@@ -2505,7 +2698,9 @@
     "year": 1998,
     "album": "...Baby One More Time",
     "previewUrl": "https://mxtape.celox.io/audio/song_251.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "startMs": 15500,
+    "party": true
   },
   {
     "id": "song_252",
@@ -2514,7 +2709,9 @@
     "year": 1999,
     "album": "A Little Bit of Mambo",
     "previewUrl": "https://mxtape.celox.io/audio/song_252.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "startMs": 5000,
+    "party": true
   },
   {
     "id": "song_253",
@@ -2523,7 +2720,9 @@
     "year": 1997,
     "album": "Aquarium",
     "previewUrl": "https://mxtape.celox.io/audio/song_253.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "startMs": 7000,
+    "party": true
   },
   {
     "id": "song_254",
@@ -2550,7 +2749,9 @@
     "year": 1992,
     "album": "4 gewinnt",
     "previewUrl": "https://mxtape.celox.io/audio/song_256.m4a",
-    "genre": "Hip-Hop"
+    "genre": "Hip-Hop",
+    "startMs": 4000,
+    "german": true
   },
   {
     "id": "song_257",
@@ -2559,7 +2760,8 @@
     "year": 2003,
     "album": "Speakerboxxx/The Love Below",
     "previewUrl": "https://mxtape.celox.io/audio/song_257.m4a",
-    "genre": "Hip-Hop"
+    "genre": "Hip-Hop",
+    "party": true
   },
   {
     "id": "song_258",
@@ -2568,7 +2770,8 @@
     "year": 2003,
     "album": "Dangerously in Love",
     "previewUrl": "https://mxtape.celox.io/audio/song_258.m4a",
-    "genre": "R&B"
+    "genre": "R&B",
+    "party": true
   },
   {
     "id": "song_259",
@@ -2577,7 +2780,9 @@
     "year": 2003,
     "album": "Hot Fuss",
     "previewUrl": "https://mxtape.celox.io/audio/song_259.m4a",
-    "genre": "Rock"
+    "genre": "Rock",
+    "startMs": 5000,
+    "party": true
   },
   {
     "id": "song_260",
@@ -2586,7 +2791,9 @@
     "year": 2006,
     "album": "Oral Fixation, Vol. 2",
     "previewUrl": "https://mxtape.celox.io/audio/song_260.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "startMs": 4000,
+    "party": true
   },
   {
     "id": "song_261",
@@ -2595,7 +2802,8 @@
     "year": 2006,
     "album": "Back to Black",
     "previewUrl": "https://mxtape.celox.io/audio/song_261.m4a",
-    "genre": "Soul"
+    "genre": "Soul",
+    "startMs": 2500
   },
   {
     "id": "song_262",
@@ -2604,7 +2812,8 @@
     "year": 2007,
     "album": "Good Girl Gone Bad",
     "previewUrl": "https://mxtape.celox.io/audio/song_262.m4a",
-    "genre": "R&B"
+    "genre": "R&B",
+    "party": true
   },
   {
     "id": "song_263",
@@ -2613,7 +2822,8 @@
     "year": 2009,
     "album": "The E.N.D.",
     "previewUrl": "https://mxtape.celox.io/audio/song_263.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "party": true
   },
   {
     "id": "song_264",
@@ -2622,7 +2832,8 @@
     "year": 2008,
     "album": "Only by the Night",
     "previewUrl": "https://mxtape.celox.io/audio/song_264.m4a",
-    "genre": "Rock"
+    "genre": "Rock",
+    "startMs": 4000
   },
   {
     "id": "song_265",
@@ -2631,7 +2842,9 @@
     "year": 2008,
     "album": "Stadtaffe",
     "previewUrl": "https://mxtape.celox.io/audio/song_265.m4a",
-    "genre": "Hip-Hop"
+    "genre": "Hip-Hop",
+    "startMs": 6000,
+    "german": true
   },
   {
     "id": "song_266",
@@ -2640,7 +2853,9 @@
     "year": 2004,
     "album": "Es ist Juli",
     "previewUrl": "https://mxtape.celox.io/audio/song_266.m4a",
-    "genre": "Rock"
+    "genre": "Rock",
+    "startMs": 11500,
+    "german": true
   },
   {
     "id": "song_267",
@@ -2658,7 +2873,8 @@
     "year": 2002,
     "album": "Hijas del Tomate",
     "previewUrl": "https://mxtape.celox.io/audio/song_268.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "party": true
   },
   {
     "id": "song_269",
@@ -2667,7 +2883,9 @@
     "year": 2013,
     "album": "Despicable Me 2",
     "previewUrl": "https://mxtape.celox.io/audio/song_269.m4a",
-    "genre": "Soul"
+    "genre": "Soul",
+    "startMs": 5000,
+    "party": true
   },
   {
     "id": "song_270",
@@ -2676,7 +2894,9 @@
     "year": 2014,
     "album": "Uptown Special",
     "previewUrl": "https://mxtape.celox.io/audio/song_270.m4a",
-    "genre": "Soul"
+    "genre": "Soul",
+    "startMs": 6000,
+    "party": true
   },
   {
     "id": "song_271",
@@ -2685,7 +2905,8 @@
     "year": 2013,
     "album": "Random Access Memories",
     "previewUrl": "https://mxtape.celox.io/audio/song_271.m4a",
-    "genre": "Electronic"
+    "genre": "Electronic",
+    "party": true
   },
   {
     "id": "song_272",
@@ -2694,7 +2915,9 @@
     "year": 2017,
     "album": "÷",
     "previewUrl": "https://mxtape.celox.io/audio/song_272.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "startMs": 5500,
+    "party": true
   },
   {
     "id": "song_273",
@@ -2703,7 +2926,9 @@
     "year": 2017,
     "album": "Vida",
     "previewUrl": "https://mxtape.celox.io/audio/song_273.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "startMs": 29500,
+    "party": true
   },
   {
     "id": "song_274",
@@ -2712,7 +2937,9 @@
     "year": 2012,
     "album": "Psy 6 (Six Rules), Part 1",
     "previewUrl": "https://mxtape.celox.io/audio/song_274.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "startMs": 4000,
+    "party": true
   },
   {
     "id": "song_275",
@@ -2721,7 +2948,8 @@
     "year": 2010,
     "album": "21",
     "previewUrl": "https://mxtape.celox.io/audio/song_275.m4a",
-    "genre": "Soul"
+    "genre": "Soul",
+    "startMs": 2000
   },
   {
     "id": "song_276",
@@ -2730,7 +2958,9 @@
     "year": 2012,
     "album": "Raop",
     "previewUrl": "https://mxtape.celox.io/audio/song_276.m4a",
-    "genre": "Hip-Hop"
+    "genre": "Hip-Hop",
+    "startMs": 2000,
+    "german": true
   },
   {
     "id": "song_277",
@@ -2739,7 +2969,8 @@
     "year": 2013,
     "album": "True",
     "previewUrl": "https://mxtape.celox.io/audio/song_277.m4a",
-    "genre": "Electronic"
+    "genre": "Electronic",
+    "party": true
   },
   {
     "id": "song_278",
@@ -2757,7 +2988,8 @@
     "year": 2019,
     "album": "When We All Fall Asleep, Where Do We Go?",
     "previewUrl": "https://mxtape.celox.io/audio/song_279.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "startMs": 13000
   },
   {
     "id": "song_280",
@@ -2766,7 +2998,8 @@
     "year": 2014,
     "album": "Hey",
     "previewUrl": "https://mxtape.celox.io/audio/song_280.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "german": true
   },
   {
     "id": "song_281",
@@ -2775,7 +3008,9 @@
     "year": 2020,
     "album": "Future Nostalgia",
     "previewUrl": "https://mxtape.celox.io/audio/song_281.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "startMs": 2000,
+    "party": true
   },
   {
     "id": "song_282",
@@ -2784,7 +3019,8 @@
     "year": 2022,
     "album": "Harry's House",
     "previewUrl": "https://mxtape.celox.io/audio/song_282.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "startMs": 5500
   },
   {
     "id": "song_283",
@@ -2793,7 +3029,8 @@
     "year": 2023,
     "album": "Endless Summer Vacation",
     "previewUrl": "https://mxtape.celox.io/audio/song_283.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "startMs": 8000
   },
   {
     "id": "song_284",
@@ -2802,7 +3039,8 @@
     "year": 2021,
     "album": "Sour",
     "previewUrl": "https://mxtape.celox.io/audio/song_284.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "startMs": 12000
   },
   {
     "id": "song_285",
@@ -2811,7 +3049,8 @@
     "year": 2020,
     "album": "Dreamland",
     "previewUrl": "https://mxtape.celox.io/audio/song_285.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "startMs": 18000
   },
   {
     "id": "song_286",
@@ -2820,7 +3059,8 @@
     "year": 2021,
     "album": "Montero",
     "previewUrl": "https://mxtape.celox.io/audio/song_286.m4a",
-    "genre": "Hip-Hop"
+    "genre": "Hip-Hop",
+    "startMs": 3500
   },
   {
     "id": "song_287",
@@ -2829,7 +3069,8 @@
     "year": 2021,
     "album": "F*ck Love 3: Over You",
     "previewUrl": "https://mxtape.celox.io/audio/song_287.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "startMs": 13000
   },
   {
     "id": "song_288",
@@ -2838,7 +3079,8 @@
     "year": 2021,
     "album": "The Lockdown Sessions",
     "previewUrl": "https://mxtape.celox.io/audio/song_288.m4a",
-    "genre": "Electronic"
+    "genre": "Electronic",
+    "startMs": 21500
   },
   {
     "id": "song_289",
@@ -2847,7 +3089,8 @@
     "year": 2024,
     "album": "Short n' Sweet",
     "previewUrl": "https://mxtape.celox.io/audio/song_289.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "startMs": 3500
   },
   {
     "id": "song_290",
@@ -2865,7 +3108,8 @@
     "year": 2021,
     "album": "=",
     "previewUrl": "https://mxtape.celox.io/audio/song_291.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "startMs": 5500
   },
   {
     "id": "song_292",
@@ -2874,7 +3118,8 @@
     "year": 2024,
     "album": "Fireworks & Rollerblades",
     "previewUrl": "https://mxtape.celox.io/audio/song_292.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "startMs": 6000
   },
   {
     "id": "song_293",
@@ -2892,7 +3137,8 @@
     "year": 2023,
     "album": "Komet",
     "previewUrl": "https://mxtape.celox.io/audio/song_294.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "german": true
   },
   {
     "id": "song_295",
@@ -2901,7 +3147,9 @@
     "year": 2022,
     "album": "Love Songs",
     "previewUrl": "https://mxtape.celox.io/audio/song_295.m4a",
-    "genre": "Hip-Hop"
+    "genre": "Hip-Hop",
+    "startMs": 4000,
+    "german": true
   },
   {
     "id": "song_296",
@@ -2910,7 +3158,8 @@
     "year": 2024,
     "album": "Rosie",
     "previewUrl": "https://mxtape.celox.io/audio/song_296.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "startMs": 6500
   },
   {
     "id": "song_297",
@@ -2919,7 +3168,8 @@
     "year": 2020,
     "album": "Exotica",
     "previewUrl": "https://mxtape.celox.io/audio/song_297.m4a",
-    "genre": "Electronic"
+    "genre": "Electronic",
+    "startMs": 3000
   },
   {
     "id": "song_298",
@@ -2928,7 +3178,9 @@
     "year": 2023,
     "album": "Friesenjung",
     "previewUrl": "https://mxtape.celox.io/audio/song_298.m4a",
-    "genre": "Hip-Hop"
+    "genre": "Hip-Hop",
+    "german": true,
+    "party": true
   },
   {
     "id": "song_299",
@@ -2937,7 +3189,8 @@
     "year": 2023,
     "album": "I've Tried Everything but Therapy (Part 1)",
     "previewUrl": "https://mxtape.celox.io/audio/song_299.m4a",
-    "genre": "Soul"
+    "genre": "Soul",
+    "startMs": 4500
   },
   {
     "id": "song_300",
@@ -2963,7 +3216,8 @@
     "year": 1960,
     "album": "Your Twist Party (With The King Of Twist)",
     "previewUrl": "https://mxtape.celox.io/audio/song_302.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "party": true
   },
   {
     "id": "song_303",
@@ -2981,7 +3235,9 @@
     "year": 1980,
     "album": "The Game",
     "previewUrl": "https://mxtape.celox.io/audio/song_304.m4a",
-    "genre": "Rock"
+    "genre": "Rock",
+    "startMs": 4000,
+    "party": true
   },
   {
     "id": "song_305",
@@ -2990,7 +3246,9 @@
     "year": 1990,
     "previewUrl": "https://mxtape.celox.io/audio/song_305.m4a",
     "genre": "Hip-Hop",
-    "album": "Please Hammer, Don't Hurt 'Em"
+    "album": "Please Hammer, Don't Hurt 'Em",
+    "startMs": 4000,
+    "party": true
   },
   {
     "id": "song_306",
@@ -2999,7 +3257,8 @@
     "year": 2000,
     "previewUrl": "https://mxtape.celox.io/audio/song_306.m4a",
     "genre": "Electronic",
-    "album": "Modjo"
+    "album": "Modjo",
+    "party": true
   },
   {
     "id": "song_307",
@@ -3051,7 +3310,8 @@
     "year": 1980,
     "album": "You Shook Me All Night Long",
     "previewUrl": "https://mxtape.celox.io/audio/song_312.m4a",
-    "genre": "Rock"
+    "genre": "Rock",
+    "startMs": 5500
   },
   {
     "id": "song_313",
@@ -3060,7 +3320,9 @@
     "year": 1990,
     "previewUrl": "https://mxtape.celox.io/audio/song_313.m4a",
     "genre": "Hip-Hop",
-    "album": "To the Extreme"
+    "album": "To the Extreme",
+    "startMs": 13500,
+    "party": true
   },
   {
     "id": "song_314",
@@ -3069,7 +3331,9 @@
     "year": 2000,
     "album": "Hot Shot",
     "previewUrl": "https://mxtape.celox.io/audio/song_314.m4a",
-    "genre": "Reggae"
+    "genre": "Reggae",
+    "startMs": 10500,
+    "party": true
   },
   {
     "id": "song_315",
@@ -3078,7 +3342,9 @@
     "year": 2011,
     "previewUrl": "https://mxtape.celox.io/audio/song_315.m4a",
     "genre": "Pop",
-    "album": "Talk That Talk"
+    "album": "Talk That Talk",
+    "startMs": 7500,
+    "party": true
   },
   {
     "id": "song_316",
@@ -3087,7 +3353,8 @@
     "year": 2021,
     "previewUrl": "https://mxtape.celox.io/audio/song_316.m4a",
     "genre": "Pop",
-    "album": "Planet Her"
+    "album": "Planet Her",
+    "startMs": 1500
   },
   {
     "id": "song_317",
@@ -3123,7 +3390,8 @@
     "year": 1980,
     "previewUrl": "https://mxtape.celox.io/audio/song_320.m4a",
     "genre": "Soul",
-    "album": "Celebrate!"
+    "album": "Celebrate!",
+    "party": true
   },
   {
     "id": "song_321",
@@ -3132,7 +3400,9 @@
     "year": 1990,
     "album": "Maxi Hit Sensation - Doppel-Dosis Maxi Power",
     "previewUrl": "https://mxtape.celox.io/audio/song_321.m4a",
-    "genre": "Electronic"
+    "genre": "Electronic",
+    "startMs": 1500,
+    "party": true
   },
   {
     "id": "song_322",
@@ -3141,7 +3411,8 @@
     "year": 2003,
     "previewUrl": "https://mxtape.celox.io/audio/song_322.m4a",
     "genre": "Rock",
-    "album": "Meteora"
+    "album": "Meteora",
+    "startMs": 3500
   },
   {
     "id": "song_323",
@@ -3150,7 +3421,8 @@
     "year": 2011,
     "previewUrl": "https://mxtape.celox.io/audio/song_323.m4a",
     "genre": "Electronic",
-    "album": "Sorry for Party Rocking"
+    "album": "Sorry for Party Rocking",
+    "party": true
   },
   {
     "id": "song_324",
@@ -3177,7 +3449,8 @@
     "year": 1963,
     "album": "Be My Baby / Tedesco and Pitman",
     "previewUrl": "https://mxtape.celox.io/audio/song_326.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "startMs": 1500
   },
   {
     "id": "song_327",
@@ -3194,7 +3467,9 @@
     "artist": "Trio",
     "year": 1982,
     "previewUrl": "https://mxtape.celox.io/audio/song_328.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "german": true,
+    "party": true
   },
   {
     "id": "song_329",
@@ -3212,7 +3487,8 @@
     "year": 2000,
     "previewUrl": "https://mxtape.celox.io/audio/song_330.m4a",
     "genre": "Electronic",
-    "album": "Discovery"
+    "album": "Discovery",
+    "startMs": 30000
   },
   {
     "id": "song_331",
@@ -3221,7 +3497,9 @@
     "year": 2011,
     "album": "Call Me Maybe",
     "previewUrl": "https://mxtape.celox.io/audio/song_331.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "startMs": 4000,
+    "party": true
   },
   {
     "id": "song_332",
@@ -3230,7 +3508,8 @@
     "year": 2021,
     "previewUrl": "https://mxtape.celox.io/audio/song_332.m4a",
     "genre": "Rock",
-    "album": "SOUR"
+    "album": "SOUR",
+    "startMs": 3000
   },
   {
     "id": "song_333",
@@ -3255,7 +3534,8 @@
     "year": 1971,
     "album": "Imagine",
     "previewUrl": "https://mxtape.celox.io/audio/song_335.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "startMs": 2500
   },
   {
     "id": "song_336",
@@ -3263,7 +3543,9 @@
     "artist": "Spider Murphy Gang",
     "year": 1981,
     "previewUrl": "https://mxtape.celox.io/audio/song_336.m4a",
-    "genre": "Rock"
+    "genre": "Rock",
+    "german": true,
+    "party": true
   },
   {
     "id": "song_337",
@@ -3281,7 +3563,8 @@
     "year": 2001,
     "previewUrl": "https://mxtape.celox.io/audio/song_338.m4a",
     "genre": "Pop",
-    "album": "Fever"
+    "album": "Fever",
+    "party": true
   },
   {
     "id": "song_339",
@@ -3290,7 +3573,8 @@
     "year": 2012,
     "album": "Night Visions",
     "previewUrl": "https://mxtape.celox.io/audio/song_339.m4a",
-    "genre": "Rock"
+    "genre": "Rock",
+    "startMs": 8500
   },
   {
     "id": "song_340",
@@ -3334,7 +3618,10 @@
     "year": 1982,
     "album": "Kugelblitze und Raketen",
     "previewUrl": "https://mxtape.celox.io/audio/song_344.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "startMs": 2000,
+    "german": true,
+    "party": true
   },
   {
     "id": "song_345",
@@ -3352,7 +3639,8 @@
     "year": 2001,
     "album": "Gorillaz (album Sampler)",
     "previewUrl": "https://mxtape.celox.io/audio/song_346.m4a",
-    "genre": "Hip-Hop"
+    "genre": "Hip-Hop",
+    "startMs": 8000
   },
   {
     "id": "song_347",
@@ -3370,7 +3658,8 @@
     "year": 2022,
     "previewUrl": "https://mxtape.celox.io/audio/song_348.m4a",
     "genre": "Pop",
-    "album": "Special"
+    "album": "Special",
+    "startMs": 1500
   },
   {
     "id": "song_349",
@@ -3406,7 +3695,8 @@
     "year": 1981,
     "album": "Einzelhaft",
     "previewUrl": "https://mxtape.celox.io/audio/song_352.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "german": true
   },
   {
     "id": "song_353",
@@ -3433,7 +3723,8 @@
     "year": 2014,
     "previewUrl": "https://mxtape.celox.io/audio/song_355.m4a",
     "genre": "Electronic",
-    "album": "Motion"
+    "album": "Motion",
+    "startMs": 2500
   },
   {
     "id": "song_356",
@@ -3478,7 +3769,10 @@
     "year": 1985,
     "album": "Falco 3",
     "previewUrl": "https://mxtape.celox.io/audio/song_360.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "startMs": 2500,
+    "german": true,
+    "party": true
   },
   {
     "id": "song_361",
@@ -3487,7 +3781,9 @@
     "year": 1993,
     "previewUrl": "https://mxtape.celox.io/audio/song_361.m4a",
     "genre": "Electronic",
-    "album": "No Limits!"
+    "album": "No Limits!",
+    "startMs": 2000,
+    "party": true
   },
   {
     "id": "song_362",
@@ -3496,7 +3792,9 @@
     "year": 2001,
     "album": "Laundry Service",
     "previewUrl": "https://mxtape.celox.io/audio/song_362.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "startMs": 7000,
+    "party": true
   },
   {
     "id": "song_363",
@@ -3514,7 +3812,8 @@
     "year": 2022,
     "album": "SOS",
     "previewUrl": "https://mxtape.celox.io/audio/song_364.m4a",
-    "genre": "R&B"
+    "genre": "R&B",
+    "startMs": 11500
   },
   {
     "id": "song_365",
@@ -3577,7 +3876,8 @@
     "year": 2016,
     "album": "Tape",
     "previewUrl": "https://mxtape.celox.io/audio/song_371.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "german": true
   },
   {
     "id": "song_372",
@@ -3586,7 +3886,8 @@
     "year": 2023,
     "album": "Daylight",
     "previewUrl": "https://mxtape.celox.io/audio/song_372.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "startMs": 16000
   },
   {
     "id": "song_373",
@@ -3595,7 +3896,8 @@
     "year": 1957,
     "album": "Wake Up Little Susie / Maybe Tomorrow",
     "previewUrl": "https://mxtape.celox.io/audio/song_373.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "startMs": 1500
   },
   {
     "id": "song_374",
@@ -3613,7 +3915,8 @@
     "year": 1972,
     "album": "Still Bill",
     "previewUrl": "https://mxtape.celox.io/audio/song_375.m4a",
-    "genre": "Soul"
+    "genre": "Soul",
+    "startMs": 15000
   },
   {
     "id": "song_376",
@@ -3631,7 +3934,8 @@
     "year": 1992,
     "album": "Bigger, Better, Faster, More!",
     "previewUrl": "https://mxtape.celox.io/audio/song_377.m4a",
-    "genre": "Rock"
+    "genre": "Rock",
+    "startMs": 2000
   },
   {
     "id": "song_378",
@@ -3640,7 +3944,8 @@
     "year": 2003,
     "album": "Daredevil: The Album",
     "previewUrl": "https://mxtape.celox.io/audio/song_378.m4a",
-    "genre": "Rock"
+    "genre": "Rock",
+    "startMs": 10500
   },
   {
     "id": "song_379",
@@ -3649,7 +3954,9 @@
     "year": 2016,
     "album": "Alles nix Konkretes",
     "previewUrl": "https://mxtape.celox.io/audio/song_379.m4a",
-    "genre": "Rock"
+    "genre": "Rock",
+    "startMs": 6000,
+    "german": true
   },
   {
     "id": "song_380",
@@ -3658,7 +3965,8 @@
     "year": 2023,
     "previewUrl": "https://mxtape.celox.io/audio/song_380.m4a",
     "genre": "Pop",
-    "album": "Houdini"
+    "album": "Houdini",
+    "startMs": 2500
   },
   {
     "id": "song_381",
@@ -3667,7 +3975,8 @@
     "year": 1958,
     "album": "All I Have to Do Is Dream / Claudette",
     "previewUrl": "https://mxtape.celox.io/audio/song_381.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "startMs": 2500
   },
   {
     "id": "song_382",
@@ -3694,7 +4003,8 @@
     "year": 1984,
     "album": "Make It Big",
     "previewUrl": "https://mxtape.celox.io/audio/song_384.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "party": true
   },
   {
     "id": "song_385",
@@ -3703,7 +4013,8 @@
     "year": 1994,
     "album": "Zombie",
     "previewUrl": "https://mxtape.celox.io/audio/song_385.m4a",
-    "genre": "Rock"
+    "genre": "Rock",
+    "startMs": 12000
   },
   {
     "id": "song_386",
@@ -3712,7 +4023,8 @@
     "year": 2003,
     "album": "In da Club",
     "previewUrl": "https://mxtape.celox.io/audio/song_386.m4a",
-    "genre": "Hip-Hop"
+    "genre": "Hip-Hop",
+    "party": true
   },
   {
     "id": "song_387",
@@ -3775,7 +4087,8 @@
     "year": 2003,
     "album": "Elephunk",
     "previewUrl": "https://mxtape.celox.io/audio/song_393.m4a",
-    "genre": "Hip-Hop"
+    "genre": "Hip-Hop",
+    "startMs": 8500
   },
   {
     "id": "song_394",
@@ -3829,7 +4142,8 @@
     "year": 1985,
     "album": "Don’t You (Forget About Me)",
     "previewUrl": "https://mxtape.celox.io/audio/song_399.m4a",
-    "genre": "Rock"
+    "genre": "Rock",
+    "startMs": 2000
   },
   {
     "id": "song_400",
@@ -3838,7 +4152,8 @@
     "year": 1997,
     "album": "Blur",
     "previewUrl": "https://mxtape.celox.io/audio/song_400.m4a",
-    "genre": "Rock"
+    "genre": "Rock",
+    "startMs": 14500
   },
   {
     "id": "song_401",
@@ -3856,7 +4171,8 @@
     "year": 2019,
     "album": "Blinding Lights",
     "previewUrl": "https://mxtape.celox.io/audio/song_402.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "party": true
   },
   {
     "id": "song_403",
@@ -3865,7 +4181,8 @@
     "year": 2024,
     "album": "Where I’ve Been, isn’t Where I’m Going",
     "previewUrl": "https://mxtape.celox.io/audio/song_403.m4a",
-    "genre": "Country"
+    "genre": "Country",
+    "party": true
   },
   {
     "id": "song_404",
@@ -3892,7 +4209,8 @@
     "year": 1972,
     "previewUrl": "https://mxtape.celox.io/audio/song_406.m4a",
     "genre": "Pop",
-    "album": "Honky Château"
+    "album": "Honky Château",
+    "startMs": 2500
   },
   {
     "id": "song_407",
@@ -3901,7 +4219,8 @@
     "year": 1984,
     "album": "Live Is Life",
     "previewUrl": "https://mxtape.celox.io/audio/song_407.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "party": true
   },
   {
     "id": "song_408",
@@ -3910,7 +4229,8 @@
     "year": 1997,
     "album": "Urban Hymns",
     "previewUrl": "https://mxtape.celox.io/audio/song_408.m4a",
-    "genre": "Rock"
+    "genre": "Rock",
+    "startMs": 29000
   },
   {
     "id": "song_409",
@@ -3919,7 +4239,9 @@
     "year": 2004,
     "previewUrl": "https://mxtape.celox.io/audio/song_409.m4a",
     "genre": "R&B",
-    "album": "Confessions"
+    "album": "Confessions",
+    "startMs": 1500,
+    "party": true
   },
   {
     "id": "song_410",
@@ -3928,7 +4250,8 @@
     "year": 2018,
     "previewUrl": "https://mxtape.celox.io/audio/song_410.m4a",
     "genre": "Pop",
-    "album": "Divinely Uninspired To A Hellish Extent"
+    "album": "Divinely Uninspired To A Hellish Extent",
+    "startMs": 2000
   },
   {
     "id": "song_411",
@@ -3964,7 +4287,8 @@
     "year": 1973,
     "previewUrl": "https://mxtape.celox.io/audio/song_414.m4a",
     "genre": "Rock",
-    "album": "The Dark Side of the Moon"
+    "album": "The Dark Side of the Moon",
+    "startMs": 12500
   },
   {
     "id": "song_415",
@@ -3973,7 +4297,8 @@
     "year": 1986,
     "album": "The Final Countdown",
     "previewUrl": "https://mxtape.celox.io/audio/song_415.m4a",
-    "genre": "Rock"
+    "genre": "Rock",
+    "party": true
   },
   {
     "id": "song_416",
@@ -3991,7 +4316,9 @@
     "year": 2019,
     "previewUrl": "https://mxtape.celox.io/audio/song_417.m4a",
     "genre": "Pop",
-    "album": "The Kids Are Coming"
+    "album": "The Kids Are Coming",
+    "startMs": 8500,
+    "party": true
   },
   {
     "id": "song_418",
@@ -4000,7 +4327,9 @@
     "year": 2020,
     "album": "Roller",
     "previewUrl": "https://mxtape.celox.io/audio/song_418.m4a",
-    "genre": "Hip-Hop"
+    "genre": "Hip-Hop",
+    "startMs": 8000,
+    "german": true
   },
   {
     "id": "song_419",
@@ -4027,7 +4356,8 @@
     "year": 1973,
     "album": "Let’s Get It On",
     "previewUrl": "https://mxtape.celox.io/audio/song_421.m4a",
-    "genre": "Soul"
+    "genre": "Soul",
+    "startMs": 1500
   },
   {
     "id": "song_422",
@@ -4036,7 +4366,9 @@
     "year": 1986,
     "previewUrl": "https://mxtape.celox.io/audio/song_422.m4a",
     "genre": "Rock",
-    "album": "Slippery When Wet"
+    "album": "Slippery When Wet",
+    "startMs": 13000,
+    "party": true
   },
   {
     "id": "song_423",
@@ -4045,7 +4377,8 @@
     "year": 1997,
     "previewUrl": "https://mxtape.celox.io/audio/song_423.m4a",
     "genre": "Hip-Hop",
-    "album": "Men In Black - The Album"
+    "album": "Men In Black - The Album",
+    "startMs": 6500
   },
   {
     "id": "song_424",
@@ -4054,7 +4387,8 @@
     "year": 2004,
     "album": "Breakaway",
     "previewUrl": "https://mxtape.celox.io/audio/song_424.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "startMs": 3500
   },
   {
     "id": "song_425",
@@ -4063,7 +4397,9 @@
     "year": 2017,
     "previewUrl": "https://mxtape.celox.io/audio/song_425.m4a",
     "genre": "Pop",
-    "album": "Dua Lipa"
+    "album": "Dua Lipa",
+    "startMs": 6000,
+    "party": true
   },
   {
     "id": "song_426",
@@ -4072,7 +4408,8 @@
     "year": 2022,
     "album": "Wildberry Lillet",
     "previewUrl": "https://mxtape.celox.io/audio/song_426.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "german": true
   },
   {
     "id": "song_427",
@@ -4081,7 +4418,8 @@
     "year": 1959,
     "album": "That's All",
     "previewUrl": "https://mxtape.celox.io/audio/song_427.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "startMs": 6500
   },
   {
     "id": "song_428",
@@ -4108,7 +4446,8 @@
     "year": 1986,
     "previewUrl": "https://mxtape.celox.io/audio/song_430.m4a",
     "genre": "Pop",
-    "album": "True Confessions"
+    "album": "True Confessions",
+    "party": true
   },
   {
     "id": "song_431",
@@ -4117,7 +4456,8 @@
     "year": 1997,
     "previewUrl": "https://mxtape.celox.io/audio/song_431.m4a",
     "genre": "Pop",
-    "album": "Backstreet Boys"
+    "album": "Backstreet Boys",
+    "party": true
   },
   {
     "id": "song_432",
@@ -4171,7 +4511,8 @@
     "year": 1974,
     "album": "Kung Fu Fighting",
     "previewUrl": "https://mxtape.celox.io/audio/song_437.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "party": true
   },
   {
     "id": "song_438",
@@ -4189,7 +4530,8 @@
     "year": 1997,
     "previewUrl": "https://mxtape.celox.io/audio/song_439.m4a",
     "genre": "Pop",
-    "album": "Let's Talk About Love"
+    "album": "Let's Talk About Love",
+    "startMs": 10500
   },
   {
     "id": "song_440",
@@ -4198,7 +4540,9 @@
     "year": 2005,
     "album": "Confessions on a Dance Floor",
     "previewUrl": "https://mxtape.celox.io/audio/song_440.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "startMs": 14000,
+    "party": true
   },
   {
     "id": "song_441",
@@ -4207,7 +4551,8 @@
     "year": 2014,
     "album": "Firestone",
     "previewUrl": "https://mxtape.celox.io/audio/song_441.m4a",
-    "genre": "Electronic"
+    "genre": "Electronic",
+    "startMs": 8000
   },
   {
     "id": "song_442",
@@ -4234,7 +4579,8 @@
     "year": 1967,
     "previewUrl": "https://mxtape.celox.io/audio/song_444.m4a",
     "genre": "Soul",
-    "album": "Soul Men"
+    "album": "Soul Men",
+    "startMs": 1500
   },
   {
     "id": "song_445",
@@ -4243,7 +4589,8 @@
     "year": 1974,
     "album": "Waterloo",
     "previewUrl": "https://mxtape.celox.io/audio/song_445.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "party": true
   },
   {
     "id": "song_446",
@@ -4252,7 +4599,8 @@
     "year": 1983,
     "album": "Faster Than the Speed of Night",
     "previewUrl": "https://mxtape.celox.io/audio/song_446.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "startMs": 18000
   },
   {
     "id": "song_447",
@@ -4261,7 +4609,9 @@
     "year": 1998,
     "album": "Backstage",
     "previewUrl": "https://mxtape.celox.io/audio/song_447.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "startMs": 15000,
+    "party": true
   },
   {
     "id": "song_448",
@@ -4279,7 +4629,8 @@
     "year": 2014,
     "album": "Rather Be",
     "previewUrl": "https://mxtape.celox.io/audio/song_449.m4a",
-    "genre": "Electronic"
+    "genre": "Electronic",
+    "startMs": 9000
   },
   {
     "id": "song_450",
@@ -4288,7 +4639,8 @@
     "year": 2025,
     "album": "You’ll Be Alright, Kid (Chapter 1)",
     "previewUrl": "https://mxtape.celox.io/audio/song_450.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "startMs": 7500
   },
   {
     "id": "song_451",
@@ -4296,7 +4648,8 @@
     "artist": "Doris Day",
     "year": 1956,
     "previewUrl": "https://mxtape.celox.io/audio/song_451.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "startMs": 1500
   },
   {
     "id": "song_452",
@@ -4314,7 +4667,8 @@
     "year": 1974,
     "album": "Sheer Heart Attack",
     "previewUrl": "https://mxtape.celox.io/audio/song_453.m4a",
-    "genre": "Rock"
+    "genre": "Rock",
+    "startMs": 6000
   },
   {
     "id": "song_454",
@@ -4323,7 +4677,8 @@
     "year": 1982,
     "previewUrl": "https://mxtape.celox.io/audio/song_454.m4a",
     "genre": "Pop",
-    "album": "Too Rye Ay"
+    "album": "Too Rye Ay",
+    "party": true
   },
   {
     "id": "song_455",
@@ -4332,7 +4687,8 @@
     "year": 1999,
     "album": "Ricky Martin",
     "previewUrl": "https://mxtape.celox.io/audio/song_455.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "party": true
   },
   {
     "id": "song_456",
@@ -4359,7 +4715,8 @@
     "year": 2022,
     "previewUrl": "https://mxtape.celox.io/audio/song_458.m4a",
     "genre": "R&B",
-    "album": "Escapism."
+    "album": "Escapism.",
+    "startMs": 10000
   },
   {
     "id": "song_459",
@@ -4368,7 +4725,8 @@
     "year": 1956,
     "previewUrl": "https://mxtape.celox.io/audio/song_459.m4a",
     "genre": "Pop",
-    "album": "Calypso"
+    "album": "Calypso",
+    "startMs": 3000
   },
   {
     "id": "song_460",
@@ -4377,7 +4735,8 @@
     "year": 1967,
     "album": "Happy Together",
     "previewUrl": "https://mxtape.celox.io/audio/song_460.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "startMs": 4000
   },
   {
     "id": "song_461",
@@ -4386,7 +4745,8 @@
     "year": 1975,
     "album": "KC and the Sunshine Band",
     "previewUrl": "https://mxtape.celox.io/audio/song_461.m4a",
-    "genre": "Soul"
+    "genre": "Soul",
+    "party": true
   },
   {
     "id": "song_462",
@@ -4413,7 +4773,8 @@
     "year": 2007,
     "previewUrl": "https://mxtape.celox.io/audio/song_464.m4a",
     "genre": "Pop",
-    "album": "Life In Cartoon Motion"
+    "album": "Life In Cartoon Motion",
+    "startMs": 4000
   },
   {
     "id": "song_465",
@@ -4449,7 +4810,9 @@
     "year": 1975,
     "previewUrl": "https://mxtape.celox.io/audio/song_468.m4a",
     "genre": "Soul",
-    "album": "Disco Baby"
+    "album": "Disco Baby",
+    "startMs": 2000,
+    "party": true
   },
   {
     "id": "song_469",
@@ -4476,7 +4839,8 @@
     "year": 2007,
     "album": "Bleeding Love",
     "previewUrl": "https://mxtape.celox.io/audio/song_471.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "startMs": 4000
   },
   {
     "id": "song_472",
@@ -4485,7 +4849,8 @@
     "year": 2012,
     "album": "Mit K",
     "previewUrl": "https://mxtape.celox.io/audio/song_472.m4a",
-    "genre": "Rock"
+    "genre": "Rock",
+    "german": true
   },
   {
     "id": "song_473",
@@ -4503,7 +4868,8 @@
     "year": 1967,
     "album": "The Voice of Scott McKenzie",
     "previewUrl": "https://mxtape.celox.io/audio/song_474.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "startMs": 2500
   },
   {
     "id": "song_475",
@@ -4521,7 +4887,8 @@
     "year": 1983,
     "album": "Blue Monday",
     "previewUrl": "https://mxtape.celox.io/audio/song_476.m4a",
-    "genre": "Electronic"
+    "genre": "Electronic",
+    "startMs": 2000
   },
   {
     "id": "song_477",
@@ -4530,7 +4897,8 @@
     "year": 1995,
     "previewUrl": "https://mxtape.celox.io/audio/song_477.m4a",
     "genre": "Rock",
-    "album": "Jagged Little Pill"
+    "album": "Jagged Little Pill",
+    "startMs": 17500
   },
   {
     "id": "song_478",
@@ -4539,7 +4907,8 @@
     "year": 2008,
     "album": "Rockferry",
     "previewUrl": "https://mxtape.celox.io/audio/song_478.m4a",
-    "genre": "Soul"
+    "genre": "Soul",
+    "startMs": 1500
   },
   {
     "id": "song_479",
@@ -4556,7 +4925,8 @@
     "year": 1967,
     "album": "The Letter / Neon Rainbow",
     "previewUrl": "https://mxtape.celox.io/audio/song_480.m4a",
-    "genre": "Rock"
+    "genre": "Rock",
+    "startMs": 2500
   },
   {
     "id": "song_481",
@@ -4565,7 +4935,9 @@
     "year": 1976,
     "album": "Wild Cherry",
     "previewUrl": "https://mxtape.celox.io/audio/song_481.m4a",
-    "genre": "Soul"
+    "genre": "Soul",
+    "startMs": 7000,
+    "party": true
   },
   {
     "id": "song_482",
@@ -4592,7 +4964,8 @@
     "year": 2008,
     "previewUrl": "https://mxtape.celox.io/audio/song_484.m4a",
     "genre": "Pop",
-    "album": "One of the Boys"
+    "album": "One of the Boys",
+    "party": true
   },
   {
     "id": "song_485",
@@ -4664,7 +5037,8 @@
     "year": 1987,
     "previewUrl": "https://mxtape.celox.io/audio/song_492.m4a",
     "genre": "Rock",
-    "album": "Appetite For Destruction"
+    "album": "Appetite For Destruction",
+    "party": true
   },
   {
     "id": "song_493",
@@ -4673,7 +5047,9 @@
     "year": 2002,
     "album": "Die gute Seite",
     "previewUrl": "https://mxtape.celox.io/audio/song_493.m4a",
-    "genre": "Rock"
+    "genre": "Rock",
+    "startMs": 9500,
+    "german": true
   },
   {
     "id": "song_494",
@@ -4691,7 +5067,9 @@
     "year": 1978,
     "album": "Blondes Have More Fun",
     "previewUrl": "https://mxtape.celox.io/audio/song_495.m4a",
-    "genre": "Rock"
+    "genre": "Rock",
+    "startMs": 1500,
+    "party": true
   },
   {
     "id": "song_496",
@@ -4709,7 +5087,9 @@
     "year": 2004,
     "album": "Verschwende deine Zeit",
     "previewUrl": "https://mxtape.celox.io/audio/song_497.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "startMs": 17500,
+    "german": true
   },
   {
     "id": "song_498",
@@ -4717,7 +5097,8 @@
     "artist": "The Rolling Stones",
     "year": 1969,
     "previewUrl": "https://mxtape.celox.io/audio/song_498.m4a",
-    "genre": "Rock"
+    "genre": "Rock",
+    "startMs": 4000
   },
   {
     "id": "song_499",
@@ -4726,7 +5107,8 @@
     "year": 1978,
     "album": "Outlandos d'Amour",
     "previewUrl": "https://mxtape.celox.io/audio/song_499.m4a",
-    "genre": "Rock"
+    "genre": "Rock",
+    "startMs": 4000
   },
   {
     "id": "song_500",
@@ -4735,6 +5117,7 @@
     "year": 1988,
     "previewUrl": "https://mxtape.celox.io/audio/song_500.m4a",
     "genre": "Pop",
-    "album": "Simple Pleasures"
+    "album": "Simple Pleasures",
+    "party": true
   }
 ]

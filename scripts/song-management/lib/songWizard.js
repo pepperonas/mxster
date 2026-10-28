@@ -11,10 +11,12 @@
  *   --yes        accept the suggestion without questions
  *   --no-upload  keep MP3 and cover local (upload later with rsync)
  */
+import fs from 'fs'
 import path from 'path'
 import readline from 'readline'
 import { lookupItunes, lookupRecording, fetchCover } from './musicData.js'
-import { COVER_DIR } from './songStore.js'
+import { AUDIO_DIR, COVER_DIR } from './songStore.js'
+import { rmsLevels, startFromLevels } from '../../audio-hosting/start-points.js'
 import { downloadAndUploadSong, uploadFile } from '../../audio-hosting/download-single-song.js'
 
 export const GENRES = ['Pop', 'Rock', 'Hip-Hop', 'Electronic', 'Dance', 'House', 'Disco', 'R&B', 'Soul', 'Funk', 'Metal', 'Schlager', 'Reggae', 'Country']
@@ -112,6 +114,13 @@ export async function proposeSong({ artist, title, flags, prompt, current }) {
 /** Download audio, fetch cover, upload both. Returns { audio: bool, cover: string|null }. */
 export async function fetchMedia(song, coverInfo, { upload }) {
   const audio = Boolean(await downloadAndUploadSong(song, { upload }))
+  if (audio) {
+    // Where the song becomes recognisable (quiet intros skipped)
+    const file = path.join(AUDIO_DIR, `${song.id}.m4a`)
+    const start = fs.existsSync(file) ? startFromLevels(rmsLevels(file)) : 0
+    if (start > 0) song.startMs = start
+    else delete song.startMs
+  }
   const coverFile = path.join(COVER_DIR, `${song.id}.jpg`)
   const source = await fetchCover(coverInfo, coverFile)
   if (source) {

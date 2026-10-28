@@ -14,6 +14,12 @@ export interface Song {
   factEn?: string
   /** Little-known track (deep cut, club track): only drawn when the round allows exotics. */
   exotic?: boolean
+  /** Sung in German (round option "Deutschsprachig"). */
+  german?: boolean
+  /** A crowd pleaser (round option "Party-Klassiker"). */
+  party?: boolean
+  /** Where the song becomes recognisable (silence and quiet intros skipped), ms. */
+  startMs?: number
   spotifyId?: string
   previewUrl?: string
   youtubeUrl?: string
@@ -45,6 +51,8 @@ export interface Player {
   guest?: boolean
   /** Online rounds: left on purpose — out for the rest of the round. */
   left?: boolean
+  /** Bonus option: jokers earned by naming title and artist (game/bonus). */
+  jokers?: number
 }
 
 // ============================================================================

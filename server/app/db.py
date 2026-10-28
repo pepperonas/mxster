@@ -135,6 +135,47 @@ class RoomInvite(Base):
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow)
 
 
+REPORT_REASONS = ("year", "version", "audio", "cover", "other")
+
+
+class SongReport(Base):
+    """Someone says a song is wrong (year, version, sound, cover)."""
+
+    __tablename__ = "song_reports"
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    song_id: Mapped[str] = mapped_column(String(16), index=True)
+    reason: Mapped[str] = mapped_column(String(16))
+    note: Mapped[str] = mapped_column(String(300), default="")
+    user_id: Mapped[int] = mapped_column(ForeignKey("users.id", ondelete="CASCADE"), index=True)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow)
+    resolved_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+
+
+class SongOverride(Base):
+    """A correction made in the admin area: applies to every round at once,
+    without a new build (the bundled song list stays the default)."""
+
+    __tablename__ = "song_overrides"
+    song_id: Mapped[str] = mapped_column(String(16), primary_key=True)
+    year: Mapped[int | None] = mapped_column(Integer, nullable=True)
+    blocked: Mapped[bool] = mapped_column(Integer, default=0)
+    admin_email: Mapped[str] = mapped_column(String(320), default="")
+    updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow)
+
+
+class DailyResult(Base):
+    """Today's round ("Tagesrunde"): the same songs for everyone, one try a day."""
+
+    __tablename__ = "daily_results"
+    __table_args__ = (UniqueConstraint("user_id", "day"),)
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    user_id: Mapped[int] = mapped_column(ForeignKey("users.id", ondelete="CASCADE"), index=True)
+    day: Mapped[str] = mapped_column(String(10), index=True)
+    score: Mapped[int] = mapped_column(Integer)
+    total: Mapped[int] = mapped_column(Integer)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow)
+
+
 def _configure_sqlite(dbapi_connection, _record) -> None:
     cur = dbapi_connection.cursor()
     cur.execute("PRAGMA journal_mode=WAL")

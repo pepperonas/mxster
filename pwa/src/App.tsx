@@ -11,6 +11,7 @@ import { GameScreen } from '@/screens/GameScreen'
 import { HistoryScreen, HistoryDetailScreen } from '@/screens/HistoryScreen'
 import { AchievementsScreen } from '@/screens/AchievementsScreen'
 import { StatisticsScreen } from '@/screens/StatisticsScreen'
+import { DailyScreen } from '@/screens/DailyScreen'
 import { PlayersScreen, PlayerDetailScreen } from '@/screens/PlayersScreen'
 import { JoinScreen } from '@/screens/JoinScreen'
 import { RoomScreen } from '@/screens/RoomScreen'
@@ -97,6 +98,7 @@ const router = createBrowserRouter([
           { path: '/history', element: <HistoryScreen /> },
           { path: '/history/:id', element: <HistoryDetailScreen /> },
           { path: '/stats', element: <StatisticsScreen /> },
+          { path: '/daily', element: <DailyScreen /> },
           { path: '/players', element: <PlayersScreen /> },
           { path: '/players/:name', element: <PlayerDetailScreen /> },
           { path: '/achievements', element: <AchievementsScreen /> },

@@ -15,10 +15,10 @@
 <h3>👉 <a href="https://mxtape.celox.io">mxtape.celox.io</a> — sign in with Google or email, or join a friend's room as a guest with just a link</h3>
 
 <!-- BADGES:BIG — version, tests, lines of code and songs; readme.test.ts keeps them true, scripts/readme-badges.mjs rewrites them. -->
-[![version](https://img.shields.io/badge/version-0.10.2-C2185B?style=for-the-badge&logo=semver&logoColor=white)](https://github.com/pepperonas/mxtape/releases/latest)
-[![tests](https://img.shields.io/badge/tests-619-2E9E5B?style=for-the-badge&logo=vitest&logoColor=white)](#tests-and-ci)
-[![lines of code](https://img.shields.io/badge/lines%20of%20code-22.4k-4B6BDF?style=for-the-badge&logo=typescript&logoColor=white)](pwa/src)
-[![test code](https://img.shields.io/badge/test%20code-7.8k-2E9E5B?style=for-the-badge&logo=typescript&logoColor=white)](#tests-and-ci)
+[![version](https://img.shields.io/badge/version-0.11.0-C2185B?style=for-the-badge&logo=semver&logoColor=white)](https://github.com/pepperonas/mxtape/releases/latest)
+[![tests](https://img.shields.io/badge/tests-654-2E9E5B?style=for-the-badge&logo=vitest&logoColor=white)](#tests-and-ci)
+[![lines of code](https://img.shields.io/badge/lines%20of%20code-24.3k-4B6BDF?style=for-the-badge&logo=typescript&logoColor=white)](pwa/src)
+[![test code](https://img.shields.io/badge/test%20code-8.2k-2E9E5B?style=for-the-badge&logo=typescript&logoColor=white)](#tests-and-ci)
 [![songs](https://img.shields.io/badge/songs-500-FF8A3D?style=for-the-badge&logo=applemusic&logoColor=white)](#the-song-library)
 
 [![Donate with PayPal](https://img.shields.io/badge/PayPal-support%20this%20project-00457C?style=for-the-badge&logo=paypal&logoColor=white)](https://www.paypal.com/donate/?business=martin.pfeffer@celox.io&currency_code=EUR&item_name=mxtape)
@@ -148,11 +148,13 @@ Before each round you choose:
 
 - **Length:** short (5 songs), normal (10) or long (15).
 - **Decades:** all, or only some — just the 80s and 90s, say. When the chosen decades run dry, the rest join in so the round never stalls.
+- **Genre and selection:** pop, rock, soul & R&B, hip-hop, electronic, other — and a selection: all songs, *party classics*, *German songs*, or *your nemeses* (the songs your group got wrong before, from ten misses on).
+- **Bonus for title and artist** (timeline modes): the card stays face down — you only listen. Name title and artist when placing and earn a joker (at most three); a joker swaps a song you would rather not place.
 - **Objection** (timeline modes): everyone has three. After a card is placed it stays face down, and anyone who disagrees moves it to another gap. If the player was wrong and the objection right, the objector gets the card. An objection always costs one of the three.
 - **Exotics:** off by default. Turned on, little-known club tracks, remixes and rarities join the pool.
 - **Teams** (from four people): a team shares its timeline, points and objections; members take turns.
 
-Songs from your recent rounds only come back once nothing new is left. **There are no draws:** if several players are level at the end, a tiebreak follows — only they play on, one song each per round, until exactly one leads. Playing alone? Up to three bots (easy, medium, hard) take you on.
+Songs from your recent rounds only come back once nothing new is left; songs start where they become recognisable (silent and quiet intros are skipped). **There are no draws:** if several players are level at the end, a tiebreak follows — only they play on, one song each per round, until exactly one leads. Playing alone? Up to three bots (easy, medium, hard) take you on.
 
 ## Multiplayer
 
@@ -170,6 +172,9 @@ Instead of passing one phone around, everyone plays on their own device — in t
 ## Features
 
 - **500 songs** from the 1950s to today, self-hosted, with an optional random start position
+- **Daily round:** the same ten songs for everyone each day, one try, then your friends' scores
+- **Share the result** as a picture (WhatsApp and the like) from the end screen
+- **Report a song** after the reveal (wrong year, version, sound or cover); the admin fixes the year or takes the song out, live for every round
 - **Reveal with context:** album cover on the record label, album name and a short "Did you know?"
 - **Where the card goes is obvious:** neighbour years light up and a position strip reads `2008 — ? — 2020` in the poster type
 - **A running round survives a reload** or a closed tab and is offered on the home screen
@@ -254,8 +259,9 @@ scripts/  song management, audio hosting, deployment
 | Suite | What it covers |
 |-------|----------------|
 | `cd pwa && npx vitest run` | game rules, turn flow, objection, tiebreak, stats, sync and merge, online permissions and sanitizing, screens |
-| `cd server && .venv/bin/python -m pytest -q` | sign-in and approval, data versioning, audio gate, rooms and WebSocket relay, friends and search |
+| `cd server && .venv/bin/python -m pytest -q` | sign-in and approval, data versioning, audio gate, rooms and WebSocket relay, friends and search, song reports, daily round |
 | `npm test` (repo root) | integrity of the song data |
+| `cd pwa && npm run e2e` | two browsers play an online round against the real API (join, place, pass, object) |
 | `cd pwa && npx tsc --noEmit` | types |
 
 GitHub Actions runs all of it on every push ([`ci.yml`](.github/workflows/ci.yml)). The big numbers at the top are kept honest by `pwa/src/__tests__/readme.test.ts`; `node scripts/readme-badges.mjs` recounts and rewrites them.

@@ -14,6 +14,9 @@ import { rankPlayers } from '@/game/tiebreak'
 import { useMessages } from '@/i18n'
 import { gameText } from '@/i18n/messages/game'
 import { SignUpOffer } from './SignUpOffer'
+import { shareResultCard } from '@/utils/resultImage'
+import { formatDay } from '@/utils/format'
+import { dailyText } from '@/i18n/messages/daily'
 
 interface GameOverProps {
   winner: Player
@@ -27,10 +30,13 @@ interface GameOverProps {
   homeLabel?: string
   /** Online guest without an account: offer one (their seat's name pre-filled). */
   signUpName?: string
+  /** Today's round: the score instead of a winner. */
+  daily?: { score: number; total: number }
 }
 
-export function GameOver({ winner, players, mode, onRematch, onHome, rematchBy, homeLabel, signUpName }: GameOverProps) {
+export function GameOver({ winner, players, mode, onRematch, onHome, rematchBy, homeLabel, signUpName, daily }: GameOverProps) {
   const t = useMessages(gameText)
+  const dt = useMessages(dailyText)
   const hardcore = mode === 'hardcore'
   // Who left the room is listed last, without a place
   const ranked: { player: Player; place: number | null }[] = [
@@ -64,13 +70,15 @@ export function GameOver({ winner, players, mode, onRematch, onHome, rematchBy, 
         </m.div>
 
         <m.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ ...spring.spatialDefault, delay: 0.25 }}>
-          <p className="mt-8 text-title-md text-md-on-surface-variant text-center">{t.winnerIs}</p>
+          <p className="mt-8 text-title-md text-md-on-surface-variant text-center">{daily ? dt.gameOverTitle : t.winnerIs}</p>
           <h1 id="game-over-title" className="text-poster text-center break-words" style={{ fontSize: 'clamp(2.8rem, 14vw, 4.5rem)' }}>
-            {winner.name}
+            {daily ? dt.scoreOf(daily.score, daily.total) : winner.name}
           </h1>
+          {daily && <p className="mt-2 text-title-md text-md-on-surface-variant text-center">{dt.gameOverScore(daily.score, daily.total)}</p>}
           {winner.members && <p className="mt-2 text-title-md text-md-on-surface-variant text-center">{winner.members.join(', ')}</p>}
         </m.div>
 
+        {!daily && (
         <ol className="mt-8 space-y-2">
           {ranked.map(({ player: p, place }, i) => (
             <m.li
@@ -92,10 +100,32 @@ export function GameOver({ winner, players, mode, onRematch, onHome, rematchBy, 
             </m.li>
           ))}
         </ol>
+        )}
 
         {signUpName !== undefined && <SignUpOffer name={signUpName} />}
 
         <div className="mt-auto pt-10 space-y-3">
+          <button
+            type="button"
+            className="btn btn-tonal m3-state-layer w-full"
+            onClick={() =>
+              void shareResultCard({
+                kicker: daily ? dt.gameOverTitle : t.winnerIs,
+                headline: daily ? dt.scoreOf(daily.score, daily.total) : winner.name,
+                rows: daily
+                  ? []
+                  : ranked.map(({ player: p, place }) => ({
+                      place: place === null ? '–' : `${place}.`,
+                      name: p.name,
+                      value: hardcore ? t.pointsValue(p.score) : t.songsValue(p.cards)
+                    })),
+                footer: `${formatDay(new Date().toISOString())} · mxtape.celox.io`
+              })
+            }
+          >
+            <Icon name="share" />
+            {t.shareResult}
+          </button>
           {onRematch ? (
             <button type="button" className="btn btn-lg btn-brand m3-state-layer w-full" onClick={onRematch}>
               <Icon name="replay" />
