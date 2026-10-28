@@ -5,11 +5,14 @@ import { clearSavedGame } from '@/game/savedGame'
 import { useEffect, useRef, useState, type ReactNode } from 'react'
 import { useAuth, useMe } from '@/auth/AuthContext'
 import { useAchievements, useGameHistory, useSettings, useUI } from '@/contexts'
+import { applyAppearance } from '@/contexts/SettingsContext'
 import { useAppNavigate } from '@/hooks/useAppNavigate'
 import { Avatar } from '@/components/ui/Avatar'
 import { Icon, type IconName } from '@/components/ui/Icon'
 import { Switch } from '@/components/ui/Switch'
-import { toggleThemeWithReveal } from '@/utils/themeReveal'
+import { revealChange, toggleThemeWithReveal } from '@/utils/themeReveal'
+import { ColorPicker } from '@/components/ui/ColorPicker'
+import type { ColorScheme } from '@/styles/colorSchemes'
 import { canVibrate } from '@/utils/haptics'
 import { api } from '@/api/client'
 import { LegalLinks } from '@/legal/LegalScreen'
@@ -17,7 +20,7 @@ import { LanguageSwitch } from '@/components/ui/LanguageSwitch'
 import { useMessages } from '@/i18n'
 import { profileText } from '@/i18n/messages/profile'
 
-const VERSION = '0.12.7'
+const VERSION = '0.12.8'
 
 export function ProfileScreen() {
   const me = useMe()
@@ -36,6 +39,13 @@ export function ProfileScreen() {
     const next = dark ? 'light' : 'dark'
     toggleThemeWithReveal(next, () => updateSettings({ theme: next }), themeBtn.current)
   }
+
+  const chooseColor = (next: ColorScheme, origin: HTMLElement) =>
+    revealChange(() => {
+      // DOM first (the reveal snapshots right after), state and storage follow
+      applyAppearance(settings.theme, next)
+      updateSettings({ color: next })
+    }, origin)
 
   const download = () => {
     const blob = new Blob(
@@ -120,6 +130,20 @@ export function ProfileScreen() {
             <Switch checked={dark} onChange={toggleTheme} ariaLabel={t.darkTheme} />
           </span>
         </Item>
+        <div className="px-4 py-3 space-y-3">
+          <div className="flex items-center gap-4">
+            <Icon name="palette" className="text-md-on-surface-variant shrink-0" />
+            <div className="flex-1 min-w-0">
+              <p className="text-body-lg">{t.color}</p>
+              <p className="meta">
+                {t[`color_${settings.color}`]} · {t.colorText}
+              </p>
+            </div>
+          </div>
+          <div className="sm:pl-10">
+            <ColorPicker value={settings.color} onChange={chooseColor} />
+          </div>
+        </div>
         <Item icon="globe" title={t.language} text={t.languageText}>
           <LanguageSwitch />
         </Item>

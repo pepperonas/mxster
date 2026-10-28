@@ -9,14 +9,23 @@
   <meta name="robots" content="noindex, nofollow">
   <meta name="theme-color" content="#191113">
 
-  <!-- Pre-paint theme (prevents a flash when the light theme is stored) -->
+  <!-- Pre-paint theme and colour scheme (no flash in the wrong colours).
+       The colours come from scripts/gen-tokens.mjs (same seeds as the CSS). -->
   <script>
+    /* BEGIN GENERATED SCHEME COLOURS — scripts/gen-tokens.mjs */ var MX_SCHEMES = {"vinyl":{"d":["#191113","#fe4d86","#140c0e","#312829"],"l":["#fff8f7","#dc306d","#22191b","#413738"]},"ocean":{"d":["#111318","#4790f7","#0c0e13","#282a2f"],"l":["#f9f9ff","#2276db","#191c20","#37393e"]},"lagoon":{"d":["#0e1415","#00a0ae","#090f10","#252b2c"],"l":["#f5fafb","#008490","#171d1e","#343a3b"]},"amethyst":{"d":["#161217","#c46aeb","#110d12","#2d282e"],"l":["#fff7fb","#a84fce","#1f1a1f","#3d373d"]},"moss":{"d":["#15130c","#a19200","#100e07","#2c2a21"],"l":["#fff9eb","#847800","#1d1c13","#3b3930"]}}; /* END GENERATED SCHEME COLOURS */
     try {
+      var root = document.documentElement;
       var t = localStorage.getItem('mxster_theme');
-      if (t === 'light' || t === 'dark') {
-        document.documentElement.dataset.theme = t;
-        if (t === 'light') document.querySelector('meta[name="theme-color"]').content = '#fff8f7';
-      }
+      if (t === 'light' || t === 'dark') root.dataset.theme = t;
+      var c = localStorage.getItem('mxtape_color');
+      if (!MX_SCHEMES[c]) c = 'vinyl';
+      if (c !== 'vinyl') root.dataset.color = c;
+      var s = MX_SCHEMES[c][t === 'light' ? 'l' : 'd'];
+      document.querySelector('meta[name="theme-color"]').content = s[0];
+      root.style.setProperty('--loader-bg', s[0]);
+      root.style.setProperty('--loader-label', s[1]);
+      root.style.setProperty('--loader-vinyl', s[2]);
+      root.style.setProperty('--loader-groove', s[3]);
     } catch (e) {}
     // Language: stored choice, else the browser's first German or English preference
     try {
@@ -48,24 +57,22 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="mxtape">
 
-  <!-- Loader paints before any bundled CSS: hex values mirror design-tokens.css
-       (surface neutral-6 / neutral-98, label primary-60, vinyl neutral-4). -->
+  <!-- Loader paints before any bundled CSS, in the stored scheme's colours
+       (set above). It carries its own background, so the page background
+       stays with the app's CSS and follows theme and colour changes. -->
   <style>
-    html { background: #191113; }
-    html[data-theme="light"] { background: #fff8f7; }
     #initial-loader {
       position: fixed; inset: 0; display: grid; place-items: center; z-index: 9999;
+      background: var(--loader-bg, #191113);
       transition: opacity 0.25s ease-out;
     }
     #initial-loader.loaded { opacity: 0; pointer-events: none; }
     .loader-disc {
       width: 96px; height: 96px; border-radius: 50%;
-      background: radial-gradient(circle, #fe4d86 0 22%, #140c0e 23% 100%);
-      box-shadow: inset 0 0 0 10px #140c0e, inset 0 0 0 11px #2b2023, inset 0 0 0 20px #140c0e, inset 0 0 0 21px #2b2023;
+      background: radial-gradient(circle, var(--loader-label, #fe4d86) 0 22%, var(--loader-vinyl, #140c0e) 23% 100%);
+      box-shadow: inset 0 0 0 10px var(--loader-vinyl, #140c0e), inset 0 0 0 11px var(--loader-groove, #2b2023),
+        inset 0 0 0 20px var(--loader-vinyl, #140c0e), inset 0 0 0 21px var(--loader-groove, #2b2023);
       animation: loader-spin 1.6s linear infinite;
-    }
-    html[data-theme="light"] .loader-disc {
-      background: radial-gradient(circle, #dc306d 0 22%, #22191b 23% 100%);
     }
     @keyframes loader-spin { to { transform: rotate(360deg); } }
     @media (prefers-reduced-motion: reduce) { .loader-disc { animation: none; } }

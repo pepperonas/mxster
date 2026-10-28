@@ -34,14 +34,19 @@ export function toggleThemeWithReveal(
   applyState: () => void,
   originElement?: HTMLElement | null
 ): void {
-  const doc = document as DocWithVT
-
-  // The DOM mutation must happen inside the VT callback; React's state update
-  // (persistence + meta sync) may flush later without breaking the visual.
-  const apply = () => {
+  revealChange(() => {
     document.documentElement.dataset.theme = next
     applyState()
-  }
+  }, originElement)
+}
+
+/**
+ * Any change of the app's look (theme, colour scheme) with the same circular
+ * reveal from the control that made it. `apply` must change the DOM
+ * synchronously (the View Transition snapshots right after it).
+ */
+export function revealChange(apply: () => void, originElement?: HTMLElement | null): void {
+  const doc = document as DocWithVT
 
   if (prefersReducedMotion() || typeof doc.startViewTransition !== 'function') {
     apply()

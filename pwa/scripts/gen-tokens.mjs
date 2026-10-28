@@ -1,11 +1,22 @@
 /**
  * Regenerates the M3 reference palettes in src/styles/design-tokens.css
- * (between the GENERATED PALETTES markers) from the brand seeds below.
+ * (between the GENERATED PALETTES markers) from the seeds below, one set per
+ * colour scheme, plus src/styles/colorSchemes.ts and the pre-paint colours in
+ * index.html.
  *
- *   node scripts/gen-tokens.mjs          # rewrite the block
- *   node scripts/gen-tokens.mjs --check  # exit 1 if the file is out of date
+ *   node scripts/gen-tokens.mjs          # rewrite the generated parts
+ *   node scripts/gen-tokens.mjs --check  # exit 1 if anything is out of date or a scheme fails its checks
  *
- * Roles (dark/light) reference tones by name, so a reseed reskins everything.
+ * Roles (dark/light) reference tones by name, so a scheme reskins everything:
+ * accents, surfaces (tinted with the scheme's hue), the record, the backdrop,
+ * confetti, charts. A scheme only sets primary, secondary, tertiary, neutrals
+ * and the third chart hue; error, success and warning stay the same in every
+ * scheme (they carry meaning).
+ *
+ * Every scheme is checked before anything is written: text contrast of the
+ * main roles in both themes, the brand fill with white text, accents that do
+ * not look like "right" (success) or "wrong" (error), and three chart series
+ * that stay apart.
  */
 import { readFileSync, writeFileSync } from 'node:fs'
 // Deep imports: the package's barrel has extension-less ESM paths Node can't resolve.
@@ -13,53 +24,195 @@ import { Hct } from '../node_modules/@material/material-color-utilities/hct/hct.
 import { TonalPalette } from '../node_modules/@material/material-color-utilities/palettes/tonal_palette.js'
 import { argbFromHex } from '../node_modules/@material/material-color-utilities/utils/string_utils.js'
 
-export const SEEDS = {
-  primary: '#C2185B',   // vinyl magenta
-  tertiary: '#FF8A3D',  // warm amber-orange (stage light)
+/** Meaning colours, the same in every scheme. */
+export const FIXED = {
   error: '#B3261E',
   success: '#2E9E5B',
-  warning: '#F2A900',
-  data: '#1E88E5',      // cool third hue for charts only (series 3)
+  warning: '#F2A900'
 }
+
+/**
+ * Colour schemes. The first is the default (vinyl magenta, as before).
+ * primary: accents and the record label; tertiary: the warm second accent;
+ * data: the third chart series, picked away from the other two.
+ */
+export const SCHEMES = {
+  vinyl: { primary: '#C2185B', tertiary: '#FF8A3D', data: '#1E88E5' },
+  ocean: { primary: '#1565C0', tertiary: '#FFB300', data: '#E91E63' },
+  lagoon: { primary: '#00838F', tertiary: '#EC407A', data: '#7E57C2' },
+  amethyst: { primary: '#7B1FA2', tertiary: '#26A69A', data: '#FFA000' },
+  moss: { primary: '#827717', tertiary: '#8E24AA', data: '#1E88E5' }
+}
+export const DEFAULT_SCHEME = 'vinyl'
 
 const TONES = [0, 4, 6, 10, 12, 17, 20, 22, 24, 30, 40, 50, 60, 70, 80, 87, 90, 92, 94, 95, 96, 98, 100]
 
-function palettes() {
-  const p = Hct.fromInt(argbFromHex(SEEDS.primary))
-  const t = Hct.fromInt(argbFromHex(SEEDS.tertiary))
+function schemePalettes(seeds) {
+  const p = Hct.fromInt(argbFromHex(seeds.primary))
+  const t = Hct.fromInt(argbFromHex(seeds.tertiary))
   return {
     primary: TonalPalette.fromHueAndChroma(p.hue, Math.max(p.chroma, 60)),
     secondary: TonalPalette.fromHueAndChroma(p.hue, 22),
     tertiary: TonalPalette.fromHueAndChroma(t.hue, Math.max(t.chroma, 50)),
     neutral: TonalPalette.fromHueAndChroma(p.hue, 6),
     'neutral-variant': TonalPalette.fromHueAndChroma(p.hue, 12),
-    error: TonalPalette.fromInt(argbFromHex(SEEDS.error)),
-    success: TonalPalette.fromInt(argbFromHex(SEEDS.success)),
-    warning: TonalPalette.fromInt(argbFromHex(SEEDS.warning)),
-    data: TonalPalette.fromInt(argbFromHex(SEEDS.data)),
+    data: TonalPalette.fromInt(argbFromHex(seeds.data))
   }
 }
+const fixedPalettes = () => Object.fromEntries(Object.entries(FIXED).map(([k, hex]) => [k, TonalPalette.fromInt(argbFromHex(hex))]))
 
 const triplet = (argb) => `${(argb >> 16) & 255} ${(argb >> 8) & 255} ${argb & 255}`
+const hex = (argb) => '#' + (argb & 0xffffff).toString(16).padStart(6, '0')
+
+function lines(pals) {
+  const out = []
+  for (const [name, pal] of Object.entries(pals)) {
+    out.push(`  /* ${name} */`)
+    for (const tone of TONES) out.push(`  --md-ref-${name}-${tone}: ${triplet(pal.tone(tone))};`)
+  }
+  return out
+}
 
 export function renderBlock() {
-  const lines = ['/* BEGIN GENERATED PALETTES — scripts/gen-tokens.mjs */', ':root {']
-  for (const [name, pal] of Object.entries(palettes())) {
-    lines.push(`  /* ${name} */`)
-    for (const tone of TONES) lines.push(`  --md-ref-${name}-${tone}: ${triplet(pal.tone(tone))};`)
+  const out = ['/* BEGIN GENERATED PALETTES — scripts/gen-tokens.mjs */', ':root {']
+  out.push(...lines({ ...schemePalettes(SCHEMES[DEFAULT_SCHEME]), ...fixedPalettes() }), '}')
+  for (const [id, seeds] of Object.entries(SCHEMES)) {
+    if (id === DEFAULT_SCHEME) continue
+    out.push(`[data-color='${id}'] {`, ...lines(schemePalettes(seeds)), '}')
   }
-  lines.push('}', '/* END GENERATED PALETTES */')
-  return lines.join('\n')
+  out.push('/* END GENERATED PALETTES */')
+  return out.join('\n')
 }
 
-const file = new URL('../src/styles/design-tokens.css', import.meta.url)
-const css = readFileSync(file, 'utf8')
-const re = /\/\* BEGIN GENERATED PALETTES[\s\S]*?\/\* END GENERATED PALETTES \*\//
-if (!re.test(css)) throw new Error('GENERATED PALETTES markers missing in design-tokens.css')
-const next = css.replace(re, renderBlock())
-if (process.argv.includes('--check')) {
-  if (next !== css) { console.error('design-tokens.css is out of date — run node scripts/gen-tokens.mjs'); process.exit(1) }
-} else {
-  writeFileSync(file, next)
-  console.log('palettes regenerated')
+// ── What the app needs outside CSS (pre-paint, theme-color, swatches) ──────
+
+/** Per scheme and theme: page background, record label and vinyl (mirrors the roles in design-tokens.css). */
+export function schemeColours() {
+  return Object.fromEntries(
+    Object.entries(SCHEMES).map(([id, seeds]) => {
+      const p = schemePalettes(seeds)
+      return [
+        id,
+        {
+          swatch: { primary: hex(p.primary.tone(50)), tertiary: hex(p.tertiary.tone(70)) },
+          dark: { surface: hex(p.neutral.tone(6)), label: hex(p.primary.tone(60)), vinyl: hex(p.neutral.tone(4)), groove: hex(p.neutral.tone(17)) },
+          light: { surface: hex(p.neutral.tone(98)), label: hex(p.primary.tone(50)), vinyl: hex(p.neutral.tone(10)), groove: hex(p.neutral.tone(24)) }
+        }
+      ]
+    })
+  )
 }
+
+function renderTs() {
+  return `/* GENERATED by scripts/gen-tokens.mjs — do not edit. */
+/** The colour schemes a player can choose (Profile → Farbe), with the colours the app needs outside CSS. */
+export const COLOR_SCHEMES = ${JSON.stringify(schemeColours(), null, 2)} as const
+
+export type ColorScheme = keyof typeof COLOR_SCHEMES
+export const COLOR_SCHEME_IDS = Object.keys(COLOR_SCHEMES) as ColorScheme[]
+export const DEFAULT_COLOR_SCHEME: ColorScheme = '${DEFAULT_SCHEME}'
+`
+}
+
+function renderPrepaint() {
+  const c = schemeColours()
+  const compact = Object.fromEntries(Object.entries(c).map(([id, v]) => [id, { d: [v.dark.surface, v.dark.label, v.dark.vinyl, v.dark.groove], l: [v.light.surface, v.light.label, v.light.vinyl, v.light.groove] }]))
+  return `/* BEGIN GENERATED SCHEME COLOURS — scripts/gen-tokens.mjs */ var MX_SCHEMES = ${JSON.stringify(compact)}; /* END GENERATED SCHEME COLOURS */`
+}
+
+// ── Checks ─────────────────────────────────────────────────────────────────
+
+function luminance(argb) {
+  const ch = [(argb >> 16) & 255, (argb >> 8) & 255, argb & 255].map((v) => {
+    const c = v / 255
+    return c <= 0.03928 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4
+  })
+  return 0.2126 * ch[0] + 0.7152 * ch[1] + 0.0722 * ch[2]
+}
+export function contrast(a, b) {
+  const [x, y] = [luminance(a), luminance(b)].sort((m, n) => n - m)
+  return (x + 0.05) / (y + 0.05)
+}
+const hueDistance = (a, b) => {
+  const d = Math.abs(a - b) % 360
+  return d > 180 ? 360 - d : d
+}
+const hueOf = (pal, tone) => Hct.fromInt(pal.tone(tone)).hue
+
+/** Problems of one scheme (empty = fine). */
+export function checkScheme(id) {
+  const p = { ...schemePalettes(SCHEMES[id]), ...fixedPalettes() }
+  const problems = []
+  const need = (what, ratio, min) => ratio < min && problems.push(`${id}: ${what} ${ratio.toFixed(2)} < ${min}`)
+  // Text roles (M3 pairs), dark and light
+  for (const [theme, pairs] of Object.entries({
+    dark: [['primary', 80, 'primary', 20], ['primary', 30, 'primary', 90], ['tertiary', 80, 'tertiary', 20], ['secondary', 30, 'secondary', 90], ['neutral', 6, 'neutral', 90], ['neutral', 12, 'neutral-variant', 80], ['neutral', 6, 'primary', 80]],
+    light: [['primary', 40, 'primary', 100], ['primary', 90, 'primary', 10], ['tertiary', 40, 'primary', 100], ['secondary', 90, 'secondary', 10], ['neutral', 98, 'neutral', 10], ['neutral', 94, 'neutral-variant', 30], ['neutral', 98, 'primary', 40]]
+  })) {
+    for (const [bg, bt, fg, ft] of pairs) need(`${theme} ${fg}-${ft} on ${bg}-${bt}`, contrast(p[bg].tone(bt), p[fg].tone(ft)), 4.5)
+  }
+  // Brand fill (hero buttons): white text in both themes
+  need('white on brand (primary-40)', contrast(p.primary.tone(40), p.primary.tone(100)), 4.5)
+  // Accents must not read as a verdict
+  for (const accent of ['primary', 'tertiary']) {
+    const d = hueDistance(hueOf(p[accent], 50), hueOf(p.success, 50))
+    if (d < 25) problems.push(`${id}: ${accent} too close to success (${d.toFixed(0)}°)`)
+  }
+  for (const accent of ['primary', 'tertiary']) {
+    const d = hueDistance(hueOf(p[accent], 50), hueOf(p.error, 50))
+    if (d < 15) problems.push(`${id}: ${accent} too close to error (${d.toFixed(0)}°)`)
+  }
+  const nearWarning = hueDistance(hueOf(p.primary, 50), hueOf(p.warning, 50))
+  if (nearWarning < 20) problems.push(`${id}: primary too close to warning (${nearWarning.toFixed(0)}°)`)
+  // Three chart series apart (hue) in both themes
+  const series = [hueOf(p.primary, 50), hueOf(p.tertiary, 60), hueOf(p.data, 60)]
+  for (let i = 0; i < 3; i++)
+    for (let j = i + 1; j < 3; j++) {
+      const d = hueDistance(series[i], series[j])
+      if (d < 40) problems.push(`${id}: chart series ${i + 1} and ${j + 1} only ${d.toFixed(0)}° apart`)
+    }
+  return problems
+}
+
+// ── Write / check ──────────────────────────────────────────────────────────
+
+const problems = Object.keys(SCHEMES).flatMap(checkScheme)
+if (problems.length) {
+  console.error('Colour schemes fail their checks:\n  ' + problems.join('\n  '))
+  process.exit(1)
+}
+
+function replaceBetween(text, re, next, what) {
+  if (!re.test(text)) throw new Error(`markers missing: ${what}`)
+  return text.replace(re, () => next)
+}
+
+const targets = [
+  {
+    file: new URL('../src/styles/design-tokens.css', import.meta.url),
+    make: (css) => replaceBetween(css, /\/\* BEGIN GENERATED PALETTES[\s\S]*?\/\* END GENERATED PALETTES \*\//, renderBlock(), 'design-tokens.css')
+  },
+  { file: new URL('../src/styles/colorSchemes.ts', import.meta.url), make: () => renderTs() },
+  {
+    file: new URL('../index.html', import.meta.url),
+    make: (html) => replaceBetween(html, /\/\* BEGIN GENERATED SCHEME COLOURS[\s\S]*?\/\* END GENERATED SCHEME COLOURS \*\//, renderPrepaint(), 'index.html')
+  }
+]
+
+let stale = false
+for (const { file, make } of targets) {
+  let current = ''
+  try {
+    current = readFileSync(file, 'utf8')
+  } catch {
+    /* new file */
+  }
+  const next = make(current)
+  if (next === current) continue
+  if (process.argv.includes('--check')) {
+    console.error(`${file.pathname} is out of date — run node scripts/gen-tokens.mjs`)
+    stale = true
+  } else writeFileSync(file, next)
+}
+if (stale) process.exit(1)
+if (!process.argv.includes('--check')) console.log(`palettes regenerated (${Object.keys(SCHEMES).length} colour schemes, all checks passed)`)

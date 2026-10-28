@@ -4,6 +4,7 @@
  * the right colours before React starts.
  */
 
+import { COLOR_SCHEMES, COLOR_SCHEME_IDS, DEFAULT_COLOR_SCHEME, type ColorScheme } from '@/styles/colorSchemes'
 import { createContext, useContext, useEffect, useCallback, type ReactNode } from 'react'
 import { useSyncedDoc } from '@/sync/useSyncedDoc'
 import { mergeSettings } from '@/sync/merge'
@@ -23,6 +24,8 @@ export interface Settings {
   hiddenPlayers: string[]
   /** Subtle vibration on phones (placing, verdicts, a win). */
   haptics: boolean
+  /** Colour scheme (accents, tinted surfaces, record), combined with the theme. */
+  color: ColorScheme
 }
 
 interface SettingsContextType {
@@ -42,6 +45,8 @@ interface SettingsContextType {
 }
 
 export const THEME_STORAGE_KEY = 'mxster_theme'
+/** Mirrored like the theme, so index.html paints the right colours before React. */
+export const COLOR_STORAGE_KEY = 'mxtape_color'
 
 export const defaultSettings: Settings = {
   randomStartPosition: false,
@@ -50,7 +55,21 @@ export const defaultSettings: Settings = {
   theme: readStoredTheme(),
   recentSongs: [],
   hiddenPlayers: [],
-  haptics: true
+  haptics: true,
+  color: readStoredColor()
+}
+
+function isColorScheme(v: unknown): v is ColorScheme {
+  return typeof v === 'string' && (COLOR_SCHEME_IDS as string[]).includes(v)
+}
+
+function readStoredColor(): ColorScheme {
+  try {
+    const c = localStorage.getItem(COLOR_STORAGE_KEY)
+    return isColorScheme(c) ? c : DEFAULT_COLOR_SCHEME
+  } catch {
+    return DEFAULT_COLOR_SCHEME
+  }
 }
 
 function readStoredTheme(): ThemeMode {
@@ -71,14 +90,31 @@ export function normalizeSettings(raw: unknown): Settings {
     theme: r.theme === 'light' ? 'light' : r.theme === 'dark' ? 'dark' : readStoredTheme(),
     recentSongs: Array.isArray(r.recentSongs) ? r.recentSongs.filter((k) => typeof k === 'string').slice(-RECENT_LIMIT) : [],
     hiddenPlayers: Array.isArray(r.hiddenPlayers) ? r.hiddenPlayers.filter((n) => typeof n === 'string') : [],
-    haptics: r.haptics !== false
+    haptics: r.haptics !== false,
+    color: isColorScheme(r.color) ? r.color : readStoredColor()
   }
 }
 
-/** Surface colour per theme, mirrored from design-tokens.css (neutral-6 / neutral-98). */
-export const THEME_COLOR: Record<ThemeMode, string> = {
-  dark: '#191113',
-  light: '#fff8f7'
+/** Browser bar colour: the page surface of this scheme and theme (generated with the palettes). */
+export function themeColor(color: ColorScheme, theme: ThemeMode): string {
+  return COLOR_SCHEMES[color][theme].surface
+}
+
+/** Put theme and colour on the document (and mirror them for the pre-paint in index.html). */
+export function applyAppearance(theme: ThemeMode, color: ColorScheme): void {
+  const root = document.documentElement
+  root.dataset.theme = theme
+  if (color === DEFAULT_COLOR_SCHEME) delete root.dataset.color
+  else root.dataset.color = color
+  try {
+    localStorage.setItem(THEME_STORAGE_KEY, theme)
+    localStorage.setItem(COLOR_STORAGE_KEY, color)
+  } catch {
+    /* private mode */
+  }
+  document.querySelectorAll<HTMLMetaElement>('meta[name="theme-color"]').forEach((meta) => {
+    meta.content = themeColor(color, theme)
+  })
 }
 
 const SettingsContext = createContext<SettingsContextType | undefined>(undefined)
@@ -92,22 +128,15 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
     normalize: normalizeSettings
   })
 
-  useEffect(() => {
-    document.documentElement.dataset.theme = settings.theme
-    try {
-      localStorage.setItem(THEME_STORAGE_KEY, settings.theme)
-    } catch {
-      /* private mode */
-    }
-    document.querySelectorAll<HTMLMetaElement>('meta[name="theme-color"]').forEach((meta) => {
-      meta.content = THEME_COLOR[settings.theme]
-    })
-  }, [settings.theme])
+  useEffect(() => applyAppearance(settings.theme, settings.color), [settings.theme, settings.color])
 
   useEffect(() => setHapticsEnabled(settings.haptics !== false), [settings.haptics])
 
   const updateSettings = useCallback((patch: Partial<Settings>) => setValue((prev) => ({ ...prev, ...patch })), [setValue])
-  const resetSettings = useCallback(() => setValue({ ...defaultSettings, theme: settings.theme }), [setValue, settings.theme])
+  const resetSettings = useCallback(
+    () => setValue({ ...defaultSettings, theme: settings.theme, color: settings.color }),
+    [setValue, settings.theme, settings.color]
+  )
 
   const addPlayer = useCallback(
     (playerName: string) => {
