@@ -3,6 +3,7 @@
  * a rematch with the same people, or back home.
  */
 import { useEffect } from 'react'
+import { rematchStarter } from '@/game/rematch'
 import { m } from 'motion/react'
 import { Vinyl } from '@/components/ui/Vinyl'
 import { Icon } from '@/components/ui/Icon'
@@ -59,6 +60,9 @@ export function GameOver({ winner, players, mode, onRematch, onHome, rematchBy, 
   const at = useMessages(achievementText)
   const dt = useMessages(dailyText)
   const hardcore = mode === 'hardcore'
+  // Again with the same people: whoever came last starts (game/rematch.ts)
+  const stay = players.filter((p) => !p.left)
+  const starter = stay.length > 1 ? stay[rematchStarter(stay, mode, winner.name)]?.name : undefined
   // Who left the room is listed last, without a place
   const ranked: { player: Player; place: number | null }[] = [
     ...rankPlayers(players.filter((p) => !p.left), mode, winner.name),
@@ -162,10 +166,13 @@ export function GameOver({ winner, players, mode, onRematch, onHome, rematchBy, 
             {t.shareResult}
           </button>
           {onRematch ? (
-            <button type="button" className="btn btn-lg btn-brand m3-state-layer w-full" onClick={onRematch}>
-              <Icon name="replay" />
-              {t.rematch}
-            </button>
+            <div>
+              <button type="button" className="btn btn-lg btn-brand m3-state-layer w-full" onClick={onRematch}>
+                <Icon name="replay" />
+                {t.rematch}
+              </button>
+              {starter && <p className="mt-2 text-center text-body-sm text-md-on-surface-variant">{t.rematchStarter(starter)}</p>}
+            </div>
           ) : rematchBy ? (
             <p className="text-center text-body-md text-md-on-surface-variant">{t.rematchBy(rematchBy)}</p>
           ) : null}

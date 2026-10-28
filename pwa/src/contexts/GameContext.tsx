@@ -1,4 +1,5 @@
 import { createContext, useContext, useEffect, useReducer, ReactNode } from 'react'
+import { rematchStarter } from '@/game/rematch'
 import type { StepClock } from '@/game/turnClock'
 import type { Collection } from '@/game/songPool'
 import type { Player, Song, GameMode, GlobalTimelineCard, TurnRecord } from '@/types'
@@ -99,7 +100,7 @@ type GameAction =
   | { type: 'START_GAME' }
   | { type: 'END_GAME' }
   | { type: 'RESET_GAME' }
-  | { type: 'REMATCH' }
+  | { type: 'REMATCH'; payload?: { winner?: string } }
   | { type: 'LOAD_GAME_STATE'; payload: Partial<GameState> }
   | { type: 'NEXT_TURN' }
   | { type: 'NEXT_PLAYER_ONLY' } // Switch player, keep currentSong
@@ -131,7 +132,8 @@ interface GameContextValue extends GameState {
   endGame: () => void
   resetGame: () => void
   /** Same players and mode, fresh scores and timelines, game running. */
-  rematch: () => void
+  /** Again with the same people; whoever came last starts (`winner` never does). */
+  rematch: (winner?: string) => void
   loadGameState: (state: Partial<GameState>) => void
   nextTurn: () => void
   nextPlayerOnly: () => void // Switch player but keep song
@@ -328,16 +330,20 @@ function gameReducer(state: GameState, action: GameAction): GameState {
     case 'RESET_GAME':
       return { ...initialState, ...keepOptions(state) }
 
-    case 'REMATCH':
+    case 'REMATCH': {
+      // Who left the room is not in the rematch either
+      const stay = state.players.filter((p) => !p.left)
       return {
         ...initialState,
         ...keepOptions(state),
         onlineRoom: state.onlineRoom,
-        // Who left the room is not in the rematch either
-        players: freshPlayers(state.players.filter((p) => !p.left), challengesInMode(state)),
+        players: freshPlayers(stay, challengesInMode(state)),
+        // Whoever came last starts (read from the standings before they reset)
+        currentPlayer: rematchStarter(stay, state.gameMode, action.payload?.winner),
         isGameStarted: true,
         startedAt: Date.now()
       }
+    }
 
     case 'SET_OPTIONS':
       return { ...state, ...action.payload }
@@ -458,7 +464,7 @@ export function GameProvider({ children }: GameProviderProps) {
     startGame: () => dispatch({ type: 'START_GAME' }),
     endGame: () => dispatch({ type: 'END_GAME' }),
     resetGame: () => dispatch({ type: 'RESET_GAME' }),
-    rematch: () => dispatch({ type: 'REMATCH' }),
+    rematch: (winner?: string) => dispatch({ type: 'REMATCH', payload: { winner } }),
     loadGameState: (gameState) => dispatch({ type: 'LOAD_GAME_STATE', payload: gameState }),
     nextTurn: () => dispatch({ type: 'NEXT_TURN' }),
     nextPlayerOnly: () => dispatch({ type: 'NEXT_PLAYER_ONLY' }),

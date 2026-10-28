@@ -636,7 +636,7 @@ export function GameRound({ onRematch }: { onRematch: () => void }) {
               onlinePlayer || daily
                 ? undefined
                 : () => {
-                    rematch()
+                    rematch(shownResult.winner.name)
                     onRematch()
                   }
             }

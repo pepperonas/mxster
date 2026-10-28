@@ -308,6 +308,22 @@ describe('no draw: tiebreak ("Stechen")', () => {
     ])
   })
 
+  it('in a rematch whoever came last starts', () => {
+    const t = setup('timeline_personal', [{ name: 'A', cards: 5 }, { name: 'B', cards: 1 }, { name: 'C', cards: 3 }])
+    act(() => t.get().game.setCurrentPlayer(0))
+    act(() => t.get().game.rematch('A'))
+    expect(t.get().game.currentPlayer).toBe(1)
+    expect(t.get().game.players[1].name).toBe('B')
+  })
+
+  it('in a hardcore rematch the fewest points start; leavers are out of the count', () => {
+    const t = setup('hardcore', [{ name: 'A', score: 40 }, { name: 'B', score: 5 }, { name: 'C', score: 20 }])
+    act(() => t.get().game.updatePlayer(1, { left: true }))
+    act(() => t.get().game.rematch('A'))
+    expect(t.get().game.players.map((p) => p.name)).toEqual(['A', 'C'])
+    expect(t.get().game.currentPlayer).toBe(1)
+  })
+
   it('a rematch starts without a tiebreak', () => {
     const t = setup('timeline_global', [{ name: 'A', cards: 5 }, { name: 'B', cards: 4 }])
     seed(t)

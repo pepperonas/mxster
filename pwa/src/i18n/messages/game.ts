@@ -203,6 +203,7 @@ export const gameText = defineMessages({
     songsValue: (n: number) => `${n} Songs`,
     rematch: 'Nochmal mit denselben Leuten',
     rematchBy: (name: string) => `Eine neue Runde startet ${name}.`,
+    rematchStarter: (name: string) => `${name} fängt an – wer zuletzt kam, beginnt.`,
 
     // SongInfo
     album: 'Album',
@@ -412,6 +413,7 @@ export const gameText = defineMessages({
     songsValue: (n: number) => `${n} ${n === 1 ? 'song' : 'songs'}`,
     rematch: 'Again with the same people',
     rematchBy: (name: string) => `${name.charAt(0).toUpperCase()}${name.slice(1)} starts a new round.`,
+    rematchStarter: (name: string) => `${name} goes first – whoever came last begins.`,
 
     album: 'Album',
     albumValue: (album: string) => `Album: ${album}`,
