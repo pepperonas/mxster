@@ -1,0 +1,3238 @@
+{
+  "counts": {
+    "upgraded": 397,
+    "kept": 93,
+    "no-cover": 1,
+    "reverted": 9
+  },
+  "report": [
+    {
+      "id": "song_000",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.099,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music122/v4/de/eb/63/deeb63c1-7bc0-9153-cfa3-fd9e4929aacf/4050538826562.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_001",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.106,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music211/v4/dd/86/92/dd86925d-484d-8ee7-3985-ef3264214269/602527644264.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_002",
+      "result": "kept"
+    },
+    {
+      "id": "song_003",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.016,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music114/v4/e7/83/be/e783be91-600a-dd2b-817a-21bf6a3c9493/603497843602.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_004",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.005,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music115/v4/95/fd/b9/95fdb9b2-6d2b-92a6-97f2-51c1a6d77f1a/00602527874609.rgb.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_005",
+      "result": "kept"
+    },
+    {
+      "id": "song_006",
+      "result": "kept"
+    },
+    {
+      "id": "song_007",
+      "result": "kept"
+    },
+    {
+      "id": "song_008",
+      "result": "upgraded",
+      "source": "caa",
+      "distance": 0.003,
+      "url": "https://coverartarchive.org/release-group/b4bc5e8a-1476-4f22-973a-f1954ae2a14d/front-500"
+    },
+    {
+      "id": "song_009",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.058,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music211/v4/4a/c7/c1/4ac7c1d7-7457-1399-8dde-8955b9eeb510/06UMGIM18757.rgb.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_010",
+      "result": "no-cover"
+    },
+    {
+      "id": "song_011",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.079,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music116/v4/d4/7d/e5/d47de508-312e-fbb2-8b5a-78b92645d778/197188308315.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_012",
+      "result": "kept"
+    },
+    {
+      "id": "song_013",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.014,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music123/v4/de/89/6d/de896dc4-1913-6818-ff60-c0e7ba6cab30/5060236635525_1.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_014",
+      "result": "upgraded",
+      "source": "caa",
+      "distance": 0.004,
+      "url": "https://coverartarchive.org/release-group/b341a769-b3b7-3e9e-9156-66ec6280dc67/front-500"
+    },
+    {
+      "id": "song_015",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.005,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Features115/v4/a6/62/ff/a662ffc8-bd94-c317-8001-66dba4aeecfe/dj.cszggftt.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_016",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.046,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music115/v4/e8/43/5f/e8435ffa-b6b9-b171-40ab-4ff3959ab661/886443919266.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_017",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.01,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music211/v4/20/72/d3/2072d3b2-238c-1ac2-1f6f-21f683fdc41b/24CRGIM45902.rgb.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_018",
+      "result": "upgraded",
+      "source": "caa",
+      "distance": 0.005,
+      "url": "https://coverartarchive.org/release-group/453b65a7-2af2-3dc6-b529-489342773432/front-500"
+    },
+    {
+      "id": "song_019",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.003,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music211/v4/a9/e5/c4/a9e5c4a5-5c5f-724d-5fc3-5054d683020b/artwork.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_020",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.016,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music114/v4/e7/83/be/e783be91-600a-dd2b-817a-21bf6a3c9493/603497843602.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_021",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.005,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music211/v4/21/6b/62/216b6222-296d-1539-99ca-d04a7cd5689f/7300342805886.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_022",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.106,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music115/v4/b8/c5/7a/b8c57a19-2ec1-191f-58e3-530a73ae4f7f/00602537348206.rgb.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_023",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.097,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music112/v4/82/7f/96/827f96f5-4ef5-3216-d68f-be3e11fe160f/06UMGIM07741.rgb.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_024",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.008,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music125/v4/d3/94/13/d39413b7-f646-e6a6-17b6-de58e899ddc2/603497848416.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_025",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.1,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music122/v4/cb/7d/73/cb7d73a3-b77f-aec4-b1ee-dd759c35374c/06UMGIM34819.rgb.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_026",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.008,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music118/v4/dd/5c/e6/dd5ce621-f7d2-f767-7a08-e7a7eaa7870b/00602537526994.rgb.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_027",
+      "result": "kept"
+    },
+    {
+      "id": "song_028",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.014,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music128/v4/75/f6/03/75f60356-0167-bf14-7dfa-7f84e18afd8a/803cg001.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_029",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.003,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music124/v4/49/ce/7c/49ce7cc6-129a-7ba0-7579-d5b11bf98828/4251703559463_3000.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_030",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.016,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music122/v4/79/cf/44/79cf445f-4b04-7a27-54a4-cdf57cf1d6ac/5054429119084.png/600x600bb.jpg"
+    },
+    {
+      "id": "song_031",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.005,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music122/v4/11/25/66/1125660f-a61f-df21-4f89-dcf34650eceb/5060571361479.png/600x600bb.jpg"
+    },
+    {
+      "id": "song_032",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.034,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music125/v4/9e/80/1b/9e801b06-67fa-0990-2d15-85480ad3cd46/850007452025.png/600x600bb.jpg"
+    },
+    {
+      "id": "song_033",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.008,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music211/v4/38/9c/29/389c29e9-f028-72ba-4abd-6391b83de186/4251353212053.png/600x600bb.jpg"
+    },
+    {
+      "id": "song_034",
+      "result": "upgraded",
+      "source": "caa",
+      "distance": 0.003,
+      "url": "https://coverartarchive.org/release-group/6a119a29-599a-3982-a354-55474dd20d27/front-500"
+    },
+    {
+      "id": "song_035",
+      "result": "kept"
+    },
+    {
+      "id": "song_036",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.003,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music221/v4/08/3c/1d/083c1de0-83ab-dac9-1dee-93d20be05789/4251804193719_3000.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_037",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.115,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music126/v4/41/99/4d/41994d04-d8f0-ca92-0cb3-ec4f931ed75b/06UMGIM47803.rgb.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_038",
+      "result": "kept"
+    },
+    {
+      "id": "song_039",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.05,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music211/v4/a5/ee/b6/a5eeb699-0ed0-e885-ffa7-d47f3d520437/00_Cover_Art.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_040",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.006,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music221/v4/0a/c7/ce/0ac7ce53-bb29-8c7a-129f-03046153fc5d/734167014128_cover.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_041",
+      "result": "upgraded",
+      "source": "caa",
+      "distance": 0.003,
+      "url": "https://coverartarchive.org/release-group/72824889-8fb3-45e6-8408-88ab260ac437/front-500"
+    },
+    {
+      "id": "song_042",
+      "result": "upgraded",
+      "source": "caa",
+      "distance": 0.005,
+      "url": "https://coverartarchive.org/release-group/4b838f98-bcc5-3754-80a3-504b6d6679a0/front-500"
+    },
+    {
+      "id": "song_043",
+      "result": "kept"
+    },
+    {
+      "id": "song_044",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.004,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music116/v4/83/8f/ff/838fff06-7eff-2cd8-89bb-091ecdfc6ef0/4002587100902_3000.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_045",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.012,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music116/v4/c2/61/14/c26114f4-453e-af54-f88d-9ead3d577b84/dj.metihgoa.png/600x600bb.jpg"
+    },
+    {
+      "id": "song_046",
+      "result": "kept"
+    },
+    {
+      "id": "song_047",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.114,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music211/v4/09/60/3f/09603f5d-6190-d7e1-57ab-0cb700ad9f36/196873126647.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_048",
+      "result": "kept"
+    },
+    {
+      "id": "song_049",
+      "result": "kept"
+    },
+    {
+      "id": "song_050",
+      "result": "kept"
+    },
+    {
+      "id": "song_051",
+      "result": "kept"
+    },
+    {
+      "id": "song_052",
+      "result": "upgraded",
+      "source": "caa",
+      "distance": 0.003,
+      "url": "https://coverartarchive.org/release-group/8a8e17e5-af96-3cfa-ac89-5a2e628518d9/front-500"
+    },
+    {
+      "id": "song_053",
+      "result": "reverted",
+      "source": "itunes",
+      "distance": 0.091,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music211/v4/10/6e/22/106e222a-d2d2-2790-6c14-e334d84acd71/884977441178.jpg/600x600bb.jpg",
+      "reason": "anniversary edition text"
+    },
+    {
+      "id": "song_054",
+      "result": "kept"
+    },
+    {
+      "id": "song_055",
+      "result": "kept"
+    },
+    {
+      "id": "song_056",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.106,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music115/v4/b8/c5/7a/b8c57a19-2ec1-191f-58e3-530a73ae4f7f/00602537348206.rgb.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_057",
+      "result": "kept"
+    },
+    {
+      "id": "song_058",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.012,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music128/v4/05/a3/ec/05a3ec6b-4afa-fc80-32ce-76b68cd7aced/00602527931753.rgb.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_059",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.008,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music125/v4/d3/94/13/d39413b7-f646-e6a6-17b6-de58e899ddc2/603497848416.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_060",
+      "result": "upgraded",
+      "source": "caa",
+      "distance": 0.005,
+      "url": "https://coverartarchive.org/release-group/d92c2746-6b30-4fbf-9e6f-a908b3503c62/front-500"
+    },
+    {
+      "id": "song_061",
+      "result": "upgraded",
+      "source": "caa",
+      "distance": 0.003,
+      "url": "https://coverartarchive.org/release-group/8a8e17e5-af96-3cfa-ac89-5a2e628518d9/front-500"
+    },
+    {
+      "id": "song_062",
+      "result": "reverted",
+      "source": "itunes",
+      "distance": 0.099,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music112/v4/10/1d/0a/101d0ad8-af2a-cb00-cc81-5dc98cbc7a3c/5060686501593_cover.jpg/600x600bb.jpg",
+      "reason": "bonus banner"
+    },
+    {
+      "id": "song_063",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.04,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music221/v4/91/9a/bf/919abf9e-d121-2597-0f1f-522b3c16e87a/8718522554186.png/600x600bb.jpg"
+    },
+    {
+      "id": "song_064",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.009,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music115/v4/e5/06/cc/e506ccd5-56ec-3d4c-69f7-14900bea74f0/mzi.bbgsikee.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_065",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.088,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music221/v4/85/8b/2b/858b2b32-0b99-10ba-7c15-8db3f95fd52a/4018939533991_3000.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_066",
+      "result": "upgraded",
+      "source": "caa",
+      "distance": 0.003,
+      "url": "https://coverartarchive.org/release-group/be325dd3-ba37-4215-8276-ad2a6c75740a/front-500"
+    },
+    {
+      "id": "song_067",
+      "result": "upgraded",
+      "source": "caa",
+      "distance": 0.004,
+      "url": "https://coverartarchive.org/release-group/dd52206c-04d2-483a-9e0f-21a0298b5d24/front-500"
+    },
+    {
+      "id": "song_068",
+      "result": "upgraded",
+      "source": "caa",
+      "distance": 0.005,
+      "url": "https://coverartarchive.org/release-group/d92c2746-6b30-4fbf-9e6f-a908b3503c62/front-500"
+    },
+    {
+      "id": "song_069",
+      "result": "kept"
+    },
+    {
+      "id": "song_070",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.066,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music/39/b0/be/mzi.fzvucbdq.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_071",
+      "result": "upgraded",
+      "source": "caa",
+      "distance": 0.004,
+      "url": "https://coverartarchive.org/release-group/d89b92f6-ebf7-3285-b3b0-968e7816e31a/front-500"
+    },
+    {
+      "id": "song_072",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.004,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music126/v4/4a/64/a4/4a64a46e-726f-b18c-0ca0-8b67a876c19f/cover.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_073",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.03,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music126/v4/d7/1d/f7/d71df7ae-82c9-aceb-7d9b-14b4cc27324c/22UMGIM71199.rgb.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_074",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.009,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music115/v4/e5/06/cc/e506ccd5-56ec-3d4c-69f7-14900bea74f0/mzi.bbgsikee.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_075",
+      "result": "upgraded",
+      "source": "caa",
+      "distance": 0.004,
+      "url": "https://coverartarchive.org/release-group/dd52206c-04d2-483a-9e0f-21a0298b5d24/front-500"
+    },
+    {
+      "id": "song_076",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.004,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music71/v4/13/8a/01/138a0114-a189-7024-23ce-897f5df55629/8718723079112.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_077",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.009,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music112/v4/24/3d/48/243d4839-b26f-e65c-9985-130b35d455b2/4251804151870_3000.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_078",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.012,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music116/v4/73/85/fa/7385faf6-8acd-a5db-83b7-ebc91d37cf37/5400863135300_cover.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_079",
+      "result": "upgraded",
+      "source": "caa",
+      "distance": 0.003,
+      "url": "https://coverartarchive.org/release-group/fa2b7850-ac77-3952-a4b6-f242a99a370b/front-500"
+    },
+    {
+      "id": "song_080",
+      "result": "upgraded",
+      "source": "caa",
+      "distance": 0.005,
+      "url": "https://coverartarchive.org/release-group/b5718132-8326-35b2-ab40-14db1c907138/front-500"
+    },
+    {
+      "id": "song_081",
+      "result": "upgraded",
+      "source": "caa",
+      "distance": 0.005,
+      "url": "https://coverartarchive.org/release-group/dec973a9-b3e6-3359-8a2f-9578a430a0ed/front-500"
+    },
+    {
+      "id": "song_082",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.003,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music128/v4/d8/6f/cf/d86fcf2c-6ae5-5fca-7d0f-e81a0ece6e35/1976.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_083",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.004,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music124/v4/e9/3e/7e/e93e7e4f-0a86-99e6-09df-69c0ea539998/mzi.scypbfyb.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_084",
+      "result": "upgraded",
+      "source": "caa",
+      "distance": 0.004,
+      "url": "https://coverartarchive.org/release-group/d5732764-0617-4118-bbb4-bff988a9067e/front-500"
+    },
+    {
+      "id": "song_085",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.112,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music124/v4/3f/28/ad/3f28ad3c-3dc9-7c5b-32f0-5b33eb647bf7/mzi.bnuysrxb.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_086",
+      "result": "reverted",
+      "source": "itunes",
+      "distance": 0.115,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music125/v4/92/0c/8c/920c8c14-cf08-a973-e4c1-8792f1e9183c/886443445680.jpg/600x600bb.jpg",
+      "reason": "25th anniversary text"
+    },
+    {
+      "id": "song_087",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.005,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music115/v4/69/ce/d2/69ced240-07a7-2a04-bbab-2afbacf30809/074643772822.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_088",
+      "result": "upgraded",
+      "source": "caa",
+      "distance": 0.004,
+      "url": "https://coverartarchive.org/release-group/b134e596-8b75-40ac-979d-fc57fa914ea2/front-500"
+    },
+    {
+      "id": "song_089",
+      "result": "upgraded",
+      "source": "caa",
+      "distance": 0.003,
+      "url": "https://coverartarchive.org/release-group/a738bdf1-f610-30aa-9ae7-9a4f90d6f2d7/front-500"
+    },
+    {
+      "id": "song_090",
+      "result": "upgraded",
+      "source": "caa",
+      "distance": 0.004,
+      "url": "https://coverartarchive.org/release-group/ad36e6b4-0609-45e2-9f5e-3869e862c377/front-500"
+    },
+    {
+      "id": "song_091",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.094,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music126/v4/d2/d8/d6/d2d8d6ad-85d4-7024-9726-e1f312beb522/603497889754.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_092",
+      "result": "kept"
+    },
+    {
+      "id": "song_093",
+      "result": "upgraded",
+      "source": "caa",
+      "distance": 0.003,
+      "url": "https://coverartarchive.org/release-group/bc760fa2-42f0-3fbd-8366-ced487f832d3/front-500"
+    },
+    {
+      "id": "song_094",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.06,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music114/v4/bf/80/2b/bf802b87-cf1b-0189-5e53-2811c4b37c1b/888880764577.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_095",
+      "result": "upgraded",
+      "source": "caa",
+      "distance": 0.004,
+      "url": "https://coverartarchive.org/release-group/1c98a605-2a2a-36a0-bdbb-7f9005e2fd21/front-500"
+    },
+    {
+      "id": "song_096",
+      "result": "kept"
+    },
+    {
+      "id": "song_097",
+      "result": "upgraded",
+      "source": "caa",
+      "distance": 0.005,
+      "url": "https://coverartarchive.org/release-group/6351ac1d-26ac-4c7a-8cfe-2e69a62003f2/front-500"
+    },
+    {
+      "id": "song_098",
+      "result": "reverted",
+      "source": "itunes",
+      "distance": 0.105,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music124/v4/05/44/06/054406bf-709a-1e68-e2f4-2f42e7372588/mzi.biuvtkua.jpg/600x600bb.jpg",
+      "reason": "parental advisory sticker"
+    },
+    {
+      "id": "song_099",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.009,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music115/v4/52/aa/85/52aa851f-15b7-6322-f91f-df84b15b7b19/190295978044.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_100",
+      "result": "upgraded",
+      "source": "caa",
+      "distance": 0.003,
+      "url": "https://coverartarchive.org/release-group/2386bf5d-c014-3f84-921e-7532096946c2/front-500"
+    },
+    {
+      "id": "song_101",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.088,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music/a7/9c/43/mzi.woniuqrs.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_102",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.054,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music7/v4/35/8a/e6/358ae68a-5dd3-1cf4-832e-e4c450109161/081227959265.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_103",
+      "result": "upgraded",
+      "source": "caa",
+      "distance": 0.005,
+      "url": "https://coverartarchive.org/release-group/f1363399-2ab5-3b0c-83ee-f973230a8591/front-500"
+    },
+    {
+      "id": "song_105",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.006,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music211/v4/40/19/b9/4019b983-9d3a-8260-812c-a54f352591e9/5056556174738_cover.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_106",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.01,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music114/v4/eb/ca/0d/ebca0d0d-3c73-686a-285a-f5899d1e0f25/075679954046.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_107",
+      "result": "upgraded",
+      "source": "caa",
+      "distance": 0.003,
+      "url": "https://coverartarchive.org/release-group/0e3e709a-faef-3d81-b20d-3b10769c9ab0/front-500"
+    },
+    {
+      "id": "song_108",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.112,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music211/v4/30/80/79/308079e3-9b60-5bd1-336a-bd7dd824471e/634904228163.png/600x600bb.jpg"
+    },
+    {
+      "id": "song_109",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.003,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music221/v4/78/29/6c/78296ca7-da0d-8650-99cd-74c090d9a0b7/4251804150064.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_110",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.101,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music4/v4/1d/94/70/1d947059-aa4f-663d-b709-9024b1eac137/cover.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_111",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.017,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music211/v4/a1/85/1a/a1851a49-cd01-8856-58a6-3d024fbbcba1/cover.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_112",
+      "result": "kept"
+    },
+    {
+      "id": "song_113",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.005,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music6/v4/fa/8c/31/fa8c3175-35d1-f189-c638-c47dbf67b613/094637213759.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_114",
+      "result": "kept"
+    },
+    {
+      "id": "song_115",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.005,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music116/v4/a3/08/d3/a308d30e-5151-7b56-f5e0-7c5ea98a91ef/4250250405049_Cover.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_116",
+      "result": "upgraded",
+      "source": "caa",
+      "distance": 0.005,
+      "url": "https://coverartarchive.org/release-group/bbc2fc1f-89f6-36e5-a479-a13a7adcfb8d/front-500"
+    },
+    {
+      "id": "song_117",
+      "result": "upgraded",
+      "source": "caa",
+      "distance": 0.004,
+      "url": "https://coverartarchive.org/release-group/ac93acae-11ef-37bc-b9c3-d4a2fd7cd147/front-500"
+    },
+    {
+      "id": "song_118",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.083,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music221/v4/b8/65/41/b865413a-d80a-96af-f042-a82e4aa36ac1/4050538293401.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_119",
+      "result": "upgraded",
+      "source": "caa",
+      "distance": 0.003,
+      "url": "https://coverartarchive.org/release-group/b5f37bb4-c679-32ca-91c9-4eaf85052bff/front-500"
+    },
+    {
+      "id": "song_120",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.027,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music118/v4/f9/41/48/f9414887-0104-f04b-7855-f3d7e1afaaef/00602537528172.rgb.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_121",
+      "result": "upgraded",
+      "source": "caa",
+      "distance": 0.003,
+      "url": "https://coverartarchive.org/release-group/b20405cf-b154-3e30-bd4e-e351fdc54bb4/front-500"
+    },
+    {
+      "id": "song_122",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.009,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music115/v4/2e/90/ac/2e90ac6d-c8e9-0f42-8852-af968be471dd/mzi.uchoqyha.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_123",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.087,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music124/v4/12/74/3b/12743bc2-c4db-a7ce-7ea9-3902c21b29a9/886445780093.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_124",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.025,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music126/v4/ca/7b/e4/ca7be4f1-f12d-2af7-2cbc-bdee8c7da59e/cover.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_125",
+      "result": "upgraded",
+      "source": "caa",
+      "distance": 0.004,
+      "url": "https://coverartarchive.org/release-group/0f4d8bf1-6651-434d-a04a-6215425e640b/front-500"
+    },
+    {
+      "id": "song_126",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.003,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music113/v4/cf/0e/35/cf0e3509-7449-edb2-cc62-9efcab09b0b7/artwork.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_127",
+      "result": "upgraded",
+      "source": "caa",
+      "distance": 0.005,
+      "url": "https://coverartarchive.org/release-group/5f898a60-acc5-48fc-a11b-2926084c0924/front-500"
+    },
+    {
+      "id": "song_128",
+      "result": "kept"
+    },
+    {
+      "id": "song_129",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.069,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music125/v4/b0/b4/93/b0b493b1-71ae-b154-ab40-e6acc7d84c46/842108036099_1.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_130",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.003,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music125/v4/08/23/fc/0823fcd9-cb44-695b-32bf-b3bf51d9f800/00606949351229.rgb.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_131",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.065,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music126/v4/d0/54/b8/d054b82b-981e-6834-6d47-09d00faad533/16UMGIM35659.rgb.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_132",
+      "result": "upgraded",
+      "source": "caa",
+      "distance": 0.004,
+      "url": "https://coverartarchive.org/release-group/aa3b2d67-ff18-49f3-b272-51224b186efa/front-500"
+    },
+    {
+      "id": "song_133",
+      "result": "kept"
+    },
+    {
+      "id": "song_134",
+      "result": "upgraded",
+      "source": "caa",
+      "distance": 0.004,
+      "url": "https://coverartarchive.org/release-group/51302e56-54ce-35d8-9ec6-66926dc8054f/front-500"
+    },
+    {
+      "id": "song_135",
+      "result": "kept"
+    },
+    {
+      "id": "song_136",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.002,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music128/v4/b4/48/0d/b4480db2-128a-4fa8-1a02-db1564d355a2/Mary_Clark.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_137",
+      "result": "upgraded",
+      "source": "caa",
+      "distance": 0.004,
+      "url": "https://coverartarchive.org/release-group/c1dde020-7763-4b45-9745-a9f57925a7de/front-500"
+    },
+    {
+      "id": "song_138",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.007,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music114/v4/a6/9f/70/a69f7000-ccf6-24f9-8565-cdbd93d5ca0a/4050538636598.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_139",
+      "result": "reverted",
+      "source": "itunes",
+      "distance": 0.075,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music221/v4/e8/0d/c2/e80dc202-b4ec-b056-5dda-d51c16b89f17/098787104561.png/600x600bb.jpg",
+      "reason": "deluxe 10th anniversary text"
+    },
+    {
+      "id": "song_140",
+      "result": "upgraded",
+      "source": "caa",
+      "distance": 0.002,
+      "url": "https://coverartarchive.org/release-group/1bb68eba-a682-3ce8-b463-d843dba00e0b/front-500"
+    },
+    {
+      "id": "song_141",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.007,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music126/v4/15/db/9a/15db9a4c-ae95-3723-2bad-1bafe362974a/196589896162.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_142",
+      "result": "upgraded",
+      "source": "caa",
+      "distance": 0.005,
+      "url": "https://coverartarchive.org/release-group/7358d8b1-b31d-37c4-99fc-3023f18f1d1a/front-500"
+    },
+    {
+      "id": "song_143",
+      "result": "kept"
+    },
+    {
+      "id": "song_144",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.099,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music/47/c3/21/mzi.ciyzkqao.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_145",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.023,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music221/v4/68/67/7c/68677c9f-8c6c-2c8c-e5a2-4cc4d20dddb7/8721093378327_Cover.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_146",
+      "result": "upgraded",
+      "source": "caa",
+      "distance": 0.005,
+      "url": "https://coverartarchive.org/release-group/453b65a7-2af2-3dc6-b529-489342773432/front-500"
+    },
+    {
+      "id": "song_147",
+      "result": "kept"
+    },
+    {
+      "id": "song_148",
+      "result": "kept"
+    },
+    {
+      "id": "song_149",
+      "result": "upgraded",
+      "source": "caa",
+      "distance": 0.003,
+      "url": "https://coverartarchive.org/release-group/a8fb6ac6-a659-320f-8736-87b52ad65e3a/front-500"
+    },
+    {
+      "id": "song_150",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.007,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music122/v4/e9/1a/4e/e91a4eb9-31e7-89fb-3aad-e8172e534bb6/09UMGIM42295.rgb.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_151",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.004,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music124/v4/db/50/23/db50239e-dfdf-c886-d43b-c1d5f660a947/0731452101723_3000.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_152",
+      "result": "kept"
+    },
+    {
+      "id": "song_153",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.005,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Features125/v4/38/b8/fb/38b8fb19-ba0f-1b24-cbd2-a5eac13aa81b/dj.mezdqqxi.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_154",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.002,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music128/v4/d8/a2/0b/d8a20b88-4fc1-5f7a-36f3-48bf6cf3519c/0859381160700.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_155",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.003,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music221/v4/89/4a/4a/894a4ab9-b0b0-9ea5-ca41-8da0b9b79453/14UMDIM03405.rgb.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_156",
+      "result": "kept"
+    },
+    {
+      "id": "song_157",
+      "result": "kept"
+    },
+    {
+      "id": "song_158",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.054,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music221/v4/d5/2a/a5/d52aa579-123d-81eb-f094-62ea82ef744a/13ABKIM00039.rgb.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_159",
+      "result": "upgraded",
+      "source": "caa",
+      "distance": 0.003,
+      "url": "https://coverartarchive.org/release-group/d85b9684-4277-3565-b89b-115c8b4b7fd3/front-500"
+    },
+    {
+      "id": "song_160",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.033,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music211/v4/f3/1e/c2/f31ec2df-8420-ea26-6d30-0561f9f5b5ec/06UMGIM04107.rgb.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_161",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.007,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music118/v4/23/5b/b2/235bb2c3-abaa-22e2-753d-afa8b1806dfe/603497853588.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_162",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.065,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music125/v4/a9/7e/1b/a97e1bf7-1137-aecd-9809-f4f8022db438/172728.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_163",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.043,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music112/v4/2d/00/8c/2d008c91-a13d-c60a-9ed1-ed715c583f7c/06UMGIM20991.rgb.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_164",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.111,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music115/v4/13/2a/41/132a41e2-c2c8-583d-f239-78a79fbac3fa/00602517050907.rgb.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_165",
+      "result": "kept"
+    },
+    {
+      "id": "song_166",
+      "result": "kept"
+    },
+    {
+      "id": "song_167",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.01,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music115/v4/00/bf/72/00bf72a2-3e50-e5e7-ae78-dc35bbf9bcda/886444578219.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_168",
+      "result": "kept"
+    },
+    {
+      "id": "song_169",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.091,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music221/v4/b7/d4/ce/b7d4cee5-38ab-34af-5605-1588e9a34fec/081227515461.png/600x600bb.jpg"
+    },
+    {
+      "id": "song_170",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.012,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music125/v4/1c/0f/81/1c0f818a-e458-dd84-6f1b-ccbdf5fe14d6/825646291045.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_171",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.012,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music122/v4/47/d6/fe/47d6fe2f-b14c-d8a7-597c-8a40e094364e/886449932795.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_172",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.002,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music122/v4/46/ed/58/46ed5868-63b0-bbe8-5328-b2cc6e9bfb76/886446380094.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_173",
+      "result": "upgraded",
+      "source": "caa",
+      "distance": 0.003,
+      "url": "https://coverartarchive.org/release-group/cccdb1a1-333d-30e1-9486-81b8113e608a/front-500"
+    },
+    {
+      "id": "song_174",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.076,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music124/v4/44/70/25/44702519-ccc3-7b51-a563-2a0e2515689a/05099955926652.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_175",
+      "result": "upgraded",
+      "source": "caa",
+      "distance": 0.004,
+      "url": "https://coverartarchive.org/release-group/f0371fc4-3e22-3d8d-8ce3-4af873ea6f1c/front-500"
+    },
+    {
+      "id": "song_176",
+      "result": "upgraded",
+      "source": "caa",
+      "distance": 0.003,
+      "url": "https://coverartarchive.org/release-group/3a7817b5-22cb-32c3-a31b-2c8309fbf92e/front-500"
+    },
+    {
+      "id": "song_177",
+      "result": "kept"
+    },
+    {
+      "id": "song_178",
+      "result": "kept"
+    },
+    {
+      "id": "song_179",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.01,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music114/v4/20/c6/c4/20c6c488-4791-6c15-323f-e7ea79a01f31/mzi.dbcrqaoq.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_180",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.082,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music125/v4/53/68/f3/5368f34c-7e41-3e4c-d2c5-0f0447c23f07/dj.diysopyd.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_181",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.084,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music211/v4/79/30/5f/79305ffb-2537-9cbf-e3ad-bbaaa9ab104f/24CRGIM42884.rgb.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_182",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.081,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music116/v4/3b/dc/90/3bdc90a2-3697-0c5e-3265-65ccaa7dcbb3/14UMGIM00847.rgb.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_183",
+      "result": "kept"
+    },
+    {
+      "id": "song_184",
+      "result": "kept"
+    },
+    {
+      "id": "song_185",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.079,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music115/v4/71/48/49/71484921-1017-035e-59bd-d0726cde0372/743215713821.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_186",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.004,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music125/v4/6b/25/9b/6b259bc3-3e53-4339-80b0-5b50131c8901/888880771674.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_187",
+      "result": "kept"
+    },
+    {
+      "id": "song_188",
+      "result": "reverted",
+      "source": "itunes",
+      "distance": 0.086,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music/e5/2d/e4/mzi.lqinapem.jpg/600x600bb.jpg",
+      "reason": "CD logo added"
+    },
+    {
+      "id": "song_189",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.004,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music115/v4/6c/44/66/6c446642-e67c-b19f-e8cb-e084eb549056/mzi.tbamlbgz.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_190",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.077,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music125/v4/32/41/fe/3241fe70-3529-2060-7212-48cd0cccbe6e/11UMGIM19347.rgb.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_191",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.084,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music115/v4/32/2c/f3/322cf324-9ea1-3962-865a-f4f9bf83764d/888880191069.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_192",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.02,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music128/v4/5c/1d/ef/5c1def36-6627-620e-3564-8d81d96d62a7/00724353359553.rgb.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_193",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.057,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music128/v4/d8/d5/80/d8d58018-7e78-542f-6032-a80da080e716/00008811069926.rgb.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_194",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.017,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music115/v4/5c/1c/c1/5c1cc11b-c477-0fc7-e9f0-740264cb0d01/mzi.gfeicsof.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_195",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.013,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music125/v4/61/2a/58/612a58ca-af10-cc8f-07ef-b3368ebc9564/07UMGIM12238.rgb.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_196",
+      "result": "kept"
+    },
+    {
+      "id": "song_197",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.108,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music115/v4/20/f2/be/20f2be1f-716d-a2df-913e-1aff99c08619/06UMGIM31170.rgb.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_198",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.034,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music125/v4/9e/80/1b/9e801b06-67fa-0990-2d15-85480ad3cd46/850007452025.png/600x600bb.jpg"
+    },
+    {
+      "id": "song_199",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.11,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music125/v4/ec/2f/09/ec2f0972-db2a-ef0d-52eb-7167fee36d5a/0075596229968.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_200",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.023,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music115/v4/44/40/83/44408300-636f-8cae-d508-9dd96db48cea/707541528191.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_201",
+      "result": "upgraded",
+      "source": "caa",
+      "distance": 0.004,
+      "url": "https://coverartarchive.org/release-group/1c98a605-2a2a-36a0-bdbb-7f9005e2fd21/front-500"
+    },
+    {
+      "id": "song_202",
+      "result": "kept"
+    },
+    {
+      "id": "song_203",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.099,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music6/v4/f4/39/fd/f439fd5d-9f00-f611-ea5e-65066fc7fce8/00077778696858.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_204",
+      "result": "upgraded",
+      "source": "caa",
+      "distance": 0.002,
+      "url": "https://coverartarchive.org/release-group/8c555763-bc95-3176-a6bb-1c0651e06b41/front-500"
+    },
+    {
+      "id": "song_205",
+      "result": "upgraded",
+      "source": "caa",
+      "distance": 0.003,
+      "url": "https://coverartarchive.org/release-group/c734406b-3c8a-3214-98cc-dd553f82f813/front-500"
+    },
+    {
+      "id": "song_206",
+      "result": "kept"
+    },
+    {
+      "id": "song_207",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.029,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music125/v4/14/50/c8/1450c820-3cb3-ac9f-1bbf-0137d4344452/093624903192.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_208",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.12,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music114/v4/d8/5a/74/d85a74ee-170b-83a6-f6b4-9b535a99e814/888880780003.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_209",
+      "result": "upgraded",
+      "source": "caa",
+      "distance": 0.003,
+      "url": "https://coverartarchive.org/release-group/30e20b6b-778b-3d6a-aa72-3f821a8dd538/front-500"
+    },
+    {
+      "id": "song_210",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.007,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music221/v4/11/ae/f2/11aef294-f57c-bab9-c9fc-529162984e62/24UMGIM85348.rgb.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_211",
+      "result": "upgraded",
+      "source": "caa",
+      "distance": 0.006,
+      "url": "https://coverartarchive.org/release-group/7e3730ca-d6b1-4688-b8b6-5161a90f37f7/front-500"
+    },
+    {
+      "id": "song_212",
+      "result": "kept"
+    },
+    {
+      "id": "song_213",
+      "result": "kept"
+    },
+    {
+      "id": "song_214",
+      "result": "kept"
+    },
+    {
+      "id": "song_215",
+      "result": "upgraded",
+      "source": "caa",
+      "distance": 0.108,
+      "url": "https://coverartarchive.org/release-group/4a05547f-0eb3-3eba-9e01-a9d440d4d041/front-500"
+    },
+    {
+      "id": "song_216",
+      "result": "kept"
+    },
+    {
+      "id": "song_217",
+      "result": "upgraded",
+      "source": "caa",
+      "distance": 0.004,
+      "url": "https://coverartarchive.org/release-group/874449ed-f27e-4e1b-923e-9f1aaef4cc06/front-500"
+    },
+    {
+      "id": "song_218",
+      "result": "kept"
+    },
+    {
+      "id": "song_219",
+      "result": "kept"
+    },
+    {
+      "id": "song_220",
+      "result": "kept"
+    },
+    {
+      "id": "song_221",
+      "result": "upgraded",
+      "source": "caa",
+      "distance": 0.004,
+      "url": "https://coverartarchive.org/release-group/7d8f07a7-4c64-3afb-8daf-8f1d4df89a78/front-500"
+    },
+    {
+      "id": "song_222",
+      "result": "kept"
+    },
+    {
+      "id": "song_223",
+      "result": "upgraded",
+      "source": "caa",
+      "distance": 0.004,
+      "url": "https://coverartarchive.org/release-group/da40e720-2097-3730-8a7f-0c2ddbff4a96/front-500"
+    },
+    {
+      "id": "song_224",
+      "result": "kept"
+    },
+    {
+      "id": "song_225",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.003,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music221/v4/74/20/a2/7420a22d-fe82-45d1-5695-79d66331ab1f/26UMGIM16888.rgb.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_226",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.031,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music/y2005/m06/d02/h06/s05.iowydpqe.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_227",
+      "result": "upgraded",
+      "source": "caa",
+      "distance": 0.003,
+      "url": "https://coverartarchive.org/release-group/4c37e5f7-4e2a-305c-87b5-83b4623cb2eb/front-500"
+    },
+    {
+      "id": "song_228",
+      "result": "kept"
+    },
+    {
+      "id": "song_229",
+      "result": "upgraded",
+      "source": "caa",
+      "distance": 0.004,
+      "url": "https://coverartarchive.org/release-group/38562fbb-157e-3803-b343-94f6a710444b/front-500"
+    },
+    {
+      "id": "song_230",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.005,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music113/v4/1c/3c/09/1c3c0934-8ae5-fc87-2647-e104057d41f4/074640952920.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_231",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.003,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music221/v4/2e/8c/2f/2e8c2f46-4148-d40d-61dc-2cc8e2493aab/12UMGIM11012.rgb.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_232",
+      "result": "kept"
+    },
+    {
+      "id": "song_233",
+      "result": "kept"
+    },
+    {
+      "id": "song_234",
+      "result": "kept"
+    },
+    {
+      "id": "song_235",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.004,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music113/v4/74/c1/73/74c17380-b75d-4d74-31d8-99f8e8b20c36/17UM1IM27905.rgb.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_236",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.082,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music126/v4/f8/89/3c/f8893ce7-260b-2d3f-a361-984158d5bf72/19UMGIM66006.rgb.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_237",
+      "result": "upgraded",
+      "source": "caa",
+      "distance": 0.004,
+      "url": "https://coverartarchive.org/release-group/9b4d952f-3049-3d4a-a113-e9a7f04caf60/front-500"
+    },
+    {
+      "id": "song_238",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.104,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music118/v4/a7/70/df/a770dff5-0b2c-b260-0c10-eea7997d36eb/00731453217126.rgb.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_239",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.116,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music211/v4/ec/17/d8/ec17d8f4-09bb-282b-6e01-8b03c95bc318/602527717470.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_240",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.005,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music126/v4/f4/69/61/f469613d-a7ef-e89f-007a-a7590458462b/603497826254.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_241",
+      "result": "upgraded",
+      "source": "caa",
+      "distance": 0.004,
+      "url": "https://coverartarchive.org/release-group/b9e3c8d7-d3eb-3f7f-a517-edcef2b255d6/front-500"
+    },
+    {
+      "id": "song_242",
+      "result": "kept"
+    },
+    {
+      "id": "song_243",
+      "result": "kept"
+    },
+    {
+      "id": "song_244",
+      "result": "upgraded",
+      "source": "caa",
+      "distance": 0.005,
+      "url": "https://coverartarchive.org/release-group/db82fb52-f246-36dc-910a-ba709ed22dea/front-500"
+    },
+    {
+      "id": "song_245",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.075,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music114/v4/62/61/61/626161c0-f4d7-e6ff-8586-768340ef278f/00602537002382.rgb.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_246",
+      "result": "upgraded",
+      "source": "caa",
+      "distance": 0.004,
+      "url": "https://coverartarchive.org/release-group/d147e89b-90ca-35b6-9f7b-3e34b8edf63f/front-500"
+    },
+    {
+      "id": "song_247",
+      "result": "upgraded",
+      "source": "caa",
+      "distance": 0.003,
+      "url": "https://coverartarchive.org/release-group/78e1e9c9-ba17-4937-ad41-5d53d6bc44b0/front-500"
+    },
+    {
+      "id": "song_248",
+      "result": "upgraded",
+      "source": "caa",
+      "distance": 0.005,
+      "url": "https://coverartarchive.org/release-group/d444c587-2abf-38b4-a523-251c6d88668f/front-500"
+    },
+    {
+      "id": "song_249",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.004,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music211/v4/55/09/9e/55099e56-bd67-7605-3136-112b7107468f/4099964147483.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_250",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.059,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music221/v4/88/85/6e/88856e99-7323-7737-3634-435da9fcefa0/13UABIM59225.rgb.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_251",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.061,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music/db/11/cf/mzi.khdeewwg.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_252",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.099,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music125/v4/68/59/96/68599610-92f1-4400-8db3-4e794e2f2757/886446819020.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_253",
+      "result": "kept"
+    },
+    {
+      "id": "song_254",
+      "result": "upgraded",
+      "source": "caa",
+      "distance": 0.004,
+      "url": "https://coverartarchive.org/release-group/9dae99e3-ef1b-3fe8-b3fb-ab1ea48a6fc0/front-500"
+    },
+    {
+      "id": "song_255",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.101,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music115/v4/0e/d1/5b/0ed15b14-271c-35d5-5909-49f18fbfb32b/886445600605.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_256",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.059,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music/15/3b/2c/mzi.vxtwarau.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_257",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.006,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music221/v4/71/ae/6a/71ae6a46-99a6-e9d8-d7f3-41c0f2df45c4/196872579123.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_258",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.051,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music/03/c5/d4/mzi.ldvrmhxt.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_259",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.064,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music116/v4/07/1a/5a/071a5aee-6e42-060c-35b9-6a6e45b9ea59/06UMGIM10441.rgb.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_260",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.049,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music221/v4/0d/b5/8a/0db58a8b-7b17-dd53-3464-116a415d0f49/196872648836.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_261",
+      "result": "upgraded",
+      "source": "caa",
+      "distance": 0.003,
+      "url": "https://coverartarchive.org/release-group/395c3c5d-a677-3c1f-ac1f-1beff237f62d/front-500"
+    },
+    {
+      "id": "song_262",
+      "result": "upgraded",
+      "source": "caa",
+      "distance": 0.002,
+      "url": "https://coverartarchive.org/release-group/7e48f018-b774-32e6-a68b-b42db04535c0/front-500"
+    },
+    {
+      "id": "song_263",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.003,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music211/v4/42/fc/47/42fc4794-3c69-8c00-e528-1c7e92b5ac93/09UMGIM13833.rgb.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_264",
+      "result": "upgraded",
+      "source": "caa",
+      "distance": 0.003,
+      "url": "https://coverartarchive.org/release-group/7a23bc7e-d7bd-3a22-a38d-7d1f793bae1c/front-500"
+    },
+    {
+      "id": "song_265",
+      "result": "kept"
+    },
+    {
+      "id": "song_266",
+      "result": "upgraded",
+      "source": "caa",
+      "distance": 0.005,
+      "url": "https://coverartarchive.org/release-group/45670a8a-500c-377b-963b-c47e381e84bc/front-500"
+    },
+    {
+      "id": "song_267",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.103,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music211/v4/fc/6e/1e/fc6e1e95-7f93-09d8-455e-2f24a537a71f/603497823703.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_268",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.021,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music115/v4/11/65/32/116532c7-18c0-74d0-38ac-d70d5a530ee8/192562539507.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_269",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.015,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music115/v4/96/82/ef/9682ef96-5769-74aa-55ff-9d4404edebd2/DM2_FINAL_COVER.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_270",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.018,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music5/v4/43/03/57/430357e0-e142-8d4d-ca56-87f4bd41e017/886444976145.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_271",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.046,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music115/v4/e8/43/5f/e8435ffa-b6b9-b171-40ab-4ff3959ab661/886443919266.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_272",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.01,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music115/v4/15/e6/e8/15e6e8a4-4190-6a8b-86c3-ab4a51b88288/190295851286.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_273",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.009,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music211/v4/e2/ef/f0/e2eff0bc-c51d-7de5-9280-6891ddcee71b/18UMGIM85289.rgb.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_274",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.008,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music115/v4/7c/52/87/7c5287bc-818f-55ed-e607-08b052963632/12UMGIM50914.rgb.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_275",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.009,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music221/v4/eb/ca/25/ebca2596-cd1e-b295-91a3-771c868d0a79/191404113868.png/600x600bb.jpg"
+    },
+    {
+      "id": "song_276",
+      "result": "upgraded",
+      "source": "caa",
+      "distance": 0.003,
+      "url": "https://coverartarchive.org/release-group/1ec83f3d-c070-4b7c-8539-a67500a457d4/front-500"
+    },
+    {
+      "id": "song_277",
+      "result": "upgraded",
+      "source": "caa",
+      "distance": 0.005,
+      "url": "https://coverartarchive.org/release-group/61180839-f4a7-407f-b86f-24c48eef4066/front-500"
+    },
+    {
+      "id": "song_278",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.008,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music126/v4/97/d8/36/97d8363b-63be-404e-2890-4d0d6917df89/653738287122_Cover.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_279",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.011,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music115/v4/1a/37/d1/1a37d1b1-8508-54f2-f541-bf4e437dda76/19UMGIM05028.rgb.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_280",
+      "result": "upgraded",
+      "source": "caa",
+      "distance": 0.005,
+      "url": "https://coverartarchive.org/release-group/eae73cd4-39bd-41fd-8eeb-90f4ec263915/front-500"
+    },
+    {
+      "id": "song_281",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.01,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music116/v4/e9/c5/a8/e9c5a8a0-d698-137b-2e85-cf3a8d9548f8/190295303372.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_282",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.004,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music126/v4/2a/19/fb/2a19fb85-2f70-9e44-f2a9-82abe679b88e/886449990061.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_283",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.012,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music126/v4/8c/67/ff/8c67ff91-31c3-3fef-1884-ce3ec89f3af4/196589946874.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_284",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.004,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music115/v4/02/ed/8c/02ed8cab-c089-2fdd-7ce6-ab334a9a4e19/21UMGIM26093.rgb.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_285",
+      "result": "upgraded",
+      "source": "caa",
+      "distance": 0.004,
+      "url": "https://coverartarchive.org/release-group/3b84e870-89ef-4a74-b776-98feae784ac3/front-500"
+    },
+    {
+      "id": "song_286",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.009,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music115/v4/4b/42/21/4b422136-2cfd-222c-ca7c-7573bf23139c/886449537204.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_287",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.004,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music125/v4/89/59/6a/89596ab9-fa3c-8d08-4d95-a6450fa2013c/886449400515.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_288",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.017,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music125/v4/39/2b/04/392b04a4-70bf-313a-e05e-2dbd80024307/21UMGIM74865.rgb.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_289",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.007,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music221/v4/a1/1c/ca/a11ccab6-7d4c-e041-d028-998bcebeb709/24UMGIM61704.rgb.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_290",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.02,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music211/v4/92/9f/69/929f69f1-9977-3a44-d674-11f70c852d1b/24UMGIM36186.rgb.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_291",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.014,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music125/v4/c5/d8/c6/c5d8c675-63e3-6632-33db-2401eabe574d/190296491412.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_292",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.016,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music211/v4/a5/c1/9c/a5c19c62-d641-93b4-2800-e74778569f5f/093624852483.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_293",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.005,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music122/v4/67/b5/01/67b501d5-362e-797e-7dbd-942b9e273084/22UM1IM24801.rgb.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_294",
+      "result": "kept"
+    },
+    {
+      "id": "song_295",
+      "result": "upgraded",
+      "source": "caa",
+      "distance": 0.005,
+      "url": "https://coverartarchive.org/release-group/ae4a0990-3ef1-4641-a618-65401985b3a0/front-500"
+    },
+    {
+      "id": "song_296",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.008,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music221/v4/2d/14/66/2d14661b-345b-d0f3-4e86-56ef626e68aa/075679629203.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_297",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.017,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music126/v4/6f/b2/0c/6fb20c7e-94bd-6298-f771-445f3b8163c4/21UMGIM33569.rgb.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_298",
+      "result": "kept"
+    },
+    {
+      "id": "song_299",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.015,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music126/v4/36/19/66/36196640-1561-dc5e-c6bc-1e5f4befa583/093624856771.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_300",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.003,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music221/v4/29/a7/c4/29a7c478-351d-25eb-a116-3e68118cdab8/24UMGIM31246.rgb.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_301",
+      "result": "kept"
+    },
+    {
+      "id": "song_302",
+      "result": "kept"
+    },
+    {
+      "id": "song_303",
+      "result": "upgraded",
+      "source": "caa",
+      "distance": 0.003,
+      "url": "https://coverartarchive.org/release-group/c39f7f80-d42f-3669-9653-230f8e922083/front-500"
+    },
+    {
+      "id": "song_304",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.002,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music221/v4/0e/93/88/0e9388c0-c842-56dc-311c-417e9c07db85/602527717517.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_305",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.003,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music122/v4/0c/a5/7c/0ca57c94-601d-f973-eb79-3941573aac7c/13UABIM74018.rgb.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_306",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.003,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music221/v4/a4/5c/9d/a45c9dac-1610-711a-a66f-782a1614913f/3663729402653_cover.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_307",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.003,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music125/v4/98/ae/c2/98aec2e1-3be4-0311-1b44-69348fc87abb/075679956484.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_308",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.003,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music124/v4/83/3a/f7/833af71b-2e0c-3303-24f5-8f5c546c073b/20UMGIM21167.rgb.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_309",
+      "result": "kept"
+    },
+    {
+      "id": "song_310",
+      "result": "kept"
+    },
+    {
+      "id": "song_311",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.008,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music211/v4/74/00/cd/7400cdf5-08e3-afb7-f95d-6be9ebd9149a/06UMGIM01808.rgb.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_312",
+      "result": "upgraded",
+      "source": "caa",
+      "distance": 0.005,
+      "url": "https://coverartarchive.org/release-group/2d65e57e-3335-4baa-8c74-3f512f454fc6/front-500"
+    },
+    {
+      "id": "song_313",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.006,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music124/v4/85/49/94/8549949a-da32-2e74-9f45-711926c42384/mzi.xkbqrkib.tif/600x600bb.jpg"
+    },
+    {
+      "id": "song_314",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.01,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music211/v4/5b/78/c0/5b78c053-c5d5-5414-6d95-2a9ab3d3c7a6/06UMGIM55575.rgb.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_315",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.003,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music116/v4/74/23/7b/74237b93-8346-5fe1-b1eb-938808910c5d/11UMGIM38936.rgb.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_316",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.003,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music116/v4/14/f3/28/14f32832-b9d9-1ba1-e20a-18c2ff8b6a80/886449410873.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_317",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.005,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music128/v4/6a/59/ba/6a59ba83-b62c-0aba-afdf-70112572352d/00888072025745.rgb.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_318",
+      "result": "kept"
+    },
+    {
+      "id": "song_319",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.111,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music125/v4/be/27/91/be279120-2285-16c6-c7ba-9d6643d4a948/075992732727.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_320",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.003,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music115/v4/ad/28/93/ad2893b3-364e-70d4-96df-e991092fc562/06UMGIM01158.rgb.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_321",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.008,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music221/v4/ea/24/5b/ea245b86-6946-e391-e82d-195ad99089a2/4250344455554.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_322",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.002,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Features125/v4/dd/7d/72/dd7d7259-d27f-5b3e-ce64-9e304d2cb40f/dj.rxzrauer.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_323",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.004,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music116/v4/21/d9/07/21d9076e-a52c-4f94-5176-011a9ec878e7/11UMGIM14032.rgb.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_324",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.003,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music124/v4/5e/76/14/5e761416-1c55-1b56-e8c3-177fb475bef2/886449160334.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_325",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.005,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music128/v4/6a/59/ba/6a59ba83-b62c-0aba-afdf-70112572352d/00888072025745.rgb.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_326",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.005,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music115/v4/94/45/82/94458262-998b-3a64-5461-b9230a55643e/mzi.xefbhabm.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_327",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.002,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music115/v4/5c/15/9b/5c159b27-95ca-b9a7-84e3-28e795fffd39/dj.kvkrpptq.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_328",
+      "result": "kept"
+    },
+    {
+      "id": "song_329",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.002,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music126/v4/a1/67/9c/a1679c06-1050-239c-bd3a-c374f7c6459e/886449952601.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_330",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.002,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music221/v4/fd/4a/77/fd4a77db-0ebc-d043-41a2-f32fa1bb0fb4/dj.qrikkdwj.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_331",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.003,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music125/v4/14/54/19/145419b2-96f6-fc9e-3110-fbdc78022df6/12UMGIM48177.rgb.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_332",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.004,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music115/v4/02/ed/8c/02ed8cab-c089-2fdd-7ce6-ab334a9a4e19/21UMGIM26093.rgb.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_333",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.004,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music124/v4/30/99/9f/30999ffd-75fa-02bb-becc-0908f4cb86af/00042283951624.rgb.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_334",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.003,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music114/v4/01/69/02/01690216-48fc-1c54-b1de-48170d16b1c3/00602567725268.rgb.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_335",
+      "result": "reverted",
+      "source": "itunes",
+      "distance": 0.065,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music116/v4/56/18/02/561802a0-1897-f69d-e9a0-6e78c3455c59/23UM1IM11824.rgb.jpg/600x600bb.jpg",
+      "reason": "deluxe mixes text"
+    },
+    {
+      "id": "song_336",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.004,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music123/v4/09/7c/5f/097c5f44-7b90-bf3b-a738-ad6c4e46f262/4034677414095_cover.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_337",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.06,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music211/v4/82/91/8b/82918b5d-2388-d8ea-ae9e-45c8222baf25/06UMGIM03503.rgb.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_338",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.002,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Features115/v4/2d/27/f4/2d27f445-abf6-f360-f56a-683b65c9b842/dj.hhpuvuwv.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_339",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.002,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music112/v4/1f/fa/09/1ffa092f-f52f-4a66-7d10-4cc5982dc747/12UMGIM46901.rgb.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_340",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.005,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music125/v4/c5/d8/c6/c5d8c675-63e3-6632-33db-2401eabe574d/190296491412.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_341",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.005,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music125/v4/f4/cd/08/f4cd084a-0a05-1bfc-6880-39ade16200ce/00602567823322.rgb.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_342",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.004,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music122/v4/2a/4a/e6/2a4ae63d-ada7-fa57-6f16-02eebcf72f95/18UMGIM29770.rgb.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_343",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.003,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music211/v4/fa/26/c9/fa26c9e4-e598-5019-9bd0-ce8321245cc5/15UMGIM15404.rgb.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_344",
+      "result": "kept"
+    },
+    {
+      "id": "song_345",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.003,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music115/v4/d4/9c/f6/d49cf63f-a412-5737-9392-1576c297b475/00888072396272.rgb.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_346",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.005,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music124/v4/76/fc/e7/76fce783-7be6-2dcd-7b54-1306c7d872ea/825646264261.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_347",
+      "result": "upgraded",
+      "source": "caa",
+      "distance": 0.002,
+      "url": "https://coverartarchive.org/release-group/7507cb94-6f3f-4b34-839c-98381b9a3ce3/front-500"
+    },
+    {
+      "id": "song_348",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.002,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music112/v4/b8/20/f9/b820f951-e53c-93bf-e75d-33df6165e7c1/075679736109.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_349",
+      "result": "kept"
+    },
+    {
+      "id": "song_350",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.003,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music122/v4/1a/19/db/1a19db26-17ad-b986-11a9-f72ac7a6194b/18UMGIM31214.rgb.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_351",
+      "result": "reverted",
+      "source": "itunes",
+      "distance": 0.069,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music125/v4/d1/c0/8c/d1c08c34-dc7b-0e5b-cb99-4dcfc8b92d06/mzm.gwxgofup.jpg/600x600bb.jpg",
+      "reason": "T. Rex logo missing"
+    },
+    {
+      "id": "song_352",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.092,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music69/v4/78/c7/b4/78c7b40e-00c3-fb42-6dfd-ad443c7b5448/886445701548.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_353",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.005,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music112/v4/b0/f7/5d/b0f75dab-7e01-d4c6-61c3-e6253a2cae22/06UMGIM18645.rgb.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_354",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.008,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music221/v4/37/35/62/373562e8-ab69-254b-bbf2-f1cb9aca66fe/06UMGIM16889.rgb.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_355",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.003,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music211/v4/da/50/cc/da50cc80-3515-a38d-369b-0d700ffd249d/886444820448.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_356",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.01,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music116/v4/b2/b4/7c/b2b47cf9-d8e2-53f6-5c62-c974d665c95b/22UMGIM08994.rgb.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_357",
+      "result": "upgraded",
+      "source": "caa",
+      "distance": 0.003,
+      "url": "https://coverartarchive.org/release-group/1dd3e34b-1e0a-3ca9-9331-5b8e967853e7/front-500"
+    },
+    {
+      "id": "song_358",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.103,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music112/v4/1c/86/39/1c86394a-6b1a-64d0-84c3-882415654d12/15UMGIM14285.rgb.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_359",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.066,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music116/v4/1a/54/65/1a546518-5709-5c11-3f30-90528331fbf6/15UMGIM65659.rgb.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_360",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.114,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music211/v4/09/60/3f/09603f5d-6190-d7e1-57ab-0cb700ad9f36/196873126647.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_361",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.005,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music116/v4/b7/9e/9a/b79e9ae3-8927-c3ca-5f46-c745beb0367b/8718723129497.png/600x600bb.jpg"
+    },
+    {
+      "id": "song_362",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.118,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music124/v4/c5/4b/ff/c54bffa0-2333-1a55-e67e-a9c640e06f6f/mzi.hwxgzhsl.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_363",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.003,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music115/v4/5e/1b/f1/5e1bf1de-e5f1-e73e-0752-e7882b4f2d57/886444718820.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_364",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.016,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music122/v4/62/93/13/6293132e-20ff-67ab-3d1f-96bb6797a6ba/196589564955.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_365",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.003,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music124/v4/c8/b6/75/c8b6758a-22bd-eeeb-2fe0-9a8edf123dfc/00724385402852.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_366",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.003,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music115/v4/22/ba/a8/22baa8b5-0f31-6416-73df-f78e10f1bee0/00602537424900.rgb.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_367",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.005,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music125/v4/1b/b9/16/1bb9167c-e0eb-5418-960d-e9adb61d0fdd/mzi.kqpazwnw.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_368",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.005,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music112/v4/83/87/da/8387da1b-07b6-d0e5-ca94-078f14f67bb5/dj.bbfjstbq.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_369",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.016,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music115/v4/82/f3/e9/82f3e968-8174-c5eb-7fc5-36384d050129/dj.mdauihuy.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_370",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.009,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music115/v4/b9/b4/2a/b9b42ad1-1e25-5096-da43-497a247e69a3/190295978051.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_371",
+      "result": "reverted",
+      "source": "itunes",
+      "distance": 0.115,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music69/v4/c5/8b/55/c58b5520-4752-5cb5-3686-f43f094cd3e2/886445832143.jpg/600x600bb.jpg",
+      "reason": "edition badge"
+    },
+    {
+      "id": "song_372",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.007,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music211/v4/b9/f2/2b/b9f22b26-d962-70de-6d85-674139ded7cc/842812190988_Cover.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_373",
+      "result": "kept"
+    },
+    {
+      "id": "song_374",
+      "result": "kept"
+    },
+    {
+      "id": "song_375",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.003,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music125/v4/3a/93/40/3a9340a1-73f7-5bbb-86a2-15a4ba20acea/884977735840.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_376",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.103,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music125/v4/ab/e1/f9/abe1f91c-4f32-4384-6632-13334c07c4b2/886446159812.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_377",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.008,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music115/v4/d2/aa/44/d2aa4418-7e74-7e6d-4247-9b9c1cba9e64/06UMGIM01654.rgb.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_378",
+      "result": "kept"
+    },
+    {
+      "id": "song_379",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.016,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music126/v4/d3/bb/21/d3bb215b-a86e-cf8a-93e2-abc3b2d2eb76/15UMGIM74958.rgb.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_380",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.003,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music116/v4/dd/af/ea/ddafeab5-797a-5b6f-7735-f96c537b45e0/5054197894091.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_381",
+      "result": "kept"
+    },
+    {
+      "id": "song_382",
+      "result": "upgraded",
+      "source": "caa",
+      "distance": 0.006,
+      "url": "https://coverartarchive.org/release-group/87a0f11f-2c56-37af-a05b-a3efcd2f98f0/front-500"
+    },
+    {
+      "id": "song_383",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.003,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music114/v4/5f/fa/56/5ffa56c2-ea1f-7a17-6bad-192ff9b6476d/825646124206.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_384",
+      "result": "upgraded",
+      "source": "caa",
+      "distance": 0.003,
+      "url": "https://coverartarchive.org/release-group/0e319e00-ac06-34ed-b4fa-f6d206d4a4e6/front-500"
+    },
+    {
+      "id": "song_385",
+      "result": "upgraded",
+      "source": "caa",
+      "distance": 0.005,
+      "url": "https://coverartarchive.org/release-group/421118d0-f0f1-3b22-8e10-7b27e310e979/front-500"
+    },
+    {
+      "id": "song_386",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.003,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music112/v4/6e/56/af/6e56af83-bdff-56c2-7c6a-b30cd0d356ce/06UMGIM08757.rgb.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_387",
+      "result": "kept"
+    },
+    {
+      "id": "song_388",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.002,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music116/v4/21/4a/c2/214ac20c-a66c-84a1-e357-f7e60b1932ca/196871542661.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_389",
+      "result": "kept"
+    },
+    {
+      "id": "song_390",
+      "result": "kept"
+    },
+    {
+      "id": "song_391",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.094,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music116/v4/7f/ad/91/7fad9166-acbf-0a36-c7c1-85e485a327f4/0698458358486.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_392",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.018,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music211/v4/74/41/43/744143ae-afad-8380-106e-1c1bc48922e4/14UMGIM34762.rgb.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_393",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.111,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music122/v4/05/a3/a1/05a3a1aa-c472-a7f2-4d8b-9eacff8a1e43/22UMGIM30753.rgb.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_394",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.004,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music7/v4/ff/0f/cf/ff0fcfac-848b-70b8-0da2-b16c133d18da/dj.yqavvtmw.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_395",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.003,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music221/v4/c9/a3/e9/c9a3e987-3952-a6ac-7975-680f2033e660/25UMGIM10586.rgb.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_396",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.004,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music124/v4/c0/12/9f/c0129f7f-daa0-3097-b325-755fc13d8ee1/00602567780274.rgb.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_397",
+      "result": "kept"
+    },
+    {
+      "id": "song_398",
+      "result": "kept"
+    },
+    {
+      "id": "song_399",
+      "result": "kept"
+    },
+    {
+      "id": "song_400",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.004,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music6/v4/20/b0/2d/20b02d2c-4ffc-8f4c-40ae-30f2dadf04f6/5099997262459.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_401",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.005,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music112/v4/83/c6/54/83c6541f-3b90-b46a-b46a-17bf8fd9af16/5034202113645.png/600x600bb.jpg"
+    },
+    {
+      "id": "song_402",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.004,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music115/v4/61/e7/3f/61e73f94-018d-5f50-50ec-8521952bc72e/20UM1IM11629.rgb.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_403",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.008,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music221/v4/be/db/81/bedb81c3-ca23-a1b9-f275-59e46ae4fdb1/197342625517_cover.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_404",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.004,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music116/v4/74/86/9f/74869f4f-c52b-289b-31a7-9ac9fec31e2d/06UMGIM70785.rgb.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_405",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.004,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music124/v4/0a/8a/ca/0a8aca52-e1c9-732e-a9e4-8a8e8eea168c/00602537570669.rgb.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_406",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.006,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music116/v4/75/b6/da/75b6da76-a3e0-6a77-cbe5-ad6c42cb0692/06UMGIM48050.rgb.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_407",
+      "result": "kept"
+    },
+    {
+      "id": "song_408",
+      "result": "upgraded",
+      "source": "caa",
+      "distance": 0.005,
+      "url": "https://coverartarchive.org/release-group/3dd0c8e4-af53-3605-9c20-f27c7635fb60/front-500"
+    },
+    {
+      "id": "song_409",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.005,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music125/v4/02/c6/e1/02c6e1cd-8d57-97b4-6ef1-77d2be004509/mzi.sjrqsmrq.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_410",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.016,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music116/v4/05/f7/af/05f7af37-526e-5e6e-e4cd-9e4bc3da0756/18UMGIM52528.rgb.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_411",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.003,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music221/v4/d2/f8/99/d2f89987-d2a5-45a5-1746-c0841c7e9843/24UM1IM17286.rgb.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_412",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.008,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music221/v4/72/eb/52/72eb5262-950d-c8cc-4eb5-d52d1b2c86e6/00015047900534_Cover.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_413",
+      "result": "kept"
+    },
+    {
+      "id": "song_414",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.003,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music221/v4/be/6e/ba/be6ebade-739e-fc43-e430-e20162645c65/886445613940.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_415",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.003,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music221/v4/00/4d/a9/004da9d2-9b4f-99f4-d396-72ec786fb88c/696998575721.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_416",
+      "result": "upgraded",
+      "source": "caa",
+      "distance": 0.007,
+      "url": "https://coverartarchive.org/release-group/04ee747f-ab6e-3963-bcd0-caba5b8a9c31/front-500"
+    },
+    {
+      "id": "song_417",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.003,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music115/v4/87/ed/42/87ed4279-d8d7-840f-90b5-2bffe34699ef/075679839237.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_418",
+      "result": "upgraded",
+      "source": "caa",
+      "distance": 0.004,
+      "url": "https://coverartarchive.org/release-group/0a68d5c3-f571-4780-9149-cfa35e1c0651/front-500"
+    },
+    {
+      "id": "song_419",
+      "result": "kept"
+    },
+    {
+      "id": "song_420",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.005,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music116/v4/a4/31/1b/a4311b0e-0bf7-eeba-da20-aec06db2b20a/12UMGIM10573.rgb.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_421",
+      "result": "upgraded",
+      "source": "caa",
+      "distance": 0.004,
+      "url": "https://coverartarchive.org/release-group/06d15f53-80f2-46f3-a484-d46d02a09745/front-500"
+    },
+    {
+      "id": "song_422",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.003,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music112/v4/40/16/3e/40163e24-6985-b785-d4ea-cbae07d74812/06UMGIM05422.rgb.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_423",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.007,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music114/v4/eb/3c/15/eb3c1520-e377-fe3f-e53d-32da66fa4490/888880552938.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_424",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.006,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music115/v4/e3/7e/c5/e37ec5d7-725b-695c-333c-ee0deb5adcc6/dj.mveioodu.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_425",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.003,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music116/v4/31/33/cf/3133cffc-4b77-f3c6-3ee3-5c9b6cfb6bd4/190295806675.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_426",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.003,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music122/v4/e6/64/ba/e664bafe-0248-5478-3d96-a69a29bb4f6c/196589440754.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_427",
+      "result": "kept"
+    },
+    {
+      "id": "song_428",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.099,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music114/v4/b9/06/90/b90690ed-d55a-d846-436a-fbd4e0473990/081227127527.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_429",
+      "result": "kept"
+    },
+    {
+      "id": "song_430",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.003,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music125/v4/33/0f/4c/330f4c31-6b9a-b346-e625-01e8fba322cb/190295715762.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_431",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.003,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music114/v4/59/00/53/59005338-772d-2dd7-e2ff-674484629337/012414158925.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_432",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.005,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music124/v4/32/bf/13/32bf1302-fbfe-945a-44bc-c0aeaee12711/075678375224.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_433",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.002,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music116/v4/75/11/84/751184b0-77df-1eff-bb20-dac03247425d/15UMGIM59808.rgb.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_434",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.002,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music116/v4/82/da/f7/82daf7a1-4d0e-9a94-9314-0916e4ab5635/054391385239.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_435",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.005,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music114/v4/e4/2c/fb/e42cfb89-6e07-1c5c-5271-b49c78438de7/dj.ueeuybev.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_436",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.002,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music/d6/b7/81/mzi.mcvxlkfy.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_437",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.004,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music128/v4/a3/39/d0/a339d06c-ec27-a414-ed4e-a8783d474d4b/5414939482373.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_438",
+      "result": "kept"
+    },
+    {
+      "id": "song_439",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.003,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music125/v4/f8/22/71/f82271b5-febd-23c2-8028-040760dda6f8/mzi.actfimaz.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_440",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.02,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music124/v4/24/5a/e8/245ae865-c767-310b-c8ee-6b3a05e43fd4/dj.hgvybcjz.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_441",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.032,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music115/v4/e4/f3/23/e4f323a7-29fd-a429-4dc9-dbdd5c5e5b6a/mzm.nzvdusow.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_442",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.004,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music211/v4/be/11/d1/be11d187-1aeb-99f3-01c5-597ed65cdb6a/25UMGIM07433.rgb.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_443",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.008,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music125/v4/93/7e/75/937e75df-f4da-1fef-f981-c33f050d487a/00731454641425.rgb.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_444",
+      "result": "kept"
+    },
+    {
+      "id": "song_445",
+      "result": "kept"
+    },
+    {
+      "id": "song_446",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.003,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music125/v4/20/74/b8/2074b81d-d546-b0c2-d85b-dda3a5e17661/886448236856.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_447",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.108,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music118/v4/68/83/df/6883df10-5168-e758-0c8f-50c9c01942b5/00602557265941.rgb.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_448",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.003,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music211/v4/a1/ed/a7/a1eda740-f49a-fd6e-9fb1-d38f49f606cf/887828049066.png/600x600bb.jpg"
+    },
+    {
+      "id": "song_449",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.002,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music125/v4/19/e0/1b/19e01b5f-0fd5-85f1-f347-461d4130309a/825646029594.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_450",
+      "result": "upgraded",
+      "source": "caa",
+      "distance": 0.003,
+      "url": "https://coverartarchive.org/release-group/69314d37-d718-431d-9be0-9d0903db0dab/front-500"
+    },
+    {
+      "id": "song_451",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.006,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music111/v4/e2/6d/63/e26d63cd-126a-d99f-4ccc-3e87e91eafd2/074640863523.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_452",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.003,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music124/v4/83/e1/02/83e102bb-b5b8-78ea-10ce-8f210211a9a8/603497889945.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_453",
+      "result": "upgraded",
+      "source": "caa",
+      "distance": 0.005,
+      "url": "https://coverartarchive.org/release-group/002ed683-3327-3df0-88c8-318746089925/front-500"
+    },
+    {
+      "id": "song_454",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.003,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music124/v4/98/a5/7c/98a57c6d-c857-90bb-5835-fdd60699bf05/06UMGIM09147.rgb.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_455",
+      "result": "upgraded",
+      "source": "caa",
+      "distance": 0.004,
+      "url": "https://coverartarchive.org/release-group/d1555594-914e-33e9-b35c-077c6d500cd2/front-500"
+    },
+    {
+      "id": "song_456",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.003,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music125/v4/4c/44/30/4c4430dd-150b-d393-ec70-4894975f4b16/888880422095.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_457",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.033,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music211/v4/69/9c/b5/699cb5d6-115c-ff73-9d26-e57ea4350d72/887828031795.png/600x600bb.jpg"
+    },
+    {
+      "id": "song_458",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.002,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music113/v4/5e/4d/87/5e4d87e1-2692-4262-f029-150cf601f2f5/197187195879.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_459",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.004,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music114/v4/01/d7/1d/01d71d63-3fec-5c9c-571b-7a033e0d28cc/dj.wsybhmzt.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_460",
+      "result": "upgraded",
+      "source": "caa",
+      "distance": 0.007,
+      "url": "https://coverartarchive.org/release-group/ba3303f2-3b80-4379-a7c8-801407e7eec0/front-500"
+    },
+    {
+      "id": "song_461",
+      "result": "upgraded",
+      "source": "caa",
+      "distance": 0.004,
+      "url": "https://coverartarchive.org/release-group/fbcd5ce0-c2bb-378f-96a0-ea401b09d1ea/front-500"
+    },
+    {
+      "id": "song_462",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.114,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music116/v4/bc/9f/41/bc9f4106-5f66-07ba-d577-904e492e5ac9/23UMGIM98408.rgb.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_463",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.01,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music124/v4/4c/86/1d/4c861dab-5428-f3b7-8068-82bb69db5e89/093624932130.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_464",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.006,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music116/v4/36/97/76/36977630-7bed-b717-ce9b-1dbff75fdeb7/07UMGIM00928.rgb.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_465",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.002,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music115/v4/cc/81/83/cc818302-ff27-bbbf-195e-f72bb39d32c2/886446364636.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_466",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.003,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music221/v4/fc/e2/6b/fce26bf0-4736-ef0e-6f5d-14fef60e590a/13UABIM54240.rgb.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_467",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.046,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music125/v4/5c/bd/17/5cbd17d6-ceea-e185-e889-ee494cc650da/828765035125.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_468",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.004,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music122/v4/a1/62/17/a16217f1-43ed-ac0c-1c5e-2114d0604067/051617900610.png/600x600bb.jpg"
+    },
+    {
+      "id": "song_469",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.003,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music113/v4/11/25/40/112540ba-cd42-0644-6828-95eba75121c8/0094635797657.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_470",
+      "result": "upgraded",
+      "source": "caa",
+      "distance": 0.005,
+      "url": "https://coverartarchive.org/release-group/04b0b075-bed7-388b-b44b-cf34077ad96c/front-500"
+    },
+    {
+      "id": "song_471",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.013,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music211/v4/e0/54/e1/e054e1b8-fb98-6bae-b12c-df77efd2db93/886972803326.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_472",
+      "result": "upgraded",
+      "source": "caa",
+      "distance": 0.005,
+      "url": "https://coverartarchive.org/release-group/9929530f-cd0e-4499-8c96-940099c4c980/front-500"
+    },
+    {
+      "id": "song_473",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.004,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Features/v4/9c/73/fa/9c73fadf-029c-888d-f5c3-312ad63f5442/dj.zgdcsize.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_474",
+      "result": "kept"
+    },
+    {
+      "id": "song_475",
+      "result": "kept"
+    },
+    {
+      "id": "song_476",
+      "result": "upgraded",
+      "source": "caa",
+      "distance": 0.003,
+      "url": "https://coverartarchive.org/release-group/262a92d6-a644-363d-94c2-fe2745799aec/front-500"
+    },
+    {
+      "id": "song_477",
+      "result": "upgraded",
+      "source": "caa",
+      "distance": 0.004,
+      "url": "https://coverartarchive.org/release-group/ee3d18ed-d6a8-37c7-a964-41bbdb6d59f1/front-500"
+    },
+    {
+      "id": "song_478",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.043,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music128/v4/7f/83/05/7f8305b1-0730-18c8-7d98-9dfc3a4c4bf0/00602517629769.rgb.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_479",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.004,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Features125/v4/65/bd/e4/65bde466-906f-4ae2-fe81-945807cda050/dj.xbxeoiur.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_480",
+      "result": "kept"
+    },
+    {
+      "id": "song_481",
+      "result": "upgraded",
+      "source": "caa",
+      "distance": 0.002,
+      "url": "https://coverartarchive.org/release-group/79927237-7dea-39e5-ba61-cb9845bb82a5/front-500"
+    },
+    {
+      "id": "song_482",
+      "result": "kept"
+    },
+    {
+      "id": "song_483",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.004,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music125/v4/34/2e/cb/342ecb17-ef19-816a-4ce5-e60b9ceec161/5051961073164.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_484",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.004,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music221/v4/57/dc/18/57dc1854-4483-52b2-fe7c-8a221edf9e88/13UABIM48773.rgb.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_485",
+      "result": "kept"
+    },
+    {
+      "id": "song_486",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.003,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music114/v4/be/62/e3/be62e355-acda-65f7-bf24-94d425de38c7/10UMGIM33737.rgb.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_487",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.028,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music116/v4/cb/67/fd/cb67fd0e-cdbb-60df-c3f4-46ef0f7a14d8/13UACIM03592.rgb.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_488",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.004,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music126/v4/96/8b/08/968b08e4-cb2b-54c2-32bb-dba77ad1c2ca/634904912161.png/600x600bb.jpg"
+    },
+    {
+      "id": "song_489",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.004,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music125/v4/0a/0c/4f/0a0c4f12-1489-3bda-ab41-7cb04f181e5f/5099990837951.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_490",
+      "result": "upgraded",
+      "source": "caa",
+      "distance": 0.003,
+      "url": "https://coverartarchive.org/release-group/9a4a9ebf-f4f7-3dba-9b80-0b274cbc80f9/front-500"
+    },
+    {
+      "id": "song_491",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.004,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music124/v4/8a/ae/60/8aae60b6-6e06-db6f-ad01-393a38bacd58/886444728256.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_492",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.003,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music125/v4/a0/4d/c4/a04dc484-03cc-02aa-fa82-5334fcb4bc16/18UMGIM24878.rgb.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_493",
+      "result": "kept"
+    },
+    {
+      "id": "song_494",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.007,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music115/v4/3f/35/9c/3f359c1d-2f7e-2756-3261-a4b053c6c0e6/dj.ohpderqx.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_495",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.003,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music/7e/9f/37/mzi.uhxzzozn.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_496",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.002,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music124/v4/cf/86/e7/cf86e787-2177-6366-a5c3-2180c3031015/13ULAIM49472.rgb.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_497",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.009,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music60/v4/11/46/30/11463056-a824-9933-6fcf-152bac2c57be/mzm.xrlpkrjl.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_498",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.005,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music112/v4/29/b7/81/29b781e5-3773-c87e-c6a8-82581e53d270/13ABKIM00053.rgb.jpg/600x600bb.jpg"
+    },
+    {
+      "id": "song_499",
+      "result": "upgraded",
+      "source": "caa",
+      "distance": 0.004,
+      "url": "https://coverartarchive.org/release-group/3d55b5a4-a81f-3b8e-8d7e-802ce1c86596/front-500"
+    },
+    {
+      "id": "song_500",
+      "result": "upgraded",
+      "source": "itunes",
+      "distance": 0.066,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music116/v4/be/15/97/be159727-1ea2-73bb-c9a8-03e320bb064d/13UABIM59265.rgb.jpg/600x600bb.jpg"
+    }
+  ],
+  "reviewed": "All 76 replacements with distance > 0.05 checked by eye (old vs new); 9 later editions with extra text/stickers reverted."
+}
