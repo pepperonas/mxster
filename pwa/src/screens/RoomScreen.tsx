@@ -7,6 +7,8 @@
  */
 import { useEffect, useRef, useState } from 'react'
 import { COLLECTIONS, GENRE_GROUPS, type Collection } from '@/game/songPool'
+import { buildLineup, playingMembers, teamsPossible } from '@/online/lineup'
+import { SegmentedControl } from '@/components/ui/SegmentedControl'
 import { useParams } from 'react-router-dom'
 import { AnimatePresence, m } from 'motion/react'
 import { useAuth } from '@/auth/AuthContext'
@@ -145,6 +147,14 @@ function Lobby({ account }: { account: boolean }) {
   }
   const host = room.members.find((m) => m.host)
   const [starting, setStarting] = useState(false)
+  // The host may fill up with bots or split the people into teams (not both)
+  const [bots, setBots] = useState(0)
+  const [difficulty, setDifficulty] = useState<'easy' | 'medium' | 'hard'>('medium')
+  const [teams, setTeams] = useState(0)
+  const people = playingMembers(room.members)
+  const maxTeamCount = teamsPossible(room.members)
+  const teamsOn = teams >= 2 && maxTeamCount >= 2
+  const screens = room.members.filter((m) => m.display)
 
   const copy = async () => {
     try {
@@ -177,9 +187,7 @@ function Lobby({ account }: { account: boolean }) {
         songIds: Array.isArray(options.songIds) ? options.songIds.filter((x) => typeof x === 'string').slice(0, 200) : null,
         bonus: Boolean(options.bonus)
       })
-      game.setPlayers(
-        room.members.map((mem) => ({ name: mem.name, seat: mem.seat, guest: mem.guest || undefined, timeline: [], cards: 0, score: 0 }))
-      )
+      game.setPlayers(buildLineup(room.members, { bots: teamsOn ? 0 : bots, difficulty, teams: teamsOn ? teams : 0 }))
       game.loadGameState({ onlineRoom: room.code })
       game.startGame()
       await roomApi.setStatus(room.code, 'running')
@@ -205,7 +213,7 @@ function Lobby({ account }: { account: boolean }) {
       }
     ])
 
-  const enough = room.members.length >= 2
+  const enough = people.length + (teamsOn ? 0 : bots) >= 2 && (!teamsOn || people.length >= 4)
 
   return (
     <div className="min-h-dvh pb-40">
@@ -261,7 +269,7 @@ function Lobby({ account }: { account: boolean }) {
               {t.whoPlays}
             </h2>
             <span className="meta tabular">
-              {room.members.length} / {info.maxSeats}
+              {people.length} / {info.maxSeats - screens.length}
             </span>
           </div>
           <ul className="space-y-2">
@@ -272,6 +280,57 @@ function Lobby({ account }: { account: boolean }) {
             </AnimatePresence>
           </ul>
         </section>
+
+        {isHost && (
+          <section className="surface p-5 space-y-5" aria-labelledby="fill-h">
+            <h2 id="fill-h" className="text-title-md">
+              {t.fillUp}
+            </h2>
+            <div className="space-y-2">
+              <h3 className="text-title-sm">{t.bots}</h3>
+              <SegmentedControl
+                label={t.bots}
+                value={teamsOn ? 0 : bots}
+                onChange={(n) => {
+                  setBots(n)
+                  if (n > 0) setTeams(0)
+                }}
+                segments={[0, 1, 2, 3].map((n) => ({ value: n, label: n === 0 ? t.none : String(n) }))}
+              />
+              {bots > 0 && !teamsOn && (
+                <SegmentedControl
+                  label={t.botLevel}
+                  value={difficulty}
+                  onChange={setDifficulty}
+                  segments={(['easy', 'medium', 'hard'] as const).map((d) => ({ value: d, label: t[`level_${d}`] }))}
+                />
+              )}
+              <p className="meta">{t.botsHint}</p>
+            </div>
+            <div className="space-y-2">
+              <h3 className="text-title-sm">{t.teams}</h3>
+              {maxTeamCount >= 2 && (
+              <SegmentedControl
+                label={t.teams}
+                value={teamsOn ? teams : 0}
+                onChange={(n) => {
+                  setTeams(n)
+                  if (n >= 2) setBots(0)
+                }}
+                segments={[0, 2, 3, 4]
+                  .filter((n) => n === 0 || n <= maxTeamCount)
+                  .map((n) => ({ value: n, label: n === 0 ? t.none : t.teamCount(n) }))}
+              />
+              )}
+              <p className="meta">{maxTeamCount >= 2 ? t.teamsHint : t.teamsNeedPeople(4)}</p>
+            </div>
+          </section>
+        )}
+
+        <p className="meta flex gap-2">
+          <Icon name="tv" size={18} className="shrink-0" />
+          {t.screenTip}
+        </p>
 
         {account && <InviteFriends />}
       </main>
@@ -324,7 +383,7 @@ function MemberRow({ member, me, canKick }: { member: Member; me: boolean; canKi
           <span className="text-title-md truncate">{member.name}</span>
           {me && <span className="shrink-0 rounded-m3-full bg-md-secondary-container text-md-on-secondary-container px-2 text-label-md">{t.you}</span>}
         </span>
-        <span className="block meta">{member.host ? t.host : member.guest ? t.guest : t.withAccount}</span>
+        <span className="block meta">{member.display ? t.screenLabel : member.host ? t.host : member.guest ? t.guest : t.withAccount}</span>
       </span>
       {canKick && (
         <button type="button" className="icon-btn m3-state-layer text-md-on-surface-variant" onClick={kick} aria-label={t.removeLabel(member.name)}>

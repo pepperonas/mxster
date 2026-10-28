@@ -35,6 +35,8 @@ export interface RoomValue {
   sendAudio: (cue: Omit<AudioCue, 'at'>) => void
   intentHandler: MutableRefObject<((seat: number, intent: Intent) => void) | null>
   refresh: () => Promise<RoomInfo | null>
+  /** The host's device is gone: run the game from this device (accounts only). */
+  takeover: () => Promise<void>
 }
 
 const RoomContext = createContext<RoomValue | null>(null)
@@ -58,6 +60,7 @@ export function RoomProvider({ code, children }: { code: string; children: React
   const client = useRef<RoomClient | null>(null)
   const intentHandler = useRef<((seat: number, intent: Intent) => void) | null>(null)
   const roleRef = useRef<Role | null>(null)
+  const seatRef = useRef<number | null>(null)
 
   const refresh = useCallback(async () => {
     try {
@@ -86,6 +89,7 @@ export function RoomProvider({ code, children }: { code: string; children: React
       switch (msg.type) {
         case 'welcome': {
           setSeat(msg.seat)
+          seatRef.current = msg.seat
           setRole(msg.role)
           roleRef.current = msg.role
           setMembers(msg.members)
@@ -93,7 +97,7 @@ export function RoomProvider({ code, children }: { code: string; children: React
           setCue(msg.audio)
           // Players always follow the host; the host continues from the room's
           // snapshot unless this device already runs this round
-          if (msg.role === 'player') applySnapshot(msg.snapshot)
+          if (msg.role !== 'host') applySnapshot(msg.snapshot)
           else if (gameRef.current.onlineRoom !== code && msg.snapshot)
             applySnapshot({ ...msg.snapshot, game: restoreSong(msg.snapshot.game) })
           break
@@ -102,8 +106,23 @@ export function RoomProvider({ code, children }: { code: string; children: React
           setMembers(msg.members)
           break
         case 'state':
-          if (roleRef.current === 'player') applySnapshot(msg.snapshot)
+          if (roleRef.current !== 'host') applySnapshot(msg.snapshot)
           break
+        case 'host': {
+          // Someone took over running the game. This device carries on from the
+          // state it mirrored — with the real song back (snapshots are blind)
+          setMembers(msg.members)
+          const mine = msg.seat === seatRef.current
+          if (mine && roleRef.current !== 'host') {
+            const g = gameRef.current
+            const state = Object.fromEntries(Object.entries(g).filter(([, v]) => typeof v !== 'function')) as Snapshot['game']
+            g.loadGameState(restoreSong(state))
+          }
+          const next: Role = mine ? 'host' : roleRef.current === 'display' ? 'display' : 'player'
+          roleRef.current = next
+          setRole(next)
+          break
+        }
         case 'audio':
           setCue({ songId: msg.songId, playing: msg.playing, positionMs: msg.positionMs, at: msg.at })
           break
@@ -167,7 +186,10 @@ export function RoomProvider({ code, children }: { code: string; children: React
         setCue({ ...c, at: Date.now() + (client.current?.offset ?? 0) })
       },
       intentHandler,
-      refresh
+      refresh,
+      takeover: async () => {
+        await roomApi.takeover(code)
+      }
     }),
     [code, info, problem, members, status, seat, role, connection, cue, result, refresh]
   )

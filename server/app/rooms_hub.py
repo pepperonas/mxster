@@ -21,6 +21,10 @@ class Hub:
         self.sockets: dict[str, dict[int, WebSocket]] = {}
         # Last audio cue per room, so a late (re)joiner starts in sync
         self.audio: dict[str, dict] = {}
+        # Seat whose device runs the game (mirrors rooms.host_seat)
+        self.host_seat: dict[str, int] = {}
+        # When a seat's connection went away (monotonic), for the host takeover
+        self.gone_since: dict[tuple[str, int], float] = {}
         self._lock = asyncio.Lock()
 
     def online(self, code: str) -> set[int]:
@@ -30,6 +34,7 @@ class Hub:
         async with self._lock:
             old = self.sockets.setdefault(code, {}).get(seat)
             self.sockets[code][seat] = ws
+            self.gone_since.pop((code, seat), None)
         if old is not None and old is not ws:
             # One connection per seat: a reload or a second tab takes over
             with contextlib.suppress(Exception):
@@ -40,8 +45,17 @@ class Hub:
             room = self.sockets.get(code, {})
             if room.get(seat) is ws:
                 del room[seat]
+                self.gone_since[(code, seat)] = time.monotonic()
             if not room:
                 self.sockets.pop(code, None)
+
+    def offline_for(self, code: str, seat: int) -> float | None:
+        """Seconds the seat has been without a connection; None while it is
+        connected, infinity when it never connected since the server started."""
+        if seat in self.sockets.get(code, {}):
+            return None
+        since = self.gone_since.get((code, seat))
+        return float("inf") if since is None else time.monotonic() - since
 
     async def send(self, code: str, seat: int, msg: dict) -> bool:
         ws = self.sockets.get(code, {}).get(seat)
@@ -71,6 +85,7 @@ class Hub:
         for seat in list(self.sockets.get(code, {})):
             await self.close_seat(code, seat, reason)
         self.audio.pop(code, None)
+        self.host_seat.pop(code, None)
 
 
 hub = Hub()

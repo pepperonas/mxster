@@ -36,17 +36,21 @@ export function JoinScreen() {
   const [busy, setBusy] = useState(false)
   // Kept as the error itself, so the text follows a language switch
   const [error, setError] = useState<{ err: unknown } | null>(null)
+  // TV mode: this device only shows the round (and plays the music); it may
+  // also join a round that is already running
+  const [asScreen, setAsScreen] = useState(() => new URLSearchParams(window.location.search).get('screen') === '1')
 
   useEffect(() => {
     roomApi
       .read(code)
       .then((r) => {
         if (r.me) navigate(`/room/${r.code}`, { replace: true })
+        else if (r.status === 'running' && asScreen) setRoom(r)
         else if (r.status !== 'lobby') setProblem(r.status === 'running' ? 'room_started' : 'room_closed')
         else setRoom(r)
       })
       .catch((e) => setProblem(e instanceof ApiError ? e.code : 'unreachable'))
-  }, [code, navigate])
+  }, [code, navigate, asScreen])
 
   const join = async (e?: FormEvent) => {
     e?.preventDefault()
@@ -54,7 +58,9 @@ export function JoinScreen() {
     setBusy(true)
     setError(null)
     try {
-      const r = await roomApi.join(room.code, approved ? undefined : name.trim())
+      const r = asScreen
+        ? await roomApi.join(room.code, t.screenName, true)
+        : await roomApi.join(room.code, approved ? undefined : name.trim())
       navigate(`/room/${r.code}`, { replace: true })
     } catch (err) {
       const c = err instanceof ApiError ? err.code : 'unreachable'
@@ -111,7 +117,18 @@ export function JoinScreen() {
               {room.music === 'room' ? t.musicAtHost : t.musicEverywhere}
             </p>
 
-            {approved ? (
+            {asScreen ? (
+              <div className="space-y-3">
+                <p className="text-body-md text-md-on-surface-variant">{t.screenHint}</p>
+                <button type="button" className="btn btn-lg btn-brand m3-state-layer w-full" disabled={busy} onClick={() => void join()}>
+                  <Icon name="tv" />
+                  {t.joinAsScreen}
+                </button>
+                <button type="button" className="btn btn-text m3-state-layer w-full" onClick={() => setAsScreen(false)}>
+                  {t.joinAsPlayer}
+                </button>
+              </div>
+            ) : approved ? (
               <button type="button" className="btn btn-lg btn-brand m3-state-layer w-full" disabled={busy} onClick={() => void join()}>
                 <Icon name="play" />
                 {t.join}
@@ -143,6 +160,12 @@ export function JoinScreen() {
                   {t.signInInstead}
                 </button>
               </form>
+            )}
+            {!asScreen && (
+              <button type="button" className="btn btn-text m3-state-layer w-full" onClick={() => setAsScreen(true)}>
+                <Icon name="tv" size={18} />
+                {t.useAsScreen}
+              </button>
             )}
             {error && (
               <p className="text-body-sm text-md-error" role="alert">

@@ -15,10 +15,10 @@
 <h3>👉 <a href="https://mxtape.celox.io">mxtape.celox.io</a> — mit Google oder E-Mail anmelden oder als Gast nur per Link in den Raum von Freunden</h3>
 
 <!-- BADGES:BIG — version, tests, lines of code and songs; readme.test.ts keeps them true, scripts/readme-badges.mjs rewrites them. -->
-[![version](https://img.shields.io/badge/version-0.11.0-C2185B?style=for-the-badge&logo=semver&logoColor=white)](https://github.com/pepperonas/mxtape/releases/latest)
-[![tests](https://img.shields.io/badge/tests-654-2E9E5B?style=for-the-badge&logo=vitest&logoColor=white)](#tests-und-ci)
-[![lines of code](https://img.shields.io/badge/lines%20of%20code-24.3k-4B6BDF?style=for-the-badge&logo=typescript&logoColor=white)](pwa/src)
-[![test code](https://img.shields.io/badge/test%20code-8.2k-2E9E5B?style=for-the-badge&logo=typescript&logoColor=white)](#tests-und-ci)
+[![version](https://img.shields.io/badge/version-0.12.0-C2185B?style=for-the-badge&logo=semver&logoColor=white)](https://github.com/pepperonas/mxtape/releases/latest)
+[![tests](https://img.shields.io/badge/tests-662-2E9E5B?style=for-the-badge&logo=vitest&logoColor=white)](#tests-und-ci)
+[![lines of code](https://img.shields.io/badge/lines%20of%20code-24.7k-4B6BDF?style=for-the-badge&logo=typescript&logoColor=white)](pwa/src)
+[![test code](https://img.shields.io/badge/test%20code-8.4k-2E9E5B?style=for-the-badge&logo=typescript&logoColor=white)](#tests-und-ci)
 [![songs](https://img.shields.io/badge/songs-500-FF8A3D?style=for-the-badge&logo=applemusic&logoColor=white)](#die-songsammlung)
 
 [![Donate with PayPal](https://img.shields.io/badge/PayPal-support%20this%20project-00457C?style=for-the-badge&logo=paypal&logoColor=white)](https://www.paypal.com/donate/?business=martin.pfeffer@celox.io&currency_code=EUR&item_name=mxtape)
@@ -167,6 +167,9 @@ Statt ein Handy herumzureichen, spielt jede Person auf dem eigenen Gerät – im
 - **Einspruch online:** Nach dem Legen tippt jeder, der widersprechen darf, *Einspruch* oder *Kein Einspruch*; sonst deckt die Karte nach 10 Sekunden von selbst auf. Niemand kann für die anderen vorzeitig aufdecken.
 - **Musik:** *Gemeinsam im Raum* – nur das Gerät dessen, der gerade dran ist, spielt (fällt es aus, übernimmt der Gastgeber), kein Echo. *Jeder bei sich* – alle Geräte spielen gleichzeitig (gemessen rund 20 ms auseinander).
 - **Spielen:** Wer dran ist, legt oder rät auf dem eigenen Gerät, alle anderen sehen live mit und legen vom eigenen Handy Einspruch ein. Neu laden oder kurz offline gehen kostet nichts – jede:r kommt auf den eigenen Platz zurück.
+- **TV-Modus:** Den Raumlink auf Fernseher oder Laptop öffnen und *Als Bildschirm nutzen* wählen – die Runde läuft dort groß für alle, mit Musik, und der Bildschirm bleibt an; gespielt wird auf den Handys. Ein Bildschirm kann auch mitten in der Runde dazukommen.
+- **Bots und Teams online:** Der Gastgeber füllt die Runde mit bis zu drei Bots auf (sie spielen auf seinem Gerät) oder lost die Mitspielenden in Teams; Teammitglieder sind reihum dran, jede:r auf dem eigenen Handy.
+- **Akku vom Gastgeber leer?** Nach 30 Sekunden kann jedes Konto im Raum das Spiel übernehmen; die Runde läuft auf dessen Gerät weiter.
 - **Freunde:** Andere Konten per Name oder E-Mail suchen, als Freunde hinzufügen und direkt aus dem Raum einladen; die Einladung erscheint auf ihrer Startseite.
 - Am Ende landet die Runde im Verlauf aller Mitspielenden mit Konto.
 
@@ -302,7 +305,6 @@ Einmalig auf dem Server: Geheimnisse in `/opt/mxtape-api/.env` (Vorlage `server/
 
 ## Ausblick
 
-- Bots und Teams in Online-Räumen
 - Erfolge für alle Konten einer Online-Runde (heute nur für den Gastgeber)
 - Mehr Songs, besonders aus den 50ern und den 2020ern
 

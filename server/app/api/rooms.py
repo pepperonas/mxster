@@ -1,7 +1,9 @@
 """Multiplayer rooms: create, join (account or guest), lobby, live relay.
 
-Roles: the host (an approved account, seat 0) runs the game on their device;
-everyone else sends intents. Guests join through the link with just a name:
+Roles: the host (an approved account; seat 0 at first, ``rooms.host_seat``)
+runs the game on their device; everyone else sends intents. When the host's
+device is gone for a while, another account in the room may take over.
+A display (TV, laptop) joins like a guest but only shows the round. Guests join through the link with just a name:
 they get the httpOnly cookie ``mx_guest`` (room code + seat token, signed),
 which is also what lets them hear the music while the room is open.
 """
@@ -42,6 +44,12 @@ MAX_SNAPSHOT_BYTES = 256 * 1024
 MAX_INTENT_BYTES = 2048
 OPEN = ("lobby", "running")
 RECHECK_S = 10.0
+#: The host's device has to be gone this long before someone may take over
+HOST_TAKEOVER_S = 30.0
+
+
+def is_host(room: Room, member: RoomMember) -> bool:
+    return member.seat == (room.host_seat or 0)
 
 
 # ── helpers ─────────────────────────────────────────────────────────────────
@@ -114,7 +122,8 @@ def roster(db: Session, room: Room) -> list[dict]:
             "seat": m.seat,
             "name": m.name,
             "guest": m.user_id is None,
-            "host": m.user_id == room.host_user_id,
+            "host": is_host(room, m),
+            "display": bool(m.display),
             "picture": picture,
             "online": m.seat in online and m.left_at is None,
             "left": m.left_at is not None,
@@ -169,8 +178,15 @@ def member_for(db: Session, room: Room, cookies: dict) -> RoomMember | None:
     return guest_member(db, room.code, cookies.get(GUEST_COOKIE))
 
 
+def host_member(db: Session, room: Room) -> RoomMember | None:
+    return db.execute(
+        select(RoomMember).where(RoomMember.room_code == room.code, RoomMember.seat == (room.host_seat or 0))
+    ).scalar_one_or_none()
+
+
 def public_room(db: Session, room: Room, me: RoomMember | None) -> dict:
-    host = db.get(User, room.host_user_id)
+    hm = host_member(db, room)
+    host = db.get(User, hm.user_id) if hm is not None and hm.user_id else db.get(User, room.host_user_id)
     return {
         "code": room.code,
         "status": room.status,
@@ -180,7 +196,8 @@ def public_room(db: Session, room: Room, me: RoomMember | None) -> dict:
         "members": roster(db, room),
         "maxSeats": MAX_SEATS,
         "me": None if me is None else {
-            "seat": me.seat, "name": me.name, "host": me.user_id == room.host_user_id, "left": me.left_at is not None,
+            "seat": me.seat, "name": me.name, "host": is_host(room, me), "left": me.left_at is not None,
+            "display": bool(me.display),
         },
     }
 
@@ -222,6 +239,8 @@ def read_room(code: str, request: Request, db: Session = Depends(get_db)) -> dic
 
 class JoinIn(BaseModel):
     name: str | None = None
+    #: Join as a screen that only shows the round (no account, any time)
+    display: bool = False
 
 
 @router.post("/rooms/{code}/join")
@@ -235,14 +254,15 @@ def join_room(code: str, body: JoinIn, request: Request, response: Response, db:
         if existing.left_at is not None:
             raise err(409, "left_round", "Du hast diese Runde verlassen.")
         return public_room(db, room, existing)
-    if room.status != "lobby":
+    # A screen may join a running round (it does not play); players may not
+    if room.status != "lobby" and not (body.display and room.status == "running"):
         raise err(409, "room_started" if room.status == "running" else "room_closed",
                   "Die Runde läuft schon." if room.status == "running" else "Diese Runde ist vorbei.")
     seats = members_of(db, room.code)
     if len(seats) >= MAX_SEATS:
         raise err(409, "room_full", "Der Raum ist voll.")
     seat = max(m.seat for m in seats) + 1
-    user = session_user(db, request.cookies)
+    user = None if body.display else session_user(db, request.cookies)
 
     if user is not None:
         # Account holders need CSRF like every other write of a session
@@ -254,7 +274,9 @@ def join_room(code: str, body: JoinIn, request: Request, response: Response, db:
         if not 2 <= len(name) <= 20:
             raise err(400, "bad_name", "Bitte einen Namen mit 2 bis 20 Zeichen eingeben.")
         token = secrets.token_urlsafe(24)
-        member = RoomMember(room_code=room.code, seat=seat, name=unique_name(db, room.code, name), token_hash=token_hash(token))
+        member = RoomMember(
+            room_code=room.code, seat=seat, name=unique_name(db, room.code, name), token_hash=token_hash(token), display=body.display
+        )
         db.add(member)
         s = get_settings()
         response.set_cookie(
@@ -284,7 +306,7 @@ async def leave_room(code: str, request: Request, response: Response, db: Sessio
         raise err(404, "not_member", "Du sitzt nicht in diesem Raum.")
     if me.user_id is not None:
         _check_csrf(request, db)
-    if me.user_id == room.host_user_id:
+    if is_host(room, me):
         raise err(409, "host_cannot_leave", "Als Gastgeber beendest du den Raum.")
     seat = me.seat
     if room.status == "lobby":
@@ -302,7 +324,8 @@ async def leave_room(code: str, request: Request, response: Response, db: Sessio
 
 def _host_room(db: Session, code: str, user: User) -> Room:
     room = get_room(db, code)
-    if room.host_user_id != user.id:
+    hm = host_member(db, room)
+    if hm is None or hm.user_id != user.id:
         raise err(403, "not_host", "Nur der Gastgeber kann das.")
     return room
 
@@ -311,7 +334,7 @@ def _host_room(db: Session, code: str, user: User) -> Room:
 async def kick(code: str, seat: int, user: User = Depends(require_approved), db: Session = Depends(get_db)) -> dict:
     room = _host_room(db, code, user)
     member = db.execute(select(RoomMember).where(RoomMember.room_code == room.code, RoomMember.seat == seat)).scalar_one_or_none()
-    if member is None or member.user_id == room.host_user_id:
+    if member is None or is_host(room, member):
         raise err(400, "bad_seat", "Diesen Platz gibt es nicht.")
     if room.status != "lobby":
         raise err(409, "room_started", "Während der Runde kann niemand entfernt werden.")
@@ -343,6 +366,32 @@ async def set_status(code: str, body: StatusIn, user: User = Depends(require_app
     return public_room(db, room, None)
 
 
+@router.post("/rooms/{code}/takeover", dependencies=[Depends(require_csrf)])
+async def takeover(code: str, user: User = Depends(require_approved), db: Session = Depends(get_db)) -> dict:
+    """The host's device is gone: an account in the room runs the game from now
+    on (it continues from the stored snapshot). The old host comes back as a
+    player."""
+    room = get_room(db, code)
+    me = db.execute(
+        select(RoomMember).where(RoomMember.room_code == room.code, RoomMember.user_id == user.id)
+    ).scalar_one_or_none()
+    if me is None or me.display or me.left_at is not None:
+        raise err(403, "not_member", "Du spielst in diesem Raum nicht mit.")
+    if room.status != "running":
+        raise err(409, "not_running", "Übernehmen geht nur während der Runde.")
+    if is_host(room, me):
+        return public_room(db, room, me)
+    gone = hub.offline_for(room.code, room.host_seat or 0)
+    if gone is None or gone < HOST_TAKEOVER_S:
+        raise err(409, "host_online", "Der Gastgeber ist noch da oder erst kurz weg.")
+    room.host_seat = me.seat
+    touch(room)
+    db.commit()
+    hub.host_seat[room.code] = me.seat
+    await hub.broadcast(room.code, {"type": "host", "seat": me.seat, "members": roster(db, room)})
+    return public_room(db, room, me)
+
+
 # ── live relay ──────────────────────────────────────────────────────────────
 
 def _origin_ok(ws: WebSocket) -> bool:
@@ -365,19 +414,27 @@ async def room_socket(ws: WebSocket, code: str) -> None:
             await ws.close(code=4003, reason="left")
             return
         seat = member.seat
-        is_host = member.user_id == room.host_user_id
-        # "Gemeinsam im Raum": the device of whoever is on turn plays and reports
-        # the music (the turn lives in the host's snapshot, not here). Silent
-        # devices only show a cue, so a false one costs nothing. "Jeder bei
-        # sich": everyone plays along, so only the host may set the cue.
-        may_cue = is_host or room.music == "room"
-        host_seat = 0
+        display = bool(member.display)
+        hub.host_seat[code] = room.host_seat or 0
+        music = room.music
+        # Who runs the game can change mid-round (takeover): always ask the hub
+        def hosting() -> bool:
+            return hub.host_seat.get(code, 0) == seat
+
+        # "Gemeinsam im Raum": the device of whoever is on turn (or a screen)
+        # plays and reports the music (the turn lives in the host's snapshot,
+        # not here). Silent devices only show a cue, so a false one costs
+        # nothing. "Jeder bei sich": everyone plays along, so only the host may
+        # set the cue.
+        def may_cue() -> bool:
+            return hosting() or music == "room"
+
         await ws.accept()
         await hub.attach(code, seat, ws)
         await ws.send_json({
             "type": "welcome",
             "seat": seat,
-            "role": "host" if is_host else "player",
+            "role": "host" if hosting() else "display" if display else "player",
             "status": room.status,
             "rev": room.rev,
             "snapshot": json.loads(room.snapshot or "null"),
@@ -414,7 +471,7 @@ async def room_socket(ws: WebSocket, code: str) -> None:
             if kind == "ping":
                 await ws.send_json({"type": "pong", "t": msg.get("t"), "server": now_ms()})
 
-            elif kind == "state" and is_host:
+            elif kind == "state" and hosting():
                 if len(raw) > MAX_SNAPSHOT_BYTES:
                     await ws.send_json({"type": "error", "code": "too_large"})
                     continue
@@ -429,7 +486,7 @@ async def room_socket(ws: WebSocket, code: str) -> None:
                     rev = room.rev
                 await hub.broadcast(code, {"type": "state", "rev": rev, "snapshot": msg.get("snapshot")}, exclude=seat)
 
-            elif kind == "audio" and may_cue:
+            elif kind == "audio" and may_cue():
                 cue = {
                     "type": "audio",
                     "songId": msg.get("songId"),
@@ -440,12 +497,12 @@ async def room_socket(ws: WebSocket, code: str) -> None:
                 hub.audio[code] = cue
                 await hub.broadcast(code, cue, exclude=seat)
 
-            elif kind == "intent" and not is_host:
+            elif kind == "intent" and not hosting() and not display:
                 if len(raw) > MAX_INTENT_BYTES:
                     continue
                 # The sender's seat comes from the connection, never from the message
                 forwarded = {k: v for k, v in msg.items() if k not in ("type", "seat")}
-                ok = await hub.send(code, host_seat, {"type": "intent", "seat": seat, **forwarded})
+                ok = await hub.send(code, hub.host_seat.get(code, 0), {"type": "intent", "seat": seat, **forwarded})
                 if not ok:
                     await ws.send_json({"type": "error", "code": "host_offline"})
     except WebSocketDisconnect:

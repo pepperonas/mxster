@@ -5,7 +5,9 @@ import type { MusicMode, RoomInfo, RoomStatus } from './protocol'
 export const roomApi = {
   create: (music: MusicMode, options: Record<string, unknown>) => api<RoomInfo>('/api/rooms', { method: 'POST', json: { music, options } }),
   read: (code: string) => api<RoomInfo>(`/api/rooms/${encodeURIComponent(code)}`),
-  join: (code: string, name?: string) => api<RoomInfo>(`/api/rooms/${encodeURIComponent(code)}/join`, { method: 'POST', json: { name } }),
+  join: (code: string, name?: string, display = false) =>
+    api<RoomInfo>(`/api/rooms/${encodeURIComponent(code)}/join`, { method: 'POST', json: display ? { name, display } : { name } }),
+  takeover: (code: string) => api<RoomInfo>(`/api/rooms/${encodeURIComponent(code)}/takeover`, { method: 'POST' }),
   setStatus: (code: string, status: RoomStatus) =>
     api<RoomInfo>(`/api/rooms/${encodeURIComponent(code)}/status`, { method: 'POST', json: { status } }),
   leave: (code: string) => api(`/api/rooms/${encodeURIComponent(code)}/leave`, { method: 'POST' }),

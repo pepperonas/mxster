@@ -16,6 +16,7 @@
 import type { Player } from '@/types'
 import type { PendingPlacement, Reveal, TurnPhase } from '@/game/turn'
 import type { Intent } from './protocol'
+import { seatsOf, turnSeat } from './seats'
 
 export interface TurnView {
   phase: TurnPhase
@@ -27,11 +28,13 @@ export interface TurnView {
   away?: number[]
 }
 
+/** The player (or team) this seat plays for. */
 export function indexOfSeat(players: Player[], seat: number): number {
-  return players.findIndex((p) => p.seat === seat)
+  return players.findIndex((p) => seatsOf(p).includes(seat))
 }
 
-const seatAt = (players: Player[], index: number | null | undefined) => (index == null ? undefined : players[index]?.seat)
+/** The seat that acts for a player now (a team: its member on turn). */
+const seatAt = (players: Player[], index: number | null | undefined) => (index == null ? undefined : turnSeat(players[index]))
 
 export function mayAct(view: TurnView, seat: number, action: Intent['action'], isHost = false): boolean {
   const { phase, players, currentPlayer, pending, reveal, away = [] } = view

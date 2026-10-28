@@ -47,6 +47,8 @@ export interface Player {
   memberTurn?: number
   /** Online rounds: the room seat (device) this player plays on. */
   seat?: number
+  /** Online team: one seat per member, in the order of `members` (online/seats.ts). */
+  seats?: number[]
   /** Online rounds: joined by link without an account. */
   guest?: boolean
   /** Online rounds: left on purpose — out for the rest of the round. */

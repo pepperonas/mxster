@@ -57,9 +57,11 @@ interface Options {
   onGameOver: (winner: Player, players: Player[]) => void
   /** Called after a skip that needs to be explained (penalty / danger zone). */
   onSkipNotice: (notice: SkipNotice, acknowledge: () => void) => void
+  /** Bots play on this device (false on players' devices online: the host plays them). */
+  runBots?: boolean
 }
 
-export function useTurnFlow({ onGameOver, onSkipNotice }: Options) {
+export function useTurnFlow({ onGameOver, onSkipNotice, runBots = true }: Options) {
   const game = useGame()
   const {
     gameMode,
@@ -562,7 +564,7 @@ export function useTurnFlow({ onGameOver, onSkipNotice }: Options) {
   })
 
   const currentKey = currentSong ? songKey(currentSong) : null
-  const botTurn = Boolean(activePlayer?.isBot) && (phase === 'placing' || phase === 'guessing')
+  const botTurn = runBots && Boolean(activePlayer?.isBot) && (phase === 'placing' || phase === 'guessing')
 
   useEffect(() => {
     // botBusy: if the song changes while the bot is still thinking (someone

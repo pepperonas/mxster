@@ -11,7 +11,8 @@ import type { AchievementEffect } from '@/game/achievementRules'
 
 export type RoomStatus = 'lobby' | 'running' | 'finished' | 'closed'
 export type MusicMode = 'room' | 'everyone'
-export type Role = 'host' | 'player'
+/** display: a screen (TV) that only shows the round. */
+export type Role = 'host' | 'player' | 'display'
 
 export interface Member {
   seat: number
@@ -23,6 +24,8 @@ export interface Member {
   /** Left the running round on purpose (out for good). */
   left: boolean
   userId: number | null
+  /** A screen (TV mode): shows the round, plays the music, does not play. */
+  display?: boolean
 }
 
 export interface RoomInfo {
@@ -33,7 +36,7 @@ export interface RoomInfo {
   host: { name: string; picture: string }
   members: Member[]
   maxSeats: number
-  me: { seat: number; name: string; host: boolean; left?: boolean } | null
+  me: { seat: number; name: string; host: boolean; left?: boolean; display?: boolean } | null
 }
 
 /** What the host shares: the whole game state plus the end of the round. */
@@ -76,6 +79,8 @@ export type ServerMessage =
       server: number
     }
   | { type: 'roster'; members: Member[] }
+  /** Someone took over running the game (the host's device was gone). */
+  | { type: 'host'; seat: number; members: Member[] }
   | { type: 'state'; rev: number; snapshot: Snapshot }
   | ({ type: 'audio' } & AudioCue)
   | ({ type: 'intent'; seat: number } & Intent)

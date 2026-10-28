@@ -12,6 +12,35 @@ import { concealed, jokersOf } from '@/game/bonus'
 import { api, ApiError } from '@/api/client'
 import { DAILY_SONGS, dailyScore } from '@/game/daily'
 import { dailyText } from '@/i18n/messages/daily'
+import { seatsOf, turnSeat } from '@/online/seats'
+import { apiErrorText } from '@/i18n/messages/errors'
+
+/** Same as the server's HOST_TAKEOVER_S. */
+const TAKEOVER_AFTER_MS = 30_000
+
+/**
+ * TV mode: everything a little bigger for the far side of the room, and the
+ * screen stays on (Wake Lock, where the browser has it).
+ */
+function useScreenMode(on: boolean) {
+  useEffect(() => {
+    if (!on) return
+    const root = document.documentElement
+    const before = root.style.fontSize
+    root.style.fontSize = 'clamp(16px, 1.35vw, 26px)'
+    let lock: { release: () => Promise<void> } | null = null
+    const nav = navigator as Navigator & { wakeLock?: { request: (t: 'screen') => Promise<{ release: () => Promise<void> }> } }
+    const acquire = () => nav.wakeLock?.request('screen').then((l) => (lock = l)).catch(() => {})
+    void acquire()
+    const onVisible = () => document.visibilityState === 'visible' && void acquire()
+    document.addEventListener('visibilitychange', onVisible)
+    return () => {
+      root.style.fontSize = before
+      document.removeEventListener('visibilitychange', onVisible)
+      void lock?.release().catch(() => {})
+    }
+  }, [on])
+}
 import { useGame, useUI } from '@/contexts'
 import { GuessForm, GameBoards, GuessResult, PlacementDock, FeedbackLayer, ScoreOverview, type DockState } from '@/components/game'
 import { Turntable } from '@/components/game/Turntable'
@@ -100,10 +129,13 @@ export function GameRound({ onRematch }: { onRematch: () => void }) {
   const room = useRoom()
   const online = Boolean(room && room.seat !== null)
   const onlineHost = online && room!.role === 'host'
-  const onlinePlayer = online && room!.role === 'player'
+  // A screen (TV mode) mirrors the round like a player but never acts
+  const onlineScreen = online && room!.role === 'display'
+  const onlinePlayer = online && room!.role !== 'host'
   // A guest without any account on this device: offered one when the round ends
   const { state: auth } = useAuth()
-  const guestName = onlinePlayer && auth.kind === 'anonymous' ? (room!.members.find((m) => m.seat === room!.seat)?.name ?? '') : undefined
+  useScreenMode(onlineScreen)
+  const guestName = onlinePlayer && !onlineScreen && auth.kind === 'anonymous' ? (room!.members.find((m) => m.seat === room!.seat)?.name ?? '') : undefined
 
   const [previewGap, setPreviewGap] = useState<number | null>(null)
   // Online player: the placement is on its way to the host — keep the card
@@ -173,7 +205,9 @@ export function GameRound({ onRematch }: { onRematch: () => void }) {
           if (notice.kind === 'penalty') addToast(t.skipPenaltyToast(notice.newScore), 'warning')
           acknowledge()
         }
-      : showSkipNotice
+      : showSkipNotice,
+    // Online only the host's device plays the bots
+    runBots: !onlinePlayer
   })
   const remoteFlow = useRemoteTurnFlow(room?.sendIntent ?? (noop as (i: Intent) => void))
   const flow = onlinePlayer ? remoteFlow : localFlow
@@ -195,7 +229,7 @@ export function GameRound({ onRematch }: { onRematch: () => void }) {
   // Away: not connected right now, or skipped as absent (the host may act for them)
   const away = online
     ? players.flatMap((p, i) => {
-        const m = room!.members.find((x) => x.seat === p.seat)
+        const m = room!.members.find((x) => x.seat === turnSeat(p))
         return (absent ?? []).includes(i) || !m || !m.online || m.left ? [i] : []
       })
     : []
@@ -221,7 +255,41 @@ export function GameRound({ onRematch }: { onRematch: () => void }) {
   // Players' devices: the host (who runs the round) lost the connection
   const hostMember = room?.members.find((m) => m.host)
   const hostAway = onlinePlayer && room?.connection === 'open' && Boolean(hostMember) && !hostMember!.online && !shownResult
-  const isMine = (index: number) => !online || players[index]?.seat === room!.seat
+  // After a while an account in the room may run the game instead (server checks the same)
+  const [hostAwaySince, setHostAwaySince] = useState<number | null>(null)
+  useEffect(() => {
+    setHostAwaySince(hostAway ? Date.now() : null)
+  }, [hostAway])
+  const [, tick] = useState(0)
+  useEffect(() => {
+    if (!hostAwaySince) return
+    const id = window.setTimeout(() => tick((n) => n + 1), TAKEOVER_AFTER_MS + 200)
+    return () => window.clearTimeout(id)
+  }, [hostAwaySince])
+  const mayTakeOver =
+    hostAway &&
+    !onlineScreen &&
+    auth.kind === 'signed-in' &&
+    auth.me.status === 'approved' &&
+    room?.status === 'running' &&
+    hostAwaySince !== null &&
+    Date.now() - hostAwaySince >= TAKEOVER_AFTER_MS
+  const [takingOver, setTakingOver] = useState(false)
+  const takeOver = async () => {
+    setTakingOver(true)
+    try {
+      await room!.takeover()
+      addToast(t.tookOver, 'success')
+    } catch (e) {
+      addToast(apiErrorText(e), 'error')
+    } finally {
+      setTakingOver(false)
+    }
+  }
+  // A team counts as "mine" on every member's device (objections, own card)
+  const isMine = (index: number) => !online || seatsOf(players[index]).includes(room!.seat!)
+  // …but only the member on turn plays it
+  const myTurn = (index: number) => !online || turnSeat(players[index]) === room!.seat
   // "Gemeinsam im Raum": the music plays on the device of whoever is on turn
   const hostSeat = room?.members.find((m) => m.host)?.seat ?? 0
   const musicAtSeat = online ? musicSeat(players, currentPlayer, absent ?? [], room!.members, hostSeat) : null
@@ -413,10 +481,15 @@ export function GameRound({ onRematch }: { onRematch: () => void }) {
       <main className="mx-auto max-w-6xl px-4 space-y-6">
         <PlayerStrip thinking={isBotThinking} />
         {hostAway && (
-          <p role="status" className="flex items-center gap-2 rounded-m3-lg bg-md-error-container text-md-on-error-container px-4 py-3 text-body-md">
+          <div role="status" className="flex flex-wrap items-center gap-x-3 gap-y-2 rounded-m3-lg bg-md-error-container text-md-on-error-container px-4 py-3 text-body-md">
             <Icon name="hourglass" size={18} />
-            {t.hostAway}
-          </p>
+            <span className="flex-1 min-w-[12rem]">{mayTakeOver ? t.hostGoneTakeOver : t.hostAway}</span>
+            {mayTakeOver && (
+              <button type="button" className="btn btn-filled m3-state-layer" disabled={takingOver} onClick={() => void takeOver()}>
+                {t.takeOver}
+              </button>
+            )}
+          </div>
         )}
 
         <div className="grid gap-5 lg:gap-8 lg:grid-cols-[minmax(0,5fr)_minmax(0,6fr)] lg:items-start">
@@ -425,7 +498,7 @@ export function GameRound({ onRematch }: { onRematch: () => void }) {
             <div ref={playerBarRef} data-player-bar className={compactPlayer ? 'sticky top-16 z-20' : ''}>
             <Turntable
               compact={compactPlayer}
-              caption={activePlayer.isBot || (online && !isMine(currentPlayer)) ? t.theirTurn(who) : t.yourTurn(who)}
+              caption={activePlayer.isBot || (online && !myTurn(currentPlayer)) ? t.theirTurn(who) : t.yourTurn(who)}
               song={currentSong}
               revealYear={revealYear}
               revealCorrect={revealCorrect}

@@ -43,7 +43,7 @@ def test_create_puts_the_host_on_seat_zero(client, google):
     room = create(client, me)
     assert len(room["code"]) == 8
     assert room["members"] == [
-        {"seat": 0, "name": "Martin", "guest": False, "host": True, "picture": "", "online": False, "left": False, "userId": me["id"]}
+        {"seat": 0, "name": "Martin", "guest": False, "host": True, "display": False, "picture": "", "online": False, "left": False, "userId": me["id"]}
     ]
     assert room["me"]["host"] is True
 
@@ -58,7 +58,7 @@ def test_guest_joins_with_a_name_and_gets_a_cookie(client, google):
     r = as_guest(client, room["code"], "  Lisa  ")
     assert r.status_code == 200
     assert "mx_guest" in r.cookies
-    assert r.json()["me"] == {"seat": 1, "name": "Lisa", "host": False, "left": False}
+    assert r.json()["me"] == {"seat": 1, "name": "Lisa", "host": False, "left": False, "display": False}
     # Joining again keeps the seat
     assert client.post(f"/api/rooms/{room['code']}/join", json={"name": "Egal"}).json()["me"]["seat"] == 1
 
@@ -302,3 +302,103 @@ def test_together_in_the_room_the_player_on_turn_reports_the_music(client, googl
 
 def test_everyone_at_home_only_the_host_sets_the_cue(client, google):
     assert not _host_sees_guest_cue(client, google, "everyone")
+
+
+# ── host takeover and screens ───────────────────────────────────────────────
+
+
+def _running_with_second_account(client, google):
+    """Host Martin (seat 0), account Lisa (seat 1), guest Zoe (seat 2); running."""
+    me = host(client, google)
+    room = create(client, me)
+    code = room["code"]
+    hc = dict(client.cookies)
+    client.cookies.clear()
+    login(client, google, sub="lisa", email="lisa@example.com", name="Lisa Lustig")
+    approve("lisa@example.com")
+    lisa = client.get("/api/me").json()
+    assert client.post(f"/api/rooms/{code}/join", json={}, headers=csrf(lisa)).status_code == 200
+    lc = dict(client.cookies)
+    as_guest(client, code, "Zoe")
+    zc = dict(client.cookies)
+    client.cookies.clear()
+    client.cookies.update(hc)
+    assert client.post(f"/api/rooms/{code}/status", json={"status": "running"}, headers=csrf(me)).status_code == 200
+    return code, (hc, me), (lc, lisa), zc
+
+
+def test_an_account_takes_over_when_the_host_is_gone(client, google, monkeypatch):
+    from app.api import rooms
+
+    code, (hc, me), (lc, lisa), zc = _running_with_second_account(client, google)
+    with _connect(client, code, hc) as h:
+        h.receive_json()
+    # The host just left: too early
+    client.cookies.clear()
+    client.cookies.update(lc)
+    assert client.post(f"/api/rooms/{code}/takeover", headers=csrf(lisa)).status_code == 409
+    monkeypatch.setattr(rooms, "HOST_TAKEOVER_S", 0.0)
+    with _connect(client, code, zc) as z:
+        z.receive_json()
+        client.cookies.clear()
+        client.cookies.update(lc)
+        r = client.post(f"/api/rooms/{code}/takeover", headers=csrf(lisa))
+        assert r.status_code == 200, r.text
+        assert r.json()["me"]["host"] is True
+        msg = _until(z, "host")
+        assert msg["seat"] == 1
+        assert [m["host"] for m in msg["members"]] == [False, True, False]
+        # The new host's device runs the game: intents go there, its state is relayed
+        with _connect(client, code, lc) as l:
+            assert l.receive_json()["role"] == "host"
+            z.send_json({"type": "intent", "action": "draw"})
+            assert _until(l, "intent")["seat"] == 2
+            l.send_json({"type": "state", "snapshot": {"game": {"x": 1}, "result": None}})
+            assert _until(z, "state")["snapshot"] == {"game": {"x": 1}, "result": None}
+        # The old host comes back as a player and may now leave
+        with _connect(client, code, hc) as h:
+            assert h.receive_json()["role"] == "player"
+    client.cookies.clear()
+    client.cookies.update(lc)
+    # Closing is the new host's right now
+    assert client.post(f"/api/rooms/{code}/status", json={"status": "closed"}, headers=csrf(lisa)).status_code == 200
+
+
+def test_takeover_is_not_for_guests_or_while_the_host_is_there(client, google, monkeypatch):
+    from app.api import rooms
+
+    monkeypatch.setattr(rooms, "HOST_TAKEOVER_S", 0.0)
+    code, (hc, me), (lc, lisa), zc = _running_with_second_account(client, google)
+    with _connect(client, code, hc) as h:
+        h.receive_json()
+        client.cookies.clear()
+        client.cookies.update(lc)
+        assert client.post(f"/api/rooms/{code}/takeover", headers=csrf(lisa)).status_code == 409
+    client.cookies.clear()
+    client.cookies.update(zc)
+    assert client.post(f"/api/rooms/{code}/takeover").status_code in (401, 403)
+
+
+def test_a_screen_joins_any_time_shows_the_round_and_cannot_act(client, google):
+    code, (hc, me), _, _ = _running_with_second_account(client, google)
+    client.cookies.clear()
+    r = client.post(f"/api/rooms/{code}/join", json={"name": "Fernseher", "display": True})
+    assert r.status_code == 200
+    assert r.json()["me"]["display"] is True
+    sc = dict(client.cookies)
+    # It hears the music like a guest
+    assert client.get("/api/auth/audio-check").status_code == 204
+    with _connect(client, code, hc) as h:
+        h.receive_json()
+        with _connect(client, code, sc) as s:
+            assert s.receive_json()["role"] == "display"
+            s.send_json({"type": "intent", "action": "draw"})
+            s.send_json({"type": "ping", "t": 1})
+            assert _until(s, "pong")
+            h.send_json({"type": "ping", "t": 2})
+            # The host got a pong, but never an intent from the screen
+            for _ in range(5):
+                msg = h.receive_json()
+                assert msg["type"] != "intent"
+                if msg["type"] == "pong":
+                    break

@@ -92,6 +92,9 @@ class Room(Base):
     options: Mapped[str] = mapped_column(Text, default="{}")
     snapshot: Mapped[str] = mapped_column(Text, default="null")
     rev: Mapped[int] = mapped_column(Integer, default=0)
+    # The seat whose device runs the game; another account may take over when
+    # the host's device is gone (api/rooms.py takeover)
+    host_seat: Mapped[int] = mapped_column(Integer, default=0)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow)
     expires_at: Mapped[datetime] = mapped_column(DateTime(timezone=True))
 
@@ -110,6 +113,8 @@ class RoomMember(Base):
     joined_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow)
     # Left a running round on purpose: out for the rest of it, the seat stays for the results
     left_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    # A screen (TV, laptop) that shows the round and may play the music, but does not play
+    display: Mapped[bool] = mapped_column(Integer, default=0)
 
 
 class Friendship(Base):
@@ -204,7 +209,8 @@ def init_db() -> None:
 def _add_missing_columns() -> None:
     """create_all never alters an existing table: add columns that came later."""
     later = {
-        "room_members": {"left_at": "DATETIME"},
+        "room_members": {"left_at": "DATETIME", "display": "INTEGER NOT NULL DEFAULT 0"},
+        "rooms": {"host_seat": "INTEGER NOT NULL DEFAULT 0"},
         "users": {"password_hash": "VARCHAR(200)", "email_verified_at": "DATETIME"},
     }
     with engine.begin() as conn:
