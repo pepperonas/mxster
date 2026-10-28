@@ -27,10 +27,10 @@ import { validateGuess, placeCardInTimeline } from '@/services'
 import { BotPlayer } from '@/services/botPlayer'
 import type { BotAction } from '@/services/botStrategies/types'
 import { allSongs, songById } from '@/data/catalogue'
-import type { Player, Song } from '@/types'
+import type { HistoryEntry, Player, Song } from '@/types'
 import { evaluatePlacement, timelineSongsFor } from './placement'
 import { guessBreakdown, guessDetailsFor } from './guess'
-import { endOfGameAchievements, realtimeScoreAchievements, type AchievementEffect } from './achievementRules'
+import { endOfRoundAchievements, historyAchievements, realtimeScoreAchievements, roundCounters, type AchievementEffect } from './achievementRules'
 import { evaluateSkip, SKIP_PENALTY_POINTS } from './skipRules'
 import { afterTiebreakTurn, leadersAmong, startTiebreak } from './tiebreak'
 import { stillIn } from './presence'
@@ -105,7 +105,7 @@ export function useTurnFlow({ onGameOver, onSkipNotice, runBots = true }: Option
   } = game
   const { addToast } = useUI()
   const { settings, rememberSong } = useSettings()
-  const { unlockAchievement, updateProgress, checkAchievements } = useAchievements()
+  const { applyEffects: applyAchievements } = useAchievements()
   const { saveGame, history } = useGameHistory()
 
   const [isBotThinking, setIsBotThinking] = useState(false)
@@ -134,18 +134,12 @@ export function useTurnFlow({ onGameOver, onSkipNotice, runBots = true }: Option
     finished: gameOver
   })
 
-  // Achievements belong to people: a team's results are not credited to anyone
-  const teamNames = players.filter(isTeam).map((p) => p.name)
+  // Achievements belong to people: teams and bots are never credited
+  const teamNames = players.filter((p) => isTeam(p) || p.isBot).map((p) => p.name)
   const applyEffects = useCallback(
-    (effects: AchievementEffect[]) => {
-      for (const fx of effects) {
-        if (teamNames.includes(fx.player)) continue
-        if (fx.type === 'unlock') unlockAchievement(fx.player, fx.id)
-        else updateProgress(fx.player, fx.id, fx.value)
-      }
-    },
+    (effects: AchievementEffect[]) => applyAchievements(effects.filter((fx) => !teamNames.includes(fx.player))),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [unlockAchievement, updateProgress, teamNames.join('|')]
+    [applyAchievements, teamNames.join('|')]
   )
 
   // ── Song source ──────────────────────────────────────────────────────────
@@ -192,8 +186,9 @@ export function useTurnFlow({ onGameOver, onSkipNotice, runBots = true }: Option
     (winner: Player, finalPlayers: Player[]) => {
       if (gameOver) return
       finish()
+      let entry: HistoryEntry | null = null
       try {
-        saveGame({
+        entry = saveGame({
           winner: { name: winner.name, cards: winner.cards, score: winner.score },
           players: finalPlayers,
           gameMode: gameMode ?? '',
@@ -204,23 +199,25 @@ export function useTurnFlow({ onGameOver, onSkipNotice, runBots = true }: Option
       } catch (error) {
         console.error('Failed to save game:', error)
       }
-      if (gameMode === 'hardcore') {
-        applyEffects(
-          endOfGameAchievements({
-            players: finalPlayers,
-            winner,
-            gameDurationMinutes: (Date.now() - startedAt) / 60000,
-            rankingsHistory
-          })
-        )
-        if (history && history.length > 0) {
-          const historyData = { version: '1.0', games: history }
-          finalPlayers.filter((p) => !isTeam(p)).forEach((p) => checkAchievements(p.name, historyData))
-        }
-      }
+      // Achievements belong to people: no bots, no teams (in every mode)
+      const people = finalPlayers.filter((p) => !p.isBot && !isTeam(p))
+      const games = entry ? [entry, ...(history ?? []).filter((g) => g.id !== entry!.id)] : (history ?? [])
+      applyEffects([
+        ...endOfRoundAchievements({
+          mode: gameMode ?? '',
+          people: people.map((p) => p.name),
+          players: finalPlayers,
+          winner,
+          durationMinutes: startedAt ? (Date.now() - startedAt) / 60000 : Infinity,
+          rankingsHistory,
+          turns: logRef.current,
+          genreOf: (id) => songById(id)?.genre
+        }),
+        ...people.flatMap((p) => [...historyAchievements(p.name, games), ...roundCounters(p.name, games, p.score)])
+      ])
       onGameOver(winner, finalPlayers)
     },
-    [gameOver, finish, saveGame, gameMode, addToast, applyEffects, startedAt, rankingsHistory, history, checkAchievements, onGameOver]
+    [gameOver, finish, saveGame, gameMode, addToast, applyEffects, startedAt, rankingsHistory, history, onGameOver]
   )
 
   /**

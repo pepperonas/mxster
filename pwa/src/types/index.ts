@@ -124,6 +124,8 @@ export interface HistoryEntry {
     members?: string[]
     /** A bot played this seat (since v0.6.0). */
     bot?: true
+    /** The bot's strength (since v0.12.3). */
+    level?: 'easy' | 'medium' | 'hard'
     timeline: Array<{
       id: string
       title: string

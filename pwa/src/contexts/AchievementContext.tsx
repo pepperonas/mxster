@@ -3,7 +3,7 @@
  * Manages achievement tracking and unlocking
  */
 
-import { createContext, useContext, useEffect, useCallback, useMemo, ReactNode } from 'react'
+import { createContext, useContext, useEffect, useCallback, useMemo, useRef, ReactNode } from 'react'
 import { useSyncedDoc } from '@/sync/useSyncedDoc'
 import { mergeAchievements, type AchievementDoc } from '@/sync/merge'
 import {
@@ -13,15 +13,17 @@ import {
   ACHIEVEMENT_DEFINITIONS,
   localizeAchievement
 } from '@/types/achievements'
-import type { GameHistoryData, HistoryEntry, Player } from '@/types'
+import { applyAchievementEffects, initializePlayerAchievements, type AchievementEffect } from '@/game/achievementEngine'
 import { useSettings } from './SettingsContext'
 import { useAchievementNotifications } from './AchievementNotificationContext'
 
 interface AchievementContextType {
   playerAchievements: Map<string, PlayerAchievements>
+  /** Apply a batch of effects in one step (unlocks, progress, counters). */
+  applyEffects: (effects: AchievementEffect[], options?: { silent?: boolean }) => void
+  /** The document has loaded from the account. */
+  ready: boolean
   unlockAchievement: (playerName: string, achievementId: AchievementId) => void
-  checkAchievements: (playerName: string, gameHistory: GameHistoryData) => void
-  updateStats: (playerName: string, statsUpdate: Partial<PlayerAchievements['stats']>) => void
   updateProgress: (playerName: string, achievementId: AchievementId, progress: number) => void
   getPlayerAchievements: (playerName: string) => Achievement[]
   getAllPlayerNames: () => string[]
@@ -36,28 +38,6 @@ interface AchievementContextType {
 const AchievementContext = createContext<AchievementContextType | undefined>(undefined)
 
 const STORAGE_KEY = 'mxster_achievements'
-
-// Initialize player achievements with all locked achievements
-function initializePlayerAchievements(playerName: string): PlayerAchievements {
-  const achievements: Achievement[] = Object.values(ACHIEVEMENT_DEFINITIONS).map((def) => ({
-    ...def,
-    unlocked: false,
-    progress: def.target ? 0 : undefined
-  }))
-
-  return {
-    playerName,
-    achievements,
-    stats: {
-      totalGames: 0,
-      totalWins: 0,
-      consecutiveWins: 0,
-      totalPoints: 0,
-      perfectStreakCurrent: 0,
-      perfectStreakBest: 0
-    }
-  }
-}
 
 export function AchievementProvider({ children }: { children: ReactNode }) {
   const { settings } = useSettings()
@@ -120,7 +100,7 @@ export function AchievementProvider({ children }: { children: ReactNode }) {
   )
 
   // Stored per account on the server; pre-account data is adopted once.
-  const { value: doc, setValue: setDoc } = useSyncedDoc<AchievementDoc>('achievements', {
+  const { value: doc, setValue: setDoc, status } = useSyncedDoc<AchievementDoc>('achievements', {
     initial: {},
     merge: mergeAchievements,
     legacyKey: STORAGE_KEY,
@@ -165,271 +145,38 @@ export function AchievementProvider({ children }: { children: ReactNode }) {
     })
   }, [settings.savedPlayers])
 
-  // Get or create player achievements
-  const getOrCreatePlayerAchievements = (playerName: string): PlayerAchievements => {
-    let achievements = playerAchievements.get(playerName)
-    if (!achievements) {
-      achievements = initializePlayerAchievements(playerName)
-      setPlayerAchievements(new Map(playerAchievements).set(playerName, achievements))
-    } else {
-      // Ensure player has all current achievements (migration for v0.0.23)
-      const migrated = migratePlayerAchievements(achievements)
-      if (migrated !== achievements) {
-        // Update if migration happened
-        setPlayerAchievements(new Map(playerAchievements).set(playerName, migrated))
-        achievements = migrated
+  // The latest document, also between renders: effects applied in a burst
+  // build on each other instead of on the snapshot of the last render.
+  const latest = useRef(doc)
+  latest.current = doc
+  const notified = useRef(new Set<string>())
+
+  const applyEffects = useCallback(
+    (effects: AchievementEffect[], options?: { silent?: boolean }) => {
+      if (effects.length === 0) return
+      const now = Date.now()
+      const { doc: next, unlocked } = applyAchievementEffects(latest.current, effects, now)
+      latest.current = next
+      setDoc((prev) => applyAchievementEffects(prev, effects, now).doc)
+      for (const u of unlocked) {
+        const key = `${u.player}\u0000${u.id}`
+        if (notified.current.has(key)) continue
+        notified.current.add(key)
+        if (options?.silent) continue
+        queueNotification(u.player, u.id, u.achievement)
       }
-    }
-    return achievements
-  }
+    },
+    [setDoc, queueNotification]
+  )
 
-  // Unlock achievement for player
-  const unlockAchievement = useCallback((playerName: string, achievementId: AchievementId) => {
-    setPlayerAchievements((currentMap) => {
-      const achievements = currentMap.get(playerName) || initializePlayerAchievements(playerName)
-      const achievement = achievements.achievements.find((a) => a.id === achievementId)
-
-      if (achievement && !achievement.unlocked) {
-        achievement.unlocked = true
-        achievement.unlockedAt = Date.now()
-
-        // Queue notification for animation
-        queueNotification(playerName, achievementId, achievement)
-
-        const newMap = new Map(currentMap)
-        newMap.set(playerName, { ...achievements })
-        return newMap
-      }
-
-      return currentMap
-    })
-  }, [queueNotification, setPlayerAchievements])
-
-  // Update player stats
-  const updateStats = (playerName: string, statsUpdate: Partial<PlayerAchievements['stats']>) => {
-    const achievements = getOrCreatePlayerAchievements(playerName)
-    achievements.stats = { ...achievements.stats, ...statsUpdate }
-    setPlayerAchievements(new Map(playerAchievements).set(playerName, { ...achievements }))
-  }
-
-  // Check and unlock achievements based on game history
-  const checkAchievements = (playerName: string, gameHistory: GameHistoryData) => {
-    // Calculate stats from game history
-    const playerGames = gameHistory.games.filter((game: HistoryEntry) =>
-      game.players.some((p: Player) => p.name === playerName)
-    )
-
-    const totalGames = playerGames.length
-    const totalWins = playerGames.filter((game: HistoryEntry) => {
-      const winner = game.players.reduce((prev: Player, current: Player) =>
-        current.score > prev.score ? current : prev
-      )
-      return winner.name === playerName
-    }).length
-
-    const totalPoints = playerGames.reduce((sum: number, game: HistoryEntry) => {
-      const player = game.players.find((p: Player) => p.name === playerName)
-      return sum + (player?.score || 0)
-    }, 0)
-
-    // Check Marathon Runner (50 games)
-    if (totalGames >= 50) {
-      unlockAchievement(playerName, AchievementId.MARATHON_RUNNER)
-    }
-    updateProgress(playerName, AchievementId.MARATHON_RUNNER, totalGames)
-
-    // Check score-based achievements (one-time achievements)
-    const maxScore = Math.max(...playerGames.map((game: HistoryEntry) => {
-      const player = game.players.find((p: Player) => p.name === playerName)
-      return player?.score || 0
-    }))
-
-    // Check Punktejäger (75+ points in one game) - one-time achievement
-    if (maxScore >= 75) {
-      unlockAchievement(playerName, AchievementId.PUNKTEJAEGER)
-    }
-
-    // Check Hardcore Champion (100+ points in one game) - one-time achievement
-    if (maxScore >= 100) {
-      unlockAchievement(playerName, AchievementId.HARDCORE_CHAMPION)
-    }
-
-    // Check Music Expert (1000 total points)
-    if (totalPoints >= 1000) {
-      unlockAchievement(playerName, AchievementId.MUSIC_EXPERT)
-    }
-    updateProgress(playerName, AchievementId.MUSIC_EXPERT, totalPoints)
-
-    // Check Unbeatable (5 consecutive wins)
-    let consecutiveWins = 0
-    let maxConsecutiveWins = 0
-
-    // Sort games by date
-    const sortedGames = [...playerGames].sort((a, b) => a.timestamp - b.timestamp)
-
-    sortedGames.forEach((game: HistoryEntry) => {
-      const winner = game.players.reduce((prev: Player, current: Player) =>
-        current.score > prev.score ? current : prev
-      )
-
-      if (winner.name === playerName) {
-        consecutiveWins++
-        maxConsecutiveWins = Math.max(maxConsecutiveWins, consecutiveWins)
-      } else {
-        consecutiveWins = 0
-      }
-    })
-
-    if (maxConsecutiveWins >= 5) {
-      unlockAchievement(playerName, AchievementId.UNBEATABLE)
-    }
-    updateProgress(playerName, AchievementId.UNBEATABLE, maxConsecutiveWins)
-
-    // ============================================================================
-    // NEW CROSS-GAME ACHIEVEMENTS (17-20)
-    // ============================================================================
-
-    // 17. SOCIAL_BUTTERFLY: Played with 5 different players
-    const uniquePlayers = new Set<string>()
-    playerGames.forEach((game: HistoryEntry) => {
-      game.players.forEach((p: Player) => {
-        if (p.name !== playerName) {
-          uniquePlayers.add(p.name)
-        }
-      })
-    })
-    const uniquePlayerCount = uniquePlayers.size
-
-    if (uniquePlayerCount >= 5) {
-      unlockAchievement(playerName, AchievementId.SOCIAL_BUTTERFLY)
-    }
-    updateProgress(playerName, AchievementId.SOCIAL_BUTTERFLY, uniquePlayerCount)
-
-    // 18. LEGENDARY_STREAK: 10 consecutive wins (VERY HARD)
-    if (maxConsecutiveWins >= 10) {
-      unlockAchievement(playerName, AchievementId.LEGENDARY_STREAK)
-    }
-    updateProgress(playerName, AchievementId.LEGENDARY_STREAK, maxConsecutiveWins)
-
-    // 19. CENTURION: 100 games played (VERY HARD)
-    if (totalGames >= 100) {
-      unlockAchievement(playerName, AchievementId.CENTURION)
-    }
-    updateProgress(playerName, AchievementId.CENTURION, totalGames)
-
-    // 20. COMEBACK_PROFI: 5x comeback wins (won after being behind) (VERY HARD)
-    // Better logic: Winner had fewer cards than at least one opponent
-    // This indicates they placed cards more accurately (fewer mistakes)
-    let comebackWins = 0
-    sortedGames.forEach((game: HistoryEntry) => {
-      // Check if this player won
-      const winner = game.players.reduce((prev: Player, current: Player) =>
-        current.score > prev.score ? current : prev
-      )
-
-      if (winner.name === playerName && game.players.length > 1) {
-        // Check if any opponent had MORE cards than the winner
-        // This means winner had fewer attempts but still won (= comeback/efficiency win)
-        const winnerCards = winner.cards
-        const hadFewerCards = game.players.some((p: Player) => {
-          return p.name !== playerName && p.cards > winnerCards
-        })
-
-        // Additionally check if winner had lower score at some point
-        // by checking if any opponent has similar/higher card count but lower score
-        const wasBehind = game.players.some((p: Player) => {
-          if (p.name === playerName) return false
-          // Opponent had equal/more cards but lost = winner came from behind
-          return p.cards >= winnerCards - 2 && p.score < winner.score
-        })
-
-        if (hadFewerCards || wasBehind) {
-          comebackWins++
-        }
-      }
-    })
-
-    if (comebackWins >= 5) {
-      unlockAchievement(playerName, AchievementId.COMEBACK_PROFI)
-    }
-    updateProgress(playerName, AchievementId.COMEBACK_PROFI, comebackWins)
-
-    // 21. GRAND_MASTER: 5000 total points (VERY HARD)
-    if (totalPoints >= 5000) {
-      unlockAchievement(playerName, AchievementId.GRAND_MASTER)
-    }
-    updateProgress(playerName, AchievementId.GRAND_MASTER, totalPoints)
-
-    // ============================================================================
-    // BOT SLAYER ACHIEVEMENTS (v0.0.38)
-    // ============================================================================
-
-    // Count wins against bots of each difficulty
-    let easyBotWins = 0
-    let mediumBotWins = 0
-    let hardBotWins = 0
-
-    sortedGames.forEach((game: HistoryEntry) => {
-      // Check if this player won
-      const winner = game.players.reduce((prev: Player, current: Player) =>
-        current.score > prev.score ? current : prev
-      )
-
-      if (winner.name === playerName) {
-        // Check if any opponent was a bot and track difficulty
-        game.players.forEach((p: Player) => {
-          if (p.name !== playerName && p.isBot && p.botDifficulty) {
-            if (p.botDifficulty === 'easy') easyBotWins++
-            else if (p.botDifficulty === 'medium') mediumBotWins++
-            else if (p.botDifficulty === 'hard') hardBotWins++
-          }
-        })
-      }
-    })
-
-    // 22. BOT_SLAYER_EASY: Beat 3 easy bots
-    if (easyBotWins >= 3) {
-      unlockAchievement(playerName, AchievementId.BOT_SLAYER_EASY)
-    }
-    updateProgress(playerName, AchievementId.BOT_SLAYER_EASY, easyBotWins)
-
-    // 23. BOT_SLAYER_MEDIUM: Beat 3 medium bots
-    if (mediumBotWins >= 3) {
-      unlockAchievement(playerName, AchievementId.BOT_SLAYER_MEDIUM)
-    }
-    updateProgress(playerName, AchievementId.BOT_SLAYER_MEDIUM, mediumBotWins)
-
-    // 24. BOT_SLAYER_HARD: Beat 3 hard bots
-    if (hardBotWins >= 3) {
-      unlockAchievement(playerName, AchievementId.BOT_SLAYER_HARD)
-    }
-    updateProgress(playerName, AchievementId.BOT_SLAYER_HARD, hardBotWins)
-
-    // Update stats
-    updateStats(playerName, {
-      totalGames,
-      totalWins,
-      totalPoints,
-      consecutiveWins: maxConsecutiveWins
-    })
-  }
-
-  // Update achievement progress
-  const updateProgress = (playerName: string, achievementId: AchievementId, progress: number) => {
-    const achievements = getOrCreatePlayerAchievements(playerName)
-    const achievement = achievements.achievements.find((a) => a.id === achievementId)
-
-    if (achievement && achievement.target !== undefined) {
-      achievement.progress = Math.min(progress, achievement.target)
-
-      // Auto-unlock if target reached
-      if (achievement.progress >= achievement.target && !achievement.unlocked) {
-        unlockAchievement(playerName, achievementId)
-      } else {
-        setPlayerAchievements(new Map(playerAchievements).set(playerName, { ...achievements }))
-      }
-    }
-  }
+  const unlockAchievement = useCallback(
+    (player: string, id: AchievementId) => applyEffects([{ type: 'unlock', player, id }]),
+    [applyEffects]
+  )
+  const updateProgress = useCallback(
+    (player: string, id: AchievementId, value: number) => applyEffects([{ type: 'progress', player, id, value }]),
+    [applyEffects]
+  )
 
   // Get all achievements for a player
   const getPlayerAchievements = (playerName: string): Achievement[] => {
@@ -506,9 +253,9 @@ export function AchievementProvider({ children }: { children: ReactNode }) {
     <AchievementContext.Provider
       value={{
         playerAchievements,
+        applyEffects,
+        ready: status === 'ready',
         unlockAchievement,
-        checkAchievements,
-        updateStats,
         updateProgress,
         getPlayerAchievements,
         getAllPlayerNames,

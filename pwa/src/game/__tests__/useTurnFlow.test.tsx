@@ -1,7 +1,8 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { renderHook, act, waitFor } from '@testing-library/react'
 import type { ReactNode } from 'react'
-import { AppProviders, useGame, useGameHistory } from '@/contexts'
+import { AppProviders, useAchievements, useGame, useGameHistory } from '@/contexts'
+import { AchievementId } from '@/types/achievements'
 import { MotionTestProvider } from '@/test/MotionTestProvider'
 import { useTurnFlow, type SkipNotice } from '../useTurnFlow'
 import { BotPlayer } from '@/services/botPlayer'
@@ -506,5 +507,30 @@ describe('turn log for the statistics', () => {
     act(() => t.get().flow.submitGuess('Song 1999', 'nope', '1996'))
     act(() => t.get().flow.continueTurn())
     expect(t.get().history.history[0].turns).toEqual([{ p: 'A', s: 'q', y: 1999, ok: false, d: 3, ti: true, ar: false, pts: 5 }])
+  })
+})
+
+describe('achievements', () => {
+  it('a timeline round credits its people at the end (it used to be hardcore only) and never a bot', () => {
+    const hook = renderHook(
+      () => ({ game: useGame(), flow: useTurnFlow({ onGameOver: () => {}, onSkipNotice: () => {} }), ach: useAchievements() }),
+      { wrapper }
+    )
+    const get = () => hook.result.current
+    act(() => {
+      get().game.setGameMode('timeline_personal' as never)
+      get().game.addPlayer('A')
+      get().game.addPlayer('Bot Alpha', { isBot: true, botDifficulty: 'easy' } as never)
+    })
+    const tl = Array.from({ length: 9 }, (_, i) => song(1950 + i * 5))
+    act(() => get().game.updatePlayer(0, { timeline: tl, cards: 9 }))
+    act(() => get().game.setCurrentSong(song(2020, 'z')))
+    act(() => get().flow.placeCard(9))
+    act(() => get().flow.continueTurn())
+    expect(get().flow.phase).toBe('over')
+    const a = get().ach.getPlayerAchievements('A')
+    expect(a.find((x) => x.id === AchievementId.MARATHON_RUNNER)?.progress).toBe(1)
+    expect(a.find((x) => x.id === AchievementId.PERFECTIONIST)?.unlocked).toBe(false)
+    expect(get().ach.getAllPlayerNames()).not.toContain('Bot Alpha')
   })
 })

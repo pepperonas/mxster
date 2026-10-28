@@ -41,6 +41,8 @@ interface ImportResult {
 
 interface GameHistoryContextType {
   history: HistoryEntry[]
+  /** The rounds have loaded from the account. */
+  ready: boolean
   loadAll: () => HistoryEntry[]
   saveGame: (gameData: SaveGameData) => HistoryEntry
   getAll: () => HistoryEntry[]
@@ -57,7 +59,7 @@ interface GameHistoryContextType {
 const GameHistoryContext = createContext<GameHistoryContextType | undefined>(undefined)
 
 export function GameHistoryProvider({ children }: { children: ReactNode }) {
-  const { value: history, setValue: setHistory } = useSyncedDoc<HistoryEntry[]>('history', {
+  const { value: history, setValue: setHistory, status: historyStatus } = useSyncedDoc<HistoryEntry[]>('history', {
     initial: [],
     merge: (local, server) => mergeHistory(local, server).slice(0, GAME_CONFIG.MAX_HISTORY_GAMES),
     // Pre-account history lived in the browser (two historic keys)
@@ -89,6 +91,7 @@ export function GameHistoryProvider({ children }: { children: ReactNode }) {
           score: p.score,
           ...(p.members ? { members: p.members } : {}),
           ...(p.isBot ? { bot: true as const } : {}),
+          ...(p.isBot && p.botDifficulty ? { level: p.botDifficulty } : {}),
           timeline: p.timeline.map((song) => ({
             id: song.id,
             title: song.title,
@@ -267,6 +270,7 @@ export function GameHistoryProvider({ children }: { children: ReactNode }) {
     <GameHistoryContext.Provider
       value={{
         history,
+        ready: historyStatus === 'ready',
         loadAll,
         saveGame,
         getAll,

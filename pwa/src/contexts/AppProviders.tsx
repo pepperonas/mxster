@@ -5,6 +5,7 @@ import { SettingsProvider } from './SettingsContext'
 import { AchievementNotificationProvider } from './AchievementNotificationContext'
 import { AchievementProvider } from './AchievementContext'
 import { GameHistoryProvider } from './GameHistoryContext'
+import { AchievementBackfill } from '@/components/AchievementBackfill'
 
 /**
  * Providers for the signed-in, approved app. Settings, history and
@@ -20,6 +21,7 @@ export function AppProviders({ children }: { children: ReactNode }) {
         <GameHistoryProvider>
           <AchievementNotificationProvider>
             <AchievementProvider>
+              <AchievementBackfill />
               <GameProvider>{children}</GameProvider>
             </AchievementProvider>
           </AchievementNotificationProvider>
