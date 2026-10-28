@@ -16,7 +16,7 @@ import { LanguageSwitch } from '@/components/ui/LanguageSwitch'
 import { useMessages } from '@/i18n'
 import { profileText } from '@/i18n/messages/profile'
 
-const VERSION = '0.9.9'
+const VERSION = '0.10.0'
 
 export function ProfileScreen() {
   const me = useMe()

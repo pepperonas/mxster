@@ -1,4 +1,5 @@
 import { createContext, useContext, useEffect, useReducer, ReactNode } from 'react'
+import type { StepClock } from '@/game/turnClock'
 import type { Player, Song, GameMode, GlobalTimelineCard, TurnRecord } from '@/types'
 import { type Tiebreak } from '@/game/tiebreak'
 import { nextPresent } from '@/game/presence'
@@ -39,6 +40,8 @@ export interface GameState {
   tiebreak: Tiebreak | null
   /** Online: player indices whose turns are skipped (away or left; see game/presence). */
   absent: number[]
+  /** Online: when the current step runs out (see game/turnClock). */
+  stepClock: StepClock | null
 
   // Round options
   /** Correct cards (timeline) / songs per player (hardcore) a round runs to. */
@@ -88,6 +91,7 @@ type GameAction =
   | { type: 'NEXT_PLAYER_ONLY' } // Switch player, keep currentSong
   | { type: 'SET_TIEBREAK'; payload: Tiebreak | null }
   | { type: 'SET_ABSENT'; payload: number[] }
+  | { type: 'SET_STEP_CLOCK'; payload: StepClock | null }
   | { type: 'SET_OPTIONS'; payload: Partial<RoundOptions> }
   | { type: 'SET_PLAYERS'; payload: Player[] }
   | { type: 'SET_REVEAL'; payload: Reveal | null }
@@ -119,6 +123,7 @@ interface GameContextValue extends GameState {
   nextPlayerOnly: () => void // Switch player but keep song
   setTiebreak: (tiebreak: Tiebreak | null) => void
   setAbsent: (absent: number[]) => void
+  setStepClock: (clock: StepClock | null) => void
   setOptions: (options: Partial<RoundOptions>) => void
   /** Replace the whole line-up (teams). */
   setPlayers: (players: Player[]) => void
@@ -152,6 +157,7 @@ const initialState: GameState = {
   isGameStarted: false,
   tiebreak: null,
   absent: [],
+  stepClock: null,
   goal: DEFAULT_GOAL,
   decades: [],
   challengesEnabled: true,
@@ -336,6 +342,9 @@ function gameReducer(state: GameState, action: GameAction): GameState {
     case 'SET_ABSENT':
       return { ...state, absent: action.payload }
 
+    case 'SET_STEP_CLOCK':
+      return { ...state, stepClock: action.payload }
+
     case 'NEXT_TURN': {
       const playerCount = state.players.length
       if (playerCount === 0) return state
@@ -428,6 +437,7 @@ export function GameProvider({ children }: GameProviderProps) {
     nextPlayerOnly: () => dispatch({ type: 'NEXT_PLAYER_ONLY' }),
     setTiebreak: (tiebreak) => dispatch({ type: 'SET_TIEBREAK', payload: tiebreak }),
     setAbsent: (absent) => dispatch({ type: 'SET_ABSENT', payload: absent }),
+    setStepClock: (clock) => dispatch({ type: 'SET_STEP_CLOCK', payload: clock }),
     setOptions: (options) => dispatch({ type: 'SET_OPTIONS', payload: options }),
     setPlayers: (players) => dispatch({ type: 'SET_PLAYERS', payload: players }),
     setReveal: (reveal) => dispatch({ type: 'SET_REVEAL', payload: reveal }),

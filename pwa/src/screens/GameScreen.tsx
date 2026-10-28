@@ -27,6 +27,8 @@ import { correctGapIndices, gapLabel } from '@/game/placement'
 import { useRoom } from '@/online/RoomContext'
 import { musicSeat } from '@/online/musicSeat'
 import { useObjectionWindow } from '@/online/useObjectionWindow'
+import { useTurnClock } from '@/online/useTurnClock'
+import { stepKey, visibleSecondsLeft } from '@/game/turnClock'
 import { secondsLeft } from '@/game/objectionWindow'
 import { useAuth } from '@/auth/AuthContext'
 import { useRemoteTurnFlow } from '@/online/useRemoteTurnFlow'
@@ -74,7 +76,7 @@ export function GameRound({ onRematch }: { onRematch: () => void }) {
   const navigate = useAppNavigate()
   const t = useMessages(gameText)
   const { showModal, closeModal, addToast } = useUI()
-  const { gameMode, players, currentPlayer, currentSong, resetGame, rematch, tiebreak, goal, absent } = useGame()
+  const { gameMode, players, currentPlayer, currentSong, resetGame, rematch, tiebreak, goal, absent, stepClock, turnLog, playedSongs } = useGame()
   const room = useRoom()
   const online = Boolean(room && room.seat !== null)
   const onlineHost = online && room!.role === 'host'
@@ -155,6 +157,7 @@ export function GameRound({ onRematch }: { onRematch: () => void }) {
   const clockOffset = room?.clockOffset
   const serverNow = useCallback(() => Date.now() + (clockOffset ? clockOffset() : 0), [clockOffset])
   useObjectionWindow(localFlow, onlineHost, serverNow)
+  useTurnClock(localFlow, onlineHost, serverNow)
   // Players see the end of the round when the host's snapshot says so
   const shownResult = onlinePlayer ? (room?.result ?? null) : result
   useEffect(() => {
@@ -173,7 +176,15 @@ export function GameRound({ onRematch }: { onRematch: () => void }) {
   const can = (action: Intent['action']) =>
     !online || mayAct({ phase, players, currentPlayer, pending, reveal, away }, room!.seat!, action, onlineHost)
   // The countdown of an open objection window ticks on every device
-  const windowOpen = online && phase === 'challenge' && pending?.choosing === null && pending?.deadlineAt != null
+  const windowOpen = online && ((phase === 'challenge' && pending?.choosing === null && pending?.deadlineAt != null) || stepClock != null)
+  // The step clock: everyone sees the last seconds before the game acts
+  const clockSeconds = online
+    ? visibleSecondsLeft(
+        stepClock,
+        stepKey(phase, currentPlayer, reveal?.song.id ?? currentSong?.id, turnLog?.length ?? 0, playedSongs?.length ?? 0),
+        serverNow()
+      )
+    : null
   const [, setSecond] = useState(0)
   useEffect(() => {
     if (!windowOpen) return
@@ -469,6 +480,29 @@ export function GameRound({ onRematch }: { onRematch: () => void }) {
       )}
 
       <FeedbackLayer reveal={reveal} />
+
+      {/* Online: the last seconds of a step, on every device */}
+      <AnimatePresence>
+        {clockSeconds !== null && !shownResult && (
+          <m.p
+            key="step-clock"
+            role="timer"
+            initial={{ opacity: 0, y: -8 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -8 }}
+            transition={spring.effectsDefault}
+            aria-label={
+              phase === 'idle' ? t.clockDraw(who, clockSeconds) : phase === 'revealed' ? t.clockContinue(clockSeconds) : t.clockLapse(who, clockSeconds)
+            }
+            className={`fixed right-4 z-40 whitespace-nowrap rounded-full px-3 py-1.5 text-label-lg tabular ${
+              clockSeconds <= 10 ? 'bg-md-error-container text-md-on-error-container' : 'bg-md-surface-container-highest text-md-on-surface'
+            }`}
+            style={{ top: 'calc(env(safe-area-inset-top, 0px) + 14px)' }}
+          >
+            {phase === 'idle' ? t.clockDrawShort(clockSeconds) : phase === 'revealed' ? t.clockContinue(clockSeconds) : t.clockLapseShort(clockSeconds)}
+          </m.p>
+        )}
+      </AnimatePresence>
 
       <AnimatePresence>
         {shownResult && (
