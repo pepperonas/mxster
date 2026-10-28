@@ -10,6 +10,7 @@ player's history and is counted once (same players and result within 10 min).
 """
 
 import json
+import re
 from collections import Counter
 from datetime import datetime, timedelta, timezone
 from typing import Any
@@ -36,37 +37,97 @@ def _load(body: str) -> Any:
         return None
 
 
+# Histories are written by the accounts' devices: anything may be in them.
+# Every entry is brought into a clean shape (types, lengths, ranges) or dropped
+# before anything is counted, so one odd entry can neither break the page nor
+# blow up the answer.
+MODES = {"timeline_personal", "timeline_global", "hardcore"}
+SONG_ID = re.compile(r"^song_\d{1,4}$")
+ACHIEVEMENT_ID = re.compile(r"^[a-z0-9_]{1,40}$")
+EARLIEST_MS = int(datetime(2024, 1, 1, tzinfo=timezone.utc).timestamp() * 1000)
+MAX_PLAYERS = 12
+MAX_TURNS = 400
+MAX_ACHIEVEMENT_IDS = 200
+
+
+def _num(v: Any, lo: float, hi: float) -> float | None:
+    if isinstance(v, bool) or not isinstance(v, (int, float)) or v != v:
+        return None
+    return v if lo <= v <= hi else None
+
+
+def _name(v: Any) -> str:
+    return v[:40] if isinstance(v, str) else ""
+
+
+def clean_entry(e: Any, now_ms: float) -> dict | None:
+    """One history entry in a shape that is safe to count, or None."""
+    if not isinstance(e, dict):
+        return None
+    at = _num(e.get("timestamp"), EARLIEST_MS, now_ms + 86_400_000) or _num(e.get("id"), EARLIEST_MS, now_ms + 86_400_000)
+    if at is None:
+        return None
+    players = []
+    for p in (e.get("players") if isinstance(e.get("players"), list) else [])[:MAX_PLAYERS]:
+        if not isinstance(p, dict):
+            continue
+        members = p.get("members")
+        players.append(
+            {
+                "name": _name(p.get("name")),
+                "cards": int(_num(p.get("cards"), 0, 1000) or 0),
+                "score": int(_num(p.get("score"), -10_000, 100_000) or 0),
+                "bot": p.get("bot") is True,
+                "members": [_name(m) for m in members[:MAX_PLAYERS] if isinstance(m, str)] if isinstance(members, list) else [],
+            }
+        )
+    turns = []
+    for t in (e.get("turns") if isinstance(e.get("turns"), list) else [])[:MAX_TURNS]:
+        if isinstance(t, dict) and isinstance(t.get("s"), str) and SONG_ID.match(t["s"]):
+            turns.append({"s": t["s"], "ok": t.get("ok") is True, "first": t.get("first") is True})
+    winner = e.get("winner")
+    mode = e.get("gameMode")
+    return {
+        "at": at,
+        "mode": mode if isinstance(mode, str) and mode in MODES else "?",
+        "winner": _name(winner.get("name")) if isinstance(winner, dict) else "",
+        "players": players,
+        "turns": turns,
+        "durationMs": _num(e.get("durationMs"), 1, 6 * 3600 * 1000),
+        "daily": isinstance(e.get("daily"), str) and bool(e.get("daily")),
+    }
+
+
 def _signature(entry: dict) -> tuple:
-    players = entry.get("players") or []
-    seats = tuple(sorted((str(p.get("name", "")), int(p.get("cards") or 0), int(p.get("score") or 0)) for p in players if isinstance(p, dict)))
-    winner = (entry.get("winner") or {}).get("name", "")
-    return (entry.get("gameMode", ""), winner, seats)
+    seats = tuple(sorted((p["name"], p["cards"], p["score"]) for p in entry["players"]))
+    return (entry["mode"], entry["winner"], seats)
 
 
-def unique_rounds(histories: list[Any]) -> list[dict]:
-    """Rounds of all histories, an online round (in several histories) once."""
+def unique_rounds(histories: list[Any], now_ms: float | None = None) -> list[dict]:
+    """Clean rounds of all histories, an online round (in several histories) once."""
+    now_ms = now_ms if now_ms is not None else datetime.now(timezone.utc).timestamp() * 1000
     entries = []
     for h in histories:
         if not isinstance(h, list):
             continue
         for e in h:
-            if isinstance(e, dict) and isinstance(e.get("timestamp") or e.get("id"), (int, float)):
-                entries.append(e)
-    entries.sort(key=lambda e: e.get("timestamp") or e.get("id"))
+            clean = clean_entry(e, now_ms)
+            if clean is not None:
+                entries.append(clean)
+    entries.sort(key=lambda e: e["at"])
     kept: list[dict] = []
     last_seen: dict[tuple, float] = {}
     for e in entries:
-        at = e.get("timestamp") or e.get("id")
         sig = _signature(e)
-        if sig in last_seen and at - last_seen[sig] <= SAME_ROUND_MS:
+        if sig in last_seen and e["at"] - last_seen[sig] <= SAME_ROUND_MS:
             continue
-        last_seen[sig] = at
+        last_seen[sig] = e["at"]
         kept.append(e)
     return kept
 
 
 def _when(entry: dict) -> datetime:
-    return datetime.fromtimestamp((entry.get("timestamp") or entry.get("id")) / 1000, tz=timezone.utc).astimezone(TZ)
+    return datetime.fromtimestamp(entry["at"] / 1000, tz=timezone.utc).astimezone(TZ)
 
 
 def round_stats(rounds: list[dict], today: str) -> dict:
@@ -83,24 +144,23 @@ def round_stats(rounds: list[dict], today: str) -> dict:
             per_day[when.date().isoformat()] += 1
         hours[when.hour] += 1
         weekdays[when.weekday()] += 1
-        modes[str(r.get("gameMode") or "?")] += 1
-        players = [p for p in r.get("players") or [] if isinstance(p, dict)]
-        people = sum(len(p.get("members") or []) or 1 for p in players if not p.get("bot"))
+        modes[r["mode"]] += 1
+        people = sum(len(p["members"]) or 1 for p in r["players"] if not p["bot"])
         humans.append(people)
-        if any(p.get("bot") for p in players):
+        if any(p["bot"] for p in r["players"]):
             with_bots += 1
-        if any(p.get("members") for p in players):
+        if any(p["members"] for p in r["players"]):
             teams += 1
-        if r.get("daily"):
+        if r["daily"]:
             daily += 1
-        if isinstance(r.get("durationMs"), (int, float)) and 0 < r["durationMs"] < 6 * 3600 * 1000:
+        if r["durationMs"] is not None:
             durations.append(r["durationMs"])
-        for t in r.get("turns") or []:
-            if not isinstance(t, dict) or t.get("first") or not isinstance(t.get("s"), str):
+        for t in r["turns"]:
+            if t["first"]:
                 continue
             tries = songs.setdefault(t["s"], [0, 0])
             tries[0] += 1
-            tries[1] += 1 if t.get("ok") else 0
+            tries[1] += 1 if t["ok"] else 0
     days = [(start + timedelta(days=i)).isoformat() for i in range(DAYS)]
     return {
         "total": len(rounds),
@@ -127,8 +187,11 @@ def achievement_counts(docs: list[Any]) -> dict[str, int]:
         for person in doc.values():
             if not isinstance(person, dict):
                 continue
-            for a in person.get("achievements") or []:
-                if isinstance(a, dict) and a.get("unlocked") and isinstance(a.get("id"), str):
+            achievements = person.get("achievements")
+            for a in achievements if isinstance(achievements, list) else []:
+                if not (isinstance(a, dict) and a.get("unlocked") is True and isinstance(a.get("id"), str) and ACHIEVEMENT_ID.match(a["id"])):
+                    continue
+                if a["id"] in counts or len(counts) < MAX_ACHIEVEMENT_IDS:
                     counts[a["id"]] += 1
     return dict(counts)
 

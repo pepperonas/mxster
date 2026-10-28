@@ -2,12 +2,13 @@ from datetime import datetime, timedelta, timezone
 
 import app.db as app_db
 from app.activity import KEEP_DAYS, local_day, note_activity
-from app.api.admin_stats import achievement_counts, round_stats, unique_rounds
+from app.api.admin_stats import MAX_ACHIEVEMENT_IDS, achievement_counts, round_stats, unique_rounds
 from app.db import ActivityDay, User
 from tests.conftest import login
 from tests.test_songs import _player
 
 T0 = int(datetime(2026, 10, 20, 19, 30, tzinfo=timezone.utc).timestamp() * 1000)
+NOW = T0 + 2 * 24 * 3600 * 1000
 
 
 def _round(at, winner="Anna", cards=(5, 3), mode="timeline_personal", turns=None, **extra):
@@ -27,7 +28,7 @@ def test_an_online_round_in_two_histories_counts_once():
     seen_by_ben = _round(T0 + 4000)  # saved a few seconds later on Ben's device
     rematch = _round(T0 + 60 * 60 * 1000)  # an hour later, same result: another round
     other = _round(T0 + 1000, cards=(5, 4))
-    rounds = unique_rounds([[same, other], [seen_by_ben, rematch], None, "broken"])
+    rounds = unique_rounds([[same, other], [seen_by_ben, rematch], None, "broken"], NOW)
     assert len(rounds) == 3
 
 
@@ -42,7 +43,7 @@ def test_round_stats_count_days_hours_modes_and_songs():
         _round(T0 + 24 * 3600 * 1000, mode="hardcore", durationMs=10 * 60000),
         _round(T0 - 40 * 24 * 3600 * 1000),  # outside the 30 days
     ]
-    s = round_stats(sorted(rounds, key=lambda r: r["timestamp"]), "2026-10-21")
+    s = round_stats(unique_rounds([rounds], NOW), "2026-10-21")
     assert s["total"] == 3
     assert len(s["perDay"]) == 30 and s["perDay"][-1] == {"day": "2026-10-21", "count": 1}
     assert {d["day"]: d["count"] for d in s["perDay"]}["2026-10-20"] == 1
@@ -100,3 +101,40 @@ def test_only_the_admin_sees_the_stats(client, google):
     # totals only: no names or e-mail addresses leave the server
     text = str(body)
     assert "example.com" not in text and "Anna" not in text
+
+
+def test_odd_entries_written_by_a_device_neither_break_nor_bloat_the_stats():
+    good = _round(T0, turns=[{"p": "Anna", "s": "song_002", "ok": True}])
+    odd = [
+        {"timestamp": True, "players": []},  # a bool is no time
+        {"timestamp": 10**20},  # far in the future
+        {"timestamp": 5},  # before the app existed
+        {"timestamp": T0, "winner": "Anna", "players": "x", "turns": 7, "gameMode": ["?"]},
+        {"timestamp": T0 + 1, "winner": {"name": 3}, "players": [{"name": {"a": 1}, "cards": "abc", "score": None, "members": "Ben"}, "x", 5]},
+        {"timestamp": T0 + 2, "winner": {"name": "Zoe"}, "durationMs": "long", "daily": 1, "turns": [{"s": "x" * 5000, "ok": True}, {"s": "song_003", "ok": "yes"}, None]},
+        "not an entry",
+        [1, 2],
+    ]
+    rounds = unique_rounds([[good, *odd], {"no": "list"}], NOW)
+    s = round_stats(rounds, "2026-10-21")
+    assert s["total"] == 4  # the good one and the three with a usable time
+    assert set(s["modes"]) <= {"timeline_personal", "timeline_global", "hardcore", "?"}
+    assert set(s["songs"]) == {"song_002", "song_003"}  # no made-up ids
+    assert s["songs"]["song_003"] == [1, 0]  # "yes" is not True
+
+
+def test_achievement_ids_are_checked_and_capped():
+    doc = {"Anna": {"achievements": [{"id": f"id_{i}", "unlocked": True} for i in range(MAX_ACHIEVEMENT_IDS + 50)] + [
+        {"id": "X" * 5000, "unlocked": True}, {"id": "first_round", "unlocked": "yes"}]}}
+    counts = achievement_counts([doc, {"Ben": {"achievements": "nope"}}])
+    assert len(counts) == MAX_ACHIEVEMENT_IDS
+    assert all(len(k) <= 40 for k in counts) and "first_round" not in counts
+
+
+def test_the_stats_page_survives_a_broken_history(client, google):
+    me = _player(client, google)
+    junk = [{"timestamp": T0, "players": [{"cards": "abc"}], "winner": "x"}, {"timestamp": "now"}, 42]
+    assert client.put("/api/data/history", json={"version": 0, "data": junk}, headers={"X-CSRF-Token": me["csrf"]}).status_code == 200
+    client.cookies.clear()
+    login(client, google, sub="boss", email="boss@example.com")
+    assert client.get("/api/admin/stats").status_code == 200
