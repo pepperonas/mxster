@@ -46,6 +46,10 @@ rsync -a --ignore-existing pwa/public/audio/ root@69.62.121.168:/var/www/html/mx
 ssh root@69.62.121.168 'chown -R www-data:www-data /var/www/html/mxtape/audio'
 ```
 
+## Cover schärfer machen
+
+Die Cover sind 500 × 500 px groß. `node scripts/audio-hosting/upscale-covers.mjs` ersetzt kleinere durch eine größere Fassung **desselben Motivs**: Kandidaten von iTunes (bis 600 px) und aus dem Cover Art Archive (500 px) werden mit dem vorhandenen Cover verglichen (beide auf 32 × 32 verkleinert, RMSE). Nur unter 0,12 wird ersetzt – dasselbe Bild liegt bei etwa 0,003, verschiedene Cover lagen beim Eichen bei 0,26 bis 0,73. So bleibt die von Hand geprüfte Auswahl erhalten (keine Kompilation statt Original). `--dry-run` schreibt nichts, `--only song_001,song_002` beschränkt den Lauf; der Bericht liegt in `upscale-report.json`. Danach hochladen wie unten.
+
 Voraussetzungen: `yt-dlp`, `rsync`, SSH-Zugang zum VPS; `ffprobe` (aus ffmpeg) für die Längenprüfung, `sips` (macOS) zum Skalieren der Cover.
 
 Rechtlicher Hinweis: Das Herunterladen von Musik ist rechtlich heikel. mxtape ist eine private, nicht-kommerzielle App, und die Dateien sind nur für freigeschaltete Konten erreichbar.

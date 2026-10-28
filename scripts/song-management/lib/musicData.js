@@ -95,7 +95,7 @@ export async function lookupItunes(artist, title) {
   if (!hit) return null
   return {
     album: hit.collectionName ?? null,
-    artwork: hit.artworkUrl100 ? hit.artworkUrl100.replace('100x100bb', '300x300bb') : null,
+    artwork: hit.artworkUrl100 ? hit.artworkUrl100.replace('100x100bb', '600x600bb') : null,
     year: yearOf(hit.releaseDate)
   }
 }
@@ -108,7 +108,7 @@ async function download(url, file) {
 }
 
 /**
- * Saves a 300×300 jpg cover to `file`: Cover Art Archive first, iTunes second.
+ * Saves a 500×500 jpg cover to `file`: Cover Art Archive first (front-500), iTunes second (600 px artwork).
  * Returns the source used, or null.
  */
 export async function fetchCover({ releaseGroupId, itunesArtwork }, file) {
@@ -126,7 +126,7 @@ export async function fetchCover({ releaseGroupId, itunesArtwork }, file) {
   }
   try {
     // macOS: scale and convert to jpg; elsewhere keep the file as delivered
-    execFileSync('sips', ['-s', 'format', 'jpeg', '-z', '300', '300', tmp, '--out', file], { stdio: 'ignore' })
+    execFileSync('sips', ['-s', 'format', 'jpeg', '-z', '500', '500', tmp, '--out', file], { stdio: 'ignore' })
     fs.rmSync(tmp, { force: true })
   } catch {
     fs.renameSync(tmp, file)
