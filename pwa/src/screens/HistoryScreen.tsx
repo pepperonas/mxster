@@ -3,6 +3,8 @@
  * round (ranking and the songs everyone collected).
  */
 import { useParams } from 'react-router-dom'
+import { SkeletonRows } from '@/components/ui/Skeleton'
+import { sharedElement } from '@/motion/vtName'
 import { m } from 'motion/react'
 import { useGameHistory, useUI } from '@/contexts'
 import { useAppNavigate } from '@/hooks/useAppNavigate'
@@ -31,8 +33,10 @@ export function HistoryScreen() {
     <div className="pt-4 md:pt-10">
       <h1 className="text-headline-md mb-6">{t.title}</h1>
 
-      {/* Still loading from the account: no "nothing here yet" in the meantime */}
-      {history.length === 0 && !ready ? null : history.length === 0 ? (
+      {/* Still loading from the account: placeholders, never "nothing here yet" */}
+      {history.length === 0 && !ready ? (
+        <SkeletonRows count={4} />
+      ) : history.length === 0 ? (
         <div className="surface p-8 text-center">
           <Icon name="history" size={40} className="mx-auto text-md-on-surface-variant" />
           <p className="mt-4 text-title-md">{t.emptyTitle}</p>
@@ -53,7 +57,7 @@ export function HistoryScreen() {
                       type="button"
                       className="row m3-state-layer"
                       onClick={() => navigate(`/history/${g.id}`)}
-                      style={{ viewTransitionName: `game-${g.id}` }}
+                      style={sharedElement(`game-${g.id}`)}
                     >
                       <span className="grid place-items-center w-11 h-11 shrink-0 rounded-m3-md bg-md-tertiary-container text-md-on-tertiary-container">
                         <Icon name={MODE_COPY[g.gameMode]?.icon ?? 'note'} size={22} />
@@ -114,7 +118,7 @@ export function HistoryDetailScreen() {
     <div>
       <SubPageHeader title={t.detailTitle(MODE_COPY[game.gameMode]?.name ?? t.round, formatDay(game.date))} back="/history" />
 
-      <div className="pt-2 space-y-6" style={{ viewTransitionName: `game-${game.id}` }}>
+      <div className="pt-2 space-y-6" style={sharedElement(`game-${game.id}`)}>
         <section className="rounded-m3-xxl p-6" style={{ background: 'rgb(var(--mx-brand))', color: 'rgb(var(--mx-on-brand))' }}>
           <p className="text-label-lg opacity-90">{t.winnerIs}</p>
           <p className="text-poster break-words" style={{ fontSize: 'clamp(2.2rem, 10vw, 3.2rem)' }}>

@@ -12,6 +12,7 @@ import { useAppNavigate } from '@/hooks/useAppNavigate'
 import { SubPageHeader } from '@/shell/AppShell'
 import { Icon } from '@/components/ui/Icon'
 import { Avatar } from '@/components/ui/Avatar'
+import { sharedElement, vtName } from '@/motion/vtName'
 import { Switch } from '@/components/ui/Switch'
 import { StatTile } from '@/components/charts/Bars'
 import { DecadeProfile } from '@/components/charts/DecadeProfile'
@@ -110,7 +111,9 @@ export function PlayersScreen() {
               className="flex flex-1 min-w-0 items-center gap-4 min-h-[72px] pl-4 pr-2 py-3 text-left m3-state-layer"
               onClick={() => navigate(playerPath(p.name))}
             >
-              <Avatar name={p.name} picture={p.isMe ? me.picture : undefined} size={44} />
+              <span className="shrink-0 rounded-full" style={sharedElement(vtName('player', p.name))}>
+                <Avatar name={p.name} picture={p.isMe ? me.picture : undefined} size={44} />
+              </span>
               <span className="flex-1 min-w-0 text-left">
                 <span className="flex items-center gap-2">
                   <span className="text-title-md truncate">{p.name}</span>
@@ -230,7 +233,9 @@ export function PlayerDetailScreen() {
 
       <div className="pt-2 space-y-6">
         <section className="flex items-center gap-4">
-          <Avatar name={player.name} picture={player.isMe ? me.picture : undefined} size={64} />
+          <span className="shrink-0 rounded-full" style={sharedElement(vtName('player', player.name))}>
+            <Avatar name={player.name} picture={player.isMe ? me.picture : undefined} size={64} />
+          </span>
           {editing ? (
             <form onSubmit={saveName} className="flex-1 flex flex-wrap gap-2">
               <label htmlFor="rename" className="sr-only">

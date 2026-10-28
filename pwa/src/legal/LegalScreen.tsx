@@ -3,6 +3,7 @@
  * lets these paths through), in the app's language.
  */
 import { currentIdx } from '@/navigation/backStack'
+import { prefersReducedMotion } from '@/motion/policy'
 const canStepBack = () => (currentIdx() ?? 0) > 0
 import { Link, useNavigate } from 'react-router-dom'
 import { defineMessages, localeOf, useLang, useMessages } from '@/i18n'
@@ -50,7 +51,7 @@ export function LegalLinks({ className = '' }: { className?: string }) {
   return (
     <nav aria-label={t.more} className={`flex flex-wrap justify-center gap-x-4 gap-y-1 text-body-sm text-md-on-surface-variant ${className}`}>
       {(Object.keys(LEGAL_PATHS) as LegalKind[]).map((kind) => (
-        <Link key={kind} to={LEGAL_PATHS[kind]} className="underline-offset-4 hover:underline min-h-[48px] inline-flex items-center">
+        <Link key={kind} to={LEGAL_PATHS[kind]} viewTransition={!prefersReducedMotion()} className="underline-offset-4 hover:underline min-h-[48px] inline-flex items-center">
           {t[kind]}
         </Link>
       ))}

@@ -15,10 +15,10 @@
 <h3>👉 <a href="https://mxtape.celox.io">mxtape.celox.io</a> — mit Google oder E-Mail anmelden oder als Gast nur per Link in den Raum von Freunden</h3>
 
 <!-- BADGES:BIG — version, tests, lines of code and songs; readme.test.ts keeps them true, scripts/readme-badges.mjs rewrites them. -->
-[![version](https://img.shields.io/badge/version-0.12.8-C2185B?style=for-the-badge&logo=semver&logoColor=white)](https://github.com/pepperonas/mxtape/releases/latest)
-[![tests](https://img.shields.io/badge/tests-788-2E9E5B?style=for-the-badge&logo=vitest&logoColor=white)](#tests-und-ci)
-[![lines of code](https://img.shields.io/badge/lines%20of%20code-25.6k-4B6BDF?style=for-the-badge&logo=typescript&logoColor=white)](pwa/src)
-[![test code](https://img.shields.io/badge/test%20code-9.9k-2E9E5B?style=for-the-badge&logo=typescript&logoColor=white)](#tests-und-ci)
+[![version](https://img.shields.io/badge/version-0.12.9-C2185B?style=for-the-badge&logo=semver&logoColor=white)](https://github.com/pepperonas/mxtape/releases/latest)
+[![tests](https://img.shields.io/badge/tests-807-2E9E5B?style=for-the-badge&logo=vitest&logoColor=white)](#tests-und-ci)
+[![lines of code](https://img.shields.io/badge/lines%20of%20code-25.8k-4B6BDF?style=for-the-badge&logo=typescript&logoColor=white)](pwa/src)
+[![test code](https://img.shields.io/badge/test%20code-10.0k-2E9E5B?style=for-the-badge&logo=typescript&logoColor=white)](#tests-und-ci)
 [![songs](https://img.shields.io/badge/songs-500-FF8A3D?style=for-the-badge&logo=applemusic&logoColor=white)](#die-songsammlung)
 
 [![Donate with PayPal](https://img.shields.io/badge/PayPal-support%20this%20project-00457C?style=for-the-badge&logo=paypal&logoColor=white)](https://www.paypal.com/donate/?business=martin.pfeffer@celox.io&currency_code=EUR&item_name=mxtape)
@@ -212,7 +212,8 @@ Material 3 Expressive mit eigener Identität: **Vinyl-Magenta** als Primärfarbe
 
 - Paletten werden aus Seeds **erzeugt** (`pwa/scripts/gen-tokens.mjs` → `pwa/src/styles/design-tokens.css`), nirgends sonst Rohfarben
 - Echte Federn (Steifigkeit und Dämpfung) als eine Quelle für JS (`motion`) und CSS (`linear()`-Kurven)
-- Seitenwechsel über die View Transitions API, Theme-Wechsel als Kreis-Reveal
+- Seitenwechsel zeigen, wohin es geht (View Transitions API): zwischen den Zielen der Leiste ein Überblenden, Unterseiten gleiten von rechts herein und zurück nach rechts hinaus, die Runde und andere Vollbildseiten steigen von unten auf; eine Runde wächst aus ihrer Zeile in ihre Seite, das Bild eines Spielers fliegt in seine; Theme und Farbe wechseln als Kreis-Reveal
+- Während Verlauf und Statistik laden, Platzhalter in der Form des Kommenden statt einer leeren Seite
 - Online: eine abgerissene Verbindung sieht man sofort, nach 30 s wird die Person übersprungen, bis sie zurück ist; wer verlässt, ist aus der Runde
 - Karte auf die Zeitleiste ziehen und bis zum Bestätigen in eine andere Lücke weiterziehen
 - Dezente Vibration auf dem Handy beim Greifen, Ablegen und Aufdecken (abschaltbar)

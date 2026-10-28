@@ -4,6 +4,7 @@
  * modes you play and the songs that trip everyone up.
  */
 import { useGameHistory } from '@/contexts/GameHistoryContext'
+import { SkeletonBlock, SkeletonGroup } from '@/components/ui/Skeleton'
 import { useMemo, useState } from 'react'
 import { useAppNavigate } from '@/hooks/useAppNavigate'
 import { Icon } from '@/components/ui/Icon'
@@ -60,6 +61,14 @@ export function StatisticsScreen() {
     return (
       <div className="pt-4 md:pt-10">
         <h1 className="text-headline-md mb-6">{t.title}</h1>
+        <SkeletonGroup className="space-y-6">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+            {[0, 1, 2, 3].map((i) => (
+              <SkeletonBlock key={i} className="h-[104px] rounded-m3-lg" />
+            ))}
+          </div>
+          <SkeletonBlock className="h-80 rounded-m3-xl" />
+        </SkeletonGroup>
       </div>
     )
   if (history.length === 0) {
@@ -83,7 +92,7 @@ export function StatisticsScreen() {
   const hardcore = people.filter((s) => s.guesses > 0)
 
   return (
-    <div className="pt-4 md:pt-10 space-y-6">
+    <div className="pt-4 md:pt-10 space-y-6 stagger-children">
       <header>
         <h1 className="text-headline-md">{t.title}</h1>
         <p className="meta mt-1">

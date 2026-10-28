@@ -1,5 +1,6 @@
 import { useEffect } from 'react'
 import { useNoteNavigation } from '@/navigation/useGoBack'
+import { useNavDirection } from '@/navigation/navDirection'
 import { createBrowserRouter, Navigate, Outlet, RouterProvider, useLocation } from 'react-router-dom'
 import { AppProviders } from '@/contexts'
 import { Modal, Toast, AchievementUnlockAnimation } from '@/components'
@@ -36,6 +37,7 @@ import './styles/motion.css'
 function Root() {
   useEffect(() => initRipple(), [])
   useNoteNavigation()
+  useNavDirection()
 
   // The OAuth callback lands on "/?login_error=…" — keep the address clean.
   useEffect(() => {

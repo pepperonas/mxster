@@ -69,6 +69,26 @@
 .stagger-children > *:nth-child(n + 13) { animation-delay: 480ms; }
 
 
+/* ════════════════════ SKELETONS (components/ui/Skeleton.tsx) ════════════════════
+   Tonal placeholders. They wait 250 ms before showing (a fast load shows
+   nothing), then a soft band sweeps across — transform only. */
+.mx-skeleton {
+  position: relative;
+  overflow: hidden;
+  background: rgb(var(--md-sys-color-surface-container-low));
+  animation: mx-skeleton-in var(--m3-dur-effects-slow) var(--m3-ease-effects-slow) 250ms both;
+}
+.mx-skeleton::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent, rgb(var(--md-sys-color-on-surface) / 0.06), transparent);
+  transform: translateX(-100%);
+  animation: mx-skeleton-sweep 1.6s var(--m3-ease-effects-default) 400ms infinite;
+}
+@keyframes mx-skeleton-in { from { opacity: 0; } }
+@keyframes mx-skeleton-sweep { to { transform: translateX(100%); } }
+
 /* Hero wordmark: the variable font settles from light and wide to its
    emphasized weight — a typographic spring instead of a fade. */
 @keyframes m3-wordmark {
@@ -147,6 +167,98 @@
   from { opacity: 0; transform: translateY(18px); }
 }
 
+/* Route transitions with a direction (html[data-nav], set by
+   navigation/navDirection.ts). M3 patterns:
+   - tab:          fade-through — the old page fades out quickly, the new one
+                   fades in and settles from 94 % (no spatial relation)
+   - forward/back: shared X axis — 30 px slide, the fade overlaps the start
+   - up/down:      shared Y axis for full-screen pages (round, room, legal)
+   Only opacity and transform move. Must stay above the theme-reveal rules
+   below, which win by coming later. A named element that exists on one side
+   only (a round's row on the way to another tab, the other players' avatars)
+   is its own layer above the page: `:only-child` gives it the page's motion,
+   otherwise it would pop in ahead of the page or stand still while it slides. */
+html[data-nav='tab']::view-transition-old(root),
+html[data-nav='tab']::view-transition-old(*):only-child {
+  animation: mx-vt-fade-out var(--m3-dur-effects-fast) var(--m3-ease-effects-fast) both;
+}
+html[data-nav='tab']::view-transition-new(root),
+html[data-nav='tab']::view-transition-new(*):only-child {
+  animation:
+    mx-vt-fade-in var(--m3-dur-effects-default) var(--m3-ease-effects-default) 90ms both,
+    mx-vt-settle var(--m3-dur-spatial-default) var(--m3-ease-spatial-default) 90ms both;
+}
+html[data-nav='forward']::view-transition-old(root),
+html[data-nav='forward']::view-transition-old(*):only-child {
+  animation:
+    mx-vt-fade-out var(--m3-dur-effects-default) var(--m3-ease-effects-default) both,
+    mx-vt-to-left var(--m3-dur-spatial-default) var(--m3-ease-spatial-default) both;
+}
+html[data-nav='forward']::view-transition-new(root),
+html[data-nav='forward']::view-transition-new(*):only-child {
+  animation:
+    mx-vt-fade-in var(--m3-dur-effects-slow) var(--m3-ease-effects-slow) 60ms both,
+    mx-vt-from-right var(--m3-dur-spatial-default) var(--m3-ease-spatial-default) both;
+}
+html[data-nav='back']::view-transition-old(root),
+html[data-nav='back']::view-transition-old(*):only-child {
+  animation:
+    mx-vt-fade-out var(--m3-dur-effects-default) var(--m3-ease-effects-default) both,
+    mx-vt-to-right var(--m3-dur-spatial-default) var(--m3-ease-spatial-default) both;
+}
+html[data-nav='back']::view-transition-new(root),
+html[data-nav='back']::view-transition-new(*):only-child {
+  animation:
+    mx-vt-fade-in var(--m3-dur-effects-slow) var(--m3-ease-effects-slow) 60ms both,
+    mx-vt-from-left var(--m3-dur-spatial-default) var(--m3-ease-spatial-default) both;
+}
+html[data-nav='up']::view-transition-old(root),
+html[data-nav='up']::view-transition-old(*):only-child {
+  animation:
+    mx-vt-fade-out var(--m3-dur-effects-default) var(--m3-ease-effects-default) both,
+    mx-vt-recede var(--m3-dur-spatial-slow) var(--m3-ease-spatial-slow) both;
+}
+html[data-nav='up']::view-transition-new(root),
+html[data-nav='up']::view-transition-new(*):only-child {
+  animation:
+    mx-vt-fade-in var(--m3-dur-effects-slow) var(--m3-ease-effects-slow) 60ms both,
+    mx-vt-rise var(--m3-dur-spatial-slow) var(--m3-ease-spatial-slow) both;
+}
+html[data-nav='down']::view-transition-old(root),
+html[data-nav='down']::view-transition-old(*):only-child {
+  animation:
+    mx-vt-fade-out var(--m3-dur-effects-default) var(--m3-ease-effects-default) both,
+    mx-vt-sink var(--m3-dur-spatial-default) var(--m3-ease-spatial-default) both;
+}
+html[data-nav='down']::view-transition-new(root),
+html[data-nav='down']::view-transition-new(*):only-child {
+  animation:
+    mx-vt-fade-in var(--m3-dur-effects-slow) var(--m3-ease-effects-slow) 60ms both,
+    mx-vt-settle var(--m3-dur-spatial-slow) var(--m3-ease-spatial-slow) both;
+}
+/* Fixed chrome that exists on one side only (nav bar and top bar belong to
+   the destinations) never travels with the page — it just fades. */
+html[data-nav]::view-transition-old(nav-bar):only-child,
+html[data-nav]::view-transition-old(nav-rail):only-child,
+html[data-nav]::view-transition-old(top-bar):only-child {
+  animation: mx-vt-fade-out var(--m3-dur-effects-fast) var(--m3-ease-effects-fast) both;
+}
+html[data-nav]::view-transition-new(nav-bar):only-child,
+html[data-nav]::view-transition-new(nav-rail):only-child,
+html[data-nav]::view-transition-new(top-bar):only-child {
+  animation: mx-vt-fade-in var(--m3-dur-effects-default) var(--m3-ease-effects-default) both;
+}
+@keyframes mx-vt-fade-out { to { opacity: 0; } }
+@keyframes mx-vt-fade-in { from { opacity: 0; } }
+@keyframes mx-vt-settle { from { transform: scale(0.94); } }
+@keyframes mx-vt-to-left { to { transform: translateX(-30px); } }
+@keyframes mx-vt-to-right { to { transform: translateX(30px); } }
+@keyframes mx-vt-from-right { from { transform: translateX(30px); } }
+@keyframes mx-vt-from-left { from { transform: translateX(-30px); } }
+@keyframes mx-vt-rise { from { transform: translateY(56px); } }
+@keyframes mx-vt-recede { to { transform: scale(0.96); } }
+@keyframes mx-vt-sink { to { transform: translateY(56px); } }
+
 /* While a route transition shows the incoming page, its own entry keyframes
    jump to their end state (duration 0, fill keeps them visible) instead of
    animating a second time underneath the transition. */
@@ -179,6 +291,14 @@ html[data-theme-transition] * {
   animation: none;
 }
 
+/* Shared elements (a round's row → its page, a player's avatar → their page)
+   move on the spatial spring instead of the browser's 250 ms ease. Browsers
+   without view-transition-class keep the default — same morph, plainer timing. */
+::view-transition-group(*.shared) {
+  animation-duration: var(--m3-dur-spatial-default);
+  animation-timing-function: var(--m3-ease-spatial-default);
+}
+
 /* "Neues Spiel": the brand card grows into the setup page (container transform). */
 ::view-transition-group(new-game) {
   animation-duration: var(--m3-dur-spatial-slow);
@@ -202,8 +322,20 @@ html[data-theme-transition] * {
     animation-duration: 120ms !important;
     animation-timing-function: ease !important;
   }
+  /* A browser back can still start a route transition: a plain cross-fade */
+  html[data-nav]::view-transition-old(root),
+  html[data-nav]::view-transition-old(*):only-child {
+    animation: mx-vt-fade-out 120ms ease both !important;
+  }
+  html[data-nav]::view-transition-new(root),
+  html[data-nav]::view-transition-new(*):only-child {
+    animation: mx-vt-fade-in 120ms ease both !important;
+  }
   .stagger-children > * {
     animation-delay: 0ms !important;
+  }
+  .mx-skeleton::after {
+    animation: none;
   }
   /* Decorative loops stop; spinners keep turning (they carry meaning) */
   .animate-bounce,
