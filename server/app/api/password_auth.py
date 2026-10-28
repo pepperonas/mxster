@@ -32,6 +32,7 @@ from app.db import PASSWORD_SUB, SessionRow, User, get_db, utcnow
 from app.passwords import DUMMY_HASH, MAX_LEN, MIN_LEN, fingerprint, hash_password, verify_password
 from app.security import (
     check_ip_limit,
+    check_limit,
     create_session,
     err,
     is_admin_email,
@@ -98,7 +99,9 @@ def purge_unverified(db: Session) -> int:
 
 
 def _send_verification(user: User, lang: str) -> None:
-    token = sign_payload({"v": user.id, "e": user.email})
+    # Bound to the current password: a later sign-up of the same unconfirmed
+    # address (someone else's password) makes earlier links worthless.
+    token = sign_payload({"v": user.id, "e": user.email, "f": fingerprint(user.password_hash)})
     mail.send_verification(user.email, user.name, _link(f"/api/auth/verify?token={token}"), lang)
 
 
@@ -118,7 +121,7 @@ def register(body: RegisterBody, request: Request, db: Session = Depends(get_db)
     email = _email(body.email)
     password = _password(body.password)
     lang = _lang(body.lang)
-    check_ip_limit(request, f"register-mail:{email}", limit=3, window_s=3600)
+    check_limit(f"register-mail:{email}", limit=3, window_s=3600)
     purge_unverified(db)
 
     user = _by_email(db, email)
@@ -143,8 +146,16 @@ def register(body: RegisterBody, request: Request, db: Session = Depends(get_db)
 def verify(token: str = "", db: Session = Depends(get_db)) -> Response:
     data = unsign_payload(token, max_age_s=int(VERIFY_TTL.total_seconds()))
     user = db.get(User, _int(data, "v"))
-    if user is None or user.email != data.get("e"):
+    if (
+        user is None
+        or not isinstance(data, dict)
+        or user.email != data.get("e")
+        or (user.unverified and data.get("f") != fingerprint(user.password_hash))
+    ):
         return RedirectResponse(_link("/?login_error=verify_expired"), status_code=303)
+    if user.email_verified_at is not None:
+        # Single use: a link that already did its job signs nobody in again
+        return RedirectResponse(_link("/"), status_code=303)
     if user.email_verified_at is None:
         user.email_verified_at = utcnow()
         if is_admin_email(user.email):
@@ -170,7 +181,8 @@ class LoginBody(BaseModel):
 def _check_credentials(body: LoginBody, request: Request, db: Session) -> User:
     check_ip_limit(request, "password-login", limit=10, window_s=60)
     email = body.email.strip().lower()
-    check_ip_limit(request, f"password-login:{email}", limit=10, window_s=900)
+    # Per address across all IPs: a botnet gets no more guesses than one device
+    check_limit(f"password-login:{email}", limit=20, window_s=900)
     user = _by_email(db, email) if len(email) <= 320 else None
     stored = user.password_hash if user else None
     ok = verify_password(body.password[:MAX_LEN], stored or DUMMY_HASH)
@@ -203,7 +215,7 @@ def resend(body: ResendBody, request: Request, db: Session = Depends(get_db)) ->
     """Send the confirmation link again. Needs the password, so nobody can use
     it to fill someone else's inbox."""
     user = _check_credentials(body, request, db)
-    check_ip_limit(request, f"register-mail:{user.email}", limit=3, window_s=3600)
+    check_limit(f"register-mail:{user.email}", limit=3, window_s=3600)
     if user.unverified:
         _send_verification(user, _lang(body.lang))
     return {"ok": True}
@@ -218,7 +230,7 @@ class ForgotBody(BaseModel):
 def forgot(body: ForgotBody, request: Request, db: Session = Depends(get_db)) -> dict:
     check_ip_limit(request, "forgot", limit=5, window_s=600)
     email = _email(body.email)
-    check_ip_limit(request, f"forgot-mail:{email}", limit=3, window_s=3600)
+    check_limit(f"forgot-mail:{email}", limit=3, window_s=3600)
     lang = _lang(body.lang)
     user = _by_email(db, email)
     if user is None:

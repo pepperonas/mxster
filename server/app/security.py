@@ -149,7 +149,11 @@ def client_ip(request: Request) -> str:
 
 
 def check_ip_limit(request: Request, scope: str, limit: int = 20, window_s: int = 60) -> None:
-    key = f"{scope}:{client_ip(request)}"
+    check_limit(f"{scope}:{client_ip(request)}", limit, window_s)
+
+
+def check_limit(key: str, limit: int, window_s: int) -> None:
+    """Limit by a key alone (e.g. an e-mail address), whatever IP the requests come from."""
     now = time.monotonic()
     if len(_hits) > _MAX_KEYS:  # bound memory: drop every key without a recent hit
         for k in [k for k, v in _hits.items() if not v or now - v[-1] >= window_s]:

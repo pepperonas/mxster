@@ -5,7 +5,7 @@ import secrets
 
 from fastapi import APIRouter, Depends, Request, Response
 from fastapi.responses import RedirectResponse
-from sqlalchemy import select
+from sqlalchemy import delete, select
 from sqlalchemy.orm import Session
 
 from app import google_oauth, mail
@@ -70,6 +70,11 @@ def upsert_user(db: Session, *, sub: str, email: str, name: str, picture: str) -
         ).scalars().first()
         if twin is not None:
             is_new = twin.email_verified_at is None
+            if twin.email_verified_at is None:
+                # Nobody proved the password belongs to the address owner: a
+                # stranger could have registered it to wait for the real owner.
+                twin.password_hash = None
+                db.execute(delete(SessionRow).where(SessionRow.user_id == twin.id))
             twin.google_sub = sub
             twin.email_verified_at = twin.email_verified_at or utcnow()
             user = twin

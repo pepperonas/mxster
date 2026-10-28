@@ -76,8 +76,10 @@ def test_confirm_signs_in_pending_and_notifies_admin(client, inbox):
     me = client.get("/api/me").json()
     assert me["status"] == "pending" and me["email"] == "anna@example.com" and me["hasPassword"] is True
     assert inbox[-1]["to"] == "martinpaush@gmail.com" and "Anna" in inbox[-1]["subject"]
-    # Second click: no second notice
+    # Second click: no second notice, and no session from the old link
+    client.cookies.clear()
     confirm(client, inbox)
+    assert client.get("/api/me").status_code == 401
     assert sum(m["to"] == "martinpaush@gmail.com" for m in inbox) == 1
 
 
@@ -87,7 +89,7 @@ def test_forged_or_old_confirmation_is_refused(client, inbox):
     assert "login_error=verify_expired" in r.headers["location"]
     u = user()
     # Signed for another address
-    bad = sign_payload({"v": u.id, "e": "other@example.com"})
+    bad = sign_payload({"v": u.id, "e": "other@example.com", "f": fingerprint(u.password_hash)})
     assert "verify_expired" in client.get(f"/api/auth/verify?token={bad}").headers["location"]
     assert user().unverified
 
@@ -276,4 +278,34 @@ def test_login_is_rate_limited(client, inbox):
     for _ in range(10):
         client.post("/api/auth/password-login", json={"email": "x@example.com", "password": "falsch123"})
     r = client.post("/api/auth/password-login", json={"email": "x@example.com", "password": "falsch123"})
+    assert r.status_code == 429
+
+
+def test_a_later_sign_up_kills_the_earlier_link(client, inbox):
+    """Owner registers, a stranger re-registers the same unconfirmed address
+    with their own password: the owner's link must not confirm the stranger's password."""
+    register(client, password="besitzer123")
+    owner_link = link_in(inbox[-1]["text"])
+    register(client, password="fremder123")
+    r = client.get(owner_link)
+    assert "verify_expired" in r.headers["location"]
+    assert user().unverified
+
+
+def test_google_drops_a_password_nobody_confirmed(client, inbox, google):
+    register(client, password="fremder123")
+    me = login(client, google, sub="g-1", email="anna@example.com", name="Anna")
+    assert me["hasPassword"] is False
+    client.cookies.clear()
+    r = client.post("/api/auth/password-login", json={"email": "anna@example.com", "password": "fremder123"})
+    assert r.status_code == 401
+
+
+def test_guesses_per_address_are_capped_across_ips(client, inbox, monkeypatch):
+    from app import security
+    ips = iter(f"10.0.0.{i}" for i in range(100))
+    monkeypatch.setattr(security, "client_ip", lambda request: next(ips))
+    for _ in range(20):
+        client.post("/api/auth/password-login", json={"email": "anna@example.com", "password": "falsch123"})
+    r = client.post("/api/auth/password-login", json={"email": "anna@example.com", "password": "falsch123"})
     assert r.status_code == 429
