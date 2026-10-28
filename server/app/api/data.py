@@ -13,7 +13,7 @@ from sqlalchemy import delete, select
 from sqlalchemy.orm import Session
 
 from app.config import get_settings
-from app.db import DOC_KINDS, User, UserDoc, get_db, utcnow
+from app.db import DOC_KINDS, AchievementScore, User, UserDoc, get_db, utcnow
 from app.security import err, require_approved, require_csrf
 
 router = APIRouter(prefix="/api/data")
@@ -68,5 +68,7 @@ def write(kind: str, body: DocIn, user: User = Depends(require_approved), db: Se
 @router.delete("", dependencies=[Depends(require_csrf)])
 def wipe(user: User = Depends(require_approved), db: Session = Depends(get_db)) -> dict:
     db.execute(delete(UserDoc).where(UserDoc.user_id == user.id))
+    # The achievements are gone, so is what friends saw of them
+    db.execute(delete(AchievementScore).where(AchievementScore.user_id == user.id))
     db.commit()
     return {"ok": True}

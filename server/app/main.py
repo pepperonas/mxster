@@ -5,7 +5,7 @@ import logging
 from fastapi import FastAPI, HTTPException, Request
 from fastapi.responses import JSONResponse
 
-from app.api import admin, auth, daily, data, friends, password_auth, rooms, songs
+from app.api import achievements, admin, auth, daily, data, friends, password_auth, rooms, songs
 from app.config import get_settings
 from app.api.rooms import purge_expired
 from app.db import SessionLocal, init_db
@@ -43,6 +43,7 @@ def create_app() -> FastAPI:
     app.include_router(songs.router)
     app.include_router(songs.admin)
     app.include_router(daily.router)
+    app.include_router(achievements.router)
     return app
 
 

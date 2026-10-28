@@ -6,6 +6,9 @@
  * dock. On wide screens turntable and board sit side by side.
  */
 import { useGoBack } from '@/navigation/useGoBack'
+import { useAchievements } from '@/contexts/AchievementContext'
+import { pointsSince } from '@/game/achievementPoints'
+import { earnedThisRound } from '@/components/game/GameOver'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { AnimatePresence, m } from 'motion/react'
 import { useAppNavigate } from '@/hooks/useAppNavigate'
@@ -124,8 +127,10 @@ export function GameRound({ onRematch }: { onRematch: () => void }) {
     turnLog,
     playedSongs,
     bonus,
-    daily
+    daily,
+    startedAt
   } = useGame()
+  const { getPlayerAchievements } = useAchievements()
   const dt = useMessages(dailyText)
   const room = useRoom()
   const online = Boolean(room && room.seat !== null)
@@ -626,6 +631,7 @@ export function GameRound({ onRematch }: { onRematch: () => void }) {
             players={shownResult.players}
             mode={gameMode}
             daily={daily ? { score: dailyScore(shownResult.winner.cards), total: DAILY_SONGS } : undefined}
+            earned={earnedThisRound(shownResult.players, (name) => pointsSince(getPlayerAchievements(name), startedAt))}
             onRematch={
               onlinePlayer || daily
                 ? undefined

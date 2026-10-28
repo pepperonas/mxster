@@ -4,6 +4,9 @@
  * rename, merge two spellings into one, or remove someone.
  */
 import { useState, type FormEvent } from 'react'
+import { achievementText } from '@/i18n/messages/achievements'
+import { totalPoints } from '@/game/achievementPoints'
+import { useAchievements } from '@/contexts/AchievementContext'
 import { useParams } from 'react-router-dom'
 import { m } from 'motion/react'
 import { useUI } from '@/contexts'
@@ -29,13 +32,15 @@ import { statsText } from '@/i18n/messages/stats'
 const MAX_NAME = 20
 const pct = (v: number | null) => (v === null ? '–' : msg(statsText).percent(Math.round(v * 100)))
 
-/** One line about a person: rounds, wins, hit rate. */
-function line(p: KnownPlayer): string {
+/** One line about a person: rounds, wins, hit rate, achievement points. */
+function line(p: KnownPlayer, points: number): string {
   const t = msg(playersText)
   const s = p.summary
-  if (!s || s.games === 0) return t.neverPlayed
+  const earned = points > 0 ? msg(achievementText).worth(points) : null
+  if (!s || s.games === 0) return earned ?? t.neverPlayed
   const parts = [t.rounds(s.games), t.wins(s.wins)]
   if (s.accuracy !== null) parts.push(t.right(pct(s.accuracy)))
+  if (earned) parts.push(earned)
   return parts.join(' · ')
 }
 
@@ -45,6 +50,7 @@ export function PlayersScreen() {
   const me = useMe()
   const navigate = useAppNavigate()
   const { players, add, setQuickPick } = usePlayers()
+  const { getPlayerAchievements } = useAchievements()
   const t = useMessages(playersText)
   const [name, setName] = useState('')
   const [error, setError] = useState<string | null>(null)
@@ -123,7 +129,7 @@ export function PlayersScreen() {
                     </span>
                   )}
                 </span>
-                <span className="block meta">{line(p)}</span>
+                <span className="block meta">{line(p, totalPoints(getPlayerAchievements(p.name)))}</span>
               </span>
               {p.isMe && <Icon name="chevron" size={20} className="text-md-on-surface-variant mr-2" />}
             </button>

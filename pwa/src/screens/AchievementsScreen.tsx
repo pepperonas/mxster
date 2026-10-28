@@ -1,6 +1,8 @@
 /**
- * Erfolge — per player name (achievements belong to whoever played). The
- * account holder is shown first; other names from past rounds can be picked.
+ * Erfolge — per player name (achievements belong to whoever played). On top
+ * the shown person's rank and achievement points, then the leaderboard
+ * (everyone on this account plus friends; tapping someone on this account
+ * shows their achievements), then the achievements with what each is worth.
  */
 import { Icon } from '@/components/ui/Icon'
 import { achievementDescription, achievementIcon, achievementName } from '@/types/achievements'
@@ -17,6 +19,34 @@ import { ownPlayerName } from '@/game/owner'
 import { spring } from '@/motion/springs'
 import { formatDay } from '@/utils/format'
 import { ACHIEVEMENT_DEFINITIONS, type Achievement } from '@/types/achievements'
+import { pointsFor, totalPoints, type BoardEntry } from '@/game/achievementPoints'
+import { RankCard } from '@/components/achievements/RankCard'
+import { PointsBoard } from '@/components/achievements/PointsBoard'
+import { api } from '@/api/client'
+
+interface FriendScore {
+  id: number
+  name: string
+  picture: string
+  points: number
+  unlocked: number
+  me: boolean
+}
+
+/** Friends' totals from the server (empty while loading or offline). */
+function useFriendScores(): FriendScore[] {
+  const [rows, setRows] = useState<FriendScore[]>([])
+  useEffect(() => {
+    let alive = true
+    api<{ board: FriendScore[] }>('/api/achievements/board')
+      .then((b) => alive && setRows(b.board.filter((r) => !r.me)))
+      .catch(() => {})
+    return () => {
+      alive = false
+    }
+  }, [])
+  return rows
+}
 
 export function AchievementsScreen() {
   const me = useMe()
@@ -44,6 +74,22 @@ export function AchievementsScreen() {
     ? stored
     : Object.values(ACHIEVEMENT_DEFINITIONS).map((d) => ({ ...d, unlocked: false, progress: d.target ? 0 : undefined }))
   const unlocked = list.filter((a) => a.unlocked).length
+  const points = totalPoints(list)
+  const friends = useFriendScores()
+  const board: BoardEntry[] = [
+    ...names.map((n) => {
+      const mine = getPlayerAchievements(n)
+      return {
+        key: `p-${n}`,
+        name: n,
+        points: totalPoints(mine),
+        unlocked: new Set(mine.filter((x) => x.unlocked).map((x) => x.id)).size,
+        picture: n === own ? me.picture : undefined,
+        me: n === own
+      }
+    }),
+    ...friends.map((f) => ({ key: `f-${f.id}`, name: f.name, points: f.points, unlocked: f.unlocked, picture: f.picture || undefined, friend: true }))
+  ]
   const fresh = list.filter((a) => isNew(a, seenAt)).length
   // Unlocked first (newest first), then by progress
   const sorted = [...list].sort((a, b) => {
@@ -62,15 +108,12 @@ export function AchievementsScreen() {
         </p>
       </div>
 
-      {names.length > 1 && (
-        <div className="flex gap-2 overflow-x-auto no-scrollbar -mx-4 px-4 mb-5" role="radiogroup" aria-label={t.players}>
-          {names.map((n) => (
-            <button key={n} type="button" role="radio" aria-checked={who === n} data-selected={who === n} className="chip m3-state-layer shrink-0" onClick={() => setWho(n)}>
-              {n}
-            </button>
-          ))}
-        </div>
-      )}
+      <div className="space-y-6 mb-6">
+        <RankCard points={points} />
+        {board.length > 1 && <PointsBoard entries={board} selected={who} onSelect={setWho} hasFriends={friends.length > 0} />}
+      </div>
+
+      {board.length > 1 && <h2 className="text-title-lg mb-3">{t.ofPerson(who)}</h2>}
 
       <ul className="grid gap-3 sm:grid-cols-2" key={who}>
           {sorted.map((a, i) => (
@@ -99,6 +142,11 @@ export function AchievementsScreen() {
                       {t.isNew}
                     </m.span>
                   )}
+                  <span
+                    className={`ml-auto shrink-0 rounded-m3-full px-2 text-label-md tabular ${a.unlocked ? 'bg-md-on-tertiary-container/10' : 'bg-md-surface-container-highest text-md-on-surface-variant'}`}
+                  >
+                    {a.unlocked ? t.plusPoints(pointsFor(a.id)) : t.worth(pointsFor(a.id))}
+                  </span>
                 </p>
                 <p className={`text-body-sm ${a.unlocked ? 'opacity-90' : 'text-md-on-surface-variant'}`}>{achievementDescription(a.id)}</p>
                 <p className={`mt-1 text-label-md tabular ${a.unlocked ? 'opacity-90' : 'text-md-on-surface-variant'}`}>

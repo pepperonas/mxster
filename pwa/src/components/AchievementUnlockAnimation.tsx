@@ -17,6 +17,7 @@ import { useAchievementNotifications } from '@/contexts/AchievementNotificationC
 import { useUI } from '@/contexts'
 import { celebrate } from '@/motion/celebrate'
 import { spring } from '@/motion/springs'
+import { pointsFor } from '@/game/achievementPoints'
 
 const HOLD_MS = 3000
 
@@ -67,6 +68,14 @@ export function AchievementUnlockAnimation() {
             <p className="text-label-lg mt-1">{t.unlocked}</p>
             <p className="text-headline-sm mt-1">{achievementName(currentNotification.achievement.id)}</p>
             <p className="text-body-md mt-2 opacity-90">{achievementDescription(currentNotification.achievement.id)}</p>
+            <m.p
+              className="mt-4 inline-block rounded-m3-full bg-md-on-tertiary-container text-md-tertiary-container px-4 py-1 text-title-md tabular"
+              initial={{ scale: 0.4, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              transition={{ ...spring.spatialFast, delay: 0.45 }}
+            >
+              {t.plusPoints(pointsFor(currentNotification.achievement.id))}
+            </m.p>
           </m.div>
         )}
       </AnimatePresence>

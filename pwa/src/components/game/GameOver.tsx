@@ -13,6 +13,7 @@ import type { GameMode, Player } from '@/types'
 import { rankPlayers } from '@/game/tiebreak'
 import { useMessages } from '@/i18n'
 import { gameText } from '@/i18n/messages/game'
+import { achievementText } from '@/i18n/messages/achievements'
 import { SignUpOffer } from './SignUpOffer'
 import { shareResultCard } from '@/utils/resultImage'
 import { formatDay } from '@/utils/format'
@@ -32,6 +33,19 @@ interface GameOverProps {
   signUpName?: string
   /** Today's round: the score instead of a winner. */
   daily?: { score: number; total: number }
+  /** Achievement points each seat earned this round (a team: its members together). */
+  earned?: Record<string, number>
+}
+
+/** Points per seat this round; a team adds up its members. Seats without any are left out. */
+export function earnedThisRound(players: Player[], pointsOf: (name: string) => number): Record<string, number> {
+  const out: Record<string, number> = {}
+  for (const p of players) {
+    if (p.isBot) continue
+    const n = (p.members?.length ? p.members : [p.name]).reduce((sum, name) => sum + pointsOf(name), 0)
+    if (n > 0) out[p.name] = n
+  }
+  return out
 }
 
 /** When a ranking row arrives (s): last place first, the winner last after a short pause. */
@@ -40,8 +54,9 @@ export function rankDelay(index: number, count: number): number {
   return 0.4 + fromBottom * 0.08 + (index === 0 ? 0.18 : 0)
 }
 
-export function GameOver({ winner, players, mode, onRematch, onHome, rematchBy, homeLabel, signUpName, daily }: GameOverProps) {
+export function GameOver({ winner, players, mode, onRematch, onHome, rematchBy, homeLabel, signUpName, daily, earned }: GameOverProps) {
   const t = useMessages(gameText)
+  const at = useMessages(achievementText)
   const dt = useMessages(dailyText)
   const hardcore = mode === 'hardcore'
   // Who left the room is listed last, without a place
@@ -103,7 +118,20 @@ export function GameOver({ winner, players, mode, onRematch, onHome, rematchBy, 
                 {p.members && <span className="block truncate text-body-sm opacity-80">{p.members.join(', ')}</span>}
                 {p.left && <span className="block truncate text-body-sm text-md-on-surface-variant">{t.leftShort}</span>}
               </span>
-              <span className="text-title-md tabular">{hardcore ? t.pointsValue(p.score) : t.songsValue(p.cards)}</span>
+              <span className="text-right">
+                <span className="block text-title-md tabular">{hardcore ? t.pointsValue(p.score) : t.songsValue(p.cards)}</span>
+                {earned?.[p.name] ? (
+                  <m.span
+                    className="block text-label-md tabular font-medium opacity-90"
+                    initial={{ opacity: 0, scale: 0.6 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ ...spring.spatialFast, delay: rankDelay(i, ranked.length) + 0.35 }}
+                    title={at.pointsThisRound}
+                  >
+                    {at.plusPoints(earned[p.name])}
+                  </m.span>
+                ) : null}
+              </span>
             </m.li>
           ))}
         </ol>

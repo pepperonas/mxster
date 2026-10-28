@@ -168,6 +168,17 @@ class SongOverride(Base):
     updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow)
 
 
+class AchievementScore(Base):
+    """The account holder's achievement points, so friends can compare.
+    Written by the device from the account's own achievements document."""
+
+    __tablename__ = "achievement_scores"
+    user_id: Mapped[int] = mapped_column(ForeignKey("users.id", ondelete="CASCADE"), primary_key=True)
+    points: Mapped[int] = mapped_column(Integer, default=0)
+    unlocked: Mapped[int] = mapped_column(Integer, default=0)
+    updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow)
+
+
 class DailyResult(Base):
     """Today's round ("Tagesrunde"): the same songs for everyone, one try a day."""
 

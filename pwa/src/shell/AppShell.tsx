@@ -12,6 +12,7 @@ import type { MouseEvent } from 'react'
 import { useMe } from '@/auth/AuthContext'
 import { Icon, type IconName } from '@/components/ui/Icon'
 import { Avatar } from '@/components/ui/Avatar'
+import { AchievementScoreSync } from '@/components/AchievementScoreSync'
 import { prefersReducedMotion } from '@/motion/policy'
 import { spring } from '@/motion/springs'
 import { useMessages } from '@/i18n'
@@ -39,10 +40,17 @@ export function AppShell() {
   const isGame = pathname === '/game'
   const isTopLevel = TOP_LEVEL.includes(pathname)
 
-  if (isGame) return <Outlet />
+  if (isGame)
+    return (
+      <>
+        <AchievementScoreSync />
+        <Outlet />
+      </>
+    )
 
   return (
     <div className="min-h-dvh md:pl-24">
+      <AchievementScoreSync />
       <NavRail />
       {isTopLevel ? <TopBar /> : null}
       <main className={`mx-auto w-full max-w-3xl px-4 sm:px-6 ${isTopLevel ? 'pb-32 md:pb-12' : 'pb-12'}`}>

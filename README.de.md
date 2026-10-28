@@ -15,10 +15,10 @@
 <h3>👉 <a href="https://mxtape.celox.io">mxtape.celox.io</a> — mit Google oder E-Mail anmelden oder als Gast nur per Link in den Raum von Freunden</h3>
 
 <!-- BADGES:BIG — version, tests, lines of code and songs; readme.test.ts keeps them true, scripts/readme-badges.mjs rewrites them. -->
-[![version](https://img.shields.io/badge/version-0.13.0-C2185B?style=for-the-badge&logo=semver&logoColor=white)](https://github.com/pepperonas/mxtape/releases/latest)
-[![tests](https://img.shields.io/badge/tests-817-2E9E5B?style=for-the-badge&logo=vitest&logoColor=white)](#tests-und-ci)
-[![lines of code](https://img.shields.io/badge/lines%20of%20code-26.0k-4B6BDF?style=for-the-badge&logo=typescript&logoColor=white)](pwa/src)
-[![test code](https://img.shields.io/badge/test%20code-10.1k-2E9E5B?style=for-the-badge&logo=typescript&logoColor=white)](#tests-und-ci)
+[![version](https://img.shields.io/badge/version-0.14.0-C2185B?style=for-the-badge&logo=semver&logoColor=white)](https://github.com/pepperonas/mxtape/releases/latest)
+[![tests](https://img.shields.io/badge/tests-836-2E9E5B?style=for-the-badge&logo=vitest&logoColor=white)](#tests-und-ci)
+[![lines of code](https://img.shields.io/badge/lines%20of%20code-26.6k-4B6BDF?style=for-the-badge&logo=typescript&logoColor=white)](pwa/src)
+[![test code](https://img.shields.io/badge/test%20code-10.4k-2E9E5B?style=for-the-badge&logo=typescript&logoColor=white)](#tests-und-ci)
 [![songs](https://img.shields.io/badge/songs-500-FF8A3D?style=for-the-badge&logo=applemusic&logoColor=white)](#die-songsammlung)
 
 [![Donate with PayPal](https://img.shields.io/badge/PayPal-support%20this%20project-00457C?style=for-the-badge&logo=paypal&logoColor=white)](https://www.paypal.com/donate/?business=martin.pfeffer@celox.io&currency_code=EUR&item_name=mxtape)
@@ -214,6 +214,7 @@ Material 3 Expressive mit eigener Identität: **Vinyl-Magenta** als Primärfarbe
 - Echte Federn (Steifigkeit und Dämpfung) als eine Quelle für JS (`motion`) und CSS (`linear()`-Kurven)
 - Seitenwechsel zeigen, wohin es geht (View Transitions API): zwischen den Zielen der Leiste ein Überblenden, Unterseiten gleiten von rechts herein und zurück nach rechts hinaus, die Runde und andere Vollbildseiten steigen von unten auf; eine Runde wächst aus ihrer Zeile in ihre Seite, das Bild eines Spielers fliegt in seine; Theme und Farbe wechseln als Kreis-Reveal
 - Während Verlauf und Statistik laden, Platzhalter in der Form des Kommenden statt einer leeren Seite
+- **Erfolgspunkte:** Jeder Erfolg bringt je nach Schwierigkeit 50–250 Punkte (insgesamt 6.950). Die Summe ergibt einen Rang wie eine Plattenauszeichnung — Demo, Single, Album, Gold, Platin, Diamant, Legende — samt Weg zum nächsten; eine Bestenliste vergleicht alle auf dem Konto und deine Freunde; Freischalt-Karte und Rundenende zeigen, was es gab
 - Die Platte fährt hoch, wenn die Musik startet, und läuft bei Pause aus; die Rangliste am Rundenende füllt sich von unten, der Sieger zuletzt; seit dem letzten Besuch freigeschaltete Erfolge tragen „Neu“; das Jahrzehnt-Netz morpht beim Wechsel der Kennzahl; leere Seiten zeigen eine Platte halb aus der Hülle
 - Online: eine abgerissene Verbindung sieht man sofort, nach 30 s wird die Person übersprungen, bis sie zurück ist; wer verlässt, ist aus der Runde
 - Karte auf die Zeitleiste ziehen und bis zum Bestätigen in eine andere Lücke weiterziehen
