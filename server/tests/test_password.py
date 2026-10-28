@@ -302,10 +302,34 @@ def test_google_drops_a_password_nobody_confirmed(client, inbox, google):
 
 
 def test_guesses_per_address_are_capped_across_ips(client, inbox, monkeypatch):
+    import itertools
+
     from app import security
-    ips = iter(f"10.0.0.{i}" for i in range(100))
-    monkeypatch.setattr(security, "client_ip", lambda request: next(ips))
-    for _ in range(20):
+    from app.api import password_auth
+
+    counter = itertools.count()
+    fake = lambda request: f"10.0.{next(counter) // 250}.{next(counter) % 250}"  # noqa: E731
+    monkeypatch.setattr(security, "client_ip", fake)
+    monkeypatch.setattr(password_auth, "client_ip", fake)
+    for _ in range(200):
         client.post("/api/auth/password-login", json={"email": "anna@example.com", "password": "falsch123"})
     r = client.post("/api/auth/password-login", json={"email": "anna@example.com", "password": "falsch123"})
     assert r.status_code == 429
+
+
+def test_a_right_password_is_not_used_up(client, inbox):
+    register(client)
+    confirm(client, inbox)
+    for _ in range(9):
+        client.cookies.clear()
+        assert client.post("/api/auth/password-login", json={"email": "anna@example.com", "password": "geheim123"}).status_code == 200
+
+
+def test_mail_limits_never_refuse_the_request(client, inbox):
+    register(client)
+    confirm(client, inbox)
+    client.cookies.clear()
+    inbox.clear()
+    codes = [client.post("/api/auth/forgot", json={"email": "anna@example.com"}).status_code for _ in range(5)]
+    assert codes == [202] * 5
+    assert len(inbox) == 3  # only the mails are throttled

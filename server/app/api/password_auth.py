@@ -32,7 +32,9 @@ from app.db import PASSWORD_SUB, SessionRow, User, get_db, utcnow
 from app.passwords import DUMMY_HASH, MAX_LEN, MIN_LEN, fingerprint, hash_password, verify_password
 from app.security import (
     check_ip_limit,
-    check_limit,
+    client_ip,
+    limit_reached,
+    within_limit,
     create_session,
     err,
     is_admin_email,
@@ -46,6 +48,7 @@ router = APIRouter(prefix="/api/auth")
 
 VERIFY_TTL = timedelta(hours=48)
 RESET_TTL = timedelta(hours=1)
+FAIL_WINDOW = 900
 EMAIL_RE = re.compile(r"^[^@\s]+@[^@\s]+\.[^@\s]+$")
 
 
@@ -121,7 +124,10 @@ def register(body: RegisterBody, request: Request, db: Session = Depends(get_db)
     email = _email(body.email)
     password = _password(body.password)
     lang = _lang(body.lang)
-    check_limit(f"register-mail:{email}", limit=3, window_s=3600)
+    # Per address only throttles the mails, silently: an error here would let
+    # a stranger lock the owner out of signing up
+    if not within_limit(f"register-mail:{email}", limit=3, window_s=3600):
+        return {"ok": True}
     purge_unverified(db)
 
     user = _by_email(db, email)
@@ -181,12 +187,18 @@ class LoginBody(BaseModel):
 def _check_credentials(body: LoginBody, request: Request, db: Session) -> User:
     check_ip_limit(request, "password-login", limit=10, window_s=60)
     email = body.email.strip().lower()
-    # Per address across all IPs: a botnet gets no more guesses than one device
-    check_limit(f"password-login:{email}", limit=20, window_s=900)
+    # Only failures count. Tight per address and IP; wide per address across
+    # all IPs (a botnet gets far fewer guesses, a stranger can hardly lock the
+    # owner out: 200 failures in 15 minutes, and the owner's own IP is separate).
+    per_ip, per_mail = f"pw-fail:{email}:{client_ip(request)}", f"pw-fail:{email}"
+    if limit_reached(per_ip, 10, FAIL_WINDOW) or limit_reached(per_mail, 200, FAIL_WINDOW):
+        raise err(429, "rate_limited", "Zu viele Anfragen. Bitte kurz warten.")
     user = _by_email(db, email) if len(email) <= 320 else None
     stored = user.password_hash if user else None
     ok = verify_password(body.password[:MAX_LEN], stored or DUMMY_HASH)
     if user is None or not stored or not ok:
+        within_limit(per_ip, 10, FAIL_WINDOW)
+        within_limit(per_mail, 200, FAIL_WINDOW)
         raise err(401, "invalid_credentials", "E-Mail-Adresse oder Passwort stimmen nicht.")
     return user
 
@@ -215,8 +227,7 @@ def resend(body: ResendBody, request: Request, db: Session = Depends(get_db)) ->
     """Send the confirmation link again. Needs the password, so nobody can use
     it to fill someone else's inbox."""
     user = _check_credentials(body, request, db)
-    check_limit(f"register-mail:{user.email}", limit=3, window_s=3600)
-    if user.unverified:
+    if user.unverified and within_limit(f"register-mail:{user.email}", limit=3, window_s=3600):
         _send_verification(user, _lang(body.lang))
     return {"ok": True}
 
@@ -230,7 +241,8 @@ class ForgotBody(BaseModel):
 def forgot(body: ForgotBody, request: Request, db: Session = Depends(get_db)) -> dict:
     check_ip_limit(request, "forgot", limit=5, window_s=600)
     email = _email(body.email)
-    check_limit(f"forgot-mail:{email}", limit=3, window_s=3600)
+    if not within_limit(f"forgot-mail:{email}", limit=3, window_s=3600):
+        return {"ok": True}  # mail throttled silently, the request is never refused
     lang = _lang(body.lang)
     user = _by_email(db, email)
     if user is None:

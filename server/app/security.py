@@ -152,6 +152,21 @@ def check_ip_limit(request: Request, scope: str, limit: int = 20, window_s: int 
     check_limit(f"{scope}:{client_ip(request)}", limit, window_s)
 
 
+def within_limit(key: str, limit: int, window_s: int) -> bool:
+    """Like check_limit, but answers instead of refusing (count the hit if allowed)."""
+    try:
+        check_limit(key, limit, window_s)
+        return True
+    except HTTPException:
+        return False
+
+
+def limit_reached(key: str, limit: int, window_s: int) -> bool:
+    """Peek without counting."""
+    now = time.monotonic()
+    return len([t for t in _hits.get(key, []) if now - t < window_s]) >= limit
+
+
 def check_limit(key: str, limit: int, window_s: int) -> None:
     """Limit by a key alone (e.g. an e-mail address), whatever IP the requests come from."""
     now = time.monotonic()
