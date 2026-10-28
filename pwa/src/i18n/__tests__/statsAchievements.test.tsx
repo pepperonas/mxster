@@ -33,7 +33,7 @@ describe('achievement texts', () => {
   it('names achievements in English by id', () => {
     setCurrentLang('en')
     expect(achievementName(AchievementId.ZEITMASCHINE)).toBe('Time machine')
-    expect(achievementDescription(AchievementId.UNBEATABLE)).toBe('Won 5 games in a row')
+    expect(achievementDescription(AchievementId.UNBEATABLE)).toBe('Won 5 rounds in a row')
     // The definitions follow the language at access time
     expect(ACHIEVEMENT_DEFINITIONS[AchievementId.PERFECTIONIST].name).toBe('Perfectionist')
     setCurrentLang('de')

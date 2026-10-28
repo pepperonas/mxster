@@ -1,9 +1,9 @@
 import { describe, it, expect } from 'vitest'
 import { evaluatePlacement, gapLabel, timelineSongsFor, correctGapIndices } from '../placement'
-import { endOfGameAchievements, realtimeScoreAchievements, type AchievementEffect } from '../achievementRules'
+import { endOfRoundAchievements, realtimeScoreAchievements, type AchievementEffect } from '../achievementRules'
 import { evaluateSkip } from '../skipRules'
 import { AchievementId } from '@/types/achievements'
-import type { Player, Song } from '@/types'
+import type { Player, Song, TurnRecord } from '@/types'
 
 const song = (year: number, extra: Partial<Song> = {}): Song => ({
   id: `s${year}-${extra.title ?? ''}`,
@@ -90,108 +90,67 @@ describe('realtimeScoreAchievements', () => {
       AchievementId.PUNKTEJAEGER,
       AchievementId.HARDCORE_CHAMPION
     ])
-    expect(realtimeScoreAchievements('A', 124, 125).map((e) => e.id)).toEqual([AchievementId.HARDCORE_CHAMPION])
+    // 100+ as the description says
+    expect(realtimeScoreAchievements('A', 99, 100).map((e) => e.id)).toEqual([AchievementId.HARDCORE_CHAMPION])
+    expect(realtimeScoreAchievements('A', 80, 99)).toEqual([])
   })
 })
 
-describe('endOfGameAchievements', () => {
+describe('hardcore achievements from the turn log', () => {
   const unlocked = (fx: AchievementEffect[], name: string) =>
     fx.filter((e) => e.type === 'unlock' && e.player === name).map((e) => e.id)
   const progressOf = (fx: AchievementEffect[], name: string, id: AchievementId) =>
     fx.find((e) => e.type === 'progress' && e.player === name && e.id === id)
+  const guess = (p: string, y: number, extra: Partial<TurnRecord> = {}): TurnRecord => ({ p, s: `s${y}`, y, ok: true, d: 0, ti: true, ar: true, pts: 15, ...extra })
+  const hc = (turns: TurnRecord[], players = [player('A', { cards: turns.length }), player('B')], winner = players[0], minutes = 20) =>
+    endOfRoundAchievements({ mode: 'hardcore', people: players.map((p) => p.name), players, winner, durationMinutes: minutes, turns, genreOf: (id) => `g${id}` })
 
-  const perfect = (year: number) => song(year, { points: 15 })
-
-  it('awards the timeline-shape achievements', () => {
-    const decades = [1950, 1960, 1970, 1980, 1990].map((y) => song(y, { genre: `g${y}` }))
-    const A = player('A', { timeline: decades, cards: 10, score: 40 })
-    const fx = endOfGameAchievements({ players: [A], winner: A, gameDurationMinutes: 10, rankingsHistory: [] })
-    expect(unlocked(fx, 'A')).toEqual(
-      expect.arrayContaining([
-        AchievementId.TIME_TRAVELER,
-        AchievementId.ZEITMASCHINE,
-        AchievementId.GENRE_HOPPER
-      ])
-    )
-    expect(unlocked(fx, 'A')).not.toContain(AchievementId.DECADE_MASTER)
-    // in hardcore everyone ends with the goal's number of cards: that alone is no perfect round
-    expect(unlocked(fx, 'A')).not.toContain(AchievementId.PERFECTIONIST)
-    expect(progressOf(fx, 'A', AchievementId.TIME_TRAVELER)).toMatchObject({ value: 5 })
-    expect(progressOf(fx, 'A', AchievementId.PUNKTEJAEGER)).toMatchObject({ value: 40 })
+  it('streaks follow the order of play, not the years', () => {
+    // played: 1990 full, 1970 miss, 1980 full, 2000 full — sorted by year that would read 1970,1980,1990,2000 (one run of 3)
+    const turns = [guess('A', 1990), guess('A', 1970, { pts: 5, d: 9, ok: false }), guess('A', 1980), guess('A', 2000)]
+    expect(progressOf(hc(turns), 'A', AchievementId.PERFECT_STREAK)).toMatchObject({ value: 2 })
+    const three = [guess('A', 1990), guess('A', 1970), guess('A', 1980)]
+    expect(progressOf(hc(three), 'A', AchievementId.PERFECT_STREAK)).toMatchObject({ value: 3 })
   })
 
-  it('awards DECADE_MASTER for ten songs from one decade', () => {
-    const A = player('A', { timeline: Array.from({ length: 10 }, (_, i) => song(1980 + i)) })
-    const fx = endOfGameAchievements({ players: [A], winner: A, gameDurationMinutes: 10, rankingsHistory: [] })
-    expect(unlocked(fx, 'A')).toContain(AchievementId.DECADE_MASTER)
+  it('name dropper counts artists in a row as played', () => {
+    const turns = [1, 2, 3, 4, 5].map((i) => guess('A', 1980 + i, { ti: false, pts: 5 }))
+    expect(progressOf(hc(turns), 'A', AchievementId.NAME_DROPPER)).toMatchObject({ value: 5 })
+    turns[2] = { ...turns[2], ar: false }
+    expect(progressOf(hc(turns), 'A', AchievementId.NAME_DROPPER)).toMatchObject({ value: 2 })
   })
 
-  it('awards speed and flawless only to the winner', () => {
-    const A = player('A', { score: 150 })
-    const B = player('B', { score: 150 })
-    const fx = endOfGameAchievements({ players: [A, B], winner: A, gameDurationMinutes: 2.5, rankingsHistory: [] })
-    expect(unlocked(fx, 'A')).toEqual(
-      expect.arrayContaining([AchievementId.LIGHTNING_FAST, AchievementId.MASTER_OF_TIME, AchievementId.FLAWLESS_VICTORY])
-    )
-    expect(unlocked(fx, 'B')).toEqual([])
+  it('decades and genres count right guesses only', () => {
+    const turns = [1955, 1965, 1975].map((y) => guess('A', y)).concat([1985, 1995].map((y) => guess('A', y, { ok: false, d: 7 })))
+    const fx = hc(turns)
+    expect(progressOf(fx, 'A', AchievementId.TIME_TRAVELER)).toMatchObject({ value: 3 })
+    expect(progressOf(fx, 'A', AchievementId.GENRE_HOPPER)).toMatchObject({ value: 3 })
   })
 
-  it('awards LIGHTNING_FAST but not MASTER_OF_TIME between 3 and 5 minutes', () => {
-    const A = player('A')
-    const fx = endOfGameAchievements({ players: [A, player('B')], winner: A, gameDurationMinutes: 4, rankingsHistory: [] })
-    expect(unlocked(fx, 'A')).toContain(AchievementId.LIGHTNING_FAST)
-    expect(unlocked(fx, 'A')).not.toContain(AchievementId.MASTER_OF_TIME)
+  it('flawless at any goal, only for the winner, only if every song had 15 points', () => {
+    const five = [1, 2, 3, 4, 5].map((i) => guess('A', 1980 + i))
+    expect(unlocked(hc(five), 'A')).toContain(AchievementId.FLAWLESS_VICTORY)
+    const fifteen = Array.from({ length: 15 }, (_, i) => guess('A', 1950 + i))
+    expect(unlocked(hc(fifteen), 'A')).toContain(AchievementId.FLAWLESS_VICTORY)
+    const oneShort = five.map((t, i) => (i === 3 ? { ...t, pts: 14 } : t))
+    expect(unlocked(hc(oneShort), 'A')).not.toContain(AchievementId.FLAWLESS_VICTORY)
   })
 
-  it('awards COMEBACK_KING only for being last within the first five turns', () => {
-    const A = player('A')
-    const B = player('B')
-    const early = [{ turn: 2, rankings: ['B', 'A'] }]
-    const late = [{ turn: 6, rankings: ['B', 'A'] }]
-    expect(unlocked(endOfGameAchievements({ players: [A, B], winner: A, gameDurationMinutes: 9, rankingsHistory: early }), 'A')).toContain(
-      AchievementId.COMEBACK_KING
-    )
-    expect(unlocked(endOfGameAchievements({ players: [A, B], winner: A, gameDurationMinutes: 9, rankingsHistory: late }), 'A')).not.toContain(
-      AchievementId.COMEBACK_KING
-    )
-    expect(unlocked(endOfGameAchievements({ players: [A], winner: A, gameDurationMinutes: 9, rankingsHistory: early }), 'A')).not.toContain(
-      AchievementId.COMEBACK_KING
-    )
+  it('cards at the goal alone are no perfect round (everyone has them in hardcore)', () => {
+    const missed = [1, 2, 3, 4, 5].map((i) => guess('A', 1980 + i, i === 2 ? { ok: false, d: 6, pts: 0 } : {}))
+    expect(unlocked(hc(missed, [player('A', { cards: 10 }), player('B', { cards: 10 })]), 'A')).not.toContain(AchievementId.PERFECTIONIST)
+    expect(unlocked(hc([1, 2, 3, 4, 5].map((i) => guess('A', 1980 + i))), 'A')).toContain(AchievementId.PERFECTIONIST)
   })
 
-  it('counts perfect and artist streaks consecutively', () => {
-    const streak = [perfect(1970), perfect(1971), song(1972), perfect(1973), perfect(1974), perfect(1975)]
-    const artist = Array.from({ length: 5 }, (_, i) =>
-      song(1990 + i, { guessDetails: { titleCorrect: false, artistCorrect: true, yearPoints: 0 } })
-    )
-    const A = player('A', { timeline: streak })
-    const B = player('B', { timeline: artist })
-    const fx = endOfGameAchievements({ players: [A, B], winner: A, gameDurationMinutes: 9, rankingsHistory: [] })
-    expect(progressOf(fx, 'A', AchievementId.PERFECT_STREAK)).toMatchObject({ value: 3 })
-    expect(unlocked(fx, 'A')).toContain(AchievementId.PERFECT_STREAK)
-    expect(unlocked(fx, 'B')).toContain(AchievementId.NAME_DROPPER)
-    expect(progressOf(fx, 'B', AchievementId.NAME_DROPPER)).toMatchObject({ value: 5 })
-  })
-
-  it('treats full guessDetails as a perfect guess without points', () => {
-    const d = { titleCorrect: true, artistCorrect: true, yearPoints: 5 as const }
-    const A = player('A', { timeline: [song(1, { guessDetails: d }), song(2, { guessDetails: d }), song(3, { guessDetails: d })] })
-    const fx = endOfGameAchievements({ players: [A], winner: A, gameDurationMinutes: 9, rankingsHistory: [] })
-    expect(unlocked(fx, 'A')).toContain(AchievementId.PERFECT_STREAK)
-  })
-
-  it('keeps the original effect order per player', () => {
-    const A = player('A')
-    const fx = endOfGameAchievements({ players: [A], winner: A, gameDurationMinutes: 9, rankingsHistory: [] })
-    expect(fx.map((e) => `${e.type}:${e.id}`)).toEqual([
-      `progress:${AchievementId.TIME_TRAVELER}`,
-      `progress:${AchievementId.DECADE_MASTER}`,
-      `progress:${AchievementId.PERFECT_STREAK}`,
-      `progress:${AchievementId.ZEITMASCHINE}`,
-      `progress:${AchievementId.GENRE_HOPPER}`,
-      `progress:${AchievementId.NAME_DROPPER}`,
-      `progress:${AchievementId.PUNKTEJAEGER}`
-    ])
+  it('fast and comeback wins need an opponent and go to the winner only', () => {
+    const turns = [guess('A', 1980)]
+    expect(unlocked(hc(turns, undefined, undefined, 2), 'A')).toEqual(expect.arrayContaining([AchievementId.LIGHTNING_FAST, AchievementId.MASTER_OF_TIME]))
+    expect(unlocked(hc(turns, undefined, undefined, 2), 'B')).not.toContain(AchievementId.LIGHTNING_FAST)
+    const alone = [player('A', { cards: 1 })]
+    expect(unlocked(hc(turns, alone, alone[0], 2), 'A')).not.toContain(AchievementId.LIGHTNING_FAST)
+    // B leads early, A wins: a comeback from the turn log (points)
+    const comeback = [guess('A', 1980, { pts: 0, ok: false, d: 9 }), guess('B', 1981), guess('A', 1982), guess('B', 1983, { pts: 0 }), guess('A', 1984)]
+    expect(unlocked(hc(comeback), 'A')).toContain(AchievementId.COMEBACK_KING)
   })
 })
 

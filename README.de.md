@@ -15,10 +15,10 @@
 <h3>👉 <a href="https://mxtape.celox.io">mxtape.celox.io</a> — mit Google oder E-Mail anmelden oder als Gast nur per Link in den Raum von Freunden</h3>
 
 <!-- BADGES:BIG — version, tests, lines of code and songs; readme.test.ts keeps them true, scripts/readme-badges.mjs rewrites them. -->
-[![version](https://img.shields.io/badge/version-0.12.6-C2185B?style=for-the-badge&logo=semver&logoColor=white)](https://github.com/pepperonas/mxtape/releases/latest)
+[![version](https://img.shields.io/badge/version-0.12.7-C2185B?style=for-the-badge&logo=semver&logoColor=white)](https://github.com/pepperonas/mxtape/releases/latest)
 [![tests](https://img.shields.io/badge/tests-779-2E9E5B?style=for-the-badge&logo=vitest&logoColor=white)](#tests-und-ci)
-[![lines of code](https://img.shields.io/badge/lines%20of%20code-25.5k-4B6BDF?style=for-the-badge&logo=typescript&logoColor=white)](pwa/src)
-[![test code](https://img.shields.io/badge/test%20code-9.8k-2E9E5B?style=for-the-badge&logo=typescript&logoColor=white)](#tests-und-ci)
+[![lines of code](https://img.shields.io/badge/lines%20of%20code-25.4k-4B6BDF?style=for-the-badge&logo=typescript&logoColor=white)](pwa/src)
+[![test code](https://img.shields.io/badge/test%20code-9.7k-2E9E5B?style=for-the-badge&logo=typescript&logoColor=white)](#tests-und-ci)
 [![songs](https://img.shields.io/badge/songs-500-FF8A3D?style=for-the-badge&logo=applemusic&logoColor=white)](#die-songsammlung)
 
 [![Donate with PayPal](https://img.shields.io/badge/PayPal-support%20this%20project-00457C?style=for-the-badge&logo=paypal&logoColor=white)](https://www.paypal.com/donate/?business=martin.pfeffer@celox.io&currency_code=EUR&item_name=mxtape)

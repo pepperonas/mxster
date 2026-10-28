@@ -1,10 +1,15 @@
 /**
- * Achievement rules (pure), extracted from GameScreen.
+ * Achievement rules (pure).
  *
  * The functions return *effects* instead of calling the achievement context,
- * so the rules are testable and the caller applies them in the returned order.
- * The order is part of the contract: it matches the previous inline code
- * exactly (progress before/after unlock as it was).
+ * so the rules are testable; achievementEngine applies them.
+ *
+ * Everything about a round is read from its turn log, in the order the turns
+ * were played. (The hardcore "timeline" of a player is sorted by year and
+ * holds wrong guesses too — streaks and decades must never come from it.)
+ * A "right" song: timeline modes — an own right placement or a won objection,
+ * the free first card left out; hardcore — a guess within two years.
+ * A win needs someone to beat: a round alone (the daily round) is no win.
  */
 import { AchievementId } from '@/types/achievements'
 import { GameMode, type HistoryEntry, type Player, type TurnRecord } from '@/types'
@@ -20,126 +25,39 @@ export interface RankingSnapshot {
 
 const decadeOf = (year: number) => Math.floor(year / 10) * 10
 
-/** Score thresholds crossed by a single hardcore turn (unlocked in-game). */
+/** Hardcore points thresholds, the moment they are crossed (descriptions: 75+ and 100+). */
 export function realtimeScoreAchievements(player: string, oldScore: number, newScore: number): AchievementEffect[] {
   const out: AchievementEffect[] = []
   if (newScore >= 75 && oldScore < 75) out.push({ type: 'unlock', player, id: AchievementId.PUNKTEJAEGER })
-  if (newScore >= 125 && oldScore < 125) out.push({ type: 'unlock', player, id: AchievementId.HARDCORE_CHAMPION })
+  if (newScore >= 100 && oldScore < 100) out.push({ type: 'unlock', player, id: AchievementId.HARDCORE_CHAMPION })
   return out
 }
 
-function longestStreak(player: Player, hit: (song: Player['timeline'][number]) => boolean): number {
-  let current = 0
-  let max = 0
-  for (const song of player.timeline) {
-    if (hit(song)) {
-      current++
-      max = Math.max(max, current)
-    } else {
-      current = 0
-    }
-  }
-  return max
-}
-
-export interface EndOfGameInput {
-  players: Player[]
-  winner: Player
-  gameDurationMinutes: number
-  rankingsHistory: RankingSnapshot[]
-}
-
-/** End-of-game achievements (hardcore mode). History-based checks stay with the context. */
-export function endOfGameAchievements({
-  players,
-  winner,
-  gameDurationMinutes,
-  rankingsHistory
-}: EndOfGameInput): AchievementEffect[] {
-  const fx: AchievementEffect[] = []
-  const unlock = (player: string, id: AchievementId) => fx.push({ type: 'unlock', player, id })
-  const progress = (player: string, id: AchievementId, value: number) => fx.push({ type: 'progress', player, id, value })
-
-  for (const player of players) {
-    const isWinner = player.name === winner.name
-
-    const decades = new Set(player.timeline.map((s) => decadeOf(s.year)))
-    if (decades.size >= 5) unlock(player.name, AchievementId.TIME_TRAVELER)
-    progress(player.name, AchievementId.TIME_TRAVELER, decades.size)
-
-    const decadeCounts: Record<number, number> = {}
-    for (const s of player.timeline) decadeCounts[decadeOf(s.year)] = (decadeCounts[decadeOf(s.year)] || 0) + 1
-    const maxDecadeCount = Math.max(...Object.values(decadeCounts), 0)
-    if (maxDecadeCount >= 10) unlock(player.name, AchievementId.DECADE_MASTER)
-    progress(player.name, AchievementId.DECADE_MASTER, maxDecadeCount)
-
-    // PERFECTIONIST is judged from the turn log (endOfRoundAchievements):
-    // in hardcore everyone ends with as many cards as the goal
-
-    if (isWinner && gameDurationMinutes < 5) unlock(player.name, AchievementId.LIGHTNING_FAST)
-
-    if (isWinner && players.length > 1 && rankingsHistory.length > 0) {
-      const wasLast = rankingsHistory
-        .filter((snap) => snap.turn <= 5)
-        .some((snap) => snap.rankings[snap.rankings.length - 1] === player.name)
-      if (wasLast) unlock(player.name, AchievementId.COMEBACK_KING)
-    }
-  }
-
-  for (const player of players) {
-    const maxStreak = longestStreak(player, (song) => {
-      const d = song.guessDetails
-      return song.points === 15 || Boolean(d && d.titleCorrect && d.artistCorrect && d.yearPoints === 5)
-    })
-    progress(player.name, AchievementId.PERFECT_STREAK, maxStreak)
-    if (maxStreak >= 3) unlock(player.name, AchievementId.PERFECT_STREAK)
-  }
-
-  for (const player of players) {
-    const isWinner = player.name === winner.name
-
-    const decades = new Set(player.timeline.map((s) => decadeOf(s.year)))
-    progress(player.name, AchievementId.ZEITMASCHINE, decades.size)
-    if (decades.size >= 3) unlock(player.name, AchievementId.ZEITMASCHINE)
-
-    const genres = new Set(player.timeline.map((s) => s.genre).filter((g) => g !== undefined && g !== null))
-    progress(player.name, AchievementId.GENRE_HOPPER, genres.size)
-    if (genres.size >= 4) unlock(player.name, AchievementId.GENRE_HOPPER)
-
-    const artistStreak = longestStreak(player, (song) => Boolean(song.guessDetails?.artistCorrect))
-    progress(player.name, AchievementId.NAME_DROPPER, artistStreak)
-    if (artistStreak >= 5) unlock(player.name, AchievementId.NAME_DROPPER)
-
-    progress(player.name, AchievementId.PUNKTEJAEGER, player.score)
-
-    if (isWinner && player.score === 150) unlock(player.name, AchievementId.FLAWLESS_VICTORY)
-    if (isWinner && gameDurationMinutes < 3) unlock(player.name, AchievementId.MASTER_OF_TIME)
-  }
-
-  return fx
-}
-
-// ── Every mode ──────────────────────────────────────────────────────────────
+// ── One round ───────────────────────────────────────────────────────────────
 
 export interface RoundInput {
   mode: GameMode | string
-  /** The people of this round (no bots, no teams). */
+  /** The people of this round: players and team members, never bots. */
   people: string[]
   players: Player[]
   winner: Player
   durationMinutes: number
-  rankingsHistory: RankingSnapshot[]
+  /** Kept for callers; standings now come from the turn log. */
+  rankingsHistory?: RankingSnapshot[]
   turns: TurnRecord[]
   genreOf: (songId: string) => string | undefined
   /** When the round ended (ms), for the time-of-day achievements. */
   finishedAt?: number
   /** The daily round's day, when it was one. */
   daily?: string | null
-  /** Catching up from the history: the hardcore details are not stored there. */
+  /** Catching up from the history (nothing differs any more; kept for callers). */
   fromHistory?: boolean
 }
 
 const TIMELINE_MODES: string[] = [GameMode.TIMELINE_GLOBAL, GameMode.TIMELINE_PERSONAL]
+/** A round paused and resumed later says nothing about playing long. */
+const LONG_ROUND_MIN = 60
+const LONG_ROUND_MAX = 6 * 60
 
 /** The people of a round: players and team members, never bots. */
 export function peopleOf(players: Array<Pick<Player, 'name' | 'isBot' | 'members'>>): string[] {
@@ -156,13 +74,20 @@ function rightCard(t: TurnRecord, person: string): boolean {
   return !t.first && ((t.p === person && t.ok) || (t.ch?.by === person && t.ch.ok === true))
 }
 
-/** The longest run of own right placements (the free first card left out). */
-function longestRun(turns: TurnRecord[], person: string): number {
+/** The songs `person` got right this round, in turn order. */
+export function rightSongs(turns: TurnRecord[], mode: string, person: string): TurnRecord[] {
+  if (TIMELINE_MODES.includes(mode)) return turns.filter((t) => rightCard(t, person))
+  if (mode === GameMode.HARDCORE) return turns.filter((t) => t.p === person && t.ok)
+  return []
+}
+
+/** The longest run of own turns (in play order) for which `hit` holds; the free first card left out. */
+function longestRun(turns: TurnRecord[], person: string, hit: (t: TurnRecord) => boolean): number {
   let run = 0
   let best = 0
   for (const t of turns) {
     if (t.first || t.p !== person) continue
-    run = t.ok ? run + 1 : 0
+    run = hit(t) ? run + 1 : 0
     best = Math.max(best, run)
   }
   return best
@@ -170,8 +95,7 @@ function longestRun(turns: TurnRecord[], person: string): number {
 
 /** What one round adds to the counters of one person. */
 export function roundTally(turns: TurnRecord[], mode: string, person: string) {
-  const timeline = TIMELINE_MODES.includes(mode)
-  const right = timeline ? turns.filter((t) => rightCard(t, person)) : []
+  const right = TIMELINE_MODES.includes(mode) ? turns.filter((t) => rightCard(t, person)) : []
   const mine = mode === GameMode.HARDCORE ? turns.filter((t) => t.p === person) : []
   return {
     right: right.length,
@@ -184,15 +108,9 @@ export function roundTally(turns: TurnRecord[], mode: string, person: string) {
   }
 }
 
-/** A timeline turn won by `person`: own right card, or an objection whose gap was right. */
-function wonBy(t: TurnRecord, person: string): boolean {
-  if (t.team) return false
-  return (t.p === person && t.ok) || (t.ch?.by === person && t.ch.ok === true)
-}
-
 /**
- * Was `name` strictly last at some point in the first five rounds? Standings
- * come from the turn log: cards in timeline modes, points in hardcore.
+ * Was `name` (a seat) strictly last at some point in the first five rounds?
+ * Standings come from the turn log: cards in timeline modes, points in hardcore.
  */
 export function wasLastEarly(turns: TurnRecord[], seats: string[], name: string, hardcore: boolean): boolean {
   if (seats.length < 2) return false
@@ -203,7 +121,11 @@ export function wasLastEarly(turns: TurnRecord[], seats: string[], name: string,
     const placer = t.team ?? t.p
     if (hardcore) standing.set(placer, (standing.get(placer) ?? 0) + (t.pts ?? 0))
     else if (t.ok) standing.set(placer, (standing.get(placer) ?? 0) + 1)
-    else if (t.ch?.ok) standing.set(t.ch.by, (standing.get(t.ch.by) ?? 0) + 1)
+    else if (t.ch?.ok) {
+      // an objection names the member; the card goes to the member's seat
+      const seat = seats.find((s) => s === t.ch!.by) ?? t.ch.by
+      standing.set(seat, (standing.get(seat) ?? 0) + 1)
+    }
     if (i < seats.length - 1) continue // everyone had a turn
     const mine = standing.get(name) ?? 0
     if (seats.every((s) => s === name || (standing.get(s) ?? 0) > mine)) return true
@@ -214,83 +136,62 @@ export function wasLastEarly(turns: TurnRecord[], seats: string[], name: string,
 /** Achievements of one finished round, for every mode. */
 export function endOfRoundAchievements(input: RoundInput): AchievementEffect[] {
   const { mode, people, players, winner, durationMinutes, turns, genreOf } = input
-  const keep = (fx: AchievementEffect[]) => fx.filter((e) => people.includes(e.player))
-
-  const common = keep(everyRound(input))
-  if (mode === GameMode.HARDCORE) {
-    if (input.fromHistory) return common
-    return [
-      ...keep(endOfGameAchievements({ players, winner, gameDurationMinutes: durationMinutes, rankingsHistory: input.rankingsHistory })),
-      ...common
-    ]
-  }
-
-  const fx: AchievementEffect[] = [...common]
-  const unlock = (player: string, id: AchievementId) => fx.push({ type: 'unlock', player, id })
-  const progress = (player: string, id: AchievementId, value: number) => fx.push({ type: 'progress', player, id, value })
-  const seats = players.map((p) => p.name)
-
-  for (const person of people) {
-    const right = turns.filter((t) => !t.first && wonBy(t, person))
-
-    const decades = new Set(right.map((t) => decadeOf(t.y)))
-    progress(person, AchievementId.ZEITMASCHINE, decades.size)
-    progress(person, AchievementId.TIME_TRAVELER, decades.size)
-
-    const perDecade: Record<number, number> = {}
-    for (const t of right) perDecade[decadeOf(t.y)] = (perDecade[decadeOf(t.y)] ?? 0) + 1
-    progress(person, AchievementId.DECADE_MASTER, Math.max(0, ...Object.values(perDecade)))
-
-    const genres = new Set(right.map((t) => genreOf(t.s)).filter((g): g is string => Boolean(g)))
-    progress(person, AchievementId.GENRE_HOPPER, genres.size)
-
-
-    if (person === winner.name) {
-      if (durationMinutes < 5) unlock(person, AchievementId.LIGHTNING_FAST)
-      if (durationMinutes < 3) unlock(person, AchievementId.MASTER_OF_TIME)
-      if (wasLastEarly(turns, seats, person, false)) unlock(person, AchievementId.COMEBACK_KING)
-    }
-  }
-  return fx
-}
-
-/** The part every mode shares (the new achievements of v0.12.6 and the perfect round). */
-function everyRound(input: RoundInput): AchievementEffect[] {
-  const { mode, people, winner, durationMinutes, turns } = input
   const fx: AchievementEffect[] = []
   const unlock = (player: string, id: AchievementId) => fx.push({ type: 'unlock', player, id })
   const progress = (player: string, id: AchievementId, value: number) => fx.push({ type: 'progress', player, id, value })
   const timeline = TIMELINE_MODES.includes(mode)
+  const hardcore = mode === GameMode.HARDCORE
+  const seats = players.map((p) => p.name)
+  // A win needs someone to beat (the daily round is played alone)
+  const contested = players.length >= 2
   const hour = input.finishedAt !== undefined ? new Date(input.finishedAt).getHours() : null
 
   for (const person of people) {
     unlock(person, AchievementId.FIRST_ROUND)
-    const won = wonRound(winner, person)
-    if (won) unlock(person, AchievementId.FIRST_WIN)
-    if (won && winner.members?.length) unlock(person, AchievementId.TEAM_SPIRIT)
     if (hour !== null && hour < 4) unlock(person, AchievementId.NIGHT_OWL)
     if (hour !== null && hour >= 5 && hour < 9) unlock(person, AchievementId.EARLY_BIRD)
-    if (Number.isFinite(durationMinutes) && durationMinutes > 60) unlock(person, AchievementId.LONG_ROUND)
+    if (durationMinutes > LONG_ROUND_MIN && durationMinutes < LONG_ROUND_MAX) unlock(person, AchievementId.LONG_ROUND)
     if (people.length >= 6) unlock(person, AchievementId.FULL_HOUSE)
 
-    // Every own song of the round right, at least five (timeline: placed, hardcore: year within 2)
-    const tries = turns.filter((t) => !t.first && t.p === person)
-    if (tries.length >= 5 && tries.every((t) => t.ok)) unlock(person, AchievementId.PERFECTIONIST)
+    const own = turns.filter((t) => !t.first && t.p === person)
+    // Every own song of the round right, at least five
+    if (own.length >= 5 && own.every((t) => t.ok)) unlock(person, AchievementId.PERFECTIONIST)
+
+    const right = rightSongs(turns, mode, person)
+    const decades = new Set(right.map((t) => decadeOf(t.y)))
+    progress(person, AchievementId.ZEITMASCHINE, decades.size)
+    progress(person, AchievementId.TIME_TRAVELER, decades.size)
+    const perDecade: Record<number, number> = {}
+    for (const t of right) perDecade[decadeOf(t.y)] = (perDecade[decadeOf(t.y)] ?? 0) + 1
+    progress(person, AchievementId.DECADE_MASTER, Math.max(0, ...Object.values(perDecade)))
+    progress(person, AchievementId.GENRE_HOPPER, new Set(right.map((t) => genreOf(t.s)).filter(Boolean)).size)
 
     if (timeline) {
-      const run = longestRun(turns, person)
+      const run = longestRun(turns, person, (t) => t.ok)
       progress(person, AchievementId.HOT_STREAK, run)
       progress(person, AchievementId.UNSTOPPABLE, run)
-      const right = turns.filter((t) => rightCard(t, person))
-      progress(person, AchievementId.ALL_OVER, new Set(right.map((t) => decadeOf(t.y))).size)
+      progress(person, AchievementId.ALL_OVER, decades.size)
       if (turns.some((t) => t.ch?.by === person && t.ch.ok === true)) unlock(person, AchievementId.OBJECTION_WON)
     }
-    if (mode === GameMode.HARDCORE && turns.some((t) => t.p === person && t.pts === 15)) unlock(person, AchievementId.FULL_SCORE)
+    if (hardcore) {
+      progress(person, AchievementId.PERFECT_STREAK, longestRun(turns, person, (t) => t.pts === 15))
+      progress(person, AchievementId.NAME_DROPPER, longestRun(turns, person, (t) => Boolean(t.ar)))
+      if (own.some((t) => t.pts === 15)) unlock(person, AchievementId.FULL_SCORE)
+    }
+
+    if (contested && wonRound(winner, person)) {
+      unlock(person, AchievementId.FIRST_WIN)
+      if (winner.members?.length) unlock(person, AchievementId.TEAM_SPIRIT)
+      if (durationMinutes < 5) unlock(person, AchievementId.LIGHTNING_FAST)
+      if (durationMinutes < 3) unlock(person, AchievementId.MASTER_OF_TIME)
+      if (wasLastEarly(turns, seats, winner.name, hardcore)) unlock(person, AchievementId.COMEBACK_KING)
+      // Every song of the round at full points (any goal), at least five
+      if (hardcore && own.length >= 5 && own.every((t) => t.pts === 15)) unlock(person, AchievementId.FLAWLESS_VICTORY)
+    }
 
     if (input.daily) {
       unlock(person, AchievementId.DAILY_FIRST)
-      // Ten right after the start card
-      if (turns.filter((t) => rightCard(t, person)).length >= 10) unlock(person, AchievementId.DAILY_PERFECT)
+      if (right.length >= 10) unlock(person, AchievementId.DAILY_PERFECT)
     }
   }
   return fx
@@ -304,12 +205,10 @@ function everyRound(input: RoundInput): AchievementEffect[] {
  * keeps only the last 50 rounds.
  */
 export function historyAchievements(person: string, games: HistoryEntry[]): AchievementEffect[] {
-  const mine = games
-    .filter((g) => g.players.some((p) => p.name === person && !p.members && !isBotSeat(p)))
-    .sort((a, b) => a.timestamp - b.timestamp)
+  const mine = games.filter((g) => playedIn(g, person)).sort((a, b) => a.timestamp - b.timestamp)
   const fx: AchievementEffect[] = []
   const progress = (id: AchievementId, value: number) => fx.push({ type: 'progress', player: person, id, value })
-  const won = (g: HistoryEntry) => g.winner?.name === person
+  const won = (g: HistoryEntry) => wonStored(g, person)
 
   let run = 0
   let best = 0
@@ -337,7 +236,7 @@ export function historyAchievements(person: string, games: HistoryEntry[]): Achi
   const bots = { easy: 0, medium: 0, hard: 0 }
   for (const g of mine) {
     if (!won(g)) continue
-    if (g.turns && wasLastEarly(g.turns, g.players.map((p) => p.name), person, g.gameMode === GameMode.HARDCORE)) comebacks++
+    if (g.turns && wasLastEarly(g.turns, g.players.map((p) => p.name), g.winner.name, g.gameMode === GameMode.HARDCORE)) comebacks++
     for (const p of g.players) if (p.bot && p.level) bots[p.level]++
   }
   progress(AchievementId.COMEBACK_PROFI, comebacks)
@@ -355,7 +254,8 @@ export function playedIn(g: HistoryEntry, person: string): boolean {
 
 /** Did `person` win this stored round (alone or in the winning team)? */
 export function wonStored(g: HistoryEntry, person: string): boolean {
-  if (!g.winner) return false
+  // A win needs someone to beat (the daily round is played alone)
+  if (!g.winner || g.players.length < 2) return false
   if (g.winner.name === person) return true
   return Boolean(g.players.find((p) => p.name === g.winner.name)?.members?.includes(person))
 }

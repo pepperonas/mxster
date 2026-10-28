@@ -222,3 +222,24 @@ describe('catching up from the history', () => {
     expect(prog(doc, 'Anna', AchievementId.COLLECTOR)).toBe(5)
   })
 })
+
+describe('a round alone is no win', () => {
+  it('stored daily rounds count as rounds, never as wins or win streaks', async () => {
+    const { historyAchievements } = await import('../achievementRules')
+    const dailies = [1, 2, 3, 4, 5].map((i) => game(i, 'Anna', [seat('Anna', { cards: 11 })], { daily: `2026-10-0${i}` }))
+    const doc = apply([...historyAchievements('Anna', dailies), ...roundCounters('Anna', dailies, dailies[0])])
+    expect(prog(doc, 'Anna', AchievementId.UNBEATABLE)).toBe(0)
+    expect(prog(doc, 'Anna', AchievementId.WINNER_10)).toBe(0)
+    expect(prog(doc, 'Anna', AchievementId.REGULAR)).toBe(5)
+    expect(has(apply(endOfRoundAchievements(round({ people: ['Anna'], players: [player('Anna')], durationMinutes: 2, daily: '2026-10-01' }))), 'Anna', AchievementId.FIRST_WIN)).toBe(false)
+  })
+})
+
+describe('flawless needs a real round', () => {
+  it('not from a handful of songs', () => {
+    const three = [1, 2, 3].map((i) => turn('Anna', 1980 + i, true, { d: 0, ti: true, ar: true, pts: 15 }))
+    const doc = apply(endOfRoundAchievements(round({ mode: GameMode.HARDCORE, turns: three })))
+    expect(has(doc, 'Anna', AchievementId.FLAWLESS_VICTORY)).toBe(false)
+    expect(has(doc, 'Anna', AchievementId.FULL_SCORE)).toBe(true)
+  })
+})
