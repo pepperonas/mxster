@@ -22,6 +22,8 @@ import type { Song } from '@/types'
 import type { AudioCue } from '@/online/protocol'
 import { cuePosition } from '@/online/clock'
 import { useBackdropPlaying } from '@/hooks/useBackdropPlaying'
+import { preloadCover, useCoverColor } from '@/utils/coverColor'
+import { coverSrc } from '@/utils/cover'
 import { useMessages } from '@/i18n'
 import { gameText } from '@/i18n/messages/game'
 
@@ -72,6 +74,11 @@ export function startPosition(song: Pick<Song, 'startMs'>, random: boolean, rand
   if (!random) return from
   return Math.floor(from + rand() * Math.max(0, RANDOM_START_MAX_S - from))
 }
+
+/** How far the sleeve slides left and the record moves right on reveal (% of the record).
+ * Kept small enough that neither leaves a 320 px wide phone. */
+export const SLEEVE_SHIFT = 14
+export const RECORD_SHIFT = 12
 
 export function Turntable({
   song,
@@ -238,6 +245,14 @@ export function Turntable({
 
   const progress = duration > 0 ? Math.min(1, position / duration) : 0
   const revealed = revealYear != null
+  // The sleeve shows once revealed, when the cover exists (a failed image stays away)
+  const [sleeveFailed, setSleeveFailed] = useState<string | null>(null)
+  const showSleeve = revealed && Boolean(revealCover) && sleeveFailed !== revealCover
+  const glow = useCoverColor(revealed ? revealCover : null)
+  // Load the cover while the song plays, so the reveal shows it at once
+  useEffect(() => {
+    if (song) preloadCover(coverSrc(song))
+  }, [song?.id])
   const record = (
     <Vinyl
       size="100%"
@@ -252,20 +267,58 @@ export function Turntable({
     return (
       <section
         aria-label={t.turntable}
-        className="flex items-center gap-3 pl-2 pr-2 py-2 rounded-m3-xl bg-md-surface-container-high/95 backdrop-blur-md shadow-m3-1"
+        className="relative overflow-hidden flex items-center gap-3 pl-2 pr-2 py-2 rounded-m3-xl bg-md-surface-container-high/95 backdrop-blur-md shadow-m3-1"
       >
-        <m.div layoutId="turntable-record" transition={spring.spatialDefault} className="relative flex-shrink-0 w-14 h-14">
-          {record}
-          {revealed && (
-            <span
-              className="absolute inset-0 grid place-items-center text-label-lg tabular font-bold"
-              style={{ color: '#fff', textShadow: '0 1px 4px rgb(0 0 0 / 0.7)' }}
-            >
-              {revealYear}
-            </span>
-          )}
+        {/* A breath of the cover's colour from the left once revealed */}
+        <m.span
+          aria-hidden="true"
+          className="absolute inset-0 pointer-events-none"
+          style={{ background: glow ? `linear-gradient(90deg, rgb(${glow.join(' ')} / 0.32), rgb(${glow.join(' ')} / 0) 70%)` : undefined }}
+          initial={false}
+          animate={{ opacity: showSleeve && glow ? 1 : 0 }}
+          transition={spring.effectsSlow}
+        />
+        {/* Revealed: the cover as a small sleeve, the record slides half out of it */}
+        <m.div
+          className="relative flex-shrink-0 h-14"
+          initial={false}
+          animate={{ width: showSleeve ? 84 : 56 }}
+          transition={spring.spatialDefault}
+        >
+          <AnimatePresence>
+            {showSleeve && revealCover && (
+              <m.span
+                key={revealCover}
+                className="absolute left-0 top-0 w-14 h-14 rounded-m3-xs overflow-hidden shadow-m3-2 bg-md-surface-container-highest"
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.8, transition: spring.effectsFast }}
+                transition={spring.spatialFast}
+                data-sleeve
+              >
+                <img src={revealCover} alt="" className="w-full h-full object-cover" onError={() => setSleeveFailed(revealCover)} />
+              </m.span>
+            )}
+          </AnimatePresence>
+          <m.div
+            layoutId="turntable-record"
+            transition={spring.spatialDefault}
+            className="absolute top-0 w-14 h-14"
+            initial={false}
+            animate={{ left: showSleeve ? 28 : 0 }}
+          >
+            {record}
+            {revealed && (
+              <span
+                className="absolute inset-0 grid place-items-center text-label-lg tabular font-bold"
+                style={{ color: '#fff', textShadow: '0 1px 4px rgb(0 0 0 / 0.7)' }}
+              >
+                {revealYear}
+              </span>
+            )}
+          </m.div>
         </m.div>
-        <div className="min-w-0 flex-1">
+        <div className="relative min-w-0 flex-1">
           <p className="text-title-sm text-md-on-surface truncate" aria-live="polite">
             {blocked
               ? t.tapToPlay
@@ -308,19 +361,48 @@ export function Turntable({
   return (
     <section aria-label={t.turntable} className="flex flex-col items-center">
       <div className="relative" style={{ width: 'min(76vw, 320px)', aspectRatio: '1' }}>
+        {/* The cover's colour glows behind the turntable once the song is revealed */}
+        <m.div
+          aria-hidden="true"
+          className="absolute -inset-[10%] rounded-full pointer-events-none"
+          style={{ background: glow ? `radial-gradient(closest-side, rgb(${glow.join(' ')} / 0.42), rgb(${glow.join(' ')} / 0) 100%)` : undefined }}
+          initial={false}
+          animate={{ opacity: showSleeve && glow ? 1 : 0, scale: showSleeve && glow ? 1 : 0.85 }}
+          transition={spring.effectsSlow}
+        />
         <ProgressHalo progress={song ? progress : 0} />
+        {/* The sleeve slides out to the left, the record moves aside: the cover in full */}
+        <AnimatePresence>
+          {showSleeve && revealCover && (
+            <m.div
+              key={revealCover}
+              className="absolute inset-[6%] rounded-m3-sm overflow-hidden shadow-m3-3 bg-md-surface-container-highest"
+              initial={{ x: '0%', rotate: 0, opacity: 0 }}
+              animate={{ x: `-${SLEEVE_SHIFT}%`, rotate: -3, opacity: 1 }}
+              exit={{ x: '0%', rotate: 0, opacity: 0, transition: spring.effectsDefault }}
+              transition={{ ...spring.spatialDefault, delay: 0.15 }}
+              data-sleeve
+            >
+              <img src={revealCover} alt="" className="w-full h-full object-cover" onError={() => setSleeveFailed(revealCover)} />
+            </m.div>
+          )}
+        </AnimatePresence>
         <m.div layoutId="turntable-record" transition={spring.spatialDefault} className="absolute inset-[6%]">
           <m.div
             className="w-full h-full"
-            animate={{ scale: song ? 1 : 0.94, opacity: song ? 1 : 0.85 }}
-            transition={spring.spatialDefault}
+            animate={{ scale: song ? 1 : 0.94, opacity: song ? 1 : 0.85, x: showSleeve ? `${RECORD_SHIFT}%` : '0%' }}
+            transition={{ ...spring.spatialDefault, delay: showSleeve ? 0.15 : 0 }}
           >
             {record}
           </m.div>
         </m.div>
 
-        {/* Centre control */}
-        <div className="absolute inset-0 grid place-items-center">
+        {/* Centre control (moves with the record) */}
+        <m.div
+          className="absolute inset-0 grid place-items-center"
+          animate={{ x: showSleeve ? `${RECORD_SHIFT * 0.88}%` : '0%' }}
+          transition={{ ...spring.spatialDefault, delay: showSleeve ? 0.15 : 0 }}
+        >
           <AnimatePresence mode="popLayout" initial={false}>
             {revealed ? (
               <m.div
@@ -358,7 +440,7 @@ export function Turntable({
               </m.button>
             ) : null}
           </AnimatePresence>
-        </div>
+        </m.div>
       </div>
 
       <div className="mt-4 h-6 text-label-lg text-md-on-surface-variant tabular" aria-live="polite">
