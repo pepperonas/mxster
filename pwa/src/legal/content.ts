@@ -160,7 +160,7 @@ const privacy: Record<Lang, LegalDoc> = {
             'mx_guest – ordnet Gäste ihrem Platz im Raum zu (14 Stunden)',
             'mx_known – merkt sich, dass dieses Gerät schon einmal mit E-Mail und Passwort angemeldet war, damit Fremde es nicht durch Fehlversuche aussperren können (180 Tage, nur für den Server lesbar)'
           ],
-          'Im Speicher deines Browsers (localStorage) liegen Farbschema, Sprache, eine laufende Runde, die zuletzt gewählten Rundenoptionen und ein angefangener Raumbeitritt; ein Service Worker speichert die App für schnelleres Laden. Diese Daten verlassen dein Gerät nicht, außer als Teil der Spieldaten in deinem Konto.',
+          'Im Speicher deines Browsers (localStorage, sessionStorage) liegen Farbschema, Sprache, eine laufende Runde, die zuletzt gewählten Rundenoptionen (in einer Lobby auch Bots und Teams, nur bis der Tab geschlossen wird) und ein angefangener Raumbeitritt; ein Service Worker speichert die App für schnelleres Laden. Diese Daten verlassen dein Gerät nicht, außer als Teil der Spieldaten in deinem Konto.',
           'Rechtsgrundlage ist § 25 Abs. 2 Nr. 2 TDDDG (unbedingt erforderlich für den gewünschten Dienst) sowie Art. 6 Abs. 1 lit. b DSGVO.'
         ]
       },
@@ -277,7 +277,7 @@ const privacy: Record<Lang, LegalDoc> = {
             'mx_guest — links guests to their seat in a room (14 hours)',
             'mx_known — remembers that this device signed in with e-mail and password before, so strangers cannot lock it out with failed attempts (180 days, readable only by the server)'
           ],
-          'Your browser\'s storage (localStorage) holds the theme, the language, a running round, the last chosen round options and a room you were about to join; a service worker caches the app so it loads faster. This data does not leave your device, except as part of the game data in your account.',
+          'Your browser\'s storage (localStorage, sessionStorage) holds the theme, the language, a running round, the last chosen round options (in a lobby also bots and teams, only until the tab is closed) and a room you were about to join; a service worker caches the app so it loads faster. This data does not leave your device, except as part of the game data in your account.',
           'Legal basis: § 25 (2) no. 2 TDDDG (strictly necessary for the service you asked for) and Art. 6 (1) (b) GDPR.'
         ]
       },

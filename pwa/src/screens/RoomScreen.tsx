@@ -125,6 +125,34 @@ function RoomProblem({ kind }: { kind: string }) {
   )
 }
 
+type Difficulty = 'easy' | 'medium' | 'hard'
+type LobbyPrefs = { bots: number; difficulty: Difficulty; teams: number }
+const lobbyKey = (code: string) => `mxtape_lobby_${code}`
+
+function readLobbyPrefs(code: string): LobbyPrefs {
+  const fallback: LobbyPrefs = { bots: 0, difficulty: 'medium', teams: 0 }
+  try {
+    const raw = JSON.parse(sessionStorage.getItem(lobbyKey(code)) ?? 'null')
+    if (!raw || typeof raw !== 'object') return fallback
+    const count = (v: unknown, max: number) => (Number.isInteger(v) && (v as number) >= 0 && (v as number) <= max ? (v as number) : 0)
+    return {
+      bots: count(raw.bots, 3),
+      difficulty: ['easy', 'medium', 'hard'].includes(raw.difficulty) ? raw.difficulty : 'medium',
+      teams: count(raw.teams, 4)
+    }
+  } catch {
+    return fallback
+  }
+}
+
+function writeLobbyPrefs(code: string, prefs: LobbyPrefs) {
+  try {
+    sessionStorage.setItem(lobbyKey(code), JSON.stringify(prefs))
+  } catch {
+    /* private mode */
+  }
+}
+
 function Lobby({ account }: { account: boolean }) {
   const room = useRoom()!
   const game = useGame()
@@ -148,9 +176,12 @@ function Lobby({ account }: { account: boolean }) {
   const host = room.members.find((m) => m.host)
   const [starting, setStarting] = useState(false)
   // The host may fill up with bots or split the people into teams (not both)
-  const [bots, setBots] = useState(0)
-  const [difficulty, setDifficulty] = useState<'easy' | 'medium' | 'hard'>('medium')
-  const [teams, setTeams] = useState(0)
+  const saved = readLobbyPrefs(room.code)
+  const [bots, setBots] = useState(saved.bots)
+  const [difficulty, setDifficulty] = useState<Difficulty>(saved.difficulty)
+  const [teams, setTeams] = useState(saved.teams)
+  // A reload keeps them (per room, for this tab)
+  useEffect(() => writeLobbyPrefs(room.code, { bots, difficulty, teams }), [room.code, bots, difficulty, teams])
   const people = playingMembers(room.members)
   const maxTeamCount = teamsPossible(room.members)
   const teamsOn = teams >= 2 && maxTeamCount >= 2

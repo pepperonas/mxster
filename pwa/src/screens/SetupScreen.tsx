@@ -66,7 +66,7 @@ function readLastOptions(): Partial<RoundOptions> | null {
       challengesEnabled: typeof raw.challengesEnabled === 'boolean' ? raw.challengesEnabled : undefined,
       exotics: typeof raw.exotics === 'boolean' ? raw.exotics : undefined,
       genres: Array.isArray(raw.genres) ? raw.genres.filter((g: unknown) => GENRE_GROUPS.includes(g as never)) : undefined,
-      collection: COLLECTIONS.includes(raw.collection) && raw.collection !== 'nemesis' ? raw.collection : undefined,
+      collection: COLLECTIONS.includes(raw.collection) ? raw.collection : undefined,
       bonus: typeof raw.bonus === 'boolean' ? raw.bonus : undefined
     }
   } catch {
@@ -105,6 +105,7 @@ export function SetupScreen() {
   } = useGame()
   const { history } = useGameHistory()
   const missed = useMemo(() => missedSongs(history ?? []), [history])
+  const nemesisLocked = missed.length < NEMESIS_MIN
   const theme = { genres, collection, songIds: collection === 'nemesis' ? missed : null }
   const t = useMessages(setupText)
   const { settings, addPlayer: rememberPlayer } = useSettings()
@@ -122,6 +123,9 @@ export function SetupScreen() {
   // Fresh setup: own name first, last mode preselected. Once per visit —
   // StrictMode replays effects, and the player list must not double up.
   const prepared = useRef(false)
+  // Saved options are back in the context from the next render on; only then
+  // may changes be written, or the first render would store the defaults.
+  const [hydrated, setHydrated] = useState(false)
   useEffect(() => {
     if (prepared.current) return
     prepared.current = true
@@ -129,6 +133,7 @@ export function SetupScreen() {
     if (!gameMode) setGameMode((localStorage.getItem(LAST_MODE_KEY) as GameMode | null) ?? MODE_ORDER[0])
     const last = readLastOptions()
     if (last) setOptions(Object.fromEntries(Object.entries(last).filter(([, v]) => v !== undefined)))
+    setHydrated(true)
     if (isGameStarted || players.length === 0 || players.some((p) => p.members)) {
       if (players.some((p) => p.members)) setPlayers([])
       addPlayer(ownPlayerName(me.name))
@@ -235,12 +240,17 @@ export function SetupScreen() {
     challengesEnabled,
     exotics,
     genres,
-    collection,
-    songIds: collection === 'nemesis' ? missed : null,
+    // A restored "nemesis" needs enough misses, otherwise all songs
+    collection: nemesisLocked && collection === 'nemesis' ? ('all' as Collection) : collection,
+    songIds: collection === 'nemesis' && !nemesisLocked ? missed : null,
     bonus
   })
-  const rememberOptions = () =>
-    localStorage.setItem(LAST_OPTIONS_KEY, JSON.stringify({ goal, decades, challengesEnabled, exotics, genres, collection, bonus }))
+  // Every change is stored at once, so a reload keeps the setup as it was
+  useEffect(() => {
+    if (!hydrated) return
+    if (gameMode) writePref(LAST_MODE_KEY, gameMode)
+    writePref(LAST_OPTIONS_KEY, JSON.stringify({ goal, decades, challengesEnabled, exotics, genres, collection, bonus }))
+  }, [hydrated, gameMode, goal, decades, challengesEnabled, exotics, genres, collection, bonus])
 
   const toggleDecade = (decade: number) => {
     const next = decades.includes(decade) ? decades.filter((d) => d !== decade) : [...decades, decade].sort()
@@ -267,8 +277,6 @@ export function SetupScreen() {
   const openRoom = async () => {
     if (!gameMode) return
     setOpening(true)
-    localStorage.setItem(LAST_MODE_KEY, gameMode)
-    rememberOptions()
     try {
       const room = await roomApi.create(music, { mode: gameMode, ...roundOptions() })
       navigate(`/room/${room.code}`, { replace: true })
@@ -281,9 +289,8 @@ export function SetupScreen() {
   const start = () => {
     if (devices === 'own') return void openRoom()
     if (!ready || !gameMode) return
-    localStorage.setItem(LAST_MODE_KEY, gameMode)
-    rememberOptions()
-    setOptions({ songIds: roundOptions().songIds, daily: null })
+    const opts = roundOptions()
+    setOptions({ collection: opts.collection, songIds: opts.songIds, daily: null })
     if (teamsActive) {
       setPlayers(
         teams.map<Player>((members, i) => ({ name: TEAMS[i].name, members, memberTurn: 0, timeline: [], cards: 0, score: 0 }))
@@ -713,7 +720,7 @@ export function SetupScreen() {
             <div className="flex flex-wrap gap-2" role="radiogroup" aria-labelledby="collection-h">
               {COLLECTIONS.map((c) => {
                 const on = collection === c
-                const locked = c === 'nemesis' && missed.length < NEMESIS_MIN
+                const locked = c === 'nemesis' && nemesisLocked
                 return (
                   <button
                     key={c}
