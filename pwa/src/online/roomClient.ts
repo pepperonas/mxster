@@ -1,10 +1,14 @@
 /**
  * One live connection to a room: reconnects on its own (backoff 0.5 s … 8 s),
- * keeps the clock offset to the server, and queues intents while offline.
+ * keeps the clock offset to the server, and holds intents through a short
+ * drop (QUEUE_MAX_AGE_MS) — an older tap belongs to a game that has moved on.
  * Snapshots are never queued — only the latest state matters.
  */
 import { medianOffset, type ClockSample } from './clock'
 import type { AudioCue, Intent, ServerMessage, Snapshot } from './protocol'
+
+/** A tap sent while offline is only delivered if the connection is back within this time. */
+export const QUEUE_MAX_AGE_MS = 3000
 
 export type Connection = 'connecting' | 'open' | 'closed'
 
@@ -24,7 +28,7 @@ export class RoomClient {
   private retry: number | undefined
   private pinger: number | undefined
   private samples: ClockSample[] = []
-  private queue: string[] = []
+  private queue: { raw: string; at: number }[] = []
   /** Server ms − local ms. */
   offset = 0
 
@@ -47,7 +51,8 @@ export class RoomClient {
     ws.onopen = () => {
       this.backoff = 500
       this.handlers.onConnection('open')
-      for (const raw of this.queue.splice(0)) ws.send(raw)
+      const fresh = Date.now() - QUEUE_MAX_AGE_MS
+      for (const q of this.queue.splice(0)) if (q.at >= fresh) ws.send(q.raw)
       this.ping()
       window.clearInterval(this.pinger)
       this.pinger = window.setInterval(() => this.ping(), PING_EVERY_MS)
@@ -93,7 +98,7 @@ export class RoomClient {
 
   private send(raw: string, queueIfOffline: boolean): void {
     if (this.ws && this.ws.readyState === WebSocket.OPEN) this.ws.send(raw)
-    else if (queueIfOffline) this.queue = [...this.queue, raw].slice(-20)
+    else if (queueIfOffline) this.queue = [...this.queue, { raw, at: Date.now() }].slice(-5)
   }
 
   private ping(): void {

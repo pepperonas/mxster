@@ -17,7 +17,7 @@ export const setupText = defineMessages({
     musicLabel: 'Musik',
     musicRoom: 'Gemeinsam im Raum',
     musicEveryone: 'Jeder bei sich',
-    musicRoomHint: 'Die Musik läuft nur auf deinem Gerät, alle hören mit. Kein Echo.',
+    musicRoomHint: 'Die Musik läuft immer nur auf dem Gerät dessen, der dran ist; alle hören mit. Kein Echo.',
     musicEveryoneHint: 'Die Musik läuft auf jedem Gerät, gleichzeitig. Für Runden über Entfernung.',
 
     modeHeading: 'Wie wollt ihr spielen?',
@@ -87,7 +87,7 @@ export const setupText = defineMessages({
     musicLabel: 'Music',
     musicRoom: 'Together in the room',
     musicEveryone: 'Everyone at home',
-    musicRoomHint: 'The music plays on your device only, everyone listens along. No echo.',
+    musicRoomHint: 'The music plays only on the device of whoever’s turn it is; everyone listens along. No echo.',
     musicEveryoneHint: 'The music plays on every device at the same time. For rounds at a distance.',
 
     modeHeading: 'How do you want to play?',

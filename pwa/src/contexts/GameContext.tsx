@@ -344,6 +344,8 @@ function gameReducer(state: GameState, action: GameAction): GameState {
         players: advanceMember(state.players, state.currentPlayer),
         currentPlayer: nextSeat(state),
         currentSong: null,
+        // A turn never inherits an objection (no song left to object to)
+        pending: null,
         waitingForGuess: false,
         currentSongSkips: {} // a new song starts with a clean skip count
       }

@@ -5,6 +5,7 @@ import hashlib
 import hmac
 import json
 import secrets
+import threading
 import time
 from collections import defaultdict
 from datetime import timedelta
@@ -135,6 +136,8 @@ def require_admin(user: User = Depends(current_user)) -> User:
 
 # --- in-memory per-IP rate limit (single uvicorn worker) -------------------
 _hits: dict[str, list[float]] = defaultdict(list)
+# Request handlers run in a thread pool: check and count must be one step
+_lock = threading.Lock()
 _TRUSTED_PROXIES = {"127.0.0.1", "::1"}
 _MAX_KEYS = 10_000
 
@@ -161,15 +164,36 @@ def within_limit(key: str, limit: int, window_s: int) -> bool:
         return False
 
 
-def limit_reached(key: str, limit: int, window_s: int) -> bool:
-    """Peek without counting."""
+def take(keys: list[tuple[str, int, int]]) -> bool:
+    """Atomically count one hit on every (key, limit, window) — or on none, if
+    any of them is full. Pair with ``give_back`` when the attempt succeeded."""
     now = time.monotonic()
-    return len([t for t in _hits.get(key, []) if now - t < window_s]) >= limit
+    with _lock:
+        fresh = {k: [t for t in _hits.get(k, []) if now - t < w] for k, _, w in keys}
+        if any(len(fresh[k]) >= limit for k, limit, _ in keys):
+            return False
+        for k, _, _ in keys:
+            fresh[k].append(now)
+            _hits[k] = fresh[k]
+        return True
+
+
+def give_back(keys: list[str]) -> None:
+    """Undo the latest hit on each key (a reserved attempt that succeeded)."""
+    with _lock:
+        for k in keys:
+            if _hits.get(k):
+                _hits[k].pop()
 
 
 def check_limit(key: str, limit: int, window_s: int) -> None:
     """Limit by a key alone (e.g. an e-mail address), whatever IP the requests come from."""
     now = time.monotonic()
+    with _lock:
+        _count(key, limit, window_s, now)
+
+
+def _count(key: str, limit: int, window_s: int, now: float) -> None:
     if len(_hits) > _MAX_KEYS:  # bound memory: drop every key without a recent hit
         for k in [k for k, v in _hits.items() if not v or now - v[-1] >= window_s]:
             del _hits[k]

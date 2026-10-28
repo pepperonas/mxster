@@ -175,7 +175,9 @@ def test_unconfirmed_sign_up_can_be_redone(client, inbox):
         assert db.query(User).filter(User.email == "anna@example.com").count() == 1
 
 
-def test_google_sign_in_joins_the_email_account(client, inbox, google):
+def test_google_keeps_the_password_only_of_a_confirmed_account(client, inbox, google):
+    """The owner confirmed the address by link, so the password is theirs.
+    (Unconfirmed: see test_google_drops_a_password_nobody_confirmed.)"""
     register(client)
     confirm(client, inbox)
     uid = client.get("/api/me").json()["id"]
@@ -293,6 +295,7 @@ def test_a_later_sign_up_kills_the_earlier_link(client, inbox):
 
 
 def test_google_drops_a_password_nobody_confirmed(client, inbox, google):
+    # A stranger registers the friend's address and never confirms it
     register(client, password="fremder123")
     me = login(client, google, sub="g-1", email="anna@example.com", name="Anna")
     assert me["hasPassword"] is False
@@ -311,16 +314,20 @@ def test_guesses_per_address_are_capped_across_ips(client, inbox, monkeypatch):
     fake = lambda request: f"10.0.{next(counter) // 250}.{next(counter) % 250}"  # noqa: E731
     monkeypatch.setattr(security, "client_ip", fake)
     monkeypatch.setattr(password_auth, "client_ip", fake)
-    for _ in range(200):
+    for _ in range(20):
         client.post("/api/auth/password-login", json={"email": "anna@example.com", "password": "falsch123"})
     r = client.post("/api/auth/password-login", json={"email": "anna@example.com", "password": "falsch123"})
     assert r.status_code == 429
 
 
-def test_a_right_password_is_not_used_up(client, inbox):
+def test_a_right_password_is_not_used_up(client, inbox, monkeypatch):
+    from app.api import password_auth
+
+    # Only the failure counters are under test here, not the plain request limit
+    monkeypatch.setattr(password_auth, "check_ip_limit", lambda *a, **k: None)
     register(client)
     confirm(client, inbox)
-    for _ in range(9):
+    for _ in range(25):  # more than either failure allowance
         client.cookies.clear()
         assert client.post("/api/auth/password-login", json={"email": "anna@example.com", "password": "geheim123"}).status_code == 200
 
@@ -333,3 +340,41 @@ def test_mail_limits_never_refuse_the_request(client, inbox):
     codes = [client.post("/api/auth/forgot", json={"email": "anna@example.com"}).status_code for _ in range(5)]
     assert codes == [202] * 5
     assert len(inbox) == 3  # only the mails are throttled
+
+
+def test_a_known_device_is_not_locked_out_by_strangers(client, inbox, monkeypatch):
+    import itertools
+
+    from app import security
+    from app.api import password_auth
+
+    register(client)
+    confirm(client, inbox)
+    client.cookies.clear()
+    assert client.post("/api/auth/password-login", json={"email": "anna@example.com", "password": "geheim123"}).status_code == 200
+    known = client.cookies.get("mx_known")
+    assert known
+    # Strangers from many IPs use up the shared allowance
+    counter = itertools.count()
+    fake = lambda request: f"10.1.0.{next(counter) % 250}"  # noqa: E731
+    monkeypatch.setattr(security, "client_ip", fake)
+    monkeypatch.setattr(password_auth, "client_ip", fake)
+    client.cookies.clear()
+    for _ in range(21):
+        client.post("/api/auth/password-login", json={"email": "anna@example.com", "password": "falsch123"})
+    assert client.post("/api/auth/password-login", json={"email": "anna@example.com", "password": "geheim123"}).status_code == 429
+    # The owner's device still gets in
+    client.cookies.set("mx_known", known, path="/api/auth")
+    assert client.post("/api/auth/password-login", json={"email": "anna@example.com", "password": "geheim123"}).status_code == 200
+
+
+def test_parallel_guesses_cannot_pass_the_count():
+    from concurrent.futures import ThreadPoolExecutor
+
+    from app.security import reset_rate_limits, take
+
+    reset_rate_limits()
+    keys = [("pw-fail:race@example.com", 20, 900)]
+    with ThreadPoolExecutor(16) as pool:
+        results = list(pool.map(lambda _: take(keys), range(100)))
+    assert sum(results) == 20

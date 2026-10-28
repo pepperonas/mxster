@@ -25,6 +25,7 @@ import { spring } from '@/motion/springs'
 import type { Player, Song } from '@/types'
 import { correctGapIndices, gapLabel } from '@/game/placement'
 import { useRoom } from '@/online/RoomContext'
+import { musicSeat } from '@/online/musicSeat'
 import { useAuth } from '@/auth/AuthContext'
 import { useRemoteTurnFlow } from '@/online/useRemoteTurnFlow'
 import { useHostBridge } from '@/online/useHostBridge'
@@ -71,7 +72,7 @@ export function GameRound({ onRematch }: { onRematch: () => void }) {
   const navigate = useAppNavigate()
   const t = useMessages(gameText)
   const { showModal, closeModal, addToast } = useUI()
-  const { gameMode, players, currentPlayer, currentSong, resetGame, rematch, tiebreak, goal } = useGame()
+  const { gameMode, players, currentPlayer, currentSong, resetGame, rematch, tiebreak, goal, absent } = useGame()
   const room = useRoom()
   const online = Boolean(room && room.seat !== null)
   const onlineHost = online && room!.role === 'host'
@@ -81,6 +82,9 @@ export function GameRound({ onRematch }: { onRematch: () => void }) {
   const guestName = onlinePlayer && auth.kind === 'anonymous' ? (room!.members.find((m) => m.seat === room!.seat)?.name ?? '') : undefined
 
   const [previewGap, setPreviewGap] = useState<number | null>(null)
+  // Online player: the placement is on its way to the host — keep the card
+  // where it is (no jump back to the dock) until the host's state arrives
+  const [awaiting, setAwaiting] = useState(false)
   const [hoverGap, setHoverGap] = useState<number | null>(null)
   const [result, setResult] = useState<{ winner: Player; players: Player[] } | null>(null)
   const boardRef = useRef<HTMLOListElement>(null)
@@ -159,6 +163,19 @@ export function GameRound({ onRematch }: { onRematch: () => void }) {
   const hostMember = room?.members.find((m) => m.host)
   const hostAway = onlinePlayer && room?.connection === 'open' && Boolean(hostMember) && !hostMember!.online && !shownResult
   const isMine = (index: number) => !online || players[index]?.seat === room!.seat
+  // "Gemeinsam im Raum": the music plays on the device of whoever is on turn
+  const hostSeat = room?.members.find((m) => m.host)?.seat ?? 0
+  const musicAtSeat = online ? musicSeat(players, currentPlayer, absent ?? [], room!.members, hostSeat) : null
+  const audioRole: 'local' | 'host' | 'follow' | 'silent' = !online
+    ? 'local'
+    : room!.info?.music === 'everyone'
+      ? onlineHost
+        ? 'host'
+        : 'follow'
+      : musicAtSeat === room!.seat
+        ? 'host'
+        : 'silent'
+  const musicAt = online && room!.info?.music !== 'everyone' ? room!.members.find((m) => m.seat === musicAtSeat)?.name : undefined
   const choosing = phase === 'challenge' && pending?.choosing != null ? pending.choosing : null
 
   // Phones: while a song is on the platter the player shrinks into a sticky
@@ -188,7 +205,14 @@ export function GameRound({ onRematch }: { onRematch: () => void }) {
   useEffect(() => {
     setPreviewGap(null)
     setHoverGap(null)
-  }, [currentSong, currentPlayer, choosing])
+    setAwaiting(false)
+  }, [currentSong, currentPlayer, choosing, phase])
+  // No answer (host gone): give the controls back so the tap can be repeated
+  useEffect(() => {
+    if (!awaiting) return
+    const id = window.setTimeout(() => setAwaiting(false), 6000)
+    return () => window.clearTimeout(id)
+  }, [awaiting])
 
   if (!gameMode || !activePlayer) return null
 
@@ -207,7 +231,9 @@ export function GameRound({ onRematch }: { onRematch: () => void }) {
     const gap = correctGapIndices(activeTimeline, song)[0]
     return gap === undefined ? undefined : gapLabel(activeTimeline, gap)
   }
-  const dockState: DockState | null = !isTimelineMode
+  const dockState: DockState | null = awaiting
+    ? { kind: 'waiting', text: t.sendingMove }
+    : !isTimelineMode
     ? null
     : placementReveal
       ? {
@@ -333,10 +359,11 @@ export function GameRound({ onRematch }: { onRematch: () => void }) {
               revealCover={reveal ? coverSrc(reveal.song) : null}
               onDraw={phase === 'idle' && can('draw') ? () => void flow.drawSong() : undefined}
               drawLabel={drawLabel}
-              audioRole={!online ? 'local' : onlineHost ? 'host' : room!.info?.music === 'everyone' ? 'follow' : 'silent'}
+              audioRole={audioRole}
+              musicAt={musicAt}
               cue={room?.cue ?? null}
               clockOffset={room?.clockOffset}
-              onCue={onlineHost ? room!.sendAudio : undefined}
+              onCue={audioRole === 'host' ? room!.sendAudio : undefined}
             />
             {online && phase === 'idle' && !can('draw') && (
               <p className="text-center text-body-md text-md-on-surface-variant" role="status">
@@ -384,7 +411,7 @@ export function GameRound({ onRematch }: { onRematch: () => void }) {
               hoverGap={hoverGap}
               reveal={boardReveal}
               revealPlayerIndex={placementReveal?.playerIndex ?? null}
-              onGapSelect={(gap) => (humanPlacing || challengeChoosing) && setPreviewGap(gap)}
+              onGapSelect={(gap) => !awaiting && (humanPlacing || challengeChoosing) && setPreviewGap(gap)}
               onHoverGap={setHoverGap}
               boardRef={boardRef}
               placedGap={phase === 'challenge' ? (pending?.gapIndex ?? null) : null}
@@ -405,7 +432,8 @@ export function GameRound({ onRematch }: { onRematch: () => void }) {
             if (previewGap === null) return
             if (challengeChoosing) flow.claimGap(previewGap)
             else flow.placeCard(previewGap)
-            setPreviewGap(null)
+            if (onlinePlayer) setAwaiting(true)
+            else setPreviewGap(null)
           }}
           onContinue={flow.continueTurn}
           onChallenge={flow.startChallenge}

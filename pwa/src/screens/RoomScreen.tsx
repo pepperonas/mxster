@@ -236,7 +236,7 @@ function Lobby({ account }: { account: boolean }) {
           <p className="text-title-md">{options.mode ? MODE_COPY[options.mode].name : t.roundFallback}</p>
           <p className="meta">
             {options.goal ? `${GOAL_LABEL[options.goal as keyof typeof GOAL_LABEL] ?? ''} · ` : ''}
-            {info.music === 'room' ? t.musicOnDeviceOf(host?.name ?? t.host) : t.musicOnEveryDevice}
+            {info.music === 'room' ? t.musicAtHost : t.musicOnEveryDevice}
           </p>
         </section>
 

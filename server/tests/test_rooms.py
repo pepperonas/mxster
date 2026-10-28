@@ -265,3 +265,40 @@ def test_a_blocked_host_loses_the_open_socket(client, google, monkeypatch):
         assert closed
     with app_db.SessionLocal() as db:
         assert db.get(Room, code).rev == 0
+
+
+
+def _lobby_music(client, google, music):
+    me = host(client, google)
+    room = create(client, me, music=music)
+    host_cookies = dict(client.cookies)
+    as_guest(client, room["code"], "Lisa")
+    return room["code"], host_cookies, dict(client.cookies)
+
+
+def _host_sees_guest_cue(client, google, music) -> bool:
+    code, hc, gc = _lobby_music(client, google, music)
+    with _connect(client, code, hc) as h:
+        h.receive_json()
+        with _connect(client, code, gc) as g:
+            g.receive_json()
+            g.send_json({"type": "audio", "songId": "song_002", "playing": True, "positionMs": 800})
+            # The guest's own pong comes after its cue was handled (one socket, in order)
+            g.send_json({"type": "ping", "t": 1})
+            _until(g, "pong")
+            h.send_json({"type": "ping", "t": 2})
+            seen = []
+            for _ in range(6):
+                msg = h.receive_json()
+                seen.append(msg)
+                if msg["type"] == "pong":
+                    break
+            return any(m["type"] == "audio" and m["songId"] == "song_002" for m in seen)
+
+
+def test_together_in_the_room_the_player_on_turn_reports_the_music(client, google):
+    assert _host_sees_guest_cue(client, google, "room")
+
+
+def test_everyone_at_home_only_the_host_sets_the_cue(client, google):
+    assert not _host_sees_guest_cue(client, google, "everyone")

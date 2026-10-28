@@ -10,6 +10,7 @@
  *   checked and everything unexpected is dropped or cut.
  */
 import type { GameMode, Player, Song, TurnRecord } from '@/types'
+import { songs } from '@/data/songs'
 import type { Snapshot } from './protocol'
 
 const MODES: GameMode[] = ['timeline_personal', 'timeline_global', 'hardcore'] as GameMode[]
@@ -19,6 +20,18 @@ const MAX_TURNS = 400
 
 const str = (v: unknown, max: number) => (typeof v === 'string' ? v.slice(0, max) : '')
 const num = (v: unknown, min: number, max: number) => (typeof v === 'number' && Number.isFinite(v) ? Math.min(max, Math.max(min, Math.round(v))) : 0)
+
+/**
+ * The host's device takes a stored snapshot back (reload, another device):
+ * the song on the platter was stored blind, so put the real one back from the
+ * bundled song list — judging a placement against year 0 would be wrong.
+ */
+export function restoreSong(game: Snapshot['game']): Snapshot['game'] {
+  const song = game.currentSong
+  if (!song || game.reveal) return game
+  const real = songs.find((s) => s.id === song.id)
+  return real ? { ...game, currentSong: real } : game
+}
 
 export function blindSnapshot(game: Snapshot['game']): Snapshot['game'] {
   const song = game.currentSong

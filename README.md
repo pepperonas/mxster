@@ -15,10 +15,10 @@
 <h3>👉 <a href="https://mxtape.celox.io">mxtape.celox.io</a> — sign in with Google or email, or join a friend's room as a guest with just a link</h3>
 
 <!-- BADGES:BIG — version, tests, lines of code and songs; readme.test.ts keeps them true, scripts/readme-badges.mjs rewrites them. -->
-[![version](https://img.shields.io/badge/version-0.9.7-C2185B?style=for-the-badge&logo=semver&logoColor=white)](https://github.com/pepperonas/mxtape/releases/latest)
-[![tests](https://img.shields.io/badge/tests-585-2E9E5B?style=for-the-badge&logo=vitest&logoColor=white)](#tests-and-ci)
-[![lines of code](https://img.shields.io/badge/lines%20of%20code-21.8k-4B6BDF?style=for-the-badge&logo=typescript&logoColor=white)](pwa/src)
-[![test code](https://img.shields.io/badge/test%20code-7.2k-2E9E5B?style=for-the-badge&logo=typescript&logoColor=white)](#tests-and-ci)
+[![version](https://img.shields.io/badge/version-0.9.8-C2185B?style=for-the-badge&logo=semver&logoColor=white)](https://github.com/pepperonas/mxtape/releases/latest)
+[![tests](https://img.shields.io/badge/tests-603-2E9E5B?style=for-the-badge&logo=vitest&logoColor=white)](#tests-and-ci)
+[![lines of code](https://img.shields.io/badge/lines%20of%20code-22.0k-4B6BDF?style=for-the-badge&logo=typescript&logoColor=white)](pwa/src)
+[![test code](https://img.shields.io/badge/test%20code-7.5k-2E9E5B?style=for-the-badge&logo=typescript&logoColor=white)](#tests-and-ci)
 [![songs](https://img.shields.io/badge/songs-300-FF8A3D?style=for-the-badge&logo=applemusic&logoColor=white)](#the-song-library)
 
 [![Donate with PayPal](https://img.shields.io/badge/PayPal-support%20this%20project-00457C?style=for-the-badge&logo=paypal&logoColor=white)](https://www.paypal.com/donate/?business=martin.pfeffer@celox.io&currency_code=EUR&item_name=mxtape)
@@ -160,7 +160,7 @@ Instead of passing one phone around, everyone plays on their own device — in t
 
 - **Open a room:** choose "Jeder sein Gerät" in the setup. You get a link, a QR code and a room code to type in.
 - **No account needed:** guests type a name and play. Nothing is stored for them; they hear the music only while the room is open.
-- **Music:** *together in the room* — only the host's device plays, no echo. *Everyone at home* — all devices play in sync (measured ~20 ms apart).
+- **Music:** *together in the room* — only the device of whoever's turn it is plays (the host takes over if that device drops out), no echo. *Everyone at home* — all devices play in sync (measured ~20 ms apart).
 - **Playing:** whoever is on turn places or guesses on their own device; everyone else watches live and objects from their own phone. A reload or a short drop-out costs nothing — everyone gets their seat back.
 - **Friends:** search other accounts by name or e-mail, add them as friends and invite them straight from the room; the invitation appears on their home screen.
 - At the end, the round lands in the history of every player with an account.

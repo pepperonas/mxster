@@ -44,9 +44,15 @@ interface TurntableProps {
    * Online rounds:
    *  - 'host': plays like 'local' and reports every start, pause and jump (onCue);
    *  - 'follow': plays in sync with the host's cue ("Jeder bei sich");
-   *  - 'silent': plays nothing, the host's device has the music ("Gemeinsam im Raum").
+   *  - 'silent': plays nothing, another device has the music ("Gemeinsam im Raum":
+   *    the device of whoever is on turn, see musicSeat).
+   * The role may change during a song (the music moves to another device):
+   * the device that takes over continues from the last cue, the one that
+   * hands over stops.
    */
   audioRole?: 'local' | 'host' | 'follow' | 'silent'
+  /** 'silent': whose device has the music (default: the host). */
+  musicAt?: string
   cue?: AudioCue | null
   clockOffset?: () => number
   onCue?: (cue: Omit<AudioCue, 'at'>) => void
@@ -70,7 +76,8 @@ export function Turntable({
   audioRole = 'local',
   cue = null,
   clockOffset = () => 0,
-  onCue
+  onCue,
+  musicAt
 }: TurntableProps) {
   const t = useMessages(gameText)
   const { settings } = useSettings()
@@ -116,6 +123,27 @@ export function Turntable({
     player.current.play(song, start).catch(() => {})
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [songKey])
+
+  // The music moves to or away from this device in the middle of a song
+  const lastRole = useRef(audioRole)
+  useEffect(() => {
+    const before = lastRole.current
+    lastRole.current = audioRole
+    if (before === audioRole) return
+    const p = player.current
+    if (audioRole === 'silent') {
+      p.stop()
+      return
+    }
+    if (audioRole !== 'host' || before !== 'silent' || !song) return
+    // Take over where the previous device was (paused stays paused)
+    if (cue && cue.songId === song.id) {
+      if (cue.playing) p.play(song, cuePosition(cue, Date.now(), clockOffset())).catch(() => {})
+    } else {
+      p.play(song, 0).catch(() => {})
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [audioRole])
 
   // Host: tell the others where the music is — on every start/pause, and every
   // few seconds while playing (late joiners, slow devices)
@@ -225,7 +253,7 @@ export function Turntable({
               : revealed
                 ? t.songIsFrom(revealYear ?? '')
                 : audioRole === 'silent'
-                  ? `${caption ?? t.playing} · ${t.atHost}`
+                  ? `${caption ?? t.playing} · ${musicAt ? t.atName(musicAt) : t.atHost}`
                   : (caption ?? t.playing)}
           </p>
           <div className="mt-1.5 flex items-center gap-2">
@@ -319,7 +347,9 @@ export function Turntable({
           ? revealed
             ? ''
             : audioRole === 'silent'
-              ? t.playingAtHost(formatTime(position))
+              ? musicAt
+                ? t.playingAt(musicAt, formatTime(position))
+                : t.playingAtHost(formatTime(position))
               : blocked
                 ? t.tapRecordToPlay
                 : loading

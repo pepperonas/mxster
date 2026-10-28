@@ -13,6 +13,7 @@ import { useGame } from '@/contexts'
 import { ApiError } from '@/api/client'
 import { RoomClient, type Connection } from './roomClient'
 import { roomApi } from './roomApi'
+import { restoreSong } from './sanitize'
 import type { AudioCue, Intent, Member, Role, RoomInfo, RoomStatus, ServerMessage, Snapshot } from './protocol'
 
 export interface RoomValue {
@@ -92,7 +93,9 @@ export function RoomProvider({ code, children }: { code: string; children: React
           setCue(msg.audio)
           // Players always follow the host; the host continues from the room's
           // snapshot unless this device already runs this round
-          if (msg.role === 'player' || gameRef.current.onlineRoom !== code) applySnapshot(msg.snapshot)
+          if (msg.role === 'player') applySnapshot(msg.snapshot)
+          else if (gameRef.current.onlineRoom !== code && msg.snapshot)
+            applySnapshot({ ...msg.snapshot, game: restoreSong(msg.snapshot.game) })
           break
         }
         case 'roster':

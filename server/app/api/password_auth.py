@@ -33,7 +33,8 @@ from app.passwords import DUMMY_HASH, MAX_LEN, MIN_LEN, fingerprint, hash_passwo
 from app.security import (
     check_ip_limit,
     client_ip,
-    limit_reached,
+    give_back,
+    take,
     within_limit,
     create_session,
     err,
@@ -184,22 +185,43 @@ class LoginBody(BaseModel):
     password: str
 
 
+KNOWN_COOKIE = "mx_known"
+KNOWN_MAX_AGE = 180 * 24 * 3600
+
+
+def _known_device(request: Request, email: str) -> bool:
+    data = unsign_payload(request.cookies.get(KNOWN_COOKIE, ""), max_age_s=KNOWN_MAX_AGE)
+    return isinstance(data, dict) and email in (data.get("m") or [])
+
+
+def _remember_device(request: Request, response: Response, email: str) -> None:
+    data = unsign_payload(request.cookies.get(KNOWN_COOKIE, ""), max_age_s=KNOWN_MAX_AGE)
+    known = [m for m in (data.get("m") or []) if m != email] if isinstance(data, dict) else []
+    response.set_cookie(
+        KNOWN_COOKIE, sign_payload({"m": [email, *known][:5]}), max_age=KNOWN_MAX_AGE,
+        httponly=True, samesite="lax", secure=get_settings().is_prod, path="/api/auth",
+    )
+
+
 def _check_credentials(body: LoginBody, request: Request, db: Session) -> User:
     check_ip_limit(request, "password-login", limit=10, window_s=60)
     email = body.email.strip().lower()
-    # Only failures count. Tight per address and IP; wide per address across
-    # all IPs (a botnet gets far fewer guesses, a stranger can hardly lock the
-    # owner out: 200 failures in 15 minutes, and the owner's own IP is separate).
-    per_ip, per_mail = f"pw-fail:{email}:{client_ip(request)}", f"pw-fail:{email}"
-    if limit_reached(per_ip, 10, FAIL_WINDOW) or limit_reached(per_mail, 200, FAIL_WINDOW):
+    # Only failures count, and the slot is taken BEFORE the password is checked
+    # (given back on success), so parallel guesses cannot slip past the count.
+    # 10 per address and IP, 20 per address across all IPs — except on a device
+    # that signed in to this address before (KNOWN_COOKIE): a stranger can then
+    # use up the shared allowance without locking the owner out.
+    keys = [(f"pw-fail:{email}:{client_ip(request)}", 10, FAIL_WINDOW)]
+    if not _known_device(request, email):
+        keys.append((f"pw-fail:{email}", 20, FAIL_WINDOW))
+    if not take(keys):
         raise err(429, "rate_limited", "Zu viele Anfragen. Bitte kurz warten.")
     user = _by_email(db, email) if len(email) <= 320 else None
     stored = user.password_hash if user else None
     ok = verify_password(body.password[:MAX_LEN], stored or DUMMY_HASH)
     if user is None or not stored or not ok:
-        within_limit(per_ip, 10, FAIL_WINDOW)
-        within_limit(per_mail, 200, FAIL_WINDOW)
         raise err(401, "invalid_credentials", "E-Mail-Adresse oder Passwort stimmen nicht.")
+    give_back([k for k, _, _ in keys])
     return user
 
 
@@ -214,6 +236,7 @@ def password_login(body: LoginBody, request: Request, response: Response, db: Se
     db.commit()
     row = create_session(db, user)
     set_session_cookie(response, row)
+    _remember_device(request, response, user.email)
     log.info("password login ok user=%s status=%s", user.id, user.status)
     return user_payload(user, row.csrf_token)
 

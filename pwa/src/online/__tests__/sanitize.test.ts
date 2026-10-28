@@ -47,3 +47,14 @@ describe('sanitizeResult', () => {
     expect('extra' in big.players[0]).toBe(false)
   })
 })
+
+describe('restoreSong (the host takes a stored snapshot back)', () => {
+  it('puts the real song back on the platter', async () => {
+    const { restoreSong } = await import('../sanitize')
+    const { songs } = await import('@/data/songs')
+    const real = songs[0]
+    const blind = blindSnapshot({ currentSong: real, reveal: null } as never)
+    expect(blind.currentSong?.year).toBe(0)
+    expect(restoreSong(blind).currentSong).toEqual(real)
+  })
+})

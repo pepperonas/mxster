@@ -366,6 +366,11 @@ async def room_socket(ws: WebSocket, code: str) -> None:
             return
         seat = member.seat
         is_host = member.user_id == room.host_user_id
+        # "Gemeinsam im Raum": the device of whoever is on turn plays and reports
+        # the music (the turn lives in the host's snapshot, not here). Silent
+        # devices only show a cue, so a false one costs nothing. "Jeder bei
+        # sich": everyone plays along, so only the host may set the cue.
+        may_cue = is_host or room.music == "room"
         host_seat = 0
         await ws.accept()
         await hub.attach(code, seat, ws)
@@ -424,7 +429,7 @@ async def room_socket(ws: WebSocket, code: str) -> None:
                     rev = room.rev
                 await hub.broadcast(code, {"type": "state", "rev": rev, "snapshot": msg.get("snapshot")}, exclude=seat)
 
-            elif kind == "audio" and is_host:
+            elif kind == "audio" and may_cue:
                 cue = {
                     "type": "audio",
                     "songId": msg.get("songId"),

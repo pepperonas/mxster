@@ -25,7 +25,8 @@ describe('privacy policy matches the code', () => {
     const names = [
       num(server('security.py'), /SESSION_COOKIE = "([^"]+)"/),
       num(server('security.py'), /STATE_COOKIE = "([^"]+)"/),
-      num(server('api/rooms.py'), /GUEST_COOKIE = "([^"]+)"/)
+      num(server('api/rooms.py'), /GUEST_COOKIE = "([^"]+)"/),
+      num(server('api/password_auth.py'), /KNOWN_COOKIE = "([^"]+)"/)
     ]
     for (const lang of ['de', 'en'] as const) for (const n of names) expect(text(lang)).toContain(n)
   })

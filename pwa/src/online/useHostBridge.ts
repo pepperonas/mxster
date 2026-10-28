@@ -7,6 +7,7 @@
  *   then it calls exactly the function the local controls would call.
  */
 import { useEffect, useRef } from 'react'
+import { flushSync } from 'react-dom'
 import { useGame } from '@/contexts'
 import type { TurnFlow } from '@/game/useTurnFlow'
 import { useRoom } from './RoomContext'
@@ -60,6 +61,21 @@ export function carryOut(flow: TurnFlow, game: { players: Player[]; currentPlaye
   }
 }
 
+/**
+ * Carries out one intent and commits it at once. The next intent (or a queue
+ * flushed on reconnect) must be checked against the state this one left
+ * behind, or two taps could both pass (reveal + objection, continue twice).
+ * `latest` is read after every commit: it is refreshed by the re-render.
+ */
+export function intentHandler(latest: () => { flow: TurnFlow; game: ReturnType<typeof useGame> }) {
+  return (seat: number, intent: Intent) => {
+    flushSync(() => {
+      const { flow, game } = latest()
+      carryOut(flow, game, seat, intent)
+    })
+  }
+}
+
 export function useHostBridge(flow: TurnFlow, result: Snapshot['result']) {
   const room = useRoom()
   const game = useGame()
@@ -70,9 +86,7 @@ export function useHostBridge(flow: TurnFlow, result: Snapshot['result']) {
   latest.current = { flow, game }
   useEffect(() => {
     if (!room || !isHost) return
-    room.intentHandler.current = (seat, intent) => {
-      carryOut(latest.current.flow, latest.current.game, seat, intent)
-    }
+    room.intentHandler.current = intentHandler(() => latest.current)
     return () => {
       room.intentHandler.current = null
     }
