@@ -15,11 +15,11 @@
 <h3>👉 <a href="https://mxtape.celox.io">mxtape.celox.io</a> — mit Google oder E-Mail anmelden oder als Gast nur per Link in den Raum von Freunden</h3>
 
 <!-- BADGES:BIG — version, tests, lines of code and songs; readme.test.ts keeps them true, scripts/readme-badges.mjs rewrites them. -->
-[![version](https://img.shields.io/badge/version-0.10.1-C2185B?style=for-the-badge&logo=semver&logoColor=white)](https://github.com/pepperonas/mxtape/releases/latest)
+[![version](https://img.shields.io/badge/version-0.10.2-C2185B?style=for-the-badge&logo=semver&logoColor=white)](https://github.com/pepperonas/mxtape/releases/latest)
 [![tests](https://img.shields.io/badge/tests-619-2E9E5B?style=for-the-badge&logo=vitest&logoColor=white)](#tests-und-ci)
 [![lines of code](https://img.shields.io/badge/lines%20of%20code-22.4k-4B6BDF?style=for-the-badge&logo=typescript&logoColor=white)](pwa/src)
 [![test code](https://img.shields.io/badge/test%20code-7.8k-2E9E5B?style=for-the-badge&logo=typescript&logoColor=white)](#tests-und-ci)
-[![songs](https://img.shields.io/badge/songs-300-FF8A3D?style=for-the-badge&logo=applemusic&logoColor=white)](#die-songsammlung)
+[![songs](https://img.shields.io/badge/songs-500-FF8A3D?style=for-the-badge&logo=applemusic&logoColor=white)](#die-songsammlung)
 
 [![Donate with PayPal](https://img.shields.io/badge/PayPal-support%20this%20project-00457C?style=for-the-badge&logo=paypal&logoColor=white)](https://www.paypal.com/donate/?business=martin.pfeffer@celox.io&currency_code=EUR&item_name=mxtape)
 
@@ -170,7 +170,7 @@ Statt ein Handy herumzureichen, spielt jede Person auf dem eigenen Gerät – im
 
 ## Funktionen
 
-- **300 Songs** von den 50ern bis heute, selbst gehostet, auf Wunsch mit zufälliger Startstelle
+- **500 Songs** von den 50ern bis heute, selbst gehostet, auf Wunsch mit zufälliger Startstelle
 - **Aufdecken mit Hintergrund:** Album-Cover auf dem Plattenlabel, Albumname und ein kurzes „Wusstest du?“
 - **Sofort sichtbar, wohin die Karte kommt:** Die Nachbarjahre leuchten auf, eine Positionsleiste zeigt `2008 — ? — 2020` in der Plakatschrift
 - **Eine laufende Runde übersteht Neuladen** oder einen geschlossenen Tab und wird auf der Startseite angeboten
@@ -185,7 +185,7 @@ Statt ein Handy herumzureichen, spielt jede Person auf dem eigenen Gerät – im
 
 ## Die Songsammlung
 
-300 Songs, 39 davon als Exoten markiert. Quelle der Wahrheit ist [`docs/songs.json`](docs/songs.json), die Anekdoten stehen in [`docs/song-facts.json`](docs/song-facts.json). Erscheinungsjahr und Album kommen von **MusicBrainz**, Cover aus dem **Cover Art Archive** (iTunes als Rückfall). Spotify wird nirgends benutzt.
+500 Songs, 39 davon als Exoten markiert. Quelle der Wahrheit ist [`docs/songs.json`](docs/songs.json), die Anekdoten stehen in [`docs/song-facts.json`](docs/song-facts.json). Erscheinungsjahr und Album kommen von **MusicBrainz**, Cover aus dem **Cover Art Archive** (iTunes als Rückfall). Spotify wird nirgends benutzt.
 
 ```bash
 node scripts/song-management/add-song.js "a-ha" "Take on Me"   # schlägt Jahr und Album vor, lädt Audio und Cover
