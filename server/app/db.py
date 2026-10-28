@@ -18,6 +18,7 @@ class Base(DeclarativeBase):
     pass
 
 
+PASSWORD_SUB = "pw:"
 STATUSES = ("pending", "approved", "rejected", "blocked")
 DOC_KINDS = ("history", "achievements", "settings")
 
@@ -33,6 +34,15 @@ class User(Base):
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow)
     decided_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
     last_login_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    # E-mail accounts: scrypt hash; their google_sub is "pw:<random>" until the
+    # same address signs in with Google once (then the accounts are one).
+    password_hash: Mapped[str | None] = mapped_column(String(200), nullable=True)
+    # E-mail accounts only: set once the address is confirmed (Google confirms its own)
+    email_verified_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+
+    @property
+    def unverified(self) -> bool:
+        return self.google_sub.startswith(PASSWORD_SUB) and self.email_verified_at is None
 
 
 class SessionRow(Base):
@@ -152,7 +162,10 @@ def init_db() -> None:
 
 def _add_missing_columns() -> None:
     """create_all never alters an existing table: add columns that came later."""
-    later = {"room_members": {"left_at": "DATETIME"}}
+    later = {
+        "room_members": {"left_at": "DATETIME"},
+        "users": {"password_hash": "VARCHAR(200)", "email_verified_at": "DATETIME"},
+    }
     with engine.begin() as conn:
         for table, columns in later.items():
             have = {row[1] for row in conn.exec_driver_sql(f"PRAGMA table_info({table})")}

@@ -22,6 +22,8 @@ export const adminText = defineMessages({
         }[action]
       }`,
     admin: 'Admin',
+    viaEmail: 'E-Mail',
+    viaGoogle: 'Google',
     reject: 'Ablehnen',
     approve: 'Freischalten',
     block: 'Sperren',
@@ -59,6 +61,8 @@ export const adminText = defineMessages({
         }[action]
       }`,
     admin: 'Admin',
+    viaEmail: 'Email',
+    viaGoogle: 'Google',
     reject: 'Reject',
     approve: 'Approve',
     block: 'Block',

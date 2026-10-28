@@ -5,7 +5,8 @@
 import { useMemo, useState } from 'react'
 import { m } from 'motion/react'
 import { Vinyl } from '@/components/ui/Vinyl'
-import { GoogleMark } from '@/components/ui/Icon'
+import { GoogleMark, Icon } from '@/components/ui/Icon'
+import { EmailAuth } from '@/auth/EmailAuth'
 import { LOGIN_URL } from '@/api/client'
 import { useMessages } from '@/i18n'
 import { authText } from '@/i18n/messages/auth'
@@ -17,7 +18,11 @@ import { LegalLinks } from '@/legal/LegalScreen'
 export function LoginScreen() {
   const [leaving, setLeaving] = useState(false)
   const t = useMessages(authText)
-  const code = useMemo(() => new URLSearchParams(window.location.search).get('login_error'), [])
+  const params = useMemo(() => new URLSearchParams(window.location.search), [])
+  const code = params.get('login_error')
+  // ?register=1&name=… comes from the offer after an online round as a guest
+  const wantsRegister = params.get('register') === '1'
+  const [emailOpen, setEmailOpen] = useState(wantsRegister || code === 'verify_expired')
   // Recomputed per render so a language switch translates the message too
   const error = code ? loginErrorText(code) : null
 
@@ -68,7 +73,23 @@ export function LoginScreen() {
               </span>
               {leaving ? t.leaving : t.signIn}
             </a>
-            <p className="text-body-sm text-md-on-surface-variant">
+
+            <div className="flex items-center gap-3 py-1" aria-hidden="true">
+              <span className="h-px flex-1 bg-md-outline-variant" />
+              <span className="text-label-md text-md-on-surface-variant">{t.or}</span>
+              <span className="h-px flex-1 bg-md-outline-variant" />
+            </div>
+
+            {emailOpen ? (
+              <EmailAuth initialMode={wantsRegister ? 'register' : 'signin'} initialName={params.get('name')?.slice(0, 20) ?? ''} />
+            ) : (
+              <button type="button" className="btn btn-lg btn-outline m3-state-layer w-full" onClick={() => setEmailOpen(true)}>
+                <Icon name="mail" />
+                {t.withEmail}
+              </button>
+            )}
+
+            <p className="text-body-sm text-md-on-surface-variant pt-2">
               {t.privacyNote}
             </p>
           </div>

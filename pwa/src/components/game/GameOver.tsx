@@ -13,6 +13,7 @@ import type { GameMode, Player } from '@/types'
 import { rankPlayers } from '@/game/tiebreak'
 import { useMessages } from '@/i18n'
 import { gameText } from '@/i18n/messages/game'
+import { SignUpOffer } from './SignUpOffer'
 
 interface GameOverProps {
   winner: Player
@@ -24,9 +25,11 @@ interface GameOverProps {
   /** Online, not the host: who starts the next round. */
   rematchBy?: string
   homeLabel?: string
+  /** Online guest without an account: offer one (their seat's name pre-filled). */
+  signUpName?: string
 }
 
-export function GameOver({ winner, players, mode, onRematch, onHome, rematchBy, homeLabel }: GameOverProps) {
+export function GameOver({ winner, players, mode, onRematch, onHome, rematchBy, homeLabel, signUpName }: GameOverProps) {
   const t = useMessages(gameText)
   const hardcore = mode === 'hardcore'
   // Who left the room is listed last, without a place
@@ -89,6 +92,8 @@ export function GameOver({ winner, players, mode, onRematch, onHome, rematchBy, 
             </m.li>
           ))}
         </ol>
+
+        {signUpName !== undefined && <SignUpOffer name={signUpName} />}
 
         <div className="mt-auto pt-10 space-y-3">
           {onRematch ? (

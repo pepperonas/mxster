@@ -4,7 +4,7 @@ from fastapi import APIRouter, Depends
 from sqlalchemy import delete, func, select
 from sqlalchemy.orm import Session
 
-from app.db import STATUSES, AdminAction, SessionRow, User, as_utc, get_db, utcnow
+from app.db import PASSWORD_SUB, STATUSES, AdminAction, SessionRow, User, as_utc, get_db, utcnow
 from app.security import err, is_admin_email, require_admin, require_csrf
 
 router = APIRouter(prefix="/api/admin", dependencies=[Depends(require_admin)])
@@ -21,6 +21,7 @@ def _row(u: User) -> dict:
         "picture": u.picture,
         "status": u.status,
         "isAdmin": is_admin_email(u.email),
+        "method": "password" if u.google_sub.startswith(PASSWORD_SUB) else "google",
         "createdAt": as_utc(u.created_at).isoformat() if u.created_at else None,
         "decidedAt": as_utc(u.decided_at).isoformat() if u.decided_at else None,
         "lastLoginAt": as_utc(u.last_login_at).isoformat() if u.last_login_at else None,
@@ -29,12 +30,14 @@ def _row(u: User) -> dict:
 
 @router.get("/users")
 def list_users(status: str = "", db: Session = Depends(get_db)) -> dict:
-    q = select(User).order_by(User.created_at.desc())
+    # Unconfirmed e-mail sign-ups are no request yet (and vanish after 48 h)
+    confirmed = ~(User.google_sub.startswith(PASSWORD_SUB) & User.email_verified_at.is_(None))
+    q = select(User).where(confirmed).order_by(User.created_at.desc())
     if status:
         if status not in STATUSES:
             raise err(400, "bad_status", "Unbekannter Status.")
         q = q.where(User.status == status)
-    counts = dict(db.execute(select(User.status, func.count()).group_by(User.status)).all())
+    counts = dict(db.execute(select(User.status, func.count()).where(confirmed).group_by(User.status)).all())
     return {"users": [_row(u) for u in db.execute(q).scalars()], "counts": {s: counts.get(s, 0) for s in STATUSES}}
 
 

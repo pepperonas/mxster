@@ -25,6 +25,7 @@ import { spring } from '@/motion/springs'
 import type { Player, Song } from '@/types'
 import { correctGapIndices, gapLabel } from '@/game/placement'
 import { useRoom } from '@/online/RoomContext'
+import { useAuth } from '@/auth/AuthContext'
 import { useRemoteTurnFlow } from '@/online/useRemoteTurnFlow'
 import { useHostBridge } from '@/online/useHostBridge'
 import { useHostPresence, usePresenceNotices } from '@/online/usePresence'
@@ -75,6 +76,9 @@ export function GameRound({ onRematch }: { onRematch: () => void }) {
   const online = Boolean(room && room.seat !== null)
   const onlineHost = online && room!.role === 'host'
   const onlinePlayer = online && room!.role === 'player'
+  // A guest without any account on this device: offered one when the round ends
+  const { state: auth } = useAuth()
+  const guestName = onlinePlayer && auth.kind === 'anonymous' ? (room!.members.find((m) => m.seat === room!.seat)?.name ?? '') : undefined
 
   const [previewGap, setPreviewGap] = useState<number | null>(null)
   const [hoverGap, setHoverGap] = useState<number | null>(null)
@@ -430,6 +434,7 @@ export function GameRound({ onRematch }: { onRematch: () => void }) {
             rematchBy={onlinePlayer ? (room?.members.find((m) => m.host)?.name ?? t.theHost) : undefined}
             onHome={() => void leaveGame()}
             homeLabel={onlineHost ? t.closeRoom : onlinePlayer ? t.leaveRoomButton : undefined}
+            signUpName={guestName}
           />
         )}
       </AnimatePresence>

@@ -11,7 +11,7 @@ from sqlalchemy.orm import Session
 from app import google_oauth, mail
 from app.api.rooms import GUEST_COOKIE, guest_may_listen
 from app.config import get_settings
-from app.db import SessionRow, User, get_db, utcnow
+from app.db import PASSWORD_SUB, SessionRow, User, get_db, utcnow
 from app.security import (
     STATE_COOKIE,
     check_ip_limit,
@@ -46,6 +46,7 @@ def user_payload(user: User, csrf: str) -> dict:
         "picture": user.picture,
         "status": user.status,
         "isAdmin": is_admin_email(user.email),
+        "hasPassword": user.password_hash is not None,
         "csrf": csrf,
     }
 
@@ -60,6 +61,18 @@ def upsert_user(db: Session, *, sub: str, email: str, name: str, picture: str) -
     email = email.lower()
     user = db.execute(select(User).where(User.google_sub == sub)).scalar_one_or_none()
     is_new = user is None
+    if user is None:
+        # An e-mail account with this address: Google has just confirmed the
+        # address, so from now on both ways lead into the same account. It counts
+        # as new only if nobody had confirmed it (the admin was never told).
+        twin = db.execute(
+            select(User).where(User.email == email, User.google_sub.startswith(PASSWORD_SUB)).order_by(User.id)
+        ).scalars().first()
+        if twin is not None:
+            is_new = twin.email_verified_at is None
+            twin.google_sub = sub
+            twin.email_verified_at = twin.email_verified_at or utcnow()
+            user = twin
     if user is None:
         user = User(google_sub=sub, email=email, status="pending")
         db.add(user)

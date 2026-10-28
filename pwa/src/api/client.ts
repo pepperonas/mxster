@@ -15,6 +15,8 @@ export interface Me {
   picture: string
   status: AccountStatus
   isAdmin: boolean
+  /** Signs in with e-mail and password (possibly Google too) */
+  hasPassword?: boolean
   csrf: string
 }
 

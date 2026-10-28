@@ -1,11 +1,11 @@
-"""mxtape API: Google login with an approval queue, per-account data, audio gate."""
+"""mxtape API: Google or e-mail login with an approval queue, per-account data, audio gate."""
 
 import logging
 
 from fastapi import FastAPI, HTTPException, Request
 from fastapi.responses import JSONResponse
 
-from app.api import admin, auth, data, friends, rooms
+from app.api import admin, auth, data, friends, password_auth, rooms
 from app.config import get_settings
 from app.api.rooms import purge_expired
 from app.db import SessionLocal, init_db
@@ -22,6 +22,7 @@ def create_app() -> FastAPI:
     init_db()
     with SessionLocal() as db:
         purge_expired(db)
+        password_auth.purge_unverified(db)
     app = FastAPI(title="mxtape", docs_url=None, redoc_url=None, openapi_url=None)
 
     @app.exception_handler(HTTPException)
@@ -34,6 +35,7 @@ def create_app() -> FastAPI:
         return {"ok": True}
 
     app.include_router(auth.router)
+    app.include_router(password_auth.router)
     app.include_router(admin.router)
     app.include_router(data.router)
     app.include_router(rooms.router)

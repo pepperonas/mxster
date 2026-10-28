@@ -36,7 +36,7 @@ export default defineConfig({
         // Never precache audio: /audio/ needs a signed-in session (nginx auth_request)
         globPatterns: ['**/*.{js,css,html,ico,svg,woff2}'],
         globIgnores: ['**/assets/**/*.png', 'audio/**'],
-        cacheId: 'mxtape-v10',
+        cacheId: 'mxtape-v11',
         cleanupOutdatedCaches: true,
         // Navigation fallback - always serve index.html for SPA routes
         navigateFallback: '/index.html',
@@ -49,6 +49,7 @@ export default defineConfig({
           /^\/r\//,
           /^\/room\//,
           /^\/raum\//, // old German room address, redirected by the app
+          /^\/reset-password/, // link from the reset mail, same reason
           /\.[a-zA-Z0-9]+$/ // Files with extensions (except HTML)
         ],
         runtimeCaching: [

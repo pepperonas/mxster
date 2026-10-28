@@ -28,13 +28,15 @@ const loginErrors = defineMessages({
     cancelled: 'Die Anmeldung wurde abgebrochen.',
     state_mismatch: 'Die Anmeldung ist abgelaufen. Bitte versuch es noch einmal.',
     exchange_failed: 'Google hat die Anmeldung nicht bestätigt. Bitte versuch es noch einmal.',
-    invalid_token: 'Dieses Google-Konto konnte nicht geprüft werden.'
+    invalid_token: 'Dieses Google-Konto konnte nicht geprüft werden.',
+    verify_expired: 'Dieser Bestätigungslink ist abgelaufen. Melde dich mit E-Mail und Passwort an, dann schicken wir dir einen neuen.'
   },
   en: {
     cancelled: 'Signing in was cancelled.',
     state_mismatch: 'Signing in timed out. Please try again.',
     exchange_failed: 'Google did not confirm the sign-in. Please try again.',
-    invalid_token: 'This Google account could not be verified.'
+    invalid_token: 'This Google account could not be verified.',
+    verify_expired: 'This confirmation link has expired. Sign in with your email and password and we will send you a new one.'
   }
 })
 
@@ -47,6 +49,13 @@ export function loginErrorText(code: string): string {
 const serverErrors = defineMessages({
   de: {
     bad_action: 'Unbekannte Aktion.',
+    bad_email: 'Diese E-Mail-Adresse sieht nicht gültig aus.',
+    email_unverified: 'Bitte bestätige zuerst deine E-Mail-Adresse.',
+    invalid_credentials: 'E-Mail-Adresse oder Passwort stimmen nicht.',
+    name_required: 'Wie sollen wir dich nennen?',
+    password_long: 'Das Passwort ist zu lang.',
+    password_short: 'Das Passwort braucht mindestens 8 Zeichen.',
+    reset_expired: 'Dieser Link ist abgelaufen oder wurde schon benutzt.',
     bad_music: 'Unbekannter Musikmodus.',
     bad_name: 'Bitte einen Namen mit 2 bis 20 Zeichen eingeben.',
     bad_options: 'Zu viele Optionen.',
@@ -74,6 +83,13 @@ const serverErrors = defineMessages({
   },
   en: {
     bad_action: 'Unknown action.',
+    bad_email: 'This email address does not look valid.',
+    email_unverified: 'Please confirm your email address first.',
+    invalid_credentials: 'Email address or password is wrong.',
+    name_required: 'What should we call you?',
+    password_long: 'The password is too long.',
+    password_short: 'The password needs at least 8 characters.',
+    reset_expired: 'This link has expired or was already used.',
     bad_music: 'Unknown music mode.',
     bad_name: 'Please enter a name with 2 to 20 characters.',
     bad_options: 'Too many options.',

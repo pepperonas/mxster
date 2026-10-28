@@ -12,13 +12,13 @@
   <a href="https://mxtape.celox.io"><img alt="Spielen: mxtape.celox.io" height="56" src="https://img.shields.io/badge/%E2%96%B6%EF%B8%8F_Spielen-mxtape.celox.io-C2185B?style=for-the-badge"></a>
 </p>
 
-<h3>👉 <a href="https://mxtape.celox.io">mxtape.celox.io</a> — mit Google anmelden oder als Gast nur per Link in den Raum von Freunden</h3>
+<h3>👉 <a href="https://mxtape.celox.io">mxtape.celox.io</a> — mit Google oder E-Mail anmelden oder als Gast nur per Link in den Raum von Freunden</h3>
 
 <!-- BADGES:BIG — version, tests, lines of code and songs; readme.test.ts keeps them true, scripts/readme-badges.mjs rewrites them. -->
-[![version](https://img.shields.io/badge/version-0.9.6-C2185B?style=for-the-badge&logo=semver&logoColor=white)](https://github.com/pepperonas/mxtape/releases/latest)
-[![tests](https://img.shields.io/badge/tests-546-2E9E5B?style=for-the-badge&logo=vitest&logoColor=white)](#tests-und-ci)
-[![lines of code](https://img.shields.io/badge/lines%20of%20code-20.7k-4B6BDF?style=for-the-badge&logo=typescript&logoColor=white)](pwa/src)
-[![test code](https://img.shields.io/badge/test%20code-6.6k-2E9E5B?style=for-the-badge&logo=typescript&logoColor=white)](#tests-und-ci)
+[![version](https://img.shields.io/badge/version-0.9.7-C2185B?style=for-the-badge&logo=semver&logoColor=white)](https://github.com/pepperonas/mxtape/releases/latest)
+[![tests](https://img.shields.io/badge/tests-582-2E9E5B?style=for-the-badge&logo=vitest&logoColor=white)](#tests-und-ci)
+[![lines of code](https://img.shields.io/badge/lines%20of%20code-21.7k-4B6BDF?style=for-the-badge&logo=typescript&logoColor=white)](pwa/src)
+[![test code](https://img.shields.io/badge/test%20code-7.1k-2E9E5B?style=for-the-badge&logo=typescript&logoColor=white)](#tests-und-ci)
 [![songs](https://img.shields.io/badge/songs-300-FF8A3D?style=for-the-badge&logo=applemusic&logoColor=white)](#die-songsammlung)
 
 [![Donate with PayPal](https://img.shields.io/badge/PayPal-support%20this%20project-00457C?style=for-the-badge&logo=paypal&logoColor=white)](https://www.paypal.com/donate/?business=martin.pfeffer@celox.io&currency_code=EUR&item_name=mxtape)
@@ -133,7 +133,7 @@ Es läuft als installierbare Web-App mit einer Oberfläche in **Material 3 Expre
 
 ## Zugang
 
-mxtape ist eine private App. Man meldet sich mit einem Google-Konto an; neue Konten landen auf einer Warteliste und werden einzeln freigeschaltet. Erst danach sind Spiel und Musik erreichbar – auch die Musikdateien liefert der Server nur an freigeschaltete Sitzungen aus.
+mxtape ist eine private App. Man meldet sich mit einem Google-Konto oder mit E-Mail und Passwort an (die Adresse wird vorher per Link bestätigt); neue Konten landen auf einer Warteliste und werden einzeln freigeschaltet. Wer als Gast eine Online-Runde gespielt hat, bekommt am Ende ein eigenes Konto angeboten. Erst danach sind Spiel und Musik erreichbar – auch die Musikdateien liefert der Server nur an freigeschaltete Sitzungen aus.
 
 Die eine Ausnahme: **Gäste in einem Raum.** Wer einen Raum-Link öffnet, gibt einen Namen ein und spielt mit, ganz ohne Konto, solange der Raum offen ist.
 
@@ -233,7 +233,7 @@ Durchgehend `127.0.0.1` verwenden – das Sitzungs-Cookie hängt am Host.
 | PWA | vite-plugin-pwa (Workbox), versionierter Cache, Navigationen zuerst übers Netz |
 | API | FastAPI, SQLAlchemy 2, SQLite im WAL-Modus, uvicorn (ein Worker – die Raumverwaltung liegt im Speicher) |
 | Echtzeit | WebSocket je Raumplatz, Platz vom Server gestempelt, Uhrenabgleich über den Median der Pings |
-| Anmeldung | Google OAuth (Code-Flow mit PKCE), httpOnly-Sitzungs-Cookie, CSRF-Header |
+| Anmeldung | Google OAuth (Code-Flow mit PKCE) oder E-Mail + Passwort (scrypt, Bestätigungslink, Link zum Zurücksetzen); httpOnly-Sitzungs-Cookie, CSRF-Header |
 | Betrieb | nginx auf einem VPS, `auth_request`-Sperre für Audio, systemd-Dienst |
 
 ## Aufbau
@@ -243,7 +243,7 @@ pwa/      React-19-PWA (Vite, Tailwind, motion)
   src/game/     reine Spielregeln: Legen, Raten, Einspruch, Stechen, Songauswahl, Statistik
   src/online/   Räume: Protokoll, Client, Gastgeber-Brücke, Rechte, Bereinigung
   src/screens/  eine Datei je Bildschirm
-server/   FastAPI + SQLite: Google-Login, Warteliste, Admin, Kontodaten, Audio-Freigabe, Räume (WebSocket), Freunde
+server/   FastAPI + SQLite: Google- und E-Mail-Login, Warteliste, Admin, Kontodaten, Audio-Freigabe, Räume (WebSocket), Freunde
 docs/     songs.json – die Songdatenbank (Quelle der Wahrheit), Anekdoten, Screenshots
 scripts/  Songs verwalten, Audio hosten, Deployment
 ```

@@ -20,7 +20,7 @@ export interface LegalDoc {
 }
 export type LegalKind = 'imprint' | 'privacy' | 'terms'
 
-export const LEGAL_UPDATED = '2026-10-27'
+export const LEGAL_UPDATED = '2026-10-28'
 
 const PROVIDER = ['Martin Pfeffer', 'celox.io', 'Flughafenstraße 24', '12053 Berlin']
 const MAIL = 'martin.pfeffer@celox.io'
@@ -87,7 +87,7 @@ const privacy: Record<Lang, LegalDoc> = {
       {
         heading: '2. Worum es geht',
         body: [
-          'mxtape ist ein privates Musikspiel. Spielen kann, wer sich mit einem Google-Konto anmeldet und von mir freigeschaltet wurde, sowie Gäste, die über einen Raum-Link in eine laufende Runde kommen. Es gibt keine Werbung, keine Tracker von Drittanbietern und keinen Verkauf von Daten.'
+          'mxtape ist ein privates Musikspiel. Spielen kann, wer sich mit einem Google-Konto oder mit E-Mail-Adresse und Passwort anmeldet und von mir freigeschaltet wurde, sowie Gäste, die über einen Raum-Link in eine laufende Runde kommen. Es gibt keine Werbung, keine Tracker von Drittanbietern und keinen Verkauf von Daten.'
         ]
       },
       {
@@ -109,17 +109,19 @@ const privacy: Record<Lang, LegalDoc> = {
         ]
       },
       {
-        heading: '6. Anmeldung mit Google',
+        heading: '6. Anmeldung mit Google oder E-Mail',
         body: [
+          'Du kannst dich mit deinem Google-Konto anmelden oder ein Konto mit E-Mail-Adresse und Passwort anlegen.',
           'Zum Anmelden wirst du zu Google weitergeleitet (Google Ireland Limited, Gordon House, Barrow Street, Dublin 4, Irland). Dort gibst du dein Google-Konto ein; Google gibt mir daraufhin die Kennung deines Google-Kontos, deine E-Mail-Adresse, deinen Namen, die Adresse deines Profilbilds und die Bestätigung, dass die E-Mail-Adresse geprüft ist. Ein Passwort erhalte ich nie.',
           'Dein Profilbild lädt dein Browser direkt von den Servern von Google; dabei erfährt Google deine IP-Adresse. Google kann Daten auch in den USA verarbeiten; Google ist nach dem EU-US Data Privacy Framework zertifiziert. Für die Verarbeitung bei Google gilt dessen Datenschutzerklärung (policies.google.com/privacy).',
+          'Mit E-Mail-Adresse: Du gibst Name, E-Mail-Adresse und Passwort ein. Das Passwort speichere ich nur als nicht umkehrbaren Hash (scrypt mit zufälligem Salt); im Klartext kenne ich es nie. Ich schicke dir einen Link, mit dem du bestätigst, dass dir die Adresse gehört. Erst danach sehe ich deine Anfrage. Wird der Link nicht innerhalb von 48 Stunden benutzt, lösche ich das unbestätigte Konto. Über „Passwort vergessen“ schicke ich dir einen Link, der eine Stunde und nur einmal gilt. Diese Mails laufen über den Mailserver des Hosters (siehe Abschnitt 3). Meldest du dich später mit einem Google-Konto derselben Adresse an, wird daraus dasselbe Konto.',
           'Rechtsgrundlage ist Art. 6 Abs. 1 lit. b DSGVO: Ohne Anmeldung kann ich dir kein eigenes Konto mit Verlauf und Erfolgen bereitstellen.'
         ]
       },
       {
         heading: '7. Konto und Freischaltung',
         body: [
-          'Gespeichert werden: Google-Kennung, E-Mail-Adresse, Name, Adresse des Profilbilds, Status (wartend, freigeschaltet, abgelehnt, gesperrt) sowie die Zeitpunkte der Anmeldung, der letzten Anmeldung und der Entscheidung.',
+          'Gespeichert werden: Google-Kennung (bei Anmeldung mit Google), E-Mail-Adresse, Name, Adresse des Profilbilds, bei Anmeldung mit E-Mail der Passwort-Hash und der Zeitpunkt der Bestätigung, Status (wartend, freigeschaltet, abgelehnt, gesperrt) sowie die Zeitpunkte der Anmeldung, der letzten Anmeldung und der Entscheidung.',
           'Neue Konten werden von Hand freigeschaltet; eine automatisierte Entscheidung findet nicht statt. Bei einer neuen Anfrage erhalte ich eine E-Mail mit Name und E-Mail-Adresse; der Versand läuft über den Mailserver des Hosters (siehe Abschnitt 3). Jede Entscheidung wird mit Zeitpunkt protokolliert.',
           'Rechtsgrundlage ist Art. 6 Abs. 1 lit. b DSGVO, für das Protokoll Art. 6 Abs. 1 lit. f DSGVO (Nachvollziehbarkeit der Freischaltungen).'
         ]
@@ -199,7 +201,7 @@ const privacy: Record<Lang, LegalDoc> = {
       {
         heading: '2. What this is about',
         body: [
-          'mxtape is a private music game. It can be played by people who sign in with a Google account and are approved by me, and by guests who join a running round through a room link. There are no ads, no third-party trackers and no sale of data.'
+          'mxtape is a private music game. It can be played by people who sign in with a Google account or with an e-mail address and password and are approved by me, and by guests who join a running round through a room link. There are no ads, no third-party trackers and no sale of data.'
         ]
       },
       {
@@ -221,17 +223,19 @@ const privacy: Record<Lang, LegalDoc> = {
         ]
       },
       {
-        heading: '6. Signing in with Google',
+        heading: '6. Signing in with Google or e-mail',
         body: [
+          'You can sign in with your Google account or create an account with an e-mail address and password.',
           'To sign in you are redirected to Google (Google Ireland Limited, Gordon House, Barrow Street, Dublin 4, Ireland). You enter your Google account there; Google then gives me your Google account ID, your e-mail address, your name, the address of your profile picture and the confirmation that your e-mail address is verified. I never receive a password.',
           'Your browser loads your profile picture directly from Google\'s servers, which tells Google your IP address. Google may also process data in the USA; Google is certified under the EU-US Data Privacy Framework. Google\'s own privacy policy applies to its processing (policies.google.com/privacy).',
+          'With an e-mail address: you enter a name, an e-mail address and a password. I only store the password as an irreversible hash (scrypt with a random salt); I never know it in plain text. I send you a link to confirm that the address is yours; only then do I see your request. If the link is not used within 48 hours, I delete the unconfirmed account. "Forgot password" sends you a link that works for one hour and only once. These e-mails go through the host\'s mail server (see section 3). If you later sign in with a Google account of the same address, it becomes the same account.',
           'Legal basis: Art. 6 (1) (b) GDPR — without signing in I cannot provide you with your own account, history and achievements.'
         ]
       },
       {
         heading: '7. Account and approval',
         body: [
-          'Stored are: Google account ID, e-mail address, name, profile picture address, status (waiting, approved, rejected, blocked) and the times of registration, last sign-in and the decision.',
+          'Stored are: Google account ID (when signing in with Google), e-mail address, name, profile picture address, for e-mail sign-in the password hash and the time of confirmation, status (waiting, approved, rejected, blocked) and the times of registration, last sign-in and the decision.',
           'New accounts are approved by hand; there is no automated decision. For each new request I receive an e-mail with name and e-mail address, sent via the host\'s mail server (see section 3). Every decision is logged with its time.',
           'Legal basis: Art. 6 (1) (b) GDPR, for the log Art. 6 (1) (f) GDPR (traceability of approvals).'
         ]
@@ -320,7 +324,7 @@ const terms: Record<Lang, LegalDoc> = {
       {
         heading: '3. Konto',
         body: [
-          'Du meldest dich mit deinem eigenen Google-Konto an; pro Person gibt es ein Konto. Du bist dafür verantwortlich, dass niemand anderes über dein Gerät in deinem Namen spielt. Gäste brauchen kein Konto; sie nutzen nur den Raum, in den sie eingeladen wurden.'
+          'Du meldest dich mit deinem eigenen Google-Konto oder deiner eigenen E-Mail-Adresse an; pro Person gibt es ein Konto. Dein Passwort hältst du geheim. Du bist dafür verantwortlich, dass niemand anderes über dein Gerät in deinem Namen spielt. Gäste brauchen kein Konto; sie nutzen nur den Raum, in den sie eingeladen wurden.'
         ]
       },
       {
@@ -390,7 +394,7 @@ const terms: Record<Lang, LegalDoc> = {
       {
         heading: '3. Account',
         body: [
-          'You sign in with your own Google account; there is one account per person. You are responsible for nobody else playing in your name on your device. Guests need no account; they only use the room they were invited to.'
+          'You sign in with your own Google account or your own e-mail address; there is one account per person. Keep your password to yourself. You are responsible for nobody else playing in your name on your device. Guests need no account; they only use the room they were invited to.'
         ]
       },
       {

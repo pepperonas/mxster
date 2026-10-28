@@ -55,6 +55,21 @@ describe('privacy policy matches the code', () => {
     expect(text('en')).toContain('the whole account')
   })
 
+  it('states when unconfirmed e-mail sign-ups are deleted, and the server deletes them', () => {
+    const hours = Number(num(server('api/password_auth.py'), /VERIFY_TTL = timedelta\(hours=(\d+)\)/))
+    expect(text('de')).toContain(`innerhalb von ${hours} Stunden benutzt, lösche ich`)
+    expect(text('en')).toContain(`within ${hours} hours, I delete`)
+    expect(server('api/password_auth.py')).toMatch(/User\.created_at < cutoff/)
+    expect(server('main.py')).toContain('purge_unverified(db)')
+  })
+
+  it('states the reset link lifetime and that passwords are only hashed', () => {
+    expect(server('api/password_auth.py')).toMatch(/RESET_TTL = timedelta\(hours=1\)/)
+    expect(text('de')).toContain('eine Stunde und nur einmal')
+    expect(server('passwords.py')).toContain('hashlib.scrypt')
+    expect(text('de')).toContain('scrypt')
+  })
+
   it('states how many rounds the history keeps', () => {
     expect(text('de')).toContain(`bis zu ${GAME_CONFIG.MAX_HISTORY_GAMES} Runden`)
     expect(text('en')).toContain(`up to ${GAME_CONFIG.MAX_HISTORY_GAMES} rounds`)

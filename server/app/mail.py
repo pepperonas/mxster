@@ -43,16 +43,76 @@ def send(to: str, subject: str, text: str) -> bool:
 BACKGROUND = True
 
 
-def notify_new_request(name: str, email: str) -> None:
-    """Fire and forget: the login redirect must not wait for SMTP."""
+def send_later(to: str, subject: str, text: str) -> None:
+    """Fire and forget: a request must not wait for SMTP."""
+    if BACKGROUND:
+        threading.Thread(target=lambda: send(to, subject, text), daemon=True).start()
+    else:
+        send(to, subject, text)
+
+
+def _url(path: str) -> str:
+    return f"{get_settings().public_url.rstrip('/')}{path}"
+
+
+def notify_new_request(name: str, email: str, method: str = "Google") -> None:
     s = get_settings()
-    args = (
+    send_later(
         s.notify_email,
         f"mxtape: {name or email} möchte mitspielen",
-        f"Neue Anfrage auf mxtape:\n\n  {name}\n  {email}\n\n"
-        f"Freischalten: {s.public_url.rstrip('/')}/admin\n",
+        f"Neue Anfrage auf mxtape ({method}):\n\n  {name}\n  {email}\n\n"
+        f"Freischalten: {_url('/admin')}\n",
     )
-    if BACKGROUND:
-        threading.Thread(target=lambda: send(*args), daemon=True).start()
+
+
+_SIGN = {"de": "\n\nmxtape\n{url}\n", "en": "\n\nmxtape\n{url}\n"}
+
+
+def _foot(lang: str) -> str:
+    return _SIGN.get(lang, _SIGN["de"]).format(url=_url("/"))
+
+
+def send_verification(to: str, name: str, link: str, lang: str) -> None:
+    if lang == "en":
+        subject = "mxtape: confirm your email address"
+        text = (f"Hi {name},\n\nplease confirm your email address for mxtape:\n\n{link}\n\n"
+                "The link works for 48 hours. After that, Martin approves new accounts one by one — "
+                "you will be let in as soon as he has.\n\nIf you did not sign up, ignore this email; "
+                "the unconfirmed account is deleted after 48 hours.")
     else:
-        send(*args)
+        subject = "mxtape: bitte bestätige deine E-Mail-Adresse"
+        text = (f"Hallo {name},\n\nbitte bestätige deine E-Mail-Adresse für mxtape:\n\n{link}\n\n"
+                "Der Link gilt 48 Stunden. Danach schaltet Martin neue Konten einzeln frei — "
+                "sobald das passiert ist, bist du drin.\n\nWenn du dich nicht angemeldet hast, ignorier "
+                "diese Mail; das unbestätigte Konto wird nach 48 Stunden gelöscht.")
+    send_later(to, subject, text + _foot(lang))
+
+
+def send_already_registered(to: str, google_only: bool, lang: str) -> None:
+    """Someone tried to register an address that already has an account."""
+    if lang == "en":
+        subject = "mxtape: you already have an account"
+        how = ("This address signs in with Google — use \"Sign in with Google\"." if google_only
+               else "Sign in with your email and password, or use \"Forgot password\" to set a new one.")
+        text = f"Hi,\n\nsomeone (probably you) tried to sign up to mxtape with this address, but it already has an account.\n\n{how}\n\nIf that was not you, nothing has changed."
+    else:
+        subject = "mxtape: du hast schon ein Konto"
+        how = ("Diese Adresse meldet sich mit Google an — nimm „Mit Google anmelden“." if google_only
+               else "Melde dich mit E-Mail und Passwort an, oder setz über „Passwort vergessen“ ein neues.")
+        text = f"Hallo,\n\njemand (vermutlich du) wollte sich mit dieser Adresse bei mxtape registrieren, aber es gibt schon ein Konto.\n\n{how}\n\nWenn du das nicht warst, hat sich nichts geändert."
+    send_later(to, subject, text + _foot(lang))
+
+
+def send_reset(to: str, name: str, link: str | None, lang: str) -> None:
+    """``link`` None: the account signs in with Google and has no password."""
+    if lang == "en":
+        subject = "mxtape: reset your password"
+        body = (f"Set a new password here (the link works for one hour, once):\n\n{link}" if link
+                else "This address signs in with Google and has no password — use \"Sign in with Google\".")
+        text = f"Hi {name},\n\n{body}\n\nIf you did not ask for this, ignore this email; your password stays as it is."
+    else:
+        subject = "mxtape: Passwort zurücksetzen"
+        body = (f"Hier setzt du ein neues Passwort (der Link gilt eine Stunde und nur einmal):\n\n{link}" if link
+                else "Diese Adresse meldet sich mit Google an und hat kein Passwort — nimm „Mit Google anmelden“.")
+        text = f"Hallo {name},\n\n{body}\n\nWenn du das nicht angefordert hast, ignorier diese Mail; dein Passwort bleibt, wie es ist."
+    send_later(to, subject, text + _foot(lang))

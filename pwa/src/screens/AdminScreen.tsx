@@ -25,6 +25,8 @@ interface Account {
   picture: string
   status: AccountStatus
   isAdmin: boolean
+  /** How the account signs in */
+  method?: 'google' | 'password'
   createdAt: string | null
   decidedAt: string | null
   lastLoginAt: string | null
@@ -166,7 +168,10 @@ export function AdminScreen() {
                       {a.name || a.email}
                       {a.isAdmin && <span className="ml-2 text-label-md text-md-primary">{t.admin}</span>}
                     </p>
-                    <p className="meta truncate">{a.email}</p>
+                    <p className="meta truncate">
+                      {a.email}
+                      <span className="ml-2 text-label-md">· {a.method === 'password' ? t.viaEmail : t.viaGoogle}</span>
+                    </p>
                     <p className="text-label-md text-md-on-surface-variant mt-0.5">{describe(t, a)}</p>
                   </div>
                 </div>
