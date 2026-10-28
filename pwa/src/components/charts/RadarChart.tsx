@@ -122,13 +122,24 @@ export function RadarChart({ axes, series, label, format = pct, max = 1 }: Radar
             const pts = s.values.map((v, i) => point(i, n, Math.min(1, (v ?? 0) / max)))
             return (
               <g key={s.name}>
-                <polygon points={poly(pts)} fill={color} fillOpacity={0.12} stroke={color} strokeWidth={2} strokeLinejoin="round" />
+                {/* A new metric or person morphs the web: same number of corners, so the points interpolate */}
+                <m.polygon
+                  initial={false}
+                  animate={{ points: poly(pts) }}
+                  transition={still ? { duration: 0 } : spring.spatialDefault}
+                  fill={color}
+                  fillOpacity={0.12}
+                  stroke={color}
+                  strokeWidth={2}
+                  strokeLinejoin="round"
+                />
                 {s.values.map((v, i) =>
                   v === null ? null : (
-                    <circle
+                    <m.circle
                       key={i}
-                      cx={pts[i][0]}
-                      cy={pts[i][1]}
+                      initial={false}
+                      animate={{ cx: pts[i][0], cy: pts[i][1] }}
+                      transition={still ? { duration: 0 } : spring.spatialDefault}
                       r={active === i ? 5.5 : 4}
                       fill={color}
                       stroke="rgb(var(--md-sys-color-surface-container-low))"

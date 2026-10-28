@@ -113,6 +113,8 @@ export const achievementText = defineMessages({
     players: 'Spieler',
     reachedOn: (day: string) => `Erreicht ${day}`,
     reached: 'Erreicht',
+    isNew: 'Neu',
+    newCount: (n: number) => (n === 1 ? '1 neu' : `${n} neu`),
     progress: (value: number, target: number) => `${value} von ${target}`,
     open: 'Noch offen',
     unlocked: 'Achievement freigeschaltet'
@@ -224,6 +226,8 @@ export const achievementText = defineMessages({
     players: 'Players',
     reachedOn: (day: string) => `Reached ${day}`,
     reached: 'Reached',
+    isNew: 'New',
+    newCount: (n: number) => `${n} new`,
     progress: (value: number, target: number) => `${value} of ${target}`,
     open: 'Not yet',
     unlocked: 'Achievement unlocked'

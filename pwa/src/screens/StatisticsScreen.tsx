@@ -4,10 +4,10 @@
  * modes you play and the songs that trip everyone up.
  */
 import { useGameHistory } from '@/contexts/GameHistoryContext'
+import { EmptyState } from '@/components/ui/EmptyState'
 import { SkeletonBlock, SkeletonGroup } from '@/components/ui/Skeleton'
 import { useMemo, useState } from 'react'
 import { useAppNavigate } from '@/hooks/useAppNavigate'
-import { Icon } from '@/components/ui/Icon'
 import { StatTile, BarList, WeekColumns, ShareBar } from '@/components/charts/Bars'
 import { DecadeProfile } from '@/components/charts/DecadeProfile'
 import { SERIES_COLORS } from '@/components/charts/RadarChart'
@@ -75,14 +75,12 @@ export function StatisticsScreen() {
     return (
       <div className="pt-4 md:pt-10">
         <h1 className="text-headline-md mb-6">{t.title}</h1>
-        <div className="surface p-8 text-center">
-          <Icon name="insights" size={40} className="mx-auto text-md-on-surface-variant" />
-          <p className="mt-4 text-title-md">{t.emptyTitle}</p>
-          <p className="mt-1 meta">{t.emptyText}</p>
-          <button type="button" className="btn btn-brand m3-state-layer mt-6" onClick={() => navigate('/new')}>
-            {t.firstRound}
-          </button>
-        </div>
+        <EmptyState
+          icon="insights"
+          title={t.emptyTitle}
+          text={t.emptyText}
+          action={<button type="button" className="btn btn-brand m3-state-layer" onClick={() => navigate('/new')}>{t.firstRound}</button>}
+        />
       </div>
     )
   }

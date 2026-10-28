@@ -6,7 +6,8 @@ import { Icon } from '@/components/ui/Icon'
 import { achievementDescription, achievementIcon, achievementName } from '@/types/achievements'
 import { useMessages } from '@/i18n'
 import { achievementText } from '@/i18n/messages/achievements'
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
+import { isNew, lastSeen, markSeen } from '@/game/achievementSeen'
 import { m } from 'motion/react'
 import { useMe } from '@/auth/AuthContext'
 import { useAchievements, useSettings } from '@/contexts'
@@ -32,12 +33,18 @@ export function AchievementsScreen() {
   const asked = params.get('player')
   const [who, setWho] = useState(asked && names.includes(asked) ? asked : own)
 
+  // Read once per person when they are shown, then note this visit — the
+  // badges stay for the whole visit and are gone the next time
+  const seenAt = useMemo(() => lastSeen(who), [who])
+  useEffect(() => markSeen(who), [who])
+
   const stored = getPlayerAchievements(who)
   // Nobody played under this name yet: show every achievement as still open.
   const list: Achievement[] = stored.length
     ? stored
     : Object.values(ACHIEVEMENT_DEFINITIONS).map((d) => ({ ...d, unlocked: false, progress: d.target ? 0 : undefined }))
   const unlocked = list.filter((a) => a.unlocked).length
+  const fresh = list.filter((a) => isNew(a, seenAt)).length
   // Unlocked first (newest first), then by progress
   const sorted = [...list].sort((a, b) => {
     if (a.unlocked !== b.unlocked) return a.unlocked ? -1 : 1
@@ -51,6 +58,7 @@ export function AchievementsScreen() {
         <h1 className="text-headline-md">{t.title}</h1>
         <p className="meta tabular">
           {t.countOf(unlocked, list.length)}
+          {fresh > 0 && <span className="ml-2 text-md-primary font-medium">· {t.newCount(fresh)}</span>}
         </p>
       </div>
 
@@ -79,7 +87,19 @@ export function AchievementsScreen() {
                 </span>
               </ProgressRing>
               <div className="min-w-0 flex-1">
-                <p className="text-title-md">{achievementName(a.id)}</p>
+                <p className="text-title-md flex items-center gap-2">
+                  <span className="min-w-0">{achievementName(a.id)}</span>
+                  {isNew(a, seenAt) && (
+                    <m.span
+                      className="shrink-0 rounded-m3-full bg-md-primary text-md-on-primary px-2 text-label-sm"
+                      initial={{ scale: 0.4, opacity: 0 }}
+                      animate={{ scale: 1, opacity: 1 }}
+                      transition={{ ...spring.spatialFast, delay: 0.35 + Math.min(i, 10) * 0.025 }}
+                    >
+                      {t.isNew}
+                    </m.span>
+                  )}
+                </p>
                 <p className={`text-body-sm ${a.unlocked ? 'opacity-90' : 'text-md-on-surface-variant'}`}>{achievementDescription(a.id)}</p>
                 <p className={`mt-1 text-label-md tabular ${a.unlocked ? 'opacity-90' : 'text-md-on-surface-variant'}`}>
                   {a.unlocked

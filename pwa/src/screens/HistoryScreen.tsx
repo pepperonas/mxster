@@ -3,6 +3,7 @@
  * round (ranking and the songs everyone collected).
  */
 import { useParams } from 'react-router-dom'
+import { EmptyState } from '@/components/ui/EmptyState'
 import { SkeletonRows } from '@/components/ui/Skeleton'
 import { sharedElement } from '@/motion/vtName'
 import { m } from 'motion/react'
@@ -37,14 +38,12 @@ export function HistoryScreen() {
       {history.length === 0 && !ready ? (
         <SkeletonRows count={4} />
       ) : history.length === 0 ? (
-        <div className="surface p-8 text-center">
-          <Icon name="history" size={40} className="mx-auto text-md-on-surface-variant" />
-          <p className="mt-4 text-title-md">{t.emptyTitle}</p>
-          <p className="mt-1 meta">{t.emptyText}</p>
-          <button type="button" className="btn btn-brand m3-state-layer mt-6" onClick={() => navigate('/new')}>
-            {t.firstRound}
-          </button>
-        </div>
+        <EmptyState
+          icon="history"
+          title={t.emptyTitle}
+          text={t.emptyText}
+          action={<button type="button" className="btn btn-brand m3-state-layer" onClick={() => navigate('/new')}>{t.firstRound}</button>}
+        />
       ) : (
         <div className="space-y-6">
           {[...groups].map(([day, games]) => (

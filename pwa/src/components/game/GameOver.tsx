@@ -34,6 +34,12 @@ interface GameOverProps {
   daily?: { score: number; total: number }
 }
 
+/** When a ranking row arrives (s): last place first, the winner last after a short pause. */
+export function rankDelay(index: number, count: number): number {
+  const fromBottom = count - 1 - index
+  return 0.4 + fromBottom * 0.08 + (index === 0 ? 0.18 : 0)
+}
+
 export function GameOver({ winner, players, mode, onRematch, onHome, rematchBy, homeLabel, signUpName, daily }: GameOverProps) {
   const t = useMessages(gameText)
   const dt = useMessages(dailyText)
@@ -83,9 +89,10 @@ export function GameOver({ winner, players, mode, onRematch, onHome, rematchBy, 
           {ranked.map(({ player: p, place }, i) => (
             <m.li
               key={p.name}
-              initial={{ opacity: 0, x: -16 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ ...spring.spatialDefault, delay: 0.4 + i * 0.06 }}
+              // The ranking fills from the bottom up and the winner arrives last, a beat later
+              initial={i === 0 ? { opacity: 0, scale: 0.9, y: 12 } : { opacity: 0, x: -16 }}
+              animate={i === 0 ? { opacity: 1, scale: 1, y: 0 } : { opacity: 1, x: 0 }}
+              transition={{ ...(i === 0 ? spring.spatialFast : spring.spatialDefault), delay: rankDelay(i, ranked.length) }}
               className={`flex items-center gap-4 px-4 min-h-[56px] rounded-m3-lg ${
                 i === 0 ? 'bg-md-primary-container text-md-on-primary-container' : 'bg-md-surface-container-low'
               }`}

@@ -3,9 +3,11 @@
  *
  * The disc (grooves + label) rotates while `spinning`; the light reflection
  * sits in a second, static layer on top, the way a real record catches the
- * lamp while it turns underneath. Pausing freezes the rotation where it is.
+ * lamp while it turns underneath. It spins up and coasts to a stop
+ * (useRecordMotor) and then rests where it is.
  */
-import { useEffect, useId, useState, type CSSProperties, type ReactNode } from 'react'
+import { useEffect, useId, useRef, useState, type CSSProperties, type ReactNode } from 'react'
+import { useRecordMotor } from './useRecordMotor'
 
 interface VinylProps {
   size?: number | string
@@ -51,13 +53,15 @@ export function Vinyl({ size = 240, spinning = false, label, labelColor, labelIm
   const [imageFailed, setImageFailed] = useState(false)
   useEffect(() => setImageFailed(false), [labelImage])
   const showImage = Boolean(labelImage) && !imageFailed
+  const disc = useRef<SVGSVGElement>(null)
+  const turning = useRecordMotor(disc, spinning)
   return (
     <div
       className={`relative shrink-0 select-none ${className}`}
       style={{ width: size, height: size, ...style }}
       aria-hidden="true"
     >
-      <svg viewBox="0 0 100 100" className="vinyl absolute inset-0 w-full h-full" data-spinning={spinning}>
+      <svg ref={disc} viewBox="0 0 100 100" className="vinyl absolute inset-0 w-full h-full" data-spinning={turning}>
         <defs>
           <radialGradient id={bodyId} cx="50%" cy="50%" r="50%">
             <stop offset="36%" stopColor="rgb(var(--mx-vinyl))" />
