@@ -378,3 +378,46 @@ def test_parallel_guesses_cannot_pass_the_count():
     with ThreadPoolExecutor(16) as pool:
         results = list(pool.map(lambda _: take(keys), range(100)))
     assert sum(results) == 20
+
+
+def _strangers(monkeypatch):
+    import itertools
+
+    from app import security
+    from app.api import password_auth
+
+    counter = itertools.count()
+    fake = lambda request: f"10.2.{next(counter) // 250}.{next(counter) % 250}"  # noqa: E731
+    monkeypatch.setattr(security, "client_ip", fake)
+    monkeypatch.setattr(password_auth, "client_ip", fake)
+
+
+def test_a_leaked_device_cookie_buys_no_more_than_20_guesses(client, inbox, monkeypatch):
+    register(client)
+    confirm(client, inbox)
+    client.cookies.clear()
+    client.post("/api/auth/password-login", json={"email": "anna@example.com", "password": "geheim123"})
+    known = client.cookies.get("mx_known")
+    _strangers(monkeypatch)
+    client.cookies.clear()
+    client.cookies.set("mx_known", known, path="/api/auth")
+    codes = [client.post("/api/auth/password-login", json={"email": "anna@example.com", "password": "falsch123"}).status_code for _ in range(21)]
+    assert codes[:20] == [401] * 20 and codes[20] == 429
+
+
+def test_a_password_change_retires_old_device_cookies(client, inbox, monkeypatch):
+    from app.api.password_auth import _known_device
+
+    register(client)
+    confirm(client, inbox)
+    client.cookies.clear()
+    client.post("/api/auth/password-login", json={"email": "anna@example.com", "password": "geheim123"})
+    known = client.cookies.get("mx_known")
+
+    class Req:
+        cookies = {"mx_known": known}
+
+    u = user()
+    assert _known_device(Req, u)
+    u.password_hash = hash_password("anderes123")
+    assert _known_device(Req, u) is None

@@ -189,16 +189,26 @@ KNOWN_COOKIE = "mx_known"
 KNOWN_MAX_AGE = 180 * 24 * 3600
 
 
-def _known_device(request: Request, email: str) -> bool:
+def _known_device(request: Request, user: User | None) -> str | None:
+    """The device id if this device signed in to this account with its
+    current password (a password change makes old cookies worthless)."""
+    if user is None or not user.password_hash:
+        return None
     data = unsign_payload(request.cookies.get(KNOWN_COOKIE, ""), max_age_s=KNOWN_MAX_AGE)
-    return isinstance(data, dict) and email in (data.get("m") or [])
+    if not isinstance(data, dict) or not isinstance(data.get("d"), str):
+        return None
+    entry = [user.id, fingerprint(user.password_hash)]
+    return data["d"] if entry in (data.get("a") or []) else None
 
 
-def _remember_device(request: Request, response: Response, email: str) -> None:
+def _remember_device(request: Request, response: Response, user: User) -> None:
     data = unsign_payload(request.cookies.get(KNOWN_COOKIE, ""), max_age_s=KNOWN_MAX_AGE)
-    known = [m for m in (data.get("m") or []) if m != email] if isinstance(data, dict) else []
+    data = data if isinstance(data, dict) else {}
+    device = data.get("d") if isinstance(data.get("d"), str) else secrets.token_urlsafe(12)
+    others = [a for a in (data.get("a") or []) if isinstance(a, list) and a[:1] != [user.id]]
+    entry = [user.id, fingerprint(user.password_hash)]
     response.set_cookie(
-        KNOWN_COOKIE, sign_payload({"m": [email, *known][:5]}), max_age=KNOWN_MAX_AGE,
+        KNOWN_COOKIE, sign_payload({"d": device, "a": [entry, *others][:5]}), max_age=KNOWN_MAX_AGE,
         httponly=True, samesite="lax", secure=get_settings().is_prod, path="/api/auth",
     )
 
@@ -206,17 +216,19 @@ def _remember_device(request: Request, response: Response, email: str) -> None:
 def _check_credentials(body: LoginBody, request: Request, db: Session) -> User:
     check_ip_limit(request, "password-login", limit=10, window_s=60)
     email = body.email.strip().lower()
+    user = _by_email(db, email) if len(email) <= 320 else None
     # Only failures count, and the slot is taken BEFORE the password is checked
     # (given back on success), so parallel guesses cannot slip past the count.
-    # 10 per address and IP, 20 per address across all IPs — except on a device
-    # that signed in to this address before (KNOWN_COOKIE): a stranger can then
-    # use up the shared allowance without locking the owner out.
+    # Always 10 per address and IP. Then 20 per address across all IPs — or,
+    # on a device that signed in to this account with its current password
+    # (KNOWN_COOKIE), 20 for that device: a stranger can use up the shared
+    # allowance without locking the owner out, and a leaked cookie still only
+    # buys 20 guesses, wherever it is used from.
     keys = [(f"pw-fail:{email}:{client_ip(request)}", 10, FAIL_WINDOW)]
-    if not _known_device(request, email):
-        keys.append((f"pw-fail:{email}", 20, FAIL_WINDOW))
+    device = _known_device(request, user)
+    keys.append((f"pw-fail:{email}:dev:{device}", 20, FAIL_WINDOW) if device else (f"pw-fail:{email}", 20, FAIL_WINDOW))
     if not take(keys):
         raise err(429, "rate_limited", "Zu viele Anfragen. Bitte kurz warten.")
-    user = _by_email(db, email) if len(email) <= 320 else None
     stored = user.password_hash if user else None
     ok = verify_password(body.password[:MAX_LEN], stored or DUMMY_HASH)
     if user is None or not stored or not ok:
@@ -236,7 +248,7 @@ def password_login(body: LoginBody, request: Request, response: Response, db: Se
     db.commit()
     row = create_session(db, user)
     set_session_cookie(response, row)
-    _remember_device(request, response, user.email)
+    _remember_device(request, response, user)
     log.info("password login ok user=%s status=%s", user.id, user.status)
     return user_payload(user, row.csrf_token)
 
