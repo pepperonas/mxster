@@ -364,6 +364,17 @@ def test_an_account_takes_over_when_the_host_is_gone(client, google, monkeypatch
     assert client.post(f"/api/rooms/{code}/status", json={"status": "closed"}, headers=csrf(lisa)).status_code == 200
 
 
+def test_after_a_restart_nobody_takes_over_at_once(client, google):
+    """No record of the host's connection (server restarted): the 30 s start now."""
+    from app.rooms_hub import hub
+
+    code, _, (lc, lisa), _ = _running_with_second_account(client, google)
+    hub.gone_since.clear()
+    client.cookies.clear()
+    client.cookies.update(lc)
+    assert client.post(f"/api/rooms/{code}/takeover", headers=csrf(lisa)).status_code == 409
+
+
 def test_takeover_is_not_for_guests_or_while_the_host_is_there(client, google, monkeypatch):
     from app.api import rooms
 
@@ -379,13 +390,25 @@ def test_takeover_is_not_for_guests_or_while_the_host_is_there(client, google, m
     assert client.post(f"/api/rooms/{code}/takeover").status_code in (401, 403)
 
 
-def test_a_screen_joins_any_time_shows_the_round_and_cannot_act(client, google):
-    code, (hc, me), _, _ = _running_with_second_account(client, google)
+def test_a_screen_joins_in_the_lobby_only_shows_the_round_and_cannot_act(client, google):
+    me = host(client, google)
+    room = create(client, me)
+    code = room["code"]
+    hc = dict(client.cookies)
     client.cookies.clear()
     r = client.post(f"/api/rooms/{code}/join", json={"name": "Fernseher", "display": True})
     assert r.status_code == 200
     assert r.json()["me"]["display"] is True
     sc = dict(client.cookies)
+    client.cookies.clear()
+    client.cookies.update(hc)
+    assert client.post(f"/api/rooms/{code}/status", json={"status": "running"}, headers=csrf(me)).status_code == 200
+    # A latecomer screen with the link gets nothing once the round runs
+    client.cookies.clear()
+    late = client.post(f"/api/rooms/{code}/join", json={"name": "Fremd", "display": True})
+    assert late.status_code == 409
+    client.cookies.clear()
+    client.cookies.update(sc)
     # It hears the music like a guest
     assert client.get("/api/auth/audio-check").status_code == 204
     with _connect(client, code, hc) as h:

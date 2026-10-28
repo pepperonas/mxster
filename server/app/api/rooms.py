@@ -3,7 +3,7 @@
 Roles: the host (an approved account; seat 0 at first, ``rooms.host_seat``)
 runs the game on their device; everyone else sends intents. When the host's
 device is gone for a while, another account in the room may take over.
-A display (TV, laptop) joins like a guest but only shows the round. Guests join through the link with just a name:
+A display (TV, laptop) joins like a guest (in the lobby) but only shows the round. Guests join through the link with just a name:
 they get the httpOnly cookie ``mx_guest`` (room code + seat token, signed),
 which is also what lets them hear the music while the room is open.
 """
@@ -239,7 +239,7 @@ def read_room(code: str, request: Request, db: Session = Depends(get_db)) -> dic
 
 class JoinIn(BaseModel):
     name: str | None = None
-    #: Join as a screen that only shows the round (no account, any time)
+    #: Join as a screen that only shows the round (no account; lobby only)
     display: bool = False
 
 
@@ -254,8 +254,9 @@ def join_room(code: str, body: JoinIn, request: Request, response: Response, db:
         if existing.left_at is not None:
             raise err(409, "left_round", "Du hast diese Runde verlassen.")
         return public_room(db, room, existing)
-    # A screen may join a running round (it does not play); players may not
-    if room.status != "lobby" and not (body.display and room.status == "running"):
+    # Nobody new after the start — screens included: the room link must not
+    # let a stranger into a running round (or its music)
+    if room.status != "lobby":
         raise err(409, "room_started" if room.status == "running" else "room_closed",
                   "Die Runde läuft schon." if room.status == "running" else "Diese Runde ist vorbei.")
     seats = members_of(db, room.code)

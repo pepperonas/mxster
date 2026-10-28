@@ -36,8 +36,8 @@ export function JoinScreen() {
   const [busy, setBusy] = useState(false)
   // Kept as the error itself, so the text follows a language switch
   const [error, setError] = useState<{ err: unknown } | null>(null)
-  // TV mode: this device only shows the round (and plays the music); it may
-  // also join a round that is already running
+  // TV mode: this device only shows the round (and plays the music); like
+  // everyone else it joins in the lobby
   const [asScreen, setAsScreen] = useState(() => new URLSearchParams(window.location.search).get('screen') === '1')
 
   useEffect(() => {
@@ -45,12 +45,11 @@ export function JoinScreen() {
       .read(code)
       .then((r) => {
         if (r.me) navigate(`/room/${r.code}`, { replace: true })
-        else if (r.status === 'running' && asScreen) setRoom(r)
         else if (r.status !== 'lobby') setProblem(r.status === 'running' ? 'room_started' : 'room_closed')
         else setRoom(r)
       })
       .catch((e) => setProblem(e instanceof ApiError ? e.code : 'unreachable'))
-  }, [code, navigate, asScreen])
+  }, [code, navigate])
 
   const join = async (e?: FormEvent) => {
     e?.preventDefault()

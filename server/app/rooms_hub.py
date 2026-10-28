@@ -51,11 +51,13 @@ class Hub:
 
     def offline_for(self, code: str, seat: int) -> float | None:
         """Seconds the seat has been without a connection; None while it is
-        connected, infinity when it never connected since the server started."""
+        connected. Nothing known (e.g. right after a server restart) counts as
+        "just gone": the clock starts now, so nobody can take over before the
+        host had a fair chance to reconnect."""
         if seat in self.sockets.get(code, {}):
             return None
-        since = self.gone_since.get((code, seat))
-        return float("inf") if since is None else time.monotonic() - since
+        since = self.gone_since.setdefault((code, seat), time.monotonic())
+        return time.monotonic() - since
 
     async def send(self, code: str, seat: int, msg: dict) -> bool:
         ws = self.sockets.get(code, {}).get(seat)
