@@ -8,10 +8,13 @@ import { AnimatedNumber } from '@/components/ui/AnimatedNumber'
 import { MAX_POINTS, rankFor } from '@/game/achievementPoints'
 import { spring } from '@/motion/springs'
 import { useMessages } from '@/i18n'
+import { useUI } from '@/contexts/UIContext'
+import { RankList } from './RankList'
 import { achievementText } from '@/i18n/messages/achievements'
 
 export function RankCard({ points }: { points: number }) {
   const t = useMessages(achievementText)
+  const { showModal } = useUI()
   const tt = t as unknown as Record<string, string>
   const { rank, next, toNext, progress } = rankFor(points)
   const rankName = (id: string) => tt[`rank_${id}`]
@@ -30,7 +33,17 @@ export function RankCard({ points }: { points: number }) {
           <Icon name={rank.icon} size={28} />
         </m.span>
         <div className="min-w-0 flex-1">
-          <p className="meta">{t.rankLabel}</p>
+          <p className="meta flex items-center gap-1">
+            {t.rankLabel}
+            <button
+              type="button"
+              className="icon-btn m3-state-layer -my-3 -ml-2 text-md-on-surface-variant"
+              aria-label={t.rankInfoButton}
+              onClick={() => showModal(t.rankInfo, <RankList points={points} />)}
+            >
+              <Icon name="info" size={18} />
+            </button>
+          </p>
           <p className="text-title-lg truncate">{rankName(rank.id)}</p>
         </div>
         <p className="text-right">

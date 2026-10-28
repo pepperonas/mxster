@@ -1,7 +1,9 @@
 import { describe, it, expect } from 'vitest'
 import { readFileSync } from 'node:fs'
 import { join } from 'node:path'
-import { render, screen } from '@testing-library/react'
+import { fireEvent, render, screen } from '@testing-library/react'
+import { UIProvider } from '@/contexts/UIContext'
+import { Modal } from '@/components/Modal'
 import { AchievementId, type Achievement } from '@/types/achievements'
 import { ACHIEVEMENT_POINTS, MAX_POINTS, RANKS, pointsFor, pointsSince, rankBoard, rankFor, totalPoints } from '../achievementPoints'
 import { earnedThisRound } from '@/components/game/GameOver'
@@ -130,18 +132,37 @@ describe('leaderboard', () => {
 })
 
 describe('rank card', () => {
-  it('names the rank, the points and the way to the next rank', () => {
-    setCurrentLang('de')
+  const renderCard = (points: number) =>
     render(
       <LanguageProvider initial="de">
         <MotionTestProvider>
-          <RankCard points={400} />
+          <UIProvider>
+            <RankCard points={points} />
+            <Modal />
+          </UIProvider>
         </MotionTestProvider>
       </LanguageProvider>
     )
+
+  it('names the rank, the points and the way to the next rank', () => {
+    setCurrentLang('de')
+    renderCard(400)
     expect(screen.getByText('Single')).toBeTruthy()
     expect(screen.getAllByText('Noch 350 EP bis Album').length).toBeGreaterThan(0)
     expect(screen.getByRole('progressbar').getAttribute('aria-valuenow')).toBe('30')
+  })
+
+  it('the info button opens every rank with its points, the current one marked', async () => {
+    setCurrentLang('de')
+    renderCard(1800)
+    fireEvent.click(screen.getByRole('button', { name: 'Alle Ränge anzeigen' }))
+    const dialog = await screen.findByRole('dialog')
+    const rows = [...dialog.querySelectorAll('li[data-rank]')]
+    expect(rows.map((r) => r.getAttribute('data-rank'))).toEqual(RANKS.map((r) => r.id))
+    expect(rows.find((r) => r.getAttribute('aria-current') === 'true')?.getAttribute('data-rank')).toBe('gold')
+    expect(dialog.textContent).toContain('ab 750\u00a0EP')
+    expect(dialog.textContent).toContain('ab 6000\u00a0EP')
+    expect(dialog.textContent).toContain('Legende')
   })
 })
 
@@ -186,5 +207,14 @@ describe('numbers in the poster face', () => {
     expect(src('src/components/achievements/PointsBoard.tsx')).toContain('text-title-md num-poster')
     expect(src('src/components/charts/Bars.tsx')).toContain('text-headline-sm num-poster')
     expect(src('src/components/game/GameBoards.tsx').match(/num-poster/g)?.length).toBe(2)
+  })
+})
+
+describe('rank info button', () => {
+  it('keeps the full 48 px touch target', () => {
+    const card = readFileSync(join(process.cwd(), 'src/components/achievements/RankCard.tsx'), 'utf8')
+    const btn = card.slice(card.indexOf('<button'), card.indexOf('</button>'))
+    expect(btn).toContain('icon-btn')
+    expect(btn).not.toMatch(/!w-|!h-/)
   })
 })
