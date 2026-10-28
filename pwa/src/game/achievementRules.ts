@@ -73,7 +73,8 @@ export function endOfGameAchievements({
     if (maxDecadeCount >= 10) unlock(player.name, AchievementId.DECADE_MASTER)
     progress(player.name, AchievementId.DECADE_MASTER, maxDecadeCount)
 
-    if (player.cards === 10) unlock(player.name, AchievementId.PERFECTIONIST)
+    // PERFECTIONIST is judged from the turn log (endOfRoundAchievements):
+    // in hardcore everyone ends with as many cards as the goal
 
     if (isWinner && gameDurationMinutes < 5) unlock(player.name, AchievementId.LIGHTNING_FAST)
 
@@ -130,6 +131,57 @@ export interface RoundInput {
   rankingsHistory: RankingSnapshot[]
   turns: TurnRecord[]
   genreOf: (songId: string) => string | undefined
+  /** When the round ended (ms), for the time-of-day achievements. */
+  finishedAt?: number
+  /** The daily round's day, when it was one. */
+  daily?: string | null
+  /** Catching up from the history: the hardcore details are not stored there. */
+  fromHistory?: boolean
+}
+
+const TIMELINE_MODES: string[] = [GameMode.TIMELINE_GLOBAL, GameMode.TIMELINE_PERSONAL]
+
+/** The people of a round: players and team members, never bots. */
+export function peopleOf(players: Array<Pick<Player, 'name' | 'isBot' | 'members'>>): string[] {
+  return players.flatMap((p) => (p.isBot ? [] : p.members?.length ? p.members : [p.name]))
+}
+
+/** Did `person` win (alone, or as a member of the winning team)? */
+function wonRound(winner: Pick<Player, 'name' | 'members'>, person: string): boolean {
+  return winner.name === person || Boolean(winner.members?.includes(person))
+}
+
+/** A right card of `person` in a timeline round: own placement or a won objection (teams too). */
+function rightCard(t: TurnRecord, person: string): boolean {
+  return !t.first && ((t.p === person && t.ok) || (t.ch?.by === person && t.ch.ok === true))
+}
+
+/** The longest run of own right placements (the free first card left out). */
+function longestRun(turns: TurnRecord[], person: string): number {
+  let run = 0
+  let best = 0
+  for (const t of turns) {
+    if (t.first || t.p !== person) continue
+    run = t.ok ? run + 1 : 0
+    best = Math.max(best, run)
+  }
+  return best
+}
+
+/** What one round adds to the counters of one person. */
+export function roundTally(turns: TurnRecord[], mode: string, person: string) {
+  const timeline = TIMELINE_MODES.includes(mode)
+  const right = timeline ? turns.filter((t) => rightCard(t, person)) : []
+  const mine = mode === GameMode.HARDCORE ? turns.filter((t) => t.p === person) : []
+  return {
+    right: right.length,
+    oldies: right.filter((t) => t.y < 1970).length,
+    modern: right.filter((t) => t.y >= 2010).length,
+    objections: turns.filter((t) => t.ch?.by === person && t.ch.ok === true).length,
+    exact: mine.filter((t) => t.d === 0).length,
+    titles: mine.filter((t) => t.ti).length,
+    artists: mine.filter((t) => t.ar).length
+  }
 }
 
 /** A timeline turn won by `person`: own right card, or an objection whose gap was right. */
@@ -164,20 +216,22 @@ export function endOfRoundAchievements(input: RoundInput): AchievementEffect[] {
   const { mode, people, players, winner, durationMinutes, turns, genreOf } = input
   const keep = (fx: AchievementEffect[]) => fx.filter((e) => people.includes(e.player))
 
+  const common = keep(everyRound(input))
   if (mode === GameMode.HARDCORE) {
-    return keep(
-      endOfGameAchievements({ players, winner, gameDurationMinutes: durationMinutes, rankingsHistory: input.rankingsHistory })
-    )
+    if (input.fromHistory) return common
+    return [
+      ...keep(endOfGameAchievements({ players, winner, gameDurationMinutes: durationMinutes, rankingsHistory: input.rankingsHistory })),
+      ...common
+    ]
   }
 
-  const fx: AchievementEffect[] = []
+  const fx: AchievementEffect[] = [...common]
   const unlock = (player: string, id: AchievementId) => fx.push({ type: 'unlock', player, id })
   const progress = (player: string, id: AchievementId, value: number) => fx.push({ type: 'progress', player, id, value })
   const seats = players.map((p) => p.name)
 
   for (const person of people) {
     const right = turns.filter((t) => !t.first && wonBy(t, person))
-    const tries = turns.filter((t) => !t.first && !t.team && t.p === person)
 
     const decades = new Set(right.map((t) => decadeOf(t.y)))
     progress(person, AchievementId.ZEITMASCHINE, decades.size)
@@ -190,13 +244,53 @@ export function endOfRoundAchievements(input: RoundInput): AchievementEffect[] {
     const genres = new Set(right.map((t) => genreOf(t.s)).filter((g): g is string => Boolean(g)))
     progress(person, AchievementId.GENRE_HOPPER, genres.size)
 
-    // Every own card of the round right, at least five of them
-    if (tries.length >= 5 && tries.every((t) => t.ok)) unlock(person, AchievementId.PERFECTIONIST)
 
     if (person === winner.name) {
       if (durationMinutes < 5) unlock(person, AchievementId.LIGHTNING_FAST)
       if (durationMinutes < 3) unlock(person, AchievementId.MASTER_OF_TIME)
       if (wasLastEarly(turns, seats, person, false)) unlock(person, AchievementId.COMEBACK_KING)
+    }
+  }
+  return fx
+}
+
+/** The part every mode shares (the new achievements of v0.12.6 and the perfect round). */
+function everyRound(input: RoundInput): AchievementEffect[] {
+  const { mode, people, winner, durationMinutes, turns } = input
+  const fx: AchievementEffect[] = []
+  const unlock = (player: string, id: AchievementId) => fx.push({ type: 'unlock', player, id })
+  const progress = (player: string, id: AchievementId, value: number) => fx.push({ type: 'progress', player, id, value })
+  const timeline = TIMELINE_MODES.includes(mode)
+  const hour = input.finishedAt !== undefined ? new Date(input.finishedAt).getHours() : null
+
+  for (const person of people) {
+    unlock(person, AchievementId.FIRST_ROUND)
+    const won = wonRound(winner, person)
+    if (won) unlock(person, AchievementId.FIRST_WIN)
+    if (won && winner.members?.length) unlock(person, AchievementId.TEAM_SPIRIT)
+    if (hour !== null && hour < 4) unlock(person, AchievementId.NIGHT_OWL)
+    if (hour !== null && hour >= 5 && hour < 9) unlock(person, AchievementId.EARLY_BIRD)
+    if (Number.isFinite(durationMinutes) && durationMinutes > 60) unlock(person, AchievementId.LONG_ROUND)
+    if (people.length >= 6) unlock(person, AchievementId.FULL_HOUSE)
+
+    // Every own song of the round right, at least five (timeline: placed, hardcore: year within 2)
+    const tries = turns.filter((t) => !t.first && t.p === person)
+    if (tries.length >= 5 && tries.every((t) => t.ok)) unlock(person, AchievementId.PERFECTIONIST)
+
+    if (timeline) {
+      const run = longestRun(turns, person)
+      progress(person, AchievementId.HOT_STREAK, run)
+      progress(person, AchievementId.UNSTOPPABLE, run)
+      const right = turns.filter((t) => rightCard(t, person))
+      progress(person, AchievementId.ALL_OVER, new Set(right.map((t) => decadeOf(t.y))).size)
+      if (turns.some((t) => t.ch?.by === person && t.ch.ok === true)) unlock(person, AchievementId.OBJECTION_WON)
+    }
+    if (mode === GameMode.HARDCORE && turns.some((t) => t.p === person && t.pts === 15)) unlock(person, AchievementId.FULL_SCORE)
+
+    if (input.daily) {
+      unlock(person, AchievementId.DAILY_FIRST)
+      // Ten right after the start card
+      if (turns.filter((t) => rightCard(t, person)).length >= 10) unlock(person, AchievementId.DAILY_PERFECT)
     }
   }
   return fx
@@ -254,17 +348,53 @@ export function historyAchievements(person: string, games: HistoryEntry[]): Achi
   return fx
 }
 
-/** Counters that grow with every round: rounds played, points. */
-export function roundCounters(person: string, games: HistoryEntry[], points: number): AchievementEffect[] {
-  const played = games.filter((g) => g.players.some((p) => p.name === person && !p.members && !isBotSeat(p))).length
+/** Did `person` play this stored round (alone or in a team)? */
+export function playedIn(g: HistoryEntry, person: string): boolean {
+  return g.players.some((p) => !isBotSeat(p) && (p.name === person || Boolean(p.members?.includes(person))))
+}
+
+/** Did `person` win this stored round (alone or in the winning team)? */
+export function wonStored(g: HistoryEntry, person: string): boolean {
+  if (!g.winner) return false
+  if (g.winner.name === person) return true
+  return Boolean(g.players.find((p) => p.name === g.winner.name)?.members?.includes(person))
+}
+
+const COUNTERS: Array<[keyof ReturnType<typeof roundTally>, AchievementId[]]> = [
+  ['right', [AchievementId.COLLECTOR, AchievementId.ARCHIVIST]],
+  ['oldies', [AchievementId.OLDIE_EXPERT]],
+  ['modern', [AchievementId.ZEITGEIST]],
+  ['objections', [AchievementId.STAR_LAWYER]],
+  ['exact', [AchievementId.EXACT_YEAR]],
+  ['titles', [AchievementId.TITLE_HERO]],
+  ['artists', [AchievementId.ARTIST_EXPERT]]
+]
+
+/**
+ * Counters that grow with every round: rounds played and won, points, right
+ * cards and the like. Counted up (the history keeps only 50 rounds), never
+ * below what the stored rounds already show.
+ */
+export function roundCounters(person: string, games: HistoryEntry[], round: HistoryEntry | null, points = 0): AchievementEffect[] {
+  const mine = games.filter((g) => playedIn(g, person))
+  const played = mine.length
+  const wins = mine.filter((g) => wonStored(g, person)).length
+  const add = (id: AchievementId, value: number, atLeast?: number) =>
+    value > 0 || atLeast ? [{ type: 'add' as const, player: person, id, value, atLeast }] : []
+  const won = round ? wonStored(round, person) : false
   const fx: AchievementEffect[] = [
-    { type: 'add', player: person, id: AchievementId.MARATHON_RUNNER, value: 1, atLeast: played },
-    { type: 'add', player: person, id: AchievementId.CENTURION, value: 1, atLeast: played }
+    ...add(AchievementId.MARATHON_RUNNER, 1, played),
+    ...add(AchievementId.CENTURION, 1, played),
+    ...add(AchievementId.REGULAR, 1, played),
+    ...(won ? [...add(AchievementId.WINNER_10, 1, wins), ...add(AchievementId.WINNER_25, 1, wins)] : [])
   ]
-  if (points > 0) {
-    fx.push({ type: 'add', player: person, id: AchievementId.MUSIC_EXPERT, value: points })
-    fx.push({ type: 'add', player: person, id: AchievementId.GRAND_MASTER, value: points })
+  if (points > 0) fx.push(...add(AchievementId.MUSIC_EXPERT, points), ...add(AchievementId.GRAND_MASTER, points))
+  if (round?.turns?.length) {
+    const tally = roundTally(round.turns, round.gameMode, person)
+    for (const [key, ids] of COUNTERS) for (const id of ids) fx.push(...add(id, tally[key]))
   }
+  const days = new Set(mine.map((g) => g.daily).filter(Boolean)).size
+  if (days > 0) fx.push({ type: 'progress', player: person, id: AchievementId.DAILY_REGULAR, value: days })
   return fx
 }
 
@@ -281,32 +411,48 @@ export function backfillAchievements(
 ): AchievementEffect[] {
   const fx: AchievementEffect[] = []
   const everyone = new Set<string>()
+  type Seat = HistoryEntry['players'][number]
+  const asPlayer = (p: Seat): Player => ({
+    name: p.name,
+    cards: p.cards,
+    score: p.score,
+    timeline: [],
+    ...(p.members ? { members: p.members } : {}),
+    ...(isBotSeat(p) ? { isBot: true } : {})
+  })
   for (const g of games) {
-    const people = g.players.filter((p) => !p.members && !isBotSeat(p) && !hidden.includes(p.name)).map((p) => p.name)
+    const players = g.players.map(asPlayer)
+    const people = peopleOf(players).filter((n) => !hidden.includes(n))
     people.forEach((p) => everyone.add(p))
-    if (g.gameMode === GameMode.HARDCORE || !g.turns?.length) continue
-    const asPlayer = (p: HistoryEntry['players'][number]): Player => ({ name: p.name, cards: p.cards, score: p.score, timeline: [] })
+    const winnerSeat = g.players.find((p) => p.name === g.winner?.name)
     fx.push(
       ...endOfRoundAchievements({
         mode: g.gameMode,
         people,
-        players: g.players.map(asPlayer),
-        winner: { name: g.winner?.name ?? '', cards: g.winner?.cards ?? 0, score: g.winner?.score ?? 0, timeline: [] },
+        players,
+        winner: winnerSeat ? asPlayer(winnerSeat) : { name: g.winner?.name ?? '', cards: 0, score: 0, timeline: [] },
         durationMinutes: g.durationMs ? g.durationMs / 60000 : Infinity,
         rankingsHistory: [],
-        turns: g.turns,
-        genreOf
+        turns: g.turns ?? [],
+        genreOf,
+        finishedAt: g.timestamp,
+        daily: g.daily ?? null,
+        fromHistory: true
       })
     )
   }
   for (const person of everyone) {
     fx.push(...historyAchievements(person, games))
-    const mine = games.filter((g) => g.players.some((p) => p.name === person && !p.members && !isBotSeat(p)))
-    const points = mine.reduce((sum, g) => sum + (g.players.find((p) => p.name === person)?.score ?? 0), 0)
-    for (const id of [AchievementId.MARATHON_RUNNER, AchievementId.CENTURION])
-      fx.push({ type: 'progress', player: person, id, value: mine.length })
-    for (const id of [AchievementId.MUSIC_EXPERT, AchievementId.GRAND_MASTER])
-      fx.push({ type: 'progress', player: person, id, value: points })
+    const mine = games.filter((g) => playedIn(g, person))
+    const total = (f: (g: HistoryEntry) => number) => mine.reduce((sum, g) => sum + f(g), 0)
+    const points = total((g) => g.players.find((p) => p.name === person)?.score ?? 0)
+    const wins = mine.filter((g) => wonStored(g, person)).length
+    const set = (ids: AchievementId[], value: number) => ids.forEach((id) => fx.push({ type: 'progress', player: person, id, value }))
+    set([AchievementId.MARATHON_RUNNER, AchievementId.CENTURION, AchievementId.REGULAR], mine.length)
+    set([AchievementId.MUSIC_EXPERT, AchievementId.GRAND_MASTER], points)
+    set([AchievementId.WINNER_10, AchievementId.WINNER_25], wins)
+    for (const [key, ids] of COUNTERS) set(ids, total((g) => roundTally(g.turns ?? [], g.gameMode, person)[key]))
+    set([AchievementId.DAILY_REGULAR], new Set(mine.map((g) => g.daily).filter(Boolean)).size)
   }
   return fx
 }

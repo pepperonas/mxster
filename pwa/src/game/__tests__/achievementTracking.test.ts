@@ -160,7 +160,8 @@ describe('historyAchievements', () => {
 
 describe('roundCounters', () => {
   it('counts a round and its points', () => {
-    const fx = roundCounters('Anna', [game(1, 'Anna', [seat('Anna')])], 40)
+    const g = game(1, 'Anna', [seat('Anna')])
+    const fx = roundCounters('Anna', [g], g, 40)
     const { doc } = applyAchievementEffects({}, fx, 1)
     expect(find(doc, 'Anna', AchievementId.MARATHON_RUNNER).progress).toBe(1)
     expect(find(doc, 'Anna', AchievementId.MUSIC_EXPERT).progress).toBe(40)

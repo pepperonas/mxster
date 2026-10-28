@@ -32,7 +32,34 @@ export enum AchievementId {
   // Bot Achievements (v0.0.38)
   BOT_SLAYER_EASY = 'bot_slayer_easy',         // 3x einfachen Bot besiegt
   BOT_SLAYER_MEDIUM = 'bot_slayer_medium',     // 3x mittleren Bot besiegt
-  BOT_SLAYER_HARD = 'bot_slayer_hard'          // 3x schweren Bot besiegt
+  BOT_SLAYER_HARD = 'bot_slayer_hard',         // 3x schweren Bot besiegt
+  // v0.12.6: 26 more, 50 in total
+  FIRST_ROUND = 'first_round',
+  REGULAR = 'regular',
+  FIRST_WIN = 'first_win',
+  WINNER_10 = 'winner_10',
+  WINNER_25 = 'winner_25',
+  NIGHT_OWL = 'night_owl',
+  EARLY_BIRD = 'early_bird',
+  LONG_ROUND = 'long_round',
+  FULL_HOUSE = 'full_house',
+  HOT_STREAK = 'hot_streak',
+  UNSTOPPABLE = 'unstoppable',
+  OBJECTION_WON = 'objection_won',
+  STAR_LAWYER = 'star_lawyer',
+  OLDIE_EXPERT = 'oldie_expert',
+  ZEITGEIST = 'zeitgeist',
+  ALL_OVER = 'all_over',
+  COLLECTOR = 'collector',
+  ARCHIVIST = 'archivist',
+  EXACT_YEAR = 'exact_year',
+  TITLE_HERO = 'title_hero',
+  ARTIST_EXPERT = 'artist_expert',
+  FULL_SCORE = 'full_score',
+  TEAM_SPIRIT = 'team_spirit',
+  DAILY_FIRST = 'daily_first',
+  DAILY_PERFECT = 'daily_perfect',
+  DAILY_REGULAR = 'daily_regular'
 }
 
 export interface Achievement {
@@ -203,7 +230,33 @@ const DEFINITIONS: Record<AchievementId, Omit<AchievementDefinition, 'name' | 'd
     id: AchievementId.BOT_SLAYER_HARD,
     icon: 'rocket',
     target: 3
-  }
+  },
+  [AchievementId.FIRST_ROUND]: { id: AchievementId.FIRST_ROUND, icon: 'play' },
+  [AchievementId.REGULAR]: { id: AchievementId.REGULAR, icon: 'replay', target: 10 },
+  [AchievementId.FIRST_WIN]: { id: AchievementId.FIRST_WIN, icon: 'flag' },
+  [AchievementId.WINNER_10]: { id: AchievementId.WINNER_10, icon: 'medal', target: 10 },
+  [AchievementId.WINNER_25]: { id: AchievementId.WINNER_25, icon: 'trophy', target: 25 },
+  [AchievementId.NIGHT_OWL]: { id: AchievementId.NIGHT_OWL, icon: 'moon' },
+  [AchievementId.EARLY_BIRD]: { id: AchievementId.EARLY_BIRD, icon: 'sun' },
+  [AchievementId.LONG_ROUND]: { id: AchievementId.LONG_ROUND, icon: 'hourglass' },
+  [AchievementId.FULL_HOUSE]: { id: AchievementId.FULL_HOUSE, icon: 'share' },
+  [AchievementId.HOT_STREAK]: { id: AchievementId.HOT_STREAK, icon: 'check', target: 5 },
+  [AchievementId.UNSTOPPABLE]: { id: AchievementId.UNSTOPPABLE, icon: 'insights', target: 10 },
+  [AchievementId.OBJECTION_WON]: { id: AchievementId.OBJECTION_WON, icon: 'hand' },
+  [AchievementId.STAR_LAWYER]: { id: AchievementId.STAR_LAWYER, icon: 'shield', target: 10 },
+  [AchievementId.OLDIE_EXPERT]: { id: AchievementId.OLDIE_EXPERT, icon: 'album', target: 25 },
+  [AchievementId.ZEITGEIST]: { id: AchievementId.ZEITGEIST, icon: 'note', target: 25 },
+  [AchievementId.ALL_OVER]: { id: AchievementId.ALL_OVER, icon: 'globe', target: 6 },
+  [AchievementId.COLLECTOR]: { id: AchievementId.COLLECTOR, icon: 'timeline', target: 100 },
+  [AchievementId.ARCHIVIST]: { id: AchievementId.ARCHIVIST, icon: 'library', target: 500 },
+  [AchievementId.EXACT_YEAR]: { id: AchievementId.EXACT_YEAR, icon: 'target', target: 10 },
+  [AchievementId.TITLE_HERO]: { id: AchievementId.TITLE_HERO, icon: 'edit', target: 25 },
+  [AchievementId.ARTIST_EXPERT]: { id: AchievementId.ARTIST_EXPERT, icon: 'person', target: 50 },
+  [AchievementId.FULL_SCORE]: { id: AchievementId.FULL_SCORE, icon: 'diamond' },
+  [AchievementId.TEAM_SPIRIT]: { id: AchievementId.TEAM_SPIRIT, icon: 'groups' },
+  [AchievementId.DAILY_FIRST]: { id: AchievementId.DAILY_FIRST, icon: 'today' },
+  [AchievementId.DAILY_PERFECT]: { id: AchievementId.DAILY_PERFECT, icon: 'star' },
+  [AchievementId.DAILY_REGULAR]: { id: AchievementId.DAILY_REGULAR, icon: 'flame', target: 7 }
 }
 
 export const ACHIEVEMENT_DEFINITIONS = Object.fromEntries(

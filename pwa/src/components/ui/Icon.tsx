@@ -100,6 +100,8 @@ const PATHS = {
 } as const
 
 export type IconName = keyof typeof PATHS
+/** Every icon there is (checks that data such as achievement icons names real ones). */
+export const ICON_NAMES = Object.keys(PATHS) as IconName[]
 
 export function Icon({ name, size = 24, className }: { name: IconName; size?: number; className?: string }) {
   return (

@@ -22,6 +22,8 @@ interface SaveGameData {
   totalRounds?: number
   turns?: TurnRecord[]
   durationMs?: number
+  /** The daily round's day (YYYY-MM-DD). */
+  daily?: string | null
 }
 
 interface GameStatistics {
@@ -104,7 +106,8 @@ export function GameHistoryProvider({ children }: { children: ReactNode }) {
         duration: gameData.duration || undefined,
         totalRounds: gameData.totalRounds || undefined,
         ...(gameData.turns?.length ? { turns: gameData.turns } : {}),
-        ...(gameData.durationMs ? { durationMs: gameData.durationMs } : {})
+        ...(gameData.durationMs ? { durationMs: gameData.durationMs } : {}),
+        ...(gameData.daily ? { daily: gameData.daily } : {})
       }
 
       // Keep only last 50 games to prevent localStorage overflow

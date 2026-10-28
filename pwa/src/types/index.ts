@@ -143,6 +143,8 @@ export interface HistoryEntry {
   turns?: TurnRecord[]
   /** Wall-clock length of the round (since v0.6.0). */
   durationMs?: number
+  /** The daily round's day, YYYY-MM-DD (since v0.12.6). */
+  daily?: string
 }
 
 /**

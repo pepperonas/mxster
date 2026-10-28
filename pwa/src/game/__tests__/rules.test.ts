@@ -109,12 +109,13 @@ describe('endOfGameAchievements', () => {
     expect(unlocked(fx, 'A')).toEqual(
       expect.arrayContaining([
         AchievementId.TIME_TRAVELER,
-        AchievementId.PERFECTIONIST,
         AchievementId.ZEITMASCHINE,
         AchievementId.GENRE_HOPPER
       ])
     )
     expect(unlocked(fx, 'A')).not.toContain(AchievementId.DECADE_MASTER)
+    // in hardcore everyone ends with the goal's number of cards: that alone is no perfect round
+    expect(unlocked(fx, 'A')).not.toContain(AchievementId.PERFECTIONIST)
     expect(progressOf(fx, 'A', AchievementId.TIME_TRAVELER)).toMatchObject({ value: 5 })
     expect(progressOf(fx, 'A', AchievementId.PUNKTEJAEGER)).toMatchObject({ value: 40 })
   })

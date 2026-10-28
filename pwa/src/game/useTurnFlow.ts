@@ -30,7 +30,7 @@ import { allSongs, songById } from '@/data/catalogue'
 import type { HistoryEntry, Player, Song } from '@/types'
 import { evaluatePlacement, timelineSongsFor } from './placement'
 import { guessBreakdown, guessDetailsFor } from './guess'
-import { endOfRoundAchievements, historyAchievements, realtimeScoreAchievements, roundCounters, type AchievementEffect } from './achievementRules'
+import { endOfRoundAchievements, historyAchievements, peopleOf, realtimeScoreAchievements, roundCounters, type AchievementEffect } from './achievementRules'
 import { evaluateSkip, SKIP_PENALTY_POINTS } from './skipRules'
 import { afterTiebreakTurn, leadersAmong, startTiebreak } from './tiebreak'
 import { stillIn } from './presence'
@@ -193,31 +193,35 @@ export function useTurnFlow({ onGameOver, onSkipNotice, runBots = true }: Option
           players: finalPlayers,
           gameMode: gameMode ?? '',
           turns: logRef.current,
-          durationMs: startedAt ? Date.now() - startedAt : undefined
+          durationMs: startedAt ? Date.now() - startedAt : undefined,
+          daily
         })
         addToast(msg(modesText).savedToHistory, 'success')
       } catch (error) {
         console.error('Failed to save game:', error)
       }
-      // Achievements belong to people: no bots, no teams (in every mode)
-      const people = finalPlayers.filter((p) => !p.isBot && !isTeam(p))
+      // Achievements belong to people: players and team members, never bots or teams
+      const people = peopleOf(finalPlayers)
       const games = entry ? [entry, ...(history ?? []).filter((g) => g.id !== entry!.id)] : (history ?? [])
+      const pointsOf = (name: string) => finalPlayers.find((p) => p.name === name && !isTeam(p))?.score ?? 0
       applyEffects([
         ...endOfRoundAchievements({
           mode: gameMode ?? '',
-          people: people.map((p) => p.name),
+          people,
           players: finalPlayers,
           winner,
           durationMinutes: startedAt ? (Date.now() - startedAt) / 60000 : Infinity,
           rankingsHistory,
           turns: logRef.current,
-          genreOf: (id) => songById(id)?.genre
+          genreOf: (id) => songById(id)?.genre,
+          finishedAt: Date.now(),
+          daily
         }),
-        ...people.flatMap((p) => [...historyAchievements(p.name, games), ...roundCounters(p.name, games, p.score)])
+        ...people.flatMap((name) => [...historyAchievements(name, games), ...roundCounters(name, games, entry, pointsOf(name))])
       ])
       onGameOver(winner, finalPlayers)
     },
-    [gameOver, finish, saveGame, gameMode, addToast, applyEffects, startedAt, rankingsHistory, history, onGameOver]
+    [gameOver, finish, saveGame, gameMode, addToast, applyEffects, startedAt, rankingsHistory, history, onGameOver, daily]
   )
 
   /**
