@@ -15,9 +15,9 @@
 <h3>👉 <a href="https://mxtape.celox.io">mxtape.celox.io</a> — mit Google oder E-Mail anmelden oder als Gast nur per Link in den Raum von Freunden</h3>
 
 <!-- BADGES:BIG — version, tests, lines of code and songs; readme.test.ts keeps them true, scripts/readme-badges.mjs rewrites them. -->
-[![version](https://img.shields.io/badge/version-0.12.4-C2185B?style=for-the-badge&logo=semver&logoColor=white)](https://github.com/pepperonas/mxtape/releases/latest)
-[![tests](https://img.shields.io/badge/tests-752-2E9E5B?style=for-the-badge&logo=vitest&logoColor=white)](#tests-und-ci)
-[![lines of code](https://img.shields.io/badge/lines%20of%20code-25.1k-4B6BDF?style=for-the-badge&logo=typescript&logoColor=white)](pwa/src)
+[![version](https://img.shields.io/badge/version-0.12.5-C2185B?style=for-the-badge&logo=semver&logoColor=white)](https://github.com/pepperonas/mxtape/releases/latest)
+[![tests](https://img.shields.io/badge/tests-761-2E9E5B?style=for-the-badge&logo=vitest&logoColor=white)](#tests-und-ci)
+[![lines of code](https://img.shields.io/badge/lines%20of%20code-25.2k-4B6BDF?style=for-the-badge&logo=typescript&logoColor=white)](pwa/src)
 [![test code](https://img.shields.io/badge/test%20code-9.5k-2E9E5B?style=for-the-badge&logo=typescript&logoColor=white)](#tests-und-ci)
 [![songs](https://img.shields.io/badge/songs-500-FF8A3D?style=for-the-badge&logo=applemusic&logoColor=white)](#die-songsammlung)
 
@@ -182,6 +182,7 @@ Statt ein Handy herumzureichen, spielt jede Person auf dem eigenen Gerät – im
 - **Aufdecken mit Hintergrund:** Album-Cover auf dem Plattenlabel, Albumname und ein kurzes „Wusstest du?“
 - **Sofort sichtbar, wohin die Karte kommt:** Die Nachbarjahre leuchten auf, eine Positionsleiste zeigt `2008 — ? — 2020` in der Plakatschrift
 - **Eine laufende Runde übersteht Neuladen** oder einen geschlossenen Tab und wird auf der Startseite angeboten
+- **Zurück führt zurück:** keine gestapelten Seiten, die Leiste springt immer zur Startseite zurück
 - **Bots hören erst zu:** 3–6 Sekunden, bevor sie legen; das Lied läuft danach weiter
 - **Einstellungen überstehen Neuladen:** Modus, Ziel, Jahrzehnte, Themen, Einspruch und Bonus bleiben gesetzt, in der Lobby auch Bots und Teams
 - **Fehlertolerante Antworten** im Hardcore-Modus (Tippfehler, Groß- und Kleinschreibung)

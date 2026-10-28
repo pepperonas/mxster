@@ -2,6 +2,8 @@
  * /imprint, /privacy, /terms — readable without an account (the sign-in gate
  * lets these paths through), in the app's language.
  */
+import { currentIdx } from '@/navigation/backStack'
+const canStepBack = () => (currentIdx() ?? 0) > 0
 import { Link, useNavigate } from 'react-router-dom'
 import { defineMessages, localeOf, useLang, useMessages } from '@/i18n'
 import { Icon } from '@/components/ui/Icon'
@@ -62,7 +64,8 @@ export function LegalScreen({ kind }: { kind: LegalKind }) {
   const navigate = useNavigate()
   const doc = LEGAL[kind][lang]
   const updated = new Intl.DateTimeFormat(localeOf(lang), { day: 'numeric', month: 'long', year: 'numeric' }).format(new Date(LEGAL_UPDATED))
-  const back = () => (window.history.length > 1 ? navigate(-1) : navigate('/', { replace: true }))
+  // Back where the reader came from; a page opened directly goes Home in place
+  const back = () => (canStepBack() ? navigate(-1) : navigate('/', { replace: true }))
 
   return (
     <div className="min-h-dvh px-4 sm:px-6 pb-16">

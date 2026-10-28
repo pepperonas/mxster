@@ -4,12 +4,14 @@
  * them. The profile sits behind the avatar — top bar on phones, foot of the
  * rail on larger screens. The running game owns the whole screen.
  */
+import { useGoBack, useStep } from '@/navigation/useGoBack'
+import { tabStep } from '@/navigation/backStack'
 import { Outlet, NavLink, useLocation, matchPath } from 'react-router-dom'
 import { m } from 'motion/react'
+import type { MouseEvent } from 'react'
 import { useMe } from '@/auth/AuthContext'
 import { Icon, type IconName } from '@/components/ui/Icon'
 import { Avatar } from '@/components/ui/Avatar'
-import { useAppNavigate } from '@/hooks/useAppNavigate'
 import { prefersReducedMotion } from '@/motion/policy'
 import { spring } from '@/motion/springs'
 import { useMessages } from '@/i18n'
@@ -53,7 +55,8 @@ export function AppShell() {
 
 function TopBar() {
   const me = useMe()
-  const navigate = useAppNavigate()
+  const { pathname } = useLocation()
+  const run = useStep()
   const t = useMessages(shellText)
   return (
     <header className="sticky top-0 z-30 bg-md-surface/90 backdrop-blur-md md:hidden" style={{ viewTransitionName: 'top-bar' }}>
@@ -61,7 +64,7 @@ function TopBar() {
         <span className="text-poster text-title-lg" style={{ fontSize: '1.6rem' }}>
           mxtape
         </span>
-        <button type="button" className="icon-btn m3-state-layer" onClick={() => navigate('/profile')} aria-label={t.profile}>
+        <button type="button" className="icon-btn m3-state-layer" onClick={() => pathname !== '/profile' && run(tabStep('/profile', pathname, TOP_LEVEL))} aria-label={t.profile}>
           <Avatar name={me.name} picture={me.picture} size={36} />
         </button>
       </div>
@@ -73,12 +76,29 @@ function isActive(to: string, pathname: string) {
   return to === '/' ? pathname === '/' : !!matchPath({ path: to, end: false }, pathname)
 }
 
+/**
+ * A plain click on a destination goes through `tabStep` (no stacked pages);
+ * modifier clicks (new tab) keep the link's own behaviour.
+ */
+function useTabClick(to: string) {
+  const { pathname } = useLocation()
+  const run = useStep()
+  return (e: MouseEvent<HTMLAnchorElement>) => {
+    if (e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return
+    e.preventDefault()
+    if (to === pathname) return
+    run(tabStep(to, pathname, TOP_LEVEL))
+  }
+}
+
 function NavItem({ dest, pathname, layout }: { dest: Destination; pathname: string; layout: 'bar' | 'rail' }) {
   const active = isActive(dest.to, pathname)
   const t = useMessages(shellText)
+  const onClick = useTabClick(dest.to)
   return (
     <NavLink
       to={dest.to}
+      onClick={onClick}
       viewTransition={!prefersReducedMotion()}
       className="group flex flex-col items-center gap-1 min-w-0 flex-1 md:flex-none md:min-w-[64px] py-3 md:py-2 outline-none"
       aria-current={active ? 'page' : undefined}
@@ -146,9 +166,11 @@ function NavRail() {
 function ProfileButton({ active }: { active: boolean }) {
   const me = useMe()
   const t = useMessages(shellText)
+  const onClick = useTabClick('/profile')
   return (
     <NavLink
       to="/profile"
+      onClick={onClick}
       viewTransition={!prefersReducedMotion()}
       aria-label={t.profile}
       aria-current={active ? 'page' : undefined}
@@ -163,11 +185,11 @@ function ProfileButton({ active }: { active: boolean }) {
 
 /** Small top bar with a back button for pages below a destination. */
 export function SubPageHeader({ title, back = '/' }: { title: string; back?: string }) {
-  const navigate = useAppNavigate()
+  const goBack = useGoBack()
   const t = useMessages(shellText)
   return (
     <header className="sticky top-0 z-30 -mx-4 sm:-mx-6 px-2 sm:px-4 h-16 flex items-center gap-1 bg-md-surface/90 backdrop-blur-md">
-      <button type="button" className="icon-btn m3-state-layer" onClick={() => navigate(back)} aria-label={t.back}>
+      <button type="button" className="icon-btn m3-state-layer" onClick={() => goBack(back)} aria-label={t.back}>
         <Icon name="back" />
       </button>
       <h1 className="text-title-lg truncate">{title}</h1>

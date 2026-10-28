@@ -5,6 +5,7 @@
  * mode's own part — the guess (hardcore) or the timeline with its placement
  * dock. On wide screens turntable and board sit side by side.
  */
+import { useGoBack } from '@/navigation/useGoBack'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { AnimatePresence, m } from 'motion/react'
 import { useAppNavigate } from '@/hooks/useAppNavigate'
@@ -106,7 +107,7 @@ const noop = () => {}
  * asks `can()` whether this device may use it right now.
  */
 export function GameRound({ onRematch }: { onRematch: () => void }) {
-  const navigate = useAppNavigate()
+  const goBack = useGoBack()
   const t = useMessages(gameText)
   const { showModal, closeModal, addToast } = useUI()
   const {
@@ -154,8 +155,9 @@ export function GameRound({ onRematch }: { onRematch: () => void }) {
     else if (onlinePlayer && room && !room.result) await roomApi.leave(room.code).catch(() => {})
     const wasDaily = daily
     resetGame()
-    navigate(wasDaily ? '/daily' : '/', { replace: true })
-  }, [closeModal, resetGame, navigate, onlineHost, onlinePlayer, room, daily])
+    // Back to the page the round was started from, without a second copy of it
+    goBack(wasDaily ? '/daily' : '/')
+  }, [closeModal, resetGame, goBack, onlineHost, onlinePlayer, room, daily])
 
   const showSkipNotice = useCallback(
     (notice: SkipNotice, acknowledge: () => void) => {

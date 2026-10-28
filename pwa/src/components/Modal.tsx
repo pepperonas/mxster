@@ -54,7 +54,10 @@ const modalHistory = (() => {
     open(close: () => void) {
       install()
       onBack = close
-      window.history.pushState({ modal: true }, '')
+      // Shaped like a router entry one step further, so the router's own
+      // indices stay right (a page opened from the dialog replaces this entry)
+      const state = (window.history.state ?? {}) as { idx?: number }
+      window.history.pushState({ ...state, idx: typeof state.idx === 'number' ? state.idx + 1 : state.idx, modal: true }, '')
     },
     close() {
       onBack = null

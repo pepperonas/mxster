@@ -19,7 +19,10 @@ export function useAppNavigate() {
         navigate(to)
         return
       }
-      navigate(to, { viewTransition: !prefersReducedMotion(), ...options })
+      // Leaving through a dialog: the page takes the dialog's history entry,
+      // otherwise back would show the page below once more (views stacking)
+      const fromDialog = Boolean((window.history.state as { modal?: boolean } | null)?.modal)
+      navigate(to, { viewTransition: !prefersReducedMotion(), ...options, ...(fromDialog ? { replace: true } : {}) })
     },
     [navigate]
   )
