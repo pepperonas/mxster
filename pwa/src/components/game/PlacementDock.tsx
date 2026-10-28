@@ -51,6 +51,10 @@ export type DockState =
       online?: boolean
       /** Online: this device placed the card (others may object). */
       ownCard?: boolean
+      /** Online: this device said "Kein Einspruch" and waits for the others. */
+      passed?: boolean
+      /** Online: seconds until the card turns over by itself. */
+      secondsLeft?: number | null
     }
   | { kind: 'challenge-choose'; challengerName: string; previewGap: number | null; timeline: Song[] }
   | {
@@ -80,6 +84,8 @@ interface PlacementDockProps {
   onChallenge?: (seat: number) => void
   onCancelChallenge?: () => void
   onReveal?: () => void
+  /** Online: "Kein Einspruch" for this device's seat. */
+  onPass?: (seat: number) => void
   /** Total cards needed to win (display only). */
   goal?: number
 }
@@ -94,6 +100,7 @@ export function PlacementDock({
   onChallenge,
   onCancelChallenge,
   onReveal,
+  onPass,
   goal = 10
 }: PlacementDockProps) {
   const t = useMessages(gameText)
@@ -131,7 +138,12 @@ export function PlacementDock({
                 />
               )}
               {state.kind === 'challenge-offer' && (
-                <ChallengeOfferStage state={state} onChallenge={(seat) => onChallenge?.(seat)} onReveal={() => onReveal?.()} />
+                <ChallengeOfferStage
+                  state={state}
+                  onChallenge={(seat) => onChallenge?.(seat)}
+                  onReveal={() => onReveal?.()}
+                  onPass={(seat) => onPass?.(seat)}
+                />
               )}
               {state.kind === 'challenge-choose' && state.previewGap === null && (
                 <div className="flex flex-col sm:flex-row sm:items-center gap-3">
@@ -259,11 +271,13 @@ function ConfirmStage({
 function ChallengeOfferStage({
   state,
   onChallenge,
-  onReveal
+  onReveal,
+  onPass
 }: {
   state: Extract<DockState, { kind: 'challenge-offer' }>
   onChallenge: (seat: number) => void
   onReveal: () => void
+  onPass: (seat: number) => void
 }) {
   const t = useMessages(gameText)
   const revealRef = useRef<HTMLButtonElement>(null)
@@ -276,23 +290,40 @@ function ChallengeOfferStage({
         <p className="text-title-md text-md-on-surface">{t.hasPlaced(state.placerName)}</p>
         <PositionStrip timeline={state.timeline} gap={state.gap} />
         <p className="text-body-sm text-md-on-surface-variant">
-          {!state.online ? t.objectionHint : state.ownCard ? t.othersMayObject : state.challengers.length > 0 ? t.objectionHintOwn : null}
+          {!state.online
+            ? t.objectionHint
+            : state.ownCard
+              ? t.othersMayObject
+              : state.passed
+                ? t.youPassed
+                : state.challengers.length > 0
+                  ? t.objectionHintOwn
+                  : t.othersMayObject}
         </p>
+        {state.online && state.secondsLeft != null && (
+          <p className="text-label-lg text-md-on-surface-variant tabular" role="timer" aria-live="off">
+            {t.revealsIn(state.secondsLeft)}
+          </p>
+        )}
       </div>
       {state.online ? (
-        // One person per device: a plain "Object" button, never one's own name
+        // One person per device: plain buttons, never one's own name
         state.challengers.slice(0, 1).map((c) => (
-          <button
-            key={c.seat}
-            type="button"
-            className="btn btn-tonal m3-state-layer"
-            onClick={() => onChallenge(c.seat)}
-            aria-label={`${t.lodgeObjection}, ${t.objectionsLeft(c.left)}`}
-          >
-            <Icon name="hand" size={18} />
-            {t.lodgeObjection}
-            <ChallengeDots left={c.left} />
-          </button>
+          <div key={c.seat} className="grid grid-cols-2 gap-2">
+            <button
+              type="button"
+              className="btn btn-tonal m3-state-layer"
+              onClick={() => onChallenge(c.seat)}
+              aria-label={`${t.lodgeObjection}, ${t.objectionsLeft(c.left)}`}
+            >
+              <Icon name="hand" size={18} />
+              {t.objectionShort}
+              <ChallengeDots left={c.left} />
+            </button>
+            <button ref={revealRef} type="button" className="btn btn-brand m3-state-layer" onClick={() => onPass(c.seat)}>
+              {t.passObjection}
+            </button>
+          </div>
         ))
       ) : (
         <div className="flex flex-wrap gap-2" role="group" aria-label={t.lodgeObjection}>
@@ -311,7 +342,7 @@ function ChallengeOfferStage({
           ))}
         </div>
       )}
-      {state.revealBy ? (
+      {state.online ? null : state.revealBy ? (
         <p className="text-body-sm text-md-on-surface-variant text-center py-2">{t.revealsWhenNoOne(state.revealBy)}</p>
       ) : (
         <button ref={revealRef} type="button" onClick={onReveal} className="btn btn-brand">

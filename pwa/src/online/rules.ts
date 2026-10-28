@@ -3,12 +3,14 @@
  * host's device whether an incoming intent is carried out, and on every device
  * which controls are live.
  *
- * - The player on turn draws, places, guesses, skips; the placer reveals
- *   ("no objection") and continues after the result.
- * - Only seats the game offers an objection to may object; only the objector
- *   picks the gap.
- * - The host may additionally draw, reveal and continue for anyone: when a
- *   phone runs out of battery, the round must not get stuck.
+ * - The player on turn draws, places, guesses, skips, and continues after the
+ *   result.
+ * - Only seats the game offers an objection to may object or pass ("Kein
+ *   Einspruch"); only the objector picks the gap.
+ * - Nobody turns a placed card over by hand online: the objection window
+ *   (game/objectionWindow.ts) does, once everyone passed or time ran out.
+ * - The host may draw and continue for a player who is away (not connected,
+ *   or skipped as absent) — and only then.
  */
 import type { Player } from '@/types'
 import type { PendingPlacement, Reveal, TurnPhase } from '@/game/turn'
@@ -20,6 +22,8 @@ export interface TurnView {
   currentPlayer: number
   pending: PendingPlacement | null
   reveal: Reveal | null
+  /** Player indices that are not connected or skipped as absent. */
+  away?: number[]
 }
 
 export function indexOfSeat(players: Player[], seat: number): number {
@@ -29,25 +33,34 @@ export function indexOfSeat(players: Player[], seat: number): number {
 const seatAt = (players: Player[], index: number | null | undefined) => (index == null ? undefined : players[index]?.seat)
 
 export function mayAct(view: TurnView, seat: number, action: Intent['action'], isHost = false): boolean {
-  const { phase, players, currentPlayer, pending, reveal } = view
+  const { phase, players, currentPlayer, pending, reveal, away = [] } = view
+  const forAway = (index: number | null | undefined) => isHost && index != null && away.includes(index)
   const onTurn = seatAt(players, currentPlayer) === seat
   const me = indexOfSeat(players, seat)
   switch (action) {
     case 'draw':
-      return phase === 'idle' && (onTurn || isHost)
+      return phase === 'idle' && (onTurn || forAway(currentPlayer))
     case 'place':
       return phase === 'placing' && onTurn
     case 'guess':
     case 'skip':
       return phase === 'guessing' && onTurn
     case 'challenge':
-      return phase === 'challenge' && !!pending && pending.choosing === null && me >= 0 && pending.challengers.includes(me)
+    case 'pass':
+      return (
+        phase === 'challenge' &&
+        !!pending &&
+        pending.choosing === null &&
+        me >= 0 &&
+        pending.challengers.includes(me) &&
+        !(pending.passed ?? []).includes(me)
+      )
     case 'claim':
     case 'cancelChallenge':
       return phase === 'challenge' && !!pending && pending.choosing !== null && pending.choosing === me
     case 'reveal':
-      return phase === 'challenge' && !!pending && pending.choosing === null && (seatAt(players, pending.playerIndex) === seat || isHost)
+      return false
     case 'continue':
-      return phase === 'revealed' && !!reveal && (seatAt(players, reveal.playerIndex) === seat || isHost)
+      return phase === 'revealed' && !!reveal && (seatAt(players, reveal.playerIndex) === seat || forAway(reveal.playerIndex))
   }
 }

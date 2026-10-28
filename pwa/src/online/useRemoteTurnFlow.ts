@@ -27,6 +27,9 @@ export function useRemoteTurnFlow(send: (intent: Intent) => void): TurnFlow {
     placeCard: (gap: number) => send({ action: 'place', gap }),
     startChallenge: () => send({ action: 'challenge' }),
     cancelChallenge: () => send({ action: 'cancelChallenge' }),
+    passChallenge: () => send({ action: 'pass' }),
+    // Only the host's device runs the objection window
+    setObjectionDeadline: () => {},
     claimGap: (gap: number) => send({ action: 'claim', gap }),
     revealPlacement: () => send({ action: 'reveal' }),
     submitGuess: (title: string, artist: string, year: string) => send({ action: 'guess', title, artist, year }),

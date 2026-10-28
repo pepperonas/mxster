@@ -46,4 +46,8 @@ export interface PendingPlacement {
   /** Seat currently choosing a gap for an objection. */
   choosing: number | null
   claim: ChallengeClaim | null
+  /** Online: who tapped "Kein Einspruch" (player indices). */
+  passed?: number[]
+  /** Online: when the objection window closes (server ms); see objectionWindow.ts. */
+  deadlineAt?: number | null
 }

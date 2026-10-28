@@ -363,7 +363,7 @@ export function useTurnFlow({ onGameOver, onSkipNotice }: Options) {
   /** A player raises an objection and is now choosing a gap. */
   const startChallenge = useCallback(
     (seat: number) => {
-      if (phase !== 'challenge' || !pending || !pending.challengers.includes(seat)) return
+      if (phase !== 'challenge' || !pending || !pending.challengers.includes(seat) || (pending.passed ?? []).includes(seat)) return
       setPending({ ...pending, choosing: seat })
     },
     [phase, pending, setPending]
@@ -371,8 +371,29 @@ export function useTurnFlow({ onGameOver, onSkipNotice }: Options) {
 
   const cancelChallenge = useCallback(() => {
     if (phase !== 'challenge' || !pending) return
-    setPending({ ...pending, choosing: null })
+    // Online the window opens again with a fresh countdown
+    setPending({ ...pending, choosing: null, deadlineAt: null })
   }, [phase, pending, setPending])
+
+  /** Online: someone allowed to object lets it go ("Kein Einspruch"). */
+  const passChallenge = useCallback(
+    (index: number) => {
+      if (phase !== 'challenge' || !pending || pending.choosing !== null || !pending.challengers.includes(index)) return
+      const passed = pending.passed ?? []
+      if (passed.includes(index)) return
+      setPending({ ...pending, passed: [...passed, index] })
+    },
+    [phase, pending, setPending]
+  )
+
+  /** Online: open the window (host's device), or move its deadline. */
+  const setObjectionDeadline = useCallback(
+    (deadlineAt: number) => {
+      if (phase !== 'challenge' || !pending) return
+      setPending({ ...pending, deadlineAt })
+    },
+    [phase, pending, setPending]
+  )
 
   /** The objecting player puts the card into another gap — then it is revealed. */
   const claimGap = useCallback(
@@ -520,6 +541,8 @@ export function useTurnFlow({ onGameOver, onSkipNotice }: Options) {
     placeCard,
     startChallenge,
     cancelChallenge,
+    passChallenge,
+    setObjectionDeadline,
     claimGap,
     revealPlacement,
     submitGuess,

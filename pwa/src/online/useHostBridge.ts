@@ -44,6 +44,9 @@ export function carryOut(flow: TurnFlow, game: { players: Player[]; currentPlaye
     case 'cancelChallenge':
       flow.cancelChallenge()
       return true
+    case 'pass':
+      flow.passChallenge(indexOfSeat(game.players, seat))
+      return true
     case 'reveal':
       flow.revealPlacement()
       return true

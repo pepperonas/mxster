@@ -46,16 +46,24 @@ const both = (get: ReturnType<typeof setup>, a: [number, Intent], b: [number, In
 beforeEach(() => localStorage.clear())
 
 describe('the host handles intents one after the other', () => {
-  it('reveal followed by an objection: the objection is refused, the round goes on', () => {
+  it('an objection and a pass from the same player: only the first counts', () => {
     const get = setup(GameMode.TIMELINE_GLOBAL, [{ name: 'A', seat: 0, challenges: 3 }, { name: 'B', seat: 1, challenges: 3 }])
     act(() => get().game.addToGlobalTimeline(song(1970), 0))
     act(() => get().game.setCurrentSong(song(1980)))
     act(() => get().flow.placeCard(1))
-    both(get, [0, { action: 'reveal' } as Intent], [1, { action: 'challenge' } as Intent])
-    expect(get().game.reveal).not.toBeNull()
-    expect(get().game.pending).toBeNull()
-    act(() => get().flow.continueTurn())
-    expect(get().flow.phase).toBe('idle')
+    both(get, [1, { action: 'pass' } as Intent], [1, { action: 'challenge' } as Intent])
+    expect(get().game.pending?.passed).toEqual([1])
+    expect(get().game.pending?.choosing).toBeNull()
+  })
+
+  it('a reveal intent is never carried out (the window turns the card over)', () => {
+    const get = setup(GameMode.TIMELINE_GLOBAL, [{ name: 'A', seat: 0, challenges: 3 }, { name: 'B', seat: 1, challenges: 3 }])
+    act(() => get().game.addToGlobalTimeline(song(1970), 0))
+    act(() => get().game.setCurrentSong(song(1980)))
+    act(() => get().flow.placeCard(1))
+    both(get, [0, { action: 'reveal' } as Intent], [1, { action: 'reveal' } as Intent])
+    expect(get().game.reveal).toBeNull()
+    expect(get().flow.phase).toBe('challenge')
   })
 
   it('continue twice does not skip a player', () => {
@@ -66,15 +74,6 @@ describe('the host handles intents one after the other', () => {
     expect(get().game.currentPlayer).toBe(1)
   })
 
-  it('reveal twice adds the card once', () => {
-    const get = setup(GameMode.TIMELINE_GLOBAL, [{ name: 'A', seat: 0, challenges: 3 }, { name: 'B', seat: 1, challenges: 3 }])
-    act(() => get().game.addToGlobalTimeline(song(1970), 0))
-    act(() => get().game.setCurrentSong(song(1980)))
-    act(() => get().flow.placeCard(1))
-    both(get, [0, { action: 'reveal' } as Intent], [0, { action: 'reveal' } as Intent])
-    expect(get().game.globalTimeline.map((c) => c.song.id)).toEqual(['s1970', 's1980'])
-    expect(get().game.turnLog).toHaveLength(1)
-  })
 })
 
 describe('turn change', () => {

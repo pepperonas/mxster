@@ -56,6 +56,7 @@ export type Intent =
   | { action: 'challenge' }
   | { action: 'claim'; gap: number }
   | { action: 'cancelChallenge' }
+  | { action: 'pass' }
   | { action: 'reveal' }
   | { action: 'guess'; title: string; artist: string; year: string }
   | { action: 'skip' }

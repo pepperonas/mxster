@@ -26,6 +26,8 @@ import type { Player, Song } from '@/types'
 import { correctGapIndices, gapLabel } from '@/game/placement'
 import { useRoom } from '@/online/RoomContext'
 import { musicSeat } from '@/online/musicSeat'
+import { useObjectionWindow } from '@/online/useObjectionWindow'
+import { secondsLeft } from '@/game/objectionWindow'
 import { useAuth } from '@/auth/AuthContext'
 import { useRemoteTurnFlow } from '@/online/useRemoteTurnFlow'
 import { useHostBridge } from '@/online/useHostBridge'
@@ -149,6 +151,10 @@ export function GameRound({ onRematch }: { onRematch: () => void }) {
   useHostBridge(localFlow, result ? { ...result, effects: [] } : null)
   useHostPresence(localFlow, onlineHost)
   usePresenceNotices(online)
+  // Server time: the objection countdown reads the same on every device
+  const clockOffset = room?.clockOffset
+  const serverNow = useCallback(() => Date.now() + (clockOffset ? clockOffset() : 0), [clockOffset])
+  useObjectionWindow(localFlow, onlineHost, serverNow)
   // Players see the end of the round when the host's snapshot says so
   const shownResult = onlinePlayer ? (room?.result ?? null) : result
   useEffect(() => {
@@ -156,9 +162,24 @@ export function GameRound({ onRematch }: { onRematch: () => void }) {
   }, [onlinePlayer, room?.result])
 
   const { phase, reveal, pending, activePlayer, activeTimeline, isBotThinking } = flow
+  // Away: not connected right now, or skipped as absent (the host may act for them)
+  const away = online
+    ? players.flatMap((p, i) => {
+        const m = room!.members.find((x) => x.seat === p.seat)
+        return (absent ?? []).includes(i) || !m || !m.online || m.left ? [i] : []
+      })
+    : []
   /** May this device do that now? Always yes on a single device. */
   const can = (action: Intent['action']) =>
-    !online || mayAct({ phase, players, currentPlayer, pending, reveal }, room!.seat!, action, onlineHost)
+    !online || mayAct({ phase, players, currentPlayer, pending, reveal, away }, room!.seat!, action, onlineHost)
+  // The countdown of an open objection window ticks on every device
+  const windowOpen = online && phase === 'challenge' && pending?.choosing === null && pending?.deadlineAt != null
+  const [, setSecond] = useState(0)
+  useEffect(() => {
+    if (!windowOpen) return
+    const id = window.setInterval(() => setSecond((n) => n + 1), 1000)
+    return () => window.clearInterval(id)
+  }, [windowOpen])
   // Players' devices: the host (who runs the round) lost the connection
   const hostMember = room?.members.find((m) => m.host)
   const hostAway = onlinePlayer && room?.connection === 'open' && Boolean(hostMember) && !hostMember!.online && !shownResult
@@ -257,7 +278,7 @@ export function GameRound({ onRematch }: { onRematch: () => void }) {
               placerName: turnName(players[pending.playerIndex] ?? activePlayer),
               // Online every device offers only its own objection
               challengers: pending.challengers
-                .filter((seat) => isMine(seat))
+                .filter((seat) => isMine(seat) && !(online && (pending.passed ?? []).includes(seat)))
                 .map((seat) => ({
                   seat,
                   name: players[seat]?.name ?? '',
@@ -265,9 +286,12 @@ export function GameRound({ onRematch }: { onRematch: () => void }) {
                 })),
               timeline: activeTimeline,
               gap: pending.gapIndex,
-              revealBy: can('reveal') ? undefined : turnName(players[pending.playerIndex] ?? activePlayer),
+              revealBy: online || can('reveal') ? undefined : turnName(players[pending.playerIndex] ?? activePlayer),
               online,
-              ownCard: online && isMine(pending.playerIndex)
+              ownCard: online && isMine(pending.playerIndex),
+              // Online: the window closes by itself — nobody reveals for the others
+              passed: online && pending.challengers.some((i) => isMine(i) && (pending.passed ?? []).includes(i)),
+              secondsLeft: online ? secondsLeft(pending.deadlineAt, serverNow()) : null
             }
         : phase === 'placing' && currentSong
           ? !humanTurn
@@ -437,6 +461,7 @@ export function GameRound({ onRematch }: { onRematch: () => void }) {
           }}
           onContinue={flow.continueTurn}
           onChallenge={flow.startChallenge}
+          onPass={(seat) => flow.passChallenge(seat)}
           onCancelChallenge={flow.cancelChallenge}
           onReveal={flow.revealPlacement}
           goal={goal}

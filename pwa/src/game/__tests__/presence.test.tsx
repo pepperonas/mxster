@@ -61,7 +61,8 @@ describe('unstick', () => {
     expect(unstick({ ...base, phase: 'placing' }, [1])).toBe('pass')
     expect(unstick({ ...base, phase: 'idle' }, [0])).toBeNull()
     const pending = { playerIndex: 1, gapIndex: 0, challengers: [2], choosing: null, claim: null }
-    expect(unstick({ ...base, phase: 'challenge', pending }, [1])).toBe('reveal')
+    // An absent placer: the objection window closes by itself
+    expect(unstick({ ...base, phase: 'challenge', pending }, [1])).toBeNull()
     expect(unstick({ ...base, phase: 'challenge', pending: { ...pending, choosing: 2 } }, [2])).toBe('cancelChallenge')
     expect(unstick({ ...base, phase: 'challenge', pending: { ...pending, choosing: 2 } }, [1])).toBeNull()
     expect(unstick({ ...base, phase: 'revealed', reveal: { playerIndex: 1 } as never }, [1])).toBe('continue')

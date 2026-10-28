@@ -15,10 +15,10 @@
 <h3>👉 <a href="https://mxtape.celox.io">mxtape.celox.io</a> — mit Google oder E-Mail anmelden oder als Gast nur per Link in den Raum von Freunden</h3>
 
 <!-- BADGES:BIG — version, tests, lines of code and songs; readme.test.ts keeps them true, scripts/readme-badges.mjs rewrites them. -->
-[![version](https://img.shields.io/badge/version-0.9.8-C2185B?style=for-the-badge&logo=semver&logoColor=white)](https://github.com/pepperonas/mxtape/releases/latest)
-[![tests](https://img.shields.io/badge/tests-603-2E9E5B?style=for-the-badge&logo=vitest&logoColor=white)](#tests-und-ci)
-[![lines of code](https://img.shields.io/badge/lines%20of%20code-22.0k-4B6BDF?style=for-the-badge&logo=typescript&logoColor=white)](pwa/src)
-[![test code](https://img.shields.io/badge/test%20code-7.5k-2E9E5B?style=for-the-badge&logo=typescript&logoColor=white)](#tests-und-ci)
+[![version](https://img.shields.io/badge/version-0.9.9-C2185B?style=for-the-badge&logo=semver&logoColor=white)](https://github.com/pepperonas/mxtape/releases/latest)
+[![tests](https://img.shields.io/badge/tests-613-2E9E5B?style=for-the-badge&logo=vitest&logoColor=white)](#tests-und-ci)
+[![lines of code](https://img.shields.io/badge/lines%20of%20code-22.2k-4B6BDF?style=for-the-badge&logo=typescript&logoColor=white)](pwa/src)
+[![test code](https://img.shields.io/badge/test%20code-7.7k-2E9E5B?style=for-the-badge&logo=typescript&logoColor=white)](#tests-und-ci)
 [![songs](https://img.shields.io/badge/songs-300-FF8A3D?style=for-the-badge&logo=applemusic&logoColor=white)](#die-songsammlung)
 
 [![Donate with PayPal](https://img.shields.io/badge/PayPal-support%20this%20project-00457C?style=for-the-badge&logo=paypal&logoColor=white)](https://www.paypal.com/donate/?business=martin.pfeffer@celox.io&currency_code=EUR&item_name=mxtape)
@@ -161,6 +161,7 @@ Statt ein Handy herumzureichen, spielt jede Person auf dem eigenen Gerät – im
 
 - **Raum öffnen:** Im Spielaufbau „Jeder sein Gerät“ wählen. Es gibt einen Link, einen QR-Code und einen Raumcode zum Abtippen.
 - **Ohne Konto dabei:** Gäste geben nur einen Namen ein und spielen mit. Für sie wird nichts gespeichert; die Musik hören sie, solange der Raum offen ist.
+- **Einspruch online:** Nach dem Legen tippt jeder, der widersprechen darf, *Einspruch* oder *Kein Einspruch*; sonst deckt die Karte nach 10 Sekunden von selbst auf. Niemand kann für die anderen vorzeitig aufdecken.
 - **Musik:** *Gemeinsam im Raum* – nur das Gerät dessen, der gerade dran ist, spielt (fällt es aus, übernimmt der Gastgeber), kein Echo. *Jeder bei sich* – alle Geräte spielen gleichzeitig (gemessen rund 20 ms auseinander).
 - **Spielen:** Wer dran ist, legt oder rät auf dem eigenen Gerät, alle anderen sehen live mit und legen vom eigenen Handy Einspruch ein. Neu laden oder kurz offline gehen kostet nichts – jede:r kommt auf den eigenen Platz zurück.
 - **Freunde:** Andere Konten per Name oder E-Mail suchen, als Freunde hinzufügen und direkt aus dem Raum einladen; die Einladung erscheint auf ihrer Startseite.

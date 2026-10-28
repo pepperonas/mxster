@@ -79,8 +79,8 @@ export function unstick({ phase, currentPlayer, pending, reveal }: StuckView, ab
       return gone(currentPlayer) ? 'pass' : null
     case 'challenge':
       if (!pending) return null
-      if (pending.choosing !== null) return gone(pending.choosing) ? 'cancelChallenge' : null
-      return gone(pending.playerIndex) ? 'reveal' : null
+      // Waiting for the others to object: the objection window closes by itself
+      return pending.choosing !== null && gone(pending.choosing) ? 'cancelChallenge' : null
     case 'revealed':
       return reveal && gone(reveal.playerIndex) ? 'continue' : null
     default:

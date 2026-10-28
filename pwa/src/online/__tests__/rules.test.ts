@@ -36,15 +36,31 @@ describe('mayAct', () => {
     expect(mayAct(view({ phase: 'challenge', pending: choosing }), 5, 'challenge')).toBe(false)
   })
 
-  it('the placer reveals and continues; the host may too', () => {
+  it('nobody turns a placed card over by hand online, not even the host', () => {
     const pending = { playerIndex: 1, gapIndex: 0, challengers: [2], choosing: null, claim: null }
-    expect(mayAct(view({ phase: 'challenge', pending }), 2, 'reveal')).toBe(true)
-    expect(mayAct(view({ phase: 'challenge', pending }), 5, 'reveal')).toBe(false)
-    expect(mayAct(view({ phase: 'challenge', pending }), 0, 'reveal', true)).toBe(true)
+    expect(mayAct(view({ phase: 'challenge', pending }), 2, 'reveal')).toBe(false)
+    expect(mayAct(view({ phase: 'challenge', pending }), 0, 'reveal', true)).toBe(false)
+  })
+
+  it('whoever may object may pass, once', () => {
+    const pending = { playerIndex: 1, gapIndex: 0, challengers: [2], choosing: null, claim: null }
+    const me = 5 // Tom, index 2
+    expect(mayAct(view({ phase: 'challenge', pending }), me, 'pass')).toBe(true)
+    expect(mayAct(view({ phase: 'challenge', pending }), 2, 'pass')).toBe(false)
+    const passed = { ...pending, passed: [2] }
+    expect(mayAct(view({ phase: 'challenge', pending: passed }), me, 'pass')).toBe(false)
+    expect(mayAct(view({ phase: 'challenge', pending: passed }), me, 'challenge')).toBe(false)
+  })
+
+  it('the placer continues; the host only for someone away', () => {
     const reveal = { kind: 'placement', playerIndex: 1 } as never
     expect(mayAct(view({ phase: 'revealed', reveal }), 2, 'continue')).toBe(true)
     expect(mayAct(view({ phase: 'revealed', reveal }), 5, 'continue')).toBe(false)
-    expect(mayAct(view({ phase: 'revealed', reveal }), 0, 'continue', true)).toBe(true)
+    expect(mayAct(view({ phase: 'revealed', reveal }), 0, 'continue', true)).toBe(false)
+    expect(mayAct(view({ phase: 'revealed', reveal, away: [1] }), 0, 'continue', true)).toBe(true)
+    expect(mayAct(view({ phase: 'idle', currentPlayer: 1 }), 0, 'draw', true)).toBe(false)
+    expect(mayAct(view({ phase: 'idle', currentPlayer: 1, away: [1] }), 0, 'draw', true)).toBe(true)
+    expect(mayAct(view({ phase: 'idle', currentPlayer: 1, away: [1] }), 5, 'draw')).toBe(false)
   })
 
   it('the host may not place for someone else', () => {
