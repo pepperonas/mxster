@@ -1,6 +1,7 @@
 from datetime import timedelta
 
 from app.api.daily import DAILY_MAX
+from app.daily_pick import daily_ids
 from app.db import DailyResult, SessionLocal, User, utcnow
 from tests.conftest import login
 from tests.test_songs import _player
@@ -45,7 +46,7 @@ def test_a_run_goes_until_the_first_wrong_card(client, google):
     h = {"X-CSRF-Token": me["csrf"]}
     assert client.get(_url()).json()["state"] == "none"
     start = client.post(_url("/start"), headers=h).json()
-    assert start == {"state": "running", "turns": 0, "score": 0, "max": DAILY_MAX, "songs": None}
+    assert start == {"state": "running", "turns": 0, "score": 0, "max": DAILY_MAX, "songs": daily_ids(_today(), DAILY_MAX + 1)}
     for i in range(3):
         assert client.post(_url("/turn"), json={"index": i, "ok": True}, headers=h).json()["state"] == "running"
     end = client.post(_url("/turn"), json={"index": 3, "ok": False}, headers=h).json()
@@ -60,7 +61,7 @@ def test_a_run_can_be_continued_but_never_started_twice(client, google):
     _play(client, h, [True, True])
     # paused: starting again (another device, a reload) continues where it stands
     again = client.post(_url("/start"), headers=h).json()
-    assert again == {"state": "running", "turns": 2, "score": 2, "max": DAILY_MAX, "songs": None}
+    assert again == {"state": "running", "turns": 2, "score": 2, "max": DAILY_MAX, "songs": daily_ids(_today(), DAILY_MAX + 1)}
     assert client.get(_url()).json()["mine"]["state"] == "running"
     client.post(_url("/turn"), json={"index": 2, "ok": False}, headers=h)
     r = client.post(_url("/start"), headers=h)
@@ -238,27 +239,34 @@ def test_a_lost_race_sends_nothing(client, google, mails):
         assert db.query(User).filter_by(id=lisa["id"]).one().daily_notified_at is None  # rolled back
 
 
-def test_the_first_start_of_the_day_fixes_the_songs_for_everyone(client, google):
-    """A catalogue update during the day must not give later players other songs."""
-    first = [f"song_{i:03d}" for i in range(1, 52)]
-    other = [f"song_{i:03d}" for i in range(100, 151)]
+def test_the_server_picks_the_days_songs_and_keeps_them_for_everyone(client, google):
+    """Nobody can hand the server a list; a catalogue update during the day changes nothing."""
+    from app import daily_pick
+
+    picked = daily_pick.daily_ids(_today(), DAILY_MAX + 1)
     a = _player(client, google, sub="a", email="a@example.com")
-    r = client.post(_url("/start"), json={"songs": first}, headers={"X-CSRF-Token": a["csrf"]}).json()
-    assert r["songs"] == first
-    client.cookies.clear()
-    b = _player(client, google, sub="b", email="b@example.com")
-    # another device with a newer catalogue offers other songs: it gets the day's
-    r = client.post(_url("/start"), json={"songs": other}, headers={"X-CSRF-Token": b["csrf"]}).json()
-    assert r["songs"] == first
-    # continuing a paused run: the same list again
-    assert client.post(_url("/start"), json={"songs": other}, headers={"X-CSRF-Token": b["csrf"]}).json()["songs"] == first
+    mine = ["song_001", "song_002"]  # a short list of songs I know
+    r = client.post(_url("/start"), json={"songs": mine}, headers={"X-CSRF-Token": a["csrf"]}).json()
+    assert r["songs"] == picked and len(picked) == DAILY_MAX + 1
+    # the catalogue changes during the day: later starts still get the stored list
+    daily_pick.pool.cache_clear()
+    real = daily_pick.POOL_FILE
+    try:
+        daily_pick.POOL_FILE = real.with_name("does-not-exist.json")
+        client.cookies.clear()
+        b = _player(client, google, sub="b", email="b@example.com")
+        assert client.post(_url("/start"), headers={"X-CSRF-Token": b["csrf"]}).json()["songs"] == picked
+    finally:
+        daily_pick.POOL_FILE = real
+        daily_pick.pool.cache_clear()
 
 
-def test_only_song_ids_are_kept_and_at_most_a_start_card_plus_the_maximum(client, google):
-    me = _player(client, google)
-    h = {"X-CSRF-Token": me["csrf"]}
-    assert client.post(_url("/start"), json={"songs": ["song_001", "<script>"]}, headers=h).json()["songs"] is None
-    tomorrow = (utcnow().date() + timedelta(days=1)).isoformat()
-    many = [f"song_{i:03d}" for i in range(1, 200)] + ["song_001"]
-    r = client.post(f"/api/daily/{tomorrow}/start", json={"songs": many}, headers=h).json()
-    assert len(r["songs"]) == DAILY_MAX + 1 and r["songs"][0] == "song_001" and len(set(r["songs"])) == DAILY_MAX + 1
+def test_the_pick_spreads_the_years_and_never_repeats_a_song():
+    from app.daily_pick import daily_ids, pool
+
+    ids = daily_ids("2026-10-28", DAILY_MAX + 1)
+    years = dict(pool())
+    assert len(set(ids)) == len(ids) == DAILY_MAX + 1
+    assert all(i in years for i in ids)
+    distinct = min(len(set(years.values())), DAILY_MAX + 1)
+    assert len({years[i] for i in ids[:distinct]}) == distinct
