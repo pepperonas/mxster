@@ -3,6 +3,7 @@
  * light and wide into its poster weight. One orchestrated moment, then calm.
  */
 import { useMemo, useState } from 'react'
+import { Link } from 'react-router-dom'
 import { m } from 'motion/react'
 import { Vinyl } from '@/components/ui/Vinyl'
 import { GoogleMark, Icon } from '@/components/ui/Icon'
@@ -51,9 +52,15 @@ export function LoginScreen() {
           transition={{ ...spring.spatialDefault, delay: 0.35 }}
           className="mt-6 space-y-8"
         >
-          <p className="text-body-lg text-md-on-surface-variant max-w-[34ch]">
-            {t.pitch}
-          </p>
+          <div>
+            <p className="text-body-lg text-md-on-surface-variant max-w-[34ch]">
+              {t.pitch}
+            </p>
+            <Link to="/about" className="inline-flex items-center gap-1 min-h-[48px] text-label-lg text-md-primary underline-offset-4 hover:underline" data-about-link>
+              {t.whatIs}
+              <Icon name="chevron" size={20} />
+            </Link>
+          </div>
 
           {error && (
             <p role="alert" className="rounded-m3-lg bg-md-error-container text-md-on-error-container px-4 py-3 text-body-md">

@@ -20,7 +20,7 @@ import { LanguageSwitch } from '@/components/ui/LanguageSwitch'
 import { useMessages } from '@/i18n'
 import { profileText } from '@/i18n/messages/profile'
 
-export const VERSION = '0.22.0'
+export const VERSION = '0.23.0'
 
 export function ProfileScreen() {
   const me = useMe()
@@ -181,6 +181,14 @@ export function ProfileScreen() {
       </Group>
 
       <Group title={t.about}>
+        <button type="button" className="w-full flex items-center gap-4 px-4 py-3 min-h-[72px] text-left m3-state-layer" onClick={() => navigate('/about')} data-help-row>
+          <Icon name="lightbulb" className="text-md-on-surface-variant shrink-0" />
+          <span className="flex-1 min-w-0">
+            <span className="block text-body-lg">{t.help}</span>
+            <span className="block meta">{t.helpText}</span>
+          </span>
+          <Icon name="chevron" className="text-md-on-surface-variant" />
+        </button>
         <div className="px-4 py-3 flex items-center gap-4">
           <Icon name="info" className="text-md-on-surface-variant shrink-0" />
           <span className="flex-1 text-body-lg">{t.version}</span>

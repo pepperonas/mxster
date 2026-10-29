@@ -21,6 +21,7 @@ import { JoinScreen } from '@/screens/JoinScreen'
 import { RoomScreen } from '@/screens/RoomScreen'
 import { ProfileScreen } from '@/screens/ProfileScreen'
 import { AdminScreen } from '@/screens/AdminScreen'
+import { AboutScreen } from '@/screens/AboutScreen'
 import { initRipple } from '@/utils/ripple'
 import { englishPath, LEGACY_SEGMENTS } from '@/legacyPaths'
 import { MotionProvider } from '@/motion/MotionProvider'
@@ -100,6 +101,10 @@ const router = createBrowserRouter([
       { path: '/imprint', element: <LegalScreen kind="imprint" /> },
       { path: '/privacy', element: <LegalScreen kind="privacy" /> },
       { path: '/terms', element: <LegalScreen kind="terms" /> },
+      // Product page and help: full screen, readable without an account
+      { path: '/about', element: <AboutScreen /> },
+      { path: '/landing', element: <Navigate to="/about" replace /> },
+      { path: '/help', element: <Navigate to="/about#help" replace /> },
       ...legacyRoutes(false),
       {
         element: <AppShell />,

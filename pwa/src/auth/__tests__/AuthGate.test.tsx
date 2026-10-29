@@ -106,6 +106,16 @@ describe('AuthGate', () => {
     expect(await screen.findByText('DIE APP')).toBeInTheDocument()
   })
 
+  it('anyone can read the product page and help, signed out or waiting', async () => {
+    serveSession(null)
+    const a = renderGate('/about')
+    expect(await screen.findByText('DIE APP')).toBeInTheDocument()
+    a.unmount()
+    serveSession(me('pending'))
+    renderGate('/help')
+    expect(await screen.findByText('DIE APP')).toBeInTheDocument()
+  })
+
   it('only room links are open', () => {
     expect(isRoomPath('/r/ABCD2345')).toBe(true)
     expect(isRoomPath('/room/ABCD2345')).toBe(true)

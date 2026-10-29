@@ -50,6 +50,7 @@ export default defineConfig({
           /^\/room\//,
           /^\/raum\//, // old German room address, redirected by the app
           /^\/reset-password/, // link from the reset mail, same reason
+          /^\/(about|landing|help)\/?$/, // product page: shared links must reach the current app
           /\.[a-zA-Z0-9]+$/ // Files with extensions (except HTML)
         ],
         runtimeCaching: [

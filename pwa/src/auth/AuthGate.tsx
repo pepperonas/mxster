@@ -19,6 +19,8 @@ const POLL_MS = 30_000
 export const isRoomPath = (path: string) => /^\/(r|room|raum)\/[^/]+\/?$/.test(path)
 /** Imprint, privacy policy and terms: readable by everyone, signed in or not. */
 export const isLegalPath = (path: string) => /^\/(imprint|privacy|terms)\/?$/.test(path)
+/** The product page and help (/about, plus /landing and /help that lead there): for everyone. */
+export const isAboutPath = (path: string) => /^\/(about|landing|help)\/?$/.test(path)
 /** The link from the reset mail: works whoever is signed in on this device. */
 export const isResetPath = (path: string) => /^\/reset-password\/?$/.test(path)
 
@@ -51,7 +53,7 @@ export function AuthGate({ children }: { children: ReactNode }) {
   // Room links: anyone without an approved account plays as a guest — the app
   // runs without account data (nothing loaded, nothing saved)
   const approved = state.kind === 'signed-in' && state.me.status === 'approved'
-  if (!approved && isLegalPath(pathname)) return <SyncModeProvider mode="guest">{children}</SyncModeProvider>
+  if (!approved && (isLegalPath(pathname) || isAboutPath(pathname))) return <SyncModeProvider mode="guest">{children}</SyncModeProvider>
   if (!approved && isRoomPath(pathname)) return <SyncModeProvider mode="guest">{children}</SyncModeProvider>
 
   let key: string

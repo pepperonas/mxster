@@ -54,6 +54,8 @@ export const profileText = defineMessages({
     account: 'Konto',
     notifications: 'Benachrichtigungen',
     about: 'Über mxtape',
+    help: 'Anleitung und Hilfe',
+    helpText: 'Wie eine Runde läuft, alle Spielarten, häufige Fragen',
     version: 'Version'
   },
   en: {
@@ -109,6 +111,8 @@ export const profileText = defineMessages({
     account: 'Account',
     notifications: 'Notifications',
     about: 'About mxtape',
+    help: 'Guide and help',
+    helpText: 'How a turn works, all modes, common questions',
     version: 'Version'
   }
 })

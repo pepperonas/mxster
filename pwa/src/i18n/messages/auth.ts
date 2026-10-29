@@ -3,6 +3,7 @@ import { defineMessages } from '../define'
 export const authText = defineMessages({
   de: {
     pitch: 'Hört einen Song, ratet das Jahr und legt ihn an die richtige Stelle eurer Zeitleiste.',
+    whatIs: 'Was ist mxtape? So geht’s',
     signIn: 'Mit Google anmelden',
     leaving: 'Weiter zu Google …',
     privacyNote:
@@ -60,6 +61,7 @@ export const authText = defineMessages({
   },
   en: {
     pitch: 'Hear a song, guess the year and put it in the right place on your timeline.',
+    whatIs: 'What is mxtape? How it works',
     signIn: 'Sign in with Google',
     leaving: 'On to Google …',
     privacyNote: 'New accounts are approved one by one. We only store your name, your email address and your games.',

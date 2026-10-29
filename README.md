@@ -14,11 +14,13 @@
 
 <h3>👉 <a href="https://mxtape.celox.io">mxtape.celox.io</a> — sign in with Google or email, or join a friend's room as a guest with just a link</h3>
 
+<p>New here? <a href="https://mxtape.celox.io/about"><b>mxtape.celox.io/about</b></a> introduces the game and answers the common questions — with a little timeline to try, no account needed.</p>
+
 <!-- BADGES:BIG — version, tests, lines of code and songs; readme.test.ts keeps them true, scripts/readme-badges.mjs rewrites them. -->
-[![version](https://img.shields.io/badge/version-0.22.0-C2185B?style=for-the-badge&logo=semver&logoColor=white)](https://github.com/pepperonas/mxtape/releases/latest)
-[![tests](https://img.shields.io/badge/tests-1080-2E9E5B?style=for-the-badge&logo=vitest&logoColor=white)](#tests-and-ci)
-[![lines of code](https://img.shields.io/badge/lines%20of%20code-30.8k-4B6BDF?style=for-the-badge&logo=typescript&logoColor=white)](pwa/src)
-[![test code](https://img.shields.io/badge/test%20code-12.7k-2E9E5B?style=for-the-badge&logo=typescript&logoColor=white)](#tests-and-ci)
+[![version](https://img.shields.io/badge/version-0.23.0-C2185B?style=for-the-badge&logo=semver&logoColor=white)](https://github.com/pepperonas/mxtape/releases/latest)
+[![tests](https://img.shields.io/badge/tests-1095-2E9E5B?style=for-the-badge&logo=vitest&logoColor=white)](#tests-and-ci)
+[![lines of code](https://img.shields.io/badge/lines%20of%20code-31.8k-4B6BDF?style=for-the-badge&logo=typescript&logoColor=white)](pwa/src)
+[![test code](https://img.shields.io/badge/test%20code-12.9k-2E9E5B?style=for-the-badge&logo=typescript&logoColor=white)](#tests-and-ci)
 [![songs](https://img.shields.io/badge/songs-500-FF8A3D?style=for-the-badge&logo=applemusic&logoColor=white)](#the-song-library)
 
 [![Donate with PayPal](https://img.shields.io/badge/PayPal-support%20this%20project-00457C?style=for-the-badge&logo=paypal&logoColor=white)](https://www.paypal.com/donate/?business=martin.pfeffer@celox.io&currency_code=EUR&item_name=mxtape)
@@ -134,7 +136,9 @@ It runs as an installable web app with a **Material 3 Expressive** interface bui
 
 mxtape is a private app. You sign in with a Google account or with email and password (the address is confirmed by a link first); new accounts land on a waiting list and are approved one by one. Guests who played an online round are offered an account of their own at the end. Only then are the game and the music reachable — the server hands the audio files only to approved sessions.
 
-The one exception: **guests in a room.** Whoever opens a room link types a name and plays along, no account needed, for as long as the room is open.
+The product page and help at **[/about](https://mxtape.celox.io/about)** (also reachable as `/landing` and `/help`) is open to everyone, like the legal pages.
+
+The other exception: **guests in a room.** Whoever opens a room link types a name and plays along, no account needed, for as long as the room is open.
 
 ## Game modes
 
