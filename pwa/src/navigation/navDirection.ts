@@ -14,8 +14,8 @@ import { useLocation } from 'react-router-dom'
 
 export type NavKind = 'tab' | 'forward' | 'back' | 'up' | 'down' | 'none'
 
-/** Destinations of the navigation bar, plus the profile behind the avatar. */
-export const TOP_LEVEL_PATHS = ['/', '/history', '/stats', '/players', '/achievements', '/profile']
+/** The pages of the navigation bar's destinations (tabs included), plus the settings (shell/AppShell TOP_LEVEL). */
+export const TOP_LEVEL_PATHS = ['/', '/history', '/stats', '/songs', '/achievements', '/players', '/friends', '/settings']
 
 const FULL_SCREEN = [/^\/game$/, /^\/room\//, /^\/r\//, /^\/imprint$/, /^\/privacy$/, /^\/terms$/]
 

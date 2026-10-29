@@ -22,10 +22,7 @@ import { GAME_CONFIG } from '@/utils/constants'
 import type { GameMode } from '@/types'
 import { localeOf, msg, useMessages } from '@/i18n'
 import { statsText } from '@/i18n/messages/stats'
-import { libraryText } from '@/i18n/messages/library'
-import { allSongs } from '@/data/catalogue'
-import { SongCover } from '@/components/game/SongInfo'
-import { Icon } from '@/components/ui/Icon'
+import { ReviewHeader } from '@/shell/SectionHeaders'
 
 const MAX_COMPARED = 3
 const SONG_BY_ID = new Map(songs.map((s) => [s.id, s]))
@@ -37,46 +34,6 @@ function formatPlayTime(ms: number): string {
   if (min < 60) return t.minutes(min)
   const h = Math.floor(min / 60)
   return t.hours(`${h}:${String(min % 60).padStart(2, '0')}`)
-}
-
-/** Five covers for the entry card, the same all day, another set tomorrow. */
-function coversOfTheDay(n = 5): string[] {
-  const list = allSongs()
-  const day = Math.floor(Date.now() / 86_400_000)
-  const step = Math.max(1, Math.floor(list.length / n))
-  return Array.from({ length: Math.min(n, list.length) }, (_, i) => list[(day * 7 + i * step) % list.length].id)
-}
-
-/** The way into the song library: a fan of covers, the count, one tap. */
-function LibraryEntry() {
-  const t = useMessages(libraryText)
-  const navigate = useAppNavigate()
-  const covers = useMemo(() => coversOfTheDay(), [])
-  return (
-    <button
-      type="button"
-      onClick={() => navigate('/stats/songs')}
-      className="row w-full !bg-md-surface-container m3-state-layer !py-4"
-      data-library-entry
-    >
-      <span className="relative shrink-0 h-14" style={{ width: 56 + (covers.length - 1) * 14 }} aria-hidden="true">
-        {covers.map((id, i) => (
-          <span
-            key={id}
-            className="absolute top-0 rounded-m3-md shadow-m3-1 ring-2 ring-md-surface-container"
-            style={{ left: i * 14, zIndex: covers.length - i, transform: `rotate(${(i - 2) * 3}deg)` }}
-          >
-            <SongCover song={{ id }} size={56} />
-          </span>
-        ))}
-      </span>
-      <span className="min-w-0 flex-1">
-        <span className="block text-title-md">{t.entryTitle(allSongs().length)}</span>
-        <span className="block text-body-md text-md-on-surface-variant">{t.entryText}</span>
-      </span>
-      <Icon name="chevron" className="text-md-on-surface-variant" />
-    </button>
-  )
 }
 
 /**
@@ -154,7 +111,7 @@ export function StatisticsScreen() {
   if (history.length === 0 && !ready)
     return (
       <div className="pt-4 md:pt-10">
-        <h1 className="text-headline-md mb-6">{t.title}</h1>
+        <ReviewHeader />
         <SkeletonGroup className="space-y-6">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
             {[0, 1, 2, 3].map((i) => (
@@ -168,16 +125,13 @@ export function StatisticsScreen() {
   if (history.length === 0) {
     return (
       <div className="pt-4 md:pt-10">
-        <h1 className="text-headline-md mb-6">{t.title}</h1>
+        <ReviewHeader />
         <EmptyState
           icon="insights"
           title={t.emptyTitle}
           text={t.emptyText}
           action={<button type="button" className="btn btn-brand m3-state-layer" onClick={() => navigate('/new')}>{t.firstRound}</button>}
         />
-        <div className="mt-6">
-          <LibraryEntry />
-        </div>
         <div className="mt-10">
           <Everyone />
         </div>
@@ -192,15 +146,13 @@ export function StatisticsScreen() {
   return (
     <div className="pt-4 md:pt-10 space-y-6 stagger-children">
       <header>
-        <h1 className="text-headline-md">{t.title}</h1>
-        <p className="meta mt-1">
+        <ReviewHeader />
+        <p className="meta -mt-2">
           {history.length >= GAME_CONFIG.MAX_HISTORY_GAMES
             ? t.fromLast(history.length)
             : t.fromRounds(history.length)}
         </p>
       </header>
-
-      <LibraryEntry />
 
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
         <StatTile label={t.roundsLabel} value={history.length} note={t.playersNote(people.length)} />

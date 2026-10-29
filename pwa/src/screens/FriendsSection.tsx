@@ -74,14 +74,10 @@ export function FriendsSection() {
   return (
     <section aria-labelledby="friends-h" className="space-y-4">
       <div className="flex items-baseline justify-between gap-3">
-        <h2 id="friends-h" className="text-title-lg">
+        <h2 id="friends-h" className="sr-only">
           {t.title}
         </h2>
-        {lists && lists.incoming.length > 0 && (
-          <span className="rounded-m3-full bg-md-primary text-md-on-primary px-2.5 py-0.5 text-label-md tabular" aria-label={t.newRequests(lists.incoming.length)}>
-            {lists.incoming.length}
-          </span>
-        )}
+        {/* The count of new requests sits on the "Freunde" tab (PeopleHeader) */}
       </div>
 
       <div className="relative">

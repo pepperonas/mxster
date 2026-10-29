@@ -2,6 +2,7 @@
  * Verlauf — finished rounds, newest first, grouped by day. A row opens the
  * round (ranking and the songs everyone collected).
  */
+import { ReviewHeader } from '@/shell/SectionHeaders'
 import { useParams } from 'react-router-dom'
 import { roundSongIds } from '@/utils/cover'
 import { SongCover } from '@/components/game/SongInfo'
@@ -36,7 +37,7 @@ export function HistoryScreen() {
 
   return (
     <div className="pt-4 md:pt-10">
-      <h1 className="text-headline-md mb-6">{t.title}</h1>
+      <ReviewHeader />
 
       {/* Still loading from the account: placeholders, never "nothing here yet" */}
       {history.length === 0 && !ready ? (

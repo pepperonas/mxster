@@ -14,6 +14,7 @@ import { HistoryScreen, HistoryDetailScreen } from '@/screens/HistoryScreen'
 import { AchievementsScreen } from '@/screens/AchievementsScreen'
 import { StatisticsScreen } from '@/screens/StatisticsScreen'
 import { SongLibraryScreen } from '@/screens/SongLibraryScreen'
+import { FriendsScreen } from '@/screens/FriendsScreen'
 import { DailyScreen } from '@/screens/DailyScreen'
 import { PlayersScreen, PlayerDetailScreen } from '@/screens/PlayersScreen'
 import { JoinScreen } from '@/screens/JoinScreen'
@@ -68,6 +69,12 @@ function Root() {
   )
 }
 
+/** A moved page (v0.21.0: /stats/songs → /songs): same search, sort and filters. */
+function KeepQuery({ to }: { to: string }) {
+  const { search } = useLocation()
+  return <Navigate to={`${to}${search}`} replace />
+}
+
 /** An old German address (bookmark, installed app, shared link) → its English one. */
 function LegacyRedirect() {
   const { pathname, search } = useLocation()
@@ -103,12 +110,15 @@ const router = createBrowserRouter([
           { path: '/history', element: <HistoryScreen /> },
           { path: '/history/:id', element: <HistoryDetailScreen /> },
           { path: '/stats', element: <StatisticsScreen /> },
-          { path: '/stats/songs', element: <SongLibraryScreen /> },
+          { path: '/songs', element: <SongLibraryScreen /> },
+          { path: '/stats/songs', element: <KeepQuery to="/songs" /> },
+          { path: '/friends', element: <FriendsScreen /> },
           { path: '/daily', element: <DailyScreen /> },
           { path: '/players', element: <PlayersScreen /> },
           { path: '/players/:name', element: <PlayerDetailScreen /> },
           { path: '/achievements', element: <AchievementsScreen /> },
-          { path: '/profile', element: <ProfileScreen /> },
+          { path: '/settings', element: <ProfileScreen /> },
+          { path: '/profile', element: <Navigate to="/settings" replace /> },
           { path: '/admin', element: <AdminScreen /> },
           ...legacyRoutes(true),
           { path: '*', element: <Navigate to="/" replace /> }

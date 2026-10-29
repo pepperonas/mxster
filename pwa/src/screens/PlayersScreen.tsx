@@ -20,7 +20,7 @@ import { Switch } from '@/components/ui/Switch'
 import { StatTile } from '@/components/charts/Bars'
 import { DecadeProfile } from '@/components/charts/DecadeProfile'
 import { usePlayers, type KnownPlayer } from '@/game/usePlayers'
-import { FriendsSection } from './FriendsSection'
+import { PeopleHeader } from '@/shell/SectionHeaders'
 import { decadeLabel, DECADES } from '@/game/songPool'
 import { decadeRates } from '@/game/stats'
 import { formatDay } from '@/utils/format'
@@ -70,8 +70,8 @@ export function PlayersScreen() {
 
   return (
     <div className="pt-4 md:pt-10">
-      <h1 className="text-headline-md">{t.title}</h1>
-      <p className="meta mt-1 mb-5">{t.intro}</p>
+      <PeopleHeader />
+      <p className="meta mb-5">{t.intro}</p>
 
       <form onSubmit={submit} className="flex gap-2 mb-1">
         <label htmlFor="new-player" className="sr-only">
@@ -147,10 +147,6 @@ export function PlayersScreen() {
           </m.li>
         ))}
       </ul>
-
-      <div className="mt-10">
-        <FriendsSection />
-      </div>
     </div>
   )
 }

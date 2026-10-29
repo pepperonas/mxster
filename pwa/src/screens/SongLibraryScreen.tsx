@@ -7,7 +7,6 @@
 import { useEffect, useMemo, useRef, useState, type CSSProperties } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import type { Song } from '@/types'
-import { SubPageHeader } from '@/shell/AppShell'
 import { Icon } from '@/components/ui/Icon'
 import { EmptyState } from '@/components/ui/EmptyState'
 import { SongTile, SongRow } from '@/components/library/SongTile'
@@ -118,10 +117,11 @@ export function SongLibraryScreen() {
   const filtersOn = activeFilters(state.filters)
 
   return (
-    <div className="pb-8" style={{ '--lib-top': `${64 + barHeight}px` } as CSSProperties}>
-      <SubPageHeader title={t.title} back="/stats" />
+    // A destination of its own: on phones the top bar (4rem) sits above the search, on wider screens nothing
+    <div className="pb-8 pt-4 md:pt-10 [--lib-head:4rem] md:[--lib-head:0px]" style={{ '--lib-top': `calc(var(--lib-head) + ${barHeight}px)` } as CSSProperties}>
+      <h1 className="text-headline-md mb-3">{t.title}</h1>
 
-      <div ref={bar} className="sticky top-16 z-20 -mx-4 sm:-mx-6 px-4 sm:px-6 pb-3 pt-1 bg-md-surface/90 backdrop-blur-md space-y-3">
+      <div ref={bar} className="sticky top-[var(--lib-head)] z-20 -mx-4 sm:-mx-6 px-4 sm:px-6 pb-3 pt-2 bg-md-surface/90 backdrop-blur-md space-y-3">
         <div className="relative">
           <Icon name="search" className="absolute left-4 top-1/2 -translate-y-1/2 text-md-on-surface-variant pointer-events-none" />
           <input

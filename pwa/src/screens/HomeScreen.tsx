@@ -12,6 +12,7 @@ import { PENDING_ROOM_KEY } from './JoinScreen'
 import { useMe } from '@/auth/AuthContext'
 import { useAchievements, useGame, useGameHistory, useUI } from '@/contexts'
 import { useAppNavigate } from '@/hooks/useAppNavigate'
+import { roomCodeOrNull } from '@/online/roomCode'
 import { Vinyl } from '@/components/ui/Vinyl'
 import { Icon } from '@/components/ui/Icon'
 import { ProgressRing } from '@/components/ui/ProgressRing'
@@ -113,6 +114,13 @@ export function HomeScreen() {
           </m.div>
         </div>
       </button>
+
+      <div className="flex justify-center -mt-2">
+        <button type="button" className="btn btn-text m3-state-layer" onClick={() => showModal(t.joinTitle, <JoinWithCode />)} data-join-code>
+          <Icon name="link" size={20} />
+          {t.joinWithCode}
+        </button>
+      </div>
 
       <DailyCard />
 
@@ -320,5 +328,65 @@ function DailyCard() {
       </span>
       <Icon name="chevron" className="text-md-on-surface-variant" />
     </button>
+  )
+}
+
+/** Join a room by typing its code (a shared link is the other way in). */
+export function JoinWithCode() {
+  const t = useMessages(homeText)
+  const navigate = useAppNavigate()
+  const { closeModal } = useUI()
+  const [raw, setRaw] = useState('')
+  const [invalid, setInvalid] = useState(false)
+  const submit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    const code = roomCodeOrNull(raw)
+    if (!code) {
+      setInvalid(true)
+      return
+    }
+    await closeModal()
+    navigate(`/r/${code}`)
+  }
+  return (
+    <form onSubmit={(e) => void submit(e)} className="space-y-4" data-join-form>
+      <p className="text-body-lg">{t.joinText}</p>
+      <div>
+        <label htmlFor="join-code" className="sr-only">
+          {t.joinLabel}
+        </label>
+        <input
+          id="join-code"
+          className="field text-center tracking-[0.2em] uppercase num-poster"
+          value={raw}
+          onChange={(e) => {
+            setRaw(e.target.value)
+            setInvalid(false)
+          }}
+          placeholder="AB12-CD34"
+          autoComplete="off"
+          autoCapitalize="characters"
+          spellCheck={false}
+          inputMode="text"
+          maxLength={12}
+          aria-invalid={invalid}
+          aria-describedby={invalid ? 'join-code-error' : undefined}
+          autoFocus
+        />
+        {invalid && (
+          <p id="join-code-error" className="mt-2 text-body-sm text-md-error" role="alert">
+            {t.joinInvalid}
+          </p>
+        )}
+      </div>
+      <div className="flex gap-3">
+        <button type="button" className="btn btn-text m3-state-layer flex-1" onClick={() => void closeModal()}>
+          {t.joinCancel}
+        </button>
+        <button type="submit" className="btn btn-brand m3-state-layer flex-1" disabled={raw.trim().length === 0}>
+          {t.joinGo}
+        </button>
+      </div>
+    </form>
   )
 }

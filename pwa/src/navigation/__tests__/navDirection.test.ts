@@ -2,17 +2,19 @@ import { describe, it, expect } from 'vitest'
 import { readFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { navKind, TOP_LEVEL_PATHS } from '../navDirection'
-import { DESTINATIONS } from '@/shell/AppShell'
+import { DESTINATIONS, TOP_LEVEL } from '@/shell/AppShell'
 import { sharedElement, vtName } from '@/motion/vtName'
 
 const css = readFileSync(join(process.cwd(), 'src/styles/motion.css'), 'utf8')
 const pure = css.replace(/\/\*[\s\S]*?\*\//g, '')
 
 describe('navKind', () => {
-  it('fades through between destinations of the navigation bar (and the profile)', () => {
+  it('fades through between destinations of the navigation bar, their tabs and the settings', () => {
     expect(navKind('/', '/history')).toBe('tab')
-    expect(navKind('/stats', '/players')).toBe('tab')
-    expect(navKind('/achievements', '/profile')).toBe('tab')
+    expect(navKind('/history', '/stats')).toBe('tab') // Rückblick: rounds | stats
+    expect(navKind('/players', '/friends')).toBe('tab') // Leute: players | friends
+    expect(navKind('/stats', '/songs')).toBe('tab')
+    expect(navKind('/achievements', '/settings')).toBe('tab')
     expect(navKind('/players', '/')).toBe('tab')
   })
 
@@ -22,8 +24,8 @@ describe('navKind', () => {
     expect(navKind('/players', '/players/Lisa%20M')).toBe('forward')
     expect(navKind('/', '/new')).toBe('forward')
     expect(navKind('/new', '/')).toBe('back')
-    expect(navKind('/profile', '/admin')).toBe('forward')
-    expect(navKind('/admin', '/profile')).toBe('back')
+    expect(navKind('/settings', '/admin')).toBe('forward')
+    expect(navKind('/admin', '/settings')).toBe('back')
   })
 
   it('a page below one destination reached from another still goes forward, and returns back', () => {
@@ -47,7 +49,8 @@ describe('navKind', () => {
   })
 
   it('knows exactly the shell’s destinations as top level', () => {
-    expect([...TOP_LEVEL_PATHS].sort()).toEqual([...DESTINATIONS.map((d) => d.to), '/profile'].sort())
+    expect([...TOP_LEVEL_PATHS].sort()).toEqual([...TOP_LEVEL].sort())
+    expect(TOP_LEVEL).toEqual([...DESTINATIONS.flatMap((d) => d.paths), '/settings'])
   })
 })
 

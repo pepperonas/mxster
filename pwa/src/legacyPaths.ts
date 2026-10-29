@@ -10,7 +10,7 @@ export const LEGACY_SEGMENTS: Record<string, string> = {
   statistik: 'stats',
   spieler: 'players',
   erfolge: 'achievements',
-  profil: 'profile',
+  profil: 'settings',
   raum: 'room'
 }
 

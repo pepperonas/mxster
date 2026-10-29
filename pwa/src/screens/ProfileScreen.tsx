@@ -20,7 +20,7 @@ import { LanguageSwitch } from '@/components/ui/LanguageSwitch'
 import { useMessages } from '@/i18n'
 import { profileText } from '@/i18n/messages/profile'
 
-const VERSION = '0.20.0'
+const VERSION = '0.21.0'
 
 export function ProfileScreen() {
   const me = useMe()
@@ -100,29 +100,34 @@ export function ProfileScreen() {
 
   return (
     <div className="pt-4 md:pt-10 space-y-6 stagger-children">
-      <section className="flex items-center gap-4">
-        <Avatar name={me.name} picture={me.picture} size={64} />
-        <div className="min-w-0">
-          <h1 className="text-headline-sm truncate">{me.name || t.yourAccount}</h1>
-          <p className="meta truncate">{me.email}</p>
-        </div>
-      </section>
+      <h1 className="text-headline-md">{t.settingsTitle}</h1>
 
-      {me.isAdmin && (
-        <button type="button" className="row m3-state-layer !bg-md-primary-container !text-md-on-primary-container" onClick={() => navigate('/admin')}>
-          <Icon name="shield" />
-          <span className="flex-1">
-            <span className="block text-title-md">{t.manageAccess}</span>
-            <span className="block text-body-sm opacity-90">
-              {pending === null ? t.loading : t.pending(pending)}
+      <Group title={t.account}>
+        <div className="flex items-center gap-4 px-4 py-4">
+          <Avatar name={me.name} picture={me.picture} size={56} />
+          <div className="min-w-0 flex-1">
+            <p className="text-title-md truncate">{me.name || t.yourAccount}</p>
+            <p className="meta truncate">{me.email}</p>
+          </div>
+          <button type="button" className="btn btn-tonal m3-state-layer shrink-0" onClick={() => void logout()}>
+            <Icon name="logout" size={20} />
+            <span className="hidden min-[400px]:inline">{t.signOut}</span>
+          </button>
+        </div>
+        {me.isAdmin && (
+          <button type="button" className="w-full flex items-center gap-4 px-4 py-3 min-h-[64px] text-left m3-state-layer" onClick={() => navigate('/admin')} data-admin-row>
+            <Icon name="shield" className="text-md-primary" />
+            <span className="flex-1 min-w-0">
+              <span className="block text-body-lg">{t.manageAccess}</span>
+              <span className="block meta">{pending === null ? t.loading : t.pending(pending)}</span>
             </span>
-          </span>
-          {!!pending && (
-            <span className="grid place-items-center min-w-7 h-7 px-2 rounded-full bg-md-error text-md-on-error text-label-lg tabular">{pending}</span>
-          )}
-          <Icon name="chevron" />
-        </button>
-      )}
+            {!!pending && (
+              <span className="grid place-items-center min-w-7 h-7 px-2 rounded-full bg-md-error text-md-on-error text-label-lg tabular">{pending}</span>
+            )}
+            <Icon name="chevron" className="text-md-on-surface-variant" />
+          </button>
+        )}
+      </Group>
 
       <Group title={t.appearance}>
         <Item icon={dark ? 'moon' : 'sun'} title={t.darkTheme} text={dark ? t.on : t.off}>
@@ -163,11 +168,10 @@ export function ProfileScreen() {
         )}
       </Group>
 
-      <Group title={t.players}>
+      <Group title={t.notifications}>
         <Item icon="mail" title={t.dailyMail} text={t.dailyMailText}>
           <DailyMailSwitch label={t.dailyMail} failed={t.saveFailed} />
         </Item>
-        <ActionRow icon="groups" title={t.managePlayers} text={t.managePlayersText} onClick={() => navigate('/players')} />
       </Group>
 
       <Group title={t.data}>
@@ -176,15 +180,16 @@ export function ProfileScreen() {
         <ActionRow icon="logout" title={t.deleteAccount} text={t.deleteAccountText} onClick={askDeleteAccount} danger />
       </Group>
 
-      <button type="button" className="btn btn-tonal m3-state-layer w-full" onClick={() => void logout()}>
-        <Icon name="logout" size={20} />
-        {t.signOut}
-      </button>
-
-      <div className="text-center space-y-1 pt-2">
-        <p className="meta">mxtape {VERSION}</p>
-        <LegalLinks />
-      </div>
+      <Group title={t.about}>
+        <div className="px-4 py-3 flex items-center gap-4">
+          <Icon name="info" className="text-md-on-surface-variant shrink-0" />
+          <span className="flex-1 text-body-lg">{t.version}</span>
+          <span className="meta tabular">{VERSION}</span>
+        </div>
+        <div className="px-4 pb-2">
+          <LegalLinks className="!justify-start" />
+        </div>
+      </Group>
     </div>
   )
 }

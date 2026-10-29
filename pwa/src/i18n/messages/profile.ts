@@ -49,7 +49,12 @@ export const profileText = defineMessages({
     deleteAccountBody: 'Dein Konto, Verlauf, Erfolge, Einstellungen, Freundschaften, Einladungen und deine Räume werden sofort gelöscht. Meldest du dich später wieder an, beginnst du neu und musst erneut freigeschaltet werden.',
     deleteAccountConfirm: 'Konto löschen',
     deleteAccountFailed: 'Löschen hat nicht geklappt. Bitte versuch es noch einmal.',
-    signOut: 'Abmelden'
+    signOut: 'Abmelden',
+    settingsTitle: 'Einstellungen',
+    account: 'Konto',
+    notifications: 'Benachrichtigungen',
+    about: 'Über mxtape',
+    version: 'Version'
   },
   en: {
     wipeTitle: 'Delete all game data?',
@@ -99,6 +104,11 @@ export const profileText = defineMessages({
     deleteAccountBody: 'Your account, history, achievements, settings, friendships, invitations and rooms are deleted right away. If you sign in again later, you start from scratch and need to be approved again.',
     deleteAccountConfirm: 'Delete account',
     deleteAccountFailed: 'Deleting did not work. Please try again.',
-    signOut: 'Sign out'
+    signOut: 'Sign out',
+    settingsTitle: 'Settings',
+    account: 'Account',
+    notifications: 'Notifications',
+    about: 'About mxtape',
+    version: 'Version'
   }
 })

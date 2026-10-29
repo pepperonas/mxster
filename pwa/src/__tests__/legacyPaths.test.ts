@@ -9,7 +9,7 @@ describe('englishPath', () => {
     expect(englishPath('/statistik')).toBe('/stats')
     expect(englishPath('/spieler')).toBe('/players')
     expect(englishPath('/erfolge')).toBe('/achievements')
-    expect(englishPath('/profil')).toBe('/profile')
+    expect(englishPath('/profil')).toBe('/settings') // the profile became the settings (v0.21.0)
   })
 
   it('keeps ids, names and room codes', () => {
