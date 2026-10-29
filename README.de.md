@@ -15,10 +15,10 @@
 <h3>👉 <a href="https://mxtape.celox.io">mxtape.celox.io</a> — mit Google oder E-Mail anmelden oder als Gast nur per Link in den Raum von Freunden</h3>
 
 <!-- BADGES:BIG — version, tests, lines of code and songs; readme.test.ts keeps them true, scripts/readme-badges.mjs rewrites them. -->
-[![version](https://img.shields.io/badge/version-0.21.3-C2185B?style=for-the-badge&logo=semver&logoColor=white)](https://github.com/pepperonas/mxtape/releases/latest)
-[![tests](https://img.shields.io/badge/tests-1072-2E9E5B?style=for-the-badge&logo=vitest&logoColor=white)](#tests-und-ci)
-[![lines of code](https://img.shields.io/badge/lines%20of%20code-30.7k-4B6BDF?style=for-the-badge&logo=typescript&logoColor=white)](pwa/src)
-[![test code](https://img.shields.io/badge/test%20code-12.6k-2E9E5B?style=for-the-badge&logo=typescript&logoColor=white)](#tests-und-ci)
+[![version](https://img.shields.io/badge/version-0.22.0-C2185B?style=for-the-badge&logo=semver&logoColor=white)](https://github.com/pepperonas/mxtape/releases/latest)
+[![tests](https://img.shields.io/badge/tests-1080-2E9E5B?style=for-the-badge&logo=vitest&logoColor=white)](#tests-und-ci)
+[![lines of code](https://img.shields.io/badge/lines%20of%20code-30.8k-4B6BDF?style=for-the-badge&logo=typescript&logoColor=white)](pwa/src)
+[![test code](https://img.shields.io/badge/test%20code-12.7k-2E9E5B?style=for-the-badge&logo=typescript&logoColor=white)](#tests-und-ci)
 [![songs](https://img.shields.io/badge/songs-500-FF8A3D?style=for-the-badge&logo=applemusic&logoColor=white)](#die-songsammlung)
 
 [![Donate with PayPal](https://img.shields.io/badge/PayPal-support%20this%20project-00457C?style=for-the-badge&logo=paypal&logoColor=white)](https://www.paypal.com/donate/?business=martin.pfeffer@celox.io&currency_code=EUR&item_name=mxtape)
@@ -181,6 +181,7 @@ Statt ein Handy herumzureichen, spielt jede Person auf dem eigenen Gerät – im
 - **Song melden** nach dem Aufdecken (falsches Jahr, falsche Version, schlechter Ton, falsches Cover); der Admin korrigiert das Jahr oder nimmt den Song heraus – sofort für alle Runden
 - **Aufdecken mit Hintergrund:** Album-Cover groß im Vordergrund, Albumname und ein kurzes „Wusstest du?“
 - **Doppeltipp kopiert:** Doppeltipp auf eine aufgedeckte Karte der Zeitleiste legt „Interpret – Titel“ in die Zwischenablage
+- **Danke sagen:** am Ende der Startseite – Code auf GitHub ansehen, per PayPal spendieren oder auf Google Maps bewerten, jede Kachel mit eigener kleiner Animation
 - **Übersichtliche Navigation:** fünf Ziele – Spielen, Rückblick (Runden und Statistik), Songs, Erfolge, Leute (Spieler und Freunde) – und alle Einstellungen mit einem Tipp hinter dem Zahnrad; auf breiten Bildschirmen zeigt die Seitenleiste ihre Beschriftungen
 - **Mit Code beitreten:** den Raum-Code eintippen statt den Link zu öffnen
 - **Alle zusammen:** die Statistik zeigt auch die Summen der ganzen Gruppe – Runden pro Tag, Modi, den Katalog nach Jahren, die Songs, an denen alle scheitern, die seltensten Erfolge; ohne Namen und ohne Uhrzeiten

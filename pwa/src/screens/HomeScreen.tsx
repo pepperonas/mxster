@@ -13,6 +13,7 @@ import { useMe } from '@/auth/AuthContext'
 import { useAchievements, useGame, useGameHistory, useUI } from '@/contexts'
 import { useAppNavigate } from '@/hooks/useAppNavigate'
 import { roomCodeOrNull } from '@/online/roomCode'
+import { HomeFooter } from '@/components/HomeFooter'
 import { Vinyl } from '@/components/ui/Vinyl'
 import { Icon } from '@/components/ui/Icon'
 import { ProgressRing } from '@/components/ui/ProgressRing'
@@ -176,6 +177,8 @@ export function HomeScreen() {
           )}
         </section>
       </div>
+
+      <HomeFooter />
     </div>
   )
 }
