@@ -193,3 +193,46 @@ def test_the_preference_is_on_by_default_and_needs_csrf(client, google):
     r = client.put("/api/me/prefs", json={"dailyMail": False}, headers={"X-CSRF-Token": me["csrf"]})
     assert r.json()["dailyMail"] is False
     assert client.get("/api/me").json()["dailyMail"] is False
+
+
+def test_one_notification_per_account_whatever_the_day(client, google, mails):
+    """The ±1 day window (time zones) must not allow a mail per day-row."""
+    lisa, boss = _friends(client, google)
+    h = {"X-CSRF-Token": lisa["csrf"]}
+    _play(client, h, [False])
+    assert client.post(_url("/notify"), json={"ids": [boss["id"]]}, headers=h).json() == {"sent": 1}
+    tomorrow = (utcnow().date() + timedelta(days=1)).isoformat()
+    base = f"/api/daily/{tomorrow}"
+    assert client.post(base + "/start", headers=h).status_code == 200
+    client.post(base + "/turn", json={"index": 0, "ok": False}, headers=h)
+    r = client.post(base + "/notify", json={"ids": [boss["id"]]}, headers=h)
+    assert r.status_code == 409 and r.json()["code"] == "already_sent"
+    assert len([m for m in mails if "Tagesrunde" in m[1]]) == 1
+
+
+def test_a_lost_race_sends_nothing(client, google, mails):
+    """Two requests at once: the one that finds the slot already claimed sends nothing
+    (simulated: the run is claimed between this request's check and its claim)."""
+    from app.api import daily as api
+
+    lisa, boss = _friends(client, google)
+    h = {"X-CSRF-Token": lisa["csrf"]}
+    _play(client, h, [False])
+    real = api._mailable_friends
+
+    def claim_first(db, me):
+        # the other request wins right now
+        with SessionLocal() as other:
+            other.query(DailyResult).filter_by(user_id=me.id, day=_today()).update({"notified_at": utcnow()})
+            other.commit()
+        return real(db, me)
+
+    api._mailable_friends = claim_first
+    try:
+        r = client.post(_url("/notify"), json={"ids": [boss["id"]]}, headers=h)
+    finally:
+        api._mailable_friends = real
+    assert r.status_code == 409
+    assert [m for m in mails if "Tagesrunde" in m[1]] == []
+    with SessionLocal() as db:
+        assert db.query(User).filter_by(id=lisa["id"]).one().daily_notified_at is None  # rolled back

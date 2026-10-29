@@ -17,7 +17,7 @@ from datetime import date, timedelta
 
 from fastapi import APIRouter, Depends
 from pydantic import BaseModel
-from sqlalchemy import or_, select
+from sqlalchemy import or_, select, update
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
@@ -35,6 +35,9 @@ DAILY_MAX = 50
 KEEP_DAYS = 60
 #: Friends one notification may reach
 MAX_NOTIFY = 50
+#: One notification per account in this time, whatever the day: the ±1 day
+#: window for time zones would otherwise allow a mail per day-row in a row
+NOTIFY_GAP = timedelta(hours=20)
 
 
 def _day(day: str) -> str:
@@ -213,7 +216,22 @@ def notify(day: str, body: NotifyIn, me: User = Depends(require_approved), db: S
     targets = [f for f in _mailable_friends(db, me) if f.id in wanted][:MAX_NOTIFY]
     if not targets:
         raise err(400, "no_recipients", "Niemand ausgewählt.")
-    run.notified_at = utcnow()
+    # Claim the slot atomically — on the run AND on the account — so two
+    # requests at once (or one per day-row) can never both send
+    now = utcnow()
+    run_claimed = db.execute(
+        update(DailyResult).where(DailyResult.id == run.id, DailyResult.notified_at.is_(None)).values(notified_at=now),
+        execution_options={"synchronize_session": False},  # decided in SQL, not against loaded objects
+    ).rowcount
+    user_claimed = db.execute(
+        update(User)
+        .where(User.id == me.id, or_(User.daily_notified_at.is_(None), User.daily_notified_at < now - NOTIFY_GAP))
+        .values(daily_notified_at=now),
+        execution_options={"synchronize_session": False},
+    ).rowcount
+    if run_claimed != 1 or user_claimed != 1:
+        db.rollback()
+        raise err(409, "already_sent", "Heute ist schon eine Nachricht rausgegangen.")
     db.commit()
     sender = me.name or first_name(me)
     for f in targets:

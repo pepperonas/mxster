@@ -41,6 +41,8 @@ class User(Base):
     email_verified_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
     # Friends may send a mail about their daily round (switch in the profile)
     daily_mail: Mapped[bool] = mapped_column(Boolean, default=True)
+    # When this account last mailed friends about a daily round (one per NOTIFY_GAP, whatever the day)
+    daily_notified_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
 
     @property
     def unverified(self) -> bool:
@@ -247,7 +249,7 @@ def _add_missing_columns() -> None:
     later = {
         "room_members": {"left_at": "DATETIME", "display": "INTEGER NOT NULL DEFAULT 0"},
         "rooms": {"host_seat": "INTEGER NOT NULL DEFAULT 0"},
-        "users": {"password_hash": "VARCHAR(200)", "email_verified_at": "DATETIME", "daily_mail": "BOOLEAN NOT NULL DEFAULT 1"},
+        "users": {"password_hash": "VARCHAR(200)", "email_verified_at": "DATETIME", "daily_mail": "BOOLEAN NOT NULL DEFAULT 1", "daily_notified_at": "DATETIME"},
         "daily_results": {"turns": "INTEGER NOT NULL DEFAULT 0", "started_at": "DATETIME", "finished_at": "DATETIME", "notified_at": "DATETIME"},
     }
     with engine.begin() as conn:
