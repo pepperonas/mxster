@@ -6,7 +6,7 @@
  * lamp while it turns underneath. It spins up and coasts to a stop
  * (useRecordMotor) and then rests where it is.
  */
-import { useEffect, useId, useRef, useState, type CSSProperties, type ReactNode } from 'react'
+import { useId, useRef, type CSSProperties, type ReactNode } from 'react'
 import { useRecordMotor } from './useRecordMotor'
 
 interface VinylProps {
@@ -16,8 +16,6 @@ interface VinylProps {
   label?: ReactNode
   /** Overrides the label colour (CSS colour). */
   labelColor?: string
-  /** Image printed on the label (album cover after a reveal). */
-  labelImage?: string | null
   /** Ring around the label (CSS colour), e.g. the verdict. */
   labelRing?: string
   className?: string
@@ -45,14 +43,10 @@ const GROOVES: { r: number; o: number }[] = (() => {
   return out
 })()
 
-export function Vinyl({ size = 240, spinning = false, label, labelColor, labelImage, labelRing, className = '', style }: VinylProps) {
+export function Vinyl({ size = 240, spinning = false, label, labelColor, labelRing, className = '', style }: VinylProps) {
   const uid = useId().replace(/:/g, '')
   const bodyId = `body-${uid}`
   const labelGlossId = `gloss-${uid}`
-  const clipId = `label-${uid}`
-  const [imageFailed, setImageFailed] = useState(false)
-  useEffect(() => setImageFailed(false), [labelImage])
-  const showImage = Boolean(labelImage) && !imageFailed
   const disc = useRef<SVGSVGElement>(null)
   const turning = useRecordMotor(disc, spinning)
   return (
@@ -86,25 +80,6 @@ export function Vinyl({ size = 240, spinning = false, label, labelColor, labelIm
         <circle cx="50" cy="50" r="18" fill={labelColor ?? 'rgb(var(--mx-label))'} />
         <circle cx="50" cy="50" r="16.2" fill="none" stroke="#fff" strokeOpacity="0.16" strokeWidth="0.25" />
         <path d="M50 35.5a14.5 14.5 0 0 1 12.6 7.3" stroke="rgb(var(--mx-label-2))" strokeWidth="2.2" fill="none" strokeLinecap="round" />
-        {showImage && (
-          <>
-            <clipPath id={clipId}>
-              <circle cx="50" cy="50" r="18" />
-            </clipPath>
-            <image
-              href={labelImage!}
-              x="32"
-              y="32"
-              width="36"
-              height="36"
-              preserveAspectRatio="xMidYMid slice"
-              clipPath={`url(#${clipId})`}
-              onError={() => setImageFailed(true)}
-            />
-            {/* Scrim so a year on top stays readable on any cover */}
-            <circle cx="50" cy="50" r="18" fill="rgb(0 0 0 / 0.38)" />
-          </>
-        )}
         <circle cx="50" cy="50" r="18" fill={`url(#${labelGlossId})`} />
         <circle cx="50" cy="50" r="18" fill="none" stroke="rgb(0 0 0 / 0.25)" strokeWidth="0.5" />
         {labelRing && <circle cx="50" cy="50" r="18.6" fill="none" stroke={labelRing} strokeWidth="1.6" />}

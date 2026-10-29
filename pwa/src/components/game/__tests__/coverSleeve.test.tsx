@@ -20,7 +20,7 @@ vi.mock('@/services/PreviewPlayerService', () => {
   }
   return { getPreviewPlayer: () => player }
 })
-const { Turntable, SLEEVE_SHIFT, RECORD_SHIFT } = await import('@/components/game/Turntable')
+const { Turntable, SLEEVE_SCALE, SLEEVE_SHIFT, RECORD_SHIFT } = await import('@/components/game/Turntable')
 
 const px = (...rgb: number[][]) => rgb.flatMap(([r, g, b]) => [r, g, b, 255])
 
@@ -86,11 +86,45 @@ describe('the sleeve on reveal', () => {
     expect(container.querySelector('[data-sleeve]')).toBeNull()
   })
 
-  it('moves little enough to stay on a 320 px phone', () => {
-    // the record is 88 % of min(76vw, 320px); at 320 px the side margin is 12 % of the viewport
-    const record = 0.76 * 320 * 0.88
-    const margin = (320 - 0.76 * 320) / 2
-    expect((SLEEVE_SHIFT / 100) * record).toBeLessThan(margin)
-    expect((RECORD_SHIFT / 100) * record).toBeLessThan(margin)
+  it('the cover is in front: the record slides out behind it, the year sits on the sleeve, the label carries no second cover', () => {
+    for (const compact of [false, true]) {
+      const { container, unmount } = render(view({ revealYear: 1984, revealCover: '/audio/covers/song_001.jpg', compact }))
+      const sleeve = container.querySelector('[data-sleeve]')!
+      const disc = container.querySelector('svg.vinyl')!
+      // later in the DOM = painted on top (same stacking context)
+      expect(disc.compareDocumentPosition(sleeve) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
+      expect(container.querySelector('svg.vinyl image')).toBeNull()
+      if (!compact) expect(sleeve.querySelector('[data-sleeve-year]')?.textContent).toBe('1984')
+      unmount()
+    }
+  })
+
+  it('without a cover the year stays on the label', () => {
+    const { container } = render(view({ revealYear: 1984, revealCover: null }))
+    expect(container.querySelector('[data-sleeve-year]')).toBeNull()
+    expect(container.textContent).toContain('1984')
+  })
+
+  it('sleeve and record stay on a 320 px phone, and most of the cover is not covered', () => {
+    // place = 88 % of the turntable, min(76vw, 320px); margin beside it = 12 % of the viewport
+    const turntable = 0.76 * 320
+    const place = 0.88 * turntable
+    const margin = (320 - turntable) / 2
+    const size = SLEEVE_SCALE * place
+    const centre = turntable / 2
+    const sleeveLeft = centre - (SLEEVE_SHIFT / 100) * place - size / 2
+    const recordRight = centre + (RECORD_SHIFT / 100) * place + size / 2
+    expect(-sleeveLeft).toBeLessThan(margin)
+    expect(recordRight - turntable).toBeLessThan(margin)
+    // the record peeks out by at least a fifth of the sleeve, the cover stays whole
+    const peek = recordRight - (centre - (SLEEVE_SHIFT / 100) * place + size / 2)
+    expect(peek).toBeGreaterThan(size / 5)
+  })
+
+  it('the play button stays round while playing', async () => {
+    const { readFileSync } = await import('node:fs')
+    const src = readFileSync('src/components/game/Turntable.tsx', 'utf8')
+    expect(src).not.toMatch(/borderRadius:\s*playing/)
+    expect(src).toMatch(/w-\[26%\] aspect-square rounded-full/)
   })
 })

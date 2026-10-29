@@ -15,10 +15,10 @@
 <h3>👉 <a href="https://mxtape.celox.io">mxtape.celox.io</a> — sign in with Google or email, or join a friend's room as a guest with just a link</h3>
 
 <!-- BADGES:BIG — version, tests, lines of code and songs; readme.test.ts keeps them true, scripts/readme-badges.mjs rewrites them. -->
-[![version](https://img.shields.io/badge/version-0.17.0-C2185B?style=for-the-badge&logo=semver&logoColor=white)](https://github.com/pepperonas/mxtape/releases/latest)
-[![tests](https://img.shields.io/badge/tests-972-2E9E5B?style=for-the-badge&logo=vitest&logoColor=white)](#tests-and-ci)
+[![version](https://img.shields.io/badge/version-0.17.1-C2185B?style=for-the-badge&logo=semver&logoColor=white)](https://github.com/pepperonas/mxtape/releases/latest)
+[![tests](https://img.shields.io/badge/tests-975-2E9E5B?style=for-the-badge&logo=vitest&logoColor=white)](#tests-and-ci)
 [![lines of code](https://img.shields.io/badge/lines%20of%20code-28.3k-4B6BDF?style=for-the-badge&logo=typescript&logoColor=white)](pwa/src)
-[![test code](https://img.shields.io/badge/test%20code-11.1k-2E9E5B?style=for-the-badge&logo=typescript&logoColor=white)](#tests-and-ci)
+[![test code](https://img.shields.io/badge/test%20code-11.2k-2E9E5B?style=for-the-badge&logo=typescript&logoColor=white)](#tests-and-ci)
 [![songs](https://img.shields.io/badge/songs-500-FF8A3D?style=for-the-badge&logo=applemusic&logoColor=white)](#the-song-library)
 
 [![Donate with PayPal](https://img.shields.io/badge/PayPal-support%20this%20project-00457C?style=for-the-badge&logo=paypal&logoColor=white)](https://www.paypal.com/donate/?business=martin.pfeffer@celox.io&currency_code=EUR&item_name=mxtape)
@@ -186,7 +186,7 @@ Instead of passing one phone around, everyone plays on their own device — in t
 - **Bots listen first:** 3–6 seconds before they place; the song keeps playing afterwards
 - **Settings survive a reload:** mode, goal, decades, themes, objections and bonus stay set, in a lobby bots and teams too
 - **Covers everywhere:** on every face-up card of the timeline, fanned out in the history, as a grid on a round's page, blurred behind the result and in the picture to share
-- **Covers on reveal:** the album cover slides out as a sleeve behind the record, and its colour glows behind the turntable
+- **Covers on reveal:** the album cover comes to the front in full with the year on it, the record slides out behind it, and the cover's colour glows behind the turntable
 - **Admin statistics:** usage (active accounts and rounds per day, sign-ups, time of day, weekday), how people play, the catalogue over the years, songs placed wrong most often, achievements reached most and least — totals only
 - **Online achievements for everyone:** players with an account see their own unlocks on their own device and collect them in their own account
 - **Again with the same people:** whoever came last starts the next round
