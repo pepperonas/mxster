@@ -205,3 +205,23 @@ describe('joining with a code', () => {
     await waitFor(() => expect(where).toBe('/r/AB12CD04'))
   })
 })
+
+describe('switching shows one highlight, not two', () => {
+  const css = src('styles/motion.css')
+  it('navigation that stays on screen shows only its live new state during a page change', () => {
+    for (const name of ['nav-bar', 'nav-rail', 'top-bar', 'tabs-review', 'tabs-people']) {
+      // the frozen old picture is hidden — unconditionally (Chrome does not match :not(:only-child) there)
+      expect(css).toMatch(new RegExp(`::view-transition-old\\(${name}\\),?[\\s\\S]*?\\{\\s*animation: none;\\s*opacity: 0;`))
+      expect(css).toMatch(new RegExp(`::view-transition-new\\(${name}\\),?[\\s\\S]*?\\{\\s*animation: none;\\s*mix-blend-mode: normal;`))
+    }
+    expect(css).not.toMatch(/view-transition-(old|new)\([a-z-]+\):not\(:only-child\)/)
+    // chrome leaving with a page still fades out from full opacity
+    expect(css).toMatch(/view-transition-old\(top-bar\):only-child \{\s*opacity: 1;\s*animation: mx-vt-fade-out/)
+  })
+  it('the tab row has a name of its own per destination, and the nav icons switch colour with the indicator', () => {
+    expect(src('components/ui/Tabs.tsx')).toContain('viewTransitionName: `tabs-${id}`')
+    const shell = src('shell/AppShell.tsx')
+    const item = shell.slice(shell.indexOf('function NavItem'), shell.indexOf('function NavBar'))
+    expect(item).not.toContain('transition-colors')
+  })
+})

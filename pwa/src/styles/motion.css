@@ -241,6 +241,7 @@ html[data-nav='down']::view-transition-new(*):only-child {
 html[data-nav]::view-transition-old(nav-bar):only-child,
 html[data-nav]::view-transition-old(nav-rail):only-child,
 html[data-nav]::view-transition-old(top-bar):only-child {
+  opacity: 1;
   animation: mx-vt-fade-out var(--m3-dur-effects-fast) var(--m3-ease-effects-fast) both;
 }
 html[data-nav]::view-transition-new(nav-bar):only-child,
@@ -287,8 +288,34 @@ html[data-theme-transition] * {
 /* Persistent chrome stays put while the page underneath transitions. */
 ::view-transition-group(nav-bar),
 ::view-transition-group(nav-rail),
-::view-transition-group(top-bar) {
+::view-transition-group(top-bar),
+::view-transition-group(tabs-review),
+::view-transition-group(tabs-people) {
   animation: none;
+}
+/* Chrome on both sides of a change (switching destinations, switching tabs)
+   shows only its live new state: the browser would otherwise lay a frozen
+   picture of the old navigation over it, and — the rail has no background of
+   its own — the old entry stayed lit while the indicator was already gliding to
+   the new one. The indicator's glide (Motion) runs in the live picture.
+   Unconditional on purpose: Chrome does not match :not(:only-child) on these
+   pseudo-elements. The :only-child rules above (chrome appearing or leaving
+   with a page) are more specific and keep their fades. */
+::view-transition-old(nav-bar),
+::view-transition-old(nav-rail),
+::view-transition-old(top-bar),
+::view-transition-old(tabs-review),
+::view-transition-old(tabs-people) {
+  animation: none;
+  opacity: 0;
+}
+::view-transition-new(nav-bar),
+::view-transition-new(nav-rail),
+::view-transition-new(top-bar),
+::view-transition-new(tabs-review),
+::view-transition-new(tabs-people) {
+  animation: none;
+  mix-blend-mode: normal;
 }
 
 /* Shared elements (a round's row → its page, a player's avatar → their page)

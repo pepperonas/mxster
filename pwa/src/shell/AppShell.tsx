@@ -143,11 +143,8 @@ function NavItem({ dest, pathname, layout }: { dest: Destination; pathname: stri
             transition={spring.spatialFast}
           />
         )}
-        <span
-          className={`relative transition-colors duration-m3-effects ${
-            active ? 'text-md-on-secondary-container' : 'text-md-on-surface-variant group-hover:text-md-on-surface'
-          }`}
-        >
+        {/* No colour fade: icon and label switch with the indicator, not after it */}
+        <span className={`relative ${active ? 'text-md-on-secondary-container' : 'text-md-on-surface-variant group-hover:text-md-on-surface'}`}>
           <Icon name={dest.icon} />
         </span>
         {rail && (

@@ -30,7 +30,15 @@ export function Tabs({ items, label, id }: { items: TabItem[]; label: string; id
     requestAnimationFrame(() => document.querySelector<HTMLElement>(`[data-tab="${next.to}"]`)?.focus())
   }
   return (
-    <div role="tablist" aria-label={label} onKeyDown={onKey} className="flex border-b border-md-outline-variant -mx-4 sm:mx-0 px-4 sm:px-0" data-tabs={id}>
+    <div
+      role="tablist"
+      aria-label={label}
+      onKeyDown={onKey}
+      className="flex border-b border-md-outline-variant -mx-4 sm:mx-0 px-4 sm:px-0"
+      data-tabs={id}
+      // The same row on both tabs: it stays put and shows its live state while the page below changes (motion.css)
+      style={{ viewTransitionName: `tabs-${id}` }}
+    >
       {items.map((item, i) => {
         const selected = i === current
         return (
