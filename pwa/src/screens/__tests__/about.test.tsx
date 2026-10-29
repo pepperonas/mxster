@@ -100,9 +100,12 @@ describe('about page', () => {
     page()
     const facts = document.querySelector('[data-about-facts]')!.textContent!
     const songs = allSongs()
-    expect(facts).toContain(`${songs.length}Songs`)
+    const pairs = [...document.querySelectorAll('[data-about-facts] > div')].map((d) => `${d.querySelector('dd')!.textContent} ${d.querySelector('dt')!.textContent}`)
+    expect(pairs[0]).toBe(`${songs.length} Songs`)
+    // each label once: no hidden copy that a screen reader would read twice
+    expect(facts.match(/Songs/g)).toHaveLength(1)
     const decades = new Set(songs.map((s) => Math.floor(s.year / 10)))
-    expect(facts).toContain(`${decades.size}Jahrzehnte, ${Math.min(...decades) * 10} bis heute`)
+    expect(pairs[1]).toBe(`${decades.size} Jahrzehnte, ${Math.min(...decades) * 10} bis heute`)
   })
 
   it('the call to action fits who is looking', () => {

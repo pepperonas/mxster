@@ -200,12 +200,10 @@ function Facts() {
     <div className="px-4 sm:px-6 mx-auto max-w-6xl">
       <dl className="grid grid-cols-2 md:grid-cols-4 gap-3" data-about-facts>
         {items.map((it) => (
-          <div key={it.l} className="rounded-m3-xl bg-md-surface-container-low px-5 py-4">
-            <dt className="sr-only">{it.l}</dt>
-            <dd>
-              <span className="num-poster block text-md-primary text-[clamp(2rem,7vw,2.8rem)] leading-none">{it.n}</span>
-              <span className="block text-body-md text-md-on-surface-variant mt-2">{it.l}</span>
-            </dd>
+          <div key={it.l} className="flex flex-col-reverse rounded-m3-xl bg-md-surface-container-low px-5 py-4">
+            {/* label first in the markup (dt before dd), number shown on top */}
+            <dt className="text-body-md text-md-on-surface-variant mt-2">{it.l}</dt>
+            <dd className="num-poster text-md-primary text-[clamp(2rem,7vw,2.8rem)] leading-none">{it.n}</dd>
           </div>
         ))}
       </dl>
