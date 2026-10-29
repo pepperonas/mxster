@@ -42,20 +42,29 @@ function Tile({ href, kind, title, text, art }: { href: string; kind: 'code' | '
   )
 }
 
-/** GitHub mark and a small commit graph beside it: the branch draws itself, three commits pop up. */
+/**
+ * The GitHub mark beside a small git graph: a trunk, a branch that leaves and
+ * merges back, four commits. Muted at rest; on hover the graph draws itself in
+ * the accent colour from the bottom up and the commits pop in order.
+ */
 function CodeArt() {
   return (
     <svg viewBox="0 0 56 48" width="56" height="48" className="overflow-visible">
-      <path
-        fill="currentColor"
-        className="mx-code-mark text-md-on-surface"
-        d="M12 8.6a10.4 10.4 0 0 0-3.29 20.27c.52.1.71-.23.71-.5v-1.77c-2.9.63-3.51-1.4-3.51-1.4-.47-1.2-1.15-1.52-1.15-1.52-.95-.65.07-.64.07-.64 1.05.08 1.6 1.08 1.6 1.08.93 1.6 2.44 1.14 3.04.87.09-.68.36-1.14.66-1.4-2.31-.26-4.75-1.16-4.75-5.15 0-1.14.41-2.07 1.07-2.8-.1-.26-.47-1.32.1-2.75 0 0 .88-.28 2.87 1.07a9.9 9.9 0 0 1 5.22 0c1.99-1.35 2.86-1.07 2.86-1.07.57 1.43.21 2.49.1 2.75.67.73 1.07 1.66 1.07 2.8 0 4-2.44 4.88-4.76 5.14.37.32.71.96.71 1.93v2.86c0 .28.19.6.72.5A10.4 10.4 0 0 0 12 8.6z"
-      />
-      <g className="mx-code-graph text-md-primary">
-        <path className="mx-code-branch" d="M30 40 V10 M30 30 C30 24 44 26 44 18" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" pathLength="1" />
-        <circle className="mx-code-dot" style={{ ['--i' as string]: 0 }} cx="30" cy="38" r="3.2" fill="currentColor" />
-        <circle className="mx-code-dot" style={{ ['--i' as string]: 1 }} cx="30" cy="24" r="3.2" fill="currentColor" />
-        <circle className="mx-code-dot" style={{ ['--i' as string]: 2 }} cx="44" cy="17" r="3.2" fill="currentColor" />
+      {/* the mark's path lives in a 24-unit box centred on (12, 19): moved down to the tile's middle */}
+      <g transform="translate(0 5)">
+        <path fill="currentColor" className="mx-code-mark text-md-on-surface" d="M12 8.6a10.4 10.4 0 0 0-3.29 20.27c.52.1.71-.23.71-.5v-1.77c-2.9.63-3.51-1.4-3.51-1.4-.47-1.2-1.15-1.52-1.15-1.52-.95-.65.07-.64.07-.64 1.05.08 1.6 1.08 1.6 1.08.93 1.6 2.44 1.14 3.04.87.09-.68.36-1.14.66-1.4-2.31-.26-4.75-1.16-4.75-5.15 0-1.14.41-2.07 1.07-2.8-.1-.26-.47-1.32.1-2.75 0 0 .88-.28 2.87 1.07a9.9 9.9 0 0 1 5.22 0c1.99-1.35 2.86-1.07 2.86-1.07.57 1.43.21 2.49.1 2.75.67.73 1.07 1.66 1.07 2.8 0 4-2.44 4.88-4.76 5.14.37.32.71.96.71 1.93v2.86c0 .28.19.6.72.5A10.4 10.4 0 0 0 12 8.6z" />
+      </g>
+      <g className="mx-code-graph">
+        <path className="mx-code-line" d="M33 43 V5" fill="none" stroke="currentColor" strokeWidth="2.6" strokeLinecap="round" pathLength="1" />
+        <path className="mx-code-line" style={{ ['--d' as string]: '220ms' }} d="M33 35 C33 28 51 30 51 24 C51 18 33 20 33 13" fill="none" stroke="currentColor" strokeWidth="2.6" strokeLinecap="round" pathLength="1" />
+        {[
+          [33, 40],
+          [33, 24],
+          [51, 24],
+          [33, 9]
+        ].map(([cx, cy], i) => (
+          <circle key={i} className="mx-code-dot" style={{ ['--i' as string]: i }} cx={cx} cy={cy} r="3.8" fill="currentColor" />
+        ))}
       </g>
     </svg>
   )

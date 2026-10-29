@@ -8,7 +8,7 @@ export const profileText = defineMessages({
     wipeConfirm: 'Endgültig löschen',
     wipeFailed: 'Löschen hat nicht geklappt. Bitte versuch es noch einmal.',
     yourAccount: 'Dein Konto',
-    manageAccess: 'Zugänge und Song-Meldungen',
+    manageAccess: 'Verwaltung',
     loading: 'Wird geladen …',
     pending: (n: number) =>
       n === 0 ? 'Niemand wartet' : n === 1 ? '1 Person wartet auf Freischaltung' : `${n} Personen warten auf Freischaltung`,
@@ -65,7 +65,7 @@ export const profileText = defineMessages({
     wipeConfirm: 'Delete for good',
     wipeFailed: 'Deleting did not work. Please try again.',
     yourAccount: 'Your account',
-    manageAccess: 'Access and song reports',
+    manageAccess: 'Admin',
     loading: 'Loading …',
     pending: (n: number) =>
       n === 0 ? 'Nobody is waiting' : n === 1 ? '1 person is waiting for approval' : `${n} people are waiting for approval`,

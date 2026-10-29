@@ -58,10 +58,10 @@ describe('home footer', () => {
 describe('footer motion', () => {
   it('hover runs only where pointers hover; focus and press run it too', () => {
     const hoverBlock = /@media \(hover: hover\) \{([\s\S]*?)\n\}/.exec(footerCss)![1]
-    expect(hoverBlock).toContain('.mx-thanks:hover .mx-code-branch')
+    expect(hoverBlock).toContain('.mx-thanks:hover .mx-code-line')
     expect(hoverBlock).toContain('.mx-thanks:hover .mx-give-heart')
     expect(hoverBlock).toContain('.mx-thanks:hover .mx-rate-star')
-    for (const part of ['mx-code-branch', 'mx-give-liquid', 'mx-rate-star']) expect(footerCss).toContain(`.mx-thanks:is(:focus-visible, :active) .${part}`)
+    for (const part of ['mx-code-line', 'mx-give-liquid', 'mx-rate-star']) expect(footerCss).toContain(`.mx-thanks:is(:focus-visible, :active) .${part}`)
   })
 
   it('reduced motion: no movement, the same end state', () => {

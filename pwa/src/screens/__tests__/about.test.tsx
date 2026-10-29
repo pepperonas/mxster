@@ -193,6 +193,8 @@ describe('routing', () => {
     expect(app).toContain("{ path: '/about', element: <AboutScreen /> }")
     expect(app).toContain("{ path: '/landing', element: <Navigate to=\"/about\" replace /> }")
     expect(app).toContain("{ path: '/help', element: <Navigate to=\"/about#help\" replace /> }")
+    // a page opened from a footer starts at the top; back returns to where you were
+    expect(app).toMatch(/<ScrollRestoration \/>/)
     const vite = readFileSync(join(__dirname, '../../../vite.config.ts'), 'utf8')
     expect(vite).toContain('/^\\/(about|landing|help)\\/?$/')
   })

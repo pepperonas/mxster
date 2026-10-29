@@ -51,7 +51,7 @@ describe('song library page', () => {
 
   it('opens with the state from the address: query, sort, direction, filters', () => {
     page('/stats/songs?sort=title&dir=desc&dec=1980&exotics=0')
-    expect((document.querySelector('[data-sort]') as HTMLSelectElement).value).toBe('title')
+    expect(document.querySelector('[data-dropdown-value]')!.getAttribute('data-dropdown-value')).toBe('title')
     expect(document.querySelector('[data-sort-dir]')!.getAttribute('data-sort-dir')).toBe('desc')
     const shown = [...document.querySelectorAll('[data-song-tile]')].length
     expect(shown).toBe(allSongs().filter((s) => s.year >= 1980 && s.year < 1990 && !s.exotic).length)

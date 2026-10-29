@@ -112,6 +112,20 @@ describe('the shell on a phone and on a desktop', () => {
     expect(document.querySelector('[data-admin-link]')).toBeNull()
   })
 
+  it('on the admin page its rail entry is current, and beside the rail there is no back arrow', async () => {
+    me(true)
+    const a = shell('/admin')
+    await waitFor(() => expect(document.querySelector('[data-admin-link]')).not.toBeNull())
+    expect(document.querySelector('[data-admin-link]')!.getAttribute('aria-current')).toBe('page')
+    a.unmount()
+    shell('/')
+    await waitFor(() => expect(document.querySelector('[data-admin-link]')).not.toBeNull())
+    expect(document.querySelector('[data-admin-link]')!.getAttribute('aria-current')).toBeNull()
+    // the admin page's header: back arrow only below the rail breakpoint (phones reach it from the settings)
+    expect(src('screens/AdminScreen.tsx')).toContain('<SubPageHeader title={t.title} back="/settings" inRail />')
+    expect(src('shell/AppShell.tsx')).toMatch(/className=\{`icon-btn m3-state-layer \$\{inRail \? 'md:hidden' : ''\}`\}/)
+  })
+
   it('five items in the bottom bar; "Rückblick" is current on the stats tab', async () => {
     me(false)
     shell('/stats')

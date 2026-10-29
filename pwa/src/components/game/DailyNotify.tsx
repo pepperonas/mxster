@@ -6,6 +6,7 @@
  */
 import { useEffect, useState } from 'react'
 import { api, ApiError } from '@/api/client'
+import { Checkbox } from '@/components/ui/Checkbox'
 import { Avatar } from '@/components/ui/Avatar'
 import { Icon } from '@/components/ui/Icon'
 import { useUI } from '@/contexts'
@@ -117,12 +118,7 @@ export function DailyNotifyDialog({ day, streak, onSent, onClose }: { day: strin
         {friends.map((f) => (
           <li key={f.id}>
             <label className="flex items-center gap-3 min-h-[56px] px-2 rounded-m3-lg cursor-pointer m3-state-layer">
-              <input
-                type="checkbox"
-                className="w-5 h-5 accent-[rgb(var(--md-sys-color-primary))]"
-                checked={chosen.includes(f.id)}
-                onChange={() => toggle(f.id)}
-              />
+              <Checkbox checked={chosen.includes(f.id)} onChange={() => toggle(f.id)} />
               <Avatar name={f.name} picture={f.picture} size={36} />
               <span className="min-w-0 flex-1">
                 <span className="block text-body-lg truncate">{f.name}</span>

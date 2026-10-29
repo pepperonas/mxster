@@ -49,7 +49,12 @@ const de = {
 
     demoKicker: 'Probier’s aus',
     demoTitle: 'Wohin gehört dieser Song?',
-    demoLead: 'Ohne Musik, aber nach denselben Regeln: Tippe die Lücke an, in die der Song deiner Meinung nach gehört.',
+    demoLead: 'Ohne Musik, aber nach denselben Regeln: Zieh den Song in die Lücke, in die er deiner Meinung nach gehört – oder tippe sie an.',
+    demoHere: 'Hier ablegen',
+    demoBefore: (y: number) => `vor ${y}`,
+    demoAfter: (y: number) => `nach ${y}`,
+    demoRange: (a: number, b: number) => `${a} – ${b}`,
+    demoDrag: 'Ziehen oder Lücke antippen',
     demoCard: 'Dein Song',
     demoPlace: (where: string) => `Hier ablegen: ${where}`,
     demoFirst: 'ganz vorn',
@@ -82,7 +87,7 @@ const de = {
     modesNote: 'Eine Runde dauert 5, 10 oder 15 Songs. Unentschieden gibt es nicht: Bei Gleichstand entscheidet ein Stechen.',
 
     waysKicker: 'Zusammen spielen',
-    waysTitle: 'Ein Handy reicht – jedes geht auch',
+    waysTitle: 'Spielt, wie es für euch passt',
     ways: [
       { icon: 'person', t: 'An einem Gerät', p: 'Ein Handy oder Laptop liegt in der Mitte, ihr reicht es weiter. Bots spielen auf Wunsch mit, leicht bis schwer.' },
       { icon: 'share', t: 'Jede:r am eigenen Handy', p: 'Öffnet einen Raum, die anderen scannen den QR-Code. Freund:innen ohne Konto spielen als Gast mit, nur mit Namen.' },
@@ -218,7 +223,12 @@ const en: AboutContent = {
 
     demoKicker: 'Try it',
     demoTitle: 'Where does this song go?',
-    demoLead: 'No music here, but the same rules: tap the gap you think the song belongs in.',
+    demoLead: 'No music here, but the same rules: drag the song into the gap you think it belongs in – or tap the gap.',
+    demoHere: 'Place here',
+    demoBefore: (y: number) => `before ${y}`,
+    demoAfter: (y: number) => `after ${y}`,
+    demoRange: (a: number, b: number) => `${a} – ${b}`,
+    demoDrag: 'Drag it or tap a gap',
     demoCard: 'Your song',
     demoPlace: (where: string) => `Place it ${where}`,
     demoFirst: 'at the start',
@@ -251,7 +261,7 @@ const en: AboutContent = {
     modesNote: 'A round lasts 5, 10 or 15 songs. There are no draws: a tie is settled by a tiebreak.',
 
     waysKicker: 'Play together',
-    waysTitle: 'One phone is enough – everyone’s works too',
+    waysTitle: 'Play the way that suits you',
     ways: [
       { icon: 'person', t: 'On one device', p: 'One phone or laptop in the middle, you pass it around. Bots join in if you like, easy to hard.' },
       { icon: 'share', t: 'Everyone on their phone', p: 'Open a room, the others scan the QR code. Friends without an account join as guests, with just a name.' },

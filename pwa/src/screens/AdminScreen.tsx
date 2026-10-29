@@ -110,7 +110,7 @@ export function AdminScreen() {
 
   return (
     <div>
-      <SubPageHeader title={t.title} back="/settings" />
+      <SubPageHeader title={t.title} back="/settings" inRail />
 
       <div role="tablist" aria-label={t.statusLabel} className="flex overflow-x-auto border-b border-md-outline-variant/60 -mx-4 sm:mx-0 px-2 sm:px-0">
         {TABS.map((tab_) => {

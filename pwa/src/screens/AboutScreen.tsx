@@ -73,7 +73,7 @@ export function AboutScreen() {
         <Help />
         <Closing cta={cta} />
       </main>
-      <div className="px-4 sm:px-6 pb-8 mx-auto max-w-6xl">
+      <div className="px-4 sm:px-6 pb-[calc(1rem+env(safe-area-inset-bottom))] mx-auto max-w-6xl">
         <HomeFooter />
       </div>
     </div>
@@ -122,7 +122,7 @@ function Section({ id, kicker, title, children }: { id?: string; kicker: string;
   return (
     <section id={id} className={`scroll-mt-20 px-4 sm:px-6 py-12 sm:py-16 mx-auto max-w-6xl`} aria-labelledby={id ? `${id}-title` : undefined}>
       <p className="text-label-lg text-md-primary uppercase tracking-[0.12em]">{kicker}</p>
-      <h2 id={id ? `${id}-title` : undefined} className="text-poster text-md-on-surface mt-2 mb-8 sm:mb-10 hyphens-auto break-words" style={{ fontSize: 'clamp(1.6rem, 7vw, 3.2rem)', lineHeight: 1.02 }}>
+      <h2 id={id ? `${id}-title` : undefined} className="text-poster text-md-on-surface mt-2 mb-8 sm:mb-10 break-words [text-wrap:balance]" style={{ fontSize: 'clamp(1.5rem, 6.4vw, 3.2rem)', lineHeight: 1.02 }}>
         {title}
       </h2>
       {children}
@@ -141,7 +141,7 @@ function Hero({ cta }: { cta: string }) {
           <Icon name="note" size={18} />
           {t.kicker}
         </p>
-        <h1 className="text-poster text-md-on-surface mt-5 whitespace-pre-line hyphens-auto" style={{ fontSize: 'clamp(2.6rem, 9vw, 4.4rem)', lineHeight: 0.98 }}>
+        <h1 className="text-poster text-md-on-surface mt-5 whitespace-pre-line" style={{ fontSize: 'clamp(2.6rem, 9vw, 4.4rem)', lineHeight: 0.98 }}>
           {t.heroTitle}
         </h1>
         <p className="text-body-lg text-md-on-surface-variant mt-6 max-w-[46ch]">{t.heroLead}</p>
@@ -247,10 +247,12 @@ function StepArt({ step }: { step: number }) {
   }
   if (step === 1) {
     return (
-      <span className="flex items-center gap-1.5 h-16" aria-hidden="true" data-step-art="timeline">
-        <span className="num-poster rounded-m3-sm bg-md-surface-container-high text-md-on-surface px-2 py-1.5 text-[1rem]">1969</span>
-        <span className="about-float num-poster rounded-m3-sm border-2 border-dashed border-md-primary text-md-primary px-3 py-1 text-[1rem]">?</span>
-        <span className="num-poster rounded-m3-sm bg-md-surface-container-high text-md-on-surface px-2 py-1.5 text-[1rem]">1991</span>
+      <span className="flex items-end gap-1.5 h-16 pb-1" aria-hidden="true" data-step-art="timeline">
+        <span className="about-nudge num-poster rounded-m3-sm bg-md-surface-container-high text-md-on-surface px-2 py-1.5 text-[1rem]" data-side="left">1969</span>
+        <span className="relative grid place-items-center w-12 h-[34px] rounded-m3-sm border-2 border-dashed border-md-primary/60">
+          <span className="about-drop absolute inset-[-2px] grid place-items-center rounded-m3-sm bg-md-primary-container text-md-on-primary-container num-poster text-[1rem]">?</span>
+        </span>
+        <span className="about-nudge num-poster rounded-m3-sm bg-md-surface-container-high text-md-on-surface px-2 py-1.5 text-[1rem]" data-side="right">1991</span>
       </span>
     )
   }
@@ -279,6 +281,10 @@ function Demo() {
   const [result, setResult] = useState<(DemoResult & { chosen: number }) | null>(null)
   const [score, setScore] = useState({ right: 0, played: 0 })
   const feedback = useRef<HTMLParagraphElement>(null)
+  const box = useRef<HTMLDivElement>(null)
+  // While the card is dragged: the gap it hovers (null = none, it would spring back)
+  const [hover, setHover] = useState<number | null>(null)
+  const [dragging, setDragging] = useState(false)
 
   if (!round) return null
 
@@ -299,6 +305,24 @@ function Demo() {
 
   const list = result ? result.settled : round.timeline
 
+  /** The gap nearest to the pointer while it is over the demo box, else none. */
+  const gapAt = (x: number, y: number): number | null => {
+    const area = box.current?.getBoundingClientRect()
+    if (!area || x < area.left || x > area.right || y < area.top - 24 || y > area.bottom + 24) return null
+    let best: { gap: number; d: number } | null = null
+    for (const el of box.current!.querySelectorAll<HTMLElement>('[data-demo-gap]')) {
+      const r = el.getBoundingClientRect()
+      const d = Math.abs(y - (r.top + r.height / 2))
+      if (!best || d < best.d) best = { gap: Number(el.dataset.gap), d }
+    }
+    return best && best.d < 64 ? best.gap : null
+  }
+  const shortWhere = (gap: number) =>
+    gap <= 0 ? t.demoBefore(list[0].year) : gap >= list.length ? t.demoAfter(list[list.length - 1].year) : t.demoRange(list[gap - 1].year, list[gap].year)
+  const gapButton = (gap: number) => (
+    <GapButton gap={gap} label={t.demoPlace(where(gap, list))} here={t.demoHere} where={shortWhere(gap)} hovered={hover === gap} dragging={dragging} onClick={() => choose(gap)} />
+  )
+
   return (
     <Section id="demo" kicker={t.demoKicker} title={t.demoTitle}>
       <div className="grid grid-cols-[minmax(0,1fr)] lg:grid-cols-[minmax(0,1fr)_minmax(0,1.2fr)] gap-8 items-start">
@@ -311,13 +335,36 @@ function Demo() {
           )}
         </div>
 
-        <div className="rounded-m3-xxl bg-md-surface-container p-4 sm:p-6" data-demo>
+        <div ref={box} className="rounded-m3-xxl bg-md-surface-container p-4 sm:p-6" data-demo>
           {!result && (
             <m.div
               key={round.card.id}
               initial={{ opacity: 0, y: -10, scale: 0.97 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
-              className="flex items-center gap-4 rounded-m3-lg bg-md-primary-container text-md-on-primary-container px-4 py-3 mb-4 ring-2 ring-md-primary/40"
+              drag
+              dragSnapToOrigin
+              dragMomentum={false}
+              dragElastic={0.9}
+              whileDrag={{ scale: 1.03, rotate: -1.5, zIndex: 20, boxShadow: '0 12px 28px rgb(0 0 0 / 0.35)' }}
+              onDragStart={() => {
+                setDragging(true)
+                haptic('grab')
+              }}
+              onDrag={(_, info) => {
+                const g = gapAt(info.point.x - window.scrollX, info.point.y - window.scrollY)
+                if (g !== hover) {
+                  setHover(g)
+                  if (g !== null) haptic('tick')
+                }
+              }}
+              onDragEnd={() => {
+                setDragging(false)
+                const g = hover
+                setHover(null)
+                if (g !== null) choose(g)
+              }}
+              style={{ touchAction: 'none' }}
+              className="relative flex items-center gap-4 rounded-m3-lg bg-md-primary-container text-md-on-primary-container px-4 py-3 mb-4 ring-2 ring-md-primary/40 cursor-grab active:cursor-grabbing select-none"
               data-demo-card
             >
               <span className="relative shrink-0 w-12 h-12" aria-hidden="true">
@@ -327,17 +374,21 @@ function Demo() {
                 <span className="block text-label-md opacity-80">{t.demoCard}</span>
                 <span className="block text-title-md truncate">{round.card.title}</span>
                 <span className="block text-body-md truncate opacity-90">{round.card.artist}</span>
+                <span className="flex items-center gap-1 text-label-sm opacity-80 mt-1">
+                  <Icon name="hand" size={14} />
+                  {t.demoDrag}
+                </span>
               </span>
               <span className="num-poster text-[2rem] leading-none" aria-hidden="true">?</span>
             </m.div>
           )}
 
           <ol className="space-y-2">
-            {!result && <GapButton label={t.demoPlace(where(0, list))} onClick={() => choose(0)} />}
+            {!result && gapButton(0)}
             {list.map((s, i) => (
               <m.li key={s.id} layout={!prefersReducedMotion()} transition={spring.spatialDefault} className="list-none space-y-2">
                 <DemoCard song={s} state={result && s.id === round.card.id ? (result.right ? 'right' : 'wrong') : 'plain'} />
-                {!result && <GapButton label={t.demoPlace(where(i + 1, list))} onClick={() => choose(i + 1)} />}
+                {!result && gapButton(i + 1)}
               </m.li>
             ))}
           </ol>
@@ -367,16 +418,27 @@ function Demo() {
   )
 }
 
-function GapButton({ label, onClick }: { label: string; onClick: () => void }) {
+/** A gap on the demo timeline: tap it, or drop the dragged card on it. */
+function GapButton({ gap, label, here, where, hovered, dragging, onClick }: { gap: number; label: string; here: string; where: string; hovered: boolean; dragging: boolean; onClick: () => void }) {
   return (
     <button
       type="button"
       onClick={onClick}
-      className="about-gap group w-full min-h-[48px] flex items-center gap-3 px-4 rounded-m3-lg border-2 border-dashed border-md-outline-variant text-label-lg text-md-on-surface-variant hover:border-md-primary hover:text-md-primary focus-visible:border-md-primary focus-visible:text-md-primary m3-state-layer"
+      aria-label={label}
+      className={`about-gap w-full min-h-[48px] flex items-center gap-3 px-4 rounded-m3-lg border-2 border-dashed text-label-lg transition-colors m3-state-layer ${
+        hovered
+          ? 'border-md-primary bg-md-primary/15 text-md-primary'
+          : dragging
+            ? 'border-md-primary/60 text-md-on-surface-variant'
+            : 'border-md-outline-variant text-md-on-surface-variant hover:border-md-primary hover:text-md-primary focus-visible:border-md-primary focus-visible:text-md-primary'
+      }`}
       data-demo-gap
+      data-gap={gap}
+      data-hover={hovered || undefined}
     >
       <Icon name="add" size={20} />
-      <span className="text-left">{label}</span>
+      <span className="whitespace-nowrap">{here}</span>
+      <span className="ml-auto whitespace-nowrap num-poster text-[0.95rem] opacity-90">{where}</span>
     </button>
   )
 }
@@ -464,7 +526,7 @@ function Help() {
         {t.faq.map((f) => (
           <details key={f.q} className="about-faq group rounded-m3-lg bg-md-surface-container-low open:bg-md-surface-container">
             <summary className="flex items-center gap-4 min-h-[56px] px-5 py-3 cursor-pointer list-none text-title-md text-md-on-surface m3-state-layer rounded-m3-lg">
-              <span className="flex-1">{f.q}</span>
+              <span className="flex-1 [text-wrap:balance]">{f.q}</span>
               <span className="about-faq-chev shrink-0 text-md-on-surface-variant" aria-hidden="true">
                 <Icon name="chevron" />
               </span>
@@ -498,7 +560,7 @@ function Closing({ cta }: { cta: string }) {
           <Vinyl size="min(70vw, 340px)" spinning />
         </div>
         <div className="relative max-w-[30ch]">
-          <h2 className="text-poster hyphens-auto" style={{ fontSize: 'clamp(1.9rem, 6vw, 3rem)', lineHeight: 1.02 }}>
+          <h2 className="text-poster [text-wrap:balance]" style={{ fontSize: 'clamp(1.9rem, 6vw, 3rem)', lineHeight: 1.02 }}>
             {t.ctaTitle}
           </h2>
           <p className="text-body-lg mt-3 opacity-90">{t.ctaLead}</p>

@@ -68,7 +68,7 @@ export function AppShell() {
       <AchievementScoreSync />
       <NavRail />
       {isTopLevel ? <TopBar /> : null}
-      <main className={`mx-auto w-full max-w-3xl px-4 sm:px-6 ${isTopLevel ? 'pb-32 md:pb-12' : 'pb-12'}`}>
+      <main className={`mx-auto w-full max-w-3xl px-4 sm:px-6 ${isTopLevel ? 'pb-[calc(6rem+env(safe-area-inset-bottom))] md:pb-6' : 'pb-12'}`}>
         <Outlet />
       </main>
       {isTopLevel && <NavBar />}
@@ -76,7 +76,7 @@ export function AppShell() {
   )
 }
 
-/** Phones: the wordmark, and the gear — one obvious way to the settings. */
+/** Phones: the wordmark, and the gear — one obvious way to the settings (the admin page is reached from there). */
 function TopBar() {
   const { pathname } = useLocation()
   const t = useMessages(shellText)
@@ -221,11 +221,12 @@ function RailFoot({ pathname }: { pathname: string }) {
   const onAdmin = useTabClick('/admin')
   const pending = usePendingRequests(Boolean(me.isAdmin))
   const here = pathname === SETTINGS_PATH
+  const onAdminPage = pathname === '/admin'
   const row = 'flex items-center gap-3 rounded-m3-full m3-state-layer outline-none w-14 h-14 justify-center xl:w-full xl:justify-start xl:px-4'
   return (
     <div className="mt-auto mb-6 flex flex-col items-center xl:items-stretch gap-1">
       {me.isAdmin && (
-        <NavLink to="/admin" onClick={onAdmin} viewTransition={!prefersReducedMotion()} className={`${row} relative text-md-on-surface-variant`} aria-label={t.admin} data-admin-link>
+        <NavLink to="/admin" onClick={onAdmin} viewTransition={!prefersReducedMotion()} className={`${row} relative ${onAdminPage ? 'bg-md-secondary-container text-md-on-secondary-container' : 'text-md-on-surface-variant'}`} aria-label={t.admin} aria-current={onAdminPage ? 'page' : undefined} data-admin-link>
           <Icon name="shield" />
           <span className="hidden xl:inline text-label-lg">{t.admin}</span>
           {!!pending && (
@@ -262,16 +263,21 @@ function RailFoot({ pathname }: { pathname: string }) {
   )
 }
 
-/** Small top bar with a back button for pages below a destination. */
-export function SubPageHeader({ title, back = '/' }: { title: string; back?: string }) {
+/**
+ * Small top bar with a back button for pages below a destination.
+ * `inRail`: the page also has its own entry in the side rail (the admin page) —
+ * from tablet width on, where the rail shows, it is a destination there and
+ * gets no back arrow; on phones it is reached from the settings and keeps one.
+ */
+export function SubPageHeader({ title, back = '/', inRail = false }: { title: string; back?: string; inRail?: boolean }) {
   const goBack = useGoBack()
   const t = useMessages(shellText)
   return (
     <header className="sticky top-0 z-30 -mx-4 sm:-mx-6 px-2 sm:px-4 h-16 flex items-center gap-1 bg-md-surface/90 backdrop-blur-md">
-      <button type="button" className="icon-btn m3-state-layer" onClick={() => goBack(back)} aria-label={t.back}>
+      <button type="button" className={`icon-btn m3-state-layer ${inRail ? 'md:hidden' : ''}`} onClick={() => goBack(back)} aria-label={t.back} data-back>
         <Icon name="back" />
       </button>
-      <h1 className="text-title-lg truncate">{title}</h1>
+      <h1 className={`text-title-lg truncate ${inRail ? 'md:px-2' : ''}`}>{title}</h1>
     </header>
   )
 }

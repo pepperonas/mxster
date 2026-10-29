@@ -8,6 +8,7 @@ import { useEffect, useMemo, useRef, useState, type CSSProperties } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import type { Song } from '@/types'
 import { Icon } from '@/components/ui/Icon'
+import { Dropdown } from '@/components/ui/Dropdown'
 import { EmptyState } from '@/components/ui/EmptyState'
 import { SongTile, SongRow } from '@/components/library/SongTile'
 import { SongDetail } from '@/components/library/SongDetail'
@@ -34,8 +35,7 @@ import {
   writeState,
   type Collection,
   type Filters,
-  type LibraryState,
-  type SortKey
+  type LibraryState
 } from './songLibraryModel'
 
 const VIEW_KEY = 'mxtape_library_view'
@@ -148,22 +148,15 @@ export function SongLibraryScreen() {
         </div>
 
         <div className="flex items-center gap-2">
-          <label className="chip m3-state-layer shrink-0 !pr-2 relative">
-            <Icon name="sort" size={18} className="hidden min-[360px]:block" />
-            <span className="sr-only">{t.sortLabel}</span>
-            <select
-              value={sort}
-              onChange={(e) => update({ sort: e.target.value as SortKey })}
-              className="appearance-none bg-transparent pr-1 cursor-pointer focus:outline-none min-w-0 max-w-[9.5rem] truncate"
-              data-sort
-            >
-              {SORT_KEYS.filter((k) => k !== 'relevance' || state.q.trim()).map((k) => (
-                <option key={k} value={k}>
-                  {t[`sort_${k}`]}
-                </option>
-              ))}
-            </select>
-          </label>
+          <Dropdown
+            label={t.sortLabel}
+            value={sort}
+            options={SORT_KEYS.filter((k) => k !== 'relevance' || state.q.trim()).map((k) => ({ value: k, label: t[`sort_${k}`] }))}
+            onChange={(k) => update({ sort: k })}
+            leading={<Icon name="sort" size={18} className="hidden min-[360px]:block shrink-0" />}
+            className="shrink-0"
+            buttonClassName="!pr-2 max-w-[11.5rem]"
+          />
           {sort !== 'relevance' && (
             <button
               type="button"

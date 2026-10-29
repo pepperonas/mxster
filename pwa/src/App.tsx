@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 import { useNoteNavigation } from '@/navigation/useGoBack'
 import { useNavDirection } from '@/navigation/navDirection'
-import { createBrowserRouter, Navigate, Outlet, RouterProvider, useLocation } from 'react-router-dom'
+import { createBrowserRouter, Navigate, Outlet, RouterProvider, ScrollRestoration, useLocation } from 'react-router-dom'
 import { AppProviders } from '@/contexts'
 import { Modal, Toast, AchievementUnlockAnimation } from '@/components'
 import { AuthProvider } from '@/auth/AuthContext'
@@ -53,6 +53,9 @@ function Root() {
 
   return (
     <LanguageProvider>
+    {/* A new page starts at the top (a legal page opened from a footer used to open
+        mid-text), going back returns to where you were, #anchors are jumped to */}
+    <ScrollRestoration />
     <Backdrop />
     <MotionProvider>
       <AuthProvider>
