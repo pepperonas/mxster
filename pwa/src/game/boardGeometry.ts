@@ -82,3 +82,26 @@ export function autoScrollSpeed(pointerY: number, top: number, bottom: number, z
   }
   return 0
 }
+
+/** How long the card must rest at an edge before the page moves (ms). */
+export const EDGE_DWELL_MS = 400
+/** After the dwell the scroll eases in over this time (ms) instead of starting at full speed. */
+export const EDGE_RAMP_MS = 700
+/** Fastest scroll, in px per second — independent of the screen's frame rate. */
+export const EDGE_MAX_PX_S = 720
+
+/**
+ * Edge auto-scroll for one frame, in px (negative = up). `raw` is
+ * autoScrollSpeed's per-frame value at 60 Hz (only its sign and share of the
+ * maximum count), `heldMs` how long the pointer has been in the edge zone,
+ * `dtMs` the frame time. Time-based, so a 120 Hz phone scrolls as fast as a
+ * 60 Hz one; nothing before the dwell, then a smooth ease-in to the speed the
+ * depth into the zone asks for.
+ */
+export function edgeScrollStep(raw: number, heldMs: number, dtMs: number, rawMax = 18): number {
+  if (raw === 0 || heldMs <= EDGE_DWELL_MS) return 0
+  const r = Math.min(1, (heldMs - EDGE_DWELL_MS) / EDGE_RAMP_MS)
+  const ease = r * r * (3 - 2 * r)
+  const dt = Math.min(Math.max(dtMs, 0), 50)
+  return (raw / rawMax) * EDGE_MAX_PX_S * ease * (dt / 1000)
+}

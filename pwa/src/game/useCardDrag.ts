@@ -12,18 +12,26 @@
  */
 import { useEffect, useRef, type RefObject } from 'react'
 import { useMotionValue, useSpring, useTransform, useVelocity, type PanInfo } from 'motion/react'
-import { computeInsertionIndex, isNearBoard, autoScrollSpeed } from './boardGeometry'
+import { computeInsertionIndex, isNearBoard, autoScrollSpeed, edgeScrollStep } from './boardGeometry'
 import { spring } from '@/motion/springs'
 import { haptic } from '@/utils/haptics'
 
-const EDGE_ZONE = 56
-const EDGE_DWELL_MS = 350
+/** Depth of the edge zone (px): only the last strip before an edge scrolls. */
+export const EDGE_ZONE = 44
 
-/** Top edge for auto-scroll: below the sticky header and player bar. */
-function stickyTop(): number {
+/**
+ * Top edge for auto-scroll: below the sticky header, and below the player bar
+ * only while that bar is stuck to the top. A bar in the normal flow sits
+ * somewhere on the page — taken as the edge, the page ran upwards as soon as
+ * the card moved up a little.
+ */
+export function stickyTop(): number {
+  const header = 64
   const bar = document.querySelector<HTMLElement>('[data-player-bar]')
-  const bottom = bar?.getBoundingClientRect().bottom ?? 0
-  return Math.max(64, bottom)
+  if (!bar || getComputedStyle(bar).position !== 'sticky') return header
+  const rect = bar.getBoundingClientRect()
+  // stuck = sitting at its sticky offset right under the header
+  return rect.top <= header + 1 ? Math.max(header, rect.bottom) : header
 }
 
 /** Bottom edge for auto-scroll: the top of the placement dock. */
@@ -108,6 +116,9 @@ export function useCardDrag({ boardRef, onHoverGap, onDrop, home = null }: CardD
     const edges = { top: stickyTop(), bottom: dockTop() }
     let armed = false
     let edgeSince: number | null = null
+    let edgeDir = 0
+    let lastFrame = 0
+    let carry = 0
     haptic('grab')
     drag.current = { ...geometry, clientX: point.x, clientY: point.y, velocityY: 0, hover: home, raf: 0 }
     const tick = () => {
@@ -118,14 +129,19 @@ export function useCardDrag({ boardRef, onHoverGap, onDrop, home = null }: CardD
       // over the dock (that's the way to cancel).
       if (d.clientY < edges.bottom - 8) armed = true
       const raw = armed && d.clientY <= edges.bottom ? autoScrollSpeed(d.clientY, edges.top, edges.bottom, EDGE_ZONE) : 0
-      // Only scroll after the card rests at an edge for a moment: aiming at a
-      // gap right next to the dock must not run the page away.
+      // Only scroll after the card rests at an edge for a moment, then ease in
+      // (time-based): aiming at a gap near an edge must not run the page away.
       const now = performance.now()
-      if (raw === 0) edgeSince = null
-      else if (edgeSince === null) edgeSince = now
-      const speed = raw !== 0 && edgeSince !== null && now - edgeSince > EDGE_DWELL_MS ? raw : 0
-      if (speed !== 0) {
-        window.scrollBy(0, speed)
+      if (raw === 0 || (edgeDir !== 0 && Math.sign(raw) !== edgeDir)) edgeSince = null
+      if (raw !== 0 && edgeSince === null) edgeSince = now
+      edgeDir = Math.sign(raw)
+      const speed = edgeScrollStep(raw, edgeSince === null ? 0 : now - edgeSince, lastFrame ? now - lastFrame : 0)
+      lastFrame = now
+      carry = speed === 0 ? 0 : carry + speed
+      const whole = Math.trunc(carry)
+      if (whole !== 0) {
+        carry -= whole
+        window.scrollBy(0, whole)
         updateHover()
       }
       d.raf = requestAnimationFrame(tick)
