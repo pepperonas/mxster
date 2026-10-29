@@ -17,7 +17,7 @@
 <p>Neu hier? <a href="https://mxtape.celox.io/about"><b>mxtape.celox.io/about</b></a> stellt das Spiel vor und beantwortet die häufigen Fragen – mit einer kleinen Zeitleiste zum Ausprobieren, ganz ohne Konto.</p>
 
 <!-- BADGES:BIG — version, tests, lines of code and songs; readme.test.ts keeps them true, scripts/readme-badges.mjs rewrites them. -->
-[![version](https://img.shields.io/badge/version-0.25.3-C2185B?style=for-the-badge&logo=semver&logoColor=white)](https://github.com/pepperonas/mxtape/releases/latest)
+[![version](https://img.shields.io/badge/version-0.26.0-C2185B?style=for-the-badge&logo=semver&logoColor=white)](https://github.com/pepperonas/mxtape/releases/latest)
 [![tests](https://img.shields.io/badge/tests-1109-2E9E5B?style=for-the-badge&logo=vitest&logoColor=white)](#tests-und-ci)
 [![lines of code](https://img.shields.io/badge/lines%20of%20code-32.1k-4B6BDF?style=for-the-badge&logo=typescript&logoColor=white)](pwa/src)
 [![test code](https://img.shields.io/badge/test%20code-13.1k-2E9E5B?style=for-the-badge&logo=typescript&logoColor=white)](#tests-und-ci)
@@ -212,7 +212,7 @@ Statt ein Handy herumzureichen, spielt jede Person auf dem eigenen Gerät – im
 
 ## Die Songsammlung
 
-800 Songs, 39 davon als Exoten markiert. Quelle der Wahrheit ist [`docs/songs.json`](docs/songs.json), die Anekdoten stehen in [`docs/song-facts.json`](docs/song-facts.json). Erscheinungsjahr und Album kommen von **MusicBrainz**, Cover aus dem **Cover Art Archive** (iTunes als Rückfall). Spotify wird nirgends benutzt.
+800 Songs, 39 davon als Exoten markiert. Quelle der Wahrheit ist [`docs/songs.json`](docs/songs.json), die Anekdoten stehen in [`docs/song-facts.json`](docs/song-facts.json) – 745 Songs haben ein „Wusstest du?“, jedes aus dem Wikipedia-Artikel des Songs geschrieben und dagegen geprüft, nichts aus dem Gedächtnis. Erscheinungsjahr und Album kommen von **MusicBrainz**, Cover aus dem **Cover Art Archive** (iTunes als Rückfall). Spotify wird nirgends benutzt.
 
 ```bash
 node scripts/song-management/add-song.js "a-ha" "Take on Me"   # schlägt Jahr und Album vor, lädt Audio und Cover

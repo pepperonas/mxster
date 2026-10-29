@@ -342,7 +342,9 @@ export const songs: Song[] = [
     "spotifyId": "4woTEX1wYOTGDqNXuavlRC",
     "previewUrl": "https://mxtape.celox.io/audio/song_026.m4a",
     "genre": "Hip-Hop",
-    "startMs": 5000
+    "startMs": 5000,
+    "fact": "Die Hook sang ursprünglich Mariah Carey ein – Dina Rae ersetzte sie und orientierte sich dabei an Careys Aufnahme.",
+    "factEn": "Mariah Carey originally recorded the hook – Dina Rae replaced her and used Carey's reference for her own parts."
   },
   {
     "id": "song_027",
@@ -710,7 +712,9 @@ export const songs: Song[] = [
     "spotifyId": "65YtzNpiPhGVzg6GPzkotn",
     "previewUrl": "https://mxtape.celox.io/audio/song_056.m4a",
     "genre": "Pop",
-    "startMs": 2000
+    "startMs": 2000,
+    "fact": "Pete Waterman behauptete einmal, er habe den Song produziert – tatsächlich war es Peter Collins.",
+    "factEn": "Pete Waterman once claimed he produced the song – it was in fact produced by Peter Collins."
   },
   {
     "id": "song_057",
@@ -847,7 +851,9 @@ export const songs: Song[] = [
     "spotifyId": "3FcqFCeCD6QRtRo6WGLCnC",
     "previewUrl": "https://mxtape.celox.io/audio/song_067.m4a",
     "genre": "Hip-Hop",
-    "german": true
+    "german": true,
+    "fact": "Auf dem Single-Cover ergeben Screenshots aus dem Musikvideo zusammen das Gesicht von Alligatoah.",
+    "factEn": "On the single cover, screenshots from the music video come together to form Alligatoah's face."
   },
   {
     "id": "song_068",
@@ -1161,7 +1167,9 @@ export const songs: Song[] = [
     "album": "Finally",
     "spotifyId": "0uqvSVhGgQTIdj9G51vhvv",
     "previewUrl": "https://mxtape.celox.io/audio/song_092.m4a",
-    "genre": "R&B"
+    "genre": "R&B",
+    "fact": "Den Text soll CeCe Peniston im Chemieunterricht geschrieben haben, während sie über Dates im College nachdachte.",
+    "factEn": "CeCe Peniston reportedly wrote the lyrics during a chemistry class, while thinking about dating in college."
   },
   {
     "id": "song_093",
@@ -1236,7 +1244,9 @@ export const songs: Song[] = [
     "spotifyId": "4KoecuyOpZaNFZ0UqVsllc",
     "previewUrl": "https://mxtape.celox.io/audio/song_098.m4a",
     "genre": "Pop",
-    "startMs": 12500
+    "startMs": 12500,
+    "fact": "Ursprünglich sollte der Song eine Doo-Wop-/Motown-Nummer werden.",
+    "factEn": "The song was originally meant to be a doo-wop/Motown number."
   },
   {
     "id": "song_099",
@@ -1271,7 +1281,9 @@ export const songs: Song[] = [
     "album": "Pocket Full of Kryptonite",
     "spotifyId": "4ePP9So5xRzspjLFVVbj90",
     "previewUrl": "https://mxtape.celox.io/audio/song_101.m4a",
-    "genre": "Rock"
+    "genre": "Rock",
+    "fact": "Sänger Chris Barron schrieb den Song schon einige Jahre, bevor sich die Spin Doctors überhaupt gründeten.",
+    "factEn": "Singer Chris Barron wrote the song a few years before the Spin Doctors even formed."
   },
   {
     "id": "song_102",
@@ -1394,7 +1406,9 @@ export const songs: Song[] = [
     "spotifyId": "6ou0PY1UD7gdRnHbbyiHaA",
     "previewUrl": "https://mxtape.celox.io/audio/song_112.m4a",
     "genre": "Electronic",
-    "startMs": 7500
+    "startMs": 7500,
+    "fact": "Katy Perry sampelte den Song später für ihren Titel „Crush“.",
+    "factEn": "Katy Perry later sampled the song for her track \"Crush\"."
   },
   {
     "id": "song_113",
@@ -1496,7 +1510,9 @@ export const songs: Song[] = [
     "spotifyId": "7rbWpbXVwY2DFrZpWYPtVj",
     "previewUrl": "https://mxtape.celox.io/audio/song_120.m4a",
     "genre": "Hip-Hop",
-    "startMs": 4000
+    "startMs": 4000,
+    "fact": "Im Musikvideo spielt ein Porsche 356A Cabrio mit.",
+    "factEn": "The music video features a vintage Porsche 356A convertible."
   },
   {
     "id": "song_121",
@@ -1531,7 +1547,9 @@ export const songs: Song[] = [
     "album": "Synesthesia",
     "spotifyId": "6ggAYREO7PlFwI2vbOG3dp",
     "previewUrl": "https://mxtape.celox.io/audio/song_123.m4a",
-    "genre": "Electronic"
+    "genre": "Electronic",
+    "fact": "Eines der Musikvideos zeigt Tausende Menschen, die auf dem Rollfeld des stillgelegten Flughafens Berlin-Tempelhof zu Alle Farben tanzen.",
+    "factEn": "One of the music videos shows thousands of people dancing to Alle Farben on the tarmac of the phased-out Berlin Tempelhof Airport."
   },
   {
     "id": "song_124",
@@ -2059,7 +2077,9 @@ export const songs: Song[] = [
     "spotifyId": "4hYinIaRxdaoEFSQni6K6I",
     "previewUrl": "https://mxtape.celox.io/audio/song_165.m4a",
     "genre": "Pop",
-    "german": true
+    "german": true,
+    "fact": "Der Song läuft als Titelmusik der Talkshow „Markus Lanz“.",
+    "factEn": "The song is used as the theme tune of the talk show \"Markus Lanz\"."
   },
   {
     "id": "song_166",
@@ -2071,7 +2091,9 @@ export const songs: Song[] = [
     "previewUrl": "https://mxtape.celox.io/audio/song_166.m4a",
     "genre": "Pop",
     "startMs": 8500,
-    "party": true
+    "party": true,
+    "fact": "Laut Pitbull sollte eigentlich Rihanna den Gastpart singen – sie hatte aber keine Zeit, weil sie schon für einen Song von Shakira zugesagt hatte.",
+    "factEn": "According to Pitbull, Rihanna was originally meant to be the featured artist, but had no time because she was already on a Shakira song."
   },
   {
     "id": "song_167",
@@ -2145,7 +2167,9 @@ export const songs: Song[] = [
     "previewUrl": "https://mxtape.celox.io/audio/song_172.m4a",
     "genre": "Pop",
     "startMs": 5500,
-    "party": true
+    "party": true,
+    "fact": "Regie beim Musikvideo führte Choreograf Kenny Ortega.",
+    "factEn": "The music video was directed by choreographer Kenny Ortega."
   },
   {
     "id": "song_173",
@@ -2322,7 +2346,9 @@ export const songs: Song[] = [
     "album": "Christina Aguilera",
     "spotifyId": "11mwFrKvLXCbcVGNxffGyP",
     "previewUrl": "https://mxtape.celox.io/audio/song_186.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "fact": "Christina Aguilera nahm auch eine spanische Version auf: „Genio Atrapado“.",
+    "factEn": "Christina Aguilera also recorded a Spanish version called \"Genio Atrapado\"."
   },
   {
     "id": "song_187",
@@ -2386,7 +2412,9 @@ export const songs: Song[] = [
     "spotifyId": "5xEM5hIgJ1jjgcEBfpkt2F",
     "previewUrl": "https://mxtape.celox.io/audio/song_191.m4a",
     "genre": "Pop",
-    "startMs": 1500
+    "startMs": 1500,
+    "fact": "Der Song stand 16 Wochen in Folge an der Spitze der US-Adult-Top-40 und brach damit den Rekord von „Torn“.",
+    "factEn": "The song spent sixteen consecutive weeks at number one on the US Adult Top 40, breaking the record held by \"Torn\"."
   },
   {
     "id": "song_192",
@@ -2447,7 +2475,9 @@ export const songs: Song[] = [
     "album": "No Exit",
     "spotifyId": "43117dpRPkEXz7euANdYDV",
     "previewUrl": "https://mxtape.celox.io/audio/song_196.m4a",
-    "genre": "Rock"
+    "genre": "Rock",
+    "fact": "Keyboarder Jimmy Destri schrieb den Song in Erinnerung an seine Zeit auf einer katholischen Schule, als er vom idealen Mädchen träumte.",
+    "factEn": "Keyboardist Jimmy Destri wrote the song reflecting on his Catholic school days, when he fantasized about meeting the ideal girl."
   },
   {
     "id": "song_197",
@@ -2458,7 +2488,9 @@ export const songs: Song[] = [
     "spotifyId": "2aI21FnmY7TJVKeMaoQZ0t",
     "previewUrl": "https://mxtape.celox.io/audio/song_197.m4a",
     "genre": "Pop",
-    "startMs": 7000
+    "startMs": 7000,
+    "fact": "Als Inspiration nannte Nelly Furtado den Eurythmics-Song „Here Comes the Rain Again“.",
+    "factEn": "Nelly Furtado credited the Eurythmics song \"Here Comes the Rain Again\" as her inspiration."
   },
   {
     "id": "song_198",
@@ -2571,7 +2603,9 @@ export const songs: Song[] = [
     "spotifyId": "0jvrac0ac39rXsPgG2MSZ3",
     "previewUrl": "https://mxtape.celox.io/audio/song_206.m4a",
     "genre": "Rock",
-    "startMs": 13000
+    "startMs": 13000,
+    "fact": "Die Idee kam der Band „wie eine Vision“ – sie ließ einen anderen Song liegen und stellte diesen noch in derselben Nacht fertig.",
+    "factEn": "The idea came to the band \"like a vision\" – they dropped another song and finished this one that night."
   },
   {
     "id": "song_207",
@@ -3395,7 +3429,9 @@ export const songs: Song[] = [
     "album": "21",
     "previewUrl": "https://mxtape.celox.io/audio/song_275.m4a",
     "genre": "Soul",
-    "startMs": 2000
+    "startMs": 2000,
+    "fact": "Adele selbst beschreibt den Song als „düsteren, bluesigen Gospel-Disco-Song“.",
+    "factEn": "Adele herself describes it as a \"dark blues-y gospel disco tune\"."
   },
   {
     "id": "song_276",
@@ -3429,7 +3465,9 @@ export const songs: Song[] = [
     "year": 2015,
     "album": "Peace Is the Mission",
     "previewUrl": "https://mxtape.celox.io/audio/song_278.m4a",
-    "genre": "Electronic"
+    "genre": "Electronic",
+    "fact": "Spotify kürte den Song zwischenzeitlich zum meistgestreamten Song aller Zeiten.",
+    "factEn": "Spotify once named it the most streamed song of all time."
   },
   {
     "id": "song_279",
@@ -3464,7 +3502,9 @@ export const songs: Song[] = [
     "previewUrl": "https://mxtape.celox.io/audio/song_281.m4a",
     "genre": "Pop",
     "startMs": 2000,
-    "party": true
+    "party": true,
+    "fact": "Ein Remix des Songs entstand mit Madonna und Missy Elliott.",
+    "factEn": "A remix of the song features Madonna and Missy Elliott."
   },
   {
     "id": "song_282",
@@ -3474,7 +3514,9 @@ export const songs: Song[] = [
     "album": "Harry's House",
     "previewUrl": "https://mxtape.celox.io/audio/song_282.m4a",
     "genre": "Pop",
-    "startMs": 5500
+    "startMs": 5500,
+    "fact": "Kein Act aus Großbritannien hielt sich länger auf Platz eins der US-Charts als dieser Song.",
+    "factEn": "No UK act has spent longer at number one in the US than this song."
   },
   {
     "id": "song_283",
@@ -3520,7 +3562,9 @@ export const songs: Song[] = [
     "album": "Montero",
     "previewUrl": "https://mxtape.celox.io/audio/song_286.m4a",
     "genre": "Hip-Hop",
-    "startMs": 3500
+    "startMs": 3500,
+    "fact": "Der Titel geht auf das Buch „Call Me by Your Name“ zurück.",
+    "factEn": "The song takes its name from the book \"Call Me by Your Name\"."
   },
   {
     "id": "song_287",
@@ -3530,7 +3574,9 @@ export const songs: Song[] = [
     "album": "F*ck Love 3: Over You",
     "previewUrl": "https://mxtape.celox.io/audio/song_287.m4a",
     "genre": "Pop",
-    "startMs": 13000
+    "startMs": 13000,
+    "fact": "Unter den Produzenten des Songs ist Charlie Puth.",
+    "factEn": "Charlie Puth is among the song's producers."
   },
   {
     "id": "song_288",
@@ -3561,7 +3607,9 @@ export const songs: Song[] = [
     "year": 2024,
     "album": "Hit Me Hard and Soft",
     "previewUrl": "https://mxtape.celox.io/audio/song_290.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "fact": "Billie Eilish stellte den Song zuerst in einem Teaser zur Netflix-Serie „Heartstopper“ vor.",
+    "factEn": "Billie Eilish first previewed the song in a teaser trailer for the Netflix series \"Heartstopper\"."
   },
   {
     "id": "song_291",
@@ -3571,7 +3619,9 @@ export const songs: Song[] = [
     "album": "=",
     "previewUrl": "https://mxtape.celox.io/audio/song_291.m4a",
     "genre": "Pop",
-    "startMs": 5500
+    "startMs": 5500,
+    "fact": "Mit der Band Bring Me the Horizon nahm Ed Sheeran auch eine Heavy-Metal-Version auf.",
+    "factEn": "Ed Sheeran also recorded a heavy metal version with Bring Me the Horizon."
   },
   {
     "id": "song_292",
@@ -3581,7 +3631,9 @@ export const songs: Song[] = [
     "album": "Fireworks & Rollerblades",
     "previewUrl": "https://mxtape.celox.io/audio/song_292.m4a",
     "genre": "Pop",
-    "startMs": 6000
+    "startMs": 6000,
+    "fact": "Benson Boone fing an zwei Abenden zwei verschiedene Songs an – Mitautor Jack LaFrantz schlug vor, sie zu einem zu verbinden.",
+    "factEn": "Benson Boone started two different songs on two evenings – co-writer Jack LaFrantz suggested combining them into one."
   },
   {
     "id": "song_293",
@@ -3590,7 +3642,9 @@ export const songs: Song[] = [
     "year": 2022,
     "album": "Midnights",
     "previewUrl": "https://mxtape.celox.io/audio/song_293.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "fact": "In der Bridge träumt Taylor Swift, dass ihre Schwiegertochter sie wegen des Erbes ermordet.",
+    "factEn": "The bridge depicts a nightmare in which Taylor Swift's daughter-in-law murders her for the inheritance."
   },
   {
     "id": "song_294",
@@ -3660,7 +3714,9 @@ export const songs: Song[] = [
     "album": "I've Tried Everything but Therapy (Part 1)",
     "previewUrl": "https://mxtape.celox.io/audio/song_299.m4a",
     "genre": "Soul",
-    "startMs": 4500
+    "startMs": 4500,
+    "fact": "Der Song stieg auf Platz 99 der US-Charts ein und kletterte so lange wie kein anderer bis auf Platz eins: 32 Wochen.",
+    "factEn": "The song debuted at number 99 in the US and took 32 weeks to reach number one – the longest climb of all time."
   },
   {
     "id": "song_300",
@@ -3677,7 +3733,9 @@ export const songs: Song[] = [
     "artist": "Elvis Presley",
     "year": 1956,
     "previewUrl": "https://mxtape.celox.io/audio/song_301.m4a",
-    "genre": "Rock"
+    "genre": "Rock",
+    "fact": "Inspiriert wurde der Song von einem Zeitungsartikel über einen einsamen Mann, der aus einem Hotelfenster sprang.",
+    "factEn": "The song was inspired by a newspaper article about a lonely man who jumped from a hotel window."
   },
   {
     "id": "song_302",
@@ -3687,7 +3745,9 @@ export const songs: Song[] = [
     "album": "Your Twist Party (With The King Of Twist)",
     "previewUrl": "https://mxtape.celox.io/audio/song_302.m4a",
     "genre": "Pop",
-    "party": true
+    "party": true,
+    "fact": "Das Original stammt von Hank Ballard and the Midnighters – dort war der Song nur eine B-Seite.",
+    "factEn": "The original was by Hank Ballard and the Midnighters – as a B-side."
   },
   {
     "id": "song_303",
@@ -3696,7 +3756,9 @@ export const songs: Song[] = [
     "year": 1970,
     "album": "Bridge Over Troubled Water",
     "previewUrl": "https://mxtape.celox.io/audio/song_303.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "fact": "Während Art Garfunkel im Film „Catch-22“ mitspielte, arbeitete Paul Simon an den Songs.",
+    "factEn": "While Art Garfunkel took an acting role in the film \"Catch-22\", Paul Simon worked on the songs."
   },
   {
     "id": "song_304",
@@ -3707,7 +3769,9 @@ export const songs: Song[] = [
     "previewUrl": "https://mxtape.celox.io/audio/song_304.m4a",
     "genre": "Rock",
     "startMs": 4000,
-    "party": true
+    "party": true,
+    "fact": "John Deacons Basslinie ist von „Good Times“ der Disco-Band Chic inspiriert.",
+    "factEn": "John Deacon's bass line was inspired by \"Good Times\" by the disco group Chic."
   },
   {
     "id": "song_305",
@@ -3718,7 +3782,9 @@ export const songs: Song[] = [
     "genre": "Hip-Hop",
     "album": "Please Hammer, Don't Hurt 'Em",
     "startMs": 4000,
-    "party": true
+    "party": true,
+    "fact": "Der Song sampelt das markante Riff aus Rick James' „Super Freak“.",
+    "factEn": "The song samples the prominent opening riff of Rick James's \"Super Freak\"."
   },
   {
     "id": "song_306",
@@ -3728,7 +3794,9 @@ export const songs: Song[] = [
     "previewUrl": "https://mxtape.celox.io/audio/song_306.m4a",
     "genre": "Electronic",
     "album": "Modjo",
-    "party": true
+    "party": true,
+    "fact": "„Lady“ war erst der dritte oder vierte Song, den das Duo überhaupt geschrieben hatte.",
+    "factEn": "\"Lady\" was only the \"third or fourth\" song the duo had written."
   },
   {
     "id": "song_307",
@@ -3746,7 +3814,9 @@ export const songs: Song[] = [
     "year": 2020,
     "album": "Save Your Tears",
     "previewUrl": "https://mxtape.celox.io/audio/song_308.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "fact": "Erst ein Remix mit Ariana Grande brachte den Song auf Platz eins der US-Charts.",
+    "factEn": "A remix with Ariana Grande propelled the song to number one in the US."
   },
   {
     "id": "song_309",
@@ -3754,7 +3824,9 @@ export const songs: Song[] = [
     "artist": "Elvis Presley",
     "year": 1956,
     "previewUrl": "https://mxtape.celox.io/audio/song_309.m4a",
-    "genre": "Rock"
+    "genre": "Rock",
+    "fact": "Das Original sang Big Mama Thornton – insgesamt wurde der Song mehr als 250-mal aufgenommen.",
+    "factEn": "The original was recorded by Big Mama Thornton – the song has been recorded more than 250 times."
   },
   {
     "id": "song_310",
@@ -3762,7 +3834,9 @@ export const songs: Song[] = [
     "artist": "Ray Charles",
     "year": 1961,
     "previewUrl": "https://mxtape.celox.io/audio/song_310.m4a",
-    "genre": "Soul"
+    "genre": "Soul",
+    "fact": "Geschrieben hat ihn Percy Mayfield, der ihn zuerst als A-cappella-Demo aufnahm.",
+    "factEn": "It was written by Percy Mayfield, who first recorded it as an a cappella demo."
   },
   {
     "id": "song_311",
@@ -3771,7 +3845,9 @@ export const songs: Song[] = [
     "year": 1970,
     "album": "ABC",
     "previewUrl": "https://mxtape.celox.io/audio/song_311.m4a",
-    "genre": "Soul"
+    "genre": "Soul",
+    "fact": "50 Cent erzählte, dies sei der erste Song, an dessen Hören er sich erinnere.",
+    "factEn": "50 Cent said it was the first song he remembered hearing."
   },
   {
     "id": "song_312",
@@ -3781,7 +3857,9 @@ export const songs: Song[] = [
     "album": "You Shook Me All Night Long",
     "previewUrl": "https://mxtape.celox.io/audio/song_312.m4a",
     "genre": "Rock",
-    "startMs": 5500
+    "startMs": 5500,
+    "fact": "Der Song ist eine Hommage an den verstorbenen Sänger Bon Scott – laut Vorgabe der Band durfte er nicht düster sein, sondern sollte eine Feier werden.",
+    "factEn": "The song is a tribute to the late singer Bon Scott – the band said it couldn't be morbid, it had to be a celebration."
   },
   {
     "id": "song_313",
@@ -3792,7 +3870,9 @@ export const songs: Song[] = [
     "genre": "Hip-Hop",
     "album": "To the Extreme",
     "startMs": 13500,
-    "party": true
+    "party": true,
+    "fact": "Zuerst erschien der Song nur als B-Seite von „Play That Funky Music“ – erst als DJ David Morales ihn spielte, wurde er zum Hit.",
+    "factEn": "It first appeared as the B-side to \"Play That Funky Music\" – it took off when DJ David Morales played it instead."
   },
   {
     "id": "song_314",
@@ -3803,7 +3883,9 @@ export const songs: Song[] = [
     "previewUrl": "https://mxtape.celox.io/audio/song_314.m4a",
     "genre": "Reggae",
     "startMs": 10500,
-    "party": true
+    "party": true,
+    "fact": "Inspiriert wurde der Song von der Nummer „No Loyal Men“ aus Eddie Murphys Comedy-Special „Raw“.",
+    "factEn": "The song was inspired by a bit called \"No Loyal Men\" from Eddie Murphy's comedy special \"Raw\"."
   },
   {
     "id": "song_315",
@@ -3814,7 +3896,9 @@ export const songs: Song[] = [
     "genre": "Pop",
     "album": "Talk That Talk",
     "startMs": 7500,
-    "party": true
+    "party": true,
+    "fact": "Geschrieben und produziert hat den Song Calvin Harris – er wurde Rihannas am längsten laufender Nummer-eins-Hit.",
+    "factEn": "Calvin Harris wrote and produced it – it became Rihanna's longest-running number one."
   },
   {
     "id": "song_316",
@@ -3824,7 +3908,9 @@ export const songs: Song[] = [
     "previewUrl": "https://mxtape.celox.io/audio/song_316.m4a",
     "genre": "Pop",
     "album": "Planet Her",
-    "startMs": 1500
+    "startMs": 1500,
+    "fact": "Der Song greift die Melodie aus dem Refrain von Olivia Newton-Johns „Physical“ auf.",
+    "factEn": "The song interpolates the melody of the chorus of Olivia Newton-John's \"Physical\"."
   },
   {
     "id": "song_317",
@@ -3833,7 +3919,9 @@ export const songs: Song[] = [
     "year": 1955,
     "previewUrl": "https://mxtape.celox.io/audio/song_317.m4a",
     "genre": "Rock",
-    "album": "Here's Little Richard"
+    "album": "Here's Little Richard",
+    "fact": "Der Refrain „A-wop-bop-a-loo-mop-a-lop-bam-boom!“ war Little Richards gesungene Version eines Schlagzeugmusters.",
+    "factEn": "The refrain \"A-wop-bop-a-loo-mop-a-lop-bam-boom!\" was a verbal rendition of a drum pattern imagined by Little Richard."
   },
   {
     "id": "song_318",
@@ -3842,7 +3930,9 @@ export const songs: Song[] = [
     "year": 1962,
     "album": "Llllloco‐Motion",
     "previewUrl": "https://mxtape.celox.io/audio/song_318.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "fact": "Little Eva war die Babysitterin von Carole King, die den Song mitschrieb – eigentlich war er für Dee Dee Sharp gedacht.",
+    "factEn": "Little Eva was co-writer Carole King's babysitter – the song was originally written for Dee Dee Sharp."
   },
   {
     "id": "song_319",
@@ -3851,7 +3941,9 @@ export const songs: Song[] = [
     "year": 1970,
     "album": "Paranoid",
     "previewUrl": "https://mxtape.celox.io/audio/song_319.m4a",
-    "genre": "Metal"
+    "genre": "Metal",
+    "fact": "Der Song entstand als Lückenfüller: Die Band brauchte noch drei Minuten fürs Album.",
+    "factEn": "The song was written as an afterthought: the band needed a three-minute filler for the album."
   },
   {
     "id": "song_320",
@@ -3861,7 +3953,9 @@ export const songs: Song[] = [
     "previewUrl": "https://mxtape.celox.io/audio/song_320.m4a",
     "genre": "Soul",
     "album": "Celebrate!",
-    "party": true
+    "party": true,
+    "fact": "Saxofonist Ronald Bell sagte, der Song sei vom Koran inspiriert – von der Stelle, an der die Engel die Erschaffung Adams feiern.",
+    "factEn": "Saxophonist Ronald Bell said the song was inspired by the Quran – the passage where the angels celebrate the creation of Adam."
   },
   {
     "id": "song_321",
@@ -3872,7 +3966,9 @@ export const songs: Song[] = [
     "previewUrl": "https://mxtape.celox.io/audio/song_321.m4a",
     "genre": "Electronic",
     "startMs": 1500,
-    "party": true
+    "party": true,
+    "fact": "Der Song beginnt mit einer russischen Ansage über einen Computer für Blinde.",
+    "factEn": "The song opens with a spoken Russian announcement about a computer for the blind."
   },
   {
     "id": "song_322",
@@ -3882,7 +3978,9 @@ export const songs: Song[] = [
     "previewUrl": "https://mxtape.celox.io/audio/song_322.m4a",
     "genre": "Rock",
     "album": "Meteora",
-    "startMs": 3500
+    "startMs": 3500,
+    "fact": "Mit Jay-Z entstand der Mashup „Numb/Encore“, der einen Grammy gewann.",
+    "factEn": "The mashup \"Numb/Encore\" with Jay-Z earned a Grammy."
   },
   {
     "id": "song_323",
@@ -3892,7 +3990,9 @@ export const songs: Song[] = [
     "previewUrl": "https://mxtape.celox.io/audio/song_323.m4a",
     "genre": "Electronic",
     "album": "Sorry for Party Rocking",
-    "party": true
+    "party": true,
+    "fact": "In Australien ist es die meistverkaufte Single aller Zeiten.",
+    "factEn": "It is the best-selling single of all time in Australia."
   },
   {
     "id": "song_324",
@@ -3901,7 +4001,9 @@ export const songs: Song[] = [
     "year": 2021,
     "album": "Zitti e buoni",
     "previewUrl": "https://mxtape.celox.io/audio/song_324.m4a",
-    "genre": "Rock"
+    "genre": "Rock",
+    "fact": "Måneskin gewannen mit dem Song das Sanremo-Festival und den Eurovision Song Contest.",
+    "factEn": "Måneskin won both the Sanremo Music Festival and the Eurovision Song Contest with the song."
   },
   {
     "id": "song_325",
@@ -3910,7 +4012,9 @@ export const songs: Song[] = [
     "year": 1956,
     "album": "Long Tall Sally / Slippin’ and Slidin’ (Peepin’ and Hidin’)",
     "previewUrl": "https://mxtape.celox.io/audio/song_325.m4a",
-    "genre": "Rock"
+    "genre": "Rock",
+    "fact": "Hunderte Acts coverten den Song – darunter Elvis Presley, die Kinks und die Beatles.",
+    "factEn": "Hundreds of artists have covered the song, including Elvis Presley, the Kinks and the Beatles."
   },
   {
     "id": "song_326",
@@ -3920,7 +4024,9 @@ export const songs: Song[] = [
     "album": "Be My Baby / Tedesco and Pitman",
     "previewUrl": "https://mxtape.celox.io/audio/song_326.m4a",
     "genre": "Pop",
-    "startMs": 1500
+    "startMs": 1500,
+    "fact": "Brian Wilson von den Beach Boys schrieb als Antwort darauf „Don't Worry Baby“.",
+    "factEn": "The Beach Boys' Brian Wilson wrote \"Don't Worry Baby\" as an answer song."
   },
   {
     "id": "song_327",
@@ -3929,7 +4035,9 @@ export const songs: Song[] = [
     "year": 1971,
     "previewUrl": "https://mxtape.celox.io/audio/song_327.m4a",
     "genre": "Rock",
-    "album": "Led Zeppelin IV"
+    "album": "Led Zeppelin IV",
+    "fact": "Der Song war der meistgewünschte im US-FM-Radio – obwohl er dort nie als Single erschien.",
+    "factEn": "It was the most-requested song on US FM radio – despite never being released as a single there."
   },
   {
     "id": "song_328",
@@ -3939,7 +4047,9 @@ export const songs: Song[] = [
     "previewUrl": "https://mxtape.celox.io/audio/song_328.m4a",
     "genre": "Pop",
     "german": true,
-    "party": true
+    "party": true,
+    "fact": "Der volle Titel lautet „Da Da Da I Don't Love You You Don't Love Me Aha Aha Aha“.",
+    "factEn": "The full title is \"Da Da Da I Don't Love You You Don't Love Me Aha Aha Aha\"."
   },
   {
     "id": "song_329",
@@ -3948,7 +4058,9 @@ export const songs: Song[] = [
     "year": 1990,
     "previewUrl": "https://mxtape.celox.io/audio/song_329.m4a",
     "genre": "Electronic",
-    "album": "Violator"
+    "album": "Violator",
+    "fact": "Ursprünglich war der Song eine Ballade – Alan Wilder baute ihn mit Produzent Flood zum Tanzflächen-Hit um.",
+    "factEn": "It was originally a ballad – Alan Wilder rearranged it with producer Flood into a dance-floor hit."
   },
   {
     "id": "song_330",
@@ -3958,7 +4070,9 @@ export const songs: Song[] = [
     "previewUrl": "https://mxtape.celox.io/audio/song_330.m4a",
     "genre": "Electronic",
     "album": "Discovery",
-    "startMs": 30000
+    "startMs": 30000,
+    "fact": "Das Musikvideo ist Teil des Anime-Films „Interstella 5555“.",
+    "factEn": "The music video forms part of the anime film \"Interstella 5555\"."
   },
   {
     "id": "song_331",
@@ -3969,7 +4083,9 @@ export const songs: Song[] = [
     "previewUrl": "https://mxtape.celox.io/audio/song_331.m4a",
     "genre": "Pop",
     "startMs": 4000,
-    "party": true
+    "party": true,
+    "fact": "Geschrieben wurde der Song ursprünglich als Folksong.",
+    "factEn": "The song was originally written as a folk song."
   },
   {
     "id": "song_332",
@@ -3979,7 +4095,9 @@ export const songs: Song[] = [
     "previewUrl": "https://mxtape.celox.io/audio/song_332.m4a",
     "genre": "Rock",
     "album": "SOUR",
-    "startMs": 3000
+    "startMs": 3000,
+    "fact": "Wegen der Nähe zu Paramores „Misery Business“ wurden Hayley Williams und Josh Farro nachträglich als Mitautoren genannt.",
+    "factEn": "Hayley Williams and Josh Farro were retrospectively given co-writing credits due to its resemblance to Paramore's \"Misery Business\"."
   },
   {
     "id": "song_333",
@@ -3987,7 +4105,9 @@ export const songs: Song[] = [
     "artist": "Jerry Lee Lewis",
     "year": 1957,
     "previewUrl": "https://mxtape.celox.io/audio/song_333.m4a",
-    "genre": "Rock"
+    "genre": "Rock",
+    "fact": "Der Song verkaufte sich in den USA in den ersten zehn Tagen eine Million Mal.",
+    "factEn": "It sold one million copies in the US in its first ten days."
   },
   {
     "id": "song_334",
@@ -3995,7 +4115,9 @@ export const songs: Song[] = [
     "artist": "The Beatles",
     "year": 1963,
     "previewUrl": "https://mxtape.celox.io/audio/song_334.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "fact": "Lennon und McCartney begannen den Song im Tourbus und beendeten ihn im Elternhaus von McCartney.",
+    "factEn": "Lennon and McCartney began writing it on the tour bus and finished it at McCartney's family home."
   },
   {
     "id": "song_335",
@@ -4005,7 +4127,9 @@ export const songs: Song[] = [
     "album": "Imagine",
     "previewUrl": "https://mxtape.celox.io/audio/song_335.m4a",
     "genre": "Pop",
-    "startMs": 2500
+    "startMs": 2500,
+    "fact": "Lennon sagte, ein Großteil des Textes stamme von Yoko Ono – sie wurde später als Mitautorin anerkannt.",
+    "factEn": "Lennon said much of the lyrics came from Yoko Ono – she was later credited as co-writer."
   },
   {
     "id": "song_336",
@@ -4015,7 +4139,9 @@ export const songs: Song[] = [
     "previewUrl": "https://mxtape.celox.io/audio/song_336.m4a",
     "genre": "Rock",
     "german": true,
-    "party": true
+    "party": true,
+    "fact": "Den Polizeisirenen-Sound spielte Keyboarder Michael Busse auf einem umgehängten Moog-Keyboard.",
+    "factEn": "Keyboardist Michael Busse simulated the police siren sound on a Moog keytar."
   },
   {
     "id": "song_337",
@@ -4024,7 +4150,9 @@ export const songs: Song[] = [
     "year": 1990,
     "album": "Crazy World",
     "previewUrl": "https://mxtape.celox.io/audio/song_337.m4a",
-    "genre": "Rock"
+    "genre": "Rock",
+    "fact": "Die Scorpions nahmen auch eine russische Version auf: „Veter Peremen“.",
+    "factEn": "The Scorpions also recorded a Russian-language version, \"Veter Peremen\"."
   },
   {
     "id": "song_338",
@@ -4034,7 +4162,9 @@ export const songs: Song[] = [
     "previewUrl": "https://mxtape.celox.io/audio/song_338.m4a",
     "genre": "Pop",
     "album": "Fever",
-    "party": true
+    "party": true,
+    "fact": "Kylies weißer Overall aus dem Musikvideo wurde zum Mode-Statement.",
+    "factEn": "The white jumpsuit Kylie wore in the music video became a fashion statement."
   },
   {
     "id": "song_339",
@@ -4044,7 +4174,9 @@ export const songs: Song[] = [
     "album": "Night Visions",
     "previewUrl": "https://mxtape.celox.io/audio/song_339.m4a",
     "genre": "Rock",
-    "startMs": 8500
+    "startMs": 8500,
+    "fact": "Kein Song hatte bis dahin länger gebraucht, um in die Top 5 der Charts zu klettern.",
+    "factEn": "It broke the record for the slowest climb into the top 5 in chart history."
   },
   {
     "id": "song_340",
@@ -4053,7 +4185,9 @@ export const songs: Song[] = [
     "year": 2021,
     "album": "=",
     "previewUrl": "https://mxtape.celox.io/audio/song_340.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "fact": "Ed Sheeran brauchte drei Tage für den Song – für ihn ungewöhnlich lang, weil er ihn „zu besonders“ fand, um ihn zu vermasseln.",
+    "factEn": "Ed Sheeran took three days to write it – unusually long for him, as he felt it \"was too special to get wrong\"."
   },
   {
     "id": "song_341",
@@ -4062,7 +4196,9 @@ export const songs: Song[] = [
     "year": 1957,
     "previewUrl": "https://mxtape.celox.io/audio/song_341.m4a",
     "genre": "Rock",
-    "album": "Buddy Holly"
+    "album": "Buddy Holly",
+    "fact": "Ursprünglich hieß der Song „Cindy Lou“, nach Buddy Hollys Nichte.",
+    "factEn": "The song was originally titled \"Cindy Lou\", after Buddy Holly's niece."
   },
   {
     "id": "song_342",
@@ -4070,7 +4206,9 @@ export const songs: Song[] = [
     "artist": "The Beatles",
     "year": 1963,
     "previewUrl": "https://mxtape.celox.io/audio/song_342.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "fact": "Es war die erste Beatles-Platte, die mit Vierspur-Technik aufgenommen wurde.",
+    "factEn": "It was the first Beatles record made using four-track recording equipment."
   },
   {
     "id": "song_343",
@@ -4079,7 +4217,9 @@ export const songs: Song[] = [
     "year": 1971,
     "previewUrl": "https://mxtape.celox.io/audio/song_343.m4a",
     "genre": "Rock",
-    "album": "Sticky Fingers"
+    "album": "Sticky Fingers",
+    "fact": "Aufgenommen wurde der Song in den Muscle Shoals Sound Studios in Alabama.",
+    "factEn": "The song was recorded at Muscle Shoals Sound Studio in Alabama."
   },
   {
     "id": "song_344",
@@ -4091,7 +4231,9 @@ export const songs: Song[] = [
     "genre": "Pop",
     "startMs": 2000,
     "german": true,
-    "party": true
+    "party": true,
+    "fact": "Statt „Deutschland, Deutschland spürst du mich?“ hieß es erst „Rosi, Rosi …“ – doch die Spider Murphy Gang besang schon eine Rosi.",
+    "factEn": "The line \"Deutschland, Deutschland spürst du mich?\" was first \"Rosi, Rosi …\" – but the Spider Murphy Gang had already sung about a Rosi."
   },
   {
     "id": "song_345",
@@ -4100,7 +4242,9 @@ export const songs: Song[] = [
     "year": 1991,
     "previewUrl": "https://mxtape.celox.io/audio/song_345.m4a",
     "genre": "Rock",
-    "album": "Out of Time"
+    "album": "Out of Time",
+    "fact": "Das Mandolinen-Riff schrieb Peter Buck, als er gerade lernte, auf seiner neu gekauften Mandoline zu spielen.",
+    "factEn": "Peter Buck wrote the mandolin riff while learning to play the mandolin he had recently bought."
   },
   {
     "id": "song_346",
@@ -4110,7 +4254,9 @@ export const songs: Song[] = [
     "album": "Gorillaz (album Sampler)",
     "previewUrl": "https://mxtape.celox.io/audio/song_346.m4a",
     "genre": "Hip-Hop",
-    "startMs": 8000
+    "startMs": 8000,
+    "fact": "Benannt ist der Song nach Clint Eastwood, weil er an die Titelmusik von „The Good, the Bad and the Ugly“ erinnert.",
+    "factEn": "It is named after Clint Eastwood because it resembles the theme of \"The Good, the Bad and the Ugly\"."
   },
   {
     "id": "song_347",
@@ -4119,7 +4265,9 @@ export const songs: Song[] = [
     "year": 2012,
     "album": "Royals",
     "previewUrl": "https://mxtape.celox.io/audio/song_347.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "fact": "Lorde schrieb den Text in einer halben Stunde – inspiriert unter anderem von einem Foto aus dem National Geographic.",
+    "factEn": "Lorde wrote the lyrics in half an hour, drawing inspiration from a National Geographic photo among other things."
   },
   {
     "id": "song_348",
@@ -4129,7 +4277,9 @@ export const songs: Song[] = [
     "previewUrl": "https://mxtape.celox.io/audio/song_348.m4a",
     "genre": "Pop",
     "album": "Special",
-    "startMs": 1500
+    "startMs": 1500,
+    "fact": "Der Song entstand als letzter fürs Album – fertig wurde er erst nach rund 30 weiteren Studio-Sessions.",
+    "factEn": "It was the final song created for the album and took about 30 more studio sessions to finish."
   },
   {
     "id": "song_349",
@@ -4138,7 +4288,9 @@ export const songs: Song[] = [
     "year": 1957,
     "album": "That’ll Be the Day / I’m Lookin’ for Someone to Love",
     "previewUrl": "https://mxtape.celox.io/audio/song_349.m4a",
-    "genre": "Rock"
+    "genre": "Rock",
+    "fact": "Es war der erste Song, den die Quarrymen aufnahmen – die Band, aus der die Beatles wurden.",
+    "factEn": "It was the first song recorded by the Quarrymen, the group that evolved into the Beatles."
   },
   {
     "id": "song_350",
@@ -4147,7 +4299,9 @@ export const songs: Song[] = [
     "year": 1965,
     "album": "Help!",
     "previewUrl": "https://mxtape.celox.io/audio/song_350.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "fact": "Mit rund 2.200 Coverversionen zählt der Song zu den meistgecoverten der Musikgeschichte.",
+    "factEn": "With 2,200 cover versions, it is one of the most covered songs in the history of recorded music."
   },
   {
     "id": "song_351",
@@ -4156,7 +4310,9 @@ export const songs: Song[] = [
     "year": 1971,
     "album": "Electric Warrior",
     "previewUrl": "https://mxtape.celox.io/audio/song_351.m4a",
-    "genre": "Rock"
+    "genre": "Rock",
+    "fact": "In Nordamerika erschien der Song als „Bang a Gong (Get It On)“, um Verwechslungen mit einem Song der Band Chase zu vermeiden.",
+    "factEn": "In North America it was retitled \"Bang a Gong (Get It On)\" to avoid confusion with a song by the group Chase."
   },
   {
     "id": "song_352",
@@ -4166,7 +4322,9 @@ export const songs: Song[] = [
     "album": "Einzelhaft",
     "previewUrl": "https://mxtape.celox.io/audio/song_352.m4a",
     "genre": "Pop",
-    "german": true
+    "german": true,
+    "fact": "Die Musik war eigentlich für Reinhold Bilgeri gedacht – der lehnte ab, weil sie ihm zu weich war.",
+    "factEn": "The music was originally intended for Reinhold Bilgeri, who rejected it as too soft."
   },
   {
     "id": "song_353",
@@ -4184,7 +4342,9 @@ export const songs: Song[] = [
     "year": 2002,
     "previewUrl": "https://mxtape.celox.io/audio/song_354.m4a",
     "genre": "Hip-Hop",
-    "album": "Nellyville"
+    "album": "Nellyville",
+    "fact": "Der Song greift unter anderem Elemente aus Chuck Browns „Bustin' Loose“ und einem Song von Neil Young auf.",
+    "factEn": "The song incorporates elements of Chuck Brown's \"Bustin' Loose\" and a Neil Young song."
   },
   {
     "id": "song_355",
@@ -4194,7 +4354,9 @@ export const songs: Song[] = [
     "previewUrl": "https://mxtape.celox.io/audio/song_355.m4a",
     "genre": "Electronic",
     "album": "Motion",
-    "startMs": 2500
+    "startMs": 2500,
+    "fact": "Calvin Harris singt hier selbst.",
+    "factEn": "Calvin Harris sings the vocals himself."
   },
   {
     "id": "song_356",
@@ -4203,7 +4365,9 @@ export const songs: Song[] = [
     "year": 2022,
     "album": "Rave & Roses",
     "previewUrl": "https://mxtape.celox.io/audio/song_356.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "fact": "Der Remix mit Selena Gomez führte die US-Afrobeats-Charts 58 Wochen lang an – ein Rekord.",
+    "factEn": "The remix with Selena Gomez led the US Afrobeats Songs chart for a record-setting 58 weeks."
   },
   {
     "id": "song_357",
@@ -4212,7 +4376,9 @@ export const songs: Song[] = [
     "year": 1958,
     "album": "Donna / La bamba",
     "previewUrl": "https://mxtape.celox.io/audio/song_357.m4a",
-    "genre": "Rock"
+    "genre": "Rock",
+    "fact": "Auf der Rolling-Stone-Liste der 500 besten Songs ist dies der einzige, der nicht auf Englisch geschrieben oder gesungen ist.",
+    "factEn": "It is the only song on Rolling Stone's list of the 500 greatest songs not written or sung in English."
   },
   {
     "id": "song_358",
@@ -4221,7 +4387,9 @@ export const songs: Song[] = [
     "year": 1963,
     "album": "Surfin’ USA",
     "previewUrl": "https://mxtape.celox.io/audio/song_358.m4a",
-    "genre": "Rock"
+    "genre": "Rock",
+    "fact": "Brian Wilson setzte neue Texte auf die Musik von Chuck Berrys „Sweet Little Sixteen“.",
+    "factEn": "Brian Wilson set new lyrics to the music of Chuck Berry's \"Sweet Little Sixteen\"."
   },
   {
     "id": "song_359",
@@ -4230,7 +4398,9 @@ export const songs: Song[] = [
     "year": 1971,
     "album": "American Pie",
     "previewUrl": "https://mxtape.celox.io/audio/song_359.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "fact": "„The day the music died“ meint den Flugzeugabsturz, bei dem Buddy Holly, The Big Bopper und Ritchie Valens starben.",
+    "factEn": "\"The day the music died\" refers to the plane crash that killed Buddy Holly, The Big Bopper and Ritchie Valens."
   },
   {
     "id": "song_360",
@@ -4242,7 +4412,9 @@ export const songs: Song[] = [
     "genre": "Pop",
     "startMs": 2500,
     "german": true,
-    "party": true
+    "party": true,
+    "fact": "Er ist bis heute der einzige deutschsprachige Song, der Platz eins der US-Billboard-Hot-100 erreichte.",
+    "factEn": "It is still the only German-language song to reach number one on the US Billboard Hot 100."
   },
   {
     "id": "song_361",
@@ -4253,7 +4425,9 @@ export const songs: Song[] = [
     "genre": "Electronic",
     "album": "No Limits!",
     "startMs": 2000,
-    "party": true
+    "party": true,
+    "fact": "In der britischen Fassung fielen alle Raps weg – nur das Wort „Techno“ blieb und wurde zur Endlosschleife.",
+    "factEn": "The UK version cut all the raps – only the word \"Techno\" was kept and looped over and over."
   },
   {
     "id": "song_362",
@@ -4264,7 +4438,9 @@ export const songs: Song[] = [
     "previewUrl": "https://mxtape.celox.io/audio/song_362.m4a",
     "genre": "Pop",
     "startMs": 7000,
-    "party": true
+    "party": true,
+    "fact": "Shakira schrieb den Text zuerst auf Spanisch als „Suerte“ – Gloria Estefan übertrug ihn ins Englische.",
+    "factEn": "Shakira first wrote the lyrics in Spanish as \"Suerte\" – Gloria Estefan adapted them into English."
   },
   {
     "id": "song_363",
@@ -4273,7 +4449,9 @@ export const songs: Song[] = [
     "year": 2013,
     "album": "Take Me to Church E.P.",
     "previewUrl": "https://mxtape.celox.io/audio/song_363.m4a",
-    "genre": "Rock"
+    "genre": "Rock",
+    "fact": "Hozier nahm den Gesang nachts um zwei auf seinem Dachboden auf – die Demo-Stimme blieb im fertigen Song.",
+    "factEn": "Hozier recorded the vocals at 2 a.m. in his attic – the demo vocals stayed on the finished song."
   },
   {
     "id": "song_364",
@@ -4283,7 +4461,9 @@ export const songs: Song[] = [
     "album": "SOS",
     "previewUrl": "https://mxtape.celox.io/audio/song_364.m4a",
     "genre": "R&B",
-    "startMs": 11500
+    "startMs": 11500,
+    "fact": "Im Musikvideo spielt Vivica A. Fox mit – eine der Schauspielerinnen aus den „Kill Bill“-Filmen.",
+    "factEn": "The music video features Vivica A. Fox, one of the actresses from the \"Kill Bill\" films."
   },
   {
     "id": "song_365",
@@ -4292,7 +4472,9 @@ export const songs: Song[] = [
     "year": 1958,
     "album": "Summertime Blues / Love Again",
     "previewUrl": "https://mxtape.celox.io/audio/song_365.m4a",
-    "genre": "Rock"
+    "genre": "Rock",
+    "fact": "Eddie Cochran sang Lead- und Bassstimme selbst und spielte alle Gitarrenparts ein.",
+    "factEn": "Eddie Cochran sang both the lead and the bass vocal himself and played all the guitar parts."
   },
   {
     "id": "song_366",
@@ -4301,7 +4483,9 @@ export const songs: Song[] = [
     "year": 1964,
     "previewUrl": "https://mxtape.celox.io/audio/song_366.m4a",
     "genre": "Soul",
-    "album": "Dancing In the Street"
+    "album": "Dancing In the Street",
+    "fact": "Laut Martha Reeves nahm Marvin Gaye den Song zuerst auf – und sang ihn, als würde er ihn einer Geliebten vorsingen.",
+    "factEn": "According to Martha Reeves, Marvin Gaye recorded the song first, singing it as though to a lover."
   },
   {
     "id": "song_367",
@@ -4310,7 +4494,9 @@ export const songs: Song[] = [
     "year": 1971,
     "album": "Just As I Am",
     "previewUrl": "https://mxtape.celox.io/audio/song_367.m4a",
-    "genre": "Soul"
+    "genre": "Soul",
+    "fact": "In der Bridge singt Bill Withers 26-mal „I know“ – eigentlich wollte er dort noch mehr Text schreiben.",
+    "factEn": "In the bridge Bill Withers sings \"I know\" 26 times – he had actually meant to write more lyrics there."
   },
   {
     "id": "song_368",
@@ -4319,7 +4505,9 @@ export const songs: Song[] = [
     "year": 1983,
     "album": "Flashdance: Original Soundtrack from the Motion Picture",
     "previewUrl": "https://mxtape.celox.io/audio/song_368.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "fact": "Irene Cara und Keith Forsey schrieben den Text, nachdem sie die Schlussszene gesehen hatten: das Vortanzen vor der Jury.",
+    "factEn": "Irene Cara and Keith Forsey wrote the lyrics after seeing the film's last scene: the dance audition in front of the judges."
   },
   {
     "id": "song_369",
@@ -4328,7 +4516,9 @@ export const songs: Song[] = [
     "year": 1992,
     "album": "The Bodyguard: Original Soundtrack Album",
     "previewUrl": "https://mxtape.celox.io/audio/song_369.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "fact": "Das Original schrieb und sang Dolly Parton – Whitney Houston nahm es für den Film „Bodyguard“ auf.",
+    "factEn": "The original was written and recorded by Dolly Parton – Whitney Houston recorded it for the film \"The Bodyguard\"."
   },
   {
     "id": "song_370",
@@ -4337,7 +4527,9 @@ export const songs: Song[] = [
     "year": 2002,
     "album": "A Rush of Blood to the Head",
     "previewUrl": "https://mxtape.celox.io/audio/song_370.m4a",
-    "genre": "Rock"
+    "genre": "Rock",
+    "fact": "Manager Phil Harvey erfand das Outro und pfiff es Gitarrist Jonny Buckland vor – Gitarre spielen konnte er nicht.",
+    "factEn": "Manager Phil Harvey came up with the outro and whistled it to guitarist Jonny Buckland, since he couldn't play guitar."
   },
   {
     "id": "song_371",
@@ -4347,7 +4539,9 @@ export const songs: Song[] = [
     "album": "Tape",
     "previewUrl": "https://mxtape.celox.io/audio/song_371.m4a",
     "genre": "Pop",
-    "german": true
+    "german": true,
+    "fact": "Der Song ist der offizielle Soundtrack zur Filmkomödie „Willkommen bei den Hartmanns“.",
+    "factEn": "The song is the official soundtrack to the comedy film \"Willkommen bei den Hartmanns\"."
   },
   {
     "id": "song_372",
@@ -4357,7 +4551,9 @@ export const songs: Song[] = [
     "album": "Daylight",
     "previewUrl": "https://mxtape.celox.io/audio/song_372.m4a",
     "genre": "Pop",
-    "startMs": 16000
+    "startMs": 16000,
+    "fact": "Vorab postete David Kushner Demo-Schnipsel auf TikTok – sie landeten in mehr als 230.000 Clips.",
+    "factEn": "David Kushner posted demo snippets on TikTok beforehand – they were used in more than 230,000 clips."
   },
   {
     "id": "song_373",
@@ -4367,7 +4563,9 @@ export const songs: Song[] = [
     "album": "Wake Up Little Susie / Maybe Tomorrow",
     "previewUrl": "https://mxtape.celox.io/audio/song_373.m4a",
     "genre": "Pop",
-    "startMs": 1500
+    "startMs": 1500,
+    "fact": "Bostoner Radiosender verbannten den Song, weil der Text damals als anzüglich galt.",
+    "factEn": "Boston radio stations banned the song because its lyrics were considered suggestive at the time."
   },
   {
     "id": "song_374",
@@ -4376,7 +4574,9 @@ export const songs: Song[] = [
     "year": 1964,
     "album": "Pretty Woman / Yo te amo Maria",
     "previewUrl": "https://mxtape.celox.io/audio/song_374.m4a",
-    "genre": "Rock"
+    "genre": "Rock",
+    "fact": "Als Roy Orbisons Frau ausgehen wollte, warf Co-Autor Bill Dees ein: „A pretty woman never needs any money.“",
+    "factEn": "When Roy Orbison's wife was going out, co-writer Bill Dees chimed in: \"A pretty woman never needs any money.\""
   },
   {
     "id": "song_375",
@@ -4386,7 +4586,9 @@ export const songs: Song[] = [
     "album": "Still Bill",
     "previewUrl": "https://mxtape.celox.io/audio/song_375.m4a",
     "genre": "Soul",
-    "startMs": 15000
+    "startMs": 15000,
+    "fact": "Bill Withers vermisste in Los Angeles den Zusammenhalt seiner Heimat, der Bergbaustadt Slab Fork – daraus wurde der Song.",
+    "factEn": "Bill Withers missed the community spirit of his coal-mining hometown Slab Fork after moving to Los Angeles – that inspired the song."
   },
   {
     "id": "song_376",
@@ -4395,7 +4597,9 @@ export const songs: Song[] = [
     "year": 1984,
     "album": "Footloose: Original Soundtrack of the Paramount Motion Picture",
     "previewUrl": "https://mxtape.celox.io/audio/song_376.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "fact": "Im Video tanzt Kevin Bacon in der Lagerhalle – im Film lief zu dieser Szene allerdings ein anderer Song.",
+    "factEn": "The video shows Kevin Bacon's warehouse dance – which in the film itself was set to a different song."
   },
   {
     "id": "song_377",
@@ -4405,7 +4609,9 @@ export const songs: Song[] = [
     "album": "Bigger, Better, Faster, More!",
     "previewUrl": "https://mxtape.celox.io/audio/song_377.m4a",
     "genre": "Rock",
-    "startMs": 2000
+    "startMs": 2000,
+    "fact": "Der Titel kommt im Text gar nicht vor – er wurde gewählt, um nicht mit Marvin Gayes „What's Going On“ verwechselt zu werden.",
+    "factEn": "The title never appears in the lyrics – it was chosen to avoid confusion with Marvin Gaye's \"What's Going On\"."
   },
   {
     "id": "song_378",
@@ -4415,7 +4621,9 @@ export const songs: Song[] = [
     "album": "Daredevil: The Album",
     "previewUrl": "https://mxtape.celox.io/audio/song_378.m4a",
     "genre": "Rock",
-    "startMs": 10500
+    "startMs": 10500,
+    "fact": "Die Männerstimme setzte die Plattenfirma gegen den Willen von Sängerin Amy Lee durch.",
+    "factEn": "The male vocals were forced on the song by the label against singer Amy Lee's wishes."
   },
   {
     "id": "song_379",
@@ -4436,7 +4644,9 @@ export const songs: Song[] = [
     "previewUrl": "https://mxtape.celox.io/audio/song_380.m4a",
     "genre": "Pop",
     "album": "Houdini",
-    "startMs": 2500
+    "startMs": 2500,
+    "fact": "Der Song begann als Demo, das Kevin Parker von Tame Impala produziert hatte.",
+    "factEn": "The song began as a demo produced by Tame Impala's Kevin Parker."
   },
   {
     "id": "song_381",
@@ -4446,7 +4656,9 @@ export const songs: Song[] = [
     "album": "All I Have to Do Is Dream / Claudette",
     "previewUrl": "https://mxtape.celox.io/audio/song_381.m4a",
     "genre": "Pop",
-    "startMs": 2500
+    "startMs": 2500,
+    "fact": "Die Everly Brothers nahmen den Song in nur zwei Live-Takes auf – an der Gitarre: Chet Atkins.",
+    "factEn": "The Everly Brothers recorded it in just two live takes, with Chet Atkins on guitar."
   },
   {
     "id": "song_382",
@@ -4455,7 +4667,9 @@ export const songs: Song[] = [
     "year": 1964,
     "album": "Where Did Our Love Go",
     "previewUrl": "https://mxtape.celox.io/audio/song_382.m4a",
-    "genre": "Soul"
+    "genre": "Soul",
+    "fact": "Das Fußstampfen im Takt steuerte der Teenager Mike Valvano bei.",
+    "factEn": "The footstomps keeping the beat came from a teenager named Mike Valvano."
   },
   {
     "id": "song_383",
@@ -4464,7 +4678,9 @@ export const songs: Song[] = [
     "year": 1972,
     "album": "Starman",
     "previewUrl": "https://mxtape.celox.io/audio/song_383.m4a",
-    "genre": "Rock"
+    "genre": "Rock",
+    "fact": "Der Oktavsprung bei „Star-man“ im Refrain ist derselbe wie bei „Some-where“ in „Over the Rainbow“.",
+    "factEn": "The octave leap on \"Star-man\" in the chorus is identical to the one on \"Some-where\" in \"Over the Rainbow\"."
   },
   {
     "id": "song_384",
@@ -4474,7 +4690,9 @@ export const songs: Song[] = [
     "album": "Make It Big",
     "previewUrl": "https://mxtape.celox.io/audio/song_384.m4a",
     "genre": "Pop",
-    "party": true
+    "party": true,
+    "fact": "Auslöser war ein Zettel von Andrew Ridgeley an seine Eltern: Er schrieb versehentlich zweimal „up“ – und dann absichtlich zweimal „go“.",
+    "factEn": "It started with a note Andrew Ridgeley left his parents: he accidentally wrote \"up\" twice, so he wrote \"go\" twice on purpose."
   },
   {
     "id": "song_385",
@@ -4484,7 +4702,9 @@ export const songs: Song[] = [
     "album": "Zombie",
     "previewUrl": "https://mxtape.celox.io/audio/song_385.m4a",
     "genre": "Rock",
-    "startMs": 12000
+    "startMs": 12000,
+    "fact": "Dolores O'Riordan schrieb den Song über die jungen Opfer eines IRA-Bombenanschlags im englischen Warrington.",
+    "factEn": "Dolores O'Riordan wrote the song about the young victims of an IRA bombing in Warrington, England."
   },
   {
     "id": "song_386",
@@ -4494,7 +4714,9 @@ export const songs: Song[] = [
     "album": "In da Club",
     "previewUrl": "https://mxtape.celox.io/audio/song_386.m4a",
     "genre": "Hip-Hop",
-    "party": true
+    "party": true,
+    "fact": "Den Beat bekam zuerst die Gruppe D12, die ihn weitergab – 50 Cent schrieb den Text dann in rund einer Stunde.",
+    "factEn": "The beat was first offered to the group D12, who passed – 50 Cent then wrote the lyrics in about an hour."
   },
   {
     "id": "song_387",
@@ -4512,7 +4734,9 @@ export const songs: Song[] = [
     "year": 2023,
     "album": "THINK LATER",
     "previewUrl": "https://mxtape.celox.io/audio/song_388.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "fact": "Im Musikvideo fährt Tate McRae mit einer Eismaschine durch eine leere Hockeyhalle.",
+    "factEn": "In the music video Tate McRae drives an ice resurfacer around an empty hockey arena."
   },
   {
     "id": "song_389",
@@ -4521,7 +4745,9 @@ export const songs: Song[] = [
     "year": 1957,
     "album": "Paul Anka",
     "previewUrl": "https://mxtape.celox.io/audio/song_389.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "fact": "Paul Anka schrieb den Song über Diana Ayoub, ein Mädchen aus seiner Kirchengemeinde, in das er verknallt war.",
+    "factEn": "Paul Anka wrote it about Diana Ayoub, a girl from his church he had a crush on."
   },
   {
     "id": "song_390",
@@ -4530,7 +4756,9 @@ export const songs: Song[] = [
     "year": 1964,
     "album": "You've Lost That Lovin' Feelin' / There's a Woman",
     "previewUrl": "https://mxtape.celox.io/audio/song_390.m4a",
-    "genre": "Soul"
+    "genre": "Soul",
+    "fact": "Laut BMI war es im 20. Jahrhundert der meistgespielte Song im US-Radio und -Fernsehen.",
+    "factEn": "According to BMI it was the most-played song on American radio and TV in the 20th century."
   },
   {
     "id": "song_391",
@@ -4539,7 +4767,9 @@ export const songs: Song[] = [
     "year": 1972,
     "album": "Back to Front",
     "previewUrl": "https://mxtape.celox.io/audio/song_391.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "fact": "Weil Biz Markie den Song ungefragt sampelte, entschied ein Gericht: Sampeln ohne Erlaubnis kann Urheberrechtsverletzung sein.",
+    "factEn": "After Biz Markie sampled it without permission, a court ruled that unauthorized sampling can be copyright infringement."
   },
   {
     "id": "song_392",
@@ -4548,7 +4778,9 @@ export const songs: Song[] = [
     "year": 1985,
     "album": "Songs from the Big Chair",
     "previewUrl": "https://mxtape.celox.io/audio/song_392.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "fact": "Die Refrainzeile lautete ursprünglich „Everybody wants to go to war“.",
+    "factEn": "The chorus line was originally written as \"Everybody wants to go to war\"."
   },
   {
     "id": "song_393",
@@ -4558,7 +4790,9 @@ export const songs: Song[] = [
     "album": "Elephunk",
     "previewUrl": "https://mxtape.celox.io/audio/song_393.m4a",
     "genre": "Hip-Hop",
-    "startMs": 8500
+    "startMs": 8500,
+    "fact": "Justin Timberlake singt auf dem Song mit – offiziell genannt wird er auf der Single aber nicht.",
+    "factEn": "Justin Timberlake features on vocals, but he isn't officially credited on the single."
   },
   {
     "id": "song_394",
@@ -4567,7 +4801,9 @@ export const songs: Song[] = [
     "year": 2015,
     "previewUrl": "https://mxtape.celox.io/audio/song_394.m4a",
     "genre": "Electronic",
-    "album": "Sugar"
+    "album": "Sugar",
+    "fact": "Der Song greift Baby Bashs Hit „Suga Suga“ auf.",
+    "factEn": "The song interpolates Baby Bash's hit \"Suga Suga\"."
   },
   {
     "id": "song_395",
@@ -4576,7 +4812,9 @@ export const songs: Song[] = [
     "year": 2024,
     "album": "Short n’ Sweet",
     "previewUrl": "https://mxtape.celox.io/audio/song_395.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "fact": "Im Video spielt Barry Keoghan, damals Sabrina Carpenters Freund, einen Häftling – es setzt das „Espresso“-Video fort.",
+    "factEn": "In the video Barry Keoghan, then Sabrina Carpenter's boyfriend, plays a convict – it continues the \"Espresso\" video."
   },
   {
     "id": "song_396",
@@ -4585,7 +4823,9 @@ export const songs: Song[] = [
     "year": 1956,
     "album": "This Is Fats Domino!",
     "previewUrl": "https://mxtape.celox.io/audio/song_396.m4a",
-    "genre": "Rock"
+    "genre": "Rock",
+    "fact": "Zuerst nahm Sammy Kaye den Song auf – Fats Domino ließ sich von einer Aufnahme Louis Armstrongs inspirieren.",
+    "factEn": "Sammy Kaye recorded it first – Fats Domino was inspired by a Louis Armstrong recording."
   },
   {
     "id": "song_397",
@@ -4594,7 +4834,9 @@ export const songs: Song[] = [
     "year": 1964,
     "album": "My Girl / (Talking ’Bout) Nobody but My Baby",
     "previewUrl": "https://mxtape.celox.io/audio/song_397.m4a",
-    "genre": "Soul"
+    "genre": "Soul",
+    "fact": "Die berühmte Basslinie am Anfang stammt von James Jamerson – laut Smokey Robinson jubelt das Publikum schon bei ihr.",
+    "factEn": "The famous opening bass line came from James Jamerson – Smokey Robinson says audiences cheer as soon as they hear it."
   },
   {
     "id": "song_398",
@@ -4603,7 +4845,9 @@ export const songs: Song[] = [
     "year": 1972,
     "album": "Walk on the Wild Side",
     "previewUrl": "https://mxtape.celox.io/audio/song_398.m4a",
-    "genre": "Rock"
+    "genre": "Rock",
+    "fact": "Bassist Herbie Flowers spielte Kontrabass und E-Bass – und bekam dafür zweimal die Gage von 17 Pfund.",
+    "factEn": "Bassist Herbie Flowers played both double bass and bass guitar – and was paid two session fees of £17."
   },
   {
     "id": "song_399",
@@ -4613,7 +4857,9 @@ export const songs: Song[] = [
     "album": "Don’t You (Forget About Me)",
     "previewUrl": "https://mxtape.celox.io/audio/song_399.m4a",
     "genre": "Rock",
-    "startMs": 2000
+    "startMs": 2000,
+    "fact": "Simple Minds lehnten den Song zuerst ab – auch Bryan Ferry und Billy Idol sagten nein.",
+    "factEn": "Simple Minds turned the song down at first – Bryan Ferry and Billy Idol declined too."
   },
   {
     "id": "song_400",
@@ -4623,7 +4869,9 @@ export const songs: Song[] = [
     "album": "Blur",
     "previewUrl": "https://mxtape.celox.io/audio/song_400.m4a",
     "genre": "Rock",
-    "startMs": 14500
+    "startMs": 14500,
+    "fact": "Laut Graham Coxon war der Song als Witz auf Kosten der Plattenfirma gedacht – die fand ihn zu seiner Überraschung gut.",
+    "factEn": "According to Graham Coxon, the song was meant as a joke on the record company – which, to his surprise, liked it."
   },
   {
     "id": "song_401",
@@ -4632,7 +4880,9 @@ export const songs: Song[] = [
     "year": 2004,
     "previewUrl": "https://mxtape.celox.io/audio/song_401.m4a",
     "genre": "Rock",
-    "album": "Franz Ferdinand"
+    "album": "Franz Ferdinand",
+    "fact": "Die Idee zum Song kam beim Anschauen eines Duells zweier Scharfschützen im Film „Enemy at the Gates“.",
+    "factEn": "The idea for the song came from watching a snipers' duel in the film \"Enemy at the Gates\"."
   },
   {
     "id": "song_402",
@@ -4642,7 +4892,9 @@ export const songs: Song[] = [
     "album": "Blinding Lights",
     "previewUrl": "https://mxtape.celox.io/audio/song_402.m4a",
     "genre": "Pop",
-    "party": true
+    "party": true,
+    "fact": "Zum ersten Mal zu hören war der Song in einem Mercedes-Werbespot im deutschen Fernsehen.",
+    "factEn": "The song was first heard in a Mercedes-Benz commercial on German TV."
   },
   {
     "id": "song_403",
@@ -4652,7 +4904,9 @@ export const songs: Song[] = [
     "album": "Where I’ve Been, isn’t Where I’m Going",
     "previewUrl": "https://mxtape.celox.io/audio/song_403.m4a",
     "genre": "Country",
-    "party": true
+    "party": true,
+    "fact": "Der Song greift J-Kwons Rap-Hit „Tipsy“ auf.",
+    "factEn": "The song interpolates J-Kwon's rap hit \"Tipsy\"."
   },
   {
     "id": "song_404",
@@ -4661,7 +4915,9 @@ export const songs: Song[] = [
     "year": 1956,
     "previewUrl": "https://mxtape.celox.io/audio/song_404.m4a",
     "genre": "Rock",
-    "album": "Berry Is On Top"
+    "album": "Berry Is On Top",
+    "fact": "Chuck Berry schrieb ihn, weil seine Schwester Lucy das Familienklavier ständig für klassische Musik belegte.",
+    "factEn": "Chuck Berry wrote it because his sister Lucy kept using the family piano to play classical music."
   },
   {
     "id": "song_405",
@@ -4670,7 +4926,9 @@ export const songs: Song[] = [
     "year": 1966,
     "previewUrl": "https://mxtape.celox.io/audio/song_405.m4a",
     "genre": "Pop",
-    "album": "Strangers in the Night"
+    "album": "Strangers in the Night",
+    "fact": "Der Song brachte Frank Sinatra den Grammy für die Aufnahme des Jahres ein.",
+    "factEn": "The song won Frank Sinatra the Grammy for Record of the Year."
   },
   {
     "id": "song_406",
@@ -4680,7 +4938,9 @@ export const songs: Song[] = [
     "previewUrl": "https://mxtape.celox.io/audio/song_406.m4a",
     "genre": "Pop",
     "album": "Honky Château",
-    "startMs": 2500
+    "startMs": 2500,
+    "fact": "Inspiriert wurde der Song von Ray Bradburys Kurzgeschichte „The Rocket Man“ über einen Astronauten fern seiner Familie.",
+    "factEn": "The song was inspired by Ray Bradbury's short story \"The Rocket Man\", about an astronaut whose job keeps him away from his family."
   },
   {
     "id": "song_407",
@@ -4690,7 +4950,9 @@ export const songs: Song[] = [
     "album": "Live Is Life",
     "previewUrl": "https://mxtape.celox.io/audio/song_407.m4a",
     "genre": "Pop",
-    "party": true
+    "party": true,
+    "fact": "Diego Maradona jonglierte beim Aufwärmen den Ball im Takt des Songs, der gerade aus den Stadionlautsprechern lief.",
+    "factEn": "Diego Maradona juggled the ball in time to the song during a warm-up, as it happened to play over the stadium speakers."
   },
   {
     "id": "song_408",
@@ -4700,7 +4962,9 @@ export const songs: Song[] = [
     "album": "Urban Hymns",
     "previewUrl": "https://mxtape.celox.io/audio/song_408.m4a",
     "genre": "Rock",
-    "startMs": 29000
+    "startMs": 29000,
+    "fact": "Wegen eines Samples aus einer Orchesterfassung von „The Last Time“ gingen alle Tantiemen an Mick Jagger und Keith Richards.",
+    "factEn": "Because of a sample from an orchestral version of \"The Last Time\", all royalties went to Mick Jagger and Keith Richards."
   },
   {
     "id": "song_409",
@@ -4711,7 +4975,9 @@ export const songs: Song[] = [
     "genre": "R&B",
     "album": "Confessions",
     "startMs": 1500,
-    "party": true
+    "party": true,
+    "fact": "Die Plattenfirma fand, dem Album fehle die erste Single – erst dann holte Usher Lil Jon ins Studio.",
+    "factEn": "The label felt the album lacked a lead single – only then did Usher bring in Lil Jon."
   },
   {
     "id": "song_410",
@@ -4721,7 +4987,9 @@ export const songs: Song[] = [
     "previewUrl": "https://mxtape.celox.io/audio/song_410.m4a",
     "genre": "Pop",
     "album": "Divinely Uninspired To A Hellish Extent",
-    "startMs": 2000
+    "startMs": 2000,
+    "fact": "Im Musikvideo spielt Schauspieler Peter Capaldi mit – ein entfernter Verwandter des Sängers.",
+    "factEn": "The music video features actor Peter Capaldi – a distant relative of the singer."
   },
   {
     "id": "song_411",
@@ -4730,7 +4998,9 @@ export const songs: Song[] = [
     "year": 2024,
     "previewUrl": "https://mxtape.celox.io/audio/song_411.m4a",
     "genre": "Pop",
-    "album": "The Secret of Us"
+    "album": "The Secret of Us",
+    "fact": "Bei den letzten Konzerten von Taylor Swifts Eras Tour war Gracie Abrams Vorband – mit diesem Song im Programm.",
+    "factEn": "Gracie Abrams was the opening act for the final dates of Taylor Swift's Eras Tour – with this song in her set."
   },
   {
     "id": "song_412",
@@ -4739,7 +5009,9 @@ export const songs: Song[] = [
     "year": 1956,
     "album": "Blue Suede Shoes / Dixie Fried",
     "previewUrl": "https://mxtape.celox.io/audio/song_412.m4a",
-    "genre": "Rock"
+    "genre": "Rock",
+    "fact": "Produzent Sam Phillips ließ Carl Perkins „go, boy, go“ in „go, cat, go“ ändern.",
+    "factEn": "Producer Sam Phillips got Carl Perkins to change \"go, boy, go\" to \"go, cat, go\"."
   },
   {
     "id": "song_413",
@@ -4748,7 +5020,9 @@ export const songs: Song[] = [
     "year": 1966,
     "album": "Boots",
     "previewUrl": "https://mxtape.celox.io/audio/song_413.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "fact": "Inspiriert wurde der Song von einem Satz, den Frank Sinatra im Western „4 for Texas“ sagt.",
+    "factEn": "The song was inspired by a line Frank Sinatra speaks in the western \"4 for Texas\"."
   },
   {
     "id": "song_414",
@@ -4758,7 +5032,9 @@ export const songs: Song[] = [
     "previewUrl": "https://mxtape.celox.io/audio/song_414.m4a",
     "genre": "Rock",
     "album": "The Dark Side of the Moon",
-    "startMs": 12500
+    "startMs": 12500,
+    "fact": "Roger Waters schnitt Münzklimpern, Registrierkasse und reißendes Papier zu der Geräuschschleife zusammen.",
+    "factEn": "Roger Waters spliced clinking coins, a cash register and tearing paper together into the sound-effects loop."
   },
   {
     "id": "song_415",
@@ -4768,7 +5044,9 @@ export const songs: Song[] = [
     "album": "The Final Countdown",
     "previewUrl": "https://mxtape.celox.io/audio/song_415.m4a",
     "genre": "Rock",
-    "party": true
+    "party": true,
+    "fact": "Der Song war eigentlich als Konzert-Opener gedacht – dass er ein Hit wird, glaubte die Band nie.",
+    "factEn": "The song was written as a concert opener – the band never thought it would be a hit."
   },
   {
     "id": "song_416",
@@ -4777,7 +5055,9 @@ export const songs: Song[] = [
     "year": 2004,
     "previewUrl": "https://mxtape.celox.io/audio/song_416.m4a",
     "genre": "Rock",
-    "album": "American Idiot"
+    "album": "American Idiot",
+    "fact": "Benannt ist der Song nach einem Gemälde von Gottfried Helnwein mit James Dean, Bogart, Marilyn Monroe und Elvis in einem Diner.",
+    "factEn": "The song is named after a Gottfried Helnwein painting of James Dean, Bogart, Marilyn Monroe and Elvis in a diner."
   },
   {
     "id": "song_417",
@@ -4788,7 +5068,9 @@ export const songs: Song[] = [
     "genre": "Pop",
     "album": "The Kids Are Coming",
     "startMs": 8500,
-    "party": true
+    "party": true,
+    "fact": "Tones and I schrieb den Song über ihre Zeit als Straßenmusikerin und den Druck, Passanten ständig zu unterhalten.",
+    "factEn": "Tones and I wrote the song about her time busking and the pressure to keep passers-by entertained."
   },
   {
     "id": "song_418",
@@ -4799,7 +5081,9 @@ export const songs: Song[] = [
     "previewUrl": "https://mxtape.celox.io/audio/song_418.m4a",
     "genre": "Hip-Hop",
     "startMs": 8000,
-    "german": true
+    "german": true,
+    "fact": "Der Song überholte Rammsteins „Du hast“ als meistgestreamten deutschen Song auf Spotify.",
+    "factEn": "The song overtook Rammstein's \"Du hast\" as the most-streamed German song on Spotify."
   },
   {
     "id": "song_419",
@@ -4808,7 +5092,9 @@ export const songs: Song[] = [
     "year": 1953,
     "album": "That’s Amore / You’re the Right One",
     "previewUrl": "https://mxtape.celox.io/audio/song_419.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "fact": "Laut Jerry Lewis bezahlte er die Songschreiber heimlich aus eigener Tasche – in der Hoffnung auf einen Hit für Dean Martin.",
+    "factEn": "According to Jerry Lewis, he secretly paid the songwriters himself, hoping one of the songs would be a hit for Dean Martin."
   },
   {
     "id": "song_420",
@@ -4817,7 +5103,9 @@ export const songs: Song[] = [
     "year": 1965,
     "previewUrl": "https://mxtape.celox.io/audio/song_420.m4a",
     "genre": "Soul",
-    "album": "I Got You (I Feel Good)"
+    "album": "I Got You (I Feel Good)",
+    "fact": "Im Leipziger Zentralstadion läuft der Song bei jedem Tor von RB Leipzig.",
+    "factEn": "The song plays at Leipzig's Zentralstadion whenever RB Leipzig scores a goal."
   },
   {
     "id": "song_421",
@@ -4827,7 +5115,9 @@ export const songs: Song[] = [
     "album": "Let’s Get It On",
     "previewUrl": "https://mxtape.celox.io/audio/song_421.m4a",
     "genre": "Soul",
-    "startMs": 1500
+    "startMs": 1500,
+    "fact": "Ursprünglich hatte Co-Autor Ed Townsend den Song mit einem religiösen Thema geschrieben.",
+    "factEn": "Co-writer Ed Townsend originally wrote the song with a religious theme."
   },
   {
     "id": "song_422",
@@ -4838,7 +5128,9 @@ export const songs: Song[] = [
     "genre": "Rock",
     "album": "Slippery When Wet",
     "startMs": 13000,
-    "party": true
+    "party": true,
+    "fact": "Jon Bon Jovi mochte die erste Aufnahme nicht – Richie Sambora überzeugte ihn, und der Song bekam seine Talkbox.",
+    "factEn": "Jon Bon Jovi didn't like the first recording – Richie Sambora convinced him, and the song got its talk box."
   },
   {
     "id": "song_423",
@@ -4848,7 +5140,9 @@ export const songs: Song[] = [
     "previewUrl": "https://mxtape.celox.io/audio/song_423.m4a",
     "genre": "Hip-Hop",
     "album": "Men In Black - The Album",
-    "startMs": 6500
+    "startMs": 6500,
+    "fact": "Der Song basiert auf einem Sample von Patrice Rushens „Forget Me Nots“.",
+    "factEn": "The song is built on a sample of Patrice Rushen's \"Forget Me Nots\"."
   },
   {
     "id": "song_424",
@@ -4858,7 +5152,9 @@ export const songs: Song[] = [
     "album": "Breakaway",
     "previewUrl": "https://mxtape.celox.io/audio/song_424.m4a",
     "genre": "Pop",
-    "startMs": 3500
+    "startMs": 3500,
+    "fact": "Eigentlich war der Song für Pink gedacht, die ablehnte – Hilary Duff kam an die hohen Töne nicht heran.",
+    "factEn": "It was written with Pink in mind, but she turned it down – Hilary Duff couldn't reach the high notes."
   },
   {
     "id": "song_425",
@@ -4869,7 +5165,9 @@ export const songs: Song[] = [
     "genre": "Pop",
     "album": "Dua Lipa",
     "startMs": 6000,
-    "party": true
+    "party": true,
+    "fact": "Entstanden ist der Song bei einem Songwriting-Camp für Little Mix – mehrere Acts lehnten ihn ab, bevor Dua Lipa ihn bekam.",
+    "factEn": "It was written at a songwriting camp for Little Mix – several artists rejected it before it was offered to Dua Lipa."
   },
   {
     "id": "song_426",
@@ -4879,7 +5177,9 @@ export const songs: Song[] = [
     "album": "Wildberry Lillet",
     "previewUrl": "https://mxtape.celox.io/audio/song_426.m4a",
     "genre": "Pop",
-    "german": true
+    "german": true,
+    "fact": "Bodo Wartke sang live eine konsumkritische Version – mit „Ich bin bei der FDP“ statt des Longdrinks im Refrain.",
+    "factEn": "Bodo Wartke performed a consumer-critical version live – ending the chorus with \"Ich bin bei der FDP\" instead of the drink."
   },
   {
     "id": "song_427",
@@ -4889,7 +5189,9 @@ export const songs: Song[] = [
     "album": "That's All",
     "previewUrl": "https://mxtape.celox.io/audio/song_427.m4a",
     "genre": "Pop",
-    "startMs": 6500
+    "startMs": 6500,
+    "fact": "Das Original ist die „Moritat von Mackie Messer“ aus der „Dreigroschenoper“ von Kurt Weill und Bertolt Brecht.",
+    "factEn": "The original is \"Die Moritat von Mackie Messer\" from Kurt Weill and Bertolt Brecht's \"The Threepenny Opera\"."
   },
   {
     "id": "song_428",
@@ -4898,7 +5200,9 @@ export const songs: Song[] = [
     "year": 1965,
     "album": "In the Midnight Hour",
     "previewUrl": "https://mxtape.celox.io/audio/song_428.m4a",
-    "genre": "Soul"
+    "genre": "Soul",
+    "fact": "Jerry Wexler tanzte im Studio den „Jerk“ vor – daraus entstand der verschobene Backbeat des Songs.",
+    "factEn": "Jerry Wexler demonstrated a dance called the Jerk in the studio – that gave the song its delayed backbeat."
   },
   {
     "id": "song_429",
@@ -4907,7 +5211,9 @@ export const songs: Song[] = [
     "year": 1973,
     "album": "Can the Can",
     "previewUrl": "https://mxtape.celox.io/audio/song_429.m4a",
-    "genre": "Rock"
+    "genre": "Rock",
+    "fact": "„Can the Can“ meint laut Nicky Chinn etwas Unmögliches – eine Dose passt nicht in eine gleich große.",
+    "factEn": "According to Nicky Chinn, \"can the can\" means something impossible – one can won't fit inside another of the same size."
   },
   {
     "id": "song_430",
@@ -4917,7 +5223,9 @@ export const songs: Song[] = [
     "previewUrl": "https://mxtape.celox.io/audio/song_430.m4a",
     "genre": "Pop",
     "album": "True Confessions",
-    "party": true
+    "party": true,
+    "fact": "Das Original stammt von Shocking Blue – Sängerin Mariska Veres sang wegen eines Tippfehlers „godness“ statt „goddess“.",
+    "factEn": "The original is by Shocking Blue – singer Mariska Veres sang \"godness\" instead of \"goddess\" because of a typo."
   },
   {
     "id": "song_431",
@@ -4927,7 +5235,9 @@ export const songs: Song[] = [
     "previewUrl": "https://mxtape.celox.io/audio/song_431.m4a",
     "genre": "Pop",
     "album": "Backstreet Boys",
-    "party": true
+    "party": true,
+    "fact": "Regisseur Joseph Kahn drehte das Musikvideo – vorher wusste er nicht, wer die Backstreet Boys sind.",
+    "factEn": "Director Joseph Kahn shot the music video – at first he didn't know who the Backstreet Boys were."
   },
   {
     "id": "song_432",
@@ -4936,7 +5246,9 @@ export const songs: Song[] = [
     "year": 2004,
     "album": "Back to Bedlam",
     "previewUrl": "https://mxtape.celox.io/audio/song_432.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "fact": "James Blunt sah in der Londoner U-Bahn seine Ex-Freundin mit ihrem neuen Freund – den Text schrieb er danach in zwei Minuten.",
+    "factEn": "James Blunt saw his ex-girlfriend with her new man on the London Underground – he then wrote the lyrics in two minutes."
   },
   {
     "id": "song_433",
@@ -4945,7 +5257,9 @@ export const songs: Song[] = [
     "year": 2015,
     "album": "Purpose",
     "previewUrl": "https://mxtape.celox.io/audio/song_433.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "fact": "Justin Bieber sagte später, die Entschuldigung im Song gelte Selena Gomez.",
+    "factEn": "Justin Bieber later said the lover he apologizes to in the song was Selena Gomez."
   },
   {
     "id": "song_434",
@@ -4954,7 +5268,9 @@ export const songs: Song[] = [
     "year": 2023,
     "album": "Strangers",
     "previewUrl": "https://mxtape.celox.io/audio/song_434.m4a",
-    "genre": "Electronic"
+    "genre": "Electronic",
+    "fact": "Ein TikTok-Teaser von Kenya Grace ging viral und kam auf über 35 Millionen Aufrufe.",
+    "factEn": "A TikTok teaser by Kenya Grace went viral and got over 35 million views."
   },
   {
     "id": "song_435",
@@ -4963,7 +5279,9 @@ export const songs: Song[] = [
     "year": 1959,
     "previewUrl": "https://mxtape.celox.io/audio/song_435.m4a",
     "genre": "Soul",
-    "album": "What'd I Say"
+    "album": "What'd I Say",
+    "fact": "Ray Charles improvisierte den Song bei einem Konzert, als die Setlist durch war, aber noch Zeit übrig blieb.",
+    "factEn": "Ray Charles improvised the song at a show when the band had played its whole set list and still had time left."
   },
   {
     "id": "song_436",
@@ -4972,7 +5290,9 @@ export const songs: Song[] = [
     "year": 1965,
     "previewUrl": "https://mxtape.celox.io/audio/song_436.m4a",
     "genre": "Rock",
-    "album": "Mr. Tambourine Man"
+    "album": "Mr. Tambourine Man",
+    "fact": "Bob Dylans Original hat vier Strophen – The Byrds nahmen nur die zweite davon auf.",
+    "factEn": "Bob Dylan's original has four verses – The Byrds only used the second one."
   },
   {
     "id": "song_437",
@@ -4982,7 +5302,9 @@ export const songs: Song[] = [
     "album": "Kung Fu Fighting",
     "previewUrl": "https://mxtape.celox.io/audio/song_437.m4a",
     "genre": "Pop",
-    "party": true
+    "party": true,
+    "fact": "Der Song war nur als B-Seite gedacht und wurde in den letzten zehn Minuten Studiozeit in zwei Takes aufgenommen.",
+    "factEn": "It was meant as a B-side and was recorded in two takes in the last ten minutes of studio time."
   },
   {
     "id": "song_438",
@@ -4991,7 +5313,9 @@ export const songs: Song[] = [
     "year": 1985,
     "album": "We Built This City",
     "previewUrl": "https://mxtape.celox.io/audio/song_438.m4a",
-    "genre": "Rock"
+    "genre": "Rock",
+    "fact": "Bernie Taupin und Martin Page beklagten darin ursprünglich das Sterben der Live-Clubs in Los Angeles.",
+    "factEn": "Bernie Taupin and Martin Page originally wrote it as a lament about the closing of live music clubs in Los Angeles."
   },
   {
     "id": "song_439",
@@ -5001,7 +5325,9 @@ export const songs: Song[] = [
     "previewUrl": "https://mxtape.celox.io/audio/song_439.m4a",
     "genre": "Pop",
     "album": "Let's Talk About Love",
-    "startMs": 10500
+    "startMs": 10500,
+    "fact": "James Cameron wollte zunächst keinen Popsong in „Titanic“ – erst James Horners Demo überzeugte ihn.",
+    "factEn": "James Cameron initially didn't want a pop song in \"Titanic\" – James Horner's demo changed his mind."
   },
   {
     "id": "song_440",
@@ -5012,7 +5338,9 @@ export const songs: Song[] = [
     "previewUrl": "https://mxtape.celox.io/audio/song_440.m4a",
     "genre": "Pop",
     "startMs": 14000,
-    "party": true
+    "party": true,
+    "fact": "Für das ABBA-Sample bat Madonna Benny Andersson und Björn Ulvaeus persönlich um Erlaubnis.",
+    "factEn": "Madonna personally asked Benny Andersson and Björn Ulvaeus for permission to use the ABBA sample."
   },
   {
     "id": "song_441",
@@ -5022,7 +5350,9 @@ export const songs: Song[] = [
     "album": "Firestone",
     "previewUrl": "https://mxtape.celox.io/audio/song_441.m4a",
     "genre": "Electronic",
-    "startMs": 8000
+    "startMs": 8000,
+    "fact": "Birdy sang eine Coverversion des Songs in der „Live Lounge“ von BBC Radio 1.",
+    "factEn": "Birdy performed a cover of the song in BBC Radio 1's Live Lounge."
   },
   {
     "id": "song_442",
@@ -5031,7 +5361,9 @@ export const songs: Song[] = [
     "year": 2025,
     "album": "MAYHEM",
     "previewUrl": "https://mxtape.celox.io/audio/song_442.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "fact": "Der Song verwendet Elemente von „Spellbound“ – deshalb stehen auch Siouxsie and the Banshees in den Credits.",
+    "factEn": "It uses elements of \"Spellbound\" – so members of Siouxsie and the Banshees share the songwriting credit."
   },
   {
     "id": "song_443",
@@ -5040,7 +5372,9 @@ export const songs: Song[] = [
     "year": 1955,
     "album": "Only You (and You Alone) / You Made Me Cry",
     "previewUrl": "https://mxtape.celox.io/audio/song_443.m4a",
-    "genre": "Soul"
+    "genre": "Soul",
+    "fact": "Bei einer Probe im Auto ruckelte der Wagen, Tony Williams' Stimme kippte – und genau diesen Effekt behielt die Band.",
+    "factEn": "During a rehearsal in a car the car jerked and Tony Williams' voice broke – and the band kept that effect."
   },
   {
     "id": "song_444",
@@ -5050,7 +5384,9 @@ export const songs: Song[] = [
     "previewUrl": "https://mxtape.celox.io/audio/song_444.m4a",
     "genre": "Soul",
     "album": "Soul Men",
-    "startMs": 1500
+    "startMs": 1500,
+    "fact": "Mit „Play it, Steve“ ist Gitarrist Steve Cropper von Booker T. & the M.G.'s gemeint.",
+    "factEn": "\"Play it, Steve\" refers to guitarist Steve Cropper of Booker T. & the M.G.'s."
   },
   {
     "id": "song_445",
@@ -5060,7 +5396,9 @@ export const songs: Song[] = [
     "album": "Waterloo",
     "previewUrl": "https://mxtape.celox.io/audio/song_445.m4a",
     "genre": "Pop",
-    "party": true
+    "party": true,
+    "fact": "ABBA wählten den Song statt „Hasta Mañana“, weil hier Agnetha und Anni-Frid gleichermaßen singen.",
+    "factEn": "ABBA picked it over \"Hasta Mañana\" because it gave equal weight to both Agnetha and Anni-Frid."
   },
   {
     "id": "song_446",
@@ -5070,7 +5408,9 @@ export const songs: Song[] = [
     "album": "Faster Than the Speed of Night",
     "previewUrl": "https://mxtape.celox.io/audio/song_446.m4a",
     "genre": "Pop",
-    "startMs": 18000
+    "startMs": 18000,
+    "fact": "Jim Steinman schrieb den Song eigentlich als Vampir-Liebeslied – Arbeitstitel: „Vampires in Love“.",
+    "factEn": "Jim Steinman actually wrote it as a vampire love song – its original title was \"Vampires in Love\"."
   },
   {
     "id": "song_447",
@@ -5081,7 +5421,9 @@ export const songs: Song[] = [
     "previewUrl": "https://mxtape.celox.io/audio/song_447.m4a",
     "genre": "Pop",
     "startMs": 15000,
-    "party": true
+    "party": true,
+    "fact": "Die verfremdete Stimme entstand mit der Software Auto-Tune – der Effekt wurde so oft kopiert, dass man ihn „Cher-Effekt“ nennt.",
+    "factEn": "The distorted vocals were made with the Auto-Tune software – the effect was copied so widely that it became known as the \"Cher effect\"."
   },
   {
     "id": "song_448",
@@ -5090,7 +5432,9 @@ export const songs: Song[] = [
     "year": 2005,
     "album": "Demo",
     "previewUrl": "https://mxtape.celox.io/audio/song_448.m4a",
-    "genre": "Rock"
+    "genre": "Rock",
+    "fact": "Das Mädchen auf dem Cover trug beim Shooting im Supermarkt eine falsche Uniform – Kunden hielten sie für eine Angestellte.",
+    "factEn": "The girl on the cover wore a fake uniform for the supermarket shoot – customers mistook her for a store worker."
   },
   {
     "id": "song_449",
@@ -5100,7 +5444,9 @@ export const songs: Song[] = [
     "album": "Rather Be",
     "previewUrl": "https://mxtape.celox.io/audio/song_449.m4a",
     "genre": "Electronic",
-    "startMs": 9000
+    "startMs": 9000,
+    "fact": "Das in Tokio gedrehte Musikvideo wurde auf YouTube zum viralen Hit.",
+    "factEn": "The music video, filmed in Tokyo, became a viral hit on YouTube."
   },
   {
     "id": "song_450",
@@ -5110,7 +5456,9 @@ export const songs: Song[] = [
     "album": "You’ll Be Alright, Kid (Chapter 1)",
     "previewUrl": "https://mxtape.celox.io/audio/song_450.m4a",
     "genre": "Pop",
-    "startMs": 7500
+    "startMs": 7500,
+    "fact": "Mit 16 Wochen an der Spitze der US-Pop-Radiocharts brach der Song den Rekord von Ace of Bases „The Sign“.",
+    "factEn": "With 16 weeks at number one on the US Pop Airplay chart, the song broke the record held by Ace of Base's \"The Sign\"."
   },
   {
     "id": "song_451",
@@ -5119,7 +5467,9 @@ export const songs: Song[] = [
     "year": 1956,
     "previewUrl": "https://mxtape.celox.io/audio/song_451.m4a",
     "genre": "Pop",
-    "startMs": 1500
+    "startMs": 1500,
+    "fact": "Doris Day sang ihn im Hitchcock-Film „The Man Who Knew Too Much“ als Signal für ihren entführten Filmsohn.",
+    "factEn": "Doris Day sang it in the Hitchcock film \"The Man Who Knew Too Much\" as a cue to her kidnapped onscreen son."
   },
   {
     "id": "song_452",
@@ -5138,7 +5488,9 @@ export const songs: Song[] = [
     "album": "Sheer Heart Attack",
     "previewUrl": "https://mxtape.celox.io/audio/song_453.m4a",
     "genre": "Rock",
-    "startMs": 6000
+    "startMs": 6000,
+    "fact": "Brian May lag sehr krank in seinem Zimmer, als er Freddie Mercury den Song zum ersten Mal spielen hörte.",
+    "factEn": "Brian May was lying in his room, feeling very sick, when he first heard Freddie Mercury play the song."
   },
   {
     "id": "song_454",
@@ -5148,7 +5500,9 @@ export const songs: Song[] = [
     "previewUrl": "https://mxtape.celox.io/audio/song_454.m4a",
     "genre": "Pop",
     "album": "Too Rye Ay",
-    "party": true
+    "party": true,
+    "fact": "Eine echte Eileen gab es nie – Sänger Kevin Rowland gab später zu, dass sie eine erfundene Mischfigur war.",
+    "factEn": "There was never a real Eileen – singer Kevin Rowland later admitted she was a made-up composite."
   },
   {
     "id": "song_455",
@@ -5158,7 +5512,9 @@ export const songs: Song[] = [
     "album": "Ricky Martin",
     "previewUrl": "https://mxtape.celox.io/audio/song_455.m4a",
     "genre": "Pop",
-    "party": true
+    "party": true,
+    "fact": "Mit dem Song war Ricky Martin der erste Künstler aus Puerto Rico auf Platz eins.",
+    "factEn": "The song made Ricky Martin the first Puerto Rican artist ever to hit number one."
   },
   {
     "id": "song_456",
@@ -5167,7 +5523,9 @@ export const songs: Song[] = [
     "year": 2006,
     "previewUrl": "https://mxtape.celox.io/audio/song_456.m4a",
     "genre": "Pop",
-    "album": "FutureSex/LoveSounds"
+    "album": "FutureSex/LoveSounds",
+    "fact": "Justin Timberlake beschrieb den Song so, als würden David Bowie und David Byrne James Browns „Sex Machine“ covern.",
+    "factEn": "Justin Timberlake described the song as David Bowie and David Byrne \"covering\" James Brown's \"Sex Machine\"."
   },
   {
     "id": "song_457",
@@ -5176,7 +5534,9 @@ export const songs: Song[] = [
     "year": 2013,
     "album": "AM",
     "previewUrl": "https://mxtape.celox.io/audio/song_457.m4a",
-    "genre": "Rock"
+    "genre": "Rock",
+    "fact": "Es war der erste Song der Arctic Monkeys, der überhaupt in die US-Billboard-Hot-100 kam.",
+    "factEn": "It was the first Arctic Monkeys song ever to enter the US Billboard Hot 100."
   },
   {
     "id": "song_458",
@@ -5186,7 +5546,9 @@ export const songs: Song[] = [
     "previewUrl": "https://mxtape.celox.io/audio/song_458.m4a",
     "genre": "R&B",
     "album": "Escapism.",
-    "startMs": 10000
+    "startMs": 10000,
+    "fact": "RAYE schrieb den Song mitten im Winter in einer Blockhütte in Utah.",
+    "factEn": "RAYE wrote the song in a log cabin in Utah in the middle of winter."
   },
   {
     "id": "song_459",
@@ -5196,7 +5558,9 @@ export const songs: Song[] = [
     "previewUrl": "https://mxtape.celox.io/audio/song_459.m4a",
     "genre": "Pop",
     "album": "Calypso",
-    "startMs": 3000
+    "startMs": 3000,
+    "fact": "Ursprünglich sangen jamaikanische Hafenarbeiter das Lied, die nachts Bananen verluden und bei Tagesanbruch nach Hause wollten.",
+    "factEn": "It was originally sung by Jamaican dock workers who loaded bananas at night and wanted to go home when daylight came."
   },
   {
     "id": "song_460",
@@ -5206,7 +5570,9 @@ export const songs: Song[] = [
     "album": "Happy Together",
     "previewUrl": "https://mxtape.celox.io/audio/song_460.m4a",
     "genre": "Pop",
-    "startMs": 4000
+    "startMs": 4000,
+    "fact": "Die Melodie entstand aus dem ständigen Gitarrenstimmen von Allan „Jake“ Jacobs bei den Konzerten der Band The Magicians.",
+    "factEn": "The melody was based on guitarist Allan \"Jake\" Jacobs constantly tuning up during the Magicians' concerts."
   },
   {
     "id": "song_461",
@@ -5216,7 +5582,9 @@ export const songs: Song[] = [
     "album": "KC and the Sunshine Band",
     "previewUrl": "https://mxtape.celox.io/audio/song_461.m4a",
     "genre": "Soul",
-    "party": true
+    "party": true,
+    "fact": "Für Single und Radio wurde der Song entschärft – die Originalaufnahme war zu anzüglich fürs Radio.",
+    "factEn": "The song was toned down for the single and radio – the original recording was too risqué for airplay."
   },
   {
     "id": "song_462",
@@ -5225,7 +5593,9 @@ export const songs: Song[] = [
     "year": 1981,
     "album": "Non‐Stop Erotic Cabaret",
     "previewUrl": "https://mxtape.celox.io/audio/song_462.m4a",
-    "genre": "Electronic"
+    "genre": "Electronic",
+    "fact": "Das Original sang Gloria Jones – bei ihr floppte der Song als B-Seite einer Single.",
+    "factEn": "The original was sung by Gloria Jones – her version flopped as the B-side of a single."
   },
   {
     "id": "song_463",
@@ -5234,7 +5604,9 @@ export const songs: Song[] = [
     "year": 1999,
     "album": "Californication",
     "previewUrl": "https://mxtape.celox.io/audio/song_463.m4a",
-    "genre": "Rock"
+    "genre": "Rock",
+    "fact": "Im Musikvideo sitzt Gitarrist John Frusciante am Steuer – im echten Leben fährt er gar nicht Auto.",
+    "factEn": "In the music video guitarist John Frusciante is behind the wheel – in real life he doesn't drive."
   },
   {
     "id": "song_464",
@@ -5244,7 +5616,9 @@ export const songs: Song[] = [
     "previewUrl": "https://mxtape.celox.io/audio/song_464.m4a",
     "genre": "Pop",
     "album": "Life In Cartoon Motion",
-    "startMs": 4000
+    "startMs": 4000,
+    "fact": "Mika schrieb den Song, nachdem seine Plattenfirma ihm gesagt hatte, sie wolle sein Aussehen und seinen Sound an Craig David ausrichten.",
+    "factEn": "Mika wrote the song after his record company told him they wanted to model his look and sound on Craig David."
   },
   {
     "id": "song_465",
@@ -5253,7 +5627,9 @@ export const songs: Song[] = [
     "year": 2016,
     "album": "Human",
     "previewUrl": "https://mxtape.celox.io/audio/song_465.m4a",
-    "genre": "Soul"
+    "genre": "Soul",
+    "fact": "Der Song war die Titelmusik der Amazon-Serie „Tom Clancy’s Jack Ryan“.",
+    "factEn": "The song was the theme music of the Amazon series \"Tom Clancy's Jack Ryan\"."
   },
   {
     "id": "song_466",
@@ -5262,7 +5638,9 @@ export const songs: Song[] = [
     "year": 1958,
     "previewUrl": "https://mxtape.celox.io/audio/song_466.m4a",
     "genre": "Pop",
-    "album": "Things Are Swingin'"
+    "album": "Things Are Swingin'",
+    "fact": "Mitautor Otis Blackwell nutzte wegen eines Vertrags das Pseudonym „John Davenport“ – den Namen seines Stiefvaters.",
+    "factEn": "Co-writer Otis Blackwell used the pseudonym \"John Davenport\" because of a contract – it was his stepfather's name."
   },
   {
     "id": "song_467",
@@ -5271,7 +5649,9 @@ export const songs: Song[] = [
     "year": 1967,
     "album": "Surrealistic Pillow",
     "previewUrl": "https://mxtape.celox.io/audio/song_467.m4a",
-    "genre": "Rock"
+    "genre": "Rock",
+    "fact": "Grace Slick brachte den Song von ihrer alten Band The Great Society mit – geschrieben hatte ihn ihr Schwager Darby Slick.",
+    "factEn": "Grace Slick brought the song along from her old band, the Great Society – it was written by her brother-in-law Darby Slick."
   },
   {
     "id": "song_468",
@@ -5282,7 +5662,9 @@ export const songs: Song[] = [
     "genre": "Soul",
     "album": "Disco Baby",
     "startMs": 2000,
-    "party": true
+    "party": true,
+    "fact": "Van McCoy schrieb den Song, nachdem sein Partner im New Yorker Club „Adam's Apple“ Gäste einen Tanz namens „the Hustle“ tanzen sah.",
+    "factEn": "Van McCoy wrote the song after his partner watched people dance \"the Hustle\" at the New York nightclub \"Adam's Apple\"."
   },
   {
     "id": "song_469",
@@ -5291,7 +5673,9 @@ export const songs: Song[] = [
     "year": 1981,
     "previewUrl": "https://mxtape.celox.io/audio/song_469.m4a",
     "genre": "Electronic",
-    "album": "Speak & Spell"
+    "album": "Speak & Spell",
+    "fact": "Vince Clarke mochte keine Tanzmusik – bis ihn Spandau Ballets „To Cut a Long Story Short“ zu diesem Song inspirierte.",
+    "factEn": "Vince Clarke didn't like dance music – until Spandau Ballet's \"To Cut a Long Story Short\" inspired him to write this song."
   },
   {
     "id": "song_470",
@@ -5300,7 +5684,9 @@ export const songs: Song[] = [
     "year": 1995,
     "album": "Tragic Kingdom",
     "previewUrl": "https://mxtape.celox.io/audio/song_470.m4a",
-    "genre": "Rock"
+    "genre": "Rock",
+    "fact": "Ursprünglich ein Liebeslied – Gwen Stefani schrieb den Text nach der Trennung von Bassist Tony Kanal fast komplett um.",
+    "factEn": "Originally a love song – Gwen Stefani rewrote the lyrics almost completely after her breakup with bassist Tony Kanal."
   },
   {
     "id": "song_471",
@@ -5310,7 +5696,9 @@ export const songs: Song[] = [
     "album": "Bleeding Love",
     "previewUrl": "https://mxtape.celox.io/audio/song_471.m4a",
     "genre": "Pop",
-    "startMs": 4000
+    "startMs": 4000,
+    "fact": "Geschrieben und zuerst aufgenommen hat den Song der US-Sänger Jesse McCartney.",
+    "factEn": "The song was originally written and recorded by American singer Jesse McCartney."
   },
   {
     "id": "song_472",
@@ -5329,7 +5717,9 @@ export const songs: Song[] = [
     "year": 1958,
     "previewUrl": "https://mxtape.celox.io/audio/song_473.m4a",
     "genre": "Rock",
-    "album": "Tequila"
+    "album": "Tequila",
+    "fact": "Der Song war nur eine B-Seite – zum Nummer-eins-Hit wurde er erst, als ein DJ in Cleveland ihn spielte.",
+    "factEn": "The song was only a B-side – it became a number-one hit after a DJ in Cleveland played it."
   },
   {
     "id": "song_474",
@@ -5339,7 +5729,9 @@ export const songs: Song[] = [
     "album": "The Voice of Scott McKenzie",
     "previewUrl": "https://mxtape.celox.io/audio/song_474.m4a",
     "genre": "Pop",
-    "startMs": 2500
+    "startMs": 2500,
+    "fact": "John Phillips schrieb den Song in etwa 20 Minuten, um die Behörden von Monterey zu beruhigen, die fürchteten, Hippies würden ihre Stadt überrennen.",
+    "factEn": "John Phillips wrote the song in about 20 minutes to calm Monterey's authorities, who were nervous about hippies coming to their town."
   },
   {
     "id": "song_475",
@@ -5348,7 +5740,9 @@ export const songs: Song[] = [
     "year": 1976,
     "album": "Don’t Go Breaking My Heart",
     "previewUrl": "https://mxtape.celox.io/audio/song_475.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "fact": "Elton John und Bernie Taupin schrieben den Song unter den Pseudonymen „Ann Orson“ und „Carte Blanche“.",
+    "factEn": "Elton John and Bernie Taupin wrote the song under the pseudonyms \"Ann Orson\" and \"Carte Blanche\"."
   },
   {
     "id": "song_476",
@@ -5358,7 +5752,9 @@ export const songs: Song[] = [
     "album": "Blue Monday",
     "previewUrl": "https://mxtape.celox.io/audio/song_476.m4a",
     "genre": "Electronic",
-    "startMs": 2000
+    "startMs": 2000,
+    "fact": "Die Hülle der Maxi-Single sah aus wie eine Diskette und trug statt Schrift einen Code aus farbigen Blöcken.",
+    "factEn": "The 12-inch sleeve was designed to look like a floppy disk and carried a code of coloured blocks instead of words."
   },
   {
     "id": "song_477",
@@ -5368,7 +5764,9 @@ export const songs: Song[] = [
     "previewUrl": "https://mxtape.celox.io/audio/song_477.m4a",
     "genre": "Rock",
     "album": "Jagged Little Pill",
-    "startMs": 17500
+    "startMs": 17500,
+    "fact": "Wen der Song meint, hat Alanis Morissette nie verraten – und auch nie angedeutet, es zu tun.",
+    "factEn": "Alanis Morissette has never revealed who the song is about – and has never indicated she will."
   },
   {
     "id": "song_478",
@@ -5386,7 +5784,9 @@ export const songs: Song[] = [
     "artist": "Jackie Wilson",
     "year": 1957,
     "previewUrl": "https://mxtape.celox.io/audio/song_479.m4a",
-    "genre": "Soul"
+    "genre": "Soul",
+    "fact": "Mit dem Erfolg des Songs finanzierte Berry Gordy die Gründung von Motown Records.",
+    "factEn": "The song's success allowed Berry Gordy to fund the launch of Motown Records."
   },
   {
     "id": "song_480",
@@ -5396,7 +5796,9 @@ export const songs: Song[] = [
     "album": "The Letter / Neon Rainbow",
     "previewUrl": "https://mxtape.celox.io/audio/song_480.m4a",
     "genre": "Rock",
-    "startMs": 2500
+    "startMs": 2500,
+    "fact": "Die erste Zeile „Give me a ticket for an aeroplane“ schlug der Vater von Songschreiber Wayne Carson vor.",
+    "factEn": "The opening line \"Give me a ticket for an aeroplane\" was suggested by songwriter Wayne Carson's father."
   },
   {
     "id": "song_481",
@@ -5407,7 +5809,9 @@ export const songs: Song[] = [
     "previewUrl": "https://mxtape.celox.io/audio/song_481.m4a",
     "genre": "Soul",
     "startMs": 7000,
-    "party": true
+    "party": true,
+    "fact": "Ein Gast fragte die Band in einer Pause, ob sie „funky music“ spielen würde – Rob Parissi schrieb den Song daraufhin in rund fünf Minuten.",
+    "factEn": "A patron asked the band during a break if they were going to play some funky music – Rob Parissi then wrote the song in about five minutes."
   },
   {
     "id": "song_482",
@@ -5416,7 +5820,9 @@ export const songs: Song[] = [
     "year": 1982,
     "album": "Ordinary World",
     "previewUrl": "https://mxtape.celox.io/audio/song_482.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "fact": "Der Text wurde vom Märchen Rotkäppchen inspiriert.",
+    "factEn": "The lyrics were inspired by Little Red Riding Hood."
   },
   {
     "id": "song_483",
@@ -5425,7 +5831,9 @@ export const songs: Song[] = [
     "year": 1995,
     "album": "02nd October 1995, Blackpool Empress Ballroom",
     "previewUrl": "https://mxtape.celox.io/audio/song_483.m4a",
-    "genre": "Rock"
+    "genre": "Rock",
+    "fact": "Die Zeile „So Sally can wait“ entstand, weil Liam Gallagher sich bei Noels Improvisation verhörte.",
+    "factEn": "The line \"So Sally can wait\" came about when Liam Gallagher misheard Noel's improvised singing."
   },
   {
     "id": "song_484",
@@ -5435,7 +5843,9 @@ export const songs: Song[] = [
     "previewUrl": "https://mxtape.celox.io/audio/song_484.m4a",
     "genre": "Pop",
     "album": "One of the Boys",
-    "party": true
+    "party": true,
+    "fact": "Der Song war der 1000. Nummer-eins-Hit der Rock-Ära in den US-Billboard-Charts.",
+    "factEn": "The song became the 1,000th number-one song of the rock era on the Billboard Hot 100."
   },
   {
     "id": "song_485",
@@ -5444,7 +5854,9 @@ export const songs: Song[] = [
     "year": 1967,
     "album": "Sunshine of Your Love",
     "previewUrl": "https://mxtape.celox.io/audio/song_485.m4a",
-    "genre": "Rock"
+    "genre": "Rock",
+    "fact": "Laut Eric Clapton erfand Jack Bruce das markante Bassriff nach dem Besuch eines Konzerts von Jimi Hendrix.",
+    "factEn": "According to Eric Clapton, Jack Bruce came up with the distinctive bass riff after attending a Jimi Hendrix concert."
   },
   {
     "id": "song_486",
@@ -5453,7 +5865,9 @@ export const songs: Song[] = [
     "year": 1976,
     "previewUrl": "https://mxtape.celox.io/audio/song_486.m4a",
     "genre": "Rock",
-    "album": "Jailbreak"
+    "album": "Jailbreak",
+    "fact": "Den Hit machten zwei DJs in Louisville, die den Song pausenlos spielten – fürs Album war er anfangs gar nicht vorgesehen.",
+    "factEn": "Two DJs in Louisville made it a hit by playing it nonstop – the band hadn't even chosen it for the album at first."
   },
   {
     "id": "song_487",
@@ -5462,7 +5876,9 @@ export const songs: Song[] = [
     "year": 1982,
     "album": "Billy Idol",
     "previewUrl": "https://mxtape.celox.io/audio/song_487.m4a",
-    "genre": "Rock"
+    "genre": "Rock",
+    "fact": "Billy Idol ließ sich von der Hochzeit seiner schwangeren Schwester inspirieren – einer „Shotgun Wedding“.",
+    "factEn": "Billy Idol was inspired by his pregnant sister's wedding – a \"shotgun wedding\"."
   },
   {
     "id": "song_488",
@@ -5471,7 +5887,9 @@ export const songs: Song[] = [
     "year": 1996,
     "previewUrl": "https://mxtape.celox.io/audio/song_488.m4a",
     "genre": "Electronic",
-    "album": "The Fat of the Land"
+    "album": "The Fat of the Land",
+    "fact": "Das Gitarrenriff ist ein Sample aus „S.O.S.“ von den Breeders – deshalb steht Kim Deal unter den Songschreibern.",
+    "factEn": "The guitar riff is sampled from the Breeders' \"S.O.S.\" – which is why Kim Deal is credited as a songwriter."
   },
   {
     "id": "song_489",
@@ -5480,7 +5898,9 @@ export const songs: Song[] = [
     "year": 2009,
     "previewUrl": "https://mxtape.celox.io/audio/song_489.m4a",
     "genre": "Electronic",
-    "album": "One Love"
+    "album": "One Love",
+    "fact": "Kelly Rowland hörte die Instrumentalversion in einem DJ-Set von Guetta, verliebte sich in den Track und überredete ihn, darauf singen zu dürfen.",
+    "factEn": "Kelly Rowland heard the instrumental in one of Guetta's DJ sets, fell in love with it and convinced him to let her write vocals for it."
   },
   {
     "id": "song_490",
@@ -5489,7 +5909,9 @@ export const songs: Song[] = [
     "year": 1968,
     "album": "Odessey and Oracle",
     "previewUrl": "https://mxtape.celox.io/audio/song_490.m4a",
-    "genre": "Rock"
+    "genre": "Rock",
+    "fact": "Zum Hit wurde der Song erst, als sich die Zombies längst getrennt hatten.",
+    "factEn": "The song only became a hit after the Zombies had already split up."
   },
   {
     "id": "song_491",
@@ -5498,7 +5920,9 @@ export const songs: Song[] = [
     "year": 1976,
     "previewUrl": "https://mxtape.celox.io/audio/song_491.m4a",
     "genre": "Pop",
-    "album": "Midnight Café"
+    "album": "Midnight Café",
+    "fact": "Das Original stammt von der australischen Band New World – zum weltweiten Hit machten ihn erst Smokie.",
+    "factEn": "The original was by Australian band New World – Smokie turned it into a worldwide hit."
   },
   {
     "id": "song_492",
@@ -5508,7 +5932,9 @@ export const songs: Song[] = [
     "previewUrl": "https://mxtape.celox.io/audio/song_492.m4a",
     "genre": "Rock",
     "album": "Appetite For Destruction",
-    "party": true
+    "party": true,
+    "fact": "Das Riff war eigentlich eine Aufwärmübung: Slash spielte eine „Zirkus“-Melodie und schnitt dabei Grimassen in Richtung Schlagzeuger Steven Adler.",
+    "factEn": "The riff started as a warm-up: Slash played a \"circus\" melody while making faces at drummer Steven Adler."
   },
   {
     "id": "song_493",
@@ -5519,7 +5945,9 @@ export const songs: Song[] = [
     "previewUrl": "https://mxtape.celox.io/audio/song_493.m4a",
     "genre": "Rock",
     "startMs": 9500,
-    "german": true
+    "german": true,
+    "fact": "Im Video spielen die Sportfreunde bei einer polizeilichen Gegenüberstellung – neben Bands wie Echt, die abgeführt werden.",
+    "factEn": "In the video the Sportfreunde play at a police line-up – alongside bands like Echt, who get led away."
   },
   {
     "id": "song_494",
@@ -5528,7 +5956,9 @@ export const songs: Song[] = [
     "year": 1969,
     "previewUrl": "https://mxtape.celox.io/audio/song_494.m4a",
     "genre": "Pop",
-    "album": "Sugar, Sugar"
+    "album": "Sugar, Sugar",
+    "fact": "The Archies gab es gar nicht – sie waren eine erfundene Band aus den Archie-Comics, gesungen von Studiomusikern.",
+    "factEn": "The Archies didn't exist – they were a fictional band from Archie Comics, voiced by studio musicians."
   },
   {
     "id": "song_495",
@@ -5539,7 +5969,9 @@ export const songs: Song[] = [
     "previewUrl": "https://mxtape.celox.io/audio/song_495.m4a",
     "genre": "Rock",
     "startMs": 1500,
-    "party": true
+    "party": true,
+    "fact": "Die Tantiemen des Songs wurden an UNICEF gespendet.",
+    "factEn": "The song's royalties were donated to UNICEF."
   },
   {
     "id": "song_496",
@@ -5548,7 +5980,9 @@ export const songs: Song[] = [
     "year": 1997,
     "album": "Angels",
     "previewUrl": "https://mxtape.celox.io/audio/song_496.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "fact": "Laut Robbie Williams schrieb er den Song mit Guy Chambers in 25 Minuten – den Refrain inspirierte ein Springbrunnen vor einem Café.",
+    "factEn": "According to Robbie Williams, he and Guy Chambers wrote it in 25 minutes – a fountain outside a café inspired the chorus."
   },
   {
     "id": "song_497",
@@ -5559,7 +5993,9 @@ export const songs: Song[] = [
     "previewUrl": "https://mxtape.celox.io/audio/song_497.m4a",
     "genre": "Pop",
     "startMs": 17500,
-    "german": true
+    "german": true,
+    "fact": "Sarah Brightman und Anastacia haben den Song als „Symphony“ gecovert.",
+    "factEn": "Sarah Brightman and Anastacia both covered the song as \"Symphony\"."
   },
   {
     "id": "song_498",
@@ -5568,7 +6004,9 @@ export const songs: Song[] = [
     "year": 1969,
     "previewUrl": "https://mxtape.celox.io/audio/song_498.m4a",
     "genre": "Rock",
-    "startMs": 4000
+    "startMs": 4000,
+    "fact": "Mick Jagger und Keith Richards schrieben den Song im Urlaub in Brasilien.",
+    "factEn": "Mick Jagger and Keith Richards wrote the song while on holiday in Brazil."
   },
   {
     "id": "song_499",
@@ -5578,7 +6016,9 @@ export const songs: Song[] = [
     "album": "Outlandos d'Amour",
     "previewUrl": "https://mxtape.celox.io/audio/song_499.m4a",
     "genre": "Rock",
-    "startMs": 4000
+    "startMs": 4000,
+    "fact": "Der schiefe Klavierakkord und das Lachen am Anfang entstanden, als Sting sich im Studio versehentlich auf die Tasten setzte.",
+    "factEn": "The atonal piano chord and laughter at the start happened when Sting accidentally sat down on a piano keyboard in the studio."
   },
   {
     "id": "song_500",
@@ -5588,7 +6028,9 @@ export const songs: Song[] = [
     "previewUrl": "https://mxtape.celox.io/audio/song_500.m4a",
     "genre": "Pop",
     "album": "Simple Pleasures",
-    "party": true
+    "party": true,
+    "fact": "Alle „Instrumente“ sind Bobby McFerrins eigene Stimme – es war der erste A-cappella-Song auf Platz eins der US-Charts.",
+    "factEn": "All the \"instruments\" are Bobby McFerrin's own voice – it was the first a cappella song to reach number one in the US."
   },
   {
     "id": "song_501",
@@ -5598,7 +6040,9 @@ export const songs: Song[] = [
     "album": "Mr. Sandman",
     "previewUrl": "https://mxtape.celox.io/audio/song_501.m4a",
     "genre": "Pop",
-    "startMs": 3500
+    "startMs": 3500,
+    "fact": "Cadence-Gründer Archie Bleyer gab bei der Aufnahme den Rhythmus vor, indem er auf seine Knie klopfte.",
+    "factEn": "Cadence founder Archie Bleyer provided the rhythmic beat on the recording using his knees."
   },
   {
     "id": "song_502",
@@ -5607,7 +6051,9 @@ export const songs: Song[] = [
     "year": 1955,
     "album": "Berry Is on Top",
     "previewUrl": "https://mxtape.celox.io/audio/song_502.m4a",
-    "genre": "Rock"
+    "genre": "Rock",
+    "fact": "Laut Pianist Johnnie Johnson fand Leonard Chess den Titel auf einer Mascara-Schachtel im Studio – die Schreibweise änderte er, um eine Klage zu vermeiden.",
+    "factEn": "According to pianist Johnnie Johnson, Leonard Chess took the title from a mascara box on the studio floor – and changed the spelling to avoid a lawsuit."
   },
   {
     "id": "song_503",
@@ -5616,7 +6062,9 @@ export const songs: Song[] = [
     "year": 1956,
     "album": "Don't Be Cruel",
     "previewUrl": "https://mxtape.celox.io/audio/song_503.m4a",
-    "genre": "Rock"
+    "genre": "Rock",
+    "fact": "Elvis Presley bestand im Studio auf 28 Takes, bis er mit dem Song zufrieden war.",
+    "factEn": "Elvis Presley insisted on 28 takes in the studio before he was satisfied with the song."
   },
   {
     "id": "song_504",
@@ -5625,7 +6073,9 @@ export const songs: Song[] = [
     "year": 1956,
     "album": "Love Me Tender",
     "previewUrl": "https://mxtape.celox.io/audio/song_504.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "fact": "Gefragt, warum seine Frau als Autorin genannt sei, antwortete Texter Ken Darby: „Weil sie es auch nicht geschrieben hat.“",
+    "factEn": "Asked why his wife was credited, lyricist Ken Darby would answer: \"Because she didn't write it either.\""
   },
   {
     "id": "song_505",
@@ -5635,7 +6085,9 @@ export const songs: Song[] = [
     "album": "The Teenagers Featuring Frankie Lymon",
     "previewUrl": "https://mxtape.celox.io/audio/song_505.m4a",
     "genre": "Pop",
-    "startMs": 2500
+    "startMs": 2500,
+    "fact": "Ein Spielfilm gleichen Namens erzählt das Leben von Sänger Frankie Lymon – mit Halle Berry in einer Hauptrolle.",
+    "factEn": "A feature film of the same name tells the story of singer Frankie Lymon – with Halle Berry among its stars."
   },
   {
     "id": "song_506",
@@ -5644,7 +6096,9 @@ export const songs: Song[] = [
     "year": 1957,
     "album": "The Great Ball of Fire",
     "previewUrl": "https://mxtape.celox.io/audio/song_506.m4a",
-    "genre": "Rock"
+    "genre": "Rock",
+    "fact": "Zuerst nahm Big Maybelle den Song auf – bei einer Session, die Quincy Jones leitete und arrangierte.",
+    "factEn": "Big Maybelle recorded the song first – at a session conducted and arranged by Quincy Jones."
   },
   {
     "id": "song_507",
@@ -5653,7 +6107,9 @@ export const songs: Song[] = [
     "year": 1957,
     "album": "Sam Cooke",
     "previewUrl": "https://mxtape.celox.io/audio/song_507.m4a",
-    "genre": "Soul"
+    "genre": "Soul",
+    "fact": "Sam Cooke ließ seinen jüngeren Bruder als Autor eintragen, damit sein eigener Verlag nicht am Song verdient.",
+    "factEn": "Sam Cooke gave the writing credit to his younger brother so that his own publisher wouldn't profit from the song."
   },
   {
     "id": "song_508",
@@ -5663,7 +6119,9 @@ export const songs: Song[] = [
     "album": "Bobby Darin",
     "previewUrl": "https://mxtape.celox.io/audio/song_508.m4a",
     "genre": "Rock",
-    "startMs": 2500
+    "startMs": 2500,
+    "fact": "DJ Murray the K wettete, dass Bobby Darin keinen Song schreiben könne, der mit „Splish splash, I was takin' a bath“ beginnt.",
+    "factEn": "DJ Murray the K bet that Bobby Darin couldn't write a song starting with \"Splish splash, I was takin' a bath\"."
   },
   {
     "id": "song_509",
@@ -5672,7 +6130,9 @@ export const songs: Song[] = [
     "year": 1958,
     "album": "Yakety Yak",
     "previewUrl": "https://mxtape.celox.io/audio/song_509.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "fact": "Eltern zählen einem Teenager Hausarbeiten auf – sein „Yakety yak“ kontern sie mit „Don't talk back“.",
+    "factEn": "Parents list chores for a teenager – and answer his \"yakety yak\" with \"don't talk back\"."
   },
   {
     "id": "song_510",
@@ -5682,7 +6142,9 @@ export const songs: Song[] = [
     "album": "Lollipop",
     "previewUrl": "https://mxtape.celox.io/audio/song_510.m4a",
     "genre": "Pop",
-    "startMs": 8000
+    "startMs": 8000,
+    "fact": "Das markante Plopp-Geräusch machte eine der Chordettes, indem sie einen Finger in den Mund steckte und herausschnippte.",
+    "factEn": "The distinctive popping sound was made by one of the Chordettes putting her finger in her mouth and flicking it out."
   },
   {
     "id": "song_511",
@@ -5692,7 +6154,9 @@ export const songs: Song[] = [
     "album": "Nel blu dipinto di blu",
     "previewUrl": "https://mxtape.celox.io/audio/song_511.m4a",
     "genre": "Pop",
-    "startMs": 1500
+    "startMs": 1500,
+    "fact": "Texter Franco Migliacci schlief nach Wein ein, träumte lebhaft und blickte beim Aufwachen auf die Chagall-Drucke an der Wand.",
+    "factEn": "Lyricist Franco Migliacci fell asleep after drinking wine, had vivid dreams and, on waking, looked at the Chagall reproductions on the wall."
   },
   {
     "id": "song_512",
@@ -5701,7 +6165,9 @@ export const songs: Song[] = [
     "year": 1959,
     "album": "There Goes My Baby",
     "previewUrl": "https://mxtape.celox.io/audio/song_512.m4a",
-    "genre": "Soul"
+    "genre": "Soul",
+    "fact": "Der Song brachte Streicher und einen brasilianischen Baião-Rhythmus in eine R&B-Aufnahme – Phil Spector lernte von dieser Produktion.",
+    "factEn": "The song brought strings and a Brazilian baion rhythm into an R&B recording – Phil Spector studied this production model."
   },
   {
     "id": "song_513",
@@ -5710,7 +6176,9 @@ export const songs: Song[] = [
     "year": 1959,
     "album": "That's All",
     "previewUrl": "https://mxtape.celox.io/audio/song_513.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "fact": "Am Klavier ist Neil Sedaka zu hören.",
+    "factEn": "Neil Sedaka plays the piano on the song."
   },
   {
     "id": "song_514",
@@ -5719,7 +6187,9 @@ export const songs: Song[] = [
     "year": 1960,
     "album": "It's Now or Never",
     "previewUrl": "https://mxtape.celox.io/audio/song_514.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "fact": "Die Melodie stammt aus dem neapolitanischen Lied „’O sole mio“ – den neuen Text schrieben die Autoren in einer halben Stunde.",
+    "factEn": "The melody comes from the Neapolitan song \"'O Sole mio\" – the writers came up with the new lyrics in half an hour."
   },
   {
     "id": "song_515",
@@ -5728,7 +6198,9 @@ export const songs: Song[] = [
     "year": 1960,
     "album": "Lonely and Blue",
     "previewUrl": "https://mxtape.celox.io/audio/song_515.m4a",
-    "genre": "Rock"
+    "genre": "Rock",
+    "fact": "Roy Orbison schrieb Songs im Auto sitzend, als Joe Melson ans Fenster klopfte und vorschlug, zusammenzuarbeiten.",
+    "factEn": "Roy Orbison was writing songs sitting in his car when Joe Melson tapped on the window and suggested they collaborate."
   },
   {
     "id": "song_516",
@@ -5737,7 +6209,9 @@ export const songs: Song[] = [
     "year": 1961,
     "album": "Runaway with Del Shannon",
     "previewUrl": "https://mxtape.celox.io/audio/song_516.m4a",
-    "genre": "Rock"
+    "genre": "Rock",
+    "fact": "Das zentrale Keyboard-Solo spielt Max Crook auf dem Musitron – einem Instrument, das er selbst erfunden hatte.",
+    "factEn": "Max Crook plays the central keyboard break on the Musitron – an instrument he had invented himself."
   },
   {
     "id": "song_517",
@@ -5746,7 +6220,9 @@ export const songs: Song[] = [
     "year": 1961,
     "album": "Blue Hawaii",
     "previewUrl": "https://mxtape.celox.io/audio/song_517.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "fact": "Es war der letzte Song, den Elvis Presley je live sang.",
+    "factEn": "It was the last song Elvis Presley ever performed live."
   },
   {
     "id": "song_518",
@@ -5755,7 +6231,9 @@ export const songs: Song[] = [
     "year": 1961,
     "album": "Blue Moon",
     "previewUrl": "https://mxtape.celox.io/audio/song_518.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "fact": "Der Song ist die Hymne des Fußballclubs Manchester City.",
+    "factEn": "The song serves as the anthem of football club Manchester City."
   },
   {
     "id": "song_519",
@@ -5764,7 +6242,9 @@ export const songs: Song[] = [
     "year": 1962,
     "album": "Green Onions",
     "previewUrl": "https://mxtape.celox.io/audio/song_519.m4a",
-    "genre": "Soul"
+    "genre": "Soul",
+    "fact": "Eigentlich sollte das Stück „Funky Onions“ heißen – doch Stax-Mitinhaberin Estelle Axton fand, das klinge wie ein Schimpfwort.",
+    "factEn": "It was originally going to be called \"Funky Onions\" – but Stax co-owner Estelle Axton thought it sounded like a cuss word."
   },
   {
     "id": "song_520",
@@ -5773,7 +6253,9 @@ export const songs: Song[] = [
     "year": 1963,
     "album": "He's So Fine",
     "previewUrl": "https://mxtape.celox.io/audio/song_520.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "fact": "George Harrison wurde vorgeworfen, für „My Sweet Lord“ bei diesem Song abgekupfert zu haben.",
+    "factEn": "George Harrison was accused of copying this song for \"My Sweet Lord\"."
   },
   {
     "id": "song_521",
@@ -5782,7 +6264,9 @@ export const songs: Song[] = [
     "year": 1963,
     "album": "The Kingsmen in Person",
     "previewUrl": "https://mxtape.celox.io/audio/song_521.m4a",
-    "genre": "Rock"
+    "genre": "Rock",
+    "fact": "Songschreiber Richard Berry kritzelte den Text hinter der Bühne auf Toilettenpapier – „Louie“ hieß sein Barkeeper.",
+    "factEn": "Songwriter Richard Berry scribbled the lyrics backstage on a strip of toilet paper – \"Louie\" was the name of his bartender."
   },
   {
     "id": "song_522",
@@ -5791,7 +6275,9 @@ export const songs: Song[] = [
     "year": 1963,
     "album": "Da Doo Ron Ron",
     "previewUrl": "https://mxtape.celox.io/audio/song_522.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "fact": "„Da Doo Ron Ron“ waren nur Platzhalter-Silben bis zum echten Text – doch Phil Spector gefielen sie so gut, dass er sie behielt.",
+    "factEn": "\"Da Doo Ron Ron\" was just placeholder nonsense until proper lyrics were written – but Phil Spector liked it so much he kept it."
   },
   {
     "id": "song_523",
@@ -5800,7 +6286,9 @@ export const songs: Song[] = [
     "year": 1964,
     "album": "A Hard Day’s Night",
     "previewUrl": "https://mxtape.celox.io/audio/song_523.m4a",
-    "genre": "Rock"
+    "genre": "Rock",
+    "fact": "Der Titel geht auf einen Versprecher von Ringo Starr nach einem langen Arbeitstag zurück, der bis in die Nacht ging.",
+    "factEn": "The title comes from a slip of the tongue by Ringo Starr after a working day that ran into the night."
   },
   {
     "id": "song_524",
@@ -5810,7 +6298,9 @@ export const songs: Song[] = [
     "album": "Groovin' with Manfred Mann",
     "previewUrl": "https://mxtape.celox.io/audio/song_524.m4a",
     "genre": "Pop",
-    "party": true
+    "party": true,
+    "fact": "Das Original sang die US-Gruppe The Exciters unter dem Titel „Do-Wah-Diddy“.",
+    "factEn": "The original was recorded by the American vocal group the Exciters as \"Do-Wah-Diddy\"."
   },
   {
     "id": "song_525",
@@ -5819,7 +6309,9 @@ export const songs: Song[] = [
     "year": 1964,
     "album": "Leader of the Pack",
     "previewUrl": "https://mxtape.celox.io/audio/song_525.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "fact": "Für echtes Motorengeräusch fuhr angeblich ein Motorrad durch die Hotellobby bis ins Studio – es gab einen Strafzettel.",
+    "factEn": "For an authentic engine sound, a motorcycle was reportedly driven through the hotel lobby up to the studio – earning a ticket."
   },
   {
     "id": "song_526",
@@ -5828,7 +6320,9 @@ export const songs: Song[] = [
     "year": 1965,
     "album": "Help!",
     "previewUrl": "https://mxtape.celox.io/audio/song_526.m4a",
-    "genre": "Rock"
+    "genre": "Rock",
+    "fact": "John Lennon sagte später, er habe mit dem Song unbewusst um Hilfe gerufen.",
+    "factEn": "John Lennon later said he was subconsciously crying out for help with the song."
   },
   {
     "id": "song_527",
@@ -5837,7 +6331,9 @@ export const songs: Song[] = [
     "year": 1965,
     "album": "My Generation",
     "previewUrl": "https://mxtape.celox.io/audio/song_527.m4a",
-    "genre": "Rock"
+    "genre": "Rock",
+    "fact": "Angeblich inspirierte die Queen Mum den Song: Sie soll Pete Townshends Packard-Leichenwagen abschleppen lassen haben.",
+    "factEn": "The Queen Mother supposedly inspired the song: she allegedly had Pete Townshend's Packard hearse towed away."
   },
   {
     "id": "song_528",
@@ -5846,7 +6342,9 @@ export const songs: Song[] = [
     "year": 1965,
     "album": "Look at Us",
     "previewUrl": "https://mxtape.celox.io/audio/song_528.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "fact": "Als Cher zum Einsingen geweckt wurde, hasste sie den Song und ging sofort wieder ins Bett.",
+    "factEn": "When Cher was woken up to sing it, she hated the song and went straight back to bed."
   },
   {
     "id": "song_529",
@@ -5856,7 +6354,9 @@ export const songs: Song[] = [
     "album": "Ganz in weiß",
     "previewUrl": "https://mxtape.celox.io/audio/song_529.m4a",
     "genre": "Pop",
-    "german": true
+    "german": true,
+    "fact": "Roy Black nahm den Song auch auf Englisch („I need you“) und auf Italienisch („Grazie mille“) auf.",
+    "factEn": "Roy Black also recorded the song in English (\"I need you\") and in Italian (\"Grazie mille\")."
   },
   {
     "id": "song_530",
@@ -5865,7 +6365,9 @@ export const songs: Song[] = [
     "year": 1966,
     "album": "Face to Face",
     "previewUrl": "https://mxtape.celox.io/audio/song_530.m4a",
-    "genre": "Rock"
+    "genre": "Rock",
+    "fact": "Ray Davies schrieb das Eröffnungsriff, während seine kleine Tochter über den Boden krabbelte.",
+    "factEn": "Ray Davies wrote the opening riff while his little daughter was crawling on the floor."
   },
   {
     "id": "song_531",
@@ -5874,7 +6376,9 @@ export const songs: Song[] = [
     "year": 1966,
     "album": "If You Can Believe Your Eyes and Ears",
     "previewUrl": "https://mxtape.celox.io/audio/song_531.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "fact": "Cass Elliot und Michelle Phillips hassten den Song zunächst und nannten ihn „prätentiös“.",
+    "factEn": "Cass Elliot and Michelle Phillips initially hated the song and called it \"pretentious\"."
   },
   {
     "id": "song_532",
@@ -5884,7 +6388,9 @@ export const songs: Song[] = [
     "album": "Revolver",
     "previewUrl": "https://mxtape.celox.io/audio/song_532.m4a",
     "genre": "Pop",
-    "party": true
+    "party": true,
+    "fact": "Ein Zeichentrickfilm der Beatles trägt denselben Titel wie der Song.",
+    "factEn": "An animated Beatles film shares its title with the song."
   },
   {
     "id": "song_533",
@@ -5894,7 +6400,9 @@ export const songs: Song[] = [
     "album": "Hums of The Lovin’ Spoonful",
     "previewUrl": "https://mxtape.celox.io/audio/song_533.m4a",
     "genre": "Rock",
-    "startMs": 7500
+    "startMs": 7500,
+    "fact": "Hupen und ein Presslufthammer im Song sollen Stadtlärm nachahmen – ein frühes Beispiel für Soundeffekte im Pop.",
+    "factEn": "Car horns and a pneumatic drill mimic city noise – an early instance of added sound effects in pop."
   },
   {
     "id": "song_534",
@@ -5903,7 +6411,9 @@ export const songs: Song[] = [
     "year": 1966,
     "album": "When a Man Loves a Woman",
     "previewUrl": "https://mxtape.celox.io/audio/song_534.m4a",
-    "genre": "Soul"
+    "genre": "Soul",
+    "fact": "Wegen verstimmter Bläser sollte der Song neu aufgenommen werden – doch die Bänder wurden vertauscht und die erste Version wurde der Hit.",
+    "factEn": "The song was re-recorded because the horns were out of tune – but the tapes got mixed up and the original version became the hit."
   },
   {
     "id": "song_535",
@@ -5912,7 +6422,9 @@ export const songs: Song[] = [
     "year": 1967,
     "album": "Magical Mystery Tour",
     "previewUrl": "https://mxtape.celox.io/audio/song_535.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "fact": "Der Song war Großbritanniens Beitrag zu „Our World“, der ersten weltweiten Live-Fernsehübertragung.",
+    "factEn": "The song was Britain's contribution to \"Our World\", the first live global television link."
   },
   {
     "id": "song_536",
@@ -5921,7 +6433,9 @@ export const songs: Song[] = [
     "year": 1967,
     "album": "Blowin’ Your Mind!",
     "previewUrl": "https://mxtape.celox.io/audio/song_536.m4a",
-    "genre": "Rock"
+    "genre": "Rock",
+    "fact": "Ursprünglich hieß der Song „Brown-Skinned Girl“ – Van Morrison änderte den Titel bei der Aufnahme, nach eigener Aussage aus Versehen.",
+    "factEn": "The song was originally titled \"Brown-Skinned Girl\" – Van Morrison changed it when he recorded it, by mistake, as he put it."
   },
   {
     "id": "song_537",
@@ -5931,7 +6445,9 @@ export const songs: Song[] = [
     "album": "The Birds, the Bees & the Monkees",
     "previewUrl": "https://mxtape.celox.io/audio/song_537.m4a",
     "genre": "Pop",
-    "startMs": 7500
+    "startMs": 7500,
+    "fact": "Eigentlich war der Song als B-Seite von „Love Is Only Sleeping“ geplant, einem Song von Barry Mann und Cynthia Weil.",
+    "factEn": "The song was scheduled to be the B-side of \"Love Is Only Sleeping\", a song by Barry Mann and Cynthia Weil."
   },
   {
     "id": "song_538",
@@ -5940,7 +6456,9 @@ export const songs: Song[] = [
     "year": 1967,
     "album": "United",
     "previewUrl": "https://mxtape.celox.io/audio/song_538.m4a",
-    "genre": "Soul"
+    "genre": "Soul",
+    "fact": "Ashford & Simpson wollten den Song Dusty Springfield nicht geben – er sollte ihre Eintrittskarte zu Motown sein.",
+    "factEn": "Ashford & Simpson refused to give the song to Dusty Springfield – they wanted it as their ticket into Motown."
   },
   {
     "id": "song_539",
@@ -5949,7 +6467,9 @@ export const songs: Song[] = [
     "year": 1967,
     "album": "Solo",
     "previewUrl": "https://mxtape.celox.io/audio/song_539.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "fact": "Die Plattenfirma hielt die Aufnahme ein Jahr lang zurück, weil sie fürchtete, die Four Seasons würden sich auflösen.",
+    "factEn": "The record company shelved the recording for a year because it feared the Four Seasons were breaking up."
   },
   {
     "id": "song_540",
@@ -5959,7 +6479,9 @@ export const songs: Song[] = [
     "album": "Jumpin’ Jack Flash",
     "previewUrl": "https://mxtape.celox.io/audio/song_540.m4a",
     "genre": "Rock",
-    "startMs": 1500
+    "startMs": 1500,
+    "fact": "Den Titel inspirierte Keith Richards’ Gärtner Jack Dyer, dessen stampfende Schritte Jagger und Richards eines Morgens weckten.",
+    "factEn": "The title was inspired by Keith Richards' gardener Jack Dyer, whose clumping footsteps woke Jagger and Richards one morning."
   },
   {
     "id": "song_541",
@@ -5968,7 +6490,9 @@ export const songs: Song[] = [
     "year": 1968,
     "album": "Those Were the Days",
     "previewUrl": "https://mxtape.celox.io/audio/song_541.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "fact": "Paul McCartney hörte das Lied in einem Club und versuchte vergeblich, andere Sänger und Bands – darunter die frühen Moody Blues – zur Aufnahme zu bewegen.",
+    "factEn": "Paul McCartney heard the song in a club and tried in vain to get several singers and groups, including the early Moody Blues, to record it."
   },
   {
     "id": "song_542",
@@ -5977,7 +6501,9 @@ export const songs: Song[] = [
     "year": 1968,
     "album": "Everyday People",
     "previewUrl": "https://mxtape.celox.io/audio/song_542.m4a",
-    "genre": "Soul"
+    "genre": "Soul",
+    "fact": "Die Zeile „different strokes for different folks“ wurde zum Schlagwort und gab der TV-Serie „Diff'rent Strokes“ ihren Namen.",
+    "factEn": "The line \"different strokes for different folks\" became a catchphrase and inspired the name of the TV series \"Diff'rent Strokes\"."
   },
   {
     "id": "song_543",
@@ -5987,7 +6513,9 @@ export const songs: Song[] = [
     "album": "Build Me Up Buttercup",
     "previewUrl": "https://mxtape.celox.io/audio/song_543.m4a",
     "genre": "Pop",
-    "party": true
+    "party": true,
+    "fact": "Der Song läuft bei jedem Heimspiel der Footballmannschaft Wisconsin Badgers und ist eine Hymne des irischen Fußballclubs Shamrock Rovers.",
+    "factEn": "The song is played at every home game of the Wisconsin Badgers football team and is a club anthem of Irish soccer club Shamrock Rovers."
   },
   {
     "id": "song_544",
@@ -5996,7 +6524,9 @@ export const songs: Song[] = [
     "year": 1969,
     "album": "Led Zeppelin II",
     "previewUrl": "https://mxtape.celox.io/audio/song_544.m4a",
-    "genre": "Rock"
+    "genre": "Rock",
+    "fact": "Jimmy Page erfand das Riff auf seinem Hausboot auf der Themse – Hörer von BBC Radio 2 wählten es später zum größten Gitarrenriff aller Zeiten.",
+    "factEn": "Jimmy Page came up with the riff on his houseboat on the Thames – BBC Radio 2 listeners later voted it the greatest guitar riff of all time."
   },
   {
     "id": "song_545",
@@ -6005,7 +6535,9 @@ export const songs: Song[] = [
     "year": 1969,
     "album": "Suspicious Minds",
     "previewUrl": "https://mxtape.celox.io/audio/song_545.m4a",
-    "genre": "Rock"
+    "genre": "Rock",
+    "fact": "Geschrieben und zuerst aufgenommen hat ihn Mark James – seine Version floppte, danach nahm Elvis den Song auf.",
+    "factEn": "Mark James wrote it and recorded it first – his version flopped, and then Elvis recorded it."
   },
   {
     "id": "song_546",
@@ -6014,7 +6546,9 @@ export const songs: Song[] = [
     "year": 1970,
     "album": "Lola Versus Powerman and the Moneygoround, Part One",
     "previewUrl": "https://mxtape.celox.io/audio/song_546.m4a",
-    "genre": "Rock"
+    "genre": "Rock",
+    "fact": "Ray Davies sagt, ihn habe inspiriert, dass Kinks-Manager Robert Wace in Paris eine Nacht lang mit einem Mann in Frauenkleidern tanzte.",
+    "factEn": "Ray Davies says he was inspired after Kinks manager Robert Wace spent a night in Paris dancing with a cross-dresser."
   },
   {
     "id": "song_547",
@@ -6023,7 +6557,9 @@ export const songs: Song[] = [
     "year": 1970,
     "album": "Fire and Water",
     "previewUrl": "https://mxtape.celox.io/audio/song_547.m4a",
-    "genre": "Rock"
+    "genre": "Rock",
+    "fact": "Entstanden nach einem miesen Konzert in Durham: Andy Fraser schrieb den Song direkt in der Garderobe – in kaum zehn Minuten.",
+    "factEn": "It came about after a bad gig in Durham: Andy Fraser wrote it right there in the dressing room, in no more than ten minutes."
   },
   {
     "id": "song_548",
@@ -6033,7 +6569,9 @@ export const songs: Song[] = [
     "album": "Mungo Jerry",
     "previewUrl": "https://mxtape.celox.io/audio/song_548.m4a",
     "genre": "Pop",
-    "party": true
+    "party": true,
+    "fact": "Das „Motorrad“ in der Mitte ist in Wahrheit der Triumph-Sportwagen des Toningenieurs, der am Studio vorbeifuhr.",
+    "factEn": "The \"motorcycle\" in the middle is actually the sound engineer's Triumph sports car driving past the studio."
   },
   {
     "id": "song_549",
@@ -6043,7 +6581,9 @@ export const songs: Song[] = [
     "album": "War & Peace",
     "previewUrl": "https://mxtape.celox.io/audio/song_549.m4a",
     "genre": "Soul",
-    "startMs": 1500
+    "startMs": 1500,
+    "fact": "Zuerst sangen ihn die Temptations – die Plattenfirma brachte deren Version aber nicht als Single heraus, um ihre konservativeren Fans nicht zu verschrecken.",
+    "factEn": "The Temptations recorded it first – but the label kept their version off the singles market so as not to alienate their more conservative fans."
   },
   {
     "id": "song_550",
@@ -6052,7 +6592,9 @@ export const songs: Song[] = [
     "year": 1970,
     "album": "All Things Must Pass",
     "previewUrl": "https://mxtape.celox.io/audio/song_550.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "fact": "Ein Gericht befand, dass George Harrison unbewusst den Song „He's So Fine“ der Chiffons abgekupfert hatte.",
+    "factEn": "A court found that George Harrison had subconsciously plagiarised the Chiffons' song \"He's So Fine\"."
   },
   {
     "id": "song_551",
@@ -6063,7 +6605,9 @@ export const songs: Song[] = [
     "previewUrl": "https://mxtape.celox.io/audio/song_551.m4a",
     "genre": "Pop",
     "startMs": 1500,
-    "german": true
+    "german": true,
+    "fact": "Den gesprochenen Teil in der Mitte spricht Texter Michael Kunze – Peter Maffay konnte ihn nicht ohne gerolltes „r“ sagen.",
+    "factEn": "The spoken part in the middle is voiced by lyricist Michael Kunze – Peter Maffay couldn't say it without rolling his r's."
   },
   {
     "id": "song_552",
@@ -6072,7 +6616,9 @@ export const songs: Song[] = [
     "year": 1971,
     "album": "Every Picture Tells a Story",
     "previewUrl": "https://mxtape.celox.io/audio/song_552.m4a",
-    "genre": "Rock"
+    "genre": "Rock",
+    "fact": "Eigentlich war der Song nur die B-Seite von „Reason to Believe“ – doch die Radiosender spielten lieber ihn.",
+    "factEn": "The song was originally just the B-side of \"Reason to Believe\" – but radio stations preferred to play it."
   },
   {
     "id": "song_553",
@@ -6082,7 +6628,9 @@ export const songs: Song[] = [
     "album": "Who's Next",
     "previewUrl": "https://mxtape.celox.io/audio/song_553.m4a",
     "genre": "Rock",
-    "startMs": 3500
+    "startMs": 3500,
+    "fact": "Der Titel ehrt zwei Vorbilder von Pete Townshend: den indischen spirituellen Meister Meher Baba und den Komponisten Terry Riley.",
+    "factEn": "The title honours two of Pete Townshend's inspirations: Indian spiritual master Meher Baba and composer Terry Riley."
   },
   {
     "id": "song_554",
@@ -6091,7 +6639,9 @@ export const songs: Song[] = [
     "year": 1972,
     "album": "Looking Glass",
     "previewUrl": "https://mxtape.celox.io/audio/song_554.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "fact": "Barry Manilows „Mandy“ hieß ursprünglich „Brandy“ – er benannte es um, damit es nicht mit diesem Song verwechselt wird.",
+    "factEn": "Barry Manilow's \"Mandy\" was originally called \"Brandy\" – he renamed it so it wouldn't be confused with this song."
   },
   {
     "id": "song_555",
@@ -6100,7 +6650,9 @@ export const songs: Song[] = [
     "year": 1972,
     "album": "School's Out",
     "previewUrl": "https://mxtape.celox.io/audio/song_555.m4a",
-    "genre": "Rock"
+    "genre": "Rock",
+    "fact": "Alice Cooper wollte die letzten drei Minuten des letzten Schultags in einen Song packen – wenn man dasitzt und es sich anfühlt wie eine langsam brennende Lunte.",
+    "factEn": "Alice Cooper wanted to capture the last three minutes of the last day of school, when it feels like a slow fuse burning."
   },
   {
     "id": "song_556",
@@ -6110,7 +6662,9 @@ export const songs: Song[] = [
     "album": "Popcorn",
     "previewUrl": "https://mxtape.celox.io/audio/song_556.m4a",
     "genre": "Electronic",
-    "startMs": 4500
+    "startMs": 4500,
+    "fact": "Jean-Michel Jarre nahm unter Pseudonym eine eigene Version auf – und ließ sich davon später zu „Oxygène (Part IV)“ inspirieren.",
+    "factEn": "Jean-Michel Jarre recorded his own version under a pseudonym – and was later inspired by it to write \"Oxygène (Part IV)\"."
   },
   {
     "id": "song_557",
@@ -6120,7 +6674,9 @@ export const songs: Song[] = [
     "album": "Goodbye Yellow Brick Road",
     "previewUrl": "https://mxtape.celox.io/audio/song_557.m4a",
     "genre": "Pop",
-    "startMs": 4500
+    "startMs": 4500,
+    "fact": "Die gelbe Ziegelsteinstraße stammt aus dem „Zauberer von Oz“ – im Text geht es darum, Oz verlassen und zurück auf die Farm zu wollen.",
+    "factEn": "The yellow brick road comes from The Wizard of Oz – the lyrics are about wanting to leave Oz and get back to the farm."
   },
   {
     "id": "song_558",
@@ -6130,7 +6686,9 @@ export const songs: Song[] = [
     "album": "Goats Head Soup",
     "previewUrl": "https://mxtape.celox.io/audio/song_558.m4a",
     "genre": "Rock",
-    "startMs": 17000
+    "startMs": 17000,
+    "fact": "Leise hört man im ganzen Song Mick Jaggers Probegesang mit – eine sogenannte „Geisterstimme“.",
+    "factEn": "Mick Jagger's guide vocal is faintly audible throughout the song – a so-called \"ghost vocal\"."
   },
   {
     "id": "song_559",
@@ -6139,7 +6697,9 @@ export const songs: Song[] = [
     "year": 1973,
     "album": "Seasons in the Sun",
     "previewUrl": "https://mxtape.celox.io/audio/song_559.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "fact": "Vorlage ist Jacques Brels „Le Moribond“ – Terry Jacks schrieb Teile des Texts um, inspiriert von seinem an Leukämie erkrankten Freund Roger.",
+    "factEn": "It is based on Jacques Brel's \"Le Moribond\" – Terry Jacks rewrote parts of the lyrics, inspired by his friend Roger, who had leukemia."
   },
   {
     "id": "song_560",
@@ -6149,7 +6709,9 @@ export const songs: Song[] = [
     "album": "Rock Your Baby",
     "previewUrl": "https://mxtape.celox.io/audio/song_560.m4a",
     "genre": "Soul",
-    "party": true
+    "party": true,
+    "fact": "Eigentlich war der Song gar nicht für George McCrae gedacht – er war zufällig im Studio und sang seinen Falsettgesang drauf.",
+    "factEn": "The track wasn't meant for George McCrae at all – he happened to be in the studio and added his falsetto vocals."
   },
   {
     "id": "song_561",
@@ -6158,7 +6720,9 @@ export const songs: Song[] = [
     "year": 1974,
     "album": "Can't Get Enough",
     "previewUrl": "https://mxtape.celox.io/audio/song_561.m4a",
-    "genre": "Soul"
+    "genre": "Soul",
+    "fact": "Peter Radcliffe schrieb ihn ursprünglich als Countrysong mit dem Titel „You're My First, You're My Last, My In-Between“.",
+    "factEn": "Peter Radcliffe originally wrote it as a country song titled \"You're My First, You're My Last, My In-Between\"."
   },
   {
     "id": "song_562",
@@ -6168,7 +6732,9 @@ export const songs: Song[] = [
     "album": "Nightbirds",
     "previewUrl": "https://mxtape.celox.io/audio/song_562.m4a",
     "genre": "Soul",
-    "party": true
+    "party": true,
+    "fact": "Patti LaBelle sagte später, sie habe keine Ahnung gehabt, worum es im Song geht – sie spreche kein Französisch.",
+    "factEn": "Patti LaBelle later said she had no idea what the song was about – she doesn't speak French."
   },
   {
     "id": "song_563",
@@ -6178,7 +6744,9 @@ export const songs: Song[] = [
     "album": "Griechischer Wein",
     "previewUrl": "https://mxtape.celox.io/audio/song_563.m4a",
     "genre": "Pop",
-    "german": true
+    "german": true,
+    "fact": "Die Melodie schrieb Udo Jürgens nach einem Urlaub auf Rhodos – nach eigener Aussage in nur 20 Minuten: „Ich wusste sofort, es wird ein Knaller.“",
+    "factEn": "Udo Jürgens wrote the melody after a holiday on Rhodes – in just 20 minutes, by his own account: \"I knew right away it would be a smash.\""
   },
   {
     "id": "song_564",
@@ -6189,7 +6757,9 @@ export const songs: Song[] = [
     "previewUrl": "https://mxtape.celox.io/audio/song_564.m4a",
     "genre": "Electronic",
     "startMs": 8000,
-    "german": true
+    "german": true,
+    "fact": "Der Refrain „Fahr'n, fahr'n, fahr'n“ wurde oft als englisches „Fun, fun, fun“ missverstanden – mit den Beach Boys hatte das laut Wolfgang Flür nichts zu tun.",
+    "factEn": "The refrain \"Fahren, fahren, fahren\" was often misheard as \"Fun, fun, fun\" – but according to Wolfgang Flür it had nothing to do with the Beach Boys."
   },
   {
     "id": "song_565",
@@ -6199,7 +6769,9 @@ export const songs: Song[] = [
     "album": "ABBA",
     "previewUrl": "https://mxtape.celox.io/audio/song_565.m4a",
     "genre": "Pop",
-    "startMs": 2000
+    "startMs": 2000,
+    "fact": "Der Arbeitstitel lautete „Turn Me On“ – den Namen „SOS“ erfand Stig Anderson.",
+    "factEn": "The working title was \"Turn Me On\" – the title \"SOS\" was coined by Stig Anderson."
   },
   {
     "id": "song_566",
@@ -6209,7 +6781,9 @@ export const songs: Song[] = [
     "album": "ABBA",
     "previewUrl": "https://mxtape.celox.io/audio/song_566.m4a",
     "genre": "Pop",
-    "party": true
+    "party": true,
+    "fact": "ABBA boten den Song zuerst der britischen Popgruppe Brotherhood of Man an – die lehnte ab.",
+    "factEn": "ABBA first offered the song to British pop group Brotherhood of Man, who turned it down."
   },
   {
     "id": "song_567",
@@ -6219,7 +6793,9 @@ export const songs: Song[] = [
     "album": "Wish You Were Here",
     "previewUrl": "https://mxtape.celox.io/audio/song_567.m4a",
     "genre": "Rock",
-    "startMs": 1500
+    "startMs": 1500,
+    "fact": "Das Radiogeräusch am Anfang nahm David Gilmour aus seinem eigenen Autoradio auf.",
+    "factEn": "The radio sounds at the start were recorded from David Gilmour's own car radio."
   },
   {
     "id": "song_568",
@@ -6228,7 +6804,9 @@ export const songs: Song[] = [
     "year": 1975,
     "album": "That's the Way of the World",
     "previewUrl": "https://mxtape.celox.io/audio/song_568.m4a",
-    "genre": "Soul"
+    "genre": "Soul",
+    "fact": "Maurice White kam die Idee bei einem nächtlichen Spaziergang, als er in den Sternenhimmel blickte.",
+    "factEn": "Maurice White got the idea while strolling at night and looking up at the starry sky."
   },
   {
     "id": "song_569",
@@ -6237,7 +6815,9 @@ export const songs: Song[] = [
     "year": 1975,
     "album": "Dressed to Kill",
     "previewUrl": "https://mxtape.celox.io/audio/song_569.m4a",
-    "genre": "Rock"
+    "genre": "Rock",
+    "fact": "Im Chor singen und klatschen auch Roadies, Studiomusiker und Peter Criss’ Frau Lydia mit – einige Roadies „spielten“ ihre Jackenreißverschlüsse.",
+    "factEn": "The chorus features roadies, studio musicians and Peter Criss's wife Lydia singing and clapping – some roadies even \"played\" their jacket zippers."
   },
   {
     "id": "song_570",
@@ -6247,7 +6827,9 @@ export const songs: Song[] = [
     "album": "Er gehört zu mir",
     "previewUrl": "https://mxtape.celox.io/audio/song_570.m4a",
     "genre": "Pop",
-    "german": true
+    "german": true,
+    "fact": "Beim deutschen Vorentscheid zum Eurovision Song Contest landete der Song nur auf Platz zehn.",
+    "factEn": "In the German qualifier for the Eurovision Song Contest the song only came tenth."
   },
   {
     "id": "song_571",
@@ -6256,7 +6838,9 @@ export const songs: Song[] = [
     "year": 1976,
     "album": "Songs in the Key of Life",
     "previewUrl": "https://mxtape.celox.io/audio/song_571.m4a",
-    "genre": "Soul"
+    "genre": "Soul",
+    "fact": "Der Song ist eine Hommage an Duke Ellington – im Text würdigt Stevie Wonder außerdem Count Basie, Glenn Miller, Louis Armstrong und Ella Fitzgerald.",
+    "factEn": "The song is a tribute to Duke Ellington – the lyrics also honour Count Basie, Glenn Miller, Louis Armstrong and Ella Fitzgerald."
   },
   {
     "id": "song_572",
@@ -6267,7 +6851,9 @@ export const songs: Song[] = [
     "previewUrl": "https://mxtape.celox.io/audio/song_572.m4a",
     "genre": "Soul",
     "startMs": 7000,
-    "party": true
+    "party": true,
+    "fact": "Norman Whitfield kam die Idee beim Basketballschauen – den ersten Entwurf schrieb er auf eine Papiertüte aus einem Brathähnchen-Imbiss.",
+    "factEn": "Norman Whitfield got the idea while watching basketball – and wrote the first draft on a paper bag from a fried chicken place."
   },
   {
     "id": "song_573",
@@ -6277,7 +6863,9 @@ export const songs: Song[] = [
     "album": "Wings at the Speed of Sound",
     "previewUrl": "https://mxtape.celox.io/audio/song_573.m4a",
     "genre": "Pop",
-    "startMs": 14500
+    "startMs": 14500,
+    "fact": "Paul McCartney antwortete damit Kritikern – und seinem Ex-Beatles-Kollegen John Lennon –, die ihm seichte Liebeslieder vorwarfen.",
+    "factEn": "Paul McCartney wrote it as a rebuttal to critics – and his former bandmate John Lennon – who accused him of writing lightweight love songs."
   },
   {
     "id": "song_574",
@@ -6288,7 +6876,9 @@ export const songs: Song[] = [
     "previewUrl": "https://mxtape.celox.io/audio/song_574.m4a",
     "genre": "Pop",
     "startMs": 4000,
-    "party": true
+    "party": true,
+    "fact": "Das Geklapper im Intro macht Frank Farian, indem er mit einem Bleistift auf seine Zähne klopft – er singt auch alle Männerstimmen.",
+    "factEn": "The clicking in the intro is Frank Farian playing on his teeth with a pencil – he also sang all the male parts."
   },
   {
     "id": "song_575",
@@ -6299,7 +6889,9 @@ export const songs: Song[] = [
     "previewUrl": "https://mxtape.celox.io/audio/song_575.m4a",
     "genre": "Rock",
     "startMs": 4500,
-    "party": true
+    "party": true,
+    "fact": "In einer weltweiten Musikumfrage von Sony Ericsson wurde der Song zum Lieblingslied der Welt gewählt.",
+    "factEn": "In a worldwide music poll by Sony Ericsson, it was voted the world's favourite song."
   },
   {
     "id": "song_576",
@@ -6308,7 +6900,9 @@ export const songs: Song[] = [
     "year": 1977,
     "album": "Magic Fly",
     "previewUrl": "https://mxtape.celox.io/audio/song_576.m4a",
-    "genre": "Electronic"
+    "genre": "Electronic",
+    "fact": "Eine Version des Stücks wurde Titelmusik der chinesischen Originalfassung von Jackie Chans Film „Snake in the Eagle's Shadow“.",
+    "factEn": "A version of the track became the main theme of the original Chinese version of Jackie Chan's film \"Snake in the Eagle's Shadow\"."
   },
   {
     "id": "song_577",
@@ -6318,7 +6912,9 @@ export const songs: Song[] = [
     "album": "Baccara",
     "previewUrl": "https://mxtape.celox.io/audio/song_577.m4a",
     "genre": "Pop",
-    "party": true
+    "party": true,
+    "fact": "Der Song gilt als inoffizielle Hymne der schottischen Fußball-Nationalmannschaft.",
+    "factEn": "The song is considered an unofficial anthem of the Scottish national football team."
   },
   {
     "id": "song_578",
@@ -6327,7 +6923,9 @@ export const songs: Song[] = [
     "year": 1977,
     "album": "Never Mind the Bollocks, Here's the Sex Pistols",
     "previewUrl": "https://mxtape.celox.io/audio/song_578.m4a",
-    "genre": "Rock"
+    "genre": "Rock",
+    "fact": "Die Band versuchte, den Song von einem Boot namens „Queen Elizabeth“ auf der Themse zu spielen – am Ende wurden elf Leute festgenommen.",
+    "factEn": "The band tried to play the song from a boat named the Queen Elizabeth on the Thames – eleven people ended up arrested."
   },
   {
     "id": "song_579",
@@ -6337,7 +6935,9 @@ export const songs: Song[] = [
     "album": "The Kick Inside",
     "previewUrl": "https://mxtape.celox.io/audio/song_579.m4a",
     "genre": "Pop",
-    "startMs": 7500
+    "startMs": 7500,
+    "fact": "Gitarrist Ian Bairnson spielte das Solo mit einem gebrochenen Arm.",
+    "factEn": "Guitarist Ian Bairnson played the solo with a broken arm."
   },
   {
     "id": "song_580",
@@ -6347,7 +6947,9 @@ export const songs: Song[] = [
     "album": "Grease: The Original Soundtrack From the Motion Picture",
     "previewUrl": "https://mxtape.celox.io/audio/song_580.m4a",
     "genre": "Pop",
-    "party": true
+    "party": true,
+    "fact": "Der Song stand nicht im ursprünglichen Bühnenmusical – John Farrar schrieb ihn eigens für Olivia Newton-John, und Regisseur Randal Kleiser mochte ihn nicht.",
+    "factEn": "The song wasn't in the original stage musical – John Farrar wrote it specially for Olivia Newton-John, and director Randal Kleiser didn't like it."
   },
   {
     "id": "song_581",
@@ -6356,7 +6958,9 @@ export const songs: Song[] = [
     "year": 1978,
     "album": "City to City",
     "previewUrl": "https://mxtape.celox.io/audio/song_581.m4a",
-    "genre": "Rock"
+    "genre": "Rock",
+    "fact": "Saxofonist Raphael Ravenscroft bekam für die Session angeblich nur 27 Pfund – und ärgerte sich später, dass er darin verstimmt spielt.",
+    "factEn": "Saxophonist Raphael Ravenscroft was reportedly paid just £27 for the session – and later said the song irritated him because he was out of tune."
   },
   {
     "id": "song_582",
@@ -6366,7 +6970,9 @@ export const songs: Song[] = [
     "album": "Parallel Lines",
     "previewUrl": "https://mxtape.celox.io/audio/song_582.m4a",
     "genre": "Pop",
-    "startMs": 8000
+    "startMs": 8000,
+    "fact": "Der Titel stammt von einem Film von Werner Herzog – gesehen hatte den in der Band niemand.",
+    "factEn": "The title comes from a Werner Herzog film – which none of the band had actually seen."
   },
   {
     "id": "song_583",
@@ -6376,7 +6982,9 @@ export const songs: Song[] = [
     "album": "Toto",
     "previewUrl": "https://mxtape.celox.io/audio/song_583.m4a",
     "genre": "Rock",
-    "startMs": 5000
+    "startMs": 5000,
+    "fact": "David Paich jonglierte als Schüler mit drei Freundinnen, die gleichzeitig anriefen – er musste sie in der Leitung warten lassen: „Hold the line“.",
+    "factEn": "As a high schooler David Paich was juggling three girlfriends who all called at once – so he had to put them on hold: \"Hold the line\"."
   },
   {
     "id": "song_584",
@@ -6386,7 +6994,9 @@ export const songs: Song[] = [
     "album": "52nd Street",
     "previewUrl": "https://mxtape.celox.io/audio/song_584.m4a",
     "genre": "Pop",
-    "startMs": 10000
+    "startMs": 10000,
+    "fact": "Im Hintergrund singen Peter Cetera und Donnie Dacus von der Band Chicago mit.",
+    "factEn": "Peter Cetera and Donnie Dacus of Chicago sing the backing vocals."
   },
   {
     "id": "song_585",
@@ -6395,7 +7005,9 @@ export const songs: Song[] = [
     "year": 1979,
     "album": "Breakfast in America",
     "previewUrl": "https://mxtape.celox.io/audio/song_585.m4a",
-    "genre": "Rock"
+    "genre": "Rock",
+    "fact": "Unter den Soundeffekten steckt ein Geräusch aus dem Handheld-Spiel „Football“ von Mattel Electronics.",
+    "factEn": "Among the sound effects is a sound from Mattel Electronics' handheld game \"Football\"."
   },
   {
     "id": "song_586",
@@ -6404,7 +7016,9 @@ export const songs: Song[] = [
     "year": 1979,
     "album": "Get the Knack",
     "previewUrl": "https://mxtape.celox.io/audio/song_586.m4a",
-    "genre": "Rock"
+    "genre": "Rock",
+    "fact": "Sharona Alperin, die den Song inspirierte, posiert selbst auf dem Single-Cover.",
+    "factEn": "Sharona Alperin, who inspired the song, posed for the single's picture sleeve herself."
   },
   {
     "id": "song_587",
@@ -6414,7 +7028,9 @@ export const songs: Song[] = [
     "album": "Off the Wall",
     "previewUrl": "https://mxtape.celox.io/audio/song_587.m4a",
     "genre": "Soul",
-    "party": true
+    "party": true,
+    "fact": "Michael Jacksons Mutter war vom Text schockiert – er versicherte ihr, der Titel habe nichts mit Sex zu tun.",
+    "factEn": "Michael Jackson's mother was shocked by the lyrics – he reassured her the song wasn't about sex."
   },
   {
     "id": "song_588",
@@ -6424,7 +7040,9 @@ export const songs: Song[] = [
     "album": "The Age of Plastic",
     "previewUrl": "https://mxtape.celox.io/audio/song_588.m4a",
     "genre": "Pop",
-    "startMs": 7500
+    "startMs": 7500,
+    "fact": "Das Musikvideo war das allererste, das MTV in den USA zeigte.",
+    "factEn": "Its music video was the very first one shown on MTV in the US."
   },
   {
     "id": "song_589",
@@ -6434,7 +7052,9 @@ export const songs: Song[] = [
     "album": "Bad Girls",
     "previewUrl": "https://mxtape.celox.io/audio/song_589.m4a",
     "genre": "Soul",
-    "party": true
+    "party": true,
+    "fact": "Damit gewann Donna Summer den Grammy für die beste weibliche Rock-Gesangsleistung – im allerersten Jahr dieser Kategorie.",
+    "factEn": "It won Donna Summer the Grammy for Best Female Rock Vocal Performance – in the very first year the award was given."
   },
   {
     "id": "song_590",
@@ -6443,7 +7063,9 @@ export const songs: Song[] = [
     "year": 1979,
     "album": "Songs of Love",
     "previewUrl": "https://mxtape.celox.io/audio/song_590.m4a",
-    "genre": "Soul"
+    "genre": "Soul",
+    "fact": "Ursprünglich war der Song für Stacy Lattisaw gedacht – als Teenie-Lied über Kinder, die miteinander telefonieren.",
+    "factEn": "The song was originally written for Stacy Lattisaw as a teenybopper song about children talking on the telephone."
   },
   {
     "id": "song_591",
@@ -6452,7 +7074,9 @@ export const songs: Song[] = [
     "year": 1979,
     "album": "London Calling",
     "previewUrl": "https://mxtape.celox.io/audio/song_591.m4a",
-    "genre": "Rock"
+    "genre": "Rock",
+    "fact": "Der Song endet mit einem Morsesignal, das S-O-S funkt.",
+    "factEn": "The song fades out with a Morse code signal spelling S-O-S."
   },
   {
     "id": "song_592",
@@ -6462,7 +7086,9 @@ export const songs: Song[] = [
     "album": "Zenyattà Mondatta",
     "previewUrl": "https://mxtape.celox.io/audio/song_592.m4a",
     "genre": "Rock",
-    "startMs": 10500
+    "startMs": 10500,
+    "fact": "Die Melodie taucht in Dire Straits’ „Money for Nothing“ wieder auf – Sting singt darauf die Zeile „I want my MTV“.",
+    "factEn": "The melody resurfaced in Dire Straits' \"Money for Nothing\" – Sting sang the line \"I want my MTV\" to it."
   },
   {
     "id": "song_593",
@@ -6471,7 +7097,9 @@ export const songs: Song[] = [
     "year": 1980,
     "album": "Call Me",
     "previewUrl": "https://mxtape.celox.io/audio/song_593.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "fact": "Giorgio Moroder fragte zuerst Stevie Nicks – erst dann kam Debbie Harry zum Zug und schrieb den Text in wenigen Stunden.",
+    "factEn": "Giorgio Moroder first asked Stevie Nicks – only then did he turn to Debbie Harry, who wrote the lyrics in a few hours."
   },
   {
     "id": "song_594",
@@ -6482,7 +7110,9 @@ export const songs: Song[] = [
     "previewUrl": "https://mxtape.celox.io/audio/song_594.m4a",
     "genre": "Soul",
     "startMs": 3000,
-    "party": true
+    "party": true,
+    "fact": "König Charles III. nannte den Song einen seiner Lieblingssongs – es sei unmöglich gewesen, nicht aufzustehen und zu tanzen.",
+    "factEn": "King Charles III named it one of his favourites – it was \"absolutely impossible not to get up and dance\"."
   },
   {
     "id": "song_595",
@@ -6492,7 +7122,9 @@ export const songs: Song[] = [
     "album": "Mouth to Mouth",
     "previewUrl": "https://mxtape.celox.io/audio/song_595.m4a",
     "genre": "Electronic",
-    "party": true
+    "party": true,
+    "fact": "Der Song spiegelt den Traum der Bandmitglieder, von Minneapolis nach New York zu ziehen.",
+    "factEn": "The song reflects the band members' dream of moving from Minneapolis to New York City."
   },
   {
     "id": "song_596",
@@ -6501,7 +7133,9 @@ export const songs: Song[] = [
     "year": 1980,
     "album": "Love Will Tear Us Apart",
     "previewUrl": "https://mxtape.celox.io/audio/song_596.m4a",
-    "genre": "Rock"
+    "genre": "Rock",
+    "fact": "Der Titel wirkt wie eine ironische Antwort auf „Love Will Keep Us Together“ – aufgenommen wurde er im selben Studio wie dieser Song.",
+    "factEn": "The title reads like an ironic reply to \"Love Will Keep Us Together\" – and it was recorded in the same studio as that song."
   },
   {
     "id": "song_597",
@@ -6511,7 +7145,9 @@ export const songs: Song[] = [
     "album": "Ideal",
     "previewUrl": "https://mxtape.celox.io/audio/song_597.m4a",
     "genre": "Rock",
-    "german": true
+    "german": true,
+    "fact": "Annette Humpe nahm den Song zuerst mit ihrer anderen Band, den Neonbabies, auf.",
+    "factEn": "Annette Humpe first recorded the song with her other band, the Neonbabies."
   },
   {
     "id": "song_598",
@@ -6521,7 +7157,9 @@ export const songs: Song[] = [
     "album": "Working Class Dog",
     "previewUrl": "https://mxtape.celox.io/audio/song_598.m4a",
     "genre": "Rock",
-    "startMs": 7500
+    "startMs": 7500,
+    "fact": "Der echte Freund hieß Gary – das klang gesungen aber nicht gut, also nahm Rick Springfield „Jessie“ von seinem T-Shirt mit dem Namen des Footballers Ron Jessie.",
+    "factEn": "The real friend was called Gary – which didn't sing well, so Rick Springfield took \"Jessie\" from his T-shirt bearing football player Ron Jessie's name."
   },
   {
     "id": "song_599",
@@ -6530,7 +7168,9 @@ export const songs: Song[] = [
     "year": 1981,
     "album": "Hot Space",
     "previewUrl": "https://mxtape.celox.io/audio/song_599.m4a",
-    "genre": "Rock"
+    "genre": "Rock",
+    "fact": "Vanilla Ice sampelte den Song für „Ice Ice Baby“ ohne Nennung – nach einer Klage bekamen Queen und Bowie einen Songwriting-Credit.",
+    "factEn": "Vanilla Ice sampled it for \"Ice Ice Baby\" without credit – Queen and Bowie sued and gained a songwriting credit."
   },
   {
     "id": "song_600",
@@ -6540,7 +7180,9 @@ export const songs: Song[] = [
     "album": "Vienna",
     "previewUrl": "https://mxtape.celox.io/audio/song_600.m4a",
     "genre": "Pop",
-    "startMs": 5500
+    "startMs": 5500,
+    "fact": "Midge Ure sagte über das Arrangement „This means nothing to me“ – Produzent Conny Plank antwortete: „Dann sing das doch.“",
+    "factEn": "Midge Ure said of the arrangement, \"This means nothing to me\" – producer Conny Plank replied: \"Well, sing that then.\""
   },
   {
     "id": "song_601",
@@ -6549,7 +7191,9 @@ export const songs: Song[] = [
     "year": 1981,
     "album": "Physical",
     "previewUrl": "https://mxtape.celox.io/audio/song_601.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "fact": "Der Song war ursprünglich für Rod Stewart gedacht, dann lehnte Tina Turner ab – so landete er bei Olivia Newton-John.",
+    "factEn": "The song was originally intended for Rod Stewart, then Tina Turner turned it down – and so it went to Olivia Newton-John."
   },
   {
     "id": "song_602",
@@ -6559,7 +7203,9 @@ export const songs: Song[] = [
     "album": "I Love Rock 'n' Roll",
     "previewUrl": "https://mxtape.celox.io/audio/song_602.m4a",
     "genre": "Rock",
-    "party": true
+    "party": true,
+    "fact": "Das Original stammt von der Band Arrows – Alan Merrill schrieb es als Antwort auf „It's Only Rock 'n Roll“ der Rolling Stones.",
+    "factEn": "The original is by the band the Arrows – Alan Merrill wrote it as a response to the Rolling Stones' \"It's Only Rock 'n Roll\"."
   },
   {
     "id": "song_603",
@@ -6569,7 +7215,9 @@ export const songs: Song[] = [
     "album": "Business as Usual",
     "previewUrl": "https://mxtape.celox.io/audio/song_603.m4a",
     "genre": "Pop",
-    "startMs": 2000
+    "startMs": 2000,
+    "fact": "In Australien nennt man den Song scherzhaft „die wahre australische Nationalhymne“.",
+    "factEn": "In Australia the song is often jokingly called \"the real Australian National Anthem\"."
   },
   {
     "id": "song_604",
@@ -6579,7 +7227,9 @@ export const songs: Song[] = [
     "album": "Upstairs at Eric's",
     "previewUrl": "https://mxtape.celox.io/audio/song_604.m4a",
     "genre": "Electronic",
-    "startMs": 7500
+    "startMs": 7500,
+    "fact": "Im Musikvideo spielt Vince Clarke Victor Frankenstein – in einer Art Spukschloss.",
+    "factEn": "In the music video, Vince Clarke plays Victor Frankenstein in a sort of haunted mansion."
   },
   {
     "id": "song_605",
@@ -6588,7 +7238,9 @@ export const songs: Song[] = [
     "year": 1982,
     "album": "Kissing to Be Clever",
     "previewUrl": "https://mxtape.celox.io/audio/song_605.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "fact": "Zu „Top of the Pops“ wurde die Band erst am Vorabend eingeladen – weil Shakin' Stevens abgesagt hatte.",
+    "factEn": "The band was only asked onto Top of the Pops the night before – because Shakin' Stevens had pulled out."
   },
   {
     "id": "song_606",
@@ -6598,7 +7250,9 @@ export const songs: Song[] = [
     "album": "The Hurting",
     "previewUrl": "https://mxtape.celox.io/audio/song_606.m4a",
     "genre": "Pop",
-    "startMs": 8500
+    "startMs": 8500,
+    "fact": "Die Zeile lautet eigentlich „Halargian world“ – Halarge war ein Fantasieplanet, der bei den Aufnahmen erfunden und als Witz in den Gesang eingebaut wurde.",
+    "factEn": "The actual line is \"Halargian world\" – Halarge was an imaginary planet invented during the recording sessions and added to the vocal as a joke."
   },
   {
     "id": "song_607",
@@ -6608,7 +7262,9 @@ export const songs: Song[] = [
     "album": "Ich komme",
     "previewUrl": "https://mxtape.celox.io/audio/song_607.m4a",
     "genre": "Pop",
-    "german": true
+    "german": true,
+    "fact": "In der ZDF-Hitparade wählten die Zuschauer den Song per TED auf Platz eins – Hubert Kah durfte ihn deshalb ein zweites Mal singen.",
+    "factEn": "On ZDF-Hitparade viewers voted the song to number one – so Hubert Kah got to perform it a second time."
   },
   {
     "id": "song_608",
@@ -6618,7 +7274,9 @@ export const songs: Song[] = [
     "album": "Ihre größten Erfolge",
     "previewUrl": "https://mxtape.celox.io/audio/song_608.m4a",
     "genre": "Rock",
-    "german": true
+    "german": true,
+    "fact": "Im Radio lief der Song nur selten – angeblich, weil er zur Brandstiftung aufrufe.",
+    "factEn": "The song was rarely played on the radio – supposedly because it called for arson."
   },
   {
     "id": "song_609",
@@ -6637,7 +7295,9 @@ export const songs: Song[] = [
     "year": 1982,
     "album": "Rhythm of Youth",
     "previewUrl": "https://mxtape.celox.io/audio/song_610.m4a",
-    "genre": "Electronic"
+    "genre": "Electronic",
+    "fact": "Ivan Doroschuk schrieb den Song, nachdem er wegen Pogo-Tanzens aus einem Club geworfen worden war.",
+    "factEn": "Ivan Doroschuk wrote the song after he had been thrown out of a club for pogo dancing."
   },
   {
     "id": "song_611",
@@ -6646,7 +7306,9 @@ export const songs: Song[] = [
     "year": 1983,
     "album": "Let’s Dance",
     "previewUrl": "https://mxtape.celox.io/audio/song_611.m4a",
-    "genre": "Rock"
+    "genre": "Rock",
+    "fact": "Bowie spielte Nile Rodgers den Song zuerst als Folknummer vor – Rodgers fand: Dazu kann man nicht tanzen.",
+    "factEn": "Bowie first played it to Nile Rodgers as a folk-like number – Rodgers thought: you can't dance to this."
   },
   {
     "id": "song_612",
@@ -6655,7 +7317,9 @@ export const songs: Song[] = [
     "year": 1983,
     "album": "True",
     "previewUrl": "https://mxtape.celox.io/audio/song_612.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "fact": "Gary Kemp schrieb den Song über seine Gefühle für Clare Grogan, die Sängerin von Altered Images.",
+    "factEn": "Gary Kemp wrote the song to express his feelings for Altered Images singer Clare Grogan."
   },
   {
     "id": "song_613",
@@ -6665,7 +7329,9 @@ export const songs: Song[] = [
     "album": "No Parlez",
     "previewUrl": "https://mxtape.celox.io/audio/song_613.m4a",
     "genre": "Pop",
-    "startMs": 1500
+    "startMs": 1500,
+    "fact": "Für das Bass-Intro zitierte Pino Palladino die Fagott-Melodie vom Anfang von Strawinskys „Le Sacre du Printemps“.",
+    "factEn": "For the bass intro, Pino Palladino quoted the bassoon melody that opens Stravinsky's The Rite of Spring."
   },
   {
     "id": "song_614",
@@ -6676,7 +7342,9 @@ export const songs: Song[] = [
     "previewUrl": "https://mxtape.celox.io/audio/song_614.m4a",
     "genre": "Rock",
     "startMs": 3500,
-    "german": true
+    "german": true,
+    "fact": "Der Song entstand in den Niederlanden, wo die Eltern des Bassisten ein Ferienhaus hatten – das Wort „Zoom“ stammt laut Klaus Lage von ihm.",
+    "factEn": "The song was written in the Netherlands, where the bassist's parents had a holiday home – the word \"Zoom\" was Klaus Lage's, he says."
   },
   {
     "id": "song_615",
@@ -6686,7 +7354,9 @@ export const songs: Song[] = [
     "album": "4630 Bochum",
     "previewUrl": "https://mxtape.celox.io/audio/song_615.m4a",
     "genre": "Rock",
-    "german": true
+    "german": true,
+    "fact": "Inspiriert haben Herbert Grönemeyer nach eigenen Angaben „endlose Diskussionen, Vorwürfe und Breitseiten“ seiner Freundin Anna Henkel.",
+    "factEn": "By his own account, Herbert Grönemeyer was inspired by \"endless discussions, accusations and broadsides\" from his girlfriend Anna Henkel."
   },
   {
     "id": "song_616",
@@ -6695,7 +7365,9 @@ export const songs: Song[] = [
     "year": 1984,
     "album": "Born in the U.S.A.",
     "previewUrl": "https://mxtape.celox.io/audio/song_616.m4a",
-    "genre": "Rock"
+    "genre": "Rock",
+    "fact": "Springsteen schrieb den Song in einer Nacht, nachdem Jon Landau meinte, dem Album fehle eine Single – zuerst hatte er geschimpft: „Willst du noch einen, schreib ihn selbst.“",
+    "factEn": "Springsteen wrote it overnight after Jon Landau said the album needed a single – at first he snapped: \"You want another one, you write it.\""
   },
   {
     "id": "song_617",
@@ -6704,7 +7376,9 @@ export const songs: Song[] = [
     "year": 1984,
     "album": "Purple Rain",
     "previewUrl": "https://mxtape.celox.io/audio/song_617.m4a",
-    "genre": "R&B"
+    "genre": "R&B",
+    "fact": "Der Song hat keine Basslinie – Prince hatte eine, strich sie aber, weil ihm der Song damit zu konventionell klang.",
+    "factEn": "The song has no bass line – Prince had one, but cut it because he felt the song was too conventional with it."
   },
   {
     "id": "song_618",
@@ -6714,7 +7388,9 @@ export const songs: Song[] = [
     "album": "1984",
     "previewUrl": "https://mxtape.celox.io/audio/song_618.m4a",
     "genre": "Rock",
-    "party": true
+    "party": true,
+    "fact": "Eddie Van Halens Keyboard-Riff lag zunächst ungenutzt herum – die anderen Bandmitglieder hatten ihn abgelehnt.",
+    "factEn": "Eddie Van Halen's synth riff sat unused at first – the other band members had rejected it."
   },
   {
     "id": "song_619",
@@ -6725,7 +7401,9 @@ export const songs: Song[] = [
     "previewUrl": "https://mxtape.celox.io/audio/song_619.m4a",
     "genre": "Pop",
     "startMs": 2500,
-    "party": true
+    "party": true,
+    "fact": "Auf „Who ya gonna call?“ kam Ray Parker Jr., als er spätnachts einen billigen Werbespot für einen lokalen Dienstleister sah.",
+    "factEn": "Ray Parker Jr. came up with \"Who ya gonna call?\" after seeing a cheap late-night TV commercial for a local service."
   },
   {
     "id": "song_620",
@@ -6734,7 +7412,9 @@ export const songs: Song[] = [
     "year": 1983,
     "album": "She's So Unusual",
     "previewUrl": "https://mxtape.celox.io/audio/song_620.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "fact": "Den Titel entdeckte Cyndi Lauper in einer Fernsehzeitschrift beim Science-Fiction-Film „Time After Time“ – eigentlich nur als Platzhalter.",
+    "factEn": "Cyndi Lauper borrowed the title from a TV Guide listing for the sci-fi film Time After Time – meant only as a placeholder."
   },
   {
     "id": "song_621",
@@ -6743,7 +7423,9 @@ export const songs: Song[] = [
     "year": 1984,
     "album": "The Age of Consent",
     "previewUrl": "https://mxtape.celox.io/audio/song_621.m4a",
-    "genre": "Electronic"
+    "genre": "Electronic",
+    "fact": "Der Song entstand aus dem Versuch, „Pretty Vacant“ von den Sex Pistols zu covern.",
+    "factEn": "The song grew out of an attempt to cover the Sex Pistols' \"Pretty Vacant\"."
   },
   {
     "id": "song_622",
@@ -6752,7 +7434,9 @@ export const songs: Song[] = [
     "year": 1984,
     "album": "The Woman in Red",
     "previewUrl": "https://mxtape.celox.io/audio/song_622.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "fact": "Der Song gewann den Oscar und den Golden Globe als bester Filmsong – und war in 28 Ländern auf Platz eins.",
+    "factEn": "The song won both the Oscar and the Golden Globe for Best Original Song – and reached number one in 28 countries."
   },
   {
     "id": "song_623",
@@ -6762,7 +7446,9 @@ export const songs: Song[] = [
     "album": "The Works",
     "previewUrl": "https://mxtape.celox.io/audio/song_623.m4a",
     "genre": "Rock",
-    "startMs": 4000
+    "startMs": 4000,
+    "fact": "Die Idee kam Roger Taylor, als sein Sohn im Auto über einen Song im Radio „radio ca-ca“ sagte.",
+    "factEn": "Roger Taylor got the idea when his son said \"radio ca-ca\" about a song on the car radio."
   },
   {
     "id": "song_624",
@@ -6772,7 +7458,9 @@ export const songs: Song[] = [
     "album": "Brothers in Arms",
     "previewUrl": "https://mxtape.celox.io/audio/song_624.m4a",
     "genre": "Rock",
-    "startMs": 8000
+    "startMs": 8000,
+    "fact": "Sting singt als Gast das Falsett-Intro und den Chor „I want my MTV“.",
+    "factEn": "Sting makes a guest appearance, singing the falsetto intro and the \"I want my MTV\" chorus."
   },
   {
     "id": "song_625",
@@ -6782,7 +7470,9 @@ export const songs: Song[] = [
     "album": "Desperately Seeking Susan",
     "previewUrl": "https://mxtape.celox.io/audio/song_625.m4a",
     "genre": "Pop",
-    "party": true
+    "party": true,
+    "fact": "Gedacht war der Song ursprünglich für Cheyne, einen jugendlichen Schützling von DJ Mark Kamins.",
+    "factEn": "The track was first conceived for Cheyne, a teenage protégé of DJ Mark Kamins."
   },
   {
     "id": "song_626",
@@ -6792,7 +7482,9 @@ export const songs: Song[] = [
     "album": "Hounds of Love",
     "previewUrl": "https://mxtape.celox.io/audio/song_626.m4a",
     "genre": "Pop",
-    "startMs": 6500
+    "startMs": 6500,
+    "fact": "Nach dem Einsatz in der Netflix-Serie „Stranger Things“ erreichte der Song Platz eins in acht Ländern.",
+    "factEn": "After it featured in the Netflix series \"Stranger Things\", the song reached number one in eight countries."
   },
   {
     "id": "song_627",
@@ -6802,7 +7494,9 @@ export const songs: Song[] = [
     "album": "Welcome to the Real World",
     "previewUrl": "https://mxtape.celox.io/audio/song_627.m4a",
     "genre": "Pop",
-    "startMs": 3000
+    "startMs": 3000,
+    "fact": "Richard Page, Steve George und John Lang schrieben den Song in etwa zwanzig Minuten.",
+    "factEn": "Richard Page, Steve George and John Lang wrote the song in about twenty minutes."
   },
   {
     "id": "song_628",
@@ -6813,7 +7507,9 @@ export const songs: Song[] = [
     "previewUrl": "https://mxtape.celox.io/audio/song_628.m4a",
     "genre": "Pop",
     "startMs": 6500,
-    "german": true
+    "german": true,
+    "fact": "Rapper Das Bo machte aus der Refrainzeile „Ohne Bo (fahr’n wir heut’ nicht nach Haus)“.",
+    "factEn": "Rapper Das Bo turned the refrain line into \"Ohne Bo (fahr'n wir heut' nicht nach Haus)\"."
   },
   {
     "id": "song_629",
@@ -6823,7 +7519,9 @@ export const songs: Song[] = [
     "album": "Please",
     "previewUrl": "https://mxtape.celox.io/audio/song_629.m4a",
     "genre": "Electronic",
-    "startMs": 16500
+    "startMs": 16500,
+    "fact": "Die erste Fassung mit Produzent Bobby Orlando enthielt einen Drum-Part aus Michael Jacksons „Billie Jean“.",
+    "factEn": "The first version, made with producer Bobby Orlando, included a drum part lifted from Michael Jackson's \"Billie Jean\"."
   },
   {
     "id": "song_630",
@@ -6833,7 +7531,9 @@ export const songs: Song[] = [
     "album": "So",
     "previewUrl": "https://mxtape.celox.io/audio/song_630.m4a",
     "genre": "Rock",
-    "startMs": 32000
+    "startMs": 32000,
+    "fact": "Das Video gewann an einem Abend die Rekordzahl von neun MTV Video Music Awards.",
+    "factEn": "The video won a record nine MTV Video Music Awards in one night."
   },
   {
     "id": "song_631",
@@ -6842,7 +7542,9 @@ export const songs: Song[] = [
     "year": 1986,
     "album": "Top Gun",
     "previewUrl": "https://mxtape.celox.io/audio/song_631.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "fact": "Texter Tom Whitlock lernte Giorgio Moroder kennen, als er als Mechaniker die Bremsen von dessen Ferrari reparierte.",
+    "factEn": "Lyricist Tom Whitlock met Giorgio Moroder when, working as a mechanic, he fixed the brakes on Moroder's Ferrari."
   },
   {
     "id": "song_632",
@@ -6863,7 +7565,9 @@ export const songs: Song[] = [
     "previewUrl": "https://mxtape.celox.io/audio/song_633.m4a",
     "genre": "Pop",
     "startMs": 4500,
-    "party": true
+    "party": true,
+    "fact": "Die Idee kam Liam Sternberg auf einer Fähre: Passagiere balancierten bei Wellengang wie Figuren auf ägyptischen Grabmalereien.",
+    "factEn": "Liam Sternberg got the idea on a ferry, where passengers struggling for balance reminded him of figures in Egyptian tomb paintings."
   },
   {
     "id": "song_634",
@@ -6872,7 +7576,9 @@ export const songs: Song[] = [
     "year": 1987,
     "album": "Heaven on Earth",
     "previewUrl": "https://mxtape.celox.io/audio/song_634.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "fact": "Regie beim Musikvideo führte die Schauspielerin Diane Keaton.",
+    "factEn": "The music video was directed by actress Diane Keaton."
   },
   {
     "id": "song_635",
@@ -6882,7 +7588,9 @@ export const songs: Song[] = [
     "album": "Pump Up the Volume",
     "previewUrl": "https://mxtape.celox.io/audio/song_635.m4a",
     "genre": "Electronic",
-    "startMs": 4000
+    "startMs": 4000,
+    "fact": "Den Titel lieferte ein Sample aus „I Know You Got Soul“ von Eric B. & Rakim.",
+    "factEn": "The title comes from a sample of \"I Know You Got Soul\" by Eric B. & Rakim."
   },
   {
     "id": "song_636",
@@ -6892,7 +7600,9 @@ export const songs: Song[] = [
     "album": "Hysteria",
     "previewUrl": "https://mxtape.celox.io/audio/song_636.m4a",
     "genre": "Rock",
-    "startMs": 6000
+    "startMs": 6000,
+    "fact": "Der Song entstand gegen Ende der Albumaufnahmen: Joe Elliott jammte in einer Teepause mit einem Riff auf der Akustikgitarre.",
+    "factEn": "The song came near the end of the album sessions: Joe Elliott was jamming a riff on an acoustic guitar during a tea break."
   },
   {
     "id": "song_637",
@@ -6902,7 +7612,9 @@ export const songs: Song[] = [
     "album": "Flag",
     "previewUrl": "https://mxtape.celox.io/audio/song_637.m4a",
     "genre": "Electronic",
-    "startMs": 3000
+    "startMs": 3000,
+    "fact": "Der Song war die Titelmelodie der deutschen Musikvideo-Sendung „Formel Eins“.",
+    "factEn": "The song was the theme tune of the German music video show \"Formel Eins\"."
   },
   {
     "id": "song_638",
@@ -6913,7 +7625,9 @@ export const songs: Song[] = [
     "previewUrl": "https://mxtape.celox.io/audio/song_638.m4a",
     "genre": "Electronic",
     "startMs": 7000,
-    "party": true
+    "party": true,
+    "fact": "Im Video bewegt Model Felly Kilingi die Lippen – gesungen hat aber Ya Kid K.",
+    "factEn": "In the video, model Felly Kilingi lip-syncs – the actual vocalist was Ya Kid K."
   },
   {
     "id": "song_639",
@@ -6922,7 +7636,9 @@ export const songs: Song[] = [
     "year": 1988,
     "album": "Look Sharp!",
     "previewUrl": "https://mxtape.celox.io/audio/song_639.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "fact": "Ursprünglich hieß der Song „He's Got the Look“ – Per Gessle wollte ihn zunächst von Marie Fredriksson singen lassen.",
+    "factEn": "The song was originally called \"He's Got the Look\" – Per Gessle initially wanted Marie Fredriksson to sing it."
   },
   {
     "id": "song_640",
@@ -6932,7 +7648,9 @@ export const songs: Song[] = [
     "album": "Storm Front",
     "previewUrl": "https://mxtape.celox.io/audio/song_640.m4a",
     "genre": "Pop",
-    "startMs": 6000
+    "startMs": 6000,
+    "fact": "Billy Joel selbst verglich den Song mit einem „Zahnarztbohrer“ und nannte ihn „ein schreckliches Musikstück“.",
+    "factEn": "Billy Joel himself compared the song to \"a dentist drill\" and called it \"a terrible piece of music\"."
   },
   {
     "id": "song_641",
@@ -6942,7 +7660,9 @@ export const songs: Song[] = [
     "album": "Worldbeat",
     "previewUrl": "https://mxtape.celox.io/audio/song_641.m4a",
     "genre": "Pop",
-    "party": true
+    "party": true,
+    "fact": "Der Hit ist eine unautorisierte Version von „Llorando se fue“ der bolivianischen Gruppe Los Kjarkas.",
+    "factEn": "The hit is an unauthorised version of \"Llorando se fue\" by Bolivian group Los Kjarkas."
   },
   {
     "id": "song_642",
@@ -6963,7 +7683,9 @@ export const songs: Song[] = [
     "previewUrl": "https://mxtape.celox.io/audio/song_643.m4a",
     "genre": "Electronic",
     "startMs": 6500,
-    "party": true
+    "party": true,
+    "fact": "Der Titel ist ein Hörfehler: Die Gruppe verstand im gesampelten Text „right on time“ als „ride on time“.",
+    "factEn": "The title is a mishearing: the group heard the sampled lyric \"right on time\" as \"ride on time\"."
   },
   {
     "id": "song_644",
@@ -6974,7 +7696,9 @@ export const songs: Song[] = [
     "previewUrl": "https://mxtape.celox.io/audio/song_644.m4a",
     "genre": "Electronic",
     "startMs": 10500,
-    "party": true
+    "party": true,
+    "fact": "Das „I, I-I-I-I-I“ stammt aus einem Sample von Eva Gabor aus der Titelmelodie der Serie „Green Acres“.",
+    "factEn": "The \"I, I-I-I-I-I\" comes from a sample of Eva Gabor in the theme song of the series \"Green Acres\"."
   },
   {
     "id": "song_645",
@@ -6985,7 +7709,9 @@ export const songs: Song[] = [
     "previewUrl": "https://mxtape.celox.io/audio/song_645.m4a",
     "genre": "Pop",
     "startMs": 2500,
-    "party": true
+    "party": true,
+    "fact": "Das Schwarz-Weiß-Video von David Fincher wurde innerhalb von 16 Stunden gedreht.",
+    "factEn": "The black-and-white video, directed by David Fincher, was shot within 16 hours."
   },
   {
     "id": "song_646",
@@ -7004,7 +7730,9 @@ export const songs: Song[] = [
     "year": 1991,
     "album": "Innuendo",
     "previewUrl": "https://mxtape.celox.io/audio/song_647.m4a",
-    "genre": "Rock"
+    "genre": "Rock",
+    "fact": "„I'll fucking do it, darling“, sagte Freddie Mercury – kippte einen Wodka und sang den Part makellos ein.",
+    "factEn": "\"I'll fucking do it, darling,\" Freddie Mercury said – then downed a vodka and nailed the vocal."
   },
   {
     "id": "song_648",
@@ -7013,7 +7741,9 @@ export const songs: Song[] = [
     "year": 1991,
     "album": "Blue Lines",
     "previewUrl": "https://mxtape.celox.io/audio/song_648.m4a",
-    "genre": "Electronic"
+    "genre": "Electronic",
+    "fact": "Das Video ist eine einzige ungeschnittene Einstellung: Shara Nelson läuft durch ein Viertel von Los Angeles.",
+    "factEn": "The video is one single continuous shot of Shara Nelson walking through a Los Angeles neighbourhood."
   },
   {
     "id": "song_649",
@@ -7023,7 +7753,9 @@ export const songs: Song[] = [
     "album": "Blacks' Magic",
     "previewUrl": "https://mxtape.celox.io/audio/song_649.m4a",
     "genre": "Hip-Hop",
-    "startMs": 3500
+    "startMs": 3500,
+    "fact": "In Deutschland war er der erste Originalsong eines US-Hip-Hop-Acts auf Platz eins.",
+    "factEn": "In Germany it was the first original song by an American hip-hop act to reach number one."
   },
   {
     "id": "song_650",
@@ -7032,7 +7764,9 @@ export const songs: Song[] = [
     "year": 1991,
     "album": "Dangerous",
     "previewUrl": "https://mxtape.celox.io/audio/song_650.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "fact": "Das Video lief zeitgleich in 69 Ländern an – vor 500 Millionen Zuschauern, so vielen wie nie bei einem Musikvideo.",
+    "factEn": "The video premiered simultaneously in 69 countries to 500 million viewers, the most ever for a music video."
   },
   {
     "id": "song_651",
@@ -7041,7 +7775,9 @@ export const songs: Song[] = [
     "year": 1992,
     "album": "Rage Against the Machine",
     "previewUrl": "https://mxtape.celox.io/audio/song_651.m4a",
-    "genre": "Rock"
+    "genre": "Rock",
+    "fact": "Tom Morello erfand das Riff, während er einem Gitarrenschüler die Drop-D-Stimmung erklärte.",
+    "factEn": "Tom Morello came up with the riff while teaching a guitar student how to use drop-D tuning."
   },
   {
     "id": "song_652",
@@ -7051,7 +7787,9 @@ export const songs: Song[] = [
     "album": "Mack Daddy",
     "previewUrl": "https://mxtape.celox.io/audio/song_652.m4a",
     "genre": "Hip-Hop",
-    "startMs": 31000
+    "startMs": 31000,
+    "fact": "Die Idee kam von einem Budweiser-Werbespot mit dünnen Models – der Song sollte das Gegenteil feiern.",
+    "factEn": "The idea came from a Budweiser commercial with thin models – the song set out to celebrate the opposite."
   },
   {
     "id": "song_653",
@@ -7060,7 +7798,9 @@ export const songs: Song[] = [
     "year": 1992,
     "album": "Rush",
     "previewUrl": "https://mxtape.celox.io/audio/song_653.m4a",
-    "genre": "Rock"
+    "genre": "Rock",
+    "fact": "Eric Clapton schrieb den Song mit Will Jennings für den Film „Rush“ – als Verarbeitung der Trauer um seinen Sohn Conor.",
+    "factEn": "Eric Clapton wrote the song with Will Jennings for the film \"Rush\", as a way of dealing with his grief for his son Conor."
   },
   {
     "id": "song_654",
@@ -7070,7 +7810,9 @@ export const songs: Song[] = [
     "album": "Duophonic",
     "previewUrl": "https://mxtape.celox.io/audio/song_654.m4a",
     "genre": "Pop",
-    "startMs": 2500
+    "startMs": 2500,
+    "fact": "Den Song coverten später unter anderem Donny Osmond und David Guetta.",
+    "factEn": "The song was later covered by, among others, Donny Osmond and David Guetta."
   },
   {
     "id": "song_655",
@@ -7079,7 +7821,9 @@ export const songs: Song[] = [
     "year": 1992,
     "album": "Pablo Honey",
     "previewUrl": "https://mxtape.celox.io/audio/song_655.m4a",
-    "genre": "Rock"
+    "genre": "Rock",
+    "fact": "Als die Band an jenem Abend das Studio verließ, meinte Produzent Sean Slade zu Paul Kolderie: „Schade, dass ihr bester Song ein Cover ist.“",
+    "factEn": "As the band left the studio that night, producer Sean Slade told Paul Kolderie: \"Too bad their best song's a cover.\""
   },
   {
     "id": "song_656",
@@ -7088,7 +7832,9 @@ export const songs: Song[] = [
     "year": 1992,
     "album": "The Chronic",
     "previewUrl": "https://mxtape.celox.io/audio/song_656.m4a",
-    "genre": "Hip-Hop"
+    "genre": "Hip-Hop",
+    "fact": "Snoop Dogg nahm seinen Part für die erste Fassung per Telefon aus dem Gefängnis auf.",
+    "factEn": "Snoop Dogg recorded his vocals for the original version over a prison phone."
   },
   {
     "id": "song_657",
@@ -7098,7 +7844,9 @@ export const songs: Song[] = [
     "album": "Happy Nation",
     "previewUrl": "https://mxtape.celox.io/audio/song_657.m4a",
     "genre": "Pop",
-    "party": true
+    "party": true,
+    "fact": "Das Demo war rein instrumental – Produzent Denniz Pop hielt deshalb die Strophe zunächst für den Refrain.",
+    "factEn": "The demo was instrumental only, so producer Denniz Pop at first thought the verse was the chorus."
   },
   {
     "id": "song_658",
@@ -7108,7 +7856,9 @@ export const songs: Song[] = [
     "album": "12 Inches of Snow",
     "previewUrl": "https://mxtape.celox.io/audio/song_658.m4a",
     "genre": "Hip-Hop",
-    "startMs": 1500
+    "startMs": 1500,
+    "fact": "Daddy Yankee veröffentlichte zusammen mit Snow, der neue Parts aufnahm, eine Neufassung als „Con Calma“.",
+    "factEn": "Daddy Yankee released a new version as \"Con Calma\" together with Snow, who recorded new parts."
   },
   {
     "id": "song_659",
@@ -7118,7 +7868,9 @@ export const songs: Song[] = [
     "album": "Alles nur geklaut",
     "previewUrl": "https://mxtape.celox.io/audio/song_659.m4a",
     "genre": "Pop",
-    "german": true
+    "german": true,
+    "fact": "Im Video parodieren die Prinzen Clips anderer Bands, etwa Queens „I Want to Break Free“ und Peter Gabriels „Sledgehammer“.",
+    "factEn": "In the video, Die Prinzen parody other bands' clips, such as Queen's \"I Want to Break Free\" and Peter Gabriel's \"Sledgehammer\"."
   },
   {
     "id": "song_660",
@@ -7127,7 +7879,9 @@ export const songs: Song[] = [
     "year": 1994,
     "album": "Dookie",
     "previewUrl": "https://mxtape.celox.io/audio/song_660.m4a",
-    "genre": "Rock"
+    "genre": "Rock",
+    "fact": "Der Titel „Basket Case“ kommt im Songtext kein einziges Mal vor.",
+    "factEn": "The title \"Basket Case\" never appears in the lyrics."
   },
   {
     "id": "song_661",
@@ -7136,7 +7890,9 @@ export const songs: Song[] = [
     "year": 1994,
     "album": "Smash",
     "previewUrl": "https://mxtape.celox.io/audio/song_661.m4a",
-    "genre": "Rock"
+    "genre": "Rock",
+    "fact": "Gitarrist Noodles verschenkte nach eigenen Angaben die im Video gespielte Fender Stratocaster an einen der Darsteller.",
+    "factEn": "Guitarist Noodles says he gave the Fender Stratocaster he played in the video to one of the actors."
   },
   {
     "id": "song_662",
@@ -7146,7 +7902,9 @@ export const songs: Song[] = [
     "album": "The Rhythm of the Night",
     "previewUrl": "https://mxtape.celox.io/audio/song_662.m4a",
     "genre": "Electronic",
-    "party": true
+    "party": true,
+    "fact": "Gesungen hat Giovanna Bersola, die Lampenfieber hatte – im Video ist stattdessen Olga Souza zu sehen.",
+    "factEn": "The vocals are by Giovanna Bersola, who had stage fright – Olga Souza appears in the video instead."
   },
   {
     "id": "song_663",
@@ -7156,7 +7914,9 @@ export const songs: Song[] = [
     "album": "Here Comes the Hotstepper",
     "previewUrl": "https://mxtape.celox.io/audio/song_663.m4a",
     "genre": "Hip-Hop",
-    "startMs": 5000
+    "startMs": 5000,
+    "fact": "Das „Naaaa na na na naaaa“ im Refrain ist inspiriert von „Land of 1000 Dances“.",
+    "factEn": "The \"naaaa na na na naaaa\" chorus was inspired by \"Land of 1000 Dances\"."
   },
   {
     "id": "song_664",
@@ -7165,7 +7925,9 @@ export const songs: Song[] = [
     "year": 1994,
     "album": "Four Weddings and a Funeral",
     "previewUrl": "https://mxtape.celox.io/audio/song_664.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "fact": "Wet Wet Wets Coverversion für den Soundtrack zu „Four Weddings and a Funeral“ stand 15 Wochen in Folge auf Platz eins in Großbritannien.",
+    "factEn": "Wet Wet Wet's cover for the \"Four Weddings and a Funeral\" soundtrack spent 15 consecutive weeks at number one in the UK."
   },
   {
     "id": "song_665",
@@ -7176,7 +7938,9 @@ export const songs: Song[] = [
     "previewUrl": "https://mxtape.celox.io/audio/song_665.m4a",
     "genre": "Electronic",
     "startMs": 4500,
-    "party": true
+    "party": true,
+    "fact": "Der Song stieg direkt auf Platz eins der UK-Charts ein und beendete die 15-wöchige Spitzenreihe von Wet Wet Wets „Love Is All Around“.",
+    "factEn": "The song entered the UK chart at number one, ending Wet Wet Wet's 15-week run at the top with \"Love Is All Around\"."
   },
   {
     "id": "song_666",
@@ -7186,7 +7950,9 @@ export const songs: Song[] = [
     "album": "Sex & Violins",
     "previewUrl": "https://mxtape.celox.io/audio/song_666.m4a",
     "genre": "Electronic",
-    "party": true
+    "party": true,
+    "fact": "Der Song entstand in nur etwa vier Stunden.",
+    "factEn": "The song was made in about four hours."
   },
   {
     "id": "song_667",
@@ -7196,7 +7962,9 @@ export const songs: Song[] = [
     "album": "Seal",
     "previewUrl": "https://mxtape.celox.io/audio/song_667.m4a",
     "genre": "Pop",
-    "startMs": 6500
+    "startMs": 6500,
+    "fact": "Seal schämte sich nach dem Schreiben für den Song und warf das Band in die Ecke.",
+    "factEn": "After writing it, Seal felt embarrassed by the song and threw the tape in the corner."
   },
   {
     "id": "song_668",
@@ -7206,7 +7974,9 @@ export const songs: Song[] = [
     "album": "Nobody Else",
     "previewUrl": "https://mxtape.celox.io/audio/song_668.m4a",
     "genre": "Pop",
-    "startMs": 9500
+    "startMs": 9500,
+    "fact": "Gary Barlow schrieb den Song nach eigenen Worten in fünfzehn Minuten.",
+    "factEn": "Gary Barlow says he wrote the song in fifteen minutes."
   },
   {
     "id": "song_669",
@@ -7215,7 +7985,9 @@ export const songs: Song[] = [
     "year": 1995,
     "album": "Relish",
     "previewUrl": "https://mxtape.celox.io/audio/song_669.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "fact": "Songwriter Eric Bazilian schrieb ihn in einer Nacht, um eine Frau zu beeindrucken – heute sind die beiden verheiratet.",
+    "factEn": "Songwriter Eric Bazilian wrote it in one night to impress a woman – they are now married."
   },
   {
     "id": "song_670",
@@ -7224,7 +7996,9 @@ export const songs: Song[] = [
     "year": 1995,
     "album": "Dreamland",
     "previewUrl": "https://mxtape.celox.io/audio/song_670.m4a",
-    "genre": "Electronic"
+    "genre": "Electronic",
+    "fact": "Robert Miles wollte mit dem Track DJ-Sets ausklingen lassen, damit Raver ruhiger nach Hause fahren und weniger Unfälle passieren.",
+    "factEn": "Robert Miles wanted the track to close DJ sets and calm ravers before their drive home, to reduce car accidents."
   },
   {
     "id": "song_671",
@@ -7235,7 +8009,9 @@ export const songs: Song[] = [
     "previewUrl": "https://mxtape.celox.io/audio/song_671.m4a",
     "genre": "Hip-Hop",
     "startMs": 2500,
-    "german": true
+    "german": true,
+    "fact": "Die Musik enthält ein Sample von „Soul Street“ des britischen Pop-Duos Jolley & Swain.",
+    "factEn": "The music contains a sample of \"Soul Street\" by the British pop duo Jolley & Swain."
   },
   {
     "id": "song_672",
@@ -7244,7 +8020,9 @@ export const songs: Song[] = [
     "year": 1996,
     "album": "Return of the Mack",
     "previewUrl": "https://mxtape.celox.io/audio/song_672.m4a",
-    "genre": "R&B"
+    "genre": "R&B",
+    "fact": "Der Beat stammt aus einem Sample von „Genius of Love“ des Tom Tom Club.",
+    "factEn": "The beat is sampled from \"Genius of Love\" by Tom Tom Club."
   },
   {
     "id": "song_673",
@@ -7254,7 +8032,9 @@ export const songs: Song[] = [
     "album": "Where Do You Go",
     "previewUrl": "https://mxtape.celox.io/audio/song_673.m4a",
     "genre": "Electronic",
-    "party": true
+    "party": true,
+    "fact": "Zuerst nahm die Eurodance-Band La Bouche den Song auf – No Mercys Coverversion produzierte Frank Farian.",
+    "factEn": "The Eurodance band La Bouche recorded the song first – No Mercy's cover was produced by Frank Farian."
   },
   {
     "id": "song_674",
@@ -7263,7 +8043,9 @@ export const songs: Song[] = [
     "year": 1996,
     "album": "Secrets",
     "previewUrl": "https://mxtape.celox.io/audio/song_674.m4a",
-    "genre": "R&B"
+    "genre": "R&B",
+    "fact": "Billboard kürte ihn bei einem Charts-Jubiläum zum erfolgreichsten Song einer Solokünstlerin oder eines Solokünstlers in der Hot-100-Geschichte.",
+    "factEn": "At a chart anniversary, Billboard named it the most successful song by a solo artist in Hot 100 history."
   },
   {
     "id": "song_675",
@@ -7273,7 +8055,9 @@ export const songs: Song[] = [
     "album": "Travelling Without Moving",
     "previewUrl": "https://mxtape.celox.io/audio/song_675.m4a",
     "genre": "Soul",
-    "startMs": 21500
+    "startMs": 21500,
+    "fact": "Am Anfang der Albumversion ist ein Geräusch aus dem Film „Alien“ zu hören.",
+    "factEn": "The start of the album version features a sound sampled from the film \"Alien\"."
   },
   {
     "id": "song_676",
@@ -7293,7 +8077,9 @@ export const songs: Song[] = [
     "album": "Tubthumper",
     "previewUrl": "https://mxtape.celox.io/audio/song_677.m4a",
     "genre": "Rock",
-    "party": true
+    "party": true,
+    "fact": "Als Inspiration diente der Band ein Pub in Leeds namens Fforde Grene.",
+    "factEn": "A Leeds pub called the Fforde Grene served as the band's inspiration."
   },
   {
     "id": "song_678",
@@ -7302,7 +8088,9 @@ export const songs: Song[] = [
     "year": 1997,
     "album": "No Way Out",
     "previewUrl": "https://mxtape.celox.io/audio/song_678.m4a",
-    "genre": "Hip-Hop"
+    "genre": "Hip-Hop",
+    "fact": "Das „Every Breath You Take“-Sample war nicht genehmigt – Sting klagte und erhielt 100 Prozent der Tantiemen.",
+    "factEn": "The \"Every Breath You Take\" sample wasn't cleared – Sting sued and received 100% of the royalties."
   },
   {
     "id": "song_679",
@@ -7312,7 +8100,9 @@ export const songs: Song[] = [
     "album": "OK Computer",
     "previewUrl": "https://mxtape.celox.io/audio/song_679.m4a",
     "genre": "Rock",
-    "startMs": 1500
+    "startMs": 1500,
+    "fact": "Der Titel geht auf einen Insider-Witz zurück: Die Bandmitglieder drohten einander, die „Karma Police“ zu rufen.",
+    "factEn": "The title comes from an inside joke: the band members would threaten to call the \"karma police\"."
   },
   {
     "id": "song_680",
@@ -7321,7 +8111,9 @@ export const songs: Song[] = [
     "year": 1997,
     "album": "Homework",
     "previewUrl": "https://mxtape.celox.io/audio/song_680.m4a",
-    "genre": "Electronic"
+    "genre": "Electronic",
+    "fact": "In der Albumversion wird „around the world“ 144-mal wiederholt – sonst gibt es keinen Text.",
+    "factEn": "In the album version, \"around the world\" is repeated 144 times – those are the only lyrics."
   },
   {
     "id": "song_681",
@@ -7332,7 +8124,9 @@ export const songs: Song[] = [
     "previewUrl": "https://mxtape.celox.io/audio/song_681.m4a",
     "genre": "Electronic",
     "startMs": 2000,
-    "party": true
+    "party": true,
+    "fact": "Ein Fehler im Presswerk vertauschte zwei Versionen – so wurde der Future-Breeze-Remix zur offiziellen Fassung.",
+    "factEn": "A pressing-plant error swapped two versions, which is how the Future Breeze remix became the official one."
   },
   {
     "id": "song_682",
@@ -7343,7 +8137,9 @@ export const songs: Song[] = [
     "previewUrl": "https://mxtape.celox.io/audio/song_682.m4a",
     "genre": "Metal",
     "startMs": 15000,
-    "german": true
+    "german": true,
+    "fact": "Der Song ist auf dem Soundtrack des Films „Matrix“ zu hören.",
+    "factEn": "The song features on the soundtrack of the film \"The Matrix\"."
   },
   {
     "id": "song_683",
@@ -7354,7 +8150,9 @@ export const songs: Song[] = [
     "previewUrl": "https://mxtape.celox.io/audio/song_683.m4a",
     "genre": "Hip-Hop",
     "startMs": 10000,
-    "party": true
+    "party": true,
+    "fact": "Das Original war die Debütsingle von Run-D.M.C. – Jason Nevins' Remix verkaufte sich weltweit rund fünf Millionen Mal.",
+    "factEn": "The original was Run-D.M.C.'s debut single – Jason Nevins' remix sold around five million copies worldwide."
   },
   {
     "id": "song_684",
@@ -7364,7 +8162,9 @@ export const songs: Song[] = [
     "album": "Come On Over",
     "previewUrl": "https://mxtape.celox.io/audio/song_684.m4a",
     "genre": "Pop",
-    "party": true
+    "party": true,
+    "fact": "Das Video ist eine Hommage an Robert Palmers „Addicted to Love“ – mit männlichen Models statt Frauen.",
+    "factEn": "The video pays homage to Robert Palmer's \"Addicted to Love\", with male models instead of women."
   },
   {
     "id": "song_685",
@@ -7384,7 +8184,9 @@ export const songs: Song[] = [
     "album": "The Miseducation of Lauryn Hill",
     "previewUrl": "https://mxtape.celox.io/audio/song_686.m4a",
     "genre": "Hip-Hop",
-    "startMs": 18000
+    "startMs": 18000,
+    "fact": "Es war der erste Hip-Hop-Song eines Solo-Acts, der direkt auf Platz eins der US-Charts einstieg.",
+    "factEn": "It was the first hip-hop song by a soloist to debut at number one in the US."
   },
   {
     "id": "song_687",
@@ -7394,7 +8196,9 @@ export const songs: Song[] = [
     "album": "Ray of Light",
     "previewUrl": "https://mxtape.celox.io/audio/song_687.m4a",
     "genre": "Pop",
-    "startMs": 5000
+    "startMs": 5000,
+    "fact": "Ein Trap-Remix des kanadischen DJs Sickick ging auf TikTok viral.",
+    "factEn": "A trap remix by Canadian DJ Sickick went viral on TikTok."
   },
   {
     "id": "song_688",
@@ -7405,7 +8209,9 @@ export const songs: Song[] = [
     "previewUrl": "https://mxtape.celox.io/audio/song_688.m4a",
     "genre": "Electronic",
     "startMs": 7000,
-    "party": true
+    "party": true,
+    "fact": "Die erste Strophe greift ABBAs „Lay All Your Love on Me“ auf.",
+    "factEn": "The first verse interpolates ABBA's \"Lay All Your Love on Me\"."
   },
   {
     "id": "song_689",
@@ -7414,7 +8220,9 @@ export const songs: Song[] = [
     "year": 1998,
     "album": "Dizzy Up the Girl",
     "previewUrl": "https://mxtape.celox.io/audio/song_689.m4a",
-    "genre": "Rock"
+    "genre": "Rock",
+    "fact": "Benannt ist der Song nach der Sängerin Iris DeMent, deren Namen John Rzeznik in einer Konzertliste las.",
+    "factEn": "The song is named after singer Iris DeMent, whose name John Rzeznik spotted in a concert listing."
   },
   {
     "id": "song_690",
@@ -7424,7 +8232,9 @@ export const songs: Song[] = [
     "album": "Movin' Melodies",
     "previewUrl": "https://mxtape.celox.io/audio/song_690.m4a",
     "genre": "Electronic",
-    "party": true
+    "party": true,
+    "fact": "Weil es gerade 21 Uhr war, speicherte ATB den Track als „9 PM“, als er mit seiner Verabredung das Studio verließ.",
+    "factEn": "Because it was 9 p.m., ATB saved the track as \"9 PM\" as he and his date left the studio."
   },
   {
     "id": "song_691",
@@ -7433,7 +8243,9 @@ export const songs: Song[] = [
     "year": 1999,
     "album": "Supernatural",
     "previewUrl": "https://mxtape.celox.io/audio/song_691.m4a",
-    "genre": "Rock"
+    "genre": "Rock",
+    "fact": "Ursprünglich hieß der Song „Room 17“ – der Text galt der Plattenfirma als zu anzüglich, also schrieb Rob Thomas ihn neu.",
+    "factEn": "The song was originally called \"Room 17\" – the label found the lyrics too sexual, so Rob Thomas rewrote them."
   },
   {
     "id": "song_692",
@@ -7442,7 +8254,9 @@ export const songs: Song[] = [
     "year": 1999,
     "album": "The Slim Shady LP",
     "previewUrl": "https://mxtape.celox.io/audio/song_692.m4a",
-    "genre": "Hip-Hop"
+    "genre": "Hip-Hop",
+    "fact": "Eminem und Dr. Dre stellten den Song am ersten Aufnahmetag in einer Stunde fertig.",
+    "factEn": "Eminem and Dr. Dre finished the song in an hour on the first day of recording."
   },
   {
     "id": "song_693",
@@ -7452,7 +8266,9 @@ export const songs: Song[] = [
     "album": "FanMail",
     "previewUrl": "https://mxtape.celox.io/audio/song_693.m4a",
     "genre": "R&B",
-    "startMs": 10500
+    "startMs": 10500,
+    "fact": "Kandi Burruss schrieb den Song zuerst auf einen Briefumschlag, während sie in ihrem Auto saß.",
+    "factEn": "Kandi Burruss first wrote the song on an envelope while sitting in her car."
   },
   {
     "id": "song_694",
@@ -7461,7 +8277,9 @@ export const songs: Song[] = [
     "year": 1999,
     "album": "Astro Lounge",
     "previewUrl": "https://mxtape.celox.io/audio/song_694.m4a",
-    "genre": "Rock"
+    "genre": "Rock",
+    "fact": "Vor allem durch den Film „Shrek“ wurde der Song später zum Internet-Meme.",
+    "factEn": "Thanks largely to the film \"Shrek\", the song later became an internet meme."
   },
   {
     "id": "song_695",
@@ -7470,7 +8288,9 @@ export const songs: Song[] = [
     "year": 2000,
     "album": "The Marshall Mathers LP",
     "previewUrl": "https://mxtape.celox.io/audio/song_695.m4a",
-    "genre": "Hip-Hop"
+    "genre": "Hip-Hop",
+    "fact": "Eminem und Co. schrieben den Song nur Stunden bevor die fertige Albumfassung abgegeben werden musste.",
+    "factEn": "Eminem and co. wrote the song only hours before the final copy of the album was due."
   },
   {
     "id": "song_696",
@@ -7479,7 +8299,9 @@ export const songs: Song[] = [
     "year": 2000,
     "album": "Born to Do It",
     "previewUrl": "https://mxtape.celox.io/audio/song_696.m4a",
-    "genre": "R&B"
+    "genre": "R&B",
+    "fact": "Bei den Brit Awards verlor der Song als beste Single gegen Robbie Williams' „Rock DJ“.",
+    "factEn": "At the Brit Awards, the song lost Best Single to Robbie Williams' \"Rock DJ\"."
   },
   {
     "id": "song_697",
@@ -7489,7 +8311,9 @@ export const songs: Song[] = [
     "album": "Groovejet (If This Ain't Love)",
     "previewUrl": "https://mxtape.celox.io/audio/song_697.m4a",
     "genre": "Electronic",
-    "startMs": 3000
+    "startMs": 3000,
+    "fact": "Es war der erste Song, der jemals auf einem iPod gespielt wurde – auf einem Prototyp.",
+    "factEn": "It was the first song ever played on an iPod – on a prototype unit."
   },
   {
     "id": "song_698",
@@ -7499,7 +8323,9 @@ export const songs: Song[] = [
     "album": "Parachutes",
     "previewUrl": "https://mxtape.celox.io/audio/song_698.m4a",
     "genre": "Rock",
-    "startMs": 5500
+    "startMs": 5500,
+    "fact": "Produzent Ken Nelson schickte die Band nachts zum Sternegucken – Chris Martin sang die Melodie zuerst als Neil-Young-Parodie.",
+    "factEn": "Producer Ken Nelson sent the band outside to look at the stars – Chris Martin first sang the melody as a Neil Young impression."
   },
   {
     "id": "song_699",
@@ -7509,7 +8335,9 @@ export const songs: Song[] = [
     "album": "Survivor",
     "previewUrl": "https://mxtape.celox.io/audio/song_699.m4a",
     "genre": "R&B",
-    "startMs": 2000
+    "startMs": 2000,
+    "fact": "Ein Radiosender verglich die Gruppe nach mehreren Austritten spöttisch mit der Show „Survivor“ – Beyoncé machte daraus diesen Song.",
+    "factEn": "A radio station joked about the group's departures by comparing it to the show \"Survivor\" – Beyoncé turned that into this song."
   },
   {
     "id": "song_700",
@@ -7518,7 +8346,9 @@ export const songs: Song[] = [
     "year": 2001,
     "album": "Silver Side Up",
     "previewUrl": "https://mxtape.celox.io/audio/song_700.m4a",
-    "genre": "Rock"
+    "genre": "Rock",
+    "fact": "Chad Kroeger sang den Song laut, damit seine Freundin merkt, wie aufgebracht er war – sie fand stattdessen, er klinge großartig.",
+    "factEn": "Chad Kroeger sang the song loudly, hoping his girlfriend would get how upset he was – instead she told him it sounded great."
   },
   {
     "id": "song_701",
@@ -7528,7 +8358,9 @@ export const songs: Song[] = [
     "album": "New Dubby Conquerors",
     "previewUrl": "https://mxtape.celox.io/audio/song_701.m4a",
     "genre": "Reggae",
-    "german": true
+    "german": true,
+    "fact": "Eine Talkshow im rbb Fernsehen ist nach dem Lied benannt.",
+    "factEn": "A talk show on rbb television is named after the song."
   },
   {
     "id": "song_702",
@@ -7538,7 +8370,9 @@ export const songs: Song[] = [
     "album": "Under Construction",
     "previewUrl": "https://mxtape.celox.io/audio/song_702.m4a",
     "genre": "Hip-Hop",
-    "startMs": 7000
+    "startMs": 7000,
+    "fact": "Missy Elliott schlug vor, die Zeile „I put my thang down, flip it and reverse it“ rückwärts abzuspielen – das war der Durchbruch.",
+    "factEn": "Missy Elliott suggested reversing the line \"I put my thang down, flip it and reverse it\" – that was the breakthrough."
   },
   {
     "id": "song_703",
@@ -7548,7 +8382,9 @@ export const songs: Song[] = [
     "album": "Nellyville",
     "previewUrl": "https://mxtape.celox.io/audio/song_703.m4a",
     "genre": "R&B",
-    "startMs": 12500
+    "startMs": 12500,
+    "fact": "Der Song zitiert Patti LaBelles „Love, Need and Want You“ – und LaBelle hat im Video einen Auftritt.",
+    "factEn": "The song interpolates Patti LaBelle's \"Love, Need and Want You\" – and LaBelle appears in the video."
   },
   {
     "id": "song_704",
@@ -7557,7 +8393,9 @@ export const songs: Song[] = [
     "year": 2002,
     "album": "Escapology",
     "previewUrl": "https://mxtape.celox.io/audio/song_704.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "fact": "Der Gesang stammt größtenteils aus dem ersten Demo – Robbie Williams konnte ihn später nicht mehr so gut singen.",
+    "factEn": "Most of the vocals come from the original demo – Robbie Williams couldn't sing it as well again."
   },
   {
     "id": "song_705",
@@ -7567,7 +8405,9 @@ export const songs: Song[] = [
     "album": "Dutty Rock",
     "previewUrl": "https://mxtape.celox.io/audio/song_705.m4a",
     "genre": "Reggae",
-    "party": true
+    "party": true,
+    "fact": "Der Song basiert auf dem hüpfenden Handclap-Rhythmus „Diwali Riddim“ von Produzent Steven Marsden.",
+    "factEn": "The song is built on the jumpy handclap rhythm known as the \"Diwali Riddim\", produced by Steven Marsden."
   },
   {
     "id": "song_706",
@@ -7576,7 +8416,9 @@ export const songs: Song[] = [
     "year": 2002,
     "album": "Stripped",
     "previewUrl": "https://mxtape.celox.io/audio/song_706.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "fact": "Linda Perry hatte den Song eigentlich für ihre eigene Soloplatte geschrieben und ihn sogar Pink vorgespielt.",
+    "factEn": "Linda Perry had originally written the song for her own solo record and even previewed it for Pink."
   },
   {
     "id": "song_707",
@@ -7587,7 +8429,9 @@ export const songs: Song[] = [
     "previewUrl": "https://mxtape.celox.io/audio/song_707.m4a",
     "genre": "Pop",
     "startMs": 3000,
-    "party": true
+    "party": true,
+    "fact": "Das Video besteht aus Pixel-Art in winziger Auflösung von 90×72 Bildpunkten.",
+    "factEn": "The video is made of pixel art at a tiny resolution of 90×72."
   },
   {
     "id": "song_708",
@@ -7596,7 +8440,9 @@ export const songs: Song[] = [
     "year": 2002,
     "album": "Songs About Jane",
     "previewUrl": "https://mxtape.celox.io/audio/song_708.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "fact": "Adam Levine schrieb den Song an dem Tag, an dem seine Ex-Freundin wegzog.",
+    "factEn": "Adam Levine wrote the song on the day his girlfriend moved away after their break-up."
   },
   {
     "id": "song_709",
@@ -7606,7 +8452,9 @@ export const songs: Song[] = [
     "album": "In the Zone",
     "previewUrl": "https://mxtape.celox.io/audio/song_709.m4a",
     "genre": "Pop",
-    "party": true
+    "party": true,
+    "fact": "Die hohen Streicher sind ein Sample aus dem Bollywood-Song „Tere Mere Beech Mein“.",
+    "factEn": "The high-pitched strings are sampled from the Bollywood song \"Tere Mere Beech Mein\"."
   },
   {
     "id": "song_710",
@@ -7616,7 +8464,9 @@ export const songs: Song[] = [
     "album": "DiscO-Zone",
     "previewUrl": "https://mxtape.celox.io/audio/song_710.m4a",
     "genre": "Pop",
-    "party": true
+    "party": true,
+    "fact": "Gary Brolsma tanzte am Computer dazu – sein Video „Numa Numa Dance“ wurde ein Internet-Hit.",
+    "factEn": "Gary Brolsma danced to it at his computer – his video \"Numa Numa Dance\" went viral."
   },
   {
     "id": "song_711",
@@ -7636,7 +8486,9 @@ export const songs: Song[] = [
     "year": 2004,
     "album": "Love. Angel. Music. Baby.",
     "previewUrl": "https://mxtape.celox.io/audio/song_712.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "fact": "Das Männermagazin Maxim kürte ihn zum „nervigsten Song aller Zeiten“.",
+    "factEn": "Men's magazine Maxim named it the \"Most Annoying Song Ever\"."
   },
   {
     "id": "song_713",
@@ -7645,7 +8497,9 @@ export const songs: Song[] = [
     "year": 2005,
     "album": "Daniel Powter",
     "previewUrl": "https://mxtape.celox.io/audio/song_713.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "fact": "Noch vor der offiziellen Veröffentlichung lief der Song in einem französischen Coca-Cola-Werbespot.",
+    "factEn": "Before its official release, the song was used in a French Coca-Cola TV advert."
   },
   {
     "id": "song_714",
@@ -7655,7 +8509,9 @@ export const songs: Song[] = [
     "album": "Late Registration",
     "previewUrl": "https://mxtape.celox.io/audio/song_714.m4a",
     "genre": "Hip-Hop",
-    "startMs": 14500
+    "startMs": 14500,
+    "fact": "Der Song sampelt Ray Charles' „I Got a Woman“ – vor allem die Zeile „she give me money when I'm in need“.",
+    "factEn": "The song samples Ray Charles's \"I Got a Woman\", mainly the line \"she give me money when I'm in need\"."
   },
   {
     "id": "song_715",
@@ -7665,7 +8521,9 @@ export const songs: Song[] = [
     "album": "Schrei",
     "previewUrl": "https://mxtape.celox.io/audio/song_715.m4a",
     "genre": "Rock",
-    "german": true
+    "german": true,
+    "fact": "In Großbritannien steckte die englische Fassung „Monsoon“ als 30-Sekunden-Schnipsel in einem kleinen Musikplayer aus dem McDonald's Happy Meal.",
+    "factEn": "In the UK, the English version \"Monsoon\" was a thirty-second snippet in a small music player sold as a McDonald's Happy Meal toy."
   },
   {
     "id": "song_716",
@@ -7674,7 +8532,9 @@ export const songs: Song[] = [
     "year": 2006,
     "album": "Loose",
     "previewUrl": "https://mxtape.celox.io/audio/song_716.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "fact": "Bei den Aufnahmen fing im Studio ein Lautsprecher Feuer – Nelly Furtado hatte danach wochenlang Angst vor dem Beat.",
+    "factEn": "A speaker caught fire in the studio during the sessions – afterwards Nelly Furtado was too scared of the beat to touch it for weeks."
   },
   {
     "id": "song_717",
@@ -7683,7 +8543,9 @@ export const songs: Song[] = [
     "year": 2006,
     "album": "Eyes Open",
     "previewUrl": "https://mxtape.celox.io/audio/song_717.m4a",
-    "genre": "Rock"
+    "genre": "Rock",
+    "fact": "Der Titel stammt von Gary Lightbodys Vater: Über eine unerreichbare Liebe sagte er, er sei wie ein Hund, der Autos jagt.",
+    "factEn": "The title comes from Gary Lightbody's father, who said his son was like a dog chasing a car about a girl he could never get."
   },
   {
     "id": "song_718",
@@ -7692,7 +8554,9 @@ export const songs: Song[] = [
     "year": 2006,
     "album": "Back to Black",
     "previewUrl": "https://mxtape.celox.io/audio/song_718.m4a",
-    "genre": "Soul"
+    "genre": "Soul",
+    "fact": "Beyoncé und André 3000 nahmen eine Coverversion für den Soundtrack zum Film „Der große Gatsby“ auf.",
+    "factEn": "Beyoncé and André 3000 covered the song for the soundtrack of the film \"The Great Gatsby\"."
   },
   {
     "id": "song_719",
@@ -7701,7 +8565,9 @@ export const songs: Song[] = [
     "year": 2007,
     "album": "Shock Value",
     "previewUrl": "https://mxtape.celox.io/audio/song_719.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "fact": "Die europäische Fassung des Musikvideos zeigt Szenen aus Til Schweigers Film „Keinohrhasen“.",
+    "factEn": "The European version of the music video features clips from Til Schweiger's film \"Keinohrhasen\"."
   },
   {
     "id": "song_720",
@@ -7711,7 +8577,9 @@ export const songs: Song[] = [
     "album": "Graduation",
     "previewUrl": "https://mxtape.celox.io/audio/song_720.m4a",
     "genre": "Hip-Hop",
-    "startMs": 4000
+    "startMs": 4000,
+    "fact": "Kanye West sampelte „Harder, Better, Faster, Stronger“ von Daft Punk, nachdem er das Duo auf Tour zum ersten Mal gehört hatte.",
+    "factEn": "Kanye West sampled Daft Punk's \"Harder, Better, Faster, Stronger\" after first hearing the duo while on tour."
   },
   {
     "id": "song_721",
@@ -7722,7 +8590,9 @@ export const songs: Song[] = [
     "previewUrl": "https://mxtape.celox.io/audio/song_721.m4a",
     "genre": "Pop",
     "startMs": 6500,
-    "party": true
+    "party": true,
+    "fact": "Lady Gaga nannte den Song eine Hommage an ihre „Rock-’n’-Roll-Boyfriends“ – im Kern gehe es um Sex und Glücksspiel.",
+    "factEn": "Lady Gaga called the song a tribute to her \"rock 'n' roll boyfriends\" – its main idea, she said, was sex and gambling."
   },
   {
     "id": "song_722",
@@ -7732,7 +8602,9 @@ export const songs: Song[] = [
     "album": "We Started Nothing",
     "previewUrl": "https://mxtape.celox.io/audio/song_722.m4a",
     "genre": "Pop",
-    "startMs": 9000
+    "startMs": 9000,
+    "fact": "Der Text verarbeitet den Frust von Katie White und Jules De Martino, nachdem ihre Plattenfirma Mercury sie fallen gelassen hatte – sie fühlten sich unsichtbar.",
+    "factEn": "The lyrics vent Katie White and Jules De Martino's frustration after Mercury dropped them – they felt invisible and rejected."
   },
   {
     "id": "song_723",
@@ -7742,7 +8614,9 @@ export const songs: Song[] = [
     "album": "I Am… Sasha Fierce",
     "previewUrl": "https://mxtape.celox.io/audio/song_723.m4a",
     "genre": "R&B",
-    "party": true
+    "party": true,
+    "fact": "Die Idee kam The-Dream nach Beyoncés heimlicher Hochzeit mit Jay-Z – im Studio nahm sie sogar ihren Ehering ab.",
+    "factEn": "The-Dream came up with the idea after Beyoncé's secret marriage to Jay-Z – in the studio she even took off her wedding band."
   },
   {
     "id": "song_724",
@@ -7752,7 +8626,9 @@ export const songs: Song[] = [
     "album": "Animal",
     "previewUrl": "https://mxtape.celox.io/audio/song_724.m4a",
     "genre": "Pop",
-    "party": true
+    "party": true,
+    "fact": "Laut Kesha entstand die Idee, als sie nach einer Partynacht angetrunken nach Hause stolperte.",
+    "factEn": "Kesha said the idea came from stumbling home half-drunk after a night of partying."
   },
   {
     "id": "song_725",
@@ -7761,7 +8637,9 @@ export const songs: Song[] = [
     "year": 2009,
     "album": "The Blueprint 3",
     "previewUrl": "https://mxtape.celox.io/audio/song_725.m4a",
-    "genre": "Hip-Hop"
+    "genre": "Hip-Hop",
+    "fact": "Ursprünglich schrieben Angela Hunte und Janet Sewell-Ulepic den Song als Hommage an New York – Hunte wuchs im selben Haus auf wie Jay-Z.",
+    "factEn": "Angela Hunte and Janet Sewell-Ulepic originally wrote it as a tribute to New York – Hunte grew up in the same building as Jay-Z."
   },
   {
     "id": "song_726",
@@ -7770,7 +8648,9 @@ export const songs: Song[] = [
     "year": 2010,
     "album": "Recovery",
     "previewUrl": "https://mxtape.celox.io/audio/song_726.m4a",
-    "genre": "Hip-Hop"
+    "genre": "Hip-Hop",
+    "fact": "Im Musikvideo spielen Dominic Monaghan und Megan Fox ein Paar in einer gewalttätigen Beziehung.",
+    "factEn": "The music video stars Dominic Monaghan and Megan Fox as lovers in a violent relationship."
   },
   {
     "id": "song_727",
@@ -7780,7 +8660,9 @@ export const songs: Song[] = [
     "album": "Teenage Dream",
     "previewUrl": "https://mxtape.celox.io/audio/song_727.m4a",
     "genre": "Pop",
-    "startMs": 7500
+    "startMs": 7500,
+    "fact": "Katy Perry sieht den Song als Antwort auf „Empire State of Mind“ von Jay-Z und Alicia Keys.",
+    "factEn": "Katy Perry described the song as an answer to \"Empire State of Mind\" by Jay-Z and Alicia Keys."
   },
   {
     "id": "song_728",
@@ -7790,7 +8672,9 @@ export const songs: Song[] = [
     "album": "We No Speak Americano",
     "previewUrl": "https://mxtape.celox.io/audio/song_728.m4a",
     "genre": "Electronic",
-    "party": true
+    "party": true,
+    "fact": "Der Song sampelt den neapolitanischen Klassiker „Tu vuò fà l'americano“ von Renato Carosone.",
+    "factEn": "The song samples the Neapolitan classic \"Tu vuò fà l'americano\" by Renato Carosone."
   },
   {
     "id": "song_729",
@@ -7799,7 +8683,9 @@ export const songs: Song[] = [
     "year": 2011,
     "album": "21",
     "previewUrl": "https://mxtape.celox.io/audio/song_729.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "fact": "Begleitet wird Adele nur von einem Klavier – gespielt von Co-Autor Dan Wilson.",
+    "factEn": "Adele is accompanied only by a piano – played by her co-writer Dan Wilson."
   },
   {
     "id": "song_730",
@@ -7808,7 +8694,9 @@ export const songs: Song[] = [
     "year": 2010,
     "album": "Torches",
     "previewUrl": "https://mxtape.celox.io/audio/song_730.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "fact": "Mark Foster schrieb und nahm den Song in fünf Stunden auf, als er als Jingle-Komponist arbeitete – eigentlich wäre er lieber an den Strand gegangen.",
+    "factEn": "Mark Foster wrote and recorded it in five hours while working as a jingle writer – he'd really rather have gone to the beach."
   },
   {
     "id": "song_731",
@@ -7818,7 +8706,9 @@ export const songs: Song[] = [
     "album": "Wenn Worte meine Sprache wären",
     "previewUrl": "https://mxtape.celox.io/audio/song_731.m4a",
     "genre": "Pop",
-    "german": true
+    "german": true,
+    "fact": "Den Satz sagte immer der Lebensgefährte von Tim Bendzkos Mutter, wenn er sich zum Computerspielen vor Aufgaben drückte.",
+    "factEn": "Tim Bendzko's mother's partner always used the phrase when he went off to play computer games to get out of chores."
   },
   {
     "id": "song_732",
@@ -7828,7 +8718,9 @@ export const songs: Song[] = [
     "album": "The Heist",
     "previewUrl": "https://mxtape.celox.io/audio/song_732.m4a",
     "genre": "Hip-Hop",
-    "startMs": 19500
+    "startMs": 19500,
+    "fact": "Macklemore feiert das Einkaufen im Secondhandladen – als Gegenentwurf zu Rappern, die mit teuren Sachen angeben.",
+    "factEn": "Macklemore celebrates shopping at thrift stores – the opposite of rappers flaunting expensive things."
   },
   {
     "id": "song_733",
@@ -7838,7 +8730,9 @@ export const songs: Song[] = [
     "album": "Some Nights",
     "previewUrl": "https://mxtape.celox.io/audio/song_733.m4a",
     "genre": "Pop",
-    "startMs": 8500
+    "startMs": 8500,
+    "fact": "Nach einer Coverversion in der Serie „Glee“ lief der Song in einem Chevrolet-Werbespot während des Super Bowls.",
+    "factEn": "After a cover on the TV show \"Glee\", the song was used in a Chevrolet Sonic commercial during the Super Bowl."
   },
   {
     "id": "song_734",
@@ -7848,7 +8742,9 @@ export const songs: Song[] = [
     "album": "Until Now",
     "previewUrl": "https://mxtape.celox.io/audio/song_734.m4a",
     "genre": "Electronic",
-    "startMs": 1500
+    "startMs": 1500,
+    "fact": "Den Refrain übernahm Songwriter Michel Zitron wörtlich von seinem Vater – er hatte von der Scheidung seiner Eltern erzählt.",
+    "factEn": "Songwriter Michel Zitron took the chorus word for word from his father, after opening up about his parents' divorce."
   },
   {
     "id": "song_735",
@@ -7859,7 +8755,9 @@ export const songs: Song[] = [
     "previewUrl": "https://mxtape.celox.io/audio/song_735.m4a",
     "genre": "Hip-Hop",
     "startMs": 7000,
-    "german": true
+    "german": true,
+    "fact": "Das Musikvideo spielt im frühmorgendlichen Berlin – unter anderem springen darin nackte Menschen in einem Freibad vom Turm.",
+    "factEn": "The music video is set in early-morning Berlin – among other things, naked people jump off the diving tower at an outdoor pool."
   },
   {
     "id": "song_736",
@@ -7869,7 +8767,9 @@ export const songs: Song[] = [
     "album": "Blurred Lines",
     "previewUrl": "https://mxtape.celox.io/audio/song_736.m4a",
     "genre": "Pop",
-    "startMs": 2000
+    "startMs": 2000,
+    "fact": "Ein Gericht befand, dass der Song das Urheberrecht an Marvin Gayes „Got to Give It Up“ verletzt.",
+    "factEn": "A federal jury found that the song infringed the copyright of Marvin Gaye's \"Got to Give It Up\"."
   },
   {
     "id": "song_737",
@@ -7879,7 +8779,9 @@ export const songs: Song[] = [
     "album": "Farbenspiel",
     "previewUrl": "https://mxtape.celox.io/audio/song_737.m4a",
     "genre": "Pop",
-    "german": true
+    "german": true,
+    "fact": "Kristina Bach fiel der Song auf Mallorca in wenigen Minuten ein – eigentlich wollte sie ihn selbst singen.",
+    "factEn": "Kristina Bach came up with the song in mere minutes on Mallorca – she originally meant to sing it herself."
   },
   {
     "id": "song_738",
@@ -7888,7 +8790,9 @@ export const songs: Song[] = [
     "year": 2014,
     "album": "Title",
     "previewUrl": "https://mxtape.celox.io/audio/song_738.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "fact": "Meghan Trainor schrieb ihn, um Selbstakzeptanz zu fördern – als Teenager hatte sie mit ihrem Körperbild gekämpft.",
+    "factEn": "Meghan Trainor wrote it to promote self-acceptance after struggling with her body image as a teenager."
   },
   {
     "id": "song_739",
@@ -7897,7 +8801,9 @@ export const songs: Song[] = [
     "year": 2014,
     "album": "×",
     "previewUrl": "https://mxtape.celox.io/audio/song_739.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "fact": "Während Ed Sheeran duschte, spielte Amy Wadge ein paar Akkorde auf der Gitarre – er hörte sie und rannte die Treppe hinunter.",
+    "factEn": "While Ed Sheeran was in the shower, Amy Wadge played a few chords on a guitar – he heard them and ran downstairs."
   },
   {
     "id": "song_740",
@@ -7907,7 +8813,9 @@ export const songs: Song[] = [
     "album": "25",
     "previewUrl": "https://mxtape.celox.io/audio/song_740.m4a",
     "genre": "Pop",
-    "startMs": 6000
+    "startMs": 6000,
+    "fact": "Das Musikvideo knackte schneller als jedes andere die Milliarde Aufrufe auf YouTube – in 87 Tagen.",
+    "factEn": "Its music video set the record for the fastest to reach one billion views on YouTube – in 87 days."
   },
   {
     "id": "song_741",
@@ -7916,7 +8824,9 @@ export const songs: Song[] = [
     "year": 2014,
     "album": "Me 4 U",
     "previewUrl": "https://mxtape.celox.io/audio/song_741.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "fact": "Label und Produzenten entschieden sich für den Remix des jungen deutschen DJs Felix Jaehn – mit Trompete, Conga-Beat und Klavier.",
+    "factEn": "The label and producers chose a remix by young German DJ Felix Jaehn – with trumpet, a conga beat and piano."
   },
   {
     "id": "song_742",
@@ -7925,7 +8835,9 @@ export const songs: Song[] = [
     "year": 2015,
     "album": "Beauty Behind the Madness",
     "previewUrl": "https://mxtape.celox.io/audio/song_742.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "fact": "Offiziell erschien der Song nach einem Auftritt von the Weeknd auf Apples Entwicklerkonferenz WWDC.",
+    "factEn": "The song was officially released after the Weeknd performed at Apple's Worldwide Developers Conference."
   },
   {
     "id": "song_743",
@@ -7935,7 +8847,9 @@ export const songs: Song[] = [
     "album": "Views",
     "previewUrl": "https://mxtape.celox.io/audio/song_743.m4a",
     "genre": "Hip-Hop",
-    "startMs": 3500
+    "startMs": 3500,
+    "fact": "Der Song löste „Lean On“ als meistgestreamten Song aller Zeiten bei Spotify ab.",
+    "factEn": "The song overtook \"Lean On\" as the most-streamed song ever on Spotify."
   },
   {
     "id": "song_744",
@@ -7946,7 +8860,9 @@ export const songs: Song[] = [
     "previewUrl": "https://mxtape.celox.io/audio/song_744.m4a",
     "genre": "Pop",
     "startMs": 8000,
-    "party": true
+    "party": true,
+    "fact": "Seinen ersten TV-Auftritt mit dem Song hatte Justin Timberlake im Pausenprogramm des Eurovision-Song-Contest-Finales.",
+    "factEn": "Justin Timberlake first performed the song on TV during the interval act of the Eurovision Song Contest grand final."
   },
   {
     "id": "song_745",
@@ -7956,7 +8872,9 @@ export const songs: Song[] = [
     "album": "Collage",
     "previewUrl": "https://mxtape.celox.io/audio/song_745.m4a",
     "genre": "Electronic",
-    "startMs": 2000
+    "startMs": 2000,
+    "fact": "Für Andrew Taggart von den Chainsmokers war es der erste Song, in dem er die Hauptstimme sang.",
+    "factEn": "It was the first song on which the Chainsmokers' Andrew Taggart sang lead vocals."
   },
   {
     "id": "song_746",
@@ -7966,7 +8884,9 @@ export const songs: Song[] = [
     "album": "Woodstock",
     "previewUrl": "https://mxtape.celox.io/audio/song_746.m4a",
     "genre": "Rock",
-    "startMs": 10500
+    "startMs": 10500,
+    "fact": "Der Song greift die Melodie von „Please Mr. Postman“ der Marvelettes auf – außerdem ist Motown-Songwriter Brian Holland als Autor genannt.",
+    "factEn": "The song draws on the melody of the Marvelettes' \"Please Mr. Postman\" – and it also credits Motown songwriter Brian Holland."
   },
   {
     "id": "song_747",
@@ -7975,7 +8895,9 @@ export const songs: Song[] = [
     "year": 2018,
     "album": "One Kiss",
     "previewUrl": "https://mxtape.celox.io/audio/song_747.m4a",
-    "genre": "Electronic"
+    "genre": "Electronic",
+    "fact": "Im Musikvideo taucht Calvin Harris am Pool als Kellner von Dua Lipa auf.",
+    "factEn": "In the music video, Calvin Harris appears at the pool as Dua Lipa's waiter."
   },
   {
     "id": "song_748",
@@ -7985,7 +8907,9 @@ export const songs: Song[] = [
     "album": "7",
     "previewUrl": "https://mxtape.celox.io/audio/song_748.m4a",
     "genre": "Hip-Hop",
-    "startMs": 12500
+    "startMs": 12500,
+    "fact": "Lil Nas X kaufte das Instrumental für 30 US-Dollar und nahm den Song an einem einzigen Tag auf.",
+    "factEn": "Lil Nas X bought the instrumental for US$30 and recorded the song in one day."
   },
   {
     "id": "song_749",
@@ -7994,7 +8918,9 @@ export const songs: Song[] = [
     "year": 2020,
     "album": "BE",
     "previewUrl": "https://mxtape.celox.io/audio/song_749.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "fact": "Es war der erste Song, den BTS komplett auf Englisch aufnahmen.",
+    "factEn": "It was the first song BTS recorded entirely in English."
   },
   {
     "id": "song_750",
@@ -8003,7 +8929,9 @@ export const songs: Song[] = [
     "year": 2020,
     "album": "El Dorado",
     "previewUrl": "https://mxtape.celox.io/audio/song_750.m4a",
-    "genre": "Hip-Hop"
+    "genre": "Hip-Hop",
+    "fact": "Der Song entstand, während die Musiker zusammen „Call of Duty“ spielten.",
+    "factEn": "The song came about while the artists were playing \"Call of Duty\" together."
   },
   {
     "id": "song_751",
@@ -8013,7 +8941,9 @@ export const songs: Song[] = [
     "album": "Savage Love (Laxed - Siren Beat)",
     "previewUrl": "https://mxtape.celox.io/audio/song_751.m4a",
     "genre": "Pop",
-    "startMs": 5000
+    "startMs": 5000,
+    "fact": "Jason Derulo nutzte den Beat von Jawsh 685 zunächst ohne Erlaubnis und ohne Nennung – nach heftiger Kritik einigten sich beide.",
+    "factEn": "Jason Derulo first used Jawsh 685's beat without credit or clearance – after a backlash, the two settled their differences."
   },
   {
     "id": "song_752",
@@ -8023,7 +8953,9 @@ export const songs: Song[] = [
     "album": "30",
     "previewUrl": "https://mxtape.celox.io/audio/song_752.m4a",
     "genre": "Pop",
-    "startMs": 1500
+    "startMs": 1500,
+    "fact": "Das Musikvideo zeigt Adele beim Auszug aus demselben Haus, in dem das Video zu „Hello“ gedreht wurde.",
+    "factEn": "The music video shows Adele moving out of the same house where the \"Hello\" video was filmed."
   },
   {
     "id": "song_753",
@@ -8032,7 +8964,9 @@ export const songs: Song[] = [
     "year": 2021,
     "album": "An Evening With Silk Sonic",
     "previewUrl": "https://mxtape.celox.io/audio/song_753.m4a",
-    "genre": "Soul"
+    "genre": "Soul",
+    "fact": "Bruno Mars und Anderson .Paak lernten sich kennen, als sie zusammen auf Mars' Europa-Tour unterwegs waren.",
+    "factEn": "Bruno Mars and Anderson .Paak met while touring together on the European leg of Mars' tour."
   },
   {
     "id": "song_754",
@@ -8042,7 +8976,9 @@ export const songs: Song[] = [
     "album": "RENAISSANCE",
     "previewUrl": "https://mxtape.celox.io/audio/song_754.m4a",
     "genre": "Electronic",
-    "startMs": 8000
+    "startMs": 8000,
+    "fact": "Der Song sampelt Robin S.' House-Klassiker „Show Me Love“ und Big Freedias „Explode“.",
+    "factEn": "The song samples Robin S.'s house song \"Show Me Love\" and Big Freedia's \"Explode\"."
   },
   {
     "id": "song_755",
@@ -8051,7 +8987,9 @@ export const songs: Song[] = [
     "year": 2022,
     "album": "Gloria",
     "previewUrl": "https://mxtape.celox.io/audio/song_755.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "fact": "Mit dem Grammy für diesen Song wurde Kim Petras die erste offen transgeschlechtliche Künstlerin mit einem Grammy in einer Hauptkategorie.",
+    "factEn": "Its Grammy win made Kim Petras the first openly transgender artist to win a major-category Grammy Award."
   },
   {
     "id": "song_756",
@@ -8061,7 +8999,9 @@ export const songs: Song[] = [
     "album": "I'm Good (Blue)",
     "previewUrl": "https://mxtape.celox.io/audio/song_756.m4a",
     "genre": "Electronic",
-    "party": true
+    "party": true,
+    "fact": "Der Song ist eine Neufassung von Eiffel 65s „Blue (Da Ba Dee)“ – fertiggestellt erst, als ein Schnipsel in den sozialen Medien viral ging.",
+    "factEn": "The song reworks Eiffel 65's \"Blue (Da Ba Dee)\" – it was only finished after a snippet went viral on social media."
   },
   {
     "id": "song_757",
@@ -8071,7 +9011,9 @@ export const songs: Song[] = [
     "album": "Un Verano Sin Ti",
     "previewUrl": "https://mxtape.celox.io/audio/song_757.m4a",
     "genre": "Pop",
-    "startMs": 11000
+    "startMs": 11000,
+    "fact": "„Tití“ ist in Puerto Rico ein umgangssprachliches Wort für Tante – der Titel heißt also „Tante fragte mich“.",
+    "factEn": "\"Tití\" is Puerto Rican slang for an aunt – so the title means \"Auntie Asked Me\"."
   },
   {
     "id": "song_758",
@@ -8081,7 +9023,9 @@ export const songs: Song[] = [
     "album": "Stick Season",
     "previewUrl": "https://mxtape.celox.io/audio/song_758.m4a",
     "genre": "Rock",
-    "startMs": 4000
+    "startMs": 4000,
+    "fact": "In Neuengland nennt man die Zeit nach Halloween, bevor der Winterschnee kommt, „Stick Season“ – für Noah Kahan eine „super deprimierende“ Zeit.",
+    "factEn": "In New England, \"stick season\" is the period after Halloween before the winter snow begins – a time Noah Kahan called \"super depressing\"."
   },
   {
     "id": "song_759",
@@ -8091,7 +9035,9 @@ export const songs: Song[] = [
     "album": "Scarlet",
     "previewUrl": "https://mxtape.celox.io/audio/song_759.m4a",
     "genre": "Hip-Hop",
-    "startMs": 18500
+    "startMs": 18500,
+    "fact": "Der Song sampelt Dionne Warwicks „Walk On By“.",
+    "factEn": "The song samples Dionne Warwick's \"Walk On By\"."
   },
   {
     "id": "song_760",
@@ -8101,7 +9047,9 @@ export const songs: Song[] = [
     "album": "GUTS",
     "previewUrl": "https://mxtape.celox.io/audio/song_760.m4a",
     "genre": "Pop",
-    "startMs": 2500
+    "startMs": 2500,
+    "fact": "Olivia Rodrigo plante ihn als Klavierballade – erst große Drums und wilde Tempowechsel machten daraus einen Herzschmerz-Song zum Tanzen.",
+    "factEn": "Olivia Rodrigo meant it to be a piano ballad – big drums and crazy tempo changes turned it into a heartbreak song you can dance to."
   },
   {
     "id": "song_761",
@@ -8110,7 +9058,9 @@ export const songs: Song[] = [
     "year": 2023,
     "album": "Barbie: The Album",
     "previewUrl": "https://mxtape.celox.io/audio/song_761.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "fact": "Im Film „Barbie“ begleitet der Song die Szene, in der Barbie dem Geist ihrer Erfinderin Ruth Handler begegnet.",
+    "factEn": "In the film \"Barbie\", the song accompanies the scene in which Barbie meets the spirit of her creator Ruth Handler."
   },
   {
     "id": "song_762",
@@ -8119,7 +9069,9 @@ export const songs: Song[] = [
     "year": 2024,
     "album": "Unheard",
     "previewUrl": "https://mxtape.celox.io/audio/song_762.m4a",
-    "genre": "Rock"
+    "genre": "Rock",
+    "fact": "Der Song stammt aus den Aufnahmen zu Hoziers Album „Unreal Unearth“, schaffte es aber nicht auf dessen ursprüngliche Veröffentlichung.",
+    "factEn": "The song comes from the sessions for Hozier's album \"Unreal Unearth\" but did not make the original release."
   },
   {
     "id": "song_763",
@@ -8129,7 +9081,9 @@ export const songs: Song[] = [
     "album": "Not Like Us",
     "previewUrl": "https://mxtape.celox.io/audio/song_763.m4a",
     "genre": "Hip-Hop",
-    "startMs": 7000
+    "startMs": 7000,
+    "fact": "Bei seinem ersten Liveauftritt mit dem Song spielte Kendrick Lamar ihn fünfmal hintereinander.",
+    "factEn": "The first time Kendrick Lamar performed it live, he played it five times in a row."
   },
   {
     "id": "song_764",
@@ -8138,7 +9092,9 @@ export const songs: Song[] = [
     "year": 2024,
     "album": "MILLION DOLLAR BABY",
     "previewUrl": "https://mxtape.celox.io/audio/song_764.m4a",
-    "genre": "R&B"
+    "genre": "R&B",
+    "fact": "Zehn Wochen am Stück stand der Song an der Spitze der TikTok-Charts von Billboard – länger als jeder andere.",
+    "factEn": "It spent ten straight weeks at the top of Billboard's TikTok chart – longer than any other song."
   },
   {
     "id": "song_765",
@@ -8148,7 +9104,9 @@ export const songs: Song[] = [
     "album": "How Much Is the Fish?",
     "previewUrl": "https://mxtape.celox.io/audio/song_765.m4a",
     "genre": "Electronic",
-    "party": true
+    "party": true,
+    "fact": "H.P. Baxxter verriet später: Der Fisch war für das Studio-Aquarium und kostete 3,80 D-Mark.",
+    "factEn": "H.P. Baxxter later revealed that the fish was bought for their studio aquarium and cost 3.80 Deutschmarks."
   },
   {
     "id": "song_766",
@@ -8158,7 +9116,9 @@ export const songs: Song[] = [
     "album": "See You Later, Alligator",
     "previewUrl": "https://mxtape.celox.io/audio/song_766.m4a",
     "genre": "Rock",
-    "party": true
+    "party": true,
+    "fact": "Geschrieben und zuerst aufgenommen hat den Song Bobby Charles – damals unter dem Titel „Later, Alligator“.",
+    "factEn": "The song was written and first recorded by Bobby Charles – under the title \"Later, Alligator\"."
   },
   {
     "id": "song_767",
@@ -8177,7 +9137,9 @@ export const songs: Song[] = [
     "year": 1957,
     "album": "All Shook Up",
     "previewUrl": "https://mxtape.celox.io/audio/song_768.m4a",
-    "genre": "Rock"
+    "genre": "Rock",
+    "fact": "Die Idee kam angeblich von Al Stanton, der beim Schütteln einer Pepsi-Flasche Otis Blackwell vorschlug, über „all shook up“ zu schreiben.",
+    "factEn": "Reportedly Al Stanton, shaking a bottle of Pepsi, suggested Otis Blackwell write a song based on the phrase \"all shook up\"."
   },
   {
     "id": "song_769",
@@ -8187,7 +9149,9 @@ export const songs: Song[] = [
     "album": "At the Hop",
     "previewUrl": "https://mxtape.celox.io/audio/song_769.m4a",
     "genre": "Rock",
-    "party": true
+    "party": true,
+    "fact": "Ursprünglich hieß der Song „Do the Bop“ – Dick Clark hielt den Tanz für überholt und schlug die Änderung vor.",
+    "factEn": "The song was originally called \"Do the Bop\" – Dick Clark thought the dance was on its way out and suggested the change."
   },
   {
     "id": "song_770",
@@ -8196,7 +9160,9 @@ export const songs: Song[] = [
     "year": 1959,
     "album": "Put Your Head on My Shoulder",
     "previewUrl": "https://mxtape.celox.io/audio/song_770.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "fact": "Die ersten zwölf Sekunden wurden, gemischt mit Doja Cats „Streets“, zur TikTok-„Silhouette Challenge“.",
+    "factEn": "Its first 12 seconds, mashed up with Doja Cat's \"Streets\", became the TikTok \"Silhouette Challenge\"."
   },
   {
     "id": "song_771",
@@ -8205,7 +9171,9 @@ export const songs: Song[] = [
     "year": 1962,
     "album": "Sherry & 11 Others",
     "previewUrl": "https://mxtape.celox.io/audio/song_771.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "fact": "Laut Bob Gaudio brauchte er für den Song etwa 15 Minuten – „Sherry“ hieß die Tochter seines besten Freundes, des DJs Jack Spector.",
+    "factEn": "According to Bob Gaudio the song took about 15 minutes to write – \"Sherry\" was the daughter of his best friend, DJ Jack Spector."
   },
   {
     "id": "song_772",
@@ -8214,7 +9182,9 @@ export const songs: Song[] = [
     "year": 1970,
     "album": "Let It Be",
     "previewUrl": "https://mxtape.celox.io/audio/song_772.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "fact": "Paul McCartney träumte von seiner verstorbenen Mutter Mary, die ihm sagte: „Es wird alles gut, lass es einfach sein.“",
+    "factEn": "Paul McCartney dreamt of his late mother Mary, who told him: \"It will be all right, just let it be.\""
   },
   {
     "id": "song_773",
@@ -8223,7 +9193,9 @@ export const songs: Song[] = [
     "year": 1971,
     "album": "Let's Stay Together",
     "previewUrl": "https://mxtape.celox.io/audio/song_773.m4a",
-    "genre": "Soul"
+    "genre": "Soul",
+    "fact": "Tina Turners Coverversion wurde zu ihrer Comeback-Single.",
+    "factEn": "Tina Turner's cover version became her comeback single."
   },
   {
     "id": "song_774",
@@ -8233,7 +9205,9 @@ export const songs: Song[] = [
     "album": "The Original Soundtrack",
     "previewUrl": "https://mxtape.celox.io/audio/song_774.m4a",
     "genre": "Pop",
-    "startMs": 3500
+    "startMs": 3500,
+    "fact": "Eric Stewarts Frau hatte gefragt, warum er nicht öfter „Ich liebe dich“ sage – daraus wurde dieser Song.",
+    "factEn": "Eric Stewart wrote it after his wife asked why he didn't say \"I love you\" more often."
   },
   {
     "id": "song_775",
@@ -8242,7 +9216,9 @@ export const songs: Song[] = [
     "year": 1975,
     "album": "Toys in the Attic",
     "previewUrl": "https://mxtape.celox.io/audio/song_775.m4a",
-    "genre": "Rock"
+    "genre": "Rock",
+    "fact": "Der Titel stammt aus Mel Brooks' „Frankenstein Junior“: Dort sagt Marty Feldman humpelnd „walk this way“ zu Gene Wilder.",
+    "factEn": "The title comes from Mel Brooks' \"Young Frankenstein\", where a limping Marty Feldman tells Gene Wilder to \"walk this way\"."
   },
   {
     "id": "song_776",
@@ -8252,7 +9228,9 @@ export const songs: Song[] = [
     "album": "Main Course",
     "previewUrl": "https://mxtape.celox.io/audio/song_776.m4a",
     "genre": "Soul",
-    "startMs": 4500
+    "startMs": 4500,
+    "fact": "Der Rhythmus ist dem Geräusch nachempfunden, das das Auto der Bee Gees täglich auf einem Damm auf dem Weg ins Studio in Miami machte.",
+    "factEn": "The rhythm was modelled on the sound the Bee Gees' car made crossing a causeway each day on the way to their studio in Miami."
   },
   {
     "id": "song_777",
@@ -8261,7 +9239,9 @@ export const songs: Song[] = [
     "year": 1977,
     "album": "Bat Out of Hell",
     "previewUrl": "https://mxtape.celox.io/audio/song_777.m4a",
-    "genre": "Rock"
+    "genre": "Rock",
+    "fact": "Mitten im Song kommentiert Yankees-Reporter Phil Rizzuto ein Baseballspiel – als Metapher für die Annäherungsversuche des jungen Mannes.",
+    "factEn": "Midway through, Yankees announcer Phil Rizzuto calls a baseball game as a metaphor for the young man's advances."
   },
   {
     "id": "song_778",
@@ -8270,7 +9250,9 @@ export const songs: Song[] = [
     "year": 1981,
     "album": "Kim Wilde",
     "previewUrl": "https://mxtape.celox.io/audio/song_778.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "fact": "Kims Bruder Ricky Wilde schrieb den Song zusammen mit Vater Marty Wilde – noch am selben Tag, an dem Mickie Most Kim singen hörte.",
+    "factEn": "Kim's brother Ricky Wilde wrote it with their father Marty Wilde on the very day Mickie Most heard Kim sing."
   },
   {
     "id": "song_779",
@@ -8279,7 +9261,9 @@ export const songs: Song[] = [
     "year": 1983,
     "album": "Synchronicity",
     "previewUrl": "https://mxtape.celox.io/audio/song_779.m4a",
-    "genre": "Rock"
+    "genre": "Rock",
+    "fact": "Sting begann den Song auf Jamaika am Schreibtisch von James-Bond-Autor Ian Fleming auf dessen Anwesen Goldeneye.",
+    "factEn": "Sting started writing the song at Ian Fleming's writing desk on the Goldeneye estate in Jamaica."
   },
   {
     "id": "song_780",
@@ -8288,7 +9272,9 @@ export const songs: Song[] = [
     "year": 1984,
     "album": "Private Dancer",
     "previewUrl": "https://mxtape.celox.io/audio/song_780.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "fact": "Die Autoren boten den Song zuerst Cliff Richard an, der ablehnte – auch Bucks Fizz nahmen ihn auf, veröffentlichten ihn aber nicht.",
+    "factEn": "The writers first offered it to Cliff Richard, who turned it down – Bucks Fizz recorded it too, but shelved their version."
   },
   {
     "id": "song_781",
@@ -8298,7 +9284,9 @@ export const songs: Song[] = [
     "album": "The Joshua Tree",
     "previewUrl": "https://mxtape.celox.io/audio/song_781.m4a",
     "genre": "Rock",
-    "startMs": 9000
+    "startMs": 9000,
+    "fact": "The Edge fand den Song anfangs „furchtbar“ – die Band dachte sogar darüber nach, ihn aufzugeben.",
+    "factEn": "The Edge initially thought the song was \"awful\" – the band even considered abandoning it."
   },
   {
     "id": "song_782",
@@ -8308,7 +9296,9 @@ export const songs: Song[] = [
     "album": "Whitney",
     "previewUrl": "https://mxtape.celox.io/audio/song_782.m4a",
     "genre": "Pop",
-    "party": true
+    "party": true,
+    "fact": "Geschrieben haben ihn George Merrill und Shannon Rubicam von der Band Boy Meets Girl – die auch „How Will I Know“ für Whitney schrieben.",
+    "factEn": "It was written by George Merrill and Shannon Rubicam of the band Boy Meets Girl, who also wrote Whitney's \"How Will I Know\"."
   },
   {
     "id": "song_783",
@@ -8317,7 +9307,9 @@ export const songs: Song[] = [
     "year": 1987,
     "album": "Kylie",
     "previewUrl": "https://mxtape.celox.io/audio/song_783.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "fact": "Stock Aitken Waterman hatten vergessen, dass Kylie kommt – sie schrieben den Song in 40 Minuten, während sie draußen wartete.",
+    "factEn": "Stock Aitken Waterman had forgotten Kylie was coming – they wrote the song in forty minutes while she waited outside."
   },
   {
     "id": "song_784",
@@ -8326,7 +9318,9 @@ export const songs: Song[] = [
     "year": 1990,
     "album": "It Must Have Been Love",
     "previewUrl": "https://mxtape.celox.io/audio/song_784.m4a",
-    "genre": "Pop"
+    "genre": "Pop",
+    "fact": "Ursprünglich war es eine Weihnachtssingle auf Wunsch von EMI Deutschland – bekannt wurde die Fassung ohne Weihnachtsbezug aus „Pretty Woman“.",
+    "factEn": "It began as a Christmas single requested by EMI Germany – the version that took off dropped the Christmas references for \"Pretty Woman\"."
   },
   {
     "id": "song_785",
@@ -8336,7 +9330,9 @@ export const songs: Song[] = [
     "album": "Use Your Illusion I",
     "previewUrl": "https://mxtape.celox.io/audio/song_785.m4a",
     "genre": "Rock",
-    "startMs": 3500
+    "startMs": 3500,
+    "fact": "Mit fast neun Minuten war er lange der längste Song, der es in die Top Ten der US-Charts schaffte.",
+    "factEn": "At almost nine minutes, it was long the longest song ever to reach the top ten of the Billboard Hot 100."
   },
   {
     "id": "song_786",
@@ -8347,7 +9343,9 @@ export const songs: Song[] = [
     "previewUrl": "https://mxtape.celox.io/audio/song_786.m4a",
     "genre": "Hip-Hop",
     "startMs": 5000,
-    "german": true
+    "german": true,
+    "fact": "Die GfK Entertainment kürte den Song zum „Sommerhit des Jahres“.",
+    "factEn": "GfK Entertainment named it the \"summer hit of the year\"."
   },
   {
     "id": "song_787",
@@ -8356,7 +9354,9 @@ export const songs: Song[] = [
     "year": 2008,
     "album": "Lungs",
     "previewUrl": "https://mxtape.celox.io/audio/song_787.m4a",
-    "genre": "Rock"
+    "genre": "Rock",
+    "fact": "Inspiriert wurde Florence Welch von einer riesigen Textinstallation von Ugo Rondinone, an der sie täglich mit dem Rad über die Waterloo Bridge vorbeifuhr.",
+    "factEn": "Florence Welch was inspired by a giant text installation by Ugo Rondinone that she saw daily cycling over Waterloo Bridge."
   },
   {
     "id": "song_788",
@@ -8366,7 +9366,9 @@ export const songs: Song[] = [
     "album": "Sale el sol",
     "previewUrl": "https://mxtape.celox.io/audio/song_788.m4a",
     "genre": "Pop",
-    "party": true
+    "party": true,
+    "fact": "Der Song greift den kamerunischen Makossa-Song „Zamina mina (Zangaléwa)“ von Golden Sounds auf.",
+    "factEn": "The song interpolates the Cameroonian makossa song \"Zamina mina (Zangaléwa)\" by Golden Sounds."
   },
   {
     "id": "song_789",
@@ -8377,7 +9379,9 @@ export const songs: Song[] = [
     "previewUrl": "https://mxtape.celox.io/audio/song_789.m4a",
     "genre": "Electronic",
     "startMs": 1500,
-    "party": true
+    "party": true,
+    "fact": "Der ganze Text besteht nur aus dem Namen „Barbra Streisand“ – die Musik basiert auf Boney M.s „Gotta Go Home“.",
+    "factEn": "The entire lyrics are just the name \"Barbra Streisand\" – the music is built on Boney M.'s \"Gotta Go Home\"."
   },
   {
     "id": "song_790",
@@ -8387,7 +9391,9 @@ export const songs: Song[] = [
     "album": "Merci Chérie",
     "previewUrl": "https://mxtape.celox.io/audio/song_790.m4a",
     "genre": "Pop",
-    "german": true
+    "german": true,
+    "fact": "Mit diesem Song gewann Österreich zum ersten Mal den Eurovision Song Contest – trotz französischen Titels ist der Text deutsch.",
+    "factEn": "This song gave Austria its first ever Eurovision win – despite the French title, the lyrics are in German."
   },
   {
     "id": "song_791",
@@ -8396,7 +9402,9 @@ export const songs: Song[] = [
     "year": 1969,
     "album": "Abbey Road",
     "previewUrl": "https://mxtape.celox.io/audio/song_791.m4a",
-    "genre": "Rock"
+    "genre": "Rock",
+    "fact": "Timothy Leary bat John Lennon um einen Wahlkampfsong zu seinem Slogan „Come Together – Join the Party!“",
+    "factEn": "Timothy Leary asked John Lennon to write him a campaign song based on his slogan \"Come Together – Join the Party!\""
   },
   {
     "id": "song_792",
@@ -8406,7 +9414,9 @@ export const songs: Song[] = [
     "album": "White Feathers",
     "previewUrl": "https://mxtape.celox.io/audio/song_792.m4a",
     "genre": "Pop",
-    "startMs": 3000
+    "startMs": 3000,
+    "fact": "Produziert hat ihn Duran-Duran-Keyboarder Nick Rhodes, zusammen mit Colin Thurston.",
+    "factEn": "It was produced by Duran Duran keyboardist Nick Rhodes together with Colin Thurston."
   },
   {
     "id": "song_793",
@@ -8426,7 +9436,9 @@ export const songs: Song[] = [
     "year": 2020,
     "album": "WAP",
     "previewUrl": "https://mxtape.celox.io/audio/song_794.m4a",
-    "genre": "Hip-Hop"
+    "genre": "Hip-Hop",
+    "fact": "Der Auftritt von Cardi B und Megan Thee Stallion bei den Grammys brachte der US-Medienaufsicht FCC über 1000 Beschwerden ein.",
+    "factEn": "Cardi B and Megan Thee Stallion's Grammy performance led to over 1,000 viewer complaints to the FCC."
   },
   {
     "id": "song_795",
@@ -8436,7 +9448,9 @@ export const songs: Song[] = [
     "previewUrl": "https://mxtape.celox.io/audio/song_795.m4a",
     "genre": "Soul",
     "startMs": 7500,
-    "album": "What’s Going On"
+    "album": "What’s Going On",
+    "fact": "Die Idee kam von Four-Tops-Sänger Obie Benson, der Polizeigewalt miterlebt hatte – seine Band lehnte den Song als Protestsong ab.",
+    "factEn": "The idea came from Four Tops singer Obie Benson after he witnessed police brutality – his group turned it down as a protest song."
   },
   {
     "id": "song_796",
@@ -8445,7 +9459,9 @@ export const songs: Song[] = [
     "year": 1977,
     "previewUrl": "https://mxtape.celox.io/audio/song_796.m4a",
     "genre": "Pop",
-    "album": "Saturday Night Fever"
+    "album": "Saturday Night Fever",
+    "fact": "Barry Gibb bat Keyboarder Blue Weaver: „Spiel den schönsten Akkord, den du kennst“ – so entstand der Song.",
+    "factEn": "Barry Gibb told keyboardist Blue Weaver: \"Play the most beautiful chord you know\" – and the song grew from there."
   },
   {
     "id": "song_797",
@@ -8455,7 +9471,9 @@ export const songs: Song[] = [
     "previewUrl": "https://mxtape.celox.io/audio/song_797.m4a",
     "genre": "Rock",
     "startMs": 9000,
-    "album": "Hybrid Theory"
+    "album": "Hybrid Theory",
+    "fact": "Sänger Chester Bennington mochte den Song anfangs nicht und wollte ihn gar nicht auf dem Album haben.",
+    "factEn": "Singer Chester Bennington initially disliked the song and did not want it on the album."
   },
   {
     "id": "song_798",
@@ -8465,7 +9483,9 @@ export const songs: Song[] = [
     "album": "Call on Me",
     "previewUrl": "https://mxtape.celox.io/audio/song_798.m4a",
     "genre": "Electronic",
-    "party": true
+    "party": true,
+    "fact": "Der britische Premier Tony Blair sagte über das Aerobic-Video: „Beim ersten Mal wäre ich fast vom Rudergerät gefallen.“",
+    "factEn": "British prime minister Tony Blair said of the aerobics video: \"The first time it came on, I nearly fell off my rowing machine.\""
   },
   {
     "id": "song_799",
@@ -8484,6 +9504,8 @@ export const songs: Song[] = [
     "album": "Cum On Feel the Noize",
     "previewUrl": "https://mxtape.celox.io/audio/song_800.m4a",
     "genre": "Rock",
-    "startMs": 1500
+    "startMs": 1500,
+    "fact": "Noddy Holders „Baby, baby, baby“ am Anfang war nur ein Mikrofontest und gar nicht für die fertige Aufnahme gedacht.",
+    "factEn": "Noddy Holder's \"Baby, baby, baby\" at the start was just a microphone test, never meant for the finished recording."
   }
 ]
