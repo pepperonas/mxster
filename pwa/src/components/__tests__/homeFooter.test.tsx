@@ -45,6 +45,15 @@ describe('home footer', () => {
     expect(screen.getByText(new RegExp(`mxtape ${VERSION.replace(/\./g, '\\.')}`))).toBeInTheDocument()
   })
 
+  it('sits at the bottom edge of the screen when the home page is shorter than it', () => {
+    const home = readFileSync(join(process.cwd(), 'src/screens/HomeScreen.tsx'), 'utf8')
+    const shell = readFileSync(join(process.cwd(), 'src/shell/AppShell.tsx'), 'utf8')
+    expect(home).toContain('<HomeFooter className="!mt-auto" />')
+    expect(home).toContain('className="flex-1 flex flex-col pt-4 md:pt-10 space-y-6"')
+    expect(shell).toContain('className="min-h-dvh flex flex-col md:pl-24 xl:pl-64"')
+    expect(shell).toMatch(/<main className=\{`flex-1 flex flex-col /)
+  })
+
   it('two lines, close together: mouse-sized links, touch keeps 48 px', () => {
     const src = readFileSync(join(process.cwd(), 'src/components/HomeFooter.tsx'), 'utf8')
     expect(src).toContain('<LegalLinks compact />')
@@ -61,7 +70,7 @@ describe('home footer', () => {
 
   it('sits at the end of the home page', () => {
     const home = readFileSync(join(process.cwd(), 'src/screens/HomeScreen.tsx'), 'utf8')
-    expect(home).toContain('<HomeFooter />')
+    expect(home).toMatch(/<HomeFooter[^>]*\/>\s*<\/div>\s*\)\s*\}/)
   })
 })
 

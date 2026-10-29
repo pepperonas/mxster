@@ -64,11 +64,12 @@ export function AppShell() {
     )
 
   return (
-    <div className="min-h-dvh md:pl-24 xl:pl-64">
+    <div className="min-h-dvh flex flex-col md:pl-24 xl:pl-64">
       <AchievementScoreSync />
       <NavRail />
       {isTopLevel ? <TopBar /> : null}
-      <main className={`mx-auto w-full max-w-3xl px-4 sm:px-6 ${isTopLevel ? 'pb-[calc(5.25rem+env(safe-area-inset-bottom))] md:pb-2' : 'pb-12'}`}>
+      {/* flex-1 + flex column: a page can push its footer to the bottom edge (home) */}
+      <main className={`flex-1 flex flex-col mx-auto w-full max-w-3xl px-4 sm:px-6 ${isTopLevel ? 'pb-[calc(5.25rem+env(safe-area-inset-bottom))] md:pb-2' : 'pb-12'}`}>
         <Outlet />
       </main>
       {isTopLevel && <NavBar />}

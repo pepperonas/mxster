@@ -106,10 +106,10 @@ function RateArt() {
   )
 }
 
-export function HomeFooter() {
+export function HomeFooter({ className = '' }: { className?: string }) {
   const t = useMessages(homeText)
   return (
-    <footer className="pt-6 space-y-3" data-home-footer>
+    <footer className={`pt-6 space-y-3 ${className}`} data-home-footer>
       <h2 className="sr-only">{t.footerTitle}</h2>
       <div className="grid gap-3 sm:grid-cols-3">
         <Tile href={REPO_URL} kind="code" title={t.footerCode} text={t.footerCodeText} art={<CodeArt />} />

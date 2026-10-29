@@ -79,7 +79,7 @@ export function HomeScreen() {
   }
 
   return (
-    <div className="pt-4 md:pt-10 space-y-6">
+    <div className="flex-1 flex flex-col pt-4 md:pt-10 space-y-6">
       <h1 className="text-headline-md text-md-on-surface">
         {running ? t.greetRunning(firstName) : last ? t.greetAgain(firstName) : t.greetFirst(firstName)}
       </h1>
@@ -178,7 +178,8 @@ export function HomeScreen() {
         </section>
       </div>
 
-      <HomeFooter />
+      {/* at the bottom edge when the page is shorter than the screen */}
+      <HomeFooter className="!mt-auto" />
     </div>
   )
 }
