@@ -430,8 +430,9 @@ input[type='number'] {
    Fine sound waves along the lower part of the screen (Backdrop.tsx). Each
    wave is an SVG twice the screen width that slides left by half its width,
    so it loops seamlessly; the waves drift at different speeds. While music
-   plays (html[data-playing]) the whole group swells and pulses gently.
-   Only transform moves. */
+   plays the whole group swells and pulses gently — driven from Backdrop.tsx
+   by a spring, so play and pause glide instead of jumping. Only transform
+   moves. */
 .mx-backdrop {
   position: fixed;
   inset: 0;
@@ -448,7 +449,6 @@ input[type='number'] {
   height: 42vh;
   transform-origin: 50% 60%;
   transform: scaleY(0.75);
-  transition: transform 1.6s var(--m3-ease-effects-slow);
   /* Fade out towards the top and the left edge, where most text starts */
   -webkit-mask-image: linear-gradient(to top, #000 35%, transparent 100%);
   mask-image: linear-gradient(to top, #000 35%, transparent 100%);
@@ -474,19 +474,9 @@ input[type='number'] {
   stroke: rgb(var(--mx-label-2) / var(--mx-wave-warm-alpha));
   stroke-width: 1.6px;
 }
-html[data-playing] .mx-backdrop-swell {
-  transform: scaleY(1.25);
-  animation: mx-backdrop-pulse 2.4s ease-in-out infinite;
-}
 @keyframes mx-backdrop-drift {
   to { transform: translateX(-50%); }
 }
-@keyframes mx-backdrop-pulse {
-  0%, 100% { transform: scaleY(1.1); }
-  50% { transform: scaleY(1.35); }
-}
 @media (prefers-reduced-motion: reduce) {
-  .mx-backdrop-wave,
-  html[data-playing] .mx-backdrop-swell { animation: none; }
-  .mx-backdrop-swell { transition: none; }
+  .mx-backdrop-wave { animation: none; }
 }

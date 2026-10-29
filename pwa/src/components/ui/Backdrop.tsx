@@ -1,11 +1,15 @@
 /**
  * The background: a few fine sound waves along the lower part of the screen,
- * drifting sideways at different speeds. While a song plays
- * (`html[data-playing]`, see useBackdropPlaying) they swell and pulse gently.
- * Pure CSS motion — only transform changes; the paths are built
- * once and repeat seamlessly (each path covers two periods and slides by one).
+ * drifting sideways at different speeds (CSS). While a song plays (see
+ * useBackdropPlaying) they swell and pulse gently; the swell follows a spring
+ * (backdropSwell.ts), so it glides in on play and settles on pause instead of
+ * jumping. Only transform changes; the paths are built once and repeat
+ * seamlessly (each path covers two periods and slides by one).
  */
-import type { CSSProperties } from 'react'
+import { useEffect, useRef, type CSSProperties } from 'react'
+import { isBackdropPlaying, subscribeBackdropPlaying } from '@/hooks/useBackdropPlaying'
+import { prefersReducedMotion } from '@/motion/policy'
+import { AT_REST, settled, stepSwell, swellScale, type SwellState } from './backdropSwell'
 
 const PERIOD = 1200
 const HEIGHT = 200
@@ -35,10 +39,44 @@ export function wavePath({ parts, y }: Pick<Wave, 'parts' | 'y'>): string {
   return `M${pts.join(' L')}`
 }
 
+/** Runs the swell spring while it has somewhere to go, and stops when settled. */
+function useSwell(ref: React.RefObject<HTMLDivElement | null>) {
+  useEffect(() => {
+    let state: SwellState = AT_REST
+    let frame = 0
+    let last = 0
+    const tick = (now: number) => {
+      const target = isBackdropPlaying() ? 1 : 0
+      state = stepSwell(state, target, last ? (now - last) / 1000 : 0)
+      last = now
+      if (ref.current) ref.current.style.transform = `scaleY(${swellScale(state).toFixed(4)})`
+      // playing keeps pulsing; silence stops the loop once the waves are at rest
+      frame = target === 0 && settled(state, 0) ? 0 : requestAnimationFrame(tick)
+      if (!frame) {
+        state = AT_REST
+        last = 0
+      }
+    }
+    const wake = () => {
+      if (prefersReducedMotion() || frame) return
+      last = 0
+      frame = requestAnimationFrame(tick)
+    }
+    const off = subscribeBackdropPlaying(wake)
+    if (isBackdropPlaying()) wake()
+    return () => {
+      off()
+      cancelAnimationFrame(frame)
+    }
+  }, [ref])
+}
+
 export function Backdrop() {
+  const swell = useRef<HTMLDivElement>(null)
+  useSwell(swell)
   return (
     <div className="mx-backdrop" aria-hidden="true">
-      <div className="mx-backdrop-swell">
+      <div className="mx-backdrop-swell" ref={swell}>
         {WAVES.map((w, i) => (
           <svg
             key={i}
