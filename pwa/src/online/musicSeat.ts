@@ -33,3 +33,30 @@ export function musicSeat(
   if (!m || !m.online || m.left) return hostSeat
   return seat
 }
+
+export type AudioRole = 'local' | 'host' | 'follow' | 'silent'
+
+/**
+ * What this device does with the music (pure).
+ * - A connected screen (TV) has the music in every mode; everyone else stays
+ *   silent (their play button steers the TV).
+ * - A round on one device mirrored to a TV: plays and reports the cue (so the
+ *   TV can take over mid-song) until a TV is connected.
+ * - Online without a TV: "Jeder bei sich" — the host plays, the others follow;
+ *   "Gemeinsam im Raum" — the device at `musicAtSeat` plays, the others are silent.
+ */
+export function audioRoleFor(o: {
+  mirror: boolean
+  online: boolean
+  screenOnline: boolean
+  music: 'room' | 'everyone' | undefined
+  seat: number | null
+  musicAtSeat: number | null
+  isHost: boolean
+}): AudioRole {
+  if (o.mirror) return o.screenOnline ? 'silent' : 'host'
+  if (!o.online) return 'local'
+  if (o.screenOnline) return o.musicAtSeat === o.seat ? 'host' : 'silent'
+  if (o.music === 'everyone') return o.isHost ? 'host' : 'follow'
+  return o.musicAtSeat === o.seat ? 'host' : 'silent'
+}

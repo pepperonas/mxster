@@ -91,7 +91,7 @@ const de = {
     ways: [
       { icon: 'person', t: 'An einem Gerät', p: 'Ein Handy oder Laptop liegt in der Mitte, ihr reicht es weiter. Bots spielen auf Wunsch mit, leicht bis schwer.' },
       { icon: 'share', t: 'Jede:r am eigenen Handy', p: 'Öffnet einen Raum, die anderen scannen den QR-Code. Freund:innen ohne Konto spielen als Gast mit, nur mit Namen.' },
-      { icon: 'tv', t: 'Fernseher als Bühne', p: 'Ein Bildschirm tritt dem Raum bei, zeigt die Runde groß und spielt die Musik. Die Handys sind die Fernbedienungen.' },
+      { icon: 'tv', t: 'Fernseher als Bühne', p: 'Verbinde jederzeit einen Fernseher – auch mitten in der Runde und auch, wenn ihr an einem Handy spielt. Er zeigt die Runde groß und spielt die Musik, das Handy bleibt die Fernbedienung.' },
       { icon: 'globe', t: 'Auch über Entfernung', p: 'Mit „Jeder bei sich“ läuft die Musik auf allen Geräten gleichzeitig – für Runden, die nicht im selben Raum sitzen.' }
     ] as Item[],
 
@@ -135,6 +135,13 @@ const de = {
         a: [
           'Handys spielen Ton erst nach einem Tipp ab. Nach dem Neuladen steht deshalb „Zum Abspielen tippen“ unter der Platte – einmal tippen genügt.',
           'Prüfe außerdem Lautstärke und Stummschalter. Spielt ihr im Raum mit „Gemeinsam im Raum“, kommt die Musik vom Gerät der Person, die gerade dran ist, oder vom Fernseher.'
+        ]
+      },
+      {
+        q: 'Wie verbinde ich einen Fernseher?',
+        a: [
+          'Tippe in der Runde oben rechts auf das Fernseher-Symbol. Öffne auf dem Fernseher oder Laptop mxtape.celox.io/tv und gib den angezeigten Code ein – mit Tablet oder Laptop geht auch der QR-Code. Das klappt jederzeit, auch mitten in der Runde.',
+          'Sobald der Fernseher verbunden ist, spielt nur er die Musik. Play und Pause steuerst du weiter am Handy; trennst du den Fernseher, läuft der Song auf dem Handy an derselben Stelle weiter.'
         ]
       },
       {
@@ -265,7 +272,7 @@ const en: AboutContent = {
     ways: [
       { icon: 'person', t: 'On one device', p: 'One phone or laptop in the middle, you pass it around. Bots join in if you like, easy to hard.' },
       { icon: 'share', t: 'Everyone on their phone', p: 'Open a room, the others scan the QR code. Friends without an account join as guests, with just a name.' },
-      { icon: 'tv', t: 'The TV as the stage', p: 'A screen joins the room, shows the round big and plays the music. The phones are the remote controls.' },
+      { icon: 'tv', t: 'The TV as the stage', p: 'Connect a TV any time – even in the middle of a round, and even when you play on one phone. It shows the round big and plays the music; the phone stays the remote control.' },
       { icon: 'globe', t: 'Across distances', p: 'With “Everyone at home”, the music plays on every device at the same time – for groups that are not in the same room.' }
     ] as Item[],
 
@@ -309,6 +316,13 @@ const en: AboutContent = {
         a: [
           'Phones only play sound after a tap. After a reload you will see “Tap to play” under the record – one tap is enough.',
           'Also check the volume and the mute switch. In a room with “Together in the room”, the music comes from the device of whoever is on turn, or from the TV.'
+        ]
+      },
+      {
+        q: 'How do I connect a TV?',
+        a: [
+          'In the round, tap the TV symbol at the top right. On the TV or laptop, open mxtape.celox.io/tv and enter the code shown – with a tablet or laptop the QR code works too. You can do this any time, even in the middle of a round.',
+          'Once the TV is connected, only it plays the music. You still control play and pause on the phone; if you disconnect the TV, the song carries on on the phone at the same spot.'
         ]
       },
       {

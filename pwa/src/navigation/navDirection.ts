@@ -17,7 +17,7 @@ export type NavKind = 'tab' | 'forward' | 'back' | 'up' | 'down' | 'none'
 /** The pages of the navigation bar's destinations (tabs included), plus the settings (shell/AppShell TOP_LEVEL). */
 export const TOP_LEVEL_PATHS = ['/', '/history', '/stats', '/songs', '/achievements', '/players', '/friends', '/settings']
 
-const FULL_SCREEN = [/^\/game$/, /^\/room\//, /^\/r\//, /^\/imprint$/, /^\/privacy$/, /^\/terms$/, /^\/about$/]
+const FULL_SCREEN = [/^\/game$/, /^\/room\//, /^\/r\//, /^\/imprint$/, /^\/privacy$/, /^\/terms$/, /^\/about$/, /^\/tv$/]
 
 const isTop = (p: string) => TOP_LEVEL_PATHS.includes(p)
 const isFull = (p: string) => FULL_SCREEN.some((re) => re.test(p))

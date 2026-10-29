@@ -22,6 +22,7 @@ import { RoomScreen } from '@/screens/RoomScreen'
 import { ProfileScreen } from '@/screens/ProfileScreen'
 import { AdminScreen } from '@/screens/AdminScreen'
 import { AboutScreen } from '@/screens/AboutScreen'
+import { TvScreen } from '@/screens/TvScreen'
 import { initRipple } from '@/utils/ripple'
 import { englishPath, LEGACY_SEGMENTS } from '@/legacyPaths'
 import { MotionProvider } from '@/motion/MotionProvider'
@@ -100,6 +101,8 @@ const router = createBrowserRouter([
         element: <JoinScreen />
       },
       { path: '/room/:code', element: <RoomScreen /> },
+      // The short address a TV opens: enter the code, join as a screen
+      { path: '/tv', element: <TvScreen /> },
       // Legal pages: full screen, readable without an account
       { path: '/imprint', element: <LegalScreen kind="imprint" /> },
       { path: '/privacy', element: <LegalScreen kind="privacy" /> },

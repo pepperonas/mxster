@@ -83,6 +83,8 @@ export type ServerMessage =
   | { type: 'host'; seat: number; members: Member[] }
   | { type: 'state'; rev: number; snapshot: Snapshot }
   | ({ type: 'audio' } & AudioCue)
+  /** Play/pause from a device without the music, for the device that has it (TV mode). */
+  | { type: 'audioCmd'; playing: boolean; seat: number }
   | ({ type: 'intent'; seat: number } & Intent)
   | { type: 'status'; status: RoomStatus }
   | { type: 'pong'; t: number; server: number }

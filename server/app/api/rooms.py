@@ -3,7 +3,7 @@
 Roles: the host (an approved account; seat 0 at first, ``rooms.host_seat``)
 runs the game on their device; everyone else sends intents. When the host's
 device is gone for a while, another account in the room may take over.
-A display (TV, laptop) joins like a guest (in the lobby) but only shows the round. Guests join through the link with just a name:
+A display (TV, laptop) joins like a guest — in the lobby or into a running round — but only shows the round (and plays the music while connected). Guests join through the link with just a name:
 they get the httpOnly cookie ``mx_guest`` (room code + seat token, signed),
 which is also what lets them hear the music while the room is open.
 """
@@ -239,7 +239,7 @@ def read_room(code: str, request: Request, db: Session = Depends(get_db)) -> dic
 
 class JoinIn(BaseModel):
     name: str | None = None
-    #: Join as a screen that only shows the round (no account; lobby only)
+    #: Join as a screen that only shows the round (no account; lobby or a running round)
     display: bool = False
 
 
@@ -254,9 +254,9 @@ def join_room(code: str, body: JoinIn, request: Request, response: Response, db:
         if existing.left_at is not None:
             raise err(409, "left_round", "Du hast diese Runde verlassen.")
         return public_room(db, room, existing)
-    # Nobody new after the start — screens included: the room link must not
-    # let a stranger into a running round (or its music)
-    if room.status != "lobby":
+    # No new players after the start. A screen (TV mode) may still join a running
+    # round — the owner's choice: the room link is enough to put the TV on
+    if room.status != "lobby" and not (body.display and room.status == "running"):
         raise err(409, "room_started" if room.status == "running" else "room_closed",
                   "Die Runde läuft schon." if room.status == "running" else "Diese Runde ist vorbei.")
     seats = members_of(db, room.code)
@@ -446,7 +446,8 @@ async def room_socket(ws: WebSocket, code: str) -> None:
         # nothing. "Jeder bei sich": everyone plays along, so only the host may
         # set the cue.
         def may_cue() -> bool:
-            return hosting() or music == "room"
+            # a screen plays the music whenever it is connected, in either music mode
+            return hosting() or music == "room" or display
 
         await ws.accept()
         await hub.attach(code, seat, ws)
@@ -478,7 +479,7 @@ async def room_socket(ws: WebSocket, code: str) -> None:
             # The seat was checked when the socket opened; a blocked account, a
             # signed-out session or a kick must not keep it alive. Re-check on
             # anything that changes the game, at most every few seconds.
-            if kind in ("state", "audio", "intent") and time.monotonic() - checked > RECHECK_S:
+            if kind in ("state", "audio", "intent", "audioCmd") and time.monotonic() - checked > RECHECK_S:
                 checked = time.monotonic()
                 with SessionLocal() as db:
                     room = db.get(Room, code)
@@ -515,6 +516,11 @@ async def room_socket(ws: WebSocket, code: str) -> None:
                 }
                 hub.audio[code] = cue
                 await hub.broadcast(code, cue, exclude=seat)
+
+            elif kind == "audioCmd" and not display:
+                # Play/pause from a device that does not have the music (the
+                # phone next to the TV): the device with the music carries it out
+                await hub.broadcast(code, {"type": "audioCmd", "playing": bool(msg.get("playing")), "seat": seat}, exclude=seat)
 
             elif kind == "intent" and not hosting() and not display:
                 if len(raw) > MAX_INTENT_BYTES:

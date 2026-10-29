@@ -36,16 +36,22 @@ export function JoinScreen() {
   const [busy, setBusy] = useState(false)
   // Kept as the error itself, so the text follows a language switch
   const [error, setError] = useState<{ err: unknown } | null>(null)
-  // TV mode: this device only shows the round (and plays the music); like
-  // everyone else it joins in the lobby
+  // TV mode: this device only shows the round (and plays the music). Players
+  // join in the lobby; a screen may also join a running round
   const [asScreen, setAsScreen] = useState(() => new URLSearchParams(window.location.search).get('screen') === '1')
+  const [running, setRunning] = useState(false)
 
   useEffect(() => {
     roomApi
       .read(code)
       .then((r) => {
         if (r.me) navigate(`/room/${r.code}`, { replace: true })
-        else if (r.status !== 'lobby') setProblem(r.status === 'running' ? 'room_started' : 'room_closed')
+        else if (r.status === 'running') {
+          // Too late to play along — but a TV can still take over the screen and the music
+          setRunning(true)
+          setAsScreen(true)
+          setRoom(r)
+        } else if (r.status !== 'lobby') setProblem('room_closed')
         else setRoom(r)
       })
       .catch((e) => setProblem(e instanceof ApiError ? e.code : 'unreachable'))
@@ -111,21 +117,27 @@ export function JoinScreen() {
         ) : (
           <div className="mt-4 space-y-6">
             <p className="text-title-lg text-md-on-surface">{t.invitesYou(room.host.name)}</p>
-            <p className="meta">
-              {t.alreadyHere(room.members.length)} ·{' '}
-              {room.music === 'room' ? t.musicAtHost : t.musicEverywhere}
-            </p>
+            {!running && (
+              <p className="meta">
+                {t.alreadyHere(room.members.length)} ·{' '}
+                {room.music === 'room' ? t.musicAtHost : t.musicEverywhere}
+              </p>
+            )}
 
             {asScreen ? (
               <div className="space-y-3">
-                <p className="text-body-md text-md-on-surface-variant">{t.screenHint}</p>
+                <p className="text-body-md text-md-on-surface-variant" data-join-running={running || undefined}>
+                  {running ? t.tvRunning : t.screenHint}
+                </p>
                 <button type="button" className="btn btn-lg btn-brand m3-state-layer w-full" disabled={busy} onClick={() => void join()}>
                   <Icon name="tv" />
                   {t.joinAsScreen}
                 </button>
-                <button type="button" className="btn btn-text m3-state-layer w-full" onClick={() => setAsScreen(false)}>
-                  {t.joinAsPlayer}
-                </button>
+                {!running && (
+                  <button type="button" className="btn btn-text m3-state-layer w-full" onClick={() => setAsScreen(false)}>
+                    {t.joinAsPlayer}
+                  </button>
+                )}
               </div>
             ) : approved ? (
               <button type="button" className="btn btn-lg btn-brand m3-state-layer w-full" disabled={busy} onClick={() => void join()}>

@@ -16,7 +16,7 @@ import { spring } from '@/motion/springs'
 const POLL_MS = 30_000
 
 /** A room link works without an account: guests join by name. */
-export const isRoomPath = (path: string) => /^\/(r|room|raum)\/[^/]+\/?$/.test(path)
+export const isRoomPath = (path: string) => /^\/(r|room|raum)\/[^/]+\/?$/.test(path) || /^\/tv\/?$/.test(path)
 /** Imprint, privacy policy and terms: readable by everyone, signed in or not. */
 export const isLegalPath = (path: string) => /^\/(imprint|privacy|terms)\/?$/.test(path)
 /** The product page and help (/about, plus /landing and /help that lead there): for everyone. */

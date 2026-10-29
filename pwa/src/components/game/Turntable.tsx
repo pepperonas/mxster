@@ -55,9 +55,18 @@ interface TurntableProps {
   audioRole?: 'local' | 'host' | 'follow' | 'silent'
   /** 'silent': whose device has the music (default: the host). */
   musicAt?: string
+  /** 'silent': the music is on a screen (TV mode) — said as „am Bildschirm“. */
+  musicOnScreen?: boolean
   cue?: AudioCue | null
   clockOffset?: () => number
   onCue?: (cue: Omit<AudioCue, 'at'>) => void
+  /**
+   * 'silent' with a TV that has the music: the play button stays and asks the
+   * TV to play or pause (TV mode — the phone is the remote control).
+   */
+  onRemoteToggle?: (playing: boolean) => void
+  /** 'host': play/pause requests from a phone (n counts up per request). */
+  remote?: { n: number; playing: boolean } | null
 }
 
 /** A follower jumps when it is further than this from the host (seconds). */
@@ -97,7 +106,10 @@ export function Turntable({
   cue = null,
   clockOffset = () => 0,
   onCue,
-  musicAt
+  onRemoteToggle,
+  remote,
+  musicAt,
+  musicOnScreen = false
 }: TurntableProps) {
   const t = useMessages(gameText)
   const { settings } = useSettings()
@@ -143,11 +155,21 @@ export function Turntable({
       return
     }
     if (audioRole === 'follow' || audioRole === 'silent') return
+    // A device that joins in the middle of a song (a TV switched on during the
+    // round) picks it up where the room's music stands; paused stays paused
+    if (audioRole === 'host' && cue && cue.songId === song.id) {
+      if (cue.playing) player.current.play(song, cuePosition(cue, Date.now(), clockOffset())).catch(() => {})
+      return
+    }
     const start = startPosition(song, settings.randomStartPosition, Math.random)
     player.current.play(song, start).catch(() => {})
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [songKey])
 
+  // The last cue seen: after a TV is disconnected the room (and its cue) is gone,
+  // but this device should still pick the song up where the TV was
+  const lastCue = useRef(cue)
+  if (cue) lastCue.current = cue
   // The music moves to or away from this device in the middle of a song
   const lastRole = useRef(audioRole)
   useEffect(() => {
@@ -159,10 +181,11 @@ export function Turntable({
       p.stop()
       return
     }
-    if (audioRole !== 'host' || before !== 'silent' || !song) return
+    if ((audioRole !== 'host' && audioRole !== 'local') || before !== 'silent' || !song) return
     // Take over where the previous device was (paused stays paused)
-    if (cue && cue.songId === song.id) {
-      if (cue.playing) p.play(song, cuePosition(cue, Date.now(), clockOffset())).catch(() => {})
+    const last = cue ?? lastCue.current
+    if (last && last.songId === song.id) {
+      if (last.playing) p.play(song, cuePosition(last, Date.now(), clockOffset())).catch(() => {})
     } else {
       p.play(song, startPosition(song, false, Math.random)).catch(() => {})
     }
@@ -241,10 +264,29 @@ export function Turntable({
   const loading = audioRole !== 'silent' && state === 'loading'
   useBackdropPlaying(playing)
   const toggle = useCallback(() => {
-    if (audioRole === 'silent') return
+    if (audioRole === 'silent') {
+      onRemoteToggle?.(!playing)
+      return
+    }
     if (playing) player.current.pause()
     else player.current.resume()
-  }, [playing, audioRole])
+  }, [playing, audioRole, onRemoteToggle])
+  // The device with the music carries out play/pause from the phone (TV mode)
+  const remoteN = remote?.n ?? 0
+  useEffect(() => {
+    if (!remoteN || audioRole !== 'host' || !song || !remote) return
+    const p = player.current
+    if (!remote.playing) {
+      if (p.getState() === 'playing') p.pause()
+    } else if (p.getSongId() !== song.id) {
+      p.play(song, startPosition(song, false, Math.random)).catch(() => {})
+    } else if (p.getState() !== 'playing') {
+      p.resume()
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [remoteN])
+  // Silent with a remote: the button stays and steers the TV
+  const controllable = audioRole !== 'silent' || Boolean(onRemoteToggle)
 
   const progress = duration > 0 ? Math.min(1, position / duration) : 0
   const revealed = revealYear != null
@@ -327,7 +369,7 @@ export function Turntable({
               : revealed
                 ? t.songIsFrom(revealYear ?? '')
                 : audioRole === 'silent'
-                  ? `${caption ?? t.playing} · ${musicAt ? t.atName(musicAt) : t.atHost}`
+                  ? `${caption ?? t.playing} · ${musicOnScreen ? t.atScreen : musicAt ? t.atName(musicAt) : t.atHost}`
                   : (caption ?? t.playing)}
           </p>
           <div className="mt-1.5 flex items-center gap-2">
@@ -340,7 +382,7 @@ export function Turntable({
             <span className="text-label-sm text-md-on-surface-variant tabular">{loading ? '…' : formatTime(position)}</span>
           </div>
         </div>
-        {audioRole !== 'silent' && (
+        {controllable && (
           <button
             type="button"
             onClick={toggle}
@@ -437,7 +479,7 @@ export function Turntable({
               >
                 {revealYear}
               </m.div>
-            ) : song && audioRole !== 'silent' ? (
+            ) : song && controllable ? (
               <m.button
                 key="control"
                 type="button"
@@ -468,7 +510,9 @@ export function Turntable({
           ? revealed
             ? ''
             : audioRole === 'silent'
-              ? musicAt
+              ? musicOnScreen
+                ? t.playingAtScreen(formatTime(position))
+                : musicAt
                 ? t.playingAt(musicAt, formatTime(position))
                 : t.playingAtHost(formatTime(position))
               : blocked

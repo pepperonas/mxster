@@ -83,6 +83,15 @@ export function intentHandler(latest: () => { flow: TurnFlow; game: ReturnType<t
   }
 }
 
+/**
+ * TV mode on one device: the TV must treat the round as an online one (it never
+ * saves it as its own), and the phone's link to the TV room stays on the phone.
+ */
+export function mirrorFix(game: Snapshot['game'], mirrorCode: string | null): Snapshot['game'] {
+  if (!mirrorCode) return game
+  return { ...game, onlineRoom: mirrorCode, tvRoom: null }
+}
+
 export function useHostBridge(flow: TurnFlow, result: Snapshot['result']) {
   const room = useRoom()
   const game = useGame()
@@ -102,7 +111,7 @@ export function useHostBridge(flow: TurnFlow, result: Snapshot['result']) {
   // Snapshots
   const sent = useRef('')
   // Before the reveal the song goes out without its year (sanitize.ts)
-  const snapshot = isHost ? JSON.stringify({ game: blindSnapshot(stateOf(game)), result }) : ''
+  const snapshot = isHost ? JSON.stringify({ game: mirrorFix(blindSnapshot(stateOf(game)), room?.mirror ? room.code : null), result }) : ''
   useEffect(() => {
     if (!room || !isHost || snapshot === sent.current) return
     const id = window.setTimeout(() => {

@@ -120,6 +120,10 @@ export class RoomClient {
     this.send(JSON.stringify({ type: 'state', snapshot }), false)
   }
 
+  sendAudioCmd(playing: boolean): void {
+    this.send(JSON.stringify({ type: 'audioCmd', playing }), false)
+  }
+
   sendAudio(cue: Omit<AudioCue, 'at'>): void {
     this.send(JSON.stringify({ type: 'audio', ...cue }), false)
   }

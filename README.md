@@ -17,10 +17,10 @@
 <p>New here? <a href="https://mxtape.celox.io/about"><b>mxtape.celox.io/about</b></a> introduces the game and answers the common questions — with a little timeline to try, no account needed.</p>
 
 <!-- BADGES:BIG — version, tests, lines of code and songs; readme.test.ts keeps them true, scripts/readme-badges.mjs rewrites them. -->
-[![version](https://img.shields.io/badge/version-0.26.0-C2185B?style=for-the-badge&logo=semver&logoColor=white)](https://github.com/pepperonas/mxtape/releases/latest)
-[![tests](https://img.shields.io/badge/tests-1109-2E9E5B?style=for-the-badge&logo=vitest&logoColor=white)](#tests-and-ci)
-[![lines of code](https://img.shields.io/badge/lines%20of%20code-32.1k-4B6BDF?style=for-the-badge&logo=typescript&logoColor=white)](pwa/src)
-[![test code](https://img.shields.io/badge/test%20code-13.1k-2E9E5B?style=for-the-badge&logo=typescript&logoColor=white)](#tests-and-ci)
+[![version](https://img.shields.io/badge/version-0.27.0-C2185B?style=for-the-badge&logo=semver&logoColor=white)](https://github.com/pepperonas/mxtape/releases/latest)
+[![tests](https://img.shields.io/badge/tests-1128-2E9E5B?style=for-the-badge&logo=vitest&logoColor=white)](#tests-and-ci)
+[![lines of code](https://img.shields.io/badge/lines%20of%20code-32.5k-4B6BDF?style=for-the-badge&logo=typescript&logoColor=white)](pwa/src)
+[![test code](https://img.shields.io/badge/test%20code-13.4k-2E9E5B?style=for-the-badge&logo=typescript&logoColor=white)](#tests-and-ci)
 [![songs](https://img.shields.io/badge/songs-800-FF8A3D?style=for-the-badge&logo=applemusic&logoColor=white)](#the-song-library)
 
 [![Donate with PayPal](https://img.shields.io/badge/PayPal-support%20this%20project-00457C?style=for-the-badge&logo=paypal&logoColor=white)](https://www.paypal.com/donate/?business=martin.pfeffer@celox.io&currency_code=EUR&item_name=mxtape)
@@ -170,7 +170,7 @@ Instead of passing one phone around, everyone plays on their own device — in t
 - **Objections online:** after a card is placed, everyone who may object taps *Object* or *No objection*; otherwise the card turns over by itself after 10 seconds. Nobody can reveal early for the others.
 - **Music:** *together in the room* — only the device of whoever's turn it is plays (the host takes over if that device drops out), no echo. *Everyone at home* — all devices play in sync (measured ~20 ms apart).
 - **Playing:** whoever is on turn places or guesses on their own device; everyone else watches live and objects from their own phone. A reload or a short drop-out costs nothing — everyone gets their seat back.
-- **TV mode:** open the room link on a TV or laptop and choose *Use as a screen* — it shows the round big for everyone, plays the music and stays awake; people play on their phones. A screen joins in the lobby, like everyone else.
+- **TV mode:** tap the TV symbol in any round — on one phone too — then open **mxtape.celox.io/tv** on the TV and type the code (or scan the QR code on a tablet or laptop). The TV shows the round big, stays awake and plays the music; play and pause stay on the phone. Works any time, also in the middle of a round.
 - **Bots and teams online:** the host fills the round up with up to three bots (played on the host's device) or shuffles the people into teams; team members take turns, each on their own phone.
 - **The host's phone dies?** After 30 seconds any account in the room may take over; the round carries on from their device.
 - **Friends:** search other accounts by name or e-mail, add them as friends and invite them straight from the room; the invitation appears on their home screen.

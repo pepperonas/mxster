@@ -77,6 +77,9 @@ export interface GameState {
   /** Set for an online round: the room code. Such rounds live on the server,
    *  not in this device's saved game. */
   onlineRoom: string | null
+  /** A round on one device mirrored to a TV (TV mode): the room it is mirrored
+   *  to. The round itself stays local; the room only shows it and plays the music. */
+  tvRoom: string | null
 }
 
 export type RoundOptions = Pick<
@@ -106,6 +109,7 @@ type GameAction =
   | { type: 'NEXT_PLAYER_ONLY' } // Switch player, keep currentSong
   | { type: 'SET_TIEBREAK'; payload: Tiebreak | null }
   | { type: 'SET_ABSENT'; payload: number[] }
+  | { type: 'SET_TV_ROOM'; payload: string | null }
   | { type: 'SET_STEP_CLOCK'; payload: StepClock | null }
   | { type: 'SET_OPTIONS'; payload: Partial<RoundOptions> }
   | { type: 'SET_PLAYERS'; payload: Player[] }
@@ -139,6 +143,7 @@ interface GameContextValue extends GameState {
   nextPlayerOnly: () => void // Switch player but keep song
   setTiebreak: (tiebreak: Tiebreak | null) => void
   setAbsent: (absent: number[]) => void
+  setTvRoom: (code: string | null) => void
   setStepClock: (clock: StepClock | null) => void
   setOptions: (options: Partial<RoundOptions>) => void
   /** Replace the whole line-up (teams). */
@@ -160,7 +165,7 @@ const GameContext = createContext<GameContextValue | undefined>(undefined)
 // Initial State
 // ============================================================================
 
-const initialState: GameState = {
+export const initialState: GameState = {
   gameMode: null,
   randomStartPosition: false,
   players: [],
@@ -189,7 +194,8 @@ const initialState: GameState = {
   startedAt: 0,
   rankingsHistory: [],
   turnLog: [],
-  onlineRoom: null
+  onlineRoom: null,
+  tvRoom: null
 }
 
 /** Fresh scores, timelines and challenges for a new round with the same line-up. */
@@ -231,7 +237,7 @@ const challengesInMode = (state: GameState) => state.challengesEnabled && state.
 // Reducer
 // ============================================================================
 
-function gameReducer(state: GameState, action: GameAction): GameState {
+export function gameReducer(state: GameState, action: GameAction): GameState {
   switch (action.type) {
     case 'SET_GAME_MODE':
       return { ...state, gameMode: action.payload }
@@ -337,6 +343,8 @@ function gameReducer(state: GameState, action: GameAction): GameState {
         ...initialState,
         ...keepOptions(state),
         onlineRoom: state.onlineRoom,
+        // the TV stays connected for the next round
+        tvRoom: state.tvRoom,
         players: freshPlayers(stay, challengesInMode(state)),
         // Whoever came last starts (read from the standings before they reset)
         currentPlayer: rematchStarter(stay, state.gameMode, action.payload?.winner),
@@ -371,6 +379,9 @@ function gameReducer(state: GameState, action: GameAction): GameState {
 
     case 'SET_TIEBREAK':
       return { ...state, tiebreak: action.payload }
+
+    case 'SET_TV_ROOM':
+      return { ...state, tvRoom: action.payload }
 
     case 'SET_ABSENT':
       return { ...state, absent: action.payload }
@@ -470,6 +481,7 @@ export function GameProvider({ children }: GameProviderProps) {
     nextPlayerOnly: () => dispatch({ type: 'NEXT_PLAYER_ONLY' }),
     setTiebreak: (tiebreak) => dispatch({ type: 'SET_TIEBREAK', payload: tiebreak }),
     setAbsent: (absent) => dispatch({ type: 'SET_ABSENT', payload: absent }),
+    setTvRoom: (code) => dispatch({ type: 'SET_TV_ROOM', payload: code }),
     setStepClock: (clock) => dispatch({ type: 'SET_STEP_CLOCK', payload: clock }),
     setOptions: (options) => dispatch({ type: 'SET_OPTIONS', payload: options }),
     setPlayers: (players) => dispatch({ type: 'SET_PLAYERS', payload: players }),

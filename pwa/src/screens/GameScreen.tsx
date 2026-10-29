@@ -60,8 +60,10 @@ import { getPreviewPlayer } from '@/services/PreviewPlayerService'
 import { spring } from '@/motion/springs'
 import type { Player, Song } from '@/types'
 import { correctGapIndices, gapLabel } from '@/game/placement'
-import { useRoom } from '@/online/RoomContext'
-import { musicSeat } from '@/online/musicSeat'
+import { RoomProvider, useRoom } from '@/online/RoomContext'
+import { roomsText } from '@/i18n/messages/rooms'
+import { TvPanel } from '@/components/game/TvPanel'
+import { audioRoleFor, musicSeat } from '@/online/musicSeat'
 import { useObjectionWindow } from '@/online/useObjectionWindow'
 import { useTurnClock } from '@/online/useTurnClock'
 import { stepKey, visibleSecondsLeft } from '@/game/turnClock'
@@ -81,7 +83,7 @@ let leaving = false
 
 export function GameScreen() {
   const navigate = useAppNavigate()
-  const { gameMode, players, isGameStarted } = useGame()
+  const { gameMode, players, isGameStarted, tvRoom } = useGame()
   const [round, setRound] = useState(0)
 
   // Nothing to play (reload, deep link): back to the setup.
@@ -97,7 +99,13 @@ export function GameScreen() {
   // resumes where it stood (contexts/GameContext + game/savedGame).
 
   if (!gameMode || players.length === 0 || !isGameStarted) return null
-  return <GameRound key={round} onRematch={() => setRound((r) => r + 1)} />
+  // Always inside a room provider (inert without a TV): connecting a TV later
+  // must not remount the round, or the music would start over
+  return (
+    <RoomProvider code={tvRoom} mirror>
+      <GameRound key={round} onRematch={() => setRound((r) => r + 1)} />
+    </RoomProvider>
+  )
 }
 
 const noop = () => {}
@@ -111,6 +119,7 @@ const noop = () => {}
 export function GameRound({ onRematch }: { onRematch: () => void }) {
   const goBack = useGoBack()
   const t = useMessages(gameText)
+  const rt = useMessages(roomsText)
   const { showModal, closeModal, addToast } = useUI()
   const {
     gameMode,
@@ -127,12 +136,16 @@ export function GameRound({ onRematch }: { onRematch: () => void }) {
     playedSongs,
     bonus,
     daily,
-    startedAt
+    startedAt,
+    tvRoom,
+    setTvRoom
   } = useGame()
   const { getPlayerAchievements } = useAchievements()
   const dt = useMessages(dailyText)
   const room = useRoom()
-  const online = Boolean(room && room.seat !== null)
+  // A round on one device mirrored to a TV is still a local round (its rules, its saved game)
+  const mirror = Boolean(room?.mirror)
+  const online = Boolean(room && room.seat !== null && !mirror)
   const onlineHost = online && room!.role === 'host'
   // A screen (TV mode) mirrors the round like a player but never acts
   const onlineScreen = online && room!.role === 'display'
@@ -141,6 +154,34 @@ export function GameRound({ onRematch }: { onRematch: () => void }) {
   const { state: auth } = useAuth()
   useScreenMode(onlineScreen)
   const guestName = onlinePlayer && !onlineScreen && auth.kind === 'anonymous' ? (room!.members.find((m) => m.seat === room!.seat)?.name ?? '') : undefined
+
+  // TV mode: the panel with the code; on one device, opening it creates the
+  // room the round is mirrored to
+  const [tvOpen, setTvOpen] = useState(false)
+  const [tvBusy, setTvBusy] = useState(false)
+  const [tvFailed, setTvFailed] = useState(false)
+  const tvCode = online ? room!.code : tvRoom
+  const openTv = async () => {
+    setTvOpen(true)
+    setTvFailed(false)
+    if (online || tvRoom || tvBusy) return
+    setTvBusy(true)
+    try {
+      const r = await roomApi.create('room', { tv: true })
+      await roomApi.setStatus(r.code, 'running')
+      setTvRoom(r.code)
+    } catch {
+      setTvFailed(true)
+    } finally {
+      setTvBusy(false)
+    }
+  }
+  const disconnectTv = async () => {
+    const code = tvRoom
+    setTvOpen(false)
+    setTvRoom(null)
+    if (code) await roomApi.setStatus(code, 'closed').catch(() => {})
+  }
 
   const [previewGap, setPreviewGap] = useState<number | null>(null)
   // Online player: the placement is on its way to the host — keep the card
@@ -157,11 +198,13 @@ export function GameRound({ onRematch }: { onRematch: () => void }) {
     // The host ends the room for everyone; a player leaves it (out of this round for good)
     if (onlineHost && room) await roomApi.setStatus(room.code, 'closed').catch(() => {})
     else if (onlinePlayer && room && !room.result) await roomApi.leave(room.code).catch(() => {})
+    // The TV's room ends with the round
+    if (tvRoom) await roomApi.setStatus(tvRoom, 'closed').catch(() => {})
     const wasDaily = daily
     resetGame()
     // Back to the page the round was started from, without a second copy of it
     goBack(wasDaily ? '/daily' : '/')
-  }, [closeModal, resetGame, goBack, onlineHost, onlinePlayer, room, daily])
+  }, [closeModal, resetGame, goBack, onlineHost, onlinePlayer, room, daily, tvRoom])
 
   const showSkipNotice = useCallback(
     (notice: SkipNotice, acknowledge: () => void) => {
@@ -294,16 +337,19 @@ export function GameRound({ onRematch }: { onRematch: () => void }) {
   // "Gemeinsam im Raum": the music plays on the device of whoever is on turn
   const hostSeat = room?.members.find((m) => m.host)?.seat ?? 0
   const musicAtSeat = online ? musicSeat(players, currentPlayer, absent ?? [], room!.members, hostSeat) : null
-  const audioRole: 'local' | 'host' | 'follow' | 'silent' = !online
-    ? 'local'
-    : room!.info?.music === 'everyone'
-      ? onlineHost
-        ? 'host'
-        : 'follow'
-      : musicAtSeat === room!.seat
-        ? 'host'
-        : 'silent'
-  const musicAt = online && room!.info?.music !== 'everyone' ? room!.members.find((m) => m.seat === musicAtSeat)?.name : undefined
+  // A connected screen (TV) has the music, in every mode: everyone else stays
+  // silent and the play button steers the TV
+  const screen = room?.members.find((m) => m.display && m.online && !m.left)
+  const audioRole = audioRoleFor({
+    mirror,
+    online,
+    screenOnline: Boolean(screen),
+    music: room?.info?.music,
+    seat: room?.seat ?? null,
+    musicAtSeat,
+    isHost: onlineHost
+  })
+  const musicAt = screen ? screen.name : online && room!.info?.music !== 'everyone' ? room!.members.find((m) => m.seat === musicAtSeat)?.name : undefined
   const choosing = phase === 'challenge' && pending?.choosing != null ? pending.choosing : null
 
   // Phones: while a song is on the platter the player shrinks into a sticky
@@ -477,15 +523,41 @@ export function GameRound({ onRematch }: { onRematch: () => void }) {
             <Icon name={MODE_COPY[gameMode].icon} size={20} className="text-md-primary" />
             {MODE_COPY[gameMode].name}
           </span>
+          <span className="flex-1" />
           {tiebreak && (
-            <span className="chip ml-auto bg-md-tertiary-container text-md-on-tertiary-container" role="status">
+            <span className="chip bg-md-tertiary-container text-md-on-tertiary-container" role="status">
               {tiebreak.round > 1 ? t.tiebreakRound(tiebreak.round) : t.tiebreak}
             </span>
+          )}
+          {!onlineScreen && (
+            <button
+              type="button"
+              className={`icon-btn m3-state-layer ${screen ? 'bg-md-secondary-container text-md-on-secondary-container' : ''}`}
+              onClick={() => (tvOpen ? setTvOpen(false) : void openTv())}
+              aria-label={rt.tvConnect}
+              aria-expanded={tvOpen}
+              data-tv-button={screen ? 'connected' : 'idle'}
+            >
+              <Icon name="tv" />
+            </button>
           )}
         </div>
       </header>
 
       <main className="mx-auto max-w-6xl px-4 space-y-6">
+        <AnimatePresence initial={false}>
+          {tvOpen && !onlineScreen && (
+            <TvPanel
+              key="tv"
+              code={tvCode}
+              screen={screen?.name}
+              busy={tvBusy}
+              failed={tvFailed}
+              onDisconnect={mirror ? () => void disconnectTv() : undefined}
+              onClose={() => setTvOpen(false)}
+            />
+          )}
+        </AnimatePresence>
         <PlayerStrip thinking={isBotThinking} />
         {hostAway && (
           <div role="status" className="flex flex-wrap items-center gap-x-3 gap-y-2 rounded-m3-lg bg-md-error-container text-md-on-error-container px-4 py-3 text-body-md">
@@ -514,9 +586,12 @@ export function GameRound({ onRematch }: { onRematch: () => void }) {
               drawLabel={drawLabel}
               audioRole={audioRole}
               musicAt={musicAt}
+              musicOnScreen={Boolean(screen)}
               cue={room?.cue ?? null}
               clockOffset={room?.clockOffset}
               onCue={audioRole === 'host' ? room!.sendAudio : undefined}
+              onRemoteToggle={audioRole === 'silent' && screen && !onlineScreen ? room!.sendAudioCmd : undefined}
+              remote={room?.remote ?? null}
             />
             {online && phase === 'idle' && !can('draw') && (
               <p className="text-center text-body-md text-md-on-surface-variant" role="status">

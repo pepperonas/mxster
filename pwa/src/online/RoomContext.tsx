@@ -33,6 +33,16 @@ export interface RoomValue {
   sendIntent: (intent: Intent) => void
   sendState: (snapshot: Snapshot) => void
   sendAudio: (cue: Omit<AudioCue, 'at'>) => void
+  /** Ask the device with the music (the TV) to play or pause. */
+  sendAudioCmd: (playing: boolean) => void
+  /** The latest play/pause request for this device (n counts up per request). */
+  remote: { n: number; playing: boolean } | null
+  /**
+   * A round on one device mirrored to a TV: this device runs the round locally
+   * (its own rules, its own saved game) and only shares it — it never takes the
+   * room's snapshot back.
+   */
+  mirror: boolean
   intentHandler: MutableRefObject<((seat: number, intent: Intent) => void) | null>
   refresh: () => Promise<RoomInfo | null>
   /** The host's device is gone: run the game from this device (accounts only). */
@@ -43,7 +53,13 @@ const RoomContext = createContext<RoomValue | null>(null)
 
 export const useRoom = () => useContext(RoomContext)
 
-export function RoomProvider({ code, children }: { code: string; children: ReactNode }) {
+/**
+ * `code` null: no room — the provider stays inert and offers no room. The local
+ * round wraps itself in one all the time, so connecting a TV later does not
+ * remount the round (the music would start over).
+ */
+export function RoomProvider({ code: maybeCode, mirror = false, children }: { code: string | null; mirror?: boolean; children: ReactNode }) {
+  const code = maybeCode ?? ''
   const game = useGame()
   const gameRef = useRef(game)
   gameRef.current = game
@@ -56,6 +72,7 @@ export function RoomProvider({ code, children }: { code: string; children: React
   const [role, setRole] = useState<Role | null>(null)
   const [connection, setConnection] = useState<Connection>('connecting')
   const [cue, setCue] = useState<AudioCue | null>(null)
+  const [remote, setRemote] = useState<{ n: number; playing: boolean } | null>(null)
   const [result, setResult] = useState<Snapshot['result']>(null)
   const client = useRef<RoomClient | null>(null)
   const intentHandler = useRef<((seat: number, intent: Intent) => void) | null>(null)
@@ -97,6 +114,7 @@ export function RoomProvider({ code, children }: { code: string; children: React
           setCue(msg.audio)
           // Players always follow the host; the host continues from the room's
           // snapshot unless this device already runs this round
+          if (mirror) break // the round lives on this device
           if (msg.role !== 'host') applySnapshot(msg.snapshot)
           else if (gameRef.current.onlineRoom !== code && msg.snapshot)
             applySnapshot({ ...msg.snapshot, game: restoreSong(msg.snapshot.game) })
@@ -106,7 +124,7 @@ export function RoomProvider({ code, children }: { code: string; children: React
           setMembers(msg.members)
           break
         case 'state':
-          if (roleRef.current !== 'host') applySnapshot(msg.snapshot)
+          if (roleRef.current !== 'host' && !mirror) applySnapshot(msg.snapshot)
           break
         case 'host': {
           // Someone took over running the game. This device carries on from the
@@ -126,6 +144,9 @@ export function RoomProvider({ code, children }: { code: string; children: React
         case 'audio':
           setCue({ songId: msg.songId, playing: msg.playing, positionMs: msg.positionMs, at: msg.at })
           break
+        case 'audioCmd':
+          setRemote((prev) => ({ n: (prev?.n ?? 0) + 1, playing: msg.playing }))
+          break
         case 'intent': {
           const { type: _t, seat: from, ...intent } = msg
           intentHandler.current?.(from, intent as Intent)
@@ -142,11 +163,12 @@ export function RoomProvider({ code, children }: { code: string; children: React
           break
       }
     },
-    [applySnapshot, code]
+    [applySnapshot, code, mirror]
   )
 
   // Load the room, then connect — only once this device has a seat
   useEffect(() => {
+    if (!code) return
     let cancelled = false
     void refresh().then((r) => {
       if (cancelled || !r || !r.me) return
@@ -185,14 +207,17 @@ export function RoomProvider({ code, children }: { code: string; children: React
         // clock reads it when the host's device has the music)
         setCue({ ...c, at: Date.now() + (client.current?.offset ?? 0) })
       },
+      sendAudioCmd: (playing) => client.current?.sendAudioCmd(playing),
+      remote,
+      mirror,
       intentHandler,
       refresh,
       takeover: async () => {
         await roomApi.takeover(code)
       }
     }),
-    [code, info, problem, members, status, seat, role, connection, cue, result, refresh]
+    [code, info, problem, members, status, seat, role, connection, cue, result, refresh, remote, mirror]
   )
 
-  return <RoomContext.Provider value={value}>{children}</RoomContext.Provider>
+  return <RoomContext.Provider value={code ? value : null}>{children}</RoomContext.Provider>
 }

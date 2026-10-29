@@ -390,7 +390,7 @@ def test_takeover_is_not_for_guests_or_while_the_host_is_there(client, google, m
     assert client.post(f"/api/rooms/{code}/takeover").status_code in (401, 403)
 
 
-def test_a_screen_joins_in_the_lobby_only_shows_the_round_and_cannot_act(client, google):
+def test_a_screen_joins_shows_the_round_and_cannot_act(client, google):
     me = host(client, google)
     room = create(client, me)
     code = room["code"]
@@ -403,10 +403,16 @@ def test_a_screen_joins_in_the_lobby_only_shows_the_round_and_cannot_act(client,
     client.cookies.clear()
     client.cookies.update(hc)
     assert client.post(f"/api/rooms/{code}/status", json={"status": "running"}, headers=csrf(me)).status_code == 200
-    # A latecomer screen with the link gets nothing once the round runs
+    # A screen may still join the running round (TV mode from a running round);
+    # a new player may not
     client.cookies.clear()
-    late = client.post(f"/api/rooms/{code}/join", json={"name": "Fremd", "display": True})
-    assert late.status_code == 409
+    late = client.post(f"/api/rooms/{code}/join", json={"name": "Fernseher 2", "display": True})
+    assert late.status_code == 200
+    assert late.json()["me"]["display"] is True
+    client.cookies.clear()
+    player = client.post(f"/api/rooms/{code}/join", json={"name": "Fremd"})
+    assert player.status_code == 409
+    assert player.json()["code"] == "room_started"
     client.cookies.clear()
     client.cookies.update(sc)
     # It hears the music like a guest
@@ -468,3 +474,59 @@ def test_an_expired_room_cannot_be_entered_again(client, google):
         with _connect(client, code, hc) as h:
             h.receive_json()
     assert closed.value.code == 4003
+
+
+def _with_screen(client, google, music):
+    """A running room (host + guest Lisa) with a TV joined; returns code and cookies."""
+    me = host(client, google)
+    room = create(client, me, music=music)
+    code = room["code"]
+    hc = dict(client.cookies)
+    as_guest(client, code, "Lisa")
+    gc = dict(client.cookies)
+    client.cookies.clear()
+    client.cookies.update(hc)
+    assert client.post(f"/api/rooms/{code}/status", json={"status": "running"}, headers=csrf(me)).status_code == 200
+    client.cookies.clear()
+    assert client.post(f"/api/rooms/{code}/join", json={"name": "Fernseher", "display": True}).status_code == 200
+    sc = dict(client.cookies)
+    return code, hc, gc, sc
+
+
+def test_a_screen_reports_the_music_even_when_everyone_plays_at_home(client, google):
+    code, hc, gc, sc = _with_screen(client, google, "everyone")
+    with _connect(client, code, hc) as h:
+        h.receive_json()
+        with _connect(client, code, gc) as g:
+            g.receive_json()
+            with _connect(client, code, sc) as s:
+                s.receive_json()
+                s.send_json({"type": "audio", "songId": "song_001", "playing": True, "positionMs": 1000})
+                assert _until(g, "audio")["playing"] is True
+                # a player in "everyone" mode still may not cue: the next cue the
+                # screen hears is the host's, not the player's
+                g.send_json({"type": "audio", "songId": "song_001", "playing": False, "positionMs": 5555})
+                g.send_json({"type": "ping", "t": 7})
+                assert _until(g, "pong")["t"] == 7
+                h.send_json({"type": "audio", "songId": "song_001", "playing": True, "positionMs": 7777})
+                assert _until(s, "audio")["positionMs"] == 7777
+
+
+def test_play_pause_from_a_phone_reaches_the_tv_but_not_from_the_tv(client, google):
+    code, hc, gc, sc = _with_screen(client, google, "room")
+    with _connect(client, code, hc) as h:
+        h.receive_json()
+        with _connect(client, code, sc) as s:
+            s.receive_json()
+            h.send_json({"type": "audioCmd", "playing": False})
+            cmd = _until(s, "audioCmd")
+            assert cmd["playing"] is False and cmd["seat"] == 0
+            # the screen cannot remote-control anyone
+            s.send_json({"type": "audioCmd", "playing": True})
+            s.send_json({"type": "ping", "t": 3})
+            h.send_json({"type": "ping", "t": 4})
+            for _ in range(6):
+                msg = h.receive_json()
+                assert msg["type"] != "audioCmd"
+                if msg["type"] == "pong":
+                    break
