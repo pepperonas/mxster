@@ -23,7 +23,7 @@
  * Gap highlight during a drag uses transform/colour only — the layout must
  * not change while the drag measures it.
  */
-import { useCallback, useEffect, useRef, type Ref, type RefObject } from 'react'
+import { useCallback, useEffect, useRef, useState, type Ref, type RefObject } from 'react'
 import { SongCover } from './SongInfo'
 import { AnimatePresence, animate, m, useMotionValue } from 'motion/react'
 import type { Song } from '@/types'
@@ -35,6 +35,9 @@ import { GripIcon } from '@/components/ui/GripIcon'
 import { initialOf } from '@/game/teams'
 import { useMessages } from '@/i18n'
 import { gameText } from '@/i18n/messages/game'
+import { useToastOptional } from '@/contexts/UIContext'
+import { useDoubleTap } from '@/hooks/useDoubleTap'
+import { copySong } from '@/utils/copySong'
 
 /** Shared element id of a card on its way from the dock to its slot — one per song. */
 export const pendingCardLayoutId = (songId: string) => `pending-card-${songId}`
@@ -149,7 +152,7 @@ export function TimelineBoard({
     }
     if (reveal && !reveal.isCorrect && reveal.gapIndex === gap) {
       items.push(
-        <BoardRow key={`ghost-${reveal.song.id}`} layoutId={pendingCardLayoutId(reveal.song.id)} tone="wrong" shake>
+        <BoardRow key={`ghost-${reveal.song.id}`} layoutId={pendingCardLayoutId(reveal.song.id)} tone="wrong" shake copy={reveal.song}>
           <CardContent song={reveal.song} revealYear />
         </BoardRow>
       )
@@ -178,6 +181,7 @@ export function TimelineBoard({
         layoutId={isRevealed ? pendingCardLayoutId(card.song.id) : undefined}
         tone={isRevealed ? 'correct' : 'default'}
         pop={isRevealed}
+        copy={card.song}
       >
         <CardContent
           song={card.song}
@@ -225,11 +229,29 @@ interface BoardRowProps {
   shake?: boolean
   /** Revealed right: lifts once (the counterpart of the wrong card's shake). */
   pop?: boolean
+  /** A face-up card: a double tap copies "Artist – Title". Never set on a waiting card (its title may be hidden). */
+  copy?: Song
 }
 
-function BoardRow({ ref, children, layoutId, tone, shake, pop }: BoardRowProps) {
+function BoardRow({ ref, children, layoutId, tone, shake, pop, copy }: BoardRowProps) {
+  const t = useMessages(gameText)
+  const toast = useToastOptional()
+  const [flash, setFlash] = useState(false)
+  const tap = useDoubleTap(
+    copy
+      ? () => {
+          void copySong(copy, toast ?? (() => {}), t).then((ok) => {
+            if (!ok) return
+            setFlash(true)
+            setTimeout(() => setFlash(false), 450)
+          })
+        }
+      : undefined
+  )
   return (
     <m.li
+      {...tap}
+      data-copyable={copy ? '' : undefined}
       ref={ref}
       layout="position"
       layoutId={layoutId}
@@ -250,7 +272,7 @@ function BoardRow({ ref, children, layoutId, tone, shake, pop }: BoardRowProps) 
             : spring.spatialDefault
       }
       data-pop={pop || undefined}
-      className={`relative flex items-center gap-3 min-h-[52px] px-3 py-1.5 rounded-m3-lg border-2 transition-colors duration-m3-effects-slow ease-m3-effects-slow ${TONE_CLASS[tone]} ${pop ? 'mx-success-ring' : ''}`}
+      className={`relative flex items-center gap-3 min-h-[52px] px-3 py-1.5 rounded-m3-lg border-2 transition-colors duration-m3-effects-slow ease-m3-effects-slow ${TONE_CLASS[tone]} ${pop ? 'mx-success-ring' : ''} ${copy ? 'select-none' : ''} ${flash ? '!border-md-primary' : ''}`}
     >
       {children}
     </m.li>

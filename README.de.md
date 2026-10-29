@@ -15,10 +15,10 @@
 <h3>👉 <a href="https://mxtape.celox.io">mxtape.celox.io</a> — mit Google oder E-Mail anmelden oder als Gast nur per Link in den Raum von Freunden</h3>
 
 <!-- BADGES:BIG — version, tests, lines of code and songs; readme.test.ts keeps them true, scripts/readme-badges.mjs rewrites them. -->
-[![version](https://img.shields.io/badge/version-0.17.3-C2185B?style=for-the-badge&logo=semver&logoColor=white)](https://github.com/pepperonas/mxtape/releases/latest)
-[![tests](https://img.shields.io/badge/tests-988-2E9E5B?style=for-the-badge&logo=vitest&logoColor=white)](#tests-und-ci)
-[![lines of code](https://img.shields.io/badge/lines%20of%20code-28.4k-4B6BDF?style=for-the-badge&logo=typescript&logoColor=white)](pwa/src)
-[![test code](https://img.shields.io/badge/test%20code-11.3k-2E9E5B?style=for-the-badge&logo=typescript&logoColor=white)](#tests-und-ci)
+[![version](https://img.shields.io/badge/version-0.18.0-C2185B?style=for-the-badge&logo=semver&logoColor=white)](https://github.com/pepperonas/mxtape/releases/latest)
+[![tests](https://img.shields.io/badge/tests-1016-2E9E5B?style=for-the-badge&logo=vitest&logoColor=white)](#tests-und-ci)
+[![lines of code](https://img.shields.io/badge/lines%20of%20code-29.5k-4B6BDF?style=for-the-badge&logo=typescript&logoColor=white)](pwa/src)
+[![test code](https://img.shields.io/badge/test%20code-11.7k-2E9E5B?style=for-the-badge&logo=typescript&logoColor=white)](#tests-und-ci)
 [![songs](https://img.shields.io/badge/songs-500-FF8A3D?style=for-the-badge&logo=applemusic&logoColor=white)](#die-songsammlung)
 
 [![Donate with PayPal](https://img.shields.io/badge/PayPal-support%20this%20project-00457C?style=for-the-badge&logo=paypal&logoColor=white)](https://www.paypal.com/donate/?business=martin.pfeffer@celox.io&currency_code=EUR&item_name=mxtape)
@@ -180,6 +180,8 @@ Statt ein Handy herumzureichen, spielt jede Person auf dem eigenen Gerät – im
 - **Ergebnis teilen** als Bild (WhatsApp und Co.) direkt vom Endbildschirm
 - **Song melden** nach dem Aufdecken (falsches Jahr, falsche Version, schlechter Ton, falsches Cover); der Admin korrigiert das Jahr oder nimmt den Song heraus – sofort für alle Runden
 - **Aufdecken mit Hintergrund:** Album-Cover groß im Vordergrund, Albumname und ein kurzes „Wusstest du?“
+- **Doppeltipp kopiert:** Doppeltipp auf eine aufgedeckte Karte der Zeitleiste legt „Interpret – Titel“ in die Zwischenablage
+- **Alle Songs:** den ganzen Katalog als Cover oder Liste durchstöbern, nach Jahr, Titel, Interpret, Album, Neuheit oder eurer Trefferquote sortieren, nach Jahrzehnt, Musikrichtung und Auswahl filtern und mit Tippfehler-Toleranz suchen („gronemeier“, „ac dc“, „queen 80er“); jeder Song öffnet sich mit Cover, Anekdote, 30 Sekunden zum Anhören und Kopieren-Knopf
 - **Sofort sichtbar, wohin die Karte kommt:** Die Nachbarjahre leuchten auf, eine Positionsleiste zeigt `2008 — ? — 2020` in der Plakatschrift
 - **Eine laufende Runde übersteht Neuladen** oder einen geschlossenen Tab und wird auf der Startseite angeboten
 - **Farbe wählbar:** fünf Farben (Vinyl, Ozean, Lagune, Amethyst, Moos), jeweils hell und dunkel, alle auf Kontrast geprüft

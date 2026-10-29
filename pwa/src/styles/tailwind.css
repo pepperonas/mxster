@@ -480,3 +480,15 @@ input[type='number'] {
 @media (prefers-reduced-motion: reduce) {
   .mx-backdrop-wave { animation: none; }
 }
+
+/* ── Song library (SongLibraryScreen) ────────────────────────────────────
+   500 entries without a virtual list: off-screen ones are skipped by the
+   browser until they come near (content-visibility), with a size guess so the
+   scrollbar stays honest. */
+.lib-item {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 240px;
+}
+.lib-item-row {
+  contain-intrinsic-size: auto 64px;
+}

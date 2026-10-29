@@ -221,7 +221,9 @@ export const gameText = defineMessages({
     reportNoteHint: 'Zum Beispiel das richtige Jahr.',
     reportSend: 'Melden',
     reportCancel: 'Abbrechen',
-    reportThanks: 'Danke, ist gemeldet.'
+    reportThanks: 'Danke, ist gemeldet.',
+    copied: (line: string) => `Kopiert: ${line}`,
+    copyFailed: 'Kopieren ging nicht.'
   },
   en: {
     skippedTooOften: 'Skipped too often',
@@ -430,6 +432,8 @@ export const gameText = defineMessages({
     reportNoteHint: 'For example the right year.',
     reportSend: 'Report',
     reportCancel: 'Cancel',
-    reportThanks: 'Thanks, it is reported.'
+    reportThanks: 'Thanks, it is reported.',
+    copied: (line: string) => `Copied: ${line}`,
+    copyFailed: 'Copying did not work.'
   }
 })

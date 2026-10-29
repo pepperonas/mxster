@@ -294,6 +294,20 @@ export function groupStats(history: readonly HistoryEntry[], { minTries = 2, top
   }
 }
 
+/** Tries and right answers per song over every logged turn (first cards left out, like the rates above). */
+export function songRates(history: readonly HistoryEntry[]): Map<string, { tries: number; right: number }> {
+  const out = new Map<string, { tries: number; right: number }>()
+  for (const game of history)
+    for (const t of game.turns ?? []) {
+      if (!countsForRate(t)) continue
+      const s = out.get(t.s) ?? { tries: 0, right: 0 }
+      s.tries++
+      if (t.ok) s.right++
+      out.set(t.s, s)
+    }
+  return out
+}
+
 /** Rounds per calendar week (Monday start), oldest first, ending with the current week. */
 export function weeklyRounds(history: readonly HistoryEntry[], weeks = 12, now = Date.now()): Array<{ start: number; rounds: number }> {
   const monday = new Date(now)

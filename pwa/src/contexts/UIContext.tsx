@@ -222,3 +222,8 @@ export function useUI() {
   }
   return context
 }
+
+/** The toast function when a UIProvider is around, else null (components that also render standalone). */
+export function useToastOptional(): UIContextValue['addToast'] | null {
+  return useContext(UIContext)?.addToast ?? null
+}

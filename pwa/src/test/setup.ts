@@ -82,11 +82,12 @@ global.IntersectionObserver = vi.fn().mockImplementation(() => ({
 })) as any
 
 // Mock ResizeObserver (for responsive layouts)
-global.ResizeObserver = vi.fn().mockImplementation(() => ({
-  observe: vi.fn(),
-  unobserve: vi.fn(),
-  disconnect: vi.fn(),
-})) as any
+// A class: browsers construct it with `new` (an arrow-function mock throws there)
+global.ResizeObserver = class {
+  observe() {}
+  unobserve() {}
+  disconnect() {}
+} as any
 
 // Mock canvas-confetti (used in winner animations)
 vi.mock('canvas-confetti', () => ({
