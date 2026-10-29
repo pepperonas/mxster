@@ -31,7 +31,7 @@ export function parseArgs(argv) {
     else if (a === '--no-upload') flags.upload = false
     else if (a === '--exotic') flags.exotic = true
     else if (a === '--fact-en') flags.factEn = argv[++i]
-    else if (['--year', '--album', '--genre', '--fact'].includes(a)) flags[a.slice(2)] = argv[++i]
+    else if (['--year', '--album', '--genre', '--fact', '--search'].includes(a)) flags[a.slice(2)] = argv[++i]
     else positional.push(a)
   }
   if (flags.year !== undefined) flags.year = parseInt(flags.year, 10)
@@ -112,8 +112,10 @@ export async function proposeSong({ artist, title, flags, prompt, current }) {
 }
 
 /** Download audio, fetch cover, upload both. Returns { audio: bool, cover: string|null }. */
-export async function fetchMedia(song, coverInfo, { upload }) {
-  const audio = Boolean(await downloadAndUploadSong(song, { upload }))
+export async function fetchMedia(song, coverInfo, { upload, search }) {
+  // --search replaces only the YouTube query (some titles find nothing as written,
+  // e.g. a filtered word or punctuation); the stored song keeps its real title
+  const audio = Boolean(await downloadAndUploadSong(search ? { ...song, search } : song, { upload }))
   if (audio) {
     // Where the song becomes recognisable (quiet intros skipped)
     const file = path.join(AUDIO_DIR, `${song.id}.m4a`)

@@ -8,7 +8,8 @@
  * Looks up year and album (MusicBrainz, iTunes), lets you check every field,
  * downloads the audio (yt-dlp) and the cover, uploads both to the VPS and
  * writes docs/songs.json (+ docs/song-facts.json), then regenerates songs.ts.
- * Flags: --year --album --genre --fact --fact-en --exotic --yes --no-upload (see lib/songWizard.js).
+ * Flags: --year --album --genre --fact --fact-en --exotic --search --yes --no-upload (see lib/songWizard.js).
+ * --search "…" replaces only the YouTube query when the title finds nothing as written.
  * Deploy the web app afterwards so the new song is in the bundle.
  */
 import { execFileSync } from 'child_process'

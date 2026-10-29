@@ -57,7 +57,7 @@ function checkRsync() {
 async function downloadFromYouTube(song) {
   const outputPath = audioFile(song.id)
   const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'mxtape-dl-'))
-  const searchQuery = `${song.artist} - ${song.title} audio`
+  const searchQuery = song.search || `${song.artist} - ${song.title} audio`
 
   console.log(`🔍 Searching YouTube: "${searchQuery}"`)
 

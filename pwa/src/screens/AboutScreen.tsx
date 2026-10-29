@@ -73,7 +73,7 @@ export function AboutScreen() {
         <Help />
         <Closing cta={cta} />
       </main>
-      <div className="px-4 sm:px-6 pb-[calc(1rem+env(safe-area-inset-bottom))] mx-auto max-w-6xl">
+      <div className="px-4 sm:px-6 pb-[calc(0.5rem+env(safe-area-inset-bottom))] mx-auto max-w-6xl">
         <HomeFooter />
       </div>
     </div>

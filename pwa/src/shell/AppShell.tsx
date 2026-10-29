@@ -68,7 +68,7 @@ export function AppShell() {
       <AchievementScoreSync />
       <NavRail />
       {isTopLevel ? <TopBar /> : null}
-      <main className={`mx-auto w-full max-w-3xl px-4 sm:px-6 ${isTopLevel ? 'pb-[calc(6rem+env(safe-area-inset-bottom))] md:pb-6' : 'pb-12'}`}>
+      <main className={`mx-auto w-full max-w-3xl px-4 sm:px-6 ${isTopLevel ? 'pb-[calc(5.25rem+env(safe-area-inset-bottom))] md:pb-3' : 'pb-12'}`}>
         <Outlet />
       </main>
       {isTopLevel && <NavBar />}

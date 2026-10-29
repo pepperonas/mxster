@@ -17,11 +17,11 @@
 <p>New here? <a href="https://mxtape.celox.io/about"><b>mxtape.celox.io/about</b></a> introduces the game and answers the common questions — with a little timeline to try, no account needed.</p>
 
 <!-- BADGES:BIG — version, tests, lines of code and songs; readme.test.ts keeps them true, scripts/readme-badges.mjs rewrites them. -->
-[![version](https://img.shields.io/badge/version-0.24.0-C2185B?style=for-the-badge&logo=semver&logoColor=white)](https://github.com/pepperonas/mxtape/releases/latest)
+[![version](https://img.shields.io/badge/version-0.25.0-C2185B?style=for-the-badge&logo=semver&logoColor=white)](https://github.com/pepperonas/mxtape/releases/latest)
 [![tests](https://img.shields.io/badge/tests-1103-2E9E5B?style=for-the-badge&logo=vitest&logoColor=white)](#tests-and-ci)
 [![lines of code](https://img.shields.io/badge/lines%20of%20code-32.1k-4B6BDF?style=for-the-badge&logo=typescript&logoColor=white)](pwa/src)
 [![test code](https://img.shields.io/badge/test%20code-13.0k-2E9E5B?style=for-the-badge&logo=typescript&logoColor=white)](#tests-and-ci)
-[![songs](https://img.shields.io/badge/songs-500-FF8A3D?style=for-the-badge&logo=applemusic&logoColor=white)](#the-song-library)
+[![songs](https://img.shields.io/badge/songs-800-FF8A3D?style=for-the-badge&logo=applemusic&logoColor=white)](#the-song-library)
 
 [![Donate with PayPal](https://img.shields.io/badge/PayPal-support%20this%20project-00457C?style=for-the-badge&logo=paypal&logoColor=white)](https://www.paypal.com/donate/?business=martin.pfeffer@celox.io&currency_code=EUR&item_name=mxtape)
 
@@ -178,7 +178,7 @@ Instead of passing one phone around, everyone plays on their own device — in t
 
 ## Features
 
-- **500 songs** from the 1950s to today, self-hosted, with an optional random start position
+- **800 songs** from the 1950s to today, self-hosted, with an optional random start position
 - **Daily round:** the same songs for everyone each day, until the first card lands wrong; the longest streak among your friends wins the day. One try: pause any time and carry on on any device, but never start again. Afterwards tell chosen friends by email (they can turn such emails off in their profile)
 - **Share the result** as a picture (WhatsApp and the like) from the end screen
 - **Report a song** after the reveal (wrong year, version, sound or cover); the admin fixes the year or takes the song out, live for every round
@@ -211,7 +211,7 @@ Instead of passing one phone around, everyone plays on their own device — in t
 
 ## The song library
 
-500 songs, 39 of them marked as exotics. The source of truth is [`docs/songs.json`](docs/songs.json); facts live in [`docs/song-facts.json`](docs/song-facts.json). Release years and albums come from **MusicBrainz**, covers from the **Cover Art Archive** (iTunes as fallback). Spotify is not used anywhere.
+800 songs, 39 of them marked as exotics. The source of truth is [`docs/songs.json`](docs/songs.json); facts live in [`docs/song-facts.json`](docs/song-facts.json). Release years and albums come from **MusicBrainz**, covers from the **Cover Art Archive** (iTunes as fallback). Spotify is not used anywhere.
 
 ```bash
 node scripts/song-management/add-song.js "a-ha" "Take on Me"   # suggests year and album, fetches audio and cover
