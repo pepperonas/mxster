@@ -104,7 +104,7 @@ export const achievementText = defineMessages({
     daily_first_name: 'Täglich grüßt',
     daily_first_desc: 'Die Tagesrunde gespielt',
     daily_perfect_name: 'Tagesbestwert',
-    daily_perfect_desc: 'In der Tagesrunde alle 10 Songs richtig',
+    daily_perfect_desc: 'In der Tagesrunde eine Serie von mindestens 10',
     daily_regular_name: 'Tagesroutine',
     daily_regular_desc: 'An 7 Tagen die Tagesrunde gespielt',
 
@@ -249,7 +249,7 @@ export const achievementText = defineMessages({
     daily_first_name: 'Daily dose',
     daily_first_desc: 'Played the daily round',
     daily_perfect_name: 'Perfect day',
-    daily_perfect_desc: 'Got all 10 songs right in the daily round',
+    daily_perfect_desc: 'A streak of at least 10 in the daily round',
     daily_regular_name: 'Daily routine',
     daily_regular_desc: 'Played the daily round on 7 days',
 

@@ -43,6 +43,9 @@ import { judgeNaming, jokersOf, type Naming } from './bonus'
 import { guessRecord, placementRecord } from './turnRecord'
 import { msg } from '@/i18n'
 import { modesText } from '@/i18n/messages/modes'
+import { dailyText } from '@/i18n/messages/daily'
+import { dailyRunOver } from './daily'
+import { reportDailyTurn } from './dailyReport'
 
 export type { Reveal, TurnPhase } from './turn'
 
@@ -119,8 +122,13 @@ export function useTurnFlow({ onGameOver, onSkipNotice, runBots = true }: Option
     (record: Parameters<typeof logTurn>[0]) => {
       logRef.current = [...logRef.current, record]
       logTurn(record)
+      // Today's round: the server keeps the run, song by song (index = position after the start card)
+      if (daily && songIds && !record.first) {
+        const index = songIds.indexOf(record.s) - 1
+        if (index >= 0) void reportDailyTurn(daily, index, record.ok, () => addToast(msg(dailyText).savedFailed, 'warning'))
+      }
     },
-    [logTurn]
+    [logTurn, daily, songIds, addToast]
   )
 
   const { phase, activePlayer, activeTimeline } = deriveTurn({
@@ -247,9 +255,10 @@ export function useTurnFlow({ onGameOver, onSkipNotice, runBots = true }: Option
         return 'next'
       }
 
-      // Today's round ends after its last song
+      // Today's round ends at the first wrong card, or after its last song
       if (daily) {
-        if (logRef.current.length < (songIds?.length ?? 0)) return 'next'
+        const last = logRef.current[logRef.current.length - 1]
+        if (!dailyRunOver(last, songIds ?? [])) return 'next'
         finishGame(finalPlayers[playerIndex], finalPlayers)
         return 'over'
       }

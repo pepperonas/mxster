@@ -17,6 +17,8 @@ import { TimelineBoard, type BoardReveal } from './TimelineBoard'
 import { initialOf } from '@/game/teams'
 import { useMessages } from '@/i18n'
 import { gameText } from '@/i18n/messages/game'
+import { dailyText } from '@/i18n/messages/daily'
+import { dailyStreak } from '@/game/daily'
 
 interface GameBoardsProps {
   interactive: boolean
@@ -51,7 +53,7 @@ export function GameBoards({
   pendingSong
 }: GameBoardsProps) {
   const t = useMessages(gameText)
-  const { players, currentPlayer, gameMode, globalTimeline, currentSong: songInPlay, goal } = useGame()
+  const { players, currentPlayer, gameMode, globalTimeline, currentSong: songInPlay, goal, daily } = useGame()
   // The card as the table sees it (bonus option: title and artist hidden)
   const currentSong = pendingSong === undefined ? songInPlay : pendingSong
   const challengeProps = { placedGap, placedBy, previewIsChallenge, onPreviewMove: onGapSelect, onHoverGap }
@@ -102,7 +104,7 @@ export function GameBoards({
 
   return (
     <div className="space-y-4">
-      <BoardCard title={t.timelineOf(focus.name)} cards={focus.cards} goal={goal}>
+      <BoardCard title={t.timelineOf(focus.name)} cards={focus.cards} goal={goal} streak={daily ? dailyStreak(focus.cards) : undefined}>
         <TimelineBoard
           label={t.timelineOf(focus.name)}
           boardRef={boardRef}
@@ -128,16 +130,32 @@ export function GameBoards({
   )
 }
 
-function BoardCard({ title, cards, goal, children }: { title: string; cards: number; goal: number; children: React.ReactNode }) {
+interface BoardCardProps {
+  title: string
+  cards: number
+  goal: number
+  /** Today's round: no goal to reach, the streak is what counts ("Serie 3", no bar). */
+  streak?: number
+  children: React.ReactNode
+}
+
+function BoardCard({ title, cards, goal, streak, children }: BoardCardProps) {
+  const dt = useMessages(dailyText)
   return (
     <section className="surface p-4 sm:p-5">
       <div className="flex items-center justify-between gap-3 mb-3">
         <h3 className="min-w-0 text-title-lg text-md-on-surface truncate">{title}</h3>
-        <span className="flex-shrink-0 text-label-lg px-3 py-1 rounded-m3-full bg-md-secondary-container text-md-on-secondary-container num-poster">
-          <AnimatedNumber value={cards} />/{goal}
-        </span>
+        {streak === undefined ? (
+          <span className="flex-shrink-0 text-label-lg px-3 py-1 rounded-m3-full bg-md-secondary-container text-md-on-secondary-container num-poster">
+            <AnimatedNumber value={cards} />/{goal}
+          </span>
+        ) : (
+          <span className="flex-shrink-0 text-label-lg px-3 py-1 rounded-m3-full bg-md-secondary-container text-md-on-secondary-container" data-streak>
+            {dt.streakLabel} <AnimatedNumber value={streak} />
+          </span>
+        )}
       </div>
-      <ProgressBar value={cards / goal} />
+      {streak === undefined && <ProgressBar value={cards / goal} />}
       <div className="mt-4">{children}</div>
     </section>
   )

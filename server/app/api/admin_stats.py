@@ -16,7 +16,7 @@ from datetime import datetime, timedelta, timezone
 from typing import Any
 
 from fastapi import APIRouter, Depends
-from sqlalchemy import func, select
+from sqlalchemy import func, or_, select
 from sqlalchemy.orm import Session
 
 from app.activity import TZ, local_day
@@ -223,7 +223,11 @@ def stats(db: Session = Depends(get_db)) -> dict:
     active = dict(active_rows)
     first_activity = db.execute(select(func.min(ActivityDay.day))).scalar()
     daily_rows = dict(
-        db.execute(select(DailyResult.day, func.count()).where(DailyResult.day >= start.isoformat()).group_by(DailyResult.day)).all()
+        db.execute(
+            select(DailyResult.day, func.count())
+            .where(DailyResult.day >= start.isoformat(), or_(DailyResult.started_at.is_(None), DailyResult.finished_at.is_not(None)))
+            .group_by(DailyResult.day)
+        ).all()
     )
     days = [(start + timedelta(days=i)).isoformat() for i in range(DAYS)]
 

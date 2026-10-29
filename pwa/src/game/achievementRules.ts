@@ -191,7 +191,10 @@ export function endOfRoundAchievements(input: RoundInput): AchievementEffect[] {
 
     if (input.daily) {
       unlock(person, AchievementId.DAILY_FIRST)
-      if (right.length >= 10) unlock(person, AchievementId.DAILY_PERFECT)
+      // A streak of ten: from the cards on the timeline, not the turn log —
+      // a run continued on another device only logged the songs played there
+      const seat = input.players.find((p) => p.name === person)
+      if (seat && seat.cards - 1 >= 10) unlock(person, AchievementId.DAILY_PERFECT)
     }
   }
   return fx

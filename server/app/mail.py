@@ -126,3 +126,24 @@ def send_reset(to: str, name: str, link: str | None, lang: str) -> None:
                 else "Diese Adresse meldet sich mit Google an und hat kein Passwort — nimm „Mit Google anmelden“.")
         text = f"Hallo {name},\n\n{body}\n\nWenn du das nicht angefordert hast, ignorier diese Mail; dein Passwort bleibt, wie es ist."
     send_later(to, subject, text + _foot(lang))
+
+
+def send_daily_challenge(to: str, sender: str, streak: int, songs: int, lang: str) -> None:
+    """A friend tells about their daily round (they chose the recipients)."""
+    link = _url("/daily")
+    profile = _url("/profile")
+    if lang == "en":
+        subject = f"mxtape: {sender} played today's round"
+        result = (f" and got all {songs} songs right" if streak == songs and streak > 0
+                  else f" and got a streak of {streak}" if streak > 0 else "")
+        text = (f"{sender} just played today's round on mxtape{result}.\n\n"
+                f"Can you beat it? Same songs for everyone, until the first card lands wrong:\n\n{link}\n\n"
+                f"You get this because {sender} chose to tell you. You can turn these emails off in your profile: {profile}")
+    else:
+        subject = f"mxtape: {sender} hat die Tagesrunde gespielt"
+        result = (f" und alle {songs} Songs richtig gelegt" if streak == songs and streak > 0
+                  else f" und eine Serie von {streak} geschafft" if streak > 0 else "")
+        text = (f"{sender} hat eben die Tagesrunde in mxtape gespielt{result}.\n\n"
+                f"Schaffst du mehr? Dieselben Songs für alle, bis die erste Karte danebenliegt:\n\n{link}\n\n"
+                f"Du bekommst diese Mail, weil {sender} dir Bescheid geben wollte. Abbestellen kannst du solche Mails im Profil: {profile}")
+    send_later(to, subject, text + _foot(lang))

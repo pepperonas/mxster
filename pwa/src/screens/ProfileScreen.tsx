@@ -20,7 +20,7 @@ import { LanguageSwitch } from '@/components/ui/LanguageSwitch'
 import { useMessages } from '@/i18n'
 import { profileText } from '@/i18n/messages/profile'
 
-const VERSION = '0.18.0'
+const VERSION = '0.19.0'
 
 export function ProfileScreen() {
   const me = useMe()
@@ -164,6 +164,9 @@ export function ProfileScreen() {
       </Group>
 
       <Group title={t.players}>
+        <Item icon="mail" title={t.dailyMail} text={t.dailyMailText}>
+          <DailyMailSwitch label={t.dailyMail} failed={t.saveFailed} />
+        </Item>
         <ActionRow icon="groups" title={t.managePlayers} text={t.managePlayersText} onClick={() => navigate('/players')} />
       </Group>
 
@@ -229,4 +232,23 @@ function ActionRow({ icon, title, text, onClick, danger }: { icon: IconName; tit
       </span>
     </button>
   )
+}
+
+/** Mails from friends about their daily round: kept on the account (server), on by default. */
+function DailyMailSwitch({ label, failed }: { label: string; failed: string }) {
+  const me = useMe()
+  const { refresh } = useAuth()
+  const { addToast } = useUI()
+  const [on, setOn] = useState(me.dailyMail !== false)
+  const change = async (v: boolean) => {
+    setOn(v)
+    try {
+      await api('/api/me/prefs', { method: 'PUT', json: { dailyMail: v } })
+      void refresh()
+    } catch {
+      setOn(!v)
+      addToast(failed, 'warning')
+    }
+  }
+  return <Switch checked={on} onChange={(v) => void change(v)} ariaLabel={label} />
 }

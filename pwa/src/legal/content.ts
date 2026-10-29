@@ -20,7 +20,7 @@ export interface LegalDoc {
 }
 export type LegalKind = 'imprint' | 'privacy' | 'terms'
 
-export const LEGAL_UPDATED = '2026-10-28'
+export const LEGAL_UPDATED = '2026-10-29'
 
 const PROVIDER = ['Martin Pfeffer', 'celox.io', 'Flughafenstraße 24', '12053 Berlin']
 const MAIL = 'martin.pfeffer@celox.io'
@@ -146,7 +146,7 @@ const privacy: Record<Lang, LegalDoc> = {
           'Öffnest du einen Raum, speichere ich den Raumcode, die Rundenoptionen, die Plätze (Konto oder Gastname), einen verschlüsselten Platzschlüssel und den jeweils aktuellen Spielstand. Mitspielende im Raum sehen Vornamen und Profilbilder der anderen. Räume werden 12 Stunden nach der letzten Aktivität mitsamt Gastnamen und Einladungen gelöscht; das Ergebnis bleibt im Verlauf der Mitspielenden mit Konto.',
           'Gäste geben nur einen Namen ein. Für sie wird ein Cookie gesetzt, das sie ihrem Platz zuordnet (14 Stunden gültig); darüber hinaus wird für Gäste nichts gespeichert.',
           'Andere Konten findest du über einen Teil des Namens oder die genaue E-Mail-Adresse; gezeigt werden nur Name und Profilbild, E-Mail-Adressen nie. Freundschaften und Einladungen bleiben gespeichert, bis eine Seite sie entfernt oder der Raum gelöscht wird.',
-          'Spielst du die Tagesrunde, speichere ich dein Ergebnis (Tag und Punktzahl). Deine Freunde sehen es mit Name und Profilbild; nach 60 Tagen wird es gelöscht.',
+          'Spielst du die Tagesrunde, speichere ich deinen Stand Song für Song (Tag, Zahl der Songs, deine Serie, Beginn und Ende), damit du pausieren und auf jedem Gerät weiterspielen kannst. Deine Freunde sehen Serie und Stand mit Name und Profilbild; nach 60 Tagen wird alles gelöscht. Nach der Runde kannst du ausgewählten Freunden eine Mail schicken lassen: Sie enthält deinen Namen und deine Serie, deine Adresse und die der Freunde sieht niemand sonst, und es geht höchstens eine solche Mail pro Tag raus. Wer solche Mails nicht möchte, schaltet sie im Profil ab.',
           'Deine Erfolgspunkte (die Summe und wie viele Erfolge du hast) speichere ich, damit deine Freunde sich auf der Erfolge-Seite mit dir vergleichen können; sie sehen sie mit Name und Profilbild. Die Erfolge selbst und die Punkte anderer Leute auf deinem Konto werden nicht geteilt. Die Zahl wird bei jeder Änderung ersetzt und mit dem Konto gelöscht.',
           'Meldest du einen Song („Stimmt was nicht?“), speichere ich Song, Grund, deinen freiwilligen Hinweis und dein Konto, damit ich nachfragen kann. Meldungen bleiben gespeichert, bis du dein Konto löschst.',
           'Rechtsgrundlage ist Art. 6 Abs. 1 lit. b DSGVO.'
@@ -265,7 +265,7 @@ const privacy: Record<Lang, LegalDoc> = {
           'When you open a room, I store the room code, the round options, the seats (account or guest name), an encrypted seat key and the current game state. People in the room see each other\'s first names and profile pictures. Rooms are deleted 12 hours after the last activity together with guest names and invitations; the result stays in the history of the players with an account.',
           'Guests only enter a name. A cookie links them to their seat (valid for 14 hours); beyond that nothing is stored for guests.',
           'You can find other accounts by part of the name or the exact e-mail address; only name and profile picture are shown, never e-mail addresses. Friendships and invitations stay stored until one side removes them or the room is deleted.',
-          'If you play the daily round, I store your result (day and score). Your friends see it with your name and profile picture; it is deleted after 60 days.',
+          'If you play the daily round, I store your progress song by song (day, number of songs, your streak, start and end), so you can pause and carry on on any device. Your friends see the streak and the progress with your name and profile picture; everything is deleted after 60 days. After the round you can have an email sent to friends you choose: it contains your name and your streak, nobody else sees your address or theirs, and at most one such email goes out per day. Anyone who does not want these emails turns them off in the profile.',
           'I store your achievement points (the total and how many achievements you have) so your friends can compare with you on the achievements page; they see them with your name and profile picture. The achievements themselves and the points of other people on your account are not shared. The number is replaced on every change and deleted with the account.',
           'If you report a song ("Something wrong?"), I store the song, the reason, your optional note and your account so I can ask back. Reports stay stored until you delete your account.',
           'Legal basis: Art. 6 (1) (b) GDPR.'

@@ -15,10 +15,10 @@
 <h3>👉 <a href="https://mxtape.celox.io">mxtape.celox.io</a> — mit Google oder E-Mail anmelden oder als Gast nur per Link in den Raum von Freunden</h3>
 
 <!-- BADGES:BIG — version, tests, lines of code and songs; readme.test.ts keeps them true, scripts/readme-badges.mjs rewrites them. -->
-[![version](https://img.shields.io/badge/version-0.18.0-C2185B?style=for-the-badge&logo=semver&logoColor=white)](https://github.com/pepperonas/mxtape/releases/latest)
-[![tests](https://img.shields.io/badge/tests-1016-2E9E5B?style=for-the-badge&logo=vitest&logoColor=white)](#tests-und-ci)
-[![lines of code](https://img.shields.io/badge/lines%20of%20code-29.5k-4B6BDF?style=for-the-badge&logo=typescript&logoColor=white)](pwa/src)
-[![test code](https://img.shields.io/badge/test%20code-11.7k-2E9E5B?style=for-the-badge&logo=typescript&logoColor=white)](#tests-und-ci)
+[![version](https://img.shields.io/badge/version-0.19.0-C2185B?style=for-the-badge&logo=semver&logoColor=white)](https://github.com/pepperonas/mxtape/releases/latest)
+[![tests](https://img.shields.io/badge/tests-1041-2E9E5B?style=for-the-badge&logo=vitest&logoColor=white)](#tests-und-ci)
+[![lines of code](https://img.shields.io/badge/lines%20of%20code-30.1k-4B6BDF?style=for-the-badge&logo=typescript&logoColor=white)](pwa/src)
+[![test code](https://img.shields.io/badge/test%20code-12.2k-2E9E5B?style=for-the-badge&logo=typescript&logoColor=white)](#tests-und-ci)
 [![songs](https://img.shields.io/badge/songs-500-FF8A3D?style=for-the-badge&logo=applemusic&logoColor=white)](#die-songsammlung)
 
 [![Donate with PayPal](https://img.shields.io/badge/PayPal-support%20this%20project-00457C?style=for-the-badge&logo=paypal&logoColor=white)](https://www.paypal.com/donate/?business=martin.pfeffer@celox.io&currency_code=EUR&item_name=mxtape)
@@ -176,7 +176,7 @@ Statt ein Handy herumzureichen, spielt jede Person auf dem eigenen Gerät – im
 ## Funktionen
 
 - **500 Songs** von den 50ern bis heute, selbst gehostet, auf Wunsch mit zufälliger Startstelle
-- **Tagesrunde:** jeden Tag dieselben zehn Songs für alle, ein Versuch, danach die Ergebnisse deiner Freunde
+- **Tagesrunde:** jeden Tag dieselben Songs für alle, bis die erste Karte danebenliegt; die längste Serie unter deinen Freunden gewinnt den Tag. Ein Versuch: pausieren und auf jedem Gerät weiterspielen geht, neu starten nicht. Danach ausgewählten Freunden per Mail Bescheid geben (die das im Profil abbestellen können)
 - **Ergebnis teilen** als Bild (WhatsApp und Co.) direkt vom Endbildschirm
 - **Song melden** nach dem Aufdecken (falsches Jahr, falsche Version, schlechter Ton, falsches Cover); der Admin korrigiert das Jahr oder nimmt den Song heraus – sofort für alle Runden
 - **Aufdecken mit Hintergrund:** Album-Cover groß im Vordergrund, Albumname und ein kurzes „Wusstest du?“

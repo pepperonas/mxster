@@ -139,14 +139,21 @@ describe('hardcore rounds', () => {
 
 describe('daily round', () => {
   const ten = [turn('Anna', 1960, true, { first: true }), ...Array.from({ length: 10 }, (_, i) => turn('Anna', 1961 + i, true))]
-  const solo = (turns: TurnRecord[]) => round({ people: ['Anna'], players: [player('Anna')], daily: '2026-10-28', turns })
+  // cards = start card + streak
+  const solo = (turns: TurnRecord[], cards: number) => round({ people: ['Anna'], players: [player('Anna', { cards })], daily: '2026-10-28', turns })
 
-  it('played, and all ten right', () => {
-    const perfect = apply(endOfRoundAchievements(solo(ten)))
+  it('played, and a streak of ten', () => {
+    const perfect = apply(endOfRoundAchievements(solo(ten, 11)))
     expect(has(perfect, 'Anna', AchievementId.DAILY_FIRST)).toBe(true)
     expect(has(perfect, 'Anna', AchievementId.DAILY_PERFECT)).toBe(true)
-    const nine = apply(endOfRoundAchievements(solo(ten.map((t, i) => (i === 4 ? { ...t, ok: false } : t)))))
+    const nine = apply(endOfRoundAchievements(solo(ten.slice(0, 10), 10)))
+    expect(has(nine, 'Anna', AchievementId.DAILY_FIRST)).toBe(true)
     expect(has(nine, 'Anna', AchievementId.DAILY_PERFECT)).toBe(false)
+  })
+
+  it('a run continued on another device counts its whole streak (the log there holds only the last songs)', () => {
+    const resumed = apply(endOfRoundAchievements(solo(ten.slice(8), 11)))
+    expect(has(resumed, 'Anna', AchievementId.DAILY_PERFECT)).toBe(true)
   })
 
   it('nothing daily in a normal round', () => {

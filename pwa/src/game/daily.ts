@@ -1,15 +1,19 @@
 /**
  * Today's round ("Tagesrunde", pure): every account plays the same songs on
- * the same day — a start card plus DAILY_SONGS to place on one's own timeline.
+ * the same day — a start card, then songs to place on one's own timeline until
+ * the first card lands wrong (at most DAILY_MAX). The streak is the result.
  * The songs come from the date alone (seeded shuffle of the well-known songs),
- * so no server is needed to agree on them; the server keeps one result per
- * account and day (api/daily.py).
+ * so no server is needed to agree on them; the server keeps the run itself,
+ * song by song, so it can be paused and continued but not started twice
+ * (api/daily.py).
  */
-import type { Song } from '@/types'
+import type { Song, TurnRecord } from '@/types'
+import { sortTimelineByYear } from '@/services/gameLogic'
 
-export const DAILY_SONGS = 10
+/** The longest run: songs after the start card (server: DAILY_MAX). */
+export const DAILY_MAX = 50
 /** The start card plus the songs to place. */
-export const DAILY_TOTAL = DAILY_SONGS + 1
+export const DAILY_TOTAL = DAILY_MAX + 1
 
 /** The device's calendar day, YYYY-MM-DD. */
 export function localDay(now = new Date()): string {
@@ -41,7 +45,7 @@ function random(seed: number): () => number {
 /**
  * Today's songs, in playing order. Well-known songs only, ordered by id first
  * so every device shuffles the same list; years spread out (no two songs from
- * the same year), which makes the round fairer.
+ * the same year) as long as there are enough years, then the rest in order.
  */
 export function dailySongs(day: string, all: readonly Song[]): Song[] {
   const pool = all.filter((s) => !s.exotic).sort((a, b) => (a.id < b.id ? -1 : 1))
@@ -56,12 +60,35 @@ export function dailySongs(day: string, all: readonly Song[]): Song[] {
     if (years.has(s.year)) continue
     years.add(s.year)
     out.push(s)
+    if (out.length === DAILY_TOTAL) return out
+  }
+  for (const s of pool) {
     if (out.length === DAILY_TOTAL) break
+    if (!out.includes(s)) out.push(s)
   }
   return out
 }
 
-/** Correct placements, the start card not counted (0 … DAILY_SONGS). */
-export function dailyScore(cards: number): number {
-  return Math.max(0, Math.min(DAILY_SONGS, cards - 1))
+/** The streak: cards placed right, the start card not counted (0 … DAILY_MAX). */
+export function dailyStreak(cards: number): number {
+  return Math.max(0, Math.min(DAILY_MAX, cards - 1))
+}
+
+/** After a booked song: is the run over? (A wrong card, or the last song.) */
+export function dailyRunOver(last: Pick<TurnRecord, 's' | 'ok' | 'first'> | undefined, songIds: readonly string[]): boolean {
+  if (!last) return false
+  if (!last.first && !last.ok) return true
+  return songIds.indexOf(last.s) >= songIds.length - 1
+}
+
+/**
+ * Where a paused run stands, from the server's count: the start card and the
+ * `turns` songs after it are on the timeline (a run only goes on while every
+ * card lies right), and the next song is the one after them. With no song
+ * booked yet the run simply starts over with the start card (it is not booked
+ * on the server — placing it again changes nothing).
+ */
+export function resumedTimeline(songs: readonly Song[], turns: number): Song[] {
+  if (turns <= 0) return []
+  return sortTimelineByYear(songs.slice(0, Math.min(turns, DAILY_MAX) + 1))
 }

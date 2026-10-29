@@ -5,6 +5,7 @@ import secrets
 
 from fastapi import APIRouter, Depends, Request, Response
 from fastapi.responses import RedirectResponse
+from pydantic import BaseModel
 from sqlalchemy import delete, select
 from sqlalchemy.orm import Session
 
@@ -48,6 +49,7 @@ def user_payload(user: User, csrf: str) -> dict:
         "status": user.status,
         "isAdmin": is_admin_email(user.email),
         "hasPassword": user.password_hash is not None,
+        "dailyMail": bool(user.daily_mail),
         "csrf": csrf,
     }
 
@@ -184,6 +186,18 @@ def delete_me(response: Response, user: User = Depends(current_user), db: Sessio
     db.commit()
     clear_session_cookie(response)
     return {"ok": True}
+
+
+class PrefsIn(BaseModel):
+    dailyMail: bool
+
+
+@router.put("/me/prefs", dependencies=[Depends(require_csrf)])
+def set_prefs(body: PrefsIn, row: SessionRow = Depends(current_session), user: User = Depends(current_user), db: Session = Depends(get_db)) -> dict:
+    """Personal switches kept on the account (mails from friends about their daily round)."""
+    user.daily_mail = body.dailyMail
+    db.commit()
+    return user_payload(user, row.csrf_token)
 
 
 @router.get("/me")

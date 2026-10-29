@@ -3,7 +3,7 @@
 from collections.abc import Generator
 from datetime import datetime, timezone
 
-from sqlalchemy import ForeignKey, Integer, String, Text, UniqueConstraint, create_engine, event
+from sqlalchemy import Boolean, ForeignKey, Integer, String, Text, UniqueConstraint, create_engine, event
 from sqlalchemy.orm import DeclarativeBase, Mapped, Session, mapped_column, sessionmaker
 from sqlalchemy.types import DateTime
 
@@ -39,6 +39,8 @@ class User(Base):
     password_hash: Mapped[str | None] = mapped_column(String(200), nullable=True)
     # E-mail accounts only: set once the address is confirmed (Google confirms its own)
     email_verified_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    # Friends may send a mail about their daily round (switch in the profile)
+    daily_mail: Mapped[bool] = mapped_column(Boolean, default=True)
 
     @property
     def unverified(self) -> bool:
@@ -189,7 +191,13 @@ class AchievementScore(Base):
 
 
 class DailyResult(Base):
-    """Today's round ("Tagesrunde"): the same songs for everyone, one try a day."""
+    """Today's round ("Tagesrunde"): the same songs for everyone, one try a day.
+
+    Since 0.19 a row is the run itself: created on start, advanced song by
+    song (``turns``, ``score`` = the streak), finished at the first wrong card
+    or after the last song. Rows from before have no ``started_at`` and count
+    as finished (their ``total`` was 10).
+    """
 
     __tablename__ = "daily_results"
     __table_args__ = (UniqueConstraint("user_id", "day"),)
@@ -199,6 +207,14 @@ class DailyResult(Base):
     score: Mapped[int] = mapped_column(Integer)
     total: Mapped[int] = mapped_column(Integer)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow)
+    turns: Mapped[int] = mapped_column(Integer, default=0)
+    started_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    finished_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    notified_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+
+    @property
+    def finished(self) -> bool:
+        return self.started_at is None or self.finished_at is not None
 
 
 def _configure_sqlite(dbapi_connection, _record) -> None:
@@ -231,7 +247,8 @@ def _add_missing_columns() -> None:
     later = {
         "room_members": {"left_at": "DATETIME", "display": "INTEGER NOT NULL DEFAULT 0"},
         "rooms": {"host_seat": "INTEGER NOT NULL DEFAULT 0"},
-        "users": {"password_hash": "VARCHAR(200)", "email_verified_at": "DATETIME"},
+        "users": {"password_hash": "VARCHAR(200)", "email_verified_at": "DATETIME", "daily_mail": "BOOLEAN NOT NULL DEFAULT 1"},
+        "daily_results": {"turns": "INTEGER NOT NULL DEFAULT 0", "started_at": "DATETIME", "finished_at": "DATETIME", "notified_at": "DATETIME"},
     }
     with engine.begin() as conn:
         for table, columns in later.items():

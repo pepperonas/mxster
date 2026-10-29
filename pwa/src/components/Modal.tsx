@@ -235,7 +235,7 @@ function DialogSurface({ dialog, compact, dismissible, onDismiss }: DialogSurfac
 
   return (
     <div
-      className={`fixed inset-0 z-50 flex justify-center ${compact ? 'items-end' : 'items-center pt-20 pb-6 px-4'}`}
+      className={`fixed inset-0 z-[65] flex justify-center ${compact ? 'items-end' : 'items-center pt-20 pb-6 px-4'}`}
       onKeyDown={onKeyDown}
     >
       <m.div

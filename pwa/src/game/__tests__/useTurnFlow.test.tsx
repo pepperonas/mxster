@@ -583,3 +583,56 @@ describe('daily round options', () => {
     expect(g.songIds).toBeNull()
   })
 })
+
+describe('daily round: until the first wrong card, booked on the server song by song', () => {
+  it('reports each song after the start card in order and ends at the first miss', async () => {
+    const { songById } = await import('@/data/catalogue')
+    const { dailySongs } = await import('../daily')
+    const { songs } = await import('@/data/songs')
+    const list = dailySongs('2026-10-28', songs)
+    const posts: Array<{ url: string; body: unknown }> = []
+    const realFetch = globalThis.fetch
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(async (input: RequestInfo | URL, init?: RequestInit) => {
+        const url = String(input)
+        if (url.includes('/api/daily/')) {
+          posts.push({ url, body: JSON.parse(String(init?.body ?? 'null')) })
+          return new Response('{}', { status: 200 })
+        }
+        return realFetch(input, init)
+      })
+    )
+    const t = setup('timeline_personal', [{ name: 'A' }])
+    act(() => t.get().game.setOptions({ goal: 99, challengesEnabled: false, daily: '2026-10-28', songIds: list.map((s) => s.id) }))
+    act(() => t.get().game.startGame())
+    // the gap where a song belongs on A's timeline
+    const rightGap = () => {
+      const year = songById(t.get().game.currentSong!.id)!.year
+      return t.get().game.players[0].timeline.filter((s) => s.year < year).length
+    }
+    // start card, then two right
+    for (let i = 0; i < 3; i++) {
+      act(() => void t.get().flow.drawSong())
+      act(() => t.get().flow.placeCard(rightGap()))
+      expect(t.get().flow.reveal).toMatchObject({ isCorrect: true })
+      act(() => t.get().flow.continueTurn())
+      expect(t.get().flow.phase).not.toBe('over')
+    }
+    // then a wrong one: the run is over
+    act(() => void t.get().flow.drawSong())
+    const right = rightGap()
+    const len = t.get().game.players[0].timeline.length
+    act(() => t.get().flow.placeCard(right === 0 ? len : 0))
+    act(() => t.get().flow.continueTurn())
+    expect(t.get().flow.phase).toBe('over')
+    await waitFor(() => expect(posts.length).toBe(3))
+    expect(posts.map((p) => p.url)).toEqual(Array(3).fill('/api/daily/2026-10-28/turn'))
+    expect(posts.map((p) => p.body)).toEqual([
+      { index: 0, ok: true },
+      { index: 1, ok: true },
+      { index: 2, ok: false }
+    ])
+    vi.unstubAllGlobals()
+  })
+})

@@ -20,6 +20,7 @@ import { SignUpOffer } from './SignUpOffer'
 import { COVER_MAX, shareResultCard } from '@/utils/resultImage'
 import { formatDay } from '@/utils/format'
 import { dailyText } from '@/i18n/messages/daily'
+import { DailyNotifyButton } from './DailyNotify'
 
 interface GameOverProps {
   winner: Player
@@ -33,8 +34,8 @@ interface GameOverProps {
   homeLabel?: string
   /** Online guest without an account: offer one (their seat's name pre-filled). */
   signUpName?: string
-  /** Today's round: the score instead of a winner. */
-  daily?: { score: number; total: number }
+  /** Today's round: the streak instead of a winner, and telling friends about it. */
+  daily?: { day: string; streak: number; max: number }
   /** Achievement points each seat earned this round (a team: its members together). */
   earned?: Record<string, number>
   /** Song ids of the round, for the blurred cover mosaic behind the result. */
@@ -101,9 +102,13 @@ export function GameOver({ winner, players, mode, onRematch, onHome, rematchBy, 
         <m.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ ...spring.spatialDefault, delay: 0.25 }}>
           <p className="mt-8 text-title-md text-md-on-surface-variant text-center">{daily ? dt.gameOverTitle : t.winnerIs}</p>
           <h1 id="game-over-title" className="text-poster text-center break-words" style={{ fontSize: 'clamp(2.8rem, 14vw, 4.5rem)' }}>
-            {daily ? dt.scoreOf(daily.score, daily.total) : winner.name}
+            {daily ? dt.streak(daily.streak) : winner.name}
           </h1>
-          {daily && <p className="mt-2 text-title-md text-md-on-surface-variant text-center">{dt.gameOverScore(daily.score, daily.total)}</p>}
+          {daily && (
+            <p className="mt-2 text-title-md text-md-on-surface-variant text-center" data-daily-end>
+              {daily.streak >= daily.max ? dt.allRight(daily.max) : dt.missedAt(daily.streak + 1)}
+            </p>
+          )}
           {winner.members && <p className="mt-2 text-title-md text-md-on-surface-variant text-center">{winner.members.join(', ')}</p>}
         </m.div>
 
@@ -148,13 +153,14 @@ export function GameOver({ winner, players, mode, onRematch, onHome, rematchBy, 
         {signUpName !== undefined && <SignUpOffer name={signUpName} />}
 
         <div className="mt-auto pt-10 space-y-3">
+          {daily && <DailyNotifyButton day={daily.day} streak={daily.streak} />}
           <button
             type="button"
             className="btn btn-tonal m3-state-layer w-full"
             onClick={() =>
               void shareResultCard({
                 kicker: daily ? dt.gameOverTitle : t.winnerIs,
-                headline: daily ? dt.scoreOf(daily.score, daily.total) : winner.name,
+                headline: daily ? dt.streak(daily.streak) : winner.name,
                 rows: daily
                   ? []
                   : ranked.map(({ player: p, place }) => ({

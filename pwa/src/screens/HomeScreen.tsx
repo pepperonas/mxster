@@ -24,7 +24,6 @@ import { useMessages } from '@/i18n'
 import { homeText } from '@/i18n/messages/home'
 import { dailyText } from '@/i18n/messages/daily'
 import { useDailyBoard } from './DailyScreen'
-import { DAILY_SONGS } from '@/game/daily'
 import { ACHIEVEMENT_DEFINITIONS, achievementIcon, type Achievement } from '@/types/achievements'
 
 export function HomeScreen() {
@@ -310,7 +309,13 @@ function DailyCard() {
       <span className="min-w-0 flex-1">
         <span className="block text-title-md">{t.homeTitle}</span>
         <span className="block meta truncate">
-          {board?.mine ? t.homeDone(board.mine.score, board.mine.total) : t.homeOpen(DAILY_SONGS)}
+          {!board?.mine
+            ? t.homeOpen
+            : board.mine.state === 'running'
+              ? t.homeRunning(board.mine.score)
+              : board.mine.total === 10
+                ? t.homeDoneOld(board.mine.score, board.mine.total)
+                : t.homeDone(board.mine.score)}
         </span>
       </span>
       <Icon name="chevron" className="text-md-on-surface-variant" />

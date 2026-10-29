@@ -13,8 +13,7 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import { AnimatePresence, m } from 'motion/react'
 import { useAppNavigate } from '@/hooks/useAppNavigate'
 import { concealed, jokersOf } from '@/game/bonus'
-import { api, ApiError } from '@/api/client'
-import { DAILY_SONGS, dailyScore } from '@/game/daily'
+import { DAILY_MAX, dailyStreak } from '@/game/daily'
 import { dailyText } from '@/i18n/messages/daily'
 import { seatsOf, turnSeat } from '@/online/seats'
 import { apiErrorText } from '@/i18n/messages/errors'
@@ -199,12 +198,7 @@ export function GameRound({ onRematch }: { onRematch: () => void }) {
     onGameOver: (winner, finalPlayers) => {
       getPreviewPlayer().stop()
       setResult({ winner, players: finalPlayers })
-      // Today's round: one result per day on the server
-      if (daily) {
-        api(`/api/daily/${daily}`, { method: 'POST', json: { score: dailyScore(winner.cards), total: DAILY_SONGS } }).catch((e) =>
-          addToast(e instanceof ApiError && e.code === 'already_played' ? dt.alreadyPlayed : dt.savedFailed, 'warning')
-        )
-      }
+      // Today's round: the server has booked it song by song already (useTurnFlow)
     },
     // Online the skip is someone else's: no dialog on the host's device
     onSkipNotice: online
@@ -451,14 +445,20 @@ export function GameRound({ onRematch }: { onRematch: () => void }) {
           { text: t.stay },
           { text: t.leave, variant: 'danger', closeOnClick: false, onClick: () => void leaveGame() }
         ])
-      : showModal(
-          onlineHost ? t.endForAll : t.endGame,
-          <p className="text-body-lg">{onlineHost ? t.endForAllBody : t.endGameBody}</p>,
-          [
+      : daily
+        ? // Today's round is paused, not thrown away: the server keeps it
+          showModal(dt.pauseTitle, <p className="text-body-lg">{dt.pauseBody}</p>, [
             { text: t.keepPlaying },
-            { text: t.end, variant: 'danger', closeOnClick: false, onClick: () => void leaveGame() }
-          ]
-        )
+            { text: dt.pause, variant: 'primary', closeOnClick: false, onClick: () => void leaveGame() }
+          ])
+        : showModal(
+            onlineHost ? t.endForAll : t.endGame,
+            <p className="text-body-lg">{onlineHost ? t.endForAllBody : t.endGameBody}</p>,
+            [
+              { text: t.keepPlaying },
+              { text: t.end, variant: 'danger', closeOnClick: false, onClick: () => void leaveGame() }
+            ]
+          )
 
   const drawLabel = activePlayer.isBot
     ? t.drawFor(who)
@@ -470,8 +470,8 @@ export function GameRound({ onRematch }: { onRematch: () => void }) {
     <div className={`min-h-dvh ${dockState ? 'pb-56' : 'pb-12'} ${gameMode === 'hardcore' ? 'hardcore-theme' : ''}`}>
       <header className="sticky top-0 z-30 bg-md-surface/90 backdrop-blur-md">
         <div className="mx-auto max-w-6xl h-16 px-2 sm:px-4 flex items-center gap-1">
-          <button type="button" className="icon-btn m3-state-layer" onClick={confirmLeave} aria-label={t.endGameLabel}>
-            <Icon name="close" />
+          <button type="button" className="icon-btn m3-state-layer" onClick={confirmLeave} aria-label={daily ? dt.pause : t.endGameLabel}>
+            <Icon name={daily ? 'pause' : 'close'} />
           </button>
           <span className="flex items-center gap-2 text-title-md">
             <Icon name={MODE_COPY[gameMode].icon} size={20} className="text-md-primary" />
@@ -630,7 +630,7 @@ export function GameRound({ onRematch }: { onRematch: () => void }) {
             winner={shownResult.winner}
             players={shownResult.players}
             mode={gameMode}
-            daily={daily ? { score: dailyScore(shownResult.winner.cards), total: DAILY_SONGS } : undefined}
+            daily={daily ? { day: daily, streak: dailyStreak(shownResult.winner.cards), max: DAILY_MAX } : undefined}
             earned={earnedThisRound(shownResult.players, (name) => pointsSince(getPlayerAchievements(name), startedAt))}
             songIds={roundSongIds({ turns: turnLog, players: shownResult.players })}
             onRematch={

@@ -17,6 +17,8 @@ export interface Me {
   isAdmin: boolean
   /** Signs in with e-mail and password (possibly Google too) */
   hasPassword?: boolean
+  /** Mails from friends about their daily round (profile switch). */
+  dailyMail?: boolean
   csrf: string
 }
 

@@ -50,11 +50,20 @@ describe('privacy policy matches the code', () => {
     expect(server('api/rooms.py')).toMatch(/delete\(Room\)\.where\(Room\.expires_at < utcnow\(\)\)/)
   })
 
-  it('states when daily results are deleted, and the server deletes them', () => {
+  it('states when daily rounds are deleted, and the server deletes them', () => {
     const days = Number(num(server('api/daily.py'), /KEEP_DAYS = (\d+)/))
-    expect(text('de')).toContain(`nach ${days} Tagen wird es gelöscht`)
+    expect(text('de')).toContain(`nach ${days} Tagen wird alles gelöscht`)
     expect(text('en')).toContain(`deleted after ${days} days`)
     expect(server('api/daily.py')).toMatch(/DailyResult\.day < cutoff\)\.delete\(\)/)
+  })
+
+  it('names the mails to friends: once a day, opt-out in the profile — as the server does it', () => {
+    expect(text('de')).toContain('höchstens eine solche Mail pro Tag')
+    expect(text('de')).toContain('im Profil ab')
+    expect(text('en')).toContain('at most one such email goes out per day')
+    const api = server('api/daily.py')
+    expect(api).toMatch(/if run\.notified_at is not None:\s*\n\s*raise err\(409, "already_sent"/)
+    expect(api).toMatch(/User\.daily_mail\.is_\(True\)/)
   })
 
   it('states when activity days are deleted, and the server deletes them and keeps no time', () => {
