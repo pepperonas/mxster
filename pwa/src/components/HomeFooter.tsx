@@ -109,16 +109,18 @@ function RateArt() {
 export function HomeFooter() {
   const t = useMessages(homeText)
   return (
-    <footer className="pt-6 space-y-5" data-home-footer>
+    <footer className="pt-6 space-y-3" data-home-footer>
       <h2 className="sr-only">{t.footerTitle}</h2>
       <div className="grid gap-3 sm:grid-cols-3">
         <Tile href={REPO_URL} kind="code" title={t.footerCode} text={t.footerCodeText} art={<CodeArt />} />
         <Tile href={DONATE_URL} kind="give" title={t.footerGive} text={t.footerGiveText} art={<GiveArt />} />
         <Tile href={REVIEW_URL} kind="rate" title={t.footerRate} text={t.footerRateText} art={<RateArt />} />
       </div>
-      <div className="text-center space-y-1">
-        <LegalLinks />
-        <p className="text-body-sm text-md-on-surface-variant">
+      {/* desktop: links and version on one line; phones: version right under the links */}
+      <div className="flex flex-col items-center md:flex-row md:flex-wrap md:justify-center md:gap-x-4 -mt-1 md:mt-0" data-footer-meta>
+        <LegalLinks compact />
+        <span className="hidden md:inline text-md-on-surface-variant" aria-hidden="true">·</span>
+        <p className="text-body-sm text-md-on-surface-variant -mt-2 md:mt-0">
           mxtape {VERSION} · © {new Date().getFullYear()}{' '}
           <a href="https://celox.io" target="_blank" rel="noopener noreferrer" className="underline-offset-4 hover:underline">
             celox.io

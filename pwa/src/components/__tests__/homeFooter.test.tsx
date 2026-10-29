@@ -44,6 +44,15 @@ describe('home footer', () => {
     expect(screen.getByText(new RegExp(`mxtape ${VERSION.replace(/\./g, '\\.')}`))).toBeInTheDocument()
   })
 
+  it('the meta line is compact: one line from tablet width, mouse-sized links, touch keeps 48 px', () => {
+    const src = readFileSync(join(process.cwd(), 'src/components/HomeFooter.tsx'), 'utf8')
+    expect(src).toContain('<LegalLinks compact />')
+    expect(src).toMatch(/data-footer-meta[\s\S]{0,10}|md:flex-row/)
+    expect(src).toContain('md:flex-row')
+    const legal = readFileSync(join(process.cwd(), 'src/legal/LegalScreen.tsx'), 'utf8')
+    expect(legal).toContain("compact ? 'min-h-[48px] [@media(pointer:fine)]:min-h-0 [@media(pointer:fine)]:py-1' : 'min-h-[48px]'")
+  })
+
   it('the art is decoration only', () => {
     const { container } = view()
     for (const art of container.querySelectorAll('.mx-thanks-art')) expect(art.getAttribute('aria-hidden')).toBe('true')

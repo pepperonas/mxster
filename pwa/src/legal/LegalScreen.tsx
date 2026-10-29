@@ -46,12 +46,14 @@ function Paragraph({ block }: { block: Block }) {
 }
 
 /** Links to the three legal pages, e.g. for footers. */
-export function LegalLinks({ className = '' }: { className?: string }) {
+/** `compact`: with a mouse the links are only as tall as their text (touch keeps 48 px targets). */
+export function LegalLinks({ className = '', compact = false }: { className?: string; compact?: boolean }) {
   const t = useMessages(legalText)
+  const size = compact ? 'min-h-[48px] [@media(pointer:fine)]:min-h-0 [@media(pointer:fine)]:py-1' : 'min-h-[48px]'
   return (
     <nav aria-label={t.more} className={`flex flex-wrap justify-center gap-x-4 gap-y-1 text-body-sm text-md-on-surface-variant ${className}`}>
       {(Object.keys(LEGAL_PATHS) as LegalKind[]).map((kind) => (
-        <Link key={kind} to={LEGAL_PATHS[kind]} viewTransition={!prefersReducedMotion()} className="underline-offset-4 hover:underline min-h-[48px] inline-flex items-center">
+        <Link key={kind} to={LEGAL_PATHS[kind]} viewTransition={!prefersReducedMotion()} className={`underline-offset-4 hover:underline inline-flex items-center ${size}`}>
           {t[kind]}
         </Link>
       ))}
