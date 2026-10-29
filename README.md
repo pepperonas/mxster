@@ -93,7 +93,7 @@
 
 mxtape is a private music game for groups. A record spins, a song plays, and whoever is on turn slots the song into their timeline — before 1983? between 1983 and 2008? The year is only revealed once the card is down. Get it right and the card stays; get it wrong and someone else may claim it with an objection.
 
-It runs as an installable web app with a **Material 3 Expressive** interface built around one signature element: a vinyl record that spins while the song plays and shows the year on its label after the reveal.
+It runs as an installable web app with a **Material 3 Expressive** interface built around one signature element: a vinyl record that spins while the song plays and steps aside after the reveal so the album cover can show the year.
 
 ---
 
@@ -178,7 +178,7 @@ Instead of passing one phone around, everyone plays on their own device — in t
 - **Daily round:** the same ten songs for everyone each day, one try, then your friends' scores
 - **Share the result** as a picture (WhatsApp and the like) from the end screen
 - **Report a song** after the reveal (wrong year, version, sound or cover); the admin fixes the year or takes the song out, live for every round
-- **Reveal with context:** album cover on the record label, album name and a short "Did you know?"
+- **Reveal with context:** the album cover up front, album name and a short "Did you know?"
 - **Where the card goes is obvious:** neighbour years light up and a position strip reads `2008 — ? — 2020` in the poster type
 - **A running round survives a reload** or a closed tab and is offered on the home screen
 - **Pick a colour:** five schemes (Vinyl, Ocean, Lagoon, Amethyst, Moss), each light and dark, all contrast-checked
@@ -212,7 +212,7 @@ Audio is AAC-LC at 96 kbit/s, cut at four minutes with a short fade. Details, sw
 
 ## Design
 
-Material 3 Expressive with its own identity: **vinyl magenta** as primary colour, warm amber as accent. The record is the one signature element — it spins while the song plays and shows the year on its label after the reveal; everything around it stays quiet. In the background fine sound waves drift along the bottom of the screen and swell while a song plays.
+Material 3 Expressive with its own identity: **vinyl magenta** as primary colour, warm amber as accent. The record is the one signature element — it spins while the song plays and slides out behind the album cover after the reveal, the year on the cover in the verdict's colour (no cover: the year stays on the label); everything around it stays quiet. In the background fine sound waves drift along the bottom of the screen; when a song starts they swell gently and pulse, and on pause they settle back slowly instead of stopping at once.
 
 - Palettes are **generated** from seeds (`pwa/scripts/gen-tokens.mjs` → `pwa/src/styles/design-tokens.css`); no raw colours anywhere else
 - Real springs (stiffness + damping) as one source for JS (`motion`) and CSS (`linear()` curves)

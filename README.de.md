@@ -179,7 +179,7 @@ Statt ein Handy herumzureichen, spielt jede Person auf dem eigenen Gerät – im
 - **Tagesrunde:** jeden Tag dieselben zehn Songs für alle, ein Versuch, danach die Ergebnisse deiner Freunde
 - **Ergebnis teilen** als Bild (WhatsApp und Co.) direkt vom Endbildschirm
 - **Song melden** nach dem Aufdecken (falsches Jahr, falsche Version, schlechter Ton, falsches Cover); der Admin korrigiert das Jahr oder nimmt den Song heraus – sofort für alle Runden
-- **Aufdecken mit Hintergrund:** Album-Cover auf dem Plattenlabel, Albumname und ein kurzes „Wusstest du?“
+- **Aufdecken mit Hintergrund:** Album-Cover groß im Vordergrund, Albumname und ein kurzes „Wusstest du?“
 - **Sofort sichtbar, wohin die Karte kommt:** Die Nachbarjahre leuchten auf, eine Positionsleiste zeigt `2008 — ? — 2020` in der Plakatschrift
 - **Eine laufende Runde übersteht Neuladen** oder einen geschlossenen Tab und wird auf der Startseite angeboten
 - **Farbe wählbar:** fünf Farben (Vinyl, Ozean, Lagune, Amethyst, Moos), jeweils hell und dunkel, alle auf Kontrast geprüft
@@ -213,7 +213,7 @@ Audio ist AAC-LC mit 96 kbit/s, nach vier Minuten mit kurzer Ausblendung abgesch
 
 ## Design
 
-Material 3 Expressive mit eigener Identität: **Vinyl-Magenta** als Primärfarbe, warmes Bernstein als Akzent. Die Platte ist das einzige Erkennungszeichen – sie dreht sich, solange der Song läuft, und zeigt nach dem Aufdecken das Jahr auf ihrem Label; alles drumherum bleibt ruhig. Im Hintergrund ziehen feine Klangwellen am unteren Bildrand entlang und schwellen an, solange ein Song läuft.
+Material 3 Expressive mit eigener Identität: **Vinyl-Magenta** als Primärfarbe, warmes Bernstein als Akzent. Die Platte ist das einzige Erkennungszeichen – sie dreht sich, solange der Song läuft, und gleitet nach dem Aufdecken hinter dem Album-Cover heraus, das Jahr steht in der Farbe des Ergebnisses auf dem Cover (ohne Cover bleibt es auf dem Label); alles drumherum bleibt ruhig. Im Hintergrund ziehen feine Klangwellen am unteren Bildrand entlang; startet ein Song, schwellen sie sanft an und pulsieren, bei Pause klingen sie langsam aus, statt abrupt stehen zu bleiben.
 
 - Paletten werden aus Seeds **erzeugt** (`pwa/scripts/gen-tokens.mjs` → `pwa/src/styles/design-tokens.css`), nirgends sonst Rohfarben
 - Echte Federn (Steifigkeit und Dämpfung) als eine Quelle für JS (`motion`) und CSS (`linear()`-Kurven)
