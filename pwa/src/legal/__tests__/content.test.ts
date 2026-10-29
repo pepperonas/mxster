@@ -117,3 +117,19 @@ describe('legal texts', () => {
     }
   })
 })
+
+describe('the group statistics every player sees', () => {
+  it('the text names what is shown, and the server leaves out what the text leaves out', () => {
+    const de = text('de')
+    expect(de).toContain('„Alle zusammen“')
+    expect(de).toContain('ohne Namen, ohne Konten und ohne Uhrzeiten oder Wochentage der Runden')
+    expect(text('en')).toContain('no names, no accounts and no times of day or weekdays of the rounds')
+    const api = server('api/admin_stats.py')
+    // the public totals drop the hours and weekdays of the rounds
+    expect(api).toMatch(/def public_stats[\s\S]*?k not in \("hours", "weekdays"\)/)
+    // and contain neither accounts, activity nor the community figures
+    const publicFn = /def public_stats[\s\S]*?\n\n\n/.exec(api)![0]
+    expect(publicFn).not.toMatch(/accounts|activity|social/)
+    expect(server('api/stats.py')).toMatch(/Depends\(require_approved\)/)
+  })
+})

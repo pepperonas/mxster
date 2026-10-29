@@ -138,3 +138,28 @@ def test_the_stats_page_survives_a_broken_history(client, google):
     client.cookies.clear()
     login(client, google, sub="boss", email="boss@example.com")
     assert client.get("/api/admin/stats").status_code == 200
+
+
+def test_every_player_sees_the_groups_totals_but_nothing_about_accounts_or_times(client, google):
+    me = _player(client, google)
+    h = {"X-CSRF-Token": me["csrf"]}
+    turns = [{"s": "song_001", "ok": True, "first": True}, {"s": "song_002", "ok": False}]
+    client.put("/api/data/history", json={"version": 0, "data": [_round(T0, turns=turns), _round(T0 + 86_400_000)]}, headers=h)
+    client.put("/api/data/achievements", json={"version": 0, "data": {"Anna": {"achievements": [{"id": "first_round", "unlocked": True}]}}}, headers=h)
+    body = client.get("/api/stats/all").json()
+    assert body["rounds"]["total"] == 2
+    assert body["rounds"]["songs"] == {"song_002": [1, 0]}
+    assert body["achievements"] == {"first_round": 1}
+    assert len(body["rounds"]["perDay"]) == 30 and len(body["dailyPerDay"]) == 30
+    # what stays with the admin: accounts, activity, the community — and the times of day
+    assert set(body) == {"today", "rounds", "dailyPerDay", "achievements"}
+    assert "hours" not in body["rounds"] and "weekdays" not in body["rounds"]
+    # totals only: no names or addresses
+    text = str(body)
+    assert "example.com" not in text and "Anna" not in text and "Ben" not in text
+
+
+def test_the_groups_totals_need_an_approved_account(client, google):
+    assert client.get("/api/stats/all").status_code == 401
+    login(client, google, sub="p", email="p@example.com")
+    assert client.get("/api/stats/all").status_code == 403

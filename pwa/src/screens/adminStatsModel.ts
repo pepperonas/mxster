@@ -38,6 +38,14 @@ export interface ServerStats {
   social: { friendships: number; openRooms: number; openReports: number }
 }
 
+/** What every player sees (GET /api/stats/all): the game's totals, no accounts, no times of day. */
+export interface GroupStatsData {
+  today: string
+  rounds: Omit<ServerStats['rounds'], 'hours' | 'weekdays'>
+  dailyPerDay: ServerStats['dailyPerDay']
+  achievements: ServerStats['achievements']
+}
+
 /** Songs per year, every year from the first to the last (empty years included). */
 export function songsPerYear(songs: Pick<Song, 'year'>[]): { year: number; count: number }[] {
   if (songs.length === 0) return []
@@ -62,8 +70,12 @@ export function songsPerDecade(songs: Pick<Song, 'year'>[]): { decade: number; c
 }
 
 /** Tick keys: the first year of every decade in the range. */
+/** Axis labels: every decade, plus the first year when it is not crammed against the next decade. */
+export const TICK_GAP = 8
 export function decadeTicks(years: number[]): string[] {
-  return years.filter((y, i) => i === 0 || y % 10 === 0).map(String)
+  const decades = years.map((y, i) => ({ y, i })).filter(({ y }) => y % 10 === 0)
+  const first = years.length > 0 && years[0] % 10 !== 0 && (decades[0]?.i ?? Infinity) >= TICK_GAP ? [years[0]] : []
+  return [...first, ...decades.map(({ y }) => y)].map(String)
 }
 
 export interface SongPlay {

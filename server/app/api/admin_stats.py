@@ -196,6 +196,38 @@ def achievement_counts(docs: list[Any]) -> dict[str, int]:
     return dict(counts)
 
 
+def game_stats(db: Session, today: str) -> dict:
+    """What every approved player may see (statistics page, „Alle zusammen“):
+    rounds, songs, achievements and daily rounds as totals. The hours and
+    weekdays of the rounds stay with the admin — in a small circle of friends
+    "a round at 3 a.m." says who it was."""
+    start = (datetime.fromisoformat(today) - timedelta(days=DAYS - 1)).date()
+    docs = db.execute(select(UserDoc.kind, UserDoc.body)).all()
+    histories = [_load(b) for k, b in docs if k == "history"]
+    achievements = [_load(b) for k, b in docs if k == "achievements"]
+    daily_rows = dict(
+        db.execute(
+            select(DailyResult.day, func.count())
+            .where(DailyResult.day >= start.isoformat(), or_(DailyResult.started_at.is_(None), DailyResult.finished_at.is_not(None)))
+            .group_by(DailyResult.day)
+        ).all()
+    )
+    days = [(start + timedelta(days=i)).isoformat() for i in range(DAYS)]
+    return {
+        "rounds": round_stats(unique_rounds(histories), today),
+        "dailyPerDay": [{"day": d, "count": daily_rows.get(d, 0)} for d in days],
+        "achievements": achievement_counts(achievements),
+    }
+
+
+def public_stats(db: Session) -> dict:
+    """game_stats without the times of day (the admin keeps hours and weekdays)."""
+    today = local_day(utcnow())
+    out = game_stats(db, today)
+    out["rounds"] = {k: v for k, v in out["rounds"].items() if k not in ("hours", "weekdays")}
+    return {"today": today, **out}
+
+
 @router.get("/stats")
 def stats(db: Session = Depends(get_db)) -> dict:
     now = utcnow()
@@ -222,19 +254,7 @@ def stats(db: Session = Depends(get_db)) -> dict:
     ).all()
     active = dict(active_rows)
     first_activity = db.execute(select(func.min(ActivityDay.day))).scalar()
-    daily_rows = dict(
-        db.execute(
-            select(DailyResult.day, func.count())
-            .where(DailyResult.day >= start.isoformat(), or_(DailyResult.started_at.is_(None), DailyResult.finished_at.is_not(None)))
-            .group_by(DailyResult.day)
-        ).all()
-    )
     days = [(start + timedelta(days=i)).isoformat() for i in range(DAYS)]
-
-    docs = db.execute(select(UserDoc.kind, UserDoc.body)).all()
-    histories = [_load(b) for k, b in docs if k == "history"]
-    achievements = [_load(b) for k, b in docs if k == "achievements"]
-    rounds = unique_rounds(histories)
 
     return {
         "today": today,
@@ -250,9 +270,7 @@ def stats(db: Session = Depends(get_db)) -> dict:
             "signupsPerWeek": [{"week": w.isoformat(), "count": signups.get(w.isoformat(), 0)} for w in weeks],
         },
         "activity": {"perDay": [{"day": d, "count": active.get(d, 0)} for d in days], "since": first_activity},
-        "rounds": round_stats(rounds, today),
-        "dailyPerDay": [{"day": d, "count": daily_rows.get(d, 0)} for d in days],
-        "achievements": achievement_counts(achievements),
+        **game_stats(db, today),
         "social": {
             "friendships": db.execute(select(func.count()).select_from(Friendship).where(Friendship.status == "accepted")).scalar() or 0,
             "openRooms": db.execute(select(func.count()).select_from(Room).where(Room.status.in_(["lobby", "running"]), Room.expires_at > now)).scalar() or 0,

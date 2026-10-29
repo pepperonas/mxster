@@ -29,7 +29,11 @@ describe('the catalogue over the years', () => {
   })
 
   it('ticks the first year and every decade start', () => {
-    expect(decadeTicks([1953, 1954, 1960, 1961, 1970])).toEqual(['1953', '1960', '1970'])
+    // the first year only with room before the next decade (1953 next to 1960 ran together: "195360")
+    expect(decadeTicks([1953, 1954, 1960, 1961, 1970])).toEqual(['1960', '1970'])
+    expect(decadeTicks([1941, 1942, 1943, 1944, 1945, 1946, 1947, 1948, 1950])).toEqual(['1941', '1950'])
+    expect(decadeTicks([1950, 1955, 1960])).toEqual(['1950', '1960'])
+    expect(decadeTicks([1953, 1954])).toEqual(['1953'])
   })
 })
 
@@ -75,5 +79,38 @@ describe('admin screen', () => {
     expect(src).toContain('<AdminStats />')
     // five tabs on a phone: a tab keeps its full label and the row scrolls
     expect(src).toContain('min-w-max')
+  })
+})
+
+describe('the group statistics on the statistics page and the admin page', () => {
+  const days = Array.from({ length: 30 }, (_, i) => ({ day: `2026-10-${String(i + 1).padStart(2, '0')}`, count: i % 3 }))
+  const group = {
+    today: '2026-10-30',
+    rounds: { total: 12, perDay: days, modes: { timeline_personal: 8, hardcore: 4 }, avgPeople: 3.5, avgMinutes: 21, withBots: 2, teams: 1, daily: 3, songs: { song_001: [4, 1] as [number, number] }, first: '2026-10-01' },
+    dailyPerDay: days,
+    achievements: { first_round: 4 }
+  }
+
+  it('shows the game in numbers to everyone: rounds, catalogue, songs in play, achievements — no times of day', async () => {
+    const { GroupStats } = await import('@/components/stats/GroupStats')
+    const { AppProviders } = await import('@/contexts/AppProviders')
+    const { container } = render(
+      <MotionTestProvider>
+        <AppProviders>
+          <GroupStats stats={group} />
+        </AppProviders>
+      </MotionTestProvider>
+    )
+    const headings = [...container.querySelectorAll('h2, h3')].map((h) => h.textContent)
+    for (const title of ['Runden pro Tag', 'Songs pro Jahr', 'Am häufigsten erreicht']) expect(headings.some((h) => h?.includes(title))).toBe(true)
+    expect(headings.some((h) => /Uhrzeit|Wochentag|Anmeldung/.test(h ?? ''))).toBe(false)
+  })
+
+  it('the admin page keeps accounts, times of day and the community, and uses the same game sections', () => {
+    const src = readFileSync(join(process.cwd(), 'src/screens/AdminStats.tsx'), 'utf8')
+    expect(src).toContain('<GroupStats stats={stats} />')
+    for (const key of ['t.hoursChart', 't.weekdaysChart', 't.signIn', 't.activeChart', 't.community']) expect(src).toContain(key)
+    const stats = readFileSync(join(process.cwd(), 'src/screens/StatisticsScreen.tsx'), 'utf8')
+    expect(stats).toContain("api<GroupStatsData>('/api/stats/all')")
   })
 })

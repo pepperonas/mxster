@@ -6,7 +6,10 @@
 import { useGameHistory } from '@/contexts/GameHistoryContext'
 import { EmptyState } from '@/components/ui/EmptyState'
 import { SkeletonBlock, SkeletonGroup } from '@/components/ui/Skeleton'
-import { useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
+import { api } from '@/api/client'
+import { GroupStats } from '@/components/stats/GroupStats'
+import type { GroupStatsData } from './adminStatsModel'
 import { useAppNavigate } from '@/hooks/useAppNavigate'
 import { StatTile, BarList, WeekColumns, ShareBar } from '@/components/charts/Bars'
 import { DecadeProfile } from '@/components/charts/DecadeProfile'
@@ -76,6 +79,53 @@ function LibraryEntry() {
   )
 }
 
+/**
+ * „Alle zusammen“: the group's totals from every account (GET /api/stats/all) —
+ * how rounds are played, the catalogue, the songs in play, the achievements.
+ * No names, no times of day; the admin page adds those parts.
+ */
+function Everyone() {
+  const t = useMessages(statsText)
+  const [data, setData] = useState<GroupStatsData | null>(null)
+  const [failed, setFailed] = useState(false)
+  const load = useCallback(async () => {
+    setFailed(false)
+    try {
+      setData(await api<GroupStatsData>('/api/stats/all'))
+    } catch {
+      setFailed(true)
+    }
+  }, [])
+  useEffect(() => void load(), [load])
+  return (
+    <section className="space-y-8 pt-4 border-t border-md-outline-variant/60" aria-labelledby="everyone-h" data-everyone>
+      <header>
+        <h2 id="everyone-h" className="text-headline-sm">
+          {t.groupTitle}
+        </h2>
+        <p className="meta mt-1">{t.groupText}</p>
+      </header>
+      {failed ? (
+        <div className="surface p-6 text-center">
+          <p className="text-body-lg">{t.groupFailed}</p>
+          <button type="button" className="btn btn-tonal m3-state-layer mt-4" onClick={() => void load()}>
+            {t.groupReload}
+          </button>
+        </div>
+      ) : data ? (
+        <div className="space-y-10">
+          <GroupStats stats={data} />
+        </div>
+      ) : (
+        <SkeletonGroup className="space-y-4">
+          <SkeletonBlock className="h-40 rounded-m3-xl" />
+          <SkeletonBlock className="h-56 rounded-m3-xl" />
+        </SkeletonGroup>
+      )}
+    </section>
+  )
+}
+
 export function StatisticsScreen() {
   const navigate = useAppNavigate()
   const t = useMessages(statsText)
@@ -127,6 +177,9 @@ export function StatisticsScreen() {
         />
         <div className="mt-6">
           <LibraryEntry />
+        </div>
+        <div className="mt-10">
+          <Everyone />
         </div>
       </div>
     )
@@ -258,6 +311,8 @@ export function StatisticsScreen() {
           <SongList title={t.safest} items={group.safest} text={(s) => t.timesRight(s.tries)} />
         </div>
       )}
+
+      <Everyone />
     </div>
   )
 }
