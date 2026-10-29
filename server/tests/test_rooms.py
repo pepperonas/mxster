@@ -530,3 +530,22 @@ def test_play_pause_from_a_phone_reaches_the_tv_but_not_from_the_tv(client, goog
                 assert msg["type"] != "audioCmd"
                 if msg["type"] == "pong":
                     break
+
+
+def test_play_pause_reaches_only_screens(client, google):
+    code, hc, gc, sc = _with_screen(client, google, "everyone")
+    with _connect(client, code, hc) as h:
+        h.receive_json()
+        with _connect(client, code, gc) as g:
+            g.receive_json()
+            with _connect(client, code, sc) as s:
+                s.receive_json()
+                # a player tries to pause: the screen gets it, the host does not
+                g.send_json({"type": "audioCmd", "playing": False})
+                assert _until(s, "audioCmd")["seat"] == 1
+                h.send_json({"type": "ping", "t": 9})
+                for _ in range(8):
+                    msg = h.receive_json()
+                    assert msg["type"] != "audioCmd"
+                    if msg["type"] == "pong":
+                        break

@@ -518,9 +518,14 @@ async def room_socket(ws: WebSocket, code: str) -> None:
                 await hub.broadcast(code, cue, exclude=seat)
 
             elif kind == "audioCmd" and not display:
-                # Play/pause from a device that does not have the music (the
-                # phone next to the TV): the device with the music carries it out
-                await hub.broadcast(code, {"type": "audioCmd", "playing": bool(msg.get("playing")), "seat": seat}, exclude=seat)
+                # Play/pause from a phone for the TV that has the music: sent
+                # only to connected screens, nobody else's music can be steered
+                with SessionLocal() as db:
+                    screens = [m.seat for m in members_of(db, code) if m.display and m.left_at is None]
+                cmd = {"type": "audioCmd", "playing": bool(msg.get("playing")), "seat": seat}
+                for s in screens:
+                    if s in hub.online(code):
+                        await hub.send(code, s, cmd)
 
             elif kind == "intent" and not hosting() and not display:
                 if len(raw) > MAX_INTENT_BYTES:

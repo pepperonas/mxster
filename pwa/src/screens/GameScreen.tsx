@@ -591,7 +591,8 @@ export function GameRound({ onRematch }: { onRematch: () => void }) {
               clockOffset={room?.clockOffset}
               onCue={audioRole === 'host' ? room!.sendAudio : undefined}
               onRemoteToggle={audioRole === 'silent' && screen && !onlineScreen ? room!.sendAudioCmd : undefined}
-              remote={room?.remote ?? null}
+              // only a screen carries out play/pause from a phone
+              remote={onlineScreen ? (room?.remote ?? null) : null}
             />
             {online && phase === 'idle' && !can('draw') && (
               <p className="text-center text-body-md text-md-on-surface-variant" role="status">
