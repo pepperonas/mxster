@@ -524,3 +524,26 @@ html[data-theme='light'] .mx-thanks { --mx-star: var(--md-ref-warning-60); }
 @media (prefers-reduced-motion: reduce) {
   .mx-checkbox-mark { transition: none; }
 }
+
+/* "Did you know?" card (components/game/SongInfo.tsx FactCard): when it arrives,
+   a soft halo rises from the bulb once — the idea lighting up. Transform and
+   opacity only; with reduced motion the bulb simply sits there. */
+.mx-fact-bulb::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: rgb(var(--md-sys-color-tertiary) / 0.45);
+  opacity: 0;
+  transform: scale(0.7);
+  animation: mx-fact-glow 1100ms var(--mx-draw, ease-out) var(--fact-delay, 120ms) both;
+  pointer-events: none;
+}
+@keyframes mx-fact-glow {
+  0% { opacity: 0; transform: scale(0.7); }
+  30% { opacity: 1; transform: scale(1.05); }
+  100% { opacity: 0; transform: scale(1.7); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .mx-fact-bulb::after { animation: none; }
+}

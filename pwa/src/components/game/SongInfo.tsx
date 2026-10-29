@@ -48,6 +48,32 @@ export function SongCover({ song, size }: { song: Pick<Song, 'id'>; size: number
   )
 }
 
+/**
+ * The "Did you know?" fact as its own small card: a bulb in a tonal circle that
+ * lights up once when the card arrives, a kicker, the fact in body size.
+ * Shared by the reveal in the game and the song library.
+ */
+export function FactCard({ fact, label, delay = 0 }: { fact: string; label: string; delay?: number }) {
+  return (
+    <m.div
+      initial={{ opacity: 0, y: 8 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ ...spring.effectsDefault, delay }}
+      className="flex items-start gap-3 rounded-m3-lg bg-md-surface-container-highest px-4 py-3"
+      style={{ ['--fact-delay' as string]: `${Math.round(delay * 1000) + 120}ms` }}
+      data-fact
+    >
+      <span className="mx-fact-bulb relative grid place-items-center w-9 h-9 shrink-0 rounded-m3-full bg-md-tertiary-container text-md-on-tertiary-container" aria-hidden="true">
+        <Icon name="lightbulb" size={20} />
+      </span>
+      <p className="min-w-0 pt-0.5">
+        <span className="block text-label-md text-md-tertiary">{label}</span>
+        <span className="block text-body-md text-md-on-surface mt-0.5">{fact}</span>
+      </p>
+    </m.div>
+  )
+}
+
 /** The song's fact in the app language: English when there is one, else the German original. */
 export function factFor(song: Song, lang: 'de' | 'en'): string | undefined {
   return (lang === 'en' && song.factEn) || song.fact || undefined
@@ -82,18 +108,7 @@ export function SongInfo({ song, head = 'full', delay = 0 }: SongInfoProps) {
           </p>
         </div>
       )}
-      {fact && (
-        <p className="flex gap-2 text-body-sm text-md-on-surface-variant">
-          {/* Same height as the first text line, so the bulb sits on it */}
-          <span className="flex h-4 flex-shrink-0 items-center text-md-tertiary">
-            <Icon name="lightbulb" size={16} />
-          </span>
-          <span>
-            <span className="text-md-on-surface">{t.didYouKnow}</span>
-            {fact}
-          </span>
-        </p>
-      )}
+      {fact && <FactCard fact={fact} label={t.didYouKnow.trim()} delay={delay + 0.15} />}
       <ReportSongButton song={song} />
     </m.div>
   )

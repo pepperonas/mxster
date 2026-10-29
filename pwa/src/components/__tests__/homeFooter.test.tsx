@@ -8,7 +8,8 @@ import { HomeFooter, DONATE_URL, REPO_URL, REVIEW_URL } from '../HomeFooter'
 import { VERSION } from '@/screens/ProfileScreen'
 
 const css = readFileSync(join(process.cwd(), 'src/styles/motion.css'), 'utf8')
-const footerCss = css.slice(css.indexOf('HOME FOOTER'))
+// the footer's own section only (later sections have their own keyframes)
+const footerCss = css.slice(css.indexOf('HOME FOOTER'), css.indexOf('ABOUT PAGE'))
 
 describe('home footer', () => {
   const view = () =>
@@ -44,11 +45,11 @@ describe('home footer', () => {
     expect(screen.getByText(new RegExp(`mxtape ${VERSION.replace(/\./g, '\\.')}`))).toBeInTheDocument()
   })
 
-  it('the meta line is compact: one line from tablet width, mouse-sized links, touch keeps 48 px', () => {
+  it('two lines, close together: mouse-sized links, touch keeps 48 px', () => {
     const src = readFileSync(join(process.cwd(), 'src/components/HomeFooter.tsx'), 'utf8')
     expect(src).toContain('<LegalLinks compact />')
-    expect(src).toMatch(/data-footer-meta[\s\S]{0,10}|md:flex-row/)
-    expect(src).toContain('md:flex-row')
+    // links and version stay on two lines (one line was tried and did not look right)
+    expect(src).not.toContain('md:flex-row')
     const legal = readFileSync(join(process.cwd(), 'src/legal/LegalScreen.tsx'), 'utf8')
     expect(legal).toContain("compact ? 'min-h-[48px] [@media(pointer:fine)]:min-h-0 [@media(pointer:fine)]:py-1' : 'min-h-[48px]'")
   })

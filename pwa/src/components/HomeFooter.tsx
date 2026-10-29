@@ -116,11 +116,10 @@ export function HomeFooter() {
         <Tile href={DONATE_URL} kind="give" title={t.footerGive} text={t.footerGiveText} art={<GiveArt />} />
         <Tile href={REVIEW_URL} kind="rate" title={t.footerRate} text={t.footerRateText} art={<RateArt />} />
       </div>
-      {/* desktop: links and version on one line; phones: version right under the links */}
-      <div className="flex flex-col items-center md:flex-row md:flex-wrap md:justify-center md:gap-x-4 -mt-1 md:mt-0" data-footer-meta>
+      {/* two lines: the legal links, the version right under them */}
+      <div className="flex flex-col items-center" data-footer-meta>
         <LegalLinks compact />
-        <span className="hidden md:inline text-md-on-surface-variant" aria-hidden="true">·</span>
-        <p className="text-body-sm text-md-on-surface-variant -mt-2 md:mt-0">
+        <p className="text-body-sm text-md-on-surface-variant -mt-2 [@media(pointer:fine)]:mt-0">
           mxtape {VERSION} · © {new Date().getFullYear()}{' '}
           <a href="https://celox.io" target="_blank" rel="noopener noreferrer" className="underline-offset-4 hover:underline">
             celox.io

@@ -7,7 +7,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { m } from 'motion/react'
 import type { Song } from '@/types'
-import { SongCover, factFor } from '@/components/game/SongInfo'
+import { FactCard, SongCover, factFor } from '@/components/game/SongInfo'
 import { Icon } from '@/components/ui/Icon'
 import { getPreviewPlayer, type PlayerState } from '@/services/PreviewPlayerService'
 import { coverSrc } from '@/utils/cover'
@@ -101,12 +101,7 @@ export function SongDetail({ song, rate }: { song: Song; rate?: { tries: number;
         <dd className="num-poster">{rate && rate.tries > 0 ? t.rateValue(rate.right, rate.tries) : t.notPlayed}</dd>
       </dl>
 
-      {fact && (
-        <div className="rounded-m3-lg bg-md-surface-container-high p-4">
-          <p className="text-label-lg text-md-primary">{t.didYouKnow}</p>
-          <p className="text-body-md mt-1">{fact}</p>
-        </div>
-      )}
+      {fact && <FactCard fact={fact} label={t.didYouKnow} />}
 
       <div className="flex gap-3">
         <button type="button" className="btn btn-brand m3-state-layer flex-1" onClick={toggle} aria-pressed={playing}>
