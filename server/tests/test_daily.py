@@ -45,7 +45,7 @@ def test_a_run_goes_until_the_first_wrong_card(client, google):
     h = {"X-CSRF-Token": me["csrf"]}
     assert client.get(_url()).json()["state"] == "none"
     start = client.post(_url("/start"), headers=h).json()
-    assert start == {"state": "running", "turns": 0, "score": 0, "max": DAILY_MAX}
+    assert start == {"state": "running", "turns": 0, "score": 0, "max": DAILY_MAX, "songs": None}
     for i in range(3):
         assert client.post(_url("/turn"), json={"index": i, "ok": True}, headers=h).json()["state"] == "running"
     end = client.post(_url("/turn"), json={"index": 3, "ok": False}, headers=h).json()
@@ -60,7 +60,7 @@ def test_a_run_can_be_continued_but_never_started_twice(client, google):
     _play(client, h, [True, True])
     # paused: starting again (another device, a reload) continues where it stands
     again = client.post(_url("/start"), headers=h).json()
-    assert again == {"state": "running", "turns": 2, "score": 2, "max": DAILY_MAX}
+    assert again == {"state": "running", "turns": 2, "score": 2, "max": DAILY_MAX, "songs": None}
     assert client.get(_url()).json()["mine"]["state"] == "running"
     client.post(_url("/turn"), json={"index": 2, "ok": False}, headers=h)
     r = client.post(_url("/start"), headers=h)
@@ -236,3 +236,29 @@ def test_a_lost_race_sends_nothing(client, google, mails):
     assert [m for m in mails if "Tagesrunde" in m[1]] == []
     with SessionLocal() as db:
         assert db.query(User).filter_by(id=lisa["id"]).one().daily_notified_at is None  # rolled back
+
+
+def test_the_first_start_of_the_day_fixes_the_songs_for_everyone(client, google):
+    """A catalogue update during the day must not give later players other songs."""
+    first = [f"song_{i:03d}" for i in range(1, 52)]
+    other = [f"song_{i:03d}" for i in range(100, 151)]
+    a = _player(client, google, sub="a", email="a@example.com")
+    r = client.post(_url("/start"), json={"songs": first}, headers={"X-CSRF-Token": a["csrf"]}).json()
+    assert r["songs"] == first
+    client.cookies.clear()
+    b = _player(client, google, sub="b", email="b@example.com")
+    # another device with a newer catalogue offers other songs: it gets the day's
+    r = client.post(_url("/start"), json={"songs": other}, headers={"X-CSRF-Token": b["csrf"]}).json()
+    assert r["songs"] == first
+    # continuing a paused run: the same list again
+    assert client.post(_url("/start"), json={"songs": other}, headers={"X-CSRF-Token": b["csrf"]}).json()["songs"] == first
+
+
+def test_only_song_ids_are_kept_and_at_most_a_start_card_plus_the_maximum(client, google):
+    me = _player(client, google)
+    h = {"X-CSRF-Token": me["csrf"]}
+    assert client.post(_url("/start"), json={"songs": ["song_001", "<script>"]}, headers=h).json()["songs"] is None
+    tomorrow = (utcnow().date() + timedelta(days=1)).isoformat()
+    many = [f"song_{i:03d}" for i in range(1, 200)] + ["song_001"]
+    r = client.post(f"/api/daily/{tomorrow}/start", json={"songs": many}, headers=h).json()
+    assert len(r["songs"]) == DAILY_MAX + 1 and r["songs"][0] == "song_001" and len(set(r["songs"])) == DAILY_MAX + 1

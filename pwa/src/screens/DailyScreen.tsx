@@ -16,12 +16,13 @@ import { Avatar } from '@/components/ui/Avatar'
 import { Icon } from '@/components/ui/Icon'
 import { DAILY_MAX, dailySongs, localDay, resumedTimeline } from '@/game/daily'
 import { songs as bundledSongs } from '@/data/songs'
+import { songById } from '@/data/catalogue'
 import { songKey } from '@/game/songPool'
 import { ownPlayerName } from '@/game/owner'
 import { spring } from '@/motion/springs'
 import { getLang, localeOf, msg, useMessages } from '@/i18n'
 import { dailyText } from '@/i18n/messages/daily'
-import { GameMode } from '@/types'
+import { GameMode, type Song } from '@/types'
 
 export type DailyState = 'none' | 'running' | 'finished'
 
@@ -68,6 +69,13 @@ export function useDailyBoard(day = localDay()) {
   return { board, error, load }
 }
 
+/** The day's songs as the server fixed them (unknown ids skipped), else this device's own. */
+export function daySongsFrom(ids: string[] | null | undefined, own: Song[]): Song[] {
+  if (!ids || ids.length === 0) return own
+  const list = ids.map((id) => songById(id)).filter((s): s is Song => Boolean(s))
+  return list.length >= 2 ? list : own
+}
+
 function yesterdayOf(day: string): string {
   const d = new Date(`${day}T12:00:00`)
   d.setDate(d.getDate() - 1)
@@ -93,18 +101,26 @@ export function DailyScreen() {
       return
     }
     setStarting(true)
+    // From the bundled list, so an admin correction during the day does not
+    // give later players other songs; the years still come corrected (songById).
+    // The server keeps the first list of the day and hands it to everyone after —
+    // a device with an older or newer catalogue still plays the same songs.
+    const offered = dailySongs(day, bundledSongs)
     let turns = 0
+    let songs = offered
     try {
-      turns = (await api<{ turns: number }>(`/api/daily/${day}/start`, { method: 'POST' })).turns
+      const r = await api<{ turns: number; songs: string[] | null }>(`/api/daily/${day}/start`, {
+        method: 'POST',
+        json: { songs: offered.map((s) => s.id) }
+      })
+      turns = r.turns
+      songs = daySongsFrom(r.songs, offered)
     } catch (e) {
       setStarting(false)
       addToast(e instanceof ApiError && e.code === 'already_played' ? t.alreadyPlayed : t.loadFailed, 'warning')
       void load()
       return
     }
-    // From the bundled list, so an admin correction during the day does not
-    // give later players other songs; the years still come corrected (songById)
-    const songs = dailySongs(day, bundledSongs)
     game.resetGame()
     game.setGameMode(GameMode.TIMELINE_PERSONAL)
     game.setOptions({

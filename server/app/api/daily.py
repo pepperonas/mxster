@@ -12,6 +12,7 @@ can be paused and continued on any device but never started twice:
 - ``GET|POST /{day}/notify``  tell chosen friends by mail, once a day
 """
 
+import json
 import re
 from datetime import date, timedelta
 
@@ -23,7 +24,7 @@ from sqlalchemy.orm import Session
 
 from app import mail
 from app.api.friends import first_name, person
-from app.db import DailyResult, Friendship, User, as_utc, get_db, utcnow
+from app.db import DailyResult, DailySet, Friendship, User, as_utc, get_db, utcnow
 from app.security import err, require_approved, require_csrf
 
 router = APIRouter(prefix="/api/daily")
@@ -33,6 +34,7 @@ DAY = re.compile(r"^\d{4}-\d{2}-\d{2}$")
 DAILY_MAX = 50
 #: Results older than this are deleted (the board only ever shows recent days)
 KEEP_DAYS = 60
+SONG_ID = re.compile(r"^song_\d{1,5}$")
 #: Friends one notification may reach
 MAX_NOTIFY = 50
 #: One notification per account in this time, whatever the day: the ±1 day
@@ -109,17 +111,44 @@ def board(day: str, me: User = Depends(require_approved), db: Session = Depends(
     }
 
 
+class StartIn(BaseModel):
+    #: The songs this device would play (start card first); kept only if the day has none yet
+    songs: list[str] = []
+
+
+def _day_songs(db: Session, day: str, offered: list[str]) -> list[str] | None:
+    """The day's song list: the stored one, or — first start of the day — the
+    one this device offers (checked: song ids, no repeats, start card + DAILY_MAX)."""
+    row = db.get(DailySet, day)
+    if row is not None:
+        return json.loads(row.song_ids)
+    ids = list(dict.fromkeys(offered))[: DAILY_MAX + 1]
+    if len(ids) < 2 or not all(isinstance(i, str) and SONG_ID.match(i) for i in ids):
+        return None
+    db.add(DailySet(day=day, song_ids=json.dumps(ids)))
+    try:
+        db.commit()
+    except IntegrityError:  # another device fixed the day a moment earlier: take that one
+        db.rollback()
+        row = db.get(DailySet, day)
+        return json.loads(row.song_ids) if row else None
+    return ids
+
+
 @router.post("/{day}/start", dependencies=[Depends(require_csrf)])
-def start(day: str, me: User = Depends(require_approved), db: Session = Depends(get_db)) -> dict:
+def start(day: str, body: StartIn | None = None, me: User = Depends(require_approved), db: Session = Depends(get_db)) -> dict:
     """Start today's run — or, if it is already running, say where it stands.
-    A finished run cannot be started again (409)."""
+    A finished run cannot be started again (409). The answer carries the day's
+    songs, the same for everyone (fixed by the first start of the day)."""
     day = _day(day)
+    songs = _day_songs(db, day, body.songs if body else [])
     run = _run(db, me, day)
     if run is not None and run.finished:
         raise err(409, "already_played", "Die Tagesrunde ist heute schon gespielt.")
     if run is None:
         cutoff = (utcnow().date() - timedelta(days=KEEP_DAYS)).isoformat()
         db.query(DailyResult).filter(DailyResult.day < cutoff).delete()
+        db.query(DailySet).filter(DailySet.day < cutoff).delete()
         run = DailyResult(user_id=me.id, day=day, score=0, total=DAILY_MAX, turns=0, started_at=utcnow())
         db.add(run)
         try:
@@ -129,7 +158,7 @@ def start(day: str, me: User = Depends(require_approved), db: Session = Depends(
             run = _run(db, me, day)
             if run is None or run.finished:
                 raise err(409, "already_played", "Die Tagesrunde ist heute schon gespielt.")
-    return {"state": _state(run), "turns": run.turns, "score": run.score, "max": DAILY_MAX}
+    return {"state": _state(run), "turns": run.turns, "score": run.score, "max": DAILY_MAX, "songs": songs}
 
 
 class TurnIn(BaseModel):

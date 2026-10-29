@@ -27,7 +27,10 @@ function serve(board: Record<string, unknown>, start: { status: number; body: un
       if (url === '/api/songs/overrides') return json({ overrides: [] })
       if (url.startsWith('/api/daily/')) {
         calls.push(`${init?.method ?? 'GET'} ${url}`)
-        if (url.endsWith('/start')) return json(start.body, start.status)
+        if (url.endsWith('/start')) {
+          sentBody = init?.body ? JSON.parse(String(init.body)) : null
+          return json(start.body, start.status)
+        }
         if (url === `/api/daily/${today}`) return json({ day: today, max: 50, board: [], running: [], mine: null, state: 'none', ...board })
         return json({ day: 'x', max: 50, board: yesterdayBoard, running: [], mine: null, state: 'none' })
       }
@@ -38,6 +41,7 @@ function serve(board: Record<string, unknown>, start: { status: number; body: un
 }
 
 let yesterdayBoard: Row[] = []
+let sentBody: unknown = null
 let game: ReturnType<typeof useGame> | null = null
 function Peek() {
   game = useGame()
@@ -98,6 +102,17 @@ describe('daily round page', () => {
     expect(await screen.findByText('Deine Serie heute')).toBeInTheDocument()
     expect(document.querySelector('[data-daily-state="finished"]')!.textContent).toContain('7')
     expect(screen.queryByRole('button', { name: /starten|Weiterspielen/ })).toBeNull()
+  })
+
+  it('plays the songs the server fixed for the day (not its own list), and offers its own on the first start', async () => {
+    const fixed = dailySongs('2026-01-01', songs).map((s) => s.id) // another day's mix: surely different from today's
+    const calls = serve({}, { status: 200, body: { state: 'running', turns: 0, score: 0, max: 50, songs: fixed } })
+    page()
+    fireEvent.click(await screen.findByRole('button', { name: /Tagesrunde starten/ }))
+    await screen.findByText('im Spiel')
+    expect(game!.songIds).toEqual(fixed)
+    expect(calls).toContain(`POST /api/daily/${today}/start`)
+    expect(sentBody).toEqual({ songs: dailySongs(today, songs).map((s) => s.id) })
   })
 
   it('the server refusing a second start keeps the player out of the game', async () => {

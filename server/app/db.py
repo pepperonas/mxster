@@ -192,6 +192,17 @@ class AchievementScore(Base):
     updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow)
 
 
+class DailySet(Base):
+    """The songs of one day's round, fixed by the first start that day: every
+    later start — any device, any app version — plays exactly these, in this
+    order (a catalogue update during the day must not reshuffle the round)."""
+
+    __tablename__ = "daily_sets"
+    day: Mapped[str] = mapped_column(String(10), primary_key=True)
+    song_ids: Mapped[str] = mapped_column(Text)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow)
+
+
 class DailyResult(Base):
     """Today's round ("Tagesrunde"): the same songs for everyone, one try a day.
 
