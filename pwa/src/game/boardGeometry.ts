@@ -83,6 +83,19 @@ export function autoScrollSpeed(pointerY: number, top: number, bottom: number, z
   return 0
 }
 
+/**
+ * Edge scroll while a card is dragged (raw speed, signed; 0 = none). Before
+ * the card has once left the dock nothing scrolls (it starts inside the bottom
+ * zone). After that the bottom works like the top: from the last strip above
+ * the dock *and* over the dock itself — a finger pulled down lands on the dock,
+ * and scrolling stopped there, so the page could only ever go up. Releasing
+ * quickly over the dock still cancels (the dwell comes before any scroll).
+ */
+export function edgeScrollRaw(pointerY: number, top: number, bottom: number, armed: boolean, zone: number): number {
+  if (!armed) return 0
+  return autoScrollSpeed(pointerY, top, bottom, zone)
+}
+
 /** How long the card must rest at an edge before the page moves (ms). */
 export const EDGE_DWELL_MS = 400
 /** After the dwell the scroll eases in over this time (ms) instead of starting at full speed. */

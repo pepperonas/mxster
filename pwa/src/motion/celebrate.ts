@@ -17,14 +17,26 @@ function tokenColours(): string[] {
 
 export type Celebration = 'small' | 'big'
 
+/** Where the waves of the light rain after a right card start (x across the top). */
+export const SMALL_RAIN = [0.25, 0.75, 0.5]
+/** One wave of that rain: few, slow, falling down (angle 270), lingering a little. */
+export const RAIN = { particleCount: 22, angle: 270, spread: 150, startVelocity: 10, gravity: 0.7, ticks: 280, scalar: 0.9 }
+
 /** Fire confetti; returns a cancel function for multi-burst celebrations. */
 export function celebrate(kind: Celebration = 'small', origin = { x: 0.5, y: 0.65 }): () => void {
   if (prefersReducedMotion()) return () => {}
   const colors = tokenColours()
 
   if (kind === 'small') {
-    void confetti({ particleCount: 70, spread: 70, startVelocity: 38, gravity: 1.1, ticks: 160, origin, colors, disableForReducedMotion: true })
-    return () => {}
+    // A clear burst where the card landed …
+    void confetti({ particleCount: 100, spread: 80, startVelocity: 42, gravity: 1, ticks: 200, scalar: 1.1, origin, colors, disableForReducedMotion: true })
+    // … and a short, light rain from the top edge: three waves that drift down
+    const waves = SMALL_RAIN.map((wave, i) =>
+      window.setTimeout(() => {
+        void confetti({ ...RAIN, origin: { x: wave, y: -0.05 }, drift: i % 2 ? 0.4 : -0.4, colors, disableForReducedMotion: true })
+      }, i * 150)
+    )
+    return () => waves.forEach((id) => window.clearTimeout(id))
   }
 
   void confetti({ particleCount: 120, spread: 90, startVelocity: 45, origin, colors, disableForReducedMotion: true })

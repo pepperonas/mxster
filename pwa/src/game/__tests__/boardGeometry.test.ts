@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { computeInsertionIndex, isNearBoard, autoScrollSpeed, HYSTERESIS_PX, edgeScrollStep, EDGE_DWELL_MS, EDGE_RAMP_MS, EDGE_MAX_PX_S } from '../boardGeometry'
+import { computeInsertionIndex, isNearBoard, autoScrollSpeed, HYSTERESIS_PX, edgeScrollStep, edgeScrollRaw, EDGE_DWELL_MS, EDGE_RAMP_MS, EDGE_MAX_PX_S } from '../boardGeometry'
 import { stickyTop, EDGE_ZONE } from '../useCardDrag'
 
 // Gaps every 100px: 0, 100, 200, 300
@@ -119,5 +119,24 @@ describe('the top edge for scrolling', () => {
     expect(stickyTop()).toBe(140)
     bar('sticky', 400, 476) // still in the flow, not stuck yet
     expect(stickyTop()).toBe(64)
+  })
+})
+
+
+describe('scrolling down works like scrolling up', () => {
+  const top = 120
+  const bottom = 600 // top of the dock
+  it('pulled down onto the dock, the page scrolls down — as it scrolls up above the header', () => {
+    expect(edgeScrollRaw(700, top, bottom, true, EDGE_ZONE)).toBeGreaterThan(0)
+    expect(edgeScrollRaw(bottom - 10, top, bottom, true, EDGE_ZONE)).toBeGreaterThan(0)
+    expect(edgeScrollRaw(40, top, bottom, true, EDGE_ZONE)).toBeLessThan(0)
+    // both ends reach the same full speed
+    expect(edgeScrollRaw(800, top, bottom, true, EDGE_ZONE)).toBe(-edgeScrollRaw(0, top, bottom, true, EDGE_ZONE))
+  })
+  it('before the card has left the dock nothing scrolls', () => {
+    expect(edgeScrollRaw(700, top, bottom, false, EDGE_ZONE)).toBe(0)
+  })
+  it('in the middle of the screen nothing scrolls', () => {
+    expect(edgeScrollRaw(350, top, bottom, true, EDGE_ZONE)).toBe(0)
   })
 })

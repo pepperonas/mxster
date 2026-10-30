@@ -12,7 +12,7 @@
  */
 import { useEffect, useRef, type RefObject } from 'react'
 import { useMotionValue, useSpring, useTransform, useVelocity, type PanInfo } from 'motion/react'
-import { computeInsertionIndex, isNearBoard, autoScrollSpeed, edgeScrollStep } from './boardGeometry'
+import { computeInsertionIndex, isNearBoard, edgeScrollRaw, edgeScrollStep } from './boardGeometry'
 import { spring } from '@/motion/springs'
 import { haptic } from '@/utils/haptics'
 
@@ -125,10 +125,10 @@ export function useCardDrag({ boardRef, onHoverGap, onDrop, home = null }: CardD
       const d = drag.current
       if (!d) return
       // A card from the dock starts inside the bottom edge zone: only scroll
-      // once it has been lifted above the dock, and never while it is back
-      // over the dock (that's the way to cancel).
+      // once it has been lifted above the dock; after that the dock itself
+      // counts as the bottom edge (see edgeScrollRaw)
       if (d.clientY < edges.bottom - 8) armed = true
-      const raw = armed && d.clientY <= edges.bottom ? autoScrollSpeed(d.clientY, edges.top, edges.bottom, EDGE_ZONE) : 0
+      const raw = edgeScrollRaw(d.clientY, edges.top, edges.bottom, armed, EDGE_ZONE)
       // Only scroll after the card rests at an edge for a moment, then ease in
       // (time-based): aiming at a gap near an edge must not run the page away.
       const now = performance.now()
