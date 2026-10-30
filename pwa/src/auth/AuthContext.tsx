@@ -1,4 +1,4 @@
-import { createContext, useCallback, useContext, useEffect, useState, type ReactNode } from 'react'
+import { createContext, useCallback, useContext, useEffect, useRef, useState, type ReactNode } from 'react'
 import { clearSavedGame } from '@/game/savedGame'
 import { api, setCsrfToken, SESSION_LOST, type Me } from '@/api/client'
 
@@ -13,12 +13,20 @@ interface AuthValue {
   /** Re-reads /api/me (e.g. while waiting for approval). */
   refresh: () => Promise<Me | null>
   logout: () => Promise<void>
+  /**
+   * The last signed-in account. After sign-out or a lost session the app does
+   * not vanish at once: AuthGate fades it out (AnimatePresence) while it is
+   * still rendered, and its components keep reading the account meanwhile.
+   */
+  lastMe: Me | null
 }
 
 const AuthContext = createContext<AuthValue | undefined>(undefined)
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [state, setState] = useState<AuthState>({ kind: 'loading' })
+  const lastMe = useRef<Me | null>(null)
+  if (state.kind === 'signed-in') lastMe.current = state.me
 
   const refresh = useCallback(async () => {
     try {
@@ -51,7 +59,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return () => window.removeEventListener(SESSION_LOST, onLost)
   }, [refresh])
 
-  return <AuthContext.Provider value={{ state, refresh, logout }}>{children}</AuthContext.Provider>
+  return <AuthContext.Provider value={{ state, refresh, logout, lastMe: lastMe.current }}>{children}</AuthContext.Provider>
 }
 
 export function useAuth() {
@@ -65,9 +73,13 @@ export function useAuthMaybe() {
   return useContext(AuthContext)
 }
 
-/** The signed-in, approved account. Only valid inside the approved app. */
+/**
+ * The signed-in, approved account. Only valid inside the approved app — and
+ * while that app fades out after sign-out, when the last account stands in.
+ */
 export function useMe(): Me {
-  const { state } = useAuth()
-  if (state.kind !== 'signed-in') throw new Error('useMe outside the signed-in app')
-  return state.me
+  const { state, lastMe } = useAuth()
+  if (state.kind === 'signed-in') return state.me
+  if (lastMe) return lastMe
+  throw new Error('useMe outside the signed-in app')
 }

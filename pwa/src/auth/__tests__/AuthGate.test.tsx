@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, afterEach } from 'vitest'
 import { render, screen, fireEvent, waitFor } from '@testing-library/react'
 import { MotionTestProvider } from '@/test/MotionTestProvider'
-import { AuthProvider } from '../AuthContext'
+import { AuthProvider, useAuth, useMe } from '../AuthContext'
 import { AuthGate } from '../AuthGate'
 import { fakeApiFetch } from '@/test/fakeApi'
 import { MemoryRouter } from 'react-router-dom'
@@ -27,6 +27,7 @@ function serveSession(...answers: Array<ReturnType<typeof me> | null>) {
         const next = queue.length > 1 ? queue.shift() : queue[0]
         return new Response(JSON.stringify({ me: next }), { status: 200 })
       }
+      if (url === '/api/auth/logout') return new Response(null, { status: 204 })
       return fakeApiFetch(input, init)
     })
   )
@@ -122,5 +123,38 @@ describe('AuthGate', () => {
     expect(isRoomPath('/history')).toBe(false)
     expect(isRoomPath('/r/ABCD/extra')).toBe(false)
     expect(isRoomPath('/admin')).toBe(false)
+  })
+})
+
+describe('signing out from inside the app', () => {
+  function AccountRow() {
+    const me = useMe()
+    const { logout } = useAuth()
+    return (
+      <p>
+        {me.name}
+        <button type="button" onClick={() => void logout()}>
+          Abmelden
+        </button>
+      </p>
+    )
+  }
+
+  it('the app fades out with the last account instead of crashing (useMe outside the signed-in app)', async () => {
+    serveSession(me('approved'))
+    render(
+      <MemoryRouter initialEntries={['/settings']}>
+        <MotionTestProvider>
+          <AuthProvider>
+            <AuthGate>
+              <AccountRow />
+            </AuthGate>
+          </AuthProvider>
+        </MotionTestProvider>
+      </MemoryRouter>
+    )
+    fireEvent.click(await screen.findByRole('button', { name: 'Abmelden' }))
+    expect(await screen.findByRole('link', { name: /mit google anmelden/i })).toBeInTheDocument()
+    await waitFor(() => expect(screen.queryByText('Anna Beispiel')).toBeNull())
   })
 })
