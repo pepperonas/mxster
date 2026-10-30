@@ -33,6 +33,8 @@ export const setupText = defineMessages({
     botsHint: 'Allein? Dann spielen Bots gegen dich.',
     botsSwitch: 'Gegen den Computer spielen',
     strength: 'Stärke',
+    strengthOf: (name: string) => `Stärke von ${name}`,
+    formHint: 'Jeder Bot hat seine Tagesform: Ganz selten gewinnt auch ein leichter gegen einen schweren.',
     count: 'Anzahl',
     bots: (n: number) => (n === 1 ? '1 Bot' : `${n} Bots`),
 
@@ -123,6 +125,8 @@ export const setupText = defineMessages({
     botsHint: 'On your own? Then bots play against you.',
     botsSwitch: 'Play against the computer',
     strength: 'Strength',
+    strengthOf: (name: string) => `Strength of ${name}`,
+    formHint: 'Every bot has its form on the day: very rarely even an easy one beats a hard one.',
     count: 'Number',
     bots: (n: number) => (n === 1 ? '1 bot' : `${n} bots`),
 

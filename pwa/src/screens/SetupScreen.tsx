@@ -116,7 +116,8 @@ export function SetupScreen() {
   const [name, setName] = useState('')
   const [nameError, setNameError] = useState<string | null>(null)
   const [botCount, setBotCount] = useState(1)
-  const [difficulty, setDifficulty] = useState<Difficulty>('medium')
+  // One level per bot (the count picks how many of them play)
+  const [levels, setLevels] = useState<Difficulty[]>(['medium', 'medium', 'medium'])
   const inputRef = useRef<HTMLInputElement>(null)
 
   const humans = players.filter((p) => !p.isBot)
@@ -164,10 +165,10 @@ export function SetupScreen() {
     for (let i = players.length - 1; i >= 0; i--) if (players[i].isBot) removePlayer(i)
   }
 
-  function setBots(on: boolean, count = botCount, diff = difficulty) {
+  function setBots(on: boolean, count = botCount, lv = levels) {
     removeBots()
     if (!on) return
-    createBotPlayers(count, diff, humans).forEach((bot) => addPlayer(bot.name, bot))
+    createBotPlayers(count, lv.slice(0, count), humans).forEach((bot) => addPlayer(bot.name, bot))
   }
 
   const nameTaken = (n: string) => players.some((p) => p.name.toLowerCase() === n.toLowerCase())
@@ -530,23 +531,24 @@ export function SetupScreen() {
                 {botsOn && (
                   <div className="space-y-3">
                     <SegmentedControl
-                      label={t.strength}
-                      value={difficulty}
-                      onChange={(d) => {
-                        setDifficulty(d)
-                        setBots(true, botCount, d)
-                      }}
-                      segments={(Object.keys(DIFFICULTY_LABEL) as Difficulty[]).map((d) => ({ value: d, label: DIFFICULTY_LABEL[d] }))}
-                    />
-                    <SegmentedControl
                       label={t.count}
                       value={botCount}
                       onChange={(c) => {
                         setBotCount(c)
-                        setBots(true, c, difficulty)
+                        setBots(true, c, levels)
                       }}
                       segments={[1, 2, 3].map((c) => ({ value: c, label: t.bots(c) }))}
                     />
+                    <BotLevels
+                      bots={bots}
+                      label={t.strengthOf}
+                      onChange={(i, d) => {
+                        const next = levels.map((l, j) => (j === i ? d : l))
+                        setLevels(next)
+                        setBots(true, botCount, next)
+                      }}
+                    />
+                    <p className="meta">{t.formHint}</p>
                   </div>
                 )}
               </div>
@@ -815,5 +817,29 @@ export function SetupScreen() {
         </div>
       </div>
     </div>
+  )
+}
+
+/** One row per bot: its name and its own strength. */
+function BotLevels({ bots, label, onChange }: { bots: Player[]; label: (name: string) => string; onChange: (index: number, level: Difficulty) => void }) {
+  return (
+    <ul className="space-y-2" data-bot-levels>
+      {bots.map((b, i) => (
+        <li key={b.name} className="flex flex-wrap items-center gap-x-3 gap-y-2 rounded-m3-lg bg-md-surface-container-high px-3 py-2">
+          <span className="flex items-center gap-2 min-w-0 flex-1">
+            <Icon name="bot" size={18} className="text-md-on-surface-variant shrink-0" />
+            <span className="text-body-lg truncate">{b.name}</span>
+          </span>
+          <span className="w-full min-[440px]:w-auto">
+            <SegmentedControl
+              label={label(b.name)}
+              value={b.botDifficulty ?? 'medium'}
+              onChange={(d) => onChange(i, d)}
+              segments={(Object.keys(DIFFICULTY_LABEL) as Difficulty[]).map((d) => ({ value: d, label: DIFFICULTY_LABEL[d] }))}
+            />
+          </span>
+        </li>
+      ))}
+    </ul>
   )
 }

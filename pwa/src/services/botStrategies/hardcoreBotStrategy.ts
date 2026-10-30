@@ -5,40 +5,51 @@
 
 import type { Song } from '@/types'
 import type { BotConfig, BotGuess } from './types'
+import { botSkill, lerpSkill } from '../botForm'
+
+/** Accuracy per difficulty at its base skill; the round's skill interpolates between them. */
+export const GUESS_RATES = {
+  title: { easy: 0.3, medium: 0.6, hard: 0.9 },
+  artist: { easy: 0.3, medium: 0.6, hard: 0.9 },
+  yearExact: { easy: 0.1, medium: 0.4, hard: 0.7 },
+  yearClose: { easy: 0.3, medium: 0.7, hard: 0.95 },
+  typo: { easy: 0.2, medium: 0.1, hard: 0.02 }
+}
 
 export class HardcoreBotStrategy {
   private config: BotConfig
 
-  constructor(config: BotConfig) {
+  constructor(config: BotConfig, rand: () => number = Math.random) {
     this.config = config
+    this.rand = rand
   }
 
+  private rand: () => number
+
   generateGuess(correctSong: Song): BotGuess {
-    const { difficulty } = this.config
-
-    // Difficulty-based accuracy rates
-    const accuracyRates = {
-      easy: { title: 0.3, artist: 0.3, yearExact: 0.1, yearClose: 0.3 },
-      medium: { title: 0.6, artist: 0.6, yearExact: 0.4, yearClose: 0.7 },
-      hard: { title: 0.9, artist: 0.9, yearExact: 0.7, yearClose: 0.95 }
+    const skill = this.config.skill ?? botSkill(this.config.difficulty)
+    const rates = {
+      title: lerpSkill(skill, GUESS_RATES.title, 0.05, 0.97),
+      artist: lerpSkill(skill, GUESS_RATES.artist, 0.05, 0.97),
+      yearExact: lerpSkill(skill, GUESS_RATES.yearExact, 0.02, 0.85),
+      yearClose: lerpSkill(skill, GUESS_RATES.yearClose, 0.1, 0.98)
     }
-
-    const rates = accuracyRates[difficulty]
+    const typoChance = lerpSkill(skill, GUESS_RATES.typo, 0.01, 0.3)
 
     // Title guess
-    const titleCorrect = Math.random() < rates.title
+    const titleCorrect = this.rand() < rates.title
     const title = titleCorrect
-      ? this.addTypos(correctSong.title, difficulty)
+      ? this.addTypos(correctSong.title, typoChance)
       : this.generateWrongTitle(correctSong.title)
 
     // Artist guess
-    const artistCorrect = Math.random() < rates.artist
+    const artistCorrect = this.rand() < rates.artist
     const artist = artistCorrect
-      ? this.addTypos(correctSong.artist, difficulty)
+      ? this.addTypos(correctSong.artist, typoChance)
       : this.generateWrongArtist(correctSong.artist)
 
     // Year guess
-    const yearRoll = Math.random()
+    const yearRoll = this.rand()
     let year: string
 
     if (yearRoll < rates.yearExact) {
@@ -46,41 +57,38 @@ export class HardcoreBotStrategy {
       year = correctSong.year.toString()
     } else if (yearRoll < rates.yearClose) {
       // Close year (±1-2 years)
-      const offset = Math.floor(Math.random() * 5) - 2 // -2 to +2
+      const offset = Math.floor(this.rand() * 5) - 2 // -2 to +2
       year = (correctSong.year + offset).toString()
     } else {
       // Random year in ±5 year range
-      const offset = Math.floor(Math.random() * 11) - 5 // -5 to +5
+      const offset = Math.floor(this.rand() * 11) - 5 // -5 to +5
       year = (correctSong.year + offset).toString()
     }
 
     return { title, artist, year }
   }
 
-  private addTypos(text: string, difficulty: 'easy' | 'medium' | 'hard'): string {
-    // Easy: 20% chance of typo, Medium: 10%, Hard: 2%
-    const typoChance = difficulty === 'easy' ? 0.2 : difficulty === 'medium' ? 0.1 : 0.02
-
-    if (Math.random() > typoChance) return text
+  private addTypos(text: string, typoChance: number): string {
+    if (this.rand() > typoChance) return text
 
     // Add 1-2 character typos for realism
     const chars = text.split('')
-    const typoIndex = Math.floor(Math.random() * chars.length)
+    const typoIndex = Math.floor(this.rand() * chars.length)
     chars[typoIndex] = this.randomChar()
     return chars.join('')
   }
 
   private randomChar(): string {
     const chars = 'abcdefghijklmnopqrstuvwxyz'
-    return chars[Math.floor(Math.random() * chars.length)]
+    return chars[Math.floor(this.rand() * chars.length)]
   }
 
   private generateWrongTitle(correctTitle: string): string {
     // Return empty or partial match
-    return Math.random() < 0.5 ? '' : correctTitle.substring(0, Math.floor(correctTitle.length / 2))
+    return this.rand() < 0.5 ? '' : correctTitle.substring(0, Math.floor(correctTitle.length / 2))
   }
 
   private generateWrongArtist(_correctArtist: string): string {
-    return Math.random() < 0.5 ? '' : 'Unknown Artist'
+    return this.rand() < 0.5 ? '' : 'Unknown Artist'
   }
 }

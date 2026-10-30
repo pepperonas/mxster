@@ -31,6 +31,8 @@ import type { Member } from '@/online/protocol'
 import { MODE_COPY } from '@/game/modeCopy'
 import { GOAL_LABEL } from '@/game/roundEnd'
 import { getPreviewPlayer } from '@/services/PreviewPlayerService'
+import { createBotPlayers } from '@/services/botPlayer'
+import type { Player } from '@/types'
 import { spring } from '@/motion/springs'
 import type { GameMode } from '@/types'
 import { msg, useMessages } from '@/i18n'
@@ -152,18 +154,24 @@ function RoomProblem({ kind }: { kind: string }) {
 }
 
 type Difficulty = 'easy' | 'medium' | 'hard'
-type LobbyPrefs = { bots: number; difficulty: Difficulty; teams: number }
+/** `levels`: one strength per bot (bot 1, 2, 3). */
+type LobbyPrefs = { bots: number; levels: Difficulty[]; teams: number }
+const LEVELS: Difficulty[] = ['easy', 'medium', 'hard']
 const lobbyKey = (code: string) => `mxtape_lobby_${code}`
 
 function readLobbyPrefs(code: string): LobbyPrefs {
-  const fallback: LobbyPrefs = { bots: 0, difficulty: 'medium', teams: 0 }
+  const fallback: LobbyPrefs = { bots: 0, levels: ['medium', 'medium', 'medium'], teams: 0 }
   try {
     const raw = JSON.parse(sessionStorage.getItem(lobbyKey(code)) ?? 'null')
     if (!raw || typeof raw !== 'object') return fallback
     const count = (v: unknown, max: number) => (Number.isInteger(v) && (v as number) >= 0 && (v as number) <= max ? (v as number) : 0)
     return {
       bots: count(raw.bots, 3),
-      difficulty: ['easy', 'medium', 'hard'].includes(raw.difficulty) ? raw.difficulty : 'medium',
+      // older saves had one level for all bots
+      levels: [0, 1, 2].map((i) => {
+        const v = Array.isArray(raw.levels) ? raw.levels[i] : raw.difficulty
+        return LEVELS.includes(v) ? v : 'medium'
+      }),
       teams: count(raw.teams, 4)
     }
   } catch {
@@ -204,10 +212,10 @@ function Lobby({ account }: { account: boolean }) {
   // The host may fill up with bots or split the people into teams (not both)
   const saved = readLobbyPrefs(room.code)
   const [bots, setBots] = useState(saved.bots)
-  const [difficulty, setDifficulty] = useState<Difficulty>(saved.difficulty)
+  const [levels, setLevels] = useState<Difficulty[]>(saved.levels)
   const [teams, setTeams] = useState(saved.teams)
   // A reload keeps them (per room, for this tab)
-  useEffect(() => writeLobbyPrefs(room.code, { bots, difficulty, teams }), [room.code, bots, difficulty, teams])
+  useEffect(() => writeLobbyPrefs(room.code, { bots, levels, teams }), [room.code, bots, levels, teams])
   const people = playingMembers(room.members)
   const maxTeamCount = teamsPossible(room.members)
   const teamsOn = teams >= 2 && maxTeamCount >= 2
@@ -247,7 +255,7 @@ function Lobby({ account }: { account: boolean }) {
       // The room is running on the server first; only then does the round start
       // here (a failed call must not leave the host playing in a lobby)
       await roomApi.setStatus(room.code, 'running')
-      game.setPlayers(buildLineup(room.members, { bots: teamsOn ? 0 : bots, difficulty, teams: teamsOn ? teams : 0 }))
+      game.setPlayers(buildLineup(room.members, { bots: teamsOn ? 0 : bots, difficulty: levels.slice(0, bots), teams: teamsOn ? teams : 0 }))
       game.loadGameState({ onlineRoom: room.code })
       game.startGame()
     } catch {
@@ -357,12 +365,24 @@ function Lobby({ account }: { account: boolean }) {
                 segments={[0, 1, 2, 3].map((n) => ({ value: n, label: n === 0 ? t.none : String(n) }))}
               />
               {bots > 0 && !teamsOn && (
-                <SegmentedControl
-                  label={t.botLevel}
-                  value={difficulty}
-                  onChange={setDifficulty}
-                  segments={(['easy', 'medium', 'hard'] as const).map((d) => ({ value: d, label: t[`level_${d}`] }))}
-                />
+                <ul className="space-y-2" data-bot-levels>
+                  {createBotPlayers(bots, levels.slice(0, bots), people.map((m) => ({ name: m.name }) as Player)).map((b, i) => (
+                    <li key={b.name} className="flex flex-wrap items-center gap-x-3 gap-y-2 rounded-m3-lg bg-md-surface-container-high px-3 py-2">
+                      <span className="flex items-center gap-2 min-w-0 flex-1">
+                        <Icon name="bot" size={18} className="text-md-on-surface-variant shrink-0" />
+                        <span className="text-body-lg truncate">{b.name}</span>
+                      </span>
+                      <span className="w-full min-[440px]:w-auto">
+                        <SegmentedControl
+                          label={t.botLevelOf(b.name)}
+                          value={levels[i]}
+                          onChange={(d) => setLevels((prev) => prev.map((l, j) => (j === i ? d : l)))}
+                          segments={LEVELS.map((d) => ({ value: d, label: t[`level_${d}`] }))}
+                        />
+                      </span>
+                    </li>
+                  ))}
+                </ul>
               )}
               <p className="meta">{t.botsHint}</p>
             </div>

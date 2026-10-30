@@ -1,3 +1,4 @@
+import { rollForm, seeded } from '@/services/botForm'
 import { createContext, useContext, useEffect, useReducer, ReactNode } from 'react'
 import { rematchStarter } from '@/game/rematch'
 import type { StepClock } from '@/game/turnClock'
@@ -100,10 +101,10 @@ type GameAction =
   | { type: 'ADD_TO_PLAYED_SONGS'; payload: string }
   | { type: 'INCREMENT_SKIP_COUNT'; payload: number } // playerIndex
   | { type: 'RESET_SKIP_COUNTS' }
-  | { type: 'START_GAME' }
+  | { type: 'START_GAME'; payload?: { seed?: number } }
   | { type: 'END_GAME' }
   | { type: 'RESET_GAME' }
-  | { type: 'REMATCH'; payload?: { winner?: string } }
+  | { type: 'REMATCH'; payload?: { winner?: string; seed?: number } }
   | { type: 'LOAD_GAME_STATE'; payload: Partial<GameState> }
   | { type: 'NEXT_TURN' }
   | { type: 'NEXT_PLAYER_ONLY' } // Switch player, keep currentSong
@@ -199,14 +200,18 @@ export const initialState: GameState = {
 }
 
 /** Fresh scores, timelines and challenges for a new round with the same line-up. */
-function freshPlayers(players: Player[], challenges: boolean): Player[] {
+function freshPlayers(players: Player[], challenges: boolean, seed?: number): Player[] {
+  // Every bot rolls its form for this round (services/botForm.ts); from one
+  // seed, so the reducer stays pure and a reload keeps the forms
+  const rand = seeded(seed ?? 0.5)
   return players.map((p) => ({
     ...p,
     timeline: [],
     cards: 0,
     score: 0,
     challenges: challenges ? STARTING_CHALLENGES : 0,
-    memberTurn: p.members ? 0 : undefined
+    memberTurn: p.members ? 0 : undefined,
+    ...(p.isBot ? { botForm: seed === undefined ? 0 : rollForm(rand) } : {})
   }))
 }
 
@@ -314,7 +319,7 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
       return {
         ...state,
         // Who left the room is not in the next round
-        players: freshPlayers(state.players.filter((p) => !p.left), challengesInMode(state)),
+        players: freshPlayers(state.players.filter((p) => !p.left), challengesInMode(state), action.payload?.seed),
         isGameStarted: true,
         finished: false,
         reveal: null,
@@ -345,7 +350,7 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
         onlineRoom: state.onlineRoom,
         // the TV stays connected for the next round
         tvRoom: state.tvRoom,
-        players: freshPlayers(stay, challengesInMode(state)),
+        players: freshPlayers(stay, challengesInMode(state), action.payload?.seed),
         // Whoever came last starts (read from the standings before they reset)
         currentPlayer: rematchStarter(stay, state.gameMode, action.payload?.winner),
         isGameStarted: true,
@@ -472,10 +477,10 @@ export function GameProvider({ children }: GameProviderProps) {
     addToPlayedSongs: (songId) => dispatch({ type: 'ADD_TO_PLAYED_SONGS', payload: songId }),
     incrementSkipCount: (playerIndex) => dispatch({ type: 'INCREMENT_SKIP_COUNT', payload: playerIndex }),
     resetSkipCounts: () => dispatch({ type: 'RESET_SKIP_COUNTS' }),
-    startGame: () => dispatch({ type: 'START_GAME' }),
+    startGame: () => dispatch({ type: 'START_GAME', payload: { seed: Math.random() } }),
     endGame: () => dispatch({ type: 'END_GAME' }),
     resetGame: () => dispatch({ type: 'RESET_GAME' }),
-    rematch: (winner?: string) => dispatch({ type: 'REMATCH', payload: { winner } }),
+    rematch: (winner?: string) => dispatch({ type: 'REMATCH', payload: { winner, seed: Math.random() } }),
     loadGameState: (gameState) => dispatch({ type: 'LOAD_GAME_STATE', payload: gameState }),
     nextTurn: () => dispatch({ type: 'NEXT_TURN' }),
     nextPlayerOnly: () => dispatch({ type: 'NEXT_PLAYER_ONLY' }),

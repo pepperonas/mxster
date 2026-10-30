@@ -17,10 +17,10 @@
 <p>Neu hier? <a href="https://mxtape.celox.io/about"><b>mxtape.celox.io/about</b></a> stellt das Spiel vor und beantwortet die häufigen Fragen – mit einer kleinen Zeitleiste zum Ausprobieren, ganz ohne Konto.</p>
 
 <!-- BADGES:BIG — version, tests, lines of code and songs; readme.test.ts keeps them true, scripts/readme-badges.mjs rewrites them. -->
-[![version](https://img.shields.io/badge/version-0.27.1-C2185B?style=for-the-badge&logo=semver&logoColor=white)](https://github.com/pepperonas/mxtape/releases/latest)
-[![tests](https://img.shields.io/badge/tests-1129-2E9E5B?style=for-the-badge&logo=vitest&logoColor=white)](#tests-und-ci)
-[![lines of code](https://img.shields.io/badge/lines%20of%20code-32.5k-4B6BDF?style=for-the-badge&logo=typescript&logoColor=white)](pwa/src)
-[![test code](https://img.shields.io/badge/test%20code-13.4k-2E9E5B?style=for-the-badge&logo=typescript&logoColor=white)](#tests-und-ci)
+[![version](https://img.shields.io/badge/version-0.28.0-C2185B?style=for-the-badge&logo=semver&logoColor=white)](https://github.com/pepperonas/mxtape/releases/latest)
+[![tests](https://img.shields.io/badge/tests-1137-2E9E5B?style=for-the-badge&logo=vitest&logoColor=white)](#tests-und-ci)
+[![lines of code](https://img.shields.io/badge/lines%20of%20code-32.7k-4B6BDF?style=for-the-badge&logo=typescript&logoColor=white)](pwa/src)
+[![test code](https://img.shields.io/badge/test%20code-13.5k-2E9E5B?style=for-the-badge&logo=typescript&logoColor=white)](#tests-und-ci)
 [![songs](https://img.shields.io/badge/songs-800-FF8A3D?style=for-the-badge&logo=applemusic&logoColor=white)](#die-songsammlung)
 
 [![Donate with PayPal](https://img.shields.io/badge/PayPal-support%20this%20project-00457C?style=for-the-badge&logo=paypal&logoColor=white)](https://www.paypal.com/donate/?business=martin.pfeffer@celox.io&currency_code=EUR&item_name=mxtape)
@@ -171,6 +171,7 @@ Statt ein Handy herumzureichen, spielt jede Person auf dem eigenen Gerät – im
 - **Einspruch online:** Nach dem Legen tippt jeder, der widersprechen darf, *Einspruch* oder *Kein Einspruch*; sonst deckt die Karte nach 10 Sekunden von selbst auf. Niemand kann für die anderen vorzeitig aufdecken.
 - **Musik:** *Gemeinsam im Raum* – nur das Gerät dessen, der gerade dran ist, spielt (fällt es aus, übernimmt der Gastgeber), kein Echo. *Jeder bei sich* – alle Geräte spielen gleichzeitig (gemessen rund 20 ms auseinander).
 - **Spielen:** Wer dran ist, legt oder rät auf dem eigenen Gerät, alle anderen sehen live mit und legen vom eigenen Handy Einspruch ein. Neu laden oder kurz offline gehen kostet nichts – jede:r kommt auf den eigenen Platz zurück.
+- **Bots mit eigener Stärke:** Jeder Bot bekommt leicht, mittel oder schwer und würfelt zu Beginn jeder Runde seine Tagesform – ganz selten schlägt ein leichter Bot einen schweren (etwa eine Runde von hundert), ein mittlerer etwas öfter
 - **TV-Modus:** In jeder Runde – auch an einem Handy – oben aufs Fernseher-Symbol tippen, dann auf dem Fernseher **mxtape.celox.io/tv** öffnen und den Code eintippen (mit Tablet oder Laptop geht auch der QR-Code). Der Fernseher zeigt die Runde groß, bleibt an und spielt die Musik; Play und Pause bleiben am Handy. Geht jederzeit, auch mitten in der Runde.
 - **Bots und Teams online:** Der Gastgeber füllt die Runde mit bis zu drei Bots auf (sie spielen auf seinem Gerät) oder lost die Mitspielenden in Teams; Teammitglieder sind reihum dran, jede:r auf dem eigenen Handy.
 - **Akku vom Gastgeber leer?** Nach 30 Sekunden kann jedes Konto im Raum das Spiel übernehmen; die Runde läuft auf dessen Gerät weiter.

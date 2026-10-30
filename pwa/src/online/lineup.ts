@@ -12,7 +12,8 @@ export const MAX_ONLINE_BOTS = 3
 
 export interface LineupOptions {
   bots?: number
-  difficulty?: 'easy' | 'medium' | 'hard'
+  /** One level for all bots, or one per bot. */
+  difficulty?: 'easy' | 'medium' | 'hard' | Array<'easy' | 'medium' | 'hard'>
   /** Number of teams (0 or 1: no teams). */
   teams?: number
 }

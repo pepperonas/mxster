@@ -39,6 +39,8 @@ export interface Player {
   score: number  // Points (Guess Mode only)
   isBot?: boolean  // Bot player flag (v0.0.32)
   botDifficulty?: 'easy' | 'medium' | 'hard'  // Bot difficulty level (v0.0.32)
+  /** A bot's form this round (services/botForm.ts): rolled when the round starts. */
+  botForm?: number
   /** Objections left (Einspruch, timeline modes). */
   challenges?: number
   /** Set for a team: the people in it, in turn order. */

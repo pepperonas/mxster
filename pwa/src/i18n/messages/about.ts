@@ -89,7 +89,7 @@ const de = {
     waysKicker: 'Zusammen spielen',
     waysTitle: 'Spielt, wie es für euch passt',
     ways: [
-      { icon: 'person', t: 'An einem Gerät', p: 'Ein Handy oder Laptop liegt in der Mitte, ihr reicht es weiter. Bots spielen auf Wunsch mit, leicht bis schwer.' },
+      { icon: 'person', t: 'An einem Gerät', p: 'Ein Handy oder Laptop liegt in der Mitte, ihr reicht es weiter. Bots spielen auf Wunsch mit, jeder mit eigener Stärke von leicht bis schwer – und mit Tagesform.' },
       { icon: 'share', t: 'Jede:r am eigenen Handy', p: 'Öffnet einen Raum, die anderen scannen den QR-Code. Freund:innen ohne Konto spielen als Gast mit, nur mit Namen.' },
       { icon: 'tv', t: 'Fernseher als Bühne', p: 'Verbinde jederzeit einen Fernseher – auch mitten in der Runde und auch, wenn ihr an einem Handy spielt. Er zeigt die Runde groß und spielt die Musik, das Handy bleibt die Fernbedienung.' },
       { icon: 'globe', t: 'Auch über Entfernung', p: 'Mit „Jeder bei sich“ läuft die Musik auf allen Geräten gleichzeitig – für Runden, die nicht im selben Raum sitzen.' }
@@ -270,7 +270,7 @@ const en: AboutContent = {
     waysKicker: 'Play together',
     waysTitle: 'Play the way that suits you',
     ways: [
-      { icon: 'person', t: 'On one device', p: 'One phone or laptop in the middle, you pass it around. Bots join in if you like, easy to hard.' },
+      { icon: 'person', t: 'On one device', p: 'One phone or laptop in the middle, you pass it around. Bots join in if you like, each with its own strength from easy to hard – and its form on the day.' },
       { icon: 'share', t: 'Everyone on their phone', p: 'Open a room, the others scan the QR code. Friends without an account join as guests, with just a name.' },
       { icon: 'tv', t: 'The TV as the stage', p: 'Connect a TV any time – even in the middle of a round, and even when you play on one phone. It shows the round big and plays the music; the phone stays the remote control.' },
       { icon: 'globe', t: 'Across distances', p: 'With “Everyone at home”, the music plays on every device at the same time – for groups that are not in the same room.' }

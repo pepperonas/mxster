@@ -9,6 +9,8 @@ export type BotDifficulty = 'easy' | 'medium' | 'hard'
 
 export interface BotConfig {
   difficulty: BotDifficulty
+  /** Strength this round: the difficulty's base skill plus the round's form (botForm.ts). */
+  skill?: number
   thinkingTimeMs: { min: number; max: number }
 }
 

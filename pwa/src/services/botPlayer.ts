@@ -4,9 +4,10 @@
  */
 
 import type { Player, Song, GameMode } from '@/types'
-import type { BotAction, BotConfig } from './botStrategies/types'
+import type { BotAction, BotConfig, BotDifficulty } from './botStrategies/types'
 import { HardcoreBotStrategy } from './botStrategies/hardcoreBotStrategy'
 import { TimelineBotStrategy } from './botStrategies/timelineBotStrategy'
+import { botSkill } from './botForm'
 
 /**
  * How long a bot listens before it answers: like a person, a few seconds of
@@ -25,7 +26,8 @@ export class BotPlayer {
     }
 
     if (!DIFFICULTIES.includes(player.botDifficulty)) throw new Error(`Unknown bot difficulty: ${player.botDifficulty}`)
-    this.config = { difficulty: player.botDifficulty, thinkingTimeMs: { ...BOT_LISTEN_MS } }
+    // Strength this round: the difficulty plus the form rolled when the round began
+    this.config = { difficulty: player.botDifficulty, skill: botSkill(player.botDifficulty, player.botForm ?? 0), thinkingTimeMs: { ...BOT_LISTEN_MS } }
   }
 
   async executeTurn(
@@ -104,13 +106,16 @@ export function generateBotName(index: number, usedNames: string[]): string {
 }
 
 /**
- * Create bot players
+ * Create bot players. `difficulty` is one level for all, or one per bot (the
+ * last one repeats when the list is short).
  */
 export function createBotPlayers(
   count: number,
-  difficulty: 'easy' | 'medium' | 'hard',
+  difficulty: BotDifficulty | BotDifficulty[],
   existingPlayers: Player[]
 ): Player[] {
+  const levelOf = (i: number): BotDifficulty =>
+    Array.isArray(difficulty) ? (difficulty[Math.min(i, difficulty.length - 1)] ?? 'medium') : difficulty
   const usedNames = existingPlayers.map((p) => p.name)
   const bots: Player[] = []
 
@@ -122,7 +127,7 @@ export function createBotPlayers(
       cards: 0,
       score: 0,
       isBot: true,
-      botDifficulty: difficulty
+      botDifficulty: levelOf(i)
     })
   }
 
