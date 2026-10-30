@@ -4,7 +4,9 @@
  */
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { renderHook, render, screen } from '@testing-library/react'
-import { useCardDrag } from '../useCardDrag'
+import { readFileSync } from 'node:fs'
+import { join } from 'node:path'
+import { useCardDrag, fixedShift } from '../useCardDrag'
 import { TimelineBoard } from '@/components/game/TimelineBoard'
 import { MotionTestProvider } from '@/test/MotionTestProvider'
 import type { Song } from '@/types'
@@ -102,5 +104,51 @@ describe('waiting card on the board', () => {
     const card = document.querySelector('[data-preview-card]')!
     expect(card.className).not.toContain('cursor-grab')
     expect(card.getAttribute('aria-label')).toBeNull()
+  })
+})
+
+describe('a card in the fixed dock stays under the pointer while the page scrolls', () => {
+  it('fixedShift: the counter-offset is the pointer travel minus Motion offset', () => {
+    expect(fixedShift(-150, -150)).toBe(0)
+    // Motion added 368 px of page scroll the pointer never travelled
+    expect(fixedShift(37, 405)).toBe(-368)
+  })
+
+  it('shift follows Motion offset so card = pointer travel, and returns home on release', async () => {
+    const ref = { current: board() }
+    const { result } = renderHook(() => useCardDrag({ boardRef: ref, onDrop: vi.fn(), onHoverGap: vi.fn(), fixed: true }))
+    const { y, shift } = result.current
+    result.current.onDragStart(at(500))
+    // Motion sets its offset first, then calls onDrag
+    y.set(-50)
+    result.current.onDrag(at(450), info)
+    expect(y.get() + shift.get()).toBe(-50)
+    // the page scrolls 300 px: Motion pushes its offset on, the pointer stays still
+    y.set(250)
+    expect(y.get() + shift.get()).toBe(-50)
+    y.set(200)
+    result.current.onDrag(at(400), info)
+    expect(y.get() + shift.get()).toBe(-100)
+    result.current.onDragEnd()
+    // no longer following once released (shift springs home on its own)
+    const after = shift.get()
+    y.set(999)
+    expect(shift.get()).toBe(after)
+  })
+
+  it('an in-flow card (the waiting card on the board) is left to Motion', () => {
+    const ref = { current: board() }
+    const { result } = renderHook(() => useCardDrag({ boardRef: ref, onDrop: vi.fn(), onHoverGap: vi.fn() }))
+    result.current.onDragStart(at(500))
+    result.current.y.set(300)
+    expect(result.current.shift.get()).toBe(0)
+    result.current.onDragEnd()
+  })
+
+  it('the dock card takes y as its style inside a wrapper carrying shift', () => {
+    const src = readFileSync(join(process.cwd(), 'src/components/game/PlacementDock.tsx'), 'utf8')
+    expect(src).toContain('useCardDrag({ boardRef, onHoverGap, onDrop, fixed: true })')
+    expect(src).toContain('<m.div style={{ y: shift }}>')
+    expect(src).toContain('style={{ x, y, rotate: tilt }}')
   })
 })

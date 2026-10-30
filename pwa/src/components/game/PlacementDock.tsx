@@ -215,34 +215,37 @@ interface DragStageProps {
 
 function DragStage({ song, boardRef, onHoverGap, onDrop, jokers, onSwap }: DragStageProps) {
   const t = useMessages(gameText)
-  const { x, tilt, onDragStart, onDrag, onDragEnd } = useCardDrag({ boardRef, onHoverGap, onDrop })
+  const { x, y, shift, tilt, onDragStart, onDrag, onDragEnd } = useCardDrag({ boardRef, onHoverGap, onDrop, fixed: true })
 
   return (
     <div className="flex flex-col gap-2">
-      <m.div
-        layoutId={pendingCardLayoutId(song.id)}
-        drag
-        dragSnapToOrigin
-        dragElastic={0.18}
-        dragTransition={dragReturn}
-        onDragStart={onDragStart}
-        onDrag={onDrag}
-        onDragEnd={onDragEnd}
-        whileDrag={{ scale: 1.05, boxShadow: 'var(--md-sys-elevation-4)', zIndex: 50 }}
-        style={{ x, rotate: tilt }}
-        transition={spring.spatialDefault}
-        className="relative flex items-center gap-3 min-h-[56px] px-3 py-1.5 rounded-m3-lg border-2 border-md-primary bg-md-primary-container text-md-on-primary-container touch-none select-none cursor-grab active:cursor-grabbing"
-        aria-label={t.dragCard(song.title, song.artist)}
-        role="group"
-      >
-        <span className="flex-shrink-0 w-[4.25rem] h-10 grid place-items-center rounded-m3-md bg-md-surface-container-highest text-title-md text-md-on-surface-variant tabular-nums">
-          ????
-        </span>
-        <span className="min-w-0 flex-1">
-          <span className="block text-title-sm truncate">{song.title}</span>
-          <span className="block text-body-sm opacity-80 truncate">{song.artist}</span>
-        </span>
-        <GripIcon />
+      {/* the dock is fixed: counter the page scroll Motion adds while dragging */}
+      <m.div style={{ y: shift }}>
+        <m.div
+          layoutId={pendingCardLayoutId(song.id)}
+          drag
+          dragSnapToOrigin
+          dragElastic={0.18}
+          dragTransition={dragReturn}
+          onDragStart={onDragStart}
+          onDrag={onDrag}
+          onDragEnd={onDragEnd}
+          whileDrag={{ scale: 1.05, boxShadow: 'var(--md-sys-elevation-4)', zIndex: 50 }}
+          style={{ x, y, rotate: tilt }}
+          transition={spring.spatialDefault}
+          className="relative flex items-center gap-3 min-h-[56px] px-3 py-1.5 rounded-m3-lg border-2 border-md-primary bg-md-primary-container text-md-on-primary-container touch-none select-none cursor-grab active:cursor-grabbing"
+          aria-label={t.dragCard(song.title, song.artist)}
+          role="group"
+        >
+          <span className="flex-shrink-0 w-[4.25rem] h-10 grid place-items-center rounded-m3-md bg-md-surface-container-highest text-title-md text-md-on-surface-variant tabular-nums">
+            ????
+          </span>
+          <span className="min-w-0 flex-1">
+            <span className="block text-title-sm truncate">{song.title}</span>
+            <span className="block text-body-sm opacity-80 truncate">{song.artist}</span>
+          </span>
+          <GripIcon />
+        </m.div>
       </m.div>
       <div className="flex items-center justify-center gap-3">
         <p className="text-center text-body-sm text-md-on-surface-variant">{t.dragHint}</p>

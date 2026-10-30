@@ -9,11 +9,20 @@
  * computeInsertionIndex (velocity projection + hysteresis). The card tilts
  * with its horizontal velocity. Phones feel the grab, each new target and the
  * drop (utils/haptics).
+ *
+ * Motion adds window scroll to the drag offset (right for a card in the page
+ * flow, which scrolls with the page). The dock card sits in a fixed dock and
+ * does not move with the page, so it drifted away from the pointer while the
+ * page auto-scrolled — and not even by the scrolled distance (measured: 448 px
+ * offset for 368 px of scroll). `fixed` cards therefore get `shift`, a
+ * counter-offset for a wrapper that keeps the card exactly where the pointer
+ * moved it: shift = pointer travel − Motion's offset (`y`, which the card must
+ * take as its style).
  */
 import { useEffect, useRef, type RefObject } from 'react'
-import { useMotionValue, useSpring, useTransform, useVelocity, type PanInfo } from 'motion/react'
+import { animate, useMotionValue, useSpring, useTransform, useVelocity, type PanInfo } from 'motion/react'
 import { computeInsertionIndex, isNearBoard, edgeScrollRaw, edgeScrollStep } from './boardGeometry'
-import { spring } from '@/motion/springs'
+import { dragReturn, spring } from '@/motion/springs'
 import { haptic } from '@/utils/haptics'
 
 /** Depth of the edge zone (px): only the last strip before an edge scrolls. */
@@ -55,10 +64,21 @@ interface CardDragOptions {
   onDrop: (gap: number) => void
   /** The gap the card already sits in (moving it again): not highlighted, no drop. */
   home?: number | null
+  /** The card sits in a fixed container (the dock): counter Motion's scroll compensation. */
+  fixed?: boolean
 }
 
-export function useCardDrag({ boardRef, onHoverGap, onDrop, home = null }: CardDragOptions) {
+/** Counter-offset for a card in a fixed container: what Motion's offset adds beyond the pointer's travel. */
+export function fixedShift(pointerTravel: number, motionOffset: number): number {
+  return pointerTravel - motionOffset
+}
+
+export function useCardDrag({ boardRef, onHoverGap, onDrop, home = null, fixed = false }: CardDragOptions) {
   const x = useMotionValue(0)
+  const y = useMotionValue(0)
+  const shift = useMotionValue(0)
+  const unfollow = useRef<(() => void) | null>(null)
+  const followRef = useRef<(() => void) | null>(null)
   const xVelocity = useVelocity(x)
   const tilt = useSpring(useTransform(xVelocity, [-1600, 1600], [-9, 9], { clamp: true }), spring.spatialFast)
 
@@ -120,6 +140,19 @@ export function useCardDrag({ boardRef, onHoverGap, onDrop, home = null }: CardD
     let lastFrame = 0
     let carry = 0
     haptic('grab')
+    if (fixed) {
+      unfollow.current?.()
+      shift.stop()
+      // where the card shows now (a snap-back may still be under way)
+      const startVisual = y.get() + shift.get()
+      const startY = point.y
+      const follow = () => {
+        const d = drag.current
+        if (d) shift.set(fixedShift(startVisual + d.clientY - startY, y.get()))
+      }
+      unfollow.current = y.on('change', follow)
+      followRef.current = follow
+    }
     drag.current = { ...geometry, clientX: point.x, clientY: point.y, velocityY: 0, hover: home, raf: 0 }
     const tick = () => {
       const d = drag.current
@@ -156,6 +189,7 @@ export function useCardDrag({ boardRef, onHoverGap, onDrop, home = null }: CardD
     d.clientX = point.x
     d.clientY = point.y
     d.velocityY = info.velocity.y
+    followRef.current?.()
     updateHover()
   }
 
@@ -163,6 +197,13 @@ export function useCardDrag({ boardRef, onHoverGap, onDrop, home = null }: CardD
     const d = drag.current
     if (!d) return
     cancelAnimationFrame(d.raf)
+    if (fixed) {
+      unfollow.current?.()
+      unfollow.current = null
+      followRef.current = null
+      // springs home together with the card (dragSnapToOrigin)
+      animate(shift, 0, { type: 'spring', stiffness: dragReturn.bounceStiffness, damping: dragReturn.bounceDamping })
+    }
     const target = resolveHover()
     drag.current = null
     onHoverGap(null)
@@ -175,9 +216,10 @@ export function useCardDrag({ boardRef, onHoverGap, onDrop, home = null }: CardD
   useEffect(
     () => () => {
       if (drag.current) cancelAnimationFrame(drag.current.raf)
+      unfollow.current?.()
     },
     []
   )
 
-  return { x, tilt, onDragStart, onDrag, onDragEnd }
+  return { x, y, shift, tilt, onDragStart, onDrag, onDragEnd }
 }
